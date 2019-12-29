@@ -38,4 +38,9 @@ class News extends FrontendModel
     {
         return 'news';
     }
+
+    public function getDate()
+    {
+        return (new \DateTime($this->date))->format('Y-m-d');
+    }
 }

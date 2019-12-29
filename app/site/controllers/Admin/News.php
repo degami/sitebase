@@ -183,8 +183,9 @@ class News extends AdminManageModelsPage
                 $news->locale = $values['locale'];
                 $news->content = $values['content'];
                 $news->website_id = $values['website_id'];
+                $news->date = $values['date'];
 
-                $page->persist();
+                $news->persist();
                 break;
             case 'delete':
                 $news->delete();

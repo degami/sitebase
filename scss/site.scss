@@ -1,0 +1,77 @@
+$lightgrey: #eaeaea;
+
+@import "partials/forms";
+
+// Fonts
+@import url("https://fonts.googleapis.com/css?family=Raleway:100,300,400,600");
+
+@import "../node_modules/select2/src/scss/core";
+@import '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
+
+body {
+    padding: 10px;
+    background: $lightgrey;
+    color: #636b6f;
+    font-family: 'Raleway', sans-serif;
+    font-weight: 100;    
+}
+
+.alert {
+    ul {
+        list-style-type: none;
+        padding-left: 0;
+        margin-bottom: 0;
+    }
+}
+
+ul.choose-lang {
+    text-align: right;
+    margin: 0;
+    padding: 0;
+
+    li {
+        list-style-type: none;
+        display: inline-block;
+        margin-left: 10px;
+    }
+}
+
+.links_exchange {
+    li {
+        span {
+            display:block;
+        }
+        .link-url {
+
+        }
+        .link-title {
+            
+        }
+        .link-description {
+            
+        }
+    }
+}
+
+.nav-item {
+    position: relative;
+}
+
+ul.breadcrumbs {
+    padding: 0;
+    li {
+        display: inline-block;
+
+        &:after {
+            content: '/';
+            display: inline-block;
+            margin: 0 5px;
+        }
+
+        &:last-child {
+            &:after {
+                display: none;
+            }
+        }
+    }
+}

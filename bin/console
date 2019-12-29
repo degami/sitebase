@@ -1,0 +1,44 @@
+#!/usr/bin/env php
+<?php
+// application.php
+require dirname(__DIR__).'/config/defines.php';
+require dirname(__DIR__).'/vendor/autoload.php';
+
+error_reporting(E_ALL & ~E_NOTICE);
+
+use \Symfony\Component\Console\Application;
+use \HaydenPierce\ClassFinder\ClassFinder;
+use \Symfony\Component\Console\Command\Command;
+use \App\App;
+
+$application = new Application();
+
+// load environment variables
+$dotenv = Dotenv\Dotenv::create(App::getDir(App::ROOT));
+$dotenv->load();
+
+$builder = new \DI\ContainerBuilder();
+$builder->addDefinitions(App::getDir(App::CONFIG).DS.'di.php');
+
+/** @var ContainerInterface $container */
+$container = $builder->build();
+
+// ... register commands
+
+$commandsClasses = ClassFinder::getClassesInNamespace('App\Site\Commands', ClassFinder::RECURSIVE_MODE);
+foreach($commandsClasses as $commandClass){
+    try{
+        $classname = array_pop(explode("\\", $commandClass));
+        $commandname = str_replace("App\\Site\\Commands\\", "", $commandClass);
+        $commandname = preg_replace("/".$classname."$/", "", $commandname) . $container->get('utils')->pascalCaseToSnakeCase($classname);
+        $commandname = strtolower(str_replace("\\", ":", $commandname));
+        $commandObj = $container->make($commandClass, ['name' => $commandname, 'container' => $container]);
+        if ($commandObj instanceof Command){
+            $application->add($commandObj);
+        }
+    } catch (\Exception $e){
+        $container->get('utils')->logException($e);
+    }
+}
+
+$application->run();

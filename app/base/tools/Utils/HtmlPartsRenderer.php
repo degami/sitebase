@@ -201,7 +201,6 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 'aria-expanded' => 'false',
                 'aria-label' => 'Toggle navigation'
             ],
-            'text' => '<img src="'.$this->getAssets()->assetUrl('/sitebase_logo.png').'" />',
         ]]);
         $button->addChild($this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'span',

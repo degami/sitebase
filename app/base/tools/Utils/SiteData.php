@@ -93,7 +93,7 @@ class SiteData extends ContainerAwareObject
             $lang = explode("-", $lang)[0];
         }
 
-        if (!in_array($lang, $this->getSiteLocales())) {
+        if (!in_array($lang, $this->getSiteLocales()) || empty($lang)) {
             $lang = $this->getDefaultLocale();
         }
 

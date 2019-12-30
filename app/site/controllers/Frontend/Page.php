@@ -40,17 +40,7 @@ class Page extends FrontendPageWithObject
      */
     protected function getTemplateName()
     {
-        if ($this->getObject() instanceof PageModel && $this->getObject()->isLoaded()) {
-            if (!empty($this->getObject()->getTemplateName())) {
-                return $this->getObject()->getTemplateName();
-            }
-            $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsite(), $this->getObject()->getLocale());
-            if ($this->getObject()->getId() == $homepage_id) {
-                return 'homepage';
-            }
-        }
-
-        if (is_array($this->route_info->getHandler()) && $this->route_info->getHandler()[1] == 'showFrontPage') {
+        if ($this->isHomePage()) {
             return 'homepage';
         }
 

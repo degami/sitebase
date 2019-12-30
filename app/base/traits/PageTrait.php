@@ -12,6 +12,8 @@
 namespace App\Base\Traits;
 
 use \App\Base\Abstracts\ContainerAwareObject;
+use \App\Site\Controllers\Frontend\Page;
+use \App\Site\Models\Page as PageModel;
 
 /**
  * Pages Trait
@@ -82,6 +84,25 @@ trait PageTrait
             }
         } catch (\Exception $e) {
             //$this->getUtils()->logException($e);
+        }
+
+        return false;
+    }
+
+    public function isHomePage()
+    {
+        if ($this instanceof Page) {
+            if ($this->getObject() instanceof PageModel && $this->getObject()->isLoaded()) {
+                $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsite(), $this->getObject()->getLocale());
+
+                if ($this->getObject()->getId() == $homepage_id) {
+                    return true;
+                }
+            }
+        }
+
+        if (is_array($this->route_info->getHandler()) && $this->route_info->getHandler()[1] == 'showFrontPage') {
+            return true;
         }
 
         return false;

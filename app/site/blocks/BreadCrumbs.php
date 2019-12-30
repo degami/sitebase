@@ -50,7 +50,7 @@ class BreadCrumbs extends BaseCodeBlock
             $current_page->getCurrentLocale()
         );
 
-        if (($current_page instanceof Page) && ($current_page->getPageId() != $homepageid)) {
+        if (!$current_page->isHomePage()) {
             $breadcrumbs_links[] = '<a href="'.$home_url.'">'.$this->getUtils()->translate('Home', $locale).'</a>';
         }
 

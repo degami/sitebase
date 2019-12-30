@@ -33,9 +33,7 @@ class BreadCrumbs extends BaseCodeBlock
         $route_info = $current_page->getRouteInfo();
 
         $current_page_handler = $route_info->getHandler();
-        if ($current_page->getRouteGroup() == AdminTrait::getRouteGroup() ||
-            $route_info->isAdminRoute() ||
-            $current_page_handler[0] == \App\Site\Controllers\Frontend\Page::class && $current_page_handler[1] == 'showFrontPage') {
+        if ($current_page->getRouteGroup() == AdminTrait::getRouteGroup() || $route_info->isAdminRoute()) {
             return '';
         }
 

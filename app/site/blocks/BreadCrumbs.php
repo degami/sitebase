@@ -16,6 +16,8 @@ use \App\Base\Abstracts\BasePage;
 use \Psr\Container\ContainerInterface;
 use \App\Site\Models\Menu;
 use \App\Base\Traits\AdminTrait;
+use \App\Site\Controllers\Frontend\Page;
+use \App\Site\Models\Rewrite;
 
 /**
  * Breadcrumbs Block
@@ -40,7 +42,17 @@ class BreadCrumbs extends BaseCodeBlock
         $menuitems = $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['rewrite_id' => $route_info->getRewrite()]]);
         $menu_item = reset($menuitems);
         $home_url = $this->getRouting()->getUrl('frontend.root');
-        $breadcrumbs_links = ['<a href="'.$home_url.'">'.$this->getUtils()->translate('Home', $locale).'</a>'];
+
+        $breadcrumbs_links = [];
+
+        $homepageid = $this->getSiteData()->getHomePageId(
+            $this->getSiteData()->getCurrentWebsite(),
+            $current_page->getCurrentLocale()
+        );
+
+        if (($current_page instanceof Page) && ($current_page->getPageId() != $homepageid)) {
+            $breadcrumbs_links[] = '<a href="'.$home_url.'">'.$this->getUtils()->translate('Home', $locale).'</a>';
+        }
 
         $breadcrumbs_html = '<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">';
         if ($menu_item instanceof Menu) {
@@ -49,8 +61,17 @@ class BreadCrumbs extends BaseCodeBlock
                 $breadcrumbs[] = $menu_item->getId();
             }
 
-            array_push($breadcrumbs_links, ...array_map(function ($id) {
+            array_push($breadcrumbs_links, ...array_map(function ($id) use ($homepageid, $locale) {
                 $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
+
+                if ($menuItem->getRewriteId()) {
+                    /** @var Rewrite $rewrite */
+                    $rewrite = $this->getContainer()->make(Rewrite::class)->fill($menuItem->getRewriteId());
+                    if ($rewrite->getRoute() == '/page/'.$homepageid) {
+                        $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
+                    }
+                }
+
                 $leaf = [
                     'title' => $menuItem->getTitle(),
                     'href' => $menuItem->getLinkUrl(),

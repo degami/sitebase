@@ -122,6 +122,15 @@ class Page extends FrontendPageWithObject
     }
 
     /**
+     * gets page model id
+     * @return integer
+     */
+    public function getPageId()
+    {
+        return $this->getObject()->getId();
+    }
+
+    /**
      * {@inheritdocs}
      * @return array
      */

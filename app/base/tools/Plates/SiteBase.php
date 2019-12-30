@@ -180,7 +180,7 @@ class SiteBase implements ExtensionInterface
      */
     public function env($variable)
     {
-        echo $this->container->get('utils')->getEnv($variable);
+        return $this->container->get('utils')->getEnv($variable);
     }
 
     /**

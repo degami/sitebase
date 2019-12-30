@@ -6,7 +6,7 @@
         <ul class="news-list">
             <?php foreach ($news as $key => $news_elem) :?>
                 <li>
-                    <a href="<?= $news_elem->getFrontendUrl(); ?>" rel="nofollow" target="_blank" class="link-url">
+                    <a href="<?= $news_elem->getFrontendUrl(); ?>" class="news-detail">
                         <span class="news-title"><?= $news_elem->getTitle(); ?></span>
                     </a>
                     <span class="news-date"><?= $news_elem->getDate(); ?></span>

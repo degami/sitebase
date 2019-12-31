@@ -170,6 +170,9 @@ class Pages extends AdminManageModelsPage
                 ->addField('content', [
                     'type' => 'tinymce',
                     'title' => 'Content',
+                    'tinymce_options' => [
+                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                    ],
                     'default_value' => $page_content,
                     'rows' => 20,
                 ])

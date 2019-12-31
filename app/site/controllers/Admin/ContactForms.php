@@ -157,6 +157,9 @@ class ContactForms extends AdminManageModelsPage
                 ->addField('content', [
                     'type' => 'tinymce',
                     'title' => 'Content',
+                    'tinymce_options' => [
+                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                    ],
                     'default_value' => $contact_content,
                     'rows' => 20,
                 ])

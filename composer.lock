@@ -453,16 +453,16 @@
         },
         {
             "name": "degami/php-forms-api",
-            "version": "2.3.8",
+            "version": "2.3.9",
             "source": {
                 "type": "git",
                 "url": "https://github.com/degami/php-forms-api.git",
-                "reference": "ef9c4099bc7938a09311089c4ad162c41b22450f"
+                "reference": "855d94c034786d9cb0a12f4eb507e941ebb5f52a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/degami/php-forms-api/zipball/ef9c4099bc7938a09311089c4ad162c41b22450f",
-                "reference": "ef9c4099bc7938a09311089c4ad162c41b22450f",
+                "url": "https://api.github.com/repos/degami/php-forms-api/zipball/855d94c034786d9cb0a12f4eb507e941ebb5f52a",
+                "reference": "855d94c034786d9cb0a12f4eb507e941ebb5f52a",
                 "shasum": ""
             },
             "require": {
@@ -508,7 +508,7 @@
                 "api",
                 "php"
             ],
-            "time": "2019-12-29T11:19:47+00:00"
+            "time": "2019-12-31T00:20:08+00:00"
         },
         {
             "name": "degami/sql-schema",

@@ -119,7 +119,7 @@ class Websites extends AdminManageModelsPage
                     'aliases',
                     [
                     'type' => 'textfield',
-                    'title' => 'Domain',
+                    'title' => 'Aliases',
                     'default_value' => $website_aliases,
                     ]
                 )

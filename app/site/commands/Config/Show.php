@@ -30,15 +30,18 @@ class Show extends Command
     protected function configure()
     {
         $this->setDescription('Show Config')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('website', null, InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('website', null, InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

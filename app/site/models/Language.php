@@ -15,6 +15,7 @@ use \App\Base\Abstracts\Model;
 
 /**
  * Language Model
+ *
  * @method int getId()
  * @method string getName()
  * @method string getNative()

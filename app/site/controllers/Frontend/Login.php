@@ -27,11 +27,14 @@ class Login extends FormPage
 {
     use AdminTrait;
 
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -41,6 +44,7 @@ class Login extends FormPage
 
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -50,21 +54,23 @@ class Login extends FormPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
     {
-//        if ($this->templateData['form']->isSubmitted()) {
-//            $result = $this->templateData['form']->getSubmitResults('App\Site\Controllers\Login::formSubmitted');
-//            $token = $this->getContainer()->get('jwt:parser')->parse($result);
-//            $this->templateData['result'] = $result;
-//            $this->templateData['result'] .= '<pre>'.json_encode($token->getClaims()).'</pre>';
-//        }
+        //        if ($this->templateData['form']->isSubmitted()) {
+        //            $result = $this->templateData['form']->getSubmitResults('App\Site\Controllers\Login::formSubmitted');
+        //            $token = $this->getContainer()->get('jwt:parser')->parse($result);
+        //            $this->templateData['result'] = $result;
+        //            $this->templateData['result'] .= '<pre>'.json_encode($token->getClaims()).'</pre>';
+        //        }
         return $this->templateData;
     }
 
     /**
      * {@inheritdocs}
+     *
      * @return self
      */
     protected function beforeRender()
@@ -73,10 +79,14 @@ class Login extends FormPage
             $result = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
             $token = $this->getContainer()->get('jwt:parser')->parse($result);
 
-            return RedirectResponse::create($this->getUrl("admin.dashboard"), 302, [
+            return RedirectResponse::create(
+                $this->getUrl("admin.dashboard"),
+                302,
+                [
                 "Authorization" => $token,
                 "Set-Cookie" => "Authorization=".$token
-            ]);
+                ]
+            );
         } else {
             $this->getAssets()->addCss('html,body {height: 100%;}');
             $this->getAssets()->addCss('body {display: -ms-flexbox;display: flex;-ms-flex-align: center;align-items: center;padding-top: 40px;padding-bottom: 40px;background-color: #f5f5f5;}');
@@ -94,36 +104,47 @@ class Login extends FormPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         return $form->setFormId('login')
-        ->addField('username', [
-            'title' => $this->getUtils()->translate('Username', $this->getCurrentLocale()),
-            'type' => 'textfield',
-            'validate' => ['required'],
-            'attributes' => ['placeholder' => $this->getUtils()->translate('Username', $this->getCurrentLocale())],
-        ])
-        ->addField('password', [
-            'title' => $this->getUtils()->translate('Password', $this->getCurrentLocale()),
-            'type' => 'password',
-            'validate' => ['required'],
-            'attributes' => ['placeholder' => $this->getUtils()->translate('Password', $this->getCurrentLocale())],
-        ])
-        ->addField('button', [
-            'type' => 'submit',
-            'value' => $this->getUtils()->translate('Login', $this->getCurrentLocale()),
-            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-        ]);
+            ->addField(
+                'username',
+                [
+                'title' => $this->getUtils()->translate('Username', $this->getCurrentLocale()),
+                'type' => 'textfield',
+                'validate' => ['required'],
+                'attributes' => ['placeholder' => $this->getUtils()->translate('Username', $this->getCurrentLocale())],
+                ]
+            )
+            ->addField(
+                'password',
+                [
+                'title' => $this->getUtils()->translate('Password', $this->getCurrentLocale()),
+                'type' => 'password',
+                'validate' => ['required'],
+                'attributes' => ['placeholder' => $this->getUtils()->translate('Password', $this->getCurrentLocale())],
+                ]
+            )
+            ->addField(
+                'button',
+                [
+                'type' => 'submit',
+                'value' => $this->getUtils()->translate('Login', $this->getCurrentLocale()),
+                'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                ]
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -141,9 +162,12 @@ class Login extends FormPage
             $form_state['logged_user'] = $this->getContainer()->make(User::class, ['dbrow' => $user]);
 
             // dispatch "user_logged_in" event
-            $this->getApp()->event('user_logged_in', [
+            $this->getApp()->event(
+                'user_logged_in',
+                [
                 'logged_user' => $form_state['logged_user']
-            ]);
+                ]
+            );
         }
 
         return true;
@@ -151,8 +175,9 @@ class Login extends FormPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
@@ -175,7 +200,9 @@ class Login extends FormPage
             ->set('uid', $logged_user->id)
                 // Configures a new claim, called "uid"
             ->set('username', $logged_user->username)
-            ->set('userdata', (object)[
+            ->set(
+                'userdata',
+                (object)[
                 'id' => $logged_user->id,
                 'username'=>$logged_user->username,
                 'email'=>$logged_user->email,
@@ -186,7 +213,8 @@ class Login extends FormPage
                     },
                     $user_permissions
                 )
-            ])
+                ]
+            )
             ->getToken(); // Retrieves the generated token
         return "".$token;
     }

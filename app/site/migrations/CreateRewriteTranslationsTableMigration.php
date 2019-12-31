@@ -21,11 +21,14 @@ use \Degami\SqlSchema\Table;
  */
 class CreateRewriteTranslationsTableMigration extends DBMigration
 {
-    /** @var string table name */
+    /**
+     * @var string table name
+     */
     protected $tableName = 'rewrite_translation';
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getName()
@@ -35,7 +38,8 @@ class CreateRewriteTranslationsTableMigration extends DBMigration
 
     /**
      * {@inheritdocs}
-     * @param Table $table
+     *
+     * @param  Table $table
      * @return Table
      */
     public function addDBTableDefinition(Table $table)

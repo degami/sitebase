@@ -19,7 +19,9 @@ use \Degami\SqlSchema\Table;
  */
 abstract class DBMigration extends Migration
 {
-    /** @var string table name */
+    /**
+     * @var string table name
+     */
     protected $tableName;
 
     /**
@@ -52,7 +54,8 @@ abstract class DBMigration extends Migration
 
     /**
      * add db table definition
-     * @param Table $table
+     *
+     * @param  Table $table
      * @return Table
      */
     abstract public function addDBTableDefinition(Table $table);

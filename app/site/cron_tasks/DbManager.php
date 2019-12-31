@@ -13,14 +13,16 @@ namespace App\Site\Cron\Tasks;
 
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
+use \Spatie\DbDumper\Databases\MySql;
+use \Spatie\DbDumper\Compressors\GzipCompressor;
 use \App\App;
 
 /**
  * Cache manager cron
  */
-class CacheManager extends ContainerAwareObject
+class DbManager extends ContainerAwareObject
 {
-    const DEFAULT_SCHEDULE = '0 */2 * * *';
+    const DEFAULT_SCHEDULE = '0 5 * * 0';
 
     /**
      * class constructor
@@ -37,8 +39,15 @@ class CacheManager extends ContainerAwareObject
      *
      * @return boolean
      */
-    public function flush()
+    public function dumpDB()
     {
-        return $this->getCache()->clear();
+        return MySql::create()
+            ->setDbName($this->getContainer()->get('dbname'))
+            ->setUserName($this->getContainer()->get('dbuser'))
+            ->setPassword($this->getContainer()->get('dbpass'))
+        //            ->useSingleTransaction()
+        //            ->skipLockTables()
+            ->useCompressor(new GzipCompressor())
+            ->dumpToFile(App::getDir(App::DUMPS).DS.'dump.'.date("Ymd_His").'.sql.gz');
     }
 }

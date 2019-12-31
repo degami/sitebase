@@ -21,11 +21,14 @@ use \App\Site\Routing\RouteInfo;
  */
 abstract class FrontendPage extends BaseHtmlPage
 {
-    /** @var string locale */
+    /**
+     * @var string locale
+     */
     protected $locale = null;
 
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -38,6 +41,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -52,6 +56,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
     /**
      * {@inheritdocs}
+     *
      * @return \League\Plates\Template\Template
      */
     protected function prepareTemplate()
@@ -81,6 +86,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
     /**
      * {@inheritdocs}
+     *
      * @return Response|self
      */
     protected function beforeRender()
@@ -94,6 +100,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -118,6 +125,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
     /**
      * gets Rewrite object for current page
+     *
      * @return Rewrite|null
      */
     public function getRewrite()
@@ -137,6 +145,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
     /**
      * gets current page's locale
+     *
      * @return string
      */
     public function getCurrentLocale()
@@ -158,13 +167,17 @@ abstract class FrontendPage extends BaseHtmlPage
 
     /**
      * get current page translations urls
+     *
      * @return array
      */
     public function getTranslations()
     {
         $rewrite = $this->getContainer()->make(\App\Site\Models\Rewrite::class, ['dbrow' => $this->getRewrite()]);
-        return array_map(function ($el) {
-            return $el->url;
-        }, $rewrite->getTranslations());
+        return array_map(
+            function ($el) {
+                return $el->url;
+            },
+            $rewrite->getTranslations()
+        );
     }
 }

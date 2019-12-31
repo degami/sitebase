@@ -22,14 +22,19 @@ use \App\App;
  */
 abstract class CodeGeneratorCommand extends Command
 {
-    /** @var array files to dump */
+    /**
+     * @var array files to dump
+     */
     protected $filesToDump = [];
 
-    /** @var PhpComposerReader composer reader */
+    /**
+     * @var PhpComposerReader composer reader
+     */
     protected $composer_reader;
 
     /**
      * {@inheritdocs}
+     *
      * @param string                  $name
      * @param ContainerInterface|null $container
      */
@@ -45,6 +50,7 @@ abstract class CodeGeneratorCommand extends Command
 
     /**
      * add class
+     *
      * @param string $fullClassName
      * @param string $filecontents
      */
@@ -82,6 +88,7 @@ abstract class CodeGeneratorCommand extends Command
 
     /**
      * queue file to dump
+     *
      * @param  string $filename
      * @param  string $filecontents
      * @return self
@@ -94,6 +101,7 @@ abstract class CodeGeneratorCommand extends Command
 
     /**
      * flush files to disk
+     *
      * @return array
      */
     protected function doWrite()

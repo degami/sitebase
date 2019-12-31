@@ -24,6 +24,7 @@ class HeartBeat extends ContainerAwareObject
     
     /**
      * class constructor
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -33,6 +34,7 @@ class HeartBeat extends ContainerAwareObject
 
     /**
      * pulse method
+     *
      * @return string
      */
     public function pulse()

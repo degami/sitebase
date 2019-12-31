@@ -34,23 +34,34 @@ class Manager extends ContainerAwareObject
 {
     const ASSETS_DOMAIN_PATH = 'app/frontend/assets_domain';
 
-    /** @var boolean js already generated flag */
+    /**
+     * @var boolean js already generated flag
+     */
     protected $js_generated = false;
 
-    /** @var boolean head js already generated flag */
+    /**
+     * @var boolean head js already generated flag
+     */
     protected $head_js_generated = false;
 
-    /** @var array head js */
+    /**
+     * @var array head js
+     */
     protected $head_js = ['encapsulated' => [], 'direct' => []];
 
-    /** @var array js */
+    /**
+     * @var array js
+     */
     protected $js = ['encapsulated' => [], 'direct' => []];
 
-    /** @var array css */
+    /**
+     * @var array css
+     */
     protected $css = [];
 
     /**
      * gets js elements
+     *
      * @return array
      */
     public function getJs()
@@ -60,6 +71,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * gets head js
+     *
      * @return array
      */
     public function getHeadJs()
@@ -69,10 +81,11 @@ class Manager extends ContainerAwareObject
 
     /**
      * add js to element
-     * @param string / array $js    javascript to add
-     * @param boolean        $as_is no "minification"
-     * @param string         $position
-     * @param boolean        $on_ready
+     *
+     * @param  string / array $js       javascript to add
+     * @param  boolean        $as_is    no "minification"
+     * @param  string         $position
+     * @param  boolean        $on_ready
      * @return Element
      */
     public function addJs($js, $as_is = false, $position = null, $on_ready = true)
@@ -106,7 +119,8 @@ class Manager extends ContainerAwareObject
 
     /**
      * generate the js string
-     * @param string $position
+     *
+     * @param  string $position
      * @return string the js into a jquery sandbox
      */
     protected function generateJs($position = null)
@@ -142,6 +156,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * generate the js string
+     *
      * @return string the js into a jquery sandbox
      */
     protected function generateHeadJs()
@@ -152,6 +167,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * generate the js string
+     *
      * @return string the js into a jquery sandbox
      */
     protected function generatePageJs()
@@ -161,7 +177,8 @@ class Manager extends ContainerAwareObject
 
     /**
      * encapsulate js into jquery ready function
-     * @param  array $js_array
+     *
+     * @param  array  $js_array
      * @param  string $jquery_var_name
      * @return string
      */
@@ -182,6 +199,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * minify js string
+     *
      * @param  string $js javascript minify
      * @return string
      */
@@ -196,6 +214,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * gets inline js
+     *
      * @return string
      */
     public function renderPageInlineJS()
@@ -211,6 +230,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * gets inline js for head
+     *
      * @return string
      */
     public function renderHeadInlineJS()
@@ -226,6 +246,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * Add css to element
+     *
      * @param  string / array $css css to add
      * @return Element
      */
@@ -243,6 +264,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * Get the element's css array
+     *
      * @return array element's css array
      */
     public function getCss()
@@ -250,7 +272,9 @@ class Manager extends ContainerAwareObject
         if ($this instanceof FieldsContainer || $this instanceof Form) {
             $css = array_filter(array_map('trim', $this->css));
             foreach ($this->getFields() as $field) {
-                /** @var \Degami\PHPFormsApi\Abstracts\App\Base\Field $field */
+                /**
+                 * @var \Degami\PHPFormsApi\Abstracts\App\Base\Field $field
+                 */
                 $css = array_merge($css, $field->getCss());
             }
             return $css;
@@ -260,6 +284,7 @@ class Manager extends ContainerAwareObject
 
     /**
      * gets inline css
+     *
      * @return string
      */
     public function renderPageInlineCSS()
@@ -274,9 +299,10 @@ class Manager extends ContainerAwareObject
 
     /**
      * gets url for asset
-     * @param  string $asset_path
+     *
+     * @param  string  $asset_path
      * @param  integet $website_id
-     * @param  string $locale
+     * @param  string  $locale
      * @return string
      */
     public function assetUrl($asset_path, $website_id = null, $locale = null)

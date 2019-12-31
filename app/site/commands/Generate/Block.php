@@ -36,15 +36,18 @@ class Block extends CodeGeneratorCommand
     protected function configure()
     {
         $this->setDescription('Generate a new Block class')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -78,6 +81,7 @@ class Block extends CodeGeneratorCommand
 
     /**
      * gets file contents
+     *
      * @param  string $className
      * @return string
      */

@@ -24,11 +24,14 @@ use \Symfony\Component\HttpFoundation\Response;
  */
 class Links extends FormPage
 {
-    /** @var string locale */
+    /**
+     * @var string locale
+     */
     protected $locale = null;
 
     /**
      * gets route group
+     *
      * @return string
      */
     public static function getRouteGroup()
@@ -38,6 +41,7 @@ class Links extends FormPage
 
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -47,6 +51,7 @@ class Links extends FormPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -56,6 +61,7 @@ class Links extends FormPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -72,47 +78,64 @@ class Links extends FormPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
-        $form->addField('url', [
+        $form->addField(
+            'url',
+            [
             'type' => 'textfield',
             'title' => 'Insert your URL',
             'validate' => ['required'],
-        ])
-        ->addField('email', [
-            'type' => 'email',
-            'title' => 'Your Email',
-            'validate' => ['required'],
-        ])
-        ->addField('title', [
-            'type' => 'textfield',
-            'title' => 'Your Site Name',
-            'validate' => ['required'],
-        ])
-        ->addField('description', [
-            'type' => 'textarea',
-            'title' => 'Your Site Description',
-            'validate' => ['required'],
-            'rows' => 5,
-        ])
-        ->addField('button', [
-            'type' => 'button',
-            'value' => 'Send',
-            'container_class' => 'form-item mt-3',
-            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-        ]);
+            ]
+        )
+            ->addField(
+                'email',
+                [
+                'type' => 'email',
+                'title' => 'Your Email',
+                'validate' => ['required'],
+                ]
+            )
+            ->addField(
+                'title',
+                [
+                'type' => 'textfield',
+                'title' => 'Your Site Name',
+                'validate' => ['required'],
+                ]
+            )
+            ->addField(
+                'description',
+                [
+                'type' => 'textarea',
+                'title' => 'Your Site Description',
+                'validate' => ['required'],
+                'rows' => 5,
+                ]
+            )
+            ->addField(
+                'button',
+                [
+                'type' => 'button',
+                'value' => 'Send',
+                'container_class' => 'form-item mt-3',
+                'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                ]
+            );
 
         return $form;
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -122,8 +145,9 @@ class Links extends FormPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
@@ -136,25 +160,29 @@ class Links extends FormPage
         $link->title = $values->title;
         $link->description = $values->description;
         $link->locale = $this->getCurrentLocale();
-        $link->website_id = $this->getSiteData()->getCurrentWebsite();
+        $link->website_id = $this->getSiteData()->getCurrentWebsiteId();
 
         $link->persist();
 
 
         $form->addHighlight('Thanks for your submission!');
 
-        $this->getUtils()->addQueueMessage('link_form_mail', [
+        $this->getUtils()->addQueueMessage(
+            'link_form_mail',
+            [
             'from' => $values->email,
             'to' => $this->getSiteData()->getSiteEmail(),
             'subject' => 'New Link exchange',
             'body' => var_export($values->getData(), true),
-        ]);
+            ]
+        );
 
         $form->reset();
     }
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getCurrentLocale()

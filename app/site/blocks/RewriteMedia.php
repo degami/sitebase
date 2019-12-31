@@ -25,17 +25,21 @@ class RewriteMedia extends BaseCodeBlock
 {
     /**
      * {@inheritdocs}
-     * @param BasePage|null $current_page
-     * @param array $data
+     *
+     * @param  BasePage|null $current_page
+     * @param  array         $data
      * @return string
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
     {
         $images = [];
-        $images = array_map(function ($el) {
-            $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class, ['dbrow' => $el]);
-            return $media_rewrite->getMediaElement()->getImage();
-        }, $current_page->getRewrite()->media_element_rewriteList()->fetchAll());
+        $images = array_map(
+            function ($el) {
+                $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class, ['dbrow' => $el]);
+                return $media_rewrite->getMediaElement()->getImage();
+            },
+            $current_page->getRewrite()->media_element_rewriteList()->fetchAll()
+        );
 
 
         $tag_attributes = ['class' => 'block-rewritemedia cycle-slideshow'];
@@ -46,25 +50,30 @@ class RewriteMedia extends BaseCodeBlock
             }
         }
 
-        return (string)(new TagElement([
+        return (string)(new TagElement(
+            [
             'tag' => 'div',
             'attributes' => $tag_attributes,
             'children' => $images,
-        ]));
+            ]
+        ));
     }
 
     /**
      * additional configuration fieldset
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
-     * @param  array    $default_values
+     * @param  array     &$form_state
+     * @param  array     $default_values
      * @return FAPI\Form
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
     {
         $config_fields = [];
 
-        $config_fields[] = $form->getFieldObj('fx', [
+        $config_fields[] = $form->getFieldObj(
+            'fx',
+            [
             'type' => 'select',
             'title' => 'data-cycle-fx',
             'options' => [
@@ -75,20 +84,27 @@ class RewriteMedia extends BaseCodeBlock
                 'none' => 'none'
             ],
             'default_value' => $default_values['fx'] ?? '',
-        ]);
+            ]
+        );
 
-        $config_fields[] = $form->getFieldObj('speed', [
+        $config_fields[] = $form->getFieldObj(
+            'speed',
+            [
             'type' => 'textfield',
             'title' => 'data-cycle-speed',
             'default_value' => $default_values['speed'] ?? '',
-        ]);
+            ]
+        );
 
 
-        $config_fields[] = $form->getFieldObj('timeout', [
+        $config_fields[] = $form->getFieldObj(
+            'timeout',
+            [
             'type' => 'textfield',
             'title' => 'data-cycle-timeout',
             'default_value' => $default_values['timeout'] ?? '',
-        ]);
+            ]
+        );
 
         return $config_fields;
     }

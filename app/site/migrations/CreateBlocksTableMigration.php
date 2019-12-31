@@ -21,11 +21,14 @@ use \Degami\SqlSchema\Table;
  */
 class CreateBlocksTableMigration extends DBMigration
 {
-    /** @var string table name */
+    /**
+     * @var string table name
+     */
     protected $tableName = 'block';
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getName()
@@ -35,7 +38,8 @@ class CreateBlocksTableMigration extends DBMigration
 
     /**
      * {@inheritdocs}
-     * @param Table $table
+     *
+     * @param  Table $table
      * @return Table
      */
     public function addDBTableDefinition(Table $table)

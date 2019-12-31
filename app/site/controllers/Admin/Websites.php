@@ -25,6 +25,7 @@ class Websites extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -34,6 +35,7 @@ class Websites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -43,6 +45,7 @@ class Websites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -52,8 +55,9 @@ class Websites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -64,10 +68,13 @@ class Websites extends AdminManageModelsPage
             $website = $this->loadObject($this->getRequest()->get('website_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -89,31 +96,43 @@ class Websites extends AdminManageModelsPage
                     $website_domain = $website->domain;
                     $website_default_locale = $website->default_locale;
                 }
-                $form->addField('site_name', [
+                $form->addField(
+                    'site_name',
+                    [
                     'type' => 'textfield',
                     'title' => 'Site Name',
                     'default_value' => $website_site_name,
                     'validate' => ['required'],
-                ])
-                ->addField('domain', [
-                    'type' => 'textfield',
-                    'title' => 'Domain',
-                    'default_value' => $website_domain,
-                    'validate' => ['required'],
-                ])
-                ->addField('default_locale', [
-                    'type' => 'select',
-                    'title' => 'Default Locale',
-                    'default_value' => $website_default_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'domain',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Domain',
+                        'default_value' => $website_domain,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'default_locale',
+                        [
+                        'type' => 'select',
+                        'title' => 'Default Locale',
+                        'default_value' => $website_default_locale,
+                        'options' => $languages,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -126,8 +145,9 @@ class Websites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -139,13 +159,16 @@ class Websites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Page $website */
+        /**
+ * @var Page $website
+*/
         $website = $this->newEmptyObject();
         if ($this->getRequest()->get('website_id')) {
             $website = $this->loadObject($this->getRequest()->get('website_id'));
@@ -156,6 +179,7 @@ class Websites extends AdminManageModelsPage
             case 'new':
                 $website->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
+                // no break
             case 'edit':
                 $website->url = $values['url'];
                 $website->title = $values['title'];
@@ -178,6 +202,7 @@ class Websites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -193,21 +218,24 @@ class Websites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($website) {
-
-            return [
+        return array_map(
+            function ($website) {
+                return [
                 'ID' => $website->id,
                 'Site Name' => $website->site_name,
                 'Domain' => $website->domain,
                 'Default Locale' => $website->default_locale,
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&website_id='. $website->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                 <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&website_id='. $website->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

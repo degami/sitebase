@@ -27,6 +27,7 @@ class Page extends FrontendPageWithObject
 {
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -36,6 +37,7 @@ class Page extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -49,6 +51,7 @@ class Page extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -70,7 +73,8 @@ class Page extends FrontendPageWithObject
 
     /**
      * shows a page
-     * @param  integer         $id
+     *
+     * @param  integer        $id
      * @param  RouteInfo|null $route_info
      * @param  array          $options
      * @return Response
@@ -83,15 +87,16 @@ class Page extends FrontendPageWithObject
 
     /**
      * shows homepage
+     *
      * @param  RouteInfo|null $route_info
      * @return Response
      */
     public function showFrontPage(RouteInfo $route_info = null)
     {
         $homepage_id = null;
-        if ($this->getSiteData()->getHomePageRedirectsToLanguage($this->getSiteData()->getCurrentWebsite())) {
+        if ($this->getSiteData()->getHomePageRedirectsToLanguage($this->getSiteData()->getCurrentWebsiteId())) {
             $homepage_id = $this->getSiteData()->getHomePageId(
-                $this->getSiteData()->getCurrentWebsite(),
+                $this->getSiteData()->getCurrentWebsiteId(),
                 $this->getSiteData()->getBrowserPreferredLanguage()
             );
 
@@ -100,7 +105,7 @@ class Page extends FrontendPageWithObject
                 return $this->doRedirect($page_model->getFrontendUrl());
             }
         } else {
-            $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsite(), null);
+            $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsiteId(), null);
         }
 
         if ($homepage_id) {
@@ -113,6 +118,7 @@ class Page extends FrontendPageWithObject
 
     /**
      * gets page model id
+     *
      * @return integer
      */
     public function getPageId()
@@ -122,6 +128,7 @@ class Page extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -133,6 +140,7 @@ class Page extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return [type] [description]
      */
     public static function getObjectClass()

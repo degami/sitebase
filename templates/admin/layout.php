@@ -2,9 +2,9 @@
 $this->layout('base::html', ['title' => $title] + get_defined_vars());?>
 
 <?php $this->start('head') ?>
-<link rel="stylesheet" type="text/css" href="/css/admin.css">
-<script type="text/javascript" src="/vendor/tinymce/tinymce/tinymce.min.js"></script>
-<script type="text/javascript" src="/js/admin.js"></script>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/admin.css');?>">
+<script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/tinymce/tinymce.min.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/js/admin.js');?>"></script>
 <?= $this->section('head'); ?>
 <?php $this->stop() ?>
 

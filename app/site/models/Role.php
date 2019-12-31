@@ -17,6 +17,7 @@ use \App\Base\Exceptions\BasicException;
 
 /**
  * Role Model
+ *
  * @method int getId()
  * @method string getName()
  * @method \DateTime getCreatedAt()
@@ -24,11 +25,14 @@ use \App\Base\Exceptions\BasicException;
  */
 class Role extends Model
 {
-    /** @var array permissions */
+    /**
+     * @var array permissions
+     */
     protected $permissionsArray = [];
 
     /**
      * returns permissions array
+     *
      * @param  boolean $reset
      * @return array
      */
@@ -49,6 +53,7 @@ class Role extends Model
 
     /**
      * checks if role has permission
+     *
      * @param  string  $permission_name
      * @param  boolean $reset
      * @return boolean
@@ -68,6 +73,7 @@ class Role extends Model
 
     /**
      * grants permission to role
+     *
      * @param  string $permission_name
      * @return self
      */
@@ -89,6 +95,7 @@ class Role extends Model
 
     /**
      * revokes permission from role
+     *
      * @param  string $permission_name
      * @return self
      */

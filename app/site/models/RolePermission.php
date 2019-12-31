@@ -15,6 +15,7 @@ use \App\Base\Abstracts\Model;
 
 /**
  * Role Permission Pivot Model
+ *
  * @method int getId()
  * @method string gerRoleId()
  * @method string getPermissionId()

@@ -36,19 +36,22 @@ class Add extends Command
     protected function configure()
     {
         $this->setDescription('Add a new user')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('username', 'u', InputOption::VALUE_OPTIONAL),
-                new InputOption('email', 'e', InputOption::VALUE_OPTIONAL),
-                new InputOption('password', 'p', InputOption::VALUE_OPTIONAL),
-                new InputOption('role', 'r', InputOption::VALUE_OPTIONAL),
-                new InputOption('locale', 'l', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('username', 'u', InputOption::VALUE_OPTIONAL),
+                    new InputOption('email', 'e', InputOption::VALUE_OPTIONAL),
+                    new InputOption('password', 'p', InputOption::VALUE_OPTIONAL),
+                    new InputOption('role', 'r', InputOption::VALUE_OPTIONAL),
+                    new InputOption('locale', 'l', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -73,9 +76,12 @@ class Add extends Command
         if (empty($role)) {
             $question = new ChoiceQuestion(
                 'User Role? ',
-                array_map(function ($el) {
-                    return $el->name;
-                }, $this->getDb()->table('role')->fetchAll()),
+                array_map(
+                    function ($el) {
+                        return $el->name;
+                    },
+                    $this->getDb()->table('role')->fetchAll()
+                ),
                 0
             );
             $question->setErrorMessage('Role %s is invalid.');

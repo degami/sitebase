@@ -17,6 +17,7 @@ use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * Rewrite Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getUrl()
@@ -27,13 +28,16 @@ use \App\Base\Traits\WithOwnerTrait;
  */
 class Rewrite extends Model
 {
-    /** @var array rewrite translations */
+    /**
+     * @var array rewrite translations
+     */
     protected $translations = [];
 
     use WithWebsiteTrait, WithOwnerTrait;
 
     /**
      * gets object translations
+     *
      * @return array
      */
     public function getTranslations()
@@ -41,15 +45,20 @@ class Rewrite extends Model
         $this->checkLoaded();
 
         if (empty($this->translations)) {
-            $elements = array_filter(array_map(function ($el) {
-                if ($el->id == $this->getId() || $el->locale == $this->getLocale()) {
-                    return null;
-                }
-                return [
-                    'locale' => $el->destination_locale,
-                    'rewrite' => $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $el->destination])
-                ];
-            }, [] + $this->getDb()->table('rewrite_translation')->where('source', $this->getId())->fetchAll()));
+            $elements = array_filter(
+                array_map(
+                    function ($el) {
+                        if ($el->id == $this->getId() || $el->locale == $this->getLocale()) {
+                            return null;
+                        }
+                        return [
+                        'locale' => $el->destination_locale,
+                        'rewrite' => $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $el->destination])
+                        ];
+                    },
+                    [] + $this->getDb()->table('rewrite_translation')->where('source', $this->getId())->fetchAll()
+                )
+            );
 
             foreach ($elements as $item) {
                 $this->translations[$item['locale']] = $item['rewrite'];
@@ -60,6 +69,7 @@ class Rewrite extends Model
 
     /**
      * gets route info object
+     *
      * @return RouteInfo
      */
     public function getRouteInfo()

@@ -35,6 +35,7 @@ class Show extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -56,19 +57,22 @@ class Show extends Command
             }
 
             $table
-            ->addRow([
-                '<info>'.$cron->getId().'</info>',
-                $cron->getTitle(),
-                $cron->getCronTaskCallable(),
-                $cron->getSchedule(),
-                $cron->getActive(),
-            ]);
+                ->addRow(
+                    [
+                    '<info>'.$cron->getId().'</info>',
+                    $cron->getTitle(),
+                    $cron->getCronTaskCallable(),
+                    $cron->getSchedule(),
+                    $cron->getActive(),
+                    ]
+                );
         }
         $table->render();
     }
 
     /**
      * gets last heart beat
+     *
      * @return string
      */
     protected function getLastHeartBeat()
@@ -76,11 +80,11 @@ class Show extends Command
         $out = '<info>No heart beat run yet</info>';
         // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1
         $last_beat = $this->getContainer()->get('db')
-                ->cron_log()
-                ->where("1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0")
-                ->orderBy('run_time', 'DESC')
-                ->limit(1)
-                ->fetch();
+            ->cron_log()
+            ->where("1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0")
+            ->orderBy('run_time', 'DESC')
+            ->limit(1)
+            ->fetch();
 
         if ($last_beat != null) {
             $last_beat->getData();

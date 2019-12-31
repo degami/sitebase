@@ -16,6 +16,7 @@ use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * Page Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getUrl()
@@ -34,14 +35,19 @@ class Page extends FrontendModel
 {
     use WithOwnerTrait;
 
-    /** @var array page gallyer */
+    /**
+     * @var array page gallyer
+     */
     protected $gallery = [];
 
-    /** @var array page terms */
+    /**
+     * @var array page terms
+     */
     protected $terms = [];
 
     /**
      * gets page gallery
+     *
      * @return array
      */
     public function getGallery()
@@ -61,35 +67,42 @@ class Page extends FrontendModel
 
     /**
      * adds media to page
-     * @param MediaElement $media_element
+     *
+     * @param  MediaElement $media_element
      * @return self
      */
     public function addMedia($media_element)
     {
         $new_page_media_row = $this->getDb()->table('page_media_element')->createRow();
-        $new_page_media_row->update([
+        $new_page_media_row->update(
+            [
             'page_id' => $this->id,
             'media_element_id' => $media_element->id,
-        ]);
+            ]
+        );
         return $this;
     }
 
     /**
      * removes media from page
+     *
      * @param  MediaElement $media_element
      * @return self
      */
     public function removeMedia($media_element)
     {
-        $this->getDb()->table('page_media_element')->where([
+        $this->getDb()->table('page_media_element')->where(
+            [
             'page_id' => $this->id,
             'media_element_id' => $media_element->id,
-        ])->delete();
+            ]
+        )->delete();
         return $this;
     }
 
     /**
      * get page terms
+     *
      * @return array
      */
     public function getTerms()
@@ -109,35 +122,42 @@ class Page extends FrontendModel
 
     /**
      * adds a term to page
-     * @param Taxonomy $term
+     *
+     * @param  Taxonomy $term
      * @return self
      */
     public function addTerm($term)
     {
         $new_page_taxonomy_row = $this->getDb()->table('page_taxonomy')->createRow();
-        $new_page_taxonomy_row->update([
+        $new_page_taxonomy_row->update(
+            [
             'page_id' => $this->id,
             'taxonomy_id' => $term->id,
-        ]);
+            ]
+        );
         return $this;
     }
 
     /**
      * removes a term from page
+     *
      * @param  Taxonomy $term
      * @return self
      */
     public function removeTerm($term)
     {
-        $this->getDb()->table('page_taxonomy')->where([
+        $this->getDb()->table('page_taxonomy')->where(
+            [
             'page_id' => $this->id,
             'taxonomy_id' => $term->id,
-        ])->delete();
+            ]
+        )->delete();
         return $this;
     }
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getRewritePrefix()

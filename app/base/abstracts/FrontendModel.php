@@ -26,11 +26,14 @@ abstract class FrontendModel extends Model
 {
     use WithWebsiteTrait;
     
-    /** @var Rewrite|null rewrite object */
+    /**
+     * @var Rewrite|null rewrite object
+     */
     protected $rewriteObj = null;
 
     /**
      * gets object rewrite model
+     *
      * @return Rewrite
      */
     public function getRewrite()
@@ -48,6 +51,7 @@ abstract class FrontendModel extends Model
 
     /**
      * gets frontend url for object
+     *
      * @return string
      */
     public function getFrontendUrl()
@@ -59,6 +63,7 @@ abstract class FrontendModel extends Model
 
     /**
      * post persist hook
+     *
      * @return self
      */
     public function postPersist()
@@ -76,6 +81,7 @@ abstract class FrontendModel extends Model
 
     /**
      * pre remove hook
+     *
      * @return self
      */
     public function preRemove()
@@ -87,20 +93,25 @@ abstract class FrontendModel extends Model
 
     /**
      * returns object translations urls
+     *
      * @return array
      */
     public function getTranslations()
     {
-        return array_map(function ($el) {
-            $routeInfo = $el->getRouteInfo();
-            $modelClass = $this->getContainer()->call([$routeInfo->getHandler()[0], 'getObjectClass']);
-            $model = $this->getContainer()->call([$modelClass,'load'], $routeInfo->getVars());
-            return $model->getRewrite()->getUrl();
-        }, $this->getRewrite()->getTranslations());
+        return array_map(
+            function ($el) {
+                $routeInfo = $el->getRouteInfo();
+                $modelClass = $this->getContainer()->call([$routeInfo->getHandler()[0], 'getObjectClass']);
+                $model = $this->getContainer()->call([$modelClass,'load'], $routeInfo->getVars());
+                return $model->getRewrite()->getUrl();
+            },
+            $this->getRewrite()->getTranslations()
+        );
     }
 
     /**
      * return page title
+     *
      * @return string
      */
     public function getPageTitle()
@@ -110,6 +121,7 @@ abstract class FrontendModel extends Model
 
     /**
      * gets rewrite prefix
+     *
      * @return string
      */
     abstract public function getRewritePrefix();

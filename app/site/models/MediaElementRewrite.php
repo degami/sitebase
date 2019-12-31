@@ -19,6 +19,7 @@ use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * Media Element Rewrite Pivot Model
+ *
  * @method int getId()
  * @method int getMediaElementId()
  * @method int getRewriteId()
@@ -32,6 +33,7 @@ class MediaElementRewrite extends Model
 
     /**
      * gets Media Element object
+     *
      * @return MediaElement
      */
     public function getMediaElement()
@@ -43,6 +45,7 @@ class MediaElementRewrite extends Model
 
     /**
      * gets Rewrite object
+     *
      * @return Rewrite
      */
     public function getRewrite()

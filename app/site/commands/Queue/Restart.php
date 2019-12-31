@@ -41,6 +41,7 @@ class Restart extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

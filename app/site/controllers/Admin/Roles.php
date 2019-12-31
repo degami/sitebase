@@ -23,6 +23,7 @@ class Roles extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -32,6 +33,7 @@ class Roles extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -41,6 +43,7 @@ class Roles extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -50,8 +53,9 @@ class Roles extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -62,10 +66,13 @@ class Roles extends AdminManageModelsPage
             $role = $this->loadObject($this->getRequest()->get('role_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -76,18 +83,24 @@ class Roles extends AdminManageModelsPage
                 if ($role instanceof Role) {
                     $role_name = $role->name;
                 }
-                $form->addField('name', [
+                $form->addField(
+                    'name',
+                    [
                     'type' => 'textfield',
                     'title' => 'Role Name',
                     'default_value' => $role_name,
                     'validate' => ['required'],
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -100,8 +113,9 @@ class Roles extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -113,13 +127,16 @@ class Roles extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Role $role */
+        /**
+ * @var Role $role
+*/
         $role = $this->newEmptyObject();
         if ($this->getRequest()->get('role_id')) {
             $role = $this->loadObject($this->getRequest()->get('role_id'));
@@ -142,6 +159,7 @@ class Roles extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -155,18 +173,22 @@ class Roles extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($role) {
-            return [
+        return array_map(
+            function ($role) {
+                return [
                 'ID' => $role->id,
                 'Name' => $role->name,
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&role_id='. $role->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&role_id='. $role->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

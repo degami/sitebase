@@ -34,7 +34,9 @@ class Process extends Command
     const LOCKFILE_NAME = "lock.queue";
     const KILLFILE_NAME = "kill.queue";
 
-    /** @var integer executions number */
+    /**
+     * @var integer executions number
+     */
     protected $executions = 0;
 
     /**
@@ -43,15 +45,18 @@ class Process extends Command
     protected function configure()
     {
         $this->setDescription('Process queue')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('queue', null, InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('queue', null, InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

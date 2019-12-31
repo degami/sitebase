@@ -26,8 +26,9 @@ class ChangeLanguage extends BaseCodeBlock
 {
     /**
      * {@inheritdocs}
-     * @param BasePage|null $current_page
-     * @param array $data
+     *
+     * @param  BasePage|null $current_page
+     * @param  array         $data
      * @return string
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
@@ -43,22 +44,29 @@ class ChangeLanguage extends BaseCodeBlock
 
             if (is_callable([$current_page, 'getTranslations'])) {
                 if (($translations = $current_page->getTranslations()) && !empty($translations)) {
-                    return '<ul class="choose-lang"><li>'.implode('</li><li>', array_map(function ($el, $key) use ($config) {
-                        $text = '';
-                        $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
+                    return '<ul class="choose-lang"><li>'.implode(
+                        '</li><li>',
+                        array_map(
+                            function ($el, $key) use ($config) {
+                                $text = '';
+                                $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
 
-                        if ($config['show-language'] == 'code') {
-                            $text = $key;
-                        }
-                        if ($config['show-language'] == 'full') {
-                            $text = $language->native;
-                        }
-                        if (boolval($config['show-flags'])) {
-                            $text .= ' '.$this->getHtmlRenderer()->renderFlag($key);
-                        }
+                                if ($config['show-language'] == 'code') {
+                                    $text = $key;
+                                }
+                                if ($config['show-language'] == 'full') {
+                                    $text = $language->native;
+                                }
+                                if (boolval($config['show-flags'])) {
+                                    $text .= ' '.$this->getHtmlRenderer()->renderFlag($key);
+                                }
 
-                        return '<a href="'.$el.'">'.$text.'</a>';
-                    }, $translations, array_keys($translations))).'</li></ul>';
+                                return '<a href="'.$el.'">'.$text.'</a>';
+                            },
+                            $translations,
+                            array_keys($translations)
+                        )
+                    ).'</li></ul>';
                 }
             }
         } catch (Exception $e) {
@@ -68,16 +76,19 @@ class ChangeLanguage extends BaseCodeBlock
 
     /**
      * additional configuration fieldset
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
-     * @param  array    $default_values
+     * @param  array     &$form_state
+     * @param  array     $default_values
      * @return FAPI\Form
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
     {
         $config_fields = [];
 
-        $config_fields[] = $form->getFieldObj('show-language', [
+        $config_fields[] = $form->getFieldObj(
+            'show-language',
+            [
             'type' => 'select',
             'title' => 'Show Language',
             'options' => [
@@ -86,9 +97,12 @@ class ChangeLanguage extends BaseCodeBlock
                 'none' => 'None'
             ],
             'default_value' => $default_values['show-language'] ?? '',
-        ]);
+            ]
+        );
 
-        $config_fields[] = $form->getFieldObj('show-flags', [
+        $config_fields[] = $form->getFieldObj(
+            'show-flags',
+            [
             'type' => 'switchbox',
             'title' => 'Show Flag',
             'default_value' => boolval($default_values['show-flags'] ?? '') ? 1 : 0,
@@ -97,7 +111,8 @@ class ChangeLanguage extends BaseCodeBlock
             'no_value' => 0,
             'no_label' => 'No',
             'field_class' => 'switchbox',
-        ]);
+            ]
+        );
 
         return $config_fields;
     }

@@ -15,6 +15,7 @@ use \App\Base\Abstracts\Model;
 
 /**
  * User Model
+ *
  * @method int getId()
  * @method string getUsername()
  * @method string getPassword()
@@ -26,11 +27,14 @@ use \App\Base\Abstracts\Model;
  */
 class User extends Model
 {
-    /** @var Role role object */
+    /**
+     * @var Role role object
+     */
     protected $roleObj;
 
     /**
      * gets user role
+     *
      * @return Role
      */
     public function getRole()
@@ -44,6 +48,7 @@ class User extends Model
 
     /**
      * sets user role
+     *
      * @param Role|integer|string $role
      */
     public function setRole($role)
@@ -62,6 +67,7 @@ class User extends Model
 
     /**
      * checks if user has permission
+     *
      * @param  string $permission_name
      * @return boolean
      */

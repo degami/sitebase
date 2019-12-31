@@ -23,14 +23,19 @@ abstract class AdminPage extends BaseHtmlPage
 {
     use AdminTrait;
 
-    /** @var string page title */
+    /**
+     * @var string page title
+     */
     protected $page_title;
 
-    /** @var string locale */
+    /**
+     * @var string locale
+     */
     protected $locale = null;
 
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -45,6 +50,7 @@ abstract class AdminPage extends BaseHtmlPage
 
     /**
      * before render hook
+     *
      * @return Response|self
      */
     protected function beforeRender()
@@ -58,6 +64,7 @@ abstract class AdminPage extends BaseHtmlPage
 
     /**
      * {@inheritfocs}
+     *
      * @return \League\Plates\Template\Template
      */
     protected function prepareTemplate()
@@ -65,10 +72,14 @@ abstract class AdminPage extends BaseHtmlPage
         $template = $this->getTemplates()->make('admin::'.$this->getTemplateName());
         $template->data($this->getTemplateData()+$this->getBaseTemplateData());
 
-        $this->getAssets()->addJs("\$('#admin').appAdmin(".json_encode([
-            'checkLoggedUrl' => $this->getUrl('admin.json.checksession'),
-            'logoutUrl' => $this->getUrl('admin.logout'),
-        ]).");");
+        $this->getAssets()->addJs(
+            "\$('#admin').appAdmin(".json_encode(
+                [
+                'checkLoggedUrl' => $this->getUrl('admin.json.checksession'),
+                'logoutUrl' => $this->getUrl('admin.logout'),
+                ]
+            ).");"
+        );
 
         $template->start('scripts');
         echo $this->getAssets()->renderPageInlineJS();
@@ -83,6 +94,7 @@ abstract class AdminPage extends BaseHtmlPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -95,6 +107,7 @@ abstract class AdminPage extends BaseHtmlPage
 
     /**
      * gets page title
+     *
      * @return string
      */
     public function getPageTitle()
@@ -104,6 +117,7 @@ abstract class AdminPage extends BaseHtmlPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getCurrentLocale()
@@ -126,6 +140,7 @@ abstract class AdminPage extends BaseHtmlPage
 
     /**
      * gets access permission name
+     *
      * @return string
      */
     abstract protected function getAccessPermission();

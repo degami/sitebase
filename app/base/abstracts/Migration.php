@@ -22,18 +22,21 @@ abstract class Migration extends ContainerAwareObject implements MigrationInterf
 {
     /**
      * do the migration
+     *
      * @return void
      */
     abstract public function up();
 
     /**
      * undo the migration
+     *
      * @return void
      */
     abstract public function down();
     
     /**
      * gets migration name
+     *
      * @return string
      */
     public function getName()

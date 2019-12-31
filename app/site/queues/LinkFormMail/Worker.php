@@ -22,6 +22,7 @@ class Worker extends BaseQueueWorker
 {
     /**
      * {@inheritdocs}
+     *
      * @param  array $message_data
      * @return boolean
      */

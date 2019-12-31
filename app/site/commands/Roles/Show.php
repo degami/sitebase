@@ -34,6 +34,7 @@ class Show extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -52,13 +53,21 @@ class Show extends Command
             }
 
             $table
-            ->addRow([
-                '<info>'.$role->getId().'</info>',
-                $role->getName(),
-                implode("\n", array_map(function ($el) {
-                    return $el->getName();
-                }, $role->getPermissionsArray())),
-            ]);
+                ->addRow(
+                    [
+                    '<info>'.$role->getId().'</info>',
+                    $role->getName(),
+                    implode(
+                        "\n",
+                        array_map(
+                            function ($el) {
+                                return $el->getName();
+                            },
+                            $role->getPermissionsArray()
+                        )
+                    ),
+                    ]
+                );
         }
         $table->render();
     }

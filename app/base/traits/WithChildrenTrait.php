@@ -18,11 +18,14 @@ use \App\Base\Abstracts\ContainerAwareObject;
  */
 trait WithChildrenTrait
 {
-    /** @var array children */
+    /**
+     * @var array children
+     */
     protected $children = [];
 
     /**
      * gets children
+     *
      * @param  string  $locale
      * @param  boolean $reset
      * @return array

@@ -26,7 +26,6 @@ use \App\Base\Abstracts\Model;
 use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
-use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * Site Data Helper Class
@@ -40,11 +39,43 @@ class SiteData extends ContainerAwareObject
     const SITE_EMAIL_PATH = 'app/global/site_mail_address';
     const CONFIGURATION_CACHE_KEY = 'site.configuration';
     const MENU_LOGO_PATH = 'app/frontend/menu_with_logo';
+
     /**
      * gets current website id
-     * @return integer
+     *
+     * @return Website|null
      */
     public function getCurrentWebsite()
+    {
+        static $current_website = null;
+
+        if (is_numeric($current_website)) {
+            return $current_website;
+        }
+
+        $website = null;
+        if (php_sapi_name() == 'cli-server') {
+            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
+        } else {
+            //$website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
+            $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = '.$this->getDb()->quote($_SERVER['SERVER_NAME']).' OR (FIND_IN_SET('.$this->getDb()->quote($_SERVER['SERVER_NAME']).', aliases) > 0)']]])->fetch();
+            $dbrow = $this->getContainer()->make(Row::class, ['db' => $this->getDb(), 'name' => 'website', 'properties' => $result]);
+            $website = $this->getContainer()->make(Website::class, ['dbrow' => $dbrow]);
+        }
+
+        if ($website instanceof Website) {
+            return $current_website = $website;
+        }
+
+        return null;
+    }
+
+    /**
+     * gets current website id
+     *
+     * @return integer|null
+     */
+    public function getCurrentWebsiteId()
     {
         static $current_siteid = null;
 
@@ -52,13 +83,35 @@ class SiteData extends ContainerAwareObject
             return $current_siteid;
         }
 
-        if (php_sapi_name() == 'cli-server') {
-            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
-        } else {
-            $website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
+        $website = $this->getCurrentWebsite();
+        
+        if ($website instanceof Website) {
+            return $current_siteid = $website->id;
         }
 
-        return $current_siteid = $website->id;
+        return null;
+    }
+
+    /**
+     * gets default site locale
+     *
+     * @return string|null
+     */
+    public function getDefaultLocale()
+    {
+        static $website_default_locale = null;
+
+        if (!is_null($website_default_locale)) {
+            return $website_default_locale;
+        }
+
+        $website = $this->getCurrentWebsite();
+        
+        if ($website instanceof Website) {
+            return $website_default_locale = $website->getDefaultLocale();
+        }
+
+        return null;
     }
 
     public function getBrowserPreferredLanguage()
@@ -103,6 +156,7 @@ class SiteData extends ContainerAwareObject
 
     /**
      * get cached config
+     *
      * @return array
      */
     public function getCachedConfig()
@@ -116,15 +170,16 @@ class SiteData extends ContainerAwareObject
 
     /**
      * gets config value
-     * @param  string $config_path
+     *
+     * @param  string  $config_path
      * @param  integer $website_id
-     * @param  string $locale
+     * @param  string  $locale
      * @return mixed
      */
     public function getConfigValue($config_path, $website_id = null, $locale = null)
     {
         if ($website_id == null) {
-            $website_id = $this->getCurrentWebsite();
+            $website_id = $this->getCurrentWebsiteId();
         }
 
         if ($locale == null) {
@@ -151,8 +206,9 @@ class SiteData extends ContainerAwareObject
 
     /**
      * gets homepage page id
+     *
      * @param  integer $website_id
-     * @param  string $locale
+     * @param  string  $locale
      * @return integer
      */
     public function getHomePageId($website_id = null, $locale = null)
@@ -166,6 +222,7 @@ class SiteData extends ContainerAwareObject
 
     /**
      * gets homepage redirects to default language preference
+     *
      * @param  integer $website_id
      * @return boolean
      */
@@ -176,6 +233,7 @@ class SiteData extends ContainerAwareObject
 
     /**
      * gets show logo in menu preference
+     *
      * @param  integer $website_id
      * @return boolean
      */
@@ -186,6 +244,7 @@ class SiteData extends ContainerAwareObject
 
     /**
      * gets website email address
+     *
      * @param  integer $website_id
      * @return string
      */
@@ -196,6 +255,7 @@ class SiteData extends ContainerAwareObject
 
     /**
      * gets site enabled locales
+     *
      * @param  integer $website_id
      * @return array
      */
@@ -206,8 +266,9 @@ class SiteData extends ContainerAwareObject
 
     /**
      * gets main menu name
+     *
      * @param  integer $website_id
-     * @param  string $locale
+     * @param  string  $locale
      * @return string
      */
     public function getMainMenuName($website_id = null, $locale = null)
@@ -216,20 +277,5 @@ class SiteData extends ContainerAwareObject
             $locale = 'en';
         }
         return $this->getSiteData()->getConfigValue(self::MAINMENU_PATH, $website_id, $locale);
-    }
-
-    /**
-     * gets default site locale
-     * @return string|null
-     */
-    public function getDefaultLocale()
-    {
-        static $website_default_locale = null;
-
-        if ($website_default_locale == null) {
-            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->getCurrentWebsite()]);
-            $website_default_locale = $website->getDefaultLocale();
-        }
-        return $website_default_locale;
     }
 }

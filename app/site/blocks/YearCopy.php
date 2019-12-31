@@ -24,23 +24,26 @@ class YearCopy extends BaseCodeBlock
 {
     /**
      * {@inheritdocs}
+     *
      * @param  BasePage|null $current_page
      * @return string
      */
     public function renderHTML(BasePage $current_page = null)
     {
         try {
-            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsite()]);
+            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);
 
             $class = 'block copy';
 
-            return (string)(new TagElement([
+            return (string)(new TagElement(
+                [
                 'tag' => 'div',
                 'attributes' => [
                     'class' => $class,
                 ],
                 'text' => $website->getSiteName()." &copy; - ".date('Y'),
-            ]));
+                ]
+            ));
         } catch (Exception $e) {
         }
         return "";

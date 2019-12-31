@@ -21,11 +21,14 @@ use \Degami\SqlSchema\Table;
  */
 class CreateWebsiteTableMigration extends DBMigration
 {
-    /** @var string table name */
+    /**
+     * @var string table name
+     */
     protected $tableName = 'website';
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getName()
@@ -35,7 +38,8 @@ class CreateWebsiteTableMigration extends DBMigration
 
     /**
      * {@inheritdocs}
-     * @param Table $table
+     *
+     * @param  Table $table
      * @return Table
      */
     public function addDBTableDefinition(Table $table)
@@ -43,6 +47,7 @@ class CreateWebsiteTableMigration extends DBMigration
         $table->addColumn('id', 'INT', null, ['UNSIGNED'])
             ->addColumn('site_name', 'VARCHAR', [255], [], false, null)
             ->addColumn('domain', 'VARCHAR', [255], [], false, null)
+            ->addColumn('aliases', 'VARCHAR', [1024], [], false, null)
             ->addColumn('default_locale', 'VARCHAR', [10])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')

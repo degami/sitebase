@@ -33,16 +33,19 @@ class Get extends Command
     protected function configure()
     {
         $this->setDescription('Get Cache item')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('key', 'k', InputOption::VALUE_OPTIONAL),
-                new InputOption('format', 'f', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('key', 'k', InputOption::VALUE_OPTIONAL),
+                    new InputOption('format', 'f', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

@@ -24,7 +24,9 @@ use \App\Site\Controllers\Admin\Json\ContactCallback;
  */
 class ContactForms extends AdminManageModelsPage
 {
-    /** @var array available form field types */
+    /**
+     * @var array available form field types
+     */
     protected $available_form_field_types = [
         'textfield','textarea','email','number','file','checkbox',
         'select','radios','checkboxes','range',
@@ -34,6 +36,7 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -58,7 +61,7 @@ class ContactForms extends AdminManageModelsPage
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
             ];
-        } else if ($this->templateData['action'] == 'view_submission') {
+        } elseif ($this->templateData['action'] == 'view_submission') {
             $this->addBackButton();
             $this->templateData += [
                 'submission' => $this->getContainer()->call([ContactSubmission::class, 'load'], ['id' => $this->getRequest()->get('submission_id')]),
@@ -68,6 +71,7 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -77,6 +81,7 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -86,6 +91,7 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -98,8 +104,9 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -119,10 +126,13 @@ class ContactForms extends AdminManageModelsPage
         $websites = $this->getUtils()->getWebsitesSelectOptions();
 
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         $contact_url = $contact_title = $contact_content = $contact_locale = $contact_submit_to =
         $contact_website = $contact_meta_description = $contact_meta_keywords = $contact_html_title ="";
@@ -143,123 +153,177 @@ class ContactForms extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                $form->addField('url', [
+                $form->addField(
+                    'url',
+                    [
                     'type' => 'textfield',
                     'title' => 'Url',
                     'default_value' => $contact_url,
                     'validate' => ['required'],
-                ])->addField('title', [
-                    'type' => 'textfield',
-                    'title' => 'Title',
-                    'default_value' => $contact_title,
-                    'validate' => ['required'],
-                ])
-                ->addField('content', [
-                    'type' => 'tinymce',
-                    'title' => 'Content',
-                    'tinymce_options' => [
+                    ]
+                )->addField(
+                    'title',
+                    [
+                        'type' => 'textfield',
+                        'title' => 'Title',
+                        'default_value' => $contact_title,
+                        'validate' => ['required'],
+                        ]
+                )
+                    ->addField(
+                        'content',
+                        [
+                        'type' => 'tinymce',
+                        'title' => 'Content',
+                        'tinymce_options' => [
                         'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                    ],
-                    'default_value' => $contact_content,
-                    'rows' => 20,
-                ])
-                ->addField('meta_description', [
-                    'type' => 'textfield',
-                    'title' => 'Meta Description',
-                    'default_value' => $contact_meta_description,
-                ])
-                ->addField('meta_keywords', [
-                    'type' => 'textfield',
-                    'title' => 'Meta Keywords',
-                    'default_value' => $contact_meta_keywords,
-                ])
-                ->addField('html_title', [
-                    'type' => 'textfield',
-                    'title' => 'Html Title',
-                    'default_value' => $contact_html_title,
-                ])
-                ->addField('website_id', [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $contact_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                ])
-                ->addField('locale', [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $contact_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                ]);
+                        ],
+                        'default_value' => $contact_content,
+                        'rows' => 20,
+                        ]
+                    )
+                    ->addField(
+                        'meta_description',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Meta Description',
+                        'default_value' => $contact_meta_description,
+                        ]
+                    )
+                    ->addField(
+                        'meta_keywords',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Meta Keywords',
+                        'default_value' => $contact_meta_keywords,
+                        ]
+                    )
+                    ->addField(
+                        'html_title',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Html Title',
+                        'default_value' => $contact_html_title,
+                        ]
+                    )
+                    ->addField(
+                        'website_id',
+                        [
+                        'type' => 'select',
+                        'title' => 'Website',
+                        'default_value' => $contact_website,
+                        'options' => $websites,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'locale',
+                        [
+                        'type' => 'select',
+                        'title' => 'Locale',
+                        'default_value' => $contact_locale,
+                        'options' => $languages,
+                        'validate' => ['required'],
+                        ]
+                    );
 
                 if ($contact instanceof Contact) {
-                    $fieldset = $form->addField('form_definition', [
+                    $fieldset = $form->addField(
+                        'form_definition',
+                        [
                         'prefix' => '<div id="fieldset-contactfields"><label class="label-tag_container">Form Components</label>',
                         'suffix' => '</div>',
                         'type' => 'tag_container',
                         'tag' => 'div',
-                    ]);
+                        ]
+                    );
 
                     $contact_definition = $contact->getContactDefinition();
                     foreach ($contact_definition as $index => $component) {
-                        $component['effaceable'] = true;
-                        $this->addComponent($fieldset->addField('form_component_'.$index.'', [
-                            'type' => 'fieldset',
-                            'title' => $component['field_label'],
-                            'collapsible' => true,
-                            'collapsed' => true,
-                        ], $index), $index, $component);
+                            $component['effaceable'] = true;
+                            $this->addComponent(
+                                $fieldset->addField(
+                                    'form_component_'.$index.'',
+                                    [
+                                    'type' => 'fieldset',
+                                    'title' => $component['field_label'],
+                                    'collapsible' => true,
+                                    'collapsed' => true,
+                                        ],
+                                    $index
+                                ),
+                                $index,
+                                $component
+                            );
                     }
                     if ($form->isPartial() || count($contact_definition) < ($form_state['input_values']['num_components'] ?? 0)) {
                         $num_fields = $form_state['input_values']['num_components'] + ($form->isPartial() ? 1 : 0);
                         for ($i=0; $i < ($num_fields - count($contact_definition)); $i++) {
                             $index = count($contact_definition) + $i;
-                            $this->addComponent($fieldset->addField('form_component_'.$index.'', [
-                                'type' => 'fieldset',
-                                'title' => 'New Field - '.($index + 1),
-                                'collapsible' => true,
-                                'collapsed' => true,
-                            ], $index), $index);
+                            $this->addComponent(
+                                $fieldset->addField(
+                                    'form_component_'.$index.'',
+                                    [
+                                    'type' => 'fieldset',
+                                    'title' => 'New Field - '.($index + 1),
+                                    'collapsible' => true,
+                                    'collapsed' => true,
+                                    ],
+                                    $index
+                                ),
+                                $index
+                            );
                         }
                         $fieldset->addJs("\$('input[name=\"num_components\"]','#".$form->getFormId()."').val('".count($form->getField('form_definition')->getFields())."');");
                         $fieldset->addJs("\$('select','#".$form->getFormId()."').select2({'width':'100%'});");
                     }
 
-                    $form->addField('num_components', [
+                    $form->addField(
+                        'num_components',
+                        [
                         'type' => 'hidden',
                         'default_value' => count($form->getField('form_definition')->getFields()),
-                    ]);
+                        ]
+                    );
 
                     $form
-                    ->addField('addmore', [
-                        'type' => 'submit',
-                        'value' => 'Add more',
-                        'ajax_url' => $this->getUrl('admin.json.contactcallback').'?action='.$this->getRequest()->get('action').'&contact_id='.$this->getRequest()->get('contact_id'),
-                        'event' => [
-                          [
+                        ->addField(
+                            'addmore',
+                            [
+                            'type' => 'submit',
+                            'value' => 'Add more',
+                            'ajax_url' => $this->getUrl('admin.json.contactcallback').'?action='.$this->getRequest()->get('action').'&contact_id='.$this->getRequest()->get('contact_id'),
+                            'event' => [
+                            [
                             'event' => 'click',
                             'callback' => [ContactCallback::class, 'contactFormsCallback'],
                             'target' => 'fieldset-contactfields',
                             'effect' => 'fade',
                             'method' => 'replace',
-                          ],
-                        ],
-                    ]);
+                            ],
+                            ],
+                            ]
+                        );
                 }
 
                 $form
-                ->addField('submit_to', [
+                ->addField(
+                    'submit_to',
+                    [
                     'type' => 'textfield',
                     'title' => 'Submit Results to',
                     'default_value' => $contact_submit_to,
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -272,9 +336,10 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * adds a component
+     *
      * @param \Degami\PHPFormsApi\Abstracts\Base\Element $form_component
-     * @param integer $index
-     * @param array $component
+     * @param integer                                    $index
+     * @param array                                      $component
      */
     private function addComponent($form_component, $index, $component = null)
     {
@@ -290,42 +355,60 @@ class ContactForms extends AdminManageModelsPage
         }
 
         $form_component
-        ->addField('form_component_'.$index.'[id]', [
-            'type' => 'hidden',
-            'default_value' => $component['id'],
-        ])
-        ->addField('form_component_'.$index.'[field_label]', [
-            'title' => 'Field Name',
-            'type' => 'textfield',
-            'default_value' => $component['field_label'],
-        ])
-        ->addField('form_component_'.$index.'[field_type]', [
-            'title' => 'Field Type',
-            'type' => 'select',
-            'options' => ['' => ''] + array_combine($this->available_form_field_types, array_map('ucfirst', $this->available_form_field_types)),
-            'default_value' => $component['field_type'],
-            'validate' => ['required'],
-        ])
-        ->addField('form_component_'.$index.'[field_required]', [
-            'title' => 'Required Field',
-            'type' => 'select',
-            'options' => [0 => 'No', 1 => 'Yes'],
-            'default_value' => intval($component['field_required']),
-        ])
-        ->addField('form_component_'.$index.'[field_data]', [
-            'title' => 'Field Data',
-            'type' => 'textarea',
-            'default_value' => $component['field_data'],
-        ]);
+            ->addField(
+                'form_component_'.$index.'[id]',
+                [
+                'type' => 'hidden',
+                'default_value' => $component['id'],
+                ]
+            )
+            ->addField(
+                'form_component_'.$index.'[field_label]',
+                [
+                'title' => 'Field Name',
+                'type' => 'textfield',
+                'default_value' => $component['field_label'],
+                ]
+            )
+            ->addField(
+                'form_component_'.$index.'[field_type]',
+                [
+                'title' => 'Field Type',
+                'type' => 'select',
+                'options' => ['' => ''] + array_combine($this->available_form_field_types, array_map('ucfirst', $this->available_form_field_types)),
+                'default_value' => $component['field_type'],
+                'validate' => ['required'],
+                ]
+            )
+            ->addField(
+                'form_component_'.$index.'[field_required]',
+                [
+                'title' => 'Required Field',
+                'type' => 'select',
+                'options' => [0 => 'No', 1 => 'Yes'],
+                'default_value' => intval($component['field_required']),
+                ]
+            )
+            ->addField(
+                'form_component_'.$index.'[field_data]',
+                [
+                'title' => 'Field Data',
+                'type' => 'textarea',
+                'default_value' => $component['field_data'],
+                ]
+            );
 
         if (isset($component['effaceable']) && $component['effaceable'] == true) {
             $form_component
-            ->addField('form_component_'.$index.'[delete]', [
+            ->addField(
+                'form_component_'.$index.'[delete]',
+                [
                 'title' => 'Delete Field',
                 'type' => 'checkbox',
                 'default_value' => '1',
                 'value' => '0',
-            ]);
+                ]
+            );
         }
 
         return $form_component;
@@ -333,8 +416,9 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -350,13 +434,16 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Contact $contact */
+        /**
+ * @var Contact $contact
+*/
         $contact = $this->newEmptyObject();
         if ($this->getRequest()->get('contact_id')) {
             $contact = $this->loadObject($this->getRequest()->get('contact_id'));
@@ -412,6 +499,7 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -438,24 +526,29 @@ class ContactForms extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
         if ($this->templateData['action'] == 'submissions') {
-            return array_map(function ($submission) {
-                return [
+            return array_map(
+                function ($submission) {
+                    return [
                     'ID' => $submission->id,
                     'User' => $submission->getUserId() > 0 ? $submission->getOwner()->email : 'guest',
                     'Created At' => $submission->created_at,
                     'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=view_submission&submission_id='. $submission->id.'">'.$this->getUtils()->getIcon('zoom-in') .'</a>'
-                ];
-            }, $data);
+                    ];
+                },
+                $data
+            );
         }
 
-        return array_map(function ($contact) {
-            return [
+        return array_map(
+            function ($contact) {
+                return [
                 'ID' => $contact->id,
                 'Website' => $contact->getWebsiteId() == null ? 'All websites' : $contact->getWebsite()->domain,
                 'Title' => $contact->title,
@@ -466,7 +559,9 @@ class ContactForms extends AdminManageModelsPage
                     <a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=submissions&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('list') .'</a>
                     <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

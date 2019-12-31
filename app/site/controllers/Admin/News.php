@@ -25,6 +25,7 @@ class News extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -34,6 +35,7 @@ class News extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -43,6 +45,7 @@ class News extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -52,8 +55,9 @@ class News extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -64,10 +68,13 @@ class News extends AdminManageModelsPage
             $news = $this->loadObject($this->getRequest()->get('news_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -91,53 +98,74 @@ class News extends AdminManageModelsPage
                     $news_website = $news->website_id;
                     $news_date = $news->date;
                 }
-                $form->addField('url', [
+                $form->addField(
+                    'url',
+                    [
                     'type' => 'textfield',
                     'title' => 'Page url',
                     'default_value' => $news_url,
                     'validate' => ['required'],
-                ])
-                ->addField('title', [
-                    'type' => 'textfield',
-                    'title' => 'Title',
-                    'default_value' => $news_title,
-                    'validate' => ['required'],
-                ])
-                ->addField('date', [
-                    'type' => 'datepicker',
-                    'title' => 'Date',
-                    'default_value' => $news_date,
-                    'validate' => ['required'],
-                ])
-                ->addField('website_id', [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $news_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                ])
-                ->addField('locale', [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $news_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                ])
-                ->addField('content', [
-                    'type' => 'tinymce',
-                    'title' => 'Content',
-                    'tinymce_options' => [
+                    ]
+                )
+                    ->addField(
+                        'title',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Title',
+                        'default_value' => $news_title,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'date',
+                        [
+                        'type' => 'datepicker',
+                        'title' => 'Date',
+                        'default_value' => $news_date,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'website_id',
+                        [
+                        'type' => 'select',
+                        'title' => 'Website',
+                        'default_value' => $news_website,
+                        'options' => $websites,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'locale',
+                        [
+                        'type' => 'select',
+                        'title' => 'Locale',
+                        'default_value' => $news_locale,
+                        'options' => $languages,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'content',
+                        [
+                        'type' => 'tinymce',
+                        'title' => 'Content',
+                        'tinymce_options' => [
                         'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                    ],
-                    'default_value' => $news_content,
-                    'rows' => 20,
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                        ],
+                        'default_value' => $news_content,
+                        'rows' => 20,
+                        ]
+                    )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -150,8 +178,9 @@ class News extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -163,13 +192,16 @@ class News extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var NewsModel $news */
+        /**
+ * @var NewsModel $news
+*/
         $news = $this->newEmptyObject();
         if ($this->getRequest()->get('news_id')) {
             $news = $this->loadObject($this->getRequest()->get('news_id'));
@@ -180,6 +212,7 @@ class News extends AdminManageModelsPage
             case 'new':
                 $news->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
+                // no break
             case 'edit':
                 $news->url = $values['url'];
                 $news->title = $values['title'];
@@ -199,6 +232,7 @@ class News extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -216,13 +250,15 @@ class News extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($news) {
-            return [
+        return array_map(
+            function ($news) {
+                return [
                 'ID' => $news->id,
                 'Website' => $news->getWebsiteId() == null ? 'All websites' : $news->getWebsite()->domain,
                 'URL' => $news->url,
@@ -232,7 +268,9 @@ class News extends AdminManageModelsPage
                 'actions' => '<a class="btn btn-light btn-sm" href="'. $news->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>                    
                     <a class="btn btn-primary btn-sm" href="'. $news->getControllerUrl() .'?action=edit&news_id='. $news->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $news->getControllerUrl() .'?action=delete&news_id='. $news->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

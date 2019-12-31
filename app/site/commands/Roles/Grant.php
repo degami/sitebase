@@ -36,16 +36,19 @@ class Grant extends Command
     protected function configure()
     {
         $this->setDescription('Grant permission to role')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
-                new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                    new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -68,12 +71,17 @@ class Grant extends Command
             return;
         }
 
-        $permissions_available = array_filter(array_map(function ($el) use ($role) {
-            if ($role->checkPermission($el->name)) {
-                return '';
-            }
-            return $el->name;
-        }, $this->getDb()->table('permission')->fetchAll()));
+        $permissions_available = array_filter(
+            array_map(
+                function ($el) use ($role) {
+                    if ($role->checkPermission($el->name)) {
+                        return '';
+                    }
+                    return $el->name;
+                },
+                $this->getDb()->table('permission')->fetchAll()
+            )
+        );
 
         if (empty($permissions_available)) {
             $io->error('No permission available to add');

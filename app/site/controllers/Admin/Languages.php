@@ -23,6 +23,7 @@ class Languages extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -32,6 +33,7 @@ class Languages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -41,6 +43,7 @@ class Languages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -50,8 +53,9 @@ class Languages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -62,10 +66,13 @@ class Languages extends AdminManageModelsPage
             $language = $this->loadObject($this->getRequest()->get('language_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -82,47 +89,68 @@ class Languages extends AdminManageModelsPage
                     $language_family = $language->family;
                 }
 
-                $form->addField('locale', [
+                $form->addField(
+                    'locale',
+                    [
                     'type' => 'textfield',
                     'title' => 'Locale',
                     'default_value' => $language_locale,
                     'validate' => ['required'],
-                ])
-                ->addField('639-1', [
-                    'type' => 'textfield',
-                    'title' => '639-1',
-                    'default_value' => $language_639_1,
-                    'validate' => ['required'],
-                ])
-                ->addField('639-2', [
-                    'type' => 'textfield',
-                    'title' => '639-2',
-                    'default_value' => $language_639_2,
-                    'validate' => ['required'],
-                ])
-                ->addField('name', [
-                    'type' => 'textfield',
-                    'title' => 'Name',
-                    'default_value' => $language_name,
-                    'validate' => ['required'],
-                ])
-                ->addField('native', [
-                    'type' => 'textfield',
-                    'title' => 'Native',
-                    'default_value' => $language_native,
-                    'validate' => ['required'],
-                ])
-                ->addField('family', [
-                    'type' => 'textfield',
-                    'title' => 'Family',
-                    'default_value' => $language_family,
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        '639-1',
+                        [
+                        'type' => 'textfield',
+                        'title' => '639-1',
+                        'default_value' => $language_639_1,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        '639-2',
+                        [
+                        'type' => 'textfield',
+                        'title' => '639-2',
+                        'default_value' => $language_639_2,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'name',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Name',
+                        'default_value' => $language_name,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'native',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Native',
+                        'default_value' => $language_native,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'family',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Family',
+                        'default_value' => $language_family,
+                        ]
+                    )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -135,8 +163,9 @@ class Languages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -148,13 +177,16 @@ class Languages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Language $language */
+        /**
+ * @var Language $language
+*/
         $language = $this->newEmptyObject();
         if ($this->getRequest()->get('language_id')) {
             $language = $this->loadObject($this->getRequest()->get('language_id'));
@@ -183,6 +215,7 @@ class Languages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -202,13 +235,15 @@ class Languages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($language) {
-            return [
+        return array_map(
+            function ($language) {
+                return [
                 'ID' => $language->id,
                 'Locale' => $language->locale,
                 'Flag' => $this->getHtmlRenderer()->renderFlag($language->locale),
@@ -219,7 +254,9 @@ class Languages extends AdminManageModelsPage
                 'Family' => $language->family,
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&language_id='. $language->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&language_id='. $language->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

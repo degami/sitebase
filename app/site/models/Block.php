@@ -20,6 +20,7 @@ use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * Block Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getRegion()
@@ -36,14 +37,19 @@ class Block extends Model
 {
     use BlockTrait, WithWebsiteTrait, WithOwnerTrait;
 
-    /** @var array rewrites */
+    /**
+     * @var array rewrites
+     */
     protected $rewrites = [];
 
-    /** @var \App\Base\Abstracts\BaseCodeBlock code block instance */
+    /**
+     * @var \App\Base\Abstracts\BaseCodeBlock code block instance
+     */
     protected $codeBlockInstance = null;
 
     /**
      * {@inheritdocs}
+     *
      * @param  BasePage $current_page
      * @return string
      */
@@ -53,17 +59,20 @@ class Block extends Model
 
         $class = 'block block-'.$this->getId();
 
-        return (string)(new TagElement([
+        return (string)(new TagElement(
+            [
             'tag' => 'div',
             'attributes' => [
                 'class' => $class,
             ],
             'text' => $this->content,
-        ]));
+            ]
+        ));
     }
 
     /**
      * gets block instance
+     *
      * @return string
      */
     public function getInstance()
@@ -73,6 +82,7 @@ class Block extends Model
 
     /**
      * loads code block instance
+     *
      * @return \App\Base\Abstracts\BaseCodeBlock
      */
     public function loadInstance()
@@ -86,6 +96,7 @@ class Block extends Model
 
     /**
      * gets real block instance
+     *
      * @return self|\App\Base\Abstracts\BaseCodeBlock
      */
     public function getRealInstance()
@@ -95,6 +106,7 @@ class Block extends Model
 
     /**
      * renders block
+     *
      * @param  BasePage|null $current_page
      * @return string
      */
@@ -105,6 +117,7 @@ class Block extends Model
 
     /**
      * checks if is code block
+     *
      * @return boolean
      */
     public function isCodeBlock()
@@ -114,6 +127,7 @@ class Block extends Model
 
     /**
      * gets block rewrite objects
+     *
      * @return array
      */
     public function getRewrites()
@@ -133,6 +147,7 @@ class Block extends Model
 
     /**
      * checks if block can be shown on specific rewrite
+     *
      * @param  Rewrite $rewrite
      * @return boolean
      */
@@ -140,11 +155,13 @@ class Block extends Model
     {
         $this->checkLoaded();
 
-        return (count($this->getRewrites()) == 0 || count(array_filter(
-            $this->getRewrites(),
-            function ($el) use ($rewrite) {
-                return ($el->getId() == $rewrite->getId()) ? true : false;
-            }
-        )) > 0);
+        return (count($this->getRewrites()) == 0 || count(
+            array_filter(
+                $this->getRewrites(),
+                function ($el) use ($rewrite) {
+                    return ($el->getId() == $rewrite->getId()) ? true : false;
+                }
+            )
+        ) > 0);
     }
 }

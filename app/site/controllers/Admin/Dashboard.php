@@ -19,11 +19,14 @@ use \App\Base\Abstracts\AdminPage;
  */
 class Dashboard extends AdminPage
 {
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -33,6 +36,7 @@ class Dashboard extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -42,6 +46,7 @@ class Dashboard extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()

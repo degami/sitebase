@@ -27,6 +27,7 @@ class NewsDetail extends FrontendPageWithObject
 {
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -36,6 +37,7 @@ class NewsDetail extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -45,6 +47,7 @@ class NewsDetail extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -66,6 +69,7 @@ class NewsDetail extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -77,6 +81,7 @@ class NewsDetail extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return [type] [description]
      */
     public static function getObjectClass()

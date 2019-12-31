@@ -15,6 +15,7 @@ use \App\Base\Abstracts\FrontendModelWithChildren;
 
 /**
  * Taxonomy Model
+ *
  * @method int getId()
  * @method string getTitle()
  * @method string getLocale()
@@ -29,11 +30,14 @@ use \App\Base\Abstracts\FrontendModelWithChildren;
  */
 class Taxonomy extends FrontendModelWithChildren
 {
-    /** @var array taxonomy pages */
+    /**
+     * @var array taxonomy pages
+     */
     protected $pages = [];
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getRewritePrefix()
@@ -43,6 +47,7 @@ class Taxonomy extends FrontendModelWithChildren
 
     /**
      * gets term pages
+     *
      * @return array
      */
     public function getPages()

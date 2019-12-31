@@ -20,6 +20,7 @@ trait ToolsTrait
 {
     /**
      * executes an http request
+     *
      * @param  string $url
      * @param  string $method
      * @param  array  $options
@@ -37,13 +38,16 @@ trait ToolsTrait
                     $request_uri .= '?'.$parsed['query'];
                 }
 
-                $client = $this->getContainer()->make(\GuzzleHttp\Client::class, [
+                $client = $this->getContainer()->make(
+                    \GuzzleHttp\Client::class,
+                    [
                     'base_uri' => $base_uri,
-                ]);
+                    ]
+                );
                 $request->request($method, $request_uri, $options);
 
-                 $response = $request->send();
-                 return $response->getBody();
+                $response = $request->send();
+                return $response->getBody();
             }
             return false;
         }
@@ -52,6 +56,7 @@ trait ToolsTrait
 
     /**
      * Take a string_like_this and return a StringLikeThis
+     *
      * @param  string
      * @return string
      */
@@ -62,6 +67,7 @@ trait ToolsTrait
 
     /**
      * Take a StringLikeThis and return string_like_this
+     *
      * @param  string
      * @return string
      */
@@ -77,6 +83,7 @@ trait ToolsTrait
 
     /**
      * slugify string
+     *
      * @param  string $text
      * @return string
      */
@@ -109,6 +116,7 @@ trait ToolsTrait
 
     /**
      * format byte size
+     *
      * @param  integer $size size in bytes
      * @return string       formatted size
      */

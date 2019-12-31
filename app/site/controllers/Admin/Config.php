@@ -23,6 +23,7 @@ class Config extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -32,6 +33,7 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -41,6 +43,7 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -50,6 +53,7 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -68,8 +72,9 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -80,10 +85,13 @@ class Config extends AdminManageModelsPage
             $configuration = $this->loadObject($this->getRequest()->get('config_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -107,39 +115,54 @@ class Config extends AdminManageModelsPage
                     $configuration_website = $configuration->website_id;
                     $configuration_locale = $configuration->locale;
                 }
-                $form->addField('path', [
+                $form->addField(
+                    'path',
+                    [
                     'type' => 'textfield',
                     'title' => 'Configuration Path',
                     'default_value' => $configuration_path,
                     'validate' => ['required'],
-                ])
-                ->addField('website_id', [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $configuration_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                ])
-                ->addField('locale', [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $configuration_locale,
-                    'options' => $languages,
-//                    'validate' => ['required'],
-                ])
-                ->addField('value', [
-                    'type' => 'textarea',
-                    'title' => 'Configuration Value',
-                    'default_value' => $configuration_value,
-                    'rows' => 3,
-//                    'validate' => ['required'],
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'website_id',
+                        [
+                        'type' => 'select',
+                        'title' => 'Website',
+                        'default_value' => $configuration_website,
+                        'options' => $websites,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'locale',
+                        [
+                        'type' => 'select',
+                        'title' => 'Locale',
+                        'default_value' => $configuration_locale,
+                        'options' => $languages,
+                        //                    'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'value',
+                        [
+                        'type' => 'textarea',
+                        'title' => 'Configuration Value',
+                        'default_value' => $configuration_value,
+                        'rows' => 3,
+                        //                    'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -152,8 +175,9 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -165,13 +189,16 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Configuration $configuration */
+        /**
+ * @var Configuration $configuration
+*/
         $configuration = $this->newEmptyObject();
         if ($this->getRequest()->get('config_id')) {
             $configuration = $this->loadObject($this->getRequest()->get('config_id'));
@@ -206,6 +233,7 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -223,13 +251,15 @@ class Config extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($config) {
-            return [
+        return array_map(
+            function ($config) {
+                return [
                 'ID' => $config->id,
                 'Website' => $config->getWebsiteId() == null ? $this->getUtils()->translate('All websites', $this->getCurrentLocale()) : $config->getWebsite()->domain,
                 'Locale' => $config->getLocale() == null ? $this->getUtils()->translate('All languages', $this->getCurrentLocale()) : $config->getLocale(),
@@ -238,7 +268,9 @@ class Config extends AdminManageModelsPage
                 'Is System' => $config->is_system ? $this->getUtils()->getIcon('check') : '&nbsp;',
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&config_id='. $config->id.'">'.$this->getUtils()->getIcon('edit') .'</a>'.
                 ((!$config->getIsSystem()) ? '<a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&config_id='. $config->id.'">'.$this->getUtils()->getIcon('trash') .'</a>' : '')
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

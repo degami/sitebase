@@ -15,7 +15,7 @@ final class Psysh extends Command
     private $shell;
 
     /**
-     * @param Shell $shell
+     * @param Shell  $shell
      * @param string $name
      */
     public function __construct($name = null)

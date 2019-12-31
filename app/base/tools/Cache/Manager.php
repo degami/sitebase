@@ -30,11 +30,14 @@ class Manager extends ContainerAwareObject implements CacheInterface
 {
     const CACHE_TAG = 'sitebase_cache';
 
-    /** @var ExtendedCacheItemPoolInterface internal cache instance */
+    /**
+     * @var ExtendedCacheItemPoolInterface internal cache instance
+     */
     protected $internalCacheInstance;
 
     /**
      * constructor
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -45,8 +48,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * retrieves element from cache
-     * @param string $key
-     * @param null $default
+     *
+     * @param  string $key
+     * @param  null   $default
      * @return mixed|null
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -70,6 +74,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * gets cache lifetime
+     *
      * @param  int|\DateInterval $ttl
      * @return int|\Dateinterval
      */
@@ -80,9 +85,10 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * saves element in cache
-     * @param string $key
-     * @param mixed $value
-     * @param null $ttl
+     *
+     * @param  string $key
+     * @param  mixed  $value
+     * @param  null   $ttl
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -112,7 +118,8 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * deletes cached element
-     * @param string $key
+     *
+     * @param  string $key
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -127,6 +134,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * clears cache
+     *
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -141,8 +149,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * get multiple elements from cache
-     * @param string[] $keys
-     * @param null $default
+     *
+     * @param  string[] $keys
+     * @param  null     $default
      * @return \iterable
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -152,9 +161,12 @@ class Manager extends ContainerAwareObject implements CacheInterface
             $keys = \iterator_to_array($keys);
         }
         try {
-            return array_map(function (ExtendedCacheItemInterface $item) {
-                return $item->get();
-            }, $this->internalCacheInstance->getItems($keys));
+            return array_map(
+                function (ExtendedCacheItemInterface $item) {
+                    return $item->get();
+                },
+                $this->internalCacheInstance->getItems($keys)
+            );
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
@@ -162,8 +174,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * sets multiple elements into cache
-     * @param string[] $values
-     * @param null|int|\DateInterval $ttl
+     *
+     * @param  string[]               $values
+     * @param  null|int|\DateInterval $ttl
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -191,7 +204,8 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * deletes multiple elements from cache
-     * @param string[] $keys
+     *
+     * @param  string[] $keys
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -212,7 +226,8 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * checks if element is present
-     * @param string $key
+     *
+     * @param  string $key
      * @return bool
      * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
@@ -237,6 +252,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * gets internal cache instance
+     *
      * @return \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface
      */
     public function getInternalCacheInstance(): ExtendedCacheItemPoolInterface
@@ -246,6 +262,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * get cache statistics
+     *
      * @return mixed
      */
     public function getStats()
@@ -255,8 +272,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * {@inheritdocs}
+     *
      * @param  string $name
-     * @param  mixed $arguments
+     * @param  mixed  $arguments
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -266,9 +284,10 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
     /**
      * get items by tag
+     *
      * @inheritdoc
-     * @param string $tagName
-     * @return array
+     * @param      string $tagName
+     * @return     array
      */
     public function getAllItemsByTag($tagName): array
     {

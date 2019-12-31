@@ -36,6 +36,7 @@ class Globals extends ContainerAwareObject
 {
     /**
      * gets available block regions
+     *
      * @return array
      */
     public function getBlockRegions()
@@ -62,6 +63,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * gets all blocks for current locale
+     *
      * @param  string $locale
      * @return array
      */
@@ -70,7 +72,7 @@ class Globals extends ContainerAwareObject
         static $pageBlocks = null;
 
         if (is_null($pageBlocks)) {
-            $website_id = $this->getSiteData()->getCurrentWebsite();
+            $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
             $pageBlocks = [];
             foreach ($this->getDb()->table('block')->where(['locale' => [$locale, null], 'website_id' =>[$website_id, null]])->orderBy('order')->fetchAll() as $row) {
@@ -88,6 +90,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * gets websites options for selects
+     *
      * @return array
      */
     public function getWebsitesSelectOptions()
@@ -101,6 +104,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * gets site languages options for selects
+     *
      * @param  integer $website_id
      * @return array
      */
@@ -112,16 +116,23 @@ class Globals extends ContainerAwareObject
             $langsDB[$l->locale] = $l;
         }
 
-        return array_combine($languages, array_map(function ($el) use ($langsDB) {
-            $lang = isset($langsDB[$el]) ? $langsDB[$el] : null;
-            return $lang ? "{$lang->native}" : $el;
-        }, $languages));
+        return array_combine(
+            $languages,
+            array_map(
+                function ($el) use ($langsDB) {
+                    $lang = isset($langsDB[$el]) ? $langsDB[$el] : null;
+                    return $lang ? "{$lang->native}" : $el;
+                },
+                $languages
+            )
+        );
     }
 
     /**
      * return an error page
+     *
      * @param  integer $error_code
-     * @param  array  $template_data
+     * @param  array   $template_data
      * @return Response
      */
     public function errorPage($error_code, $template_data = [])
@@ -151,6 +162,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * returns a exception error page
+     *
      * @param  \Exception $exception
      * @return Response
      */
@@ -172,6 +184,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * returns an exception error json
+     *
      * @param  \Exception $exception
      * @return Response
      */
@@ -199,6 +212,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * returns a "site is offline" error page
+     *
      * @return Response
      */
     public function offlinePage()
@@ -218,9 +232,10 @@ class Globals extends ContainerAwareObject
 
     /**
      * returns site menu
-     * @param  string $menu_name
-     * @param  integer $website_id
-     * @param  string $locale
+     *
+     * @param  string    $menu_name
+     * @param  integer   $website_id
+     * @param  string    $locale
      * @param  Menu|null $menu_element
      * @return array
      */
@@ -239,17 +254,23 @@ class Globals extends ContainerAwareObject
             }
         } else {
             $query = $this->getDb()->table('menu')->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]]);
-            $out = array_map(function ($el) use ($menu_name, $website_id, $locale) {
-                /** @var Menu $menu_model */
-                $menu_model = $this->getContainer()->make(Menu::class, ['dbrow' => $el]);
-                return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
-            }, $query->fetchAll());
+            $out = array_map(
+                function ($el) use ($menu_name, $website_id, $locale) {
+                    /**
+                * @var Menu $menu_model
+                */
+                    $menu_model = $this->getContainer()->make(Menu::class, ['dbrow' => $el]);
+                    return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
+                },
+                $query->fetchAll()
+            );
         }
         return $out;
     }
 
     /**
      * logs an exception
+     *
      * @param  Exception $e
      * @param  string    $prefix
      * @param  boolean   $with_request
@@ -270,6 +291,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * gets an icon
+     *
      * @param  string $icon_name
      * @return string
      */
@@ -280,6 +302,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * executes an http request
+     *
      * @param  string $url
      * @param  string $method
      * @param  array  $options
@@ -301,6 +324,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * translates a string
+     *
      * @param  string $string
      * @param  string $locale
      * @return string
@@ -315,6 +339,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * checks password
+     *
      * @param  string $pass
      * @param  string $encoded_pass
      * @return boolean
@@ -327,6 +352,7 @@ class Globals extends ContainerAwareObject
 
     /**
      * gets encoded version of password
+     *
      * @param  string $pass
      * @return string
      */
@@ -337,8 +363,9 @@ class Globals extends ContainerAwareObject
 
     /**
      * adds message to queue
+     *
      * @param string $queue_name
-     * @param mixed $data
+     * @param mixed  $data
      */
     public function addQueueMessage($queue_name, $data)
     {
@@ -346,7 +373,7 @@ class Globals extends ContainerAwareObject
         $message->setQueueName($queue_name);
         $message->setMessage(json_encode($data));
         $message->setStatus(QueueMessage::STATUS_PENDING);
-        $message->setWebsiteId($this->getSiteData()->getCurrentWebsite());
+        $message->setWebsiteId($this->getSiteData()->getCurrentWebsiteId());
         $message->persist();
         return $message;
     }

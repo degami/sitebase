@@ -25,6 +25,7 @@ abstract class BaseJsonPage extends BasePage
 {
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -35,6 +36,7 @@ abstract class BaseJsonPage extends BasePage
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -47,9 +49,9 @@ abstract class BaseJsonPage extends BasePage
         }
         try {
             return $this
-                    ->getResponse()
-                    ->prepare($this->getRequest())
-                    ->setData(array_merge(['success' => true,], $this->getJsonData()));
+                ->getResponse()
+                ->prepare($this->getRequest())
+                ->setData(array_merge(['success' => true,], $this->getJsonData()));
         } catch (Exception $e) {
             return $this->getUtils()->exceptionJson($e);
         }
@@ -57,6 +59,7 @@ abstract class BaseJsonPage extends BasePage
 
     /**
      * gets JSON data
+     *
      * @return mixed
      */
     abstract protected function getJsonData();

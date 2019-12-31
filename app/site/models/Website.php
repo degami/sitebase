@@ -15,10 +15,16 @@ use \App\Base\Abstracts\Model;
 
 /**
  * Website Model
+ *
  * @method string getSiteName()
  * @method string getDomain()
+ * @method string getAliases()
  * @method integer getDefaultLocale()
  */
 class Website extends Model
 {
+    public function prePersist()
+    {
+        $this->aliases = implode(",", array_filter(array_map('trim', explode(",", $this->aliases))));
+    }
 }

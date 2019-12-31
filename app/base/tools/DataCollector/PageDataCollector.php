@@ -21,11 +21,14 @@ use \App\Base\Abstracts\BasePage;
  */
 class PageDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    /** @var BasePage subject object */
+    /**
+     * @var BasePage subject object
+     */
     protected $subject;
 
     /**
      * constructor
+     *
      * @param BasePage $page
      */
     public function __construct(BasePage $page = null)
@@ -35,6 +38,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
 
     /**
      * collects data
+     *
      * @return array
      */
     public function collect()
@@ -44,6 +48,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
 
     /**
      * gets tab name
+     *
      * @return string
      */
     public function getName()
@@ -53,6 +58,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
 
     /**
      * gets tab widget
+     *
      * @return array
      */
     public function getWidgets()
@@ -70,13 +76,14 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
 
     /**
      * gets assets
+     *
      * @return array
      */
     public function getAssets()
     {
         return [
-//            'css' => '',
-//            'js' => ''
+        //            'css' => '',
+        //            'js' => ''
         ];
     }
 }

@@ -26,17 +26,24 @@ use \App\Site\Models\GuestUser;
  */
 abstract class BasePage extends ContainerAwareObject
 {
-    /** @var Request request object */
+    /**
+     * @var Request request object
+     */
     protected $request;
 
-    /** @var Response response object */
+    /**
+     * @var Response response object
+     */
     protected $response;
 
-    /** @var RouteInfo route info object */
+    /**
+     * @var RouteInfo route info object
+     */
     protected $route_info = null;
 
     /**
      * class constructor
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -44,14 +51,18 @@ abstract class BasePage extends ContainerAwareObject
         parent::__construct($container);
         $this->request = Request::createFromGlobals();
         // dispatch "before_send" event
-        $this->getApp()->event('request_created', [
+        $this->getApp()->event(
+            'request_created',
+            [
             'request' => $this->request
-        ]);
+            ]
+        );
         $this->response = $this->getContainer()->make(Response::class);
     }
 
     /**
      * gets current user
+     *
      * @return \App\Site\Model\User|\App\Site\Model\GuestUser
      */
     public function getCurrentUser()
@@ -65,6 +76,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * checks if user is logged in
+     *
      * @return boolean
      */
     public function hasLoggedUser()
@@ -74,6 +86,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * controller entrypoint
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response|self
@@ -92,6 +105,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * checks if current user has specified permission
+     *
      * @param  string $permission_name
      * @return boolean
      */
@@ -108,6 +122,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * before render hook
+     *
      * @return Response|self
      */
     protected function beforeRender()
@@ -171,6 +186,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * gets url by route_name and params
+     *
      * @param  string $route_name
      * @param  array  $route_params
      * @return string
@@ -182,6 +198,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * gets current route name
+     *
      * @return string
      */
     public function getRouteName()
@@ -193,6 +210,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * gets current controller url
+     *
      * @return string
      */
     public function getControllerUrl()
@@ -217,6 +235,7 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * specifies if this controller is eligible for full page cache
+     *
      * @return boolean
      */
     public function canBeFPC()
@@ -226,13 +245,18 @@ abstract class BasePage extends ContainerAwareObject
 
     /**
      * returns a redirect object
+     *
      * @param  string $url
      * @return RedirectResponse
      */
     protected function doRedirect($url)
     {
-        return RedirectResponse::create($url, 302, [
+        return RedirectResponse::create(
+            $url,
+            302,
+            [
             "Set-Cookie" => $this->getResponse()->headers->get("Set-Cookie")
-        ]);
+            ]
+        );
     }
 }

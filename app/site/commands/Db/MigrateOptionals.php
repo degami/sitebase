@@ -24,6 +24,7 @@ class MigrateOptionals extends Migrate
 {
     /**
      * {@inheritdocs}
+     *
      * @param string                  $name
      * @param ContainerInterface|null $container
      */

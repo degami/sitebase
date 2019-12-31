@@ -17,6 +17,7 @@ use \Degami\PHPFormsApi as FAPI;
 
 /**
  * Contact Form Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getTitle()
@@ -37,6 +38,7 @@ class Contact extends FrontendModel
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getRewritePrefix()
@@ -46,32 +48,41 @@ class Contact extends FrontendModel
 
     /**
      * gets contact form definition
+     *
      * @return array
      */
     public function getContactDefinition()
     {
         $this->checkLoaded();
 
-        return array_map(function ($el) {
-            return $el->getData();
-        }, $this->getDb()->table('contact_definition')->where(['contact_id' => $this->id])->fetchAll());
+        return array_map(
+            function ($el) {
+                return $el->getData();
+            },
+            $this->getDb()->table('contact_definition')->where(['contact_id' => $this->id])->fetchAll()
+        );
     }
 
     /**
      * gets contact form submissions
+     *
      * @return array
      */
     public function getContactSubmissions()
     {
         $this->checkLoaded();
 
-        return array_map(function ($el) {
-            return $el['id'];
-        }, $this->getDb()->query('SELECT * FROM contact_submission WHERE contact_id = '.$this->id.'')->fetchAll());
+        return array_map(
+            function ($el) {
+                return $el['id'];
+            },
+            $this->getDb()->query('SELECT * FROM contact_submission WHERE contact_id = '.$this->id.'')->fetchAll()
+        );
     }
 
     /**
      * gets contact form specific submission
+     *
      * @param  integer $submission_id
      * @return array
      */
@@ -79,15 +90,19 @@ class Contact extends FrontendModel
     {
         $this->checkLoaded();
 
-        return array_map(function ($el) {
-            return $el->getData();
-        }, $this->getDb()->table('contact_definition')->where(['contact_id' => $this->id, 'contact_submission_id' => $submission_id])->fetchAll());
+        return array_map(
+            function ($el) {
+                return $el->getData();
+            },
+            $this->getDb()->table('contact_definition')->where(['contact_id' => $this->id, 'contact_submission_id' => $submission_id])->fetchAll()
+        );
     }
 
     /**
      * fills form with elements
+     *
      * @param  FAPI\Abstracts\App\Base\Element $container
-     * @param  array &$form_state
+     * @param  array                           &$form_state
      * @return FAPI\Abstracts\App\Base\Element
      */
     public function getFormDefinition(/*FAPI\Abstracts\App\Base\Element*/ $container, &$form_state)
@@ -108,6 +123,7 @@ class Contact extends FrontendModel
 
     /**
      * {@inheritdocs}
+     *
      * @return self
      */
     public function preRemove()

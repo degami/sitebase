@@ -22,6 +22,7 @@ class Index extends AdminPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -31,6 +32,7 @@ class Index extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -40,6 +42,7 @@ class Index extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -49,6 +52,7 @@ class Index extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response

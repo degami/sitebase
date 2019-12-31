@@ -22,6 +22,7 @@ class InitialDataMigration extends Migration
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getName()
@@ -31,6 +32,7 @@ class InitialDataMigration extends Migration
 
     /**
      * {@inheritdocs}
+     *
      * @return void
      */
     public function up()
@@ -46,7 +48,8 @@ class InitialDataMigration extends Migration
 
     /**
      * adds website model
-     * @return  Website
+     *
+     * @return Website
      */
     private function addWebsite()
     {
@@ -62,7 +65,8 @@ class InitialDataMigration extends Migration
 
     /**
      * adds admin user model
-     * @return  User
+     *
+     * @return User
      */
     private function addAdmin()
     {
@@ -81,8 +85,9 @@ class InitialDataMigration extends Migration
 
     /**
      * adds permission to role
-     * @param Role $role_model
-     * @param string $permission_name
+     *
+     * @param  Role   $role_model
+     * @param  string $permission_name
      * @return RolePermission
      */
     private function addPermission($role_model, $permission_name)
@@ -174,8 +179,9 @@ class InitialDataMigration extends Migration
 
     /**
      * adds homepage model
-     * @param Website $website_model
-     * @param User $owner_model
+     *
+     * @param  Website $website_model
+     * @param  User    $owner_model
      * @return Page
      */
     private function addHomePage($website_model, $owner_model)
@@ -195,8 +201,9 @@ class InitialDataMigration extends Migration
 
     /**
      * adds configuration variables
+     *
      * @param Website $website_model
-     * @param Page $homePage
+     * @param Page    $homePage
      */
     private function addVariables($website_model, $homePage)
     {
@@ -221,6 +228,7 @@ class InitialDataMigration extends Migration
 
     /**
      * {@inheritdocs}
+     *
      * @return void
      */
     public function down()

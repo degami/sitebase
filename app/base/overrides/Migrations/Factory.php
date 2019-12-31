@@ -21,16 +21,21 @@ use \InvalidArgumentException;
  */
 class Factory extends GenkgoMigrationFactory
 {
-    /** @var AdapterInterface adapter */
+    /**
+     * @var AdapterInterface adapter
+     */
     private $adapter;
 
-    /** @var Closure class loader */
+    /**
+     * @var Closure class loader
+     */
     private $classLoader;
 
     /**
      * constructor
+     *
      * @param AdapterInterface $adapter
-     * @param Closure $classLoader
+     * @param Closure          $classLoader
      */
     public function __construct(AdapterInterface $adapter, Closure $classLoader = null)
     {
@@ -40,7 +45,8 @@ class Factory extends GenkgoMigrationFactory
 
     /**
      * gets a new collection
-     * @param string $namespace
+     *
+     * @param  string $namespace
      * @return Collection
      */
     public function newList($namespace = '\\')

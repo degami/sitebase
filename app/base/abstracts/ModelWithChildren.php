@@ -14,8 +14,8 @@ namespace App\Base\Abstracts;
 use \App\Base\Traits\WithChildrenTrait;
 
 /**
-* A model with children
-*/
+ * A model with children
+ */
 abstract class ModelWithChildren extends Model
 {
     use WithChildrenTrait;

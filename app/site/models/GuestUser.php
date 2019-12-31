@@ -20,6 +20,7 @@ use \Exception;
 
 /**
  * Guest User Model
+ *
  * @method int getId()
  * @method string getUsername()
  * @method string getPassword()
@@ -33,26 +34,39 @@ class GuestUser extends ContainerAwareObject
 {
     const ROLE_ID = 1;
 
-    /** @var Role user role */
+    /**
+     * @var Role user role
+     */
     protected $roleObj = null;
 
-    /** @var integer user id */
+    /**
+     * @var integer user id
+     */
     public $id = 0;
 
-    /** @var null username */
+    /**
+     * @var null username
+     */
     public $username = null;
 
-    /** @var null nickname */
+    /**
+     * @var null nickname
+     */
     public $nickname = null;
 
-    /** @var null email */
+    /**
+     * @var null email
+     */
     public $email = null;
 
-    /** @var array permissions */
+    /**
+     * @var array permissions
+     */
     public $permissions = [];
 
     /**
      * class constructor
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -60,13 +74,17 @@ class GuestUser extends ContainerAwareObject
         parent::__construct($container);
 
         /* @todo chek if it is possible to store data to a jwt token */
-        $this->permissions = array_map(function ($el) {
-            return $el->name;
-        }, $this->getRole()->getPermissionsArray());
+        $this->permissions = array_map(
+            function ($el) {
+                return $el->name;
+            },
+            $this->getRole()->getPermissionsArray()
+        );
     }
 
     /**
      * checks if user has permission
+     *
      * @param  string $permission_name
      * @return boolean
      */
@@ -77,6 +95,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user role
+     *
      * @return Role
      */
     public function getRole()
@@ -90,6 +109,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user id
+     *
      * @return integer
      */
     public function getId()
@@ -99,6 +119,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets username
+     *
      * @return null
      */
     public function getUsername()
@@ -108,6 +129,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user password
+     *
      * @return null
      */
     public function getPassword()
@@ -117,6 +139,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user role id
+     *
      * @return integer
      */
     public function getRoleId()
@@ -126,6 +149,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user email
+     *
      * @return null
      */
     public function getEmail()
@@ -135,6 +159,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user nickname
+     *
      * @return null
      */
     public function getNickname()
@@ -144,6 +169,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user creation date
+     *
      * @return \DateTime
      */
     public function getCreatedAt()
@@ -153,6 +179,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user last update time
+     *
      * @return \DateTime
      */
     public function getUpdatedAt()
@@ -162,6 +189,7 @@ class GuestUser extends ContainerAwareObject
 
     /**
      * gets user locale
+     *
      * @return string
      */
     public function getLocale()

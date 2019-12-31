@@ -16,6 +16,7 @@ use \App\Base\Traits\WithWebsiteTrait;
 
 /**
  * Configuration Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getPath()

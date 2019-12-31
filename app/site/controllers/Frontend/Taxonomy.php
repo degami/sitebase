@@ -26,6 +26,7 @@ class Taxonomy extends FrontendPageWithObject
 {
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -35,6 +36,7 @@ class Taxonomy extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -50,6 +52,7 @@ class Taxonomy extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -71,6 +74,7 @@ class Taxonomy extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -82,6 +86,7 @@ class Taxonomy extends FrontendPageWithObject
 
     /**
      * {@inheritdocs}
+     *
      * @return [type] [description]
      */
     public static function getObjectClass()

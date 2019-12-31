@@ -36,19 +36,19 @@ class Dump extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         MySql::create()
             ->setDbName($this->getContainer()->get('dbname'))
             ->setUserName($this->getContainer()->get('dbuser'))
             ->setPassword($this->getContainer()->get('dbpass'))
-//            ->useSingleTransaction()
-//            ->skipLockTables()
+        //            ->useSingleTransaction()
+        //            ->skipLockTables()
             ->useCompressor(new GzipCompressor())
             ->dumpToFile(App::getDir(App::DUMPS).DS.'dump.'.date("Ymd_His").'.sql.gz');
     }

@@ -36,15 +36,18 @@ class Delete extends Command
     protected function configure()
     {
         $this->setDescription('Delete config')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

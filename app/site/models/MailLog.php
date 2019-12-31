@@ -15,6 +15,7 @@ use \App\Base\Abstracts\Model;
 
 /**
  * Mail Log Model
+ *
  * @method int getId()
  * @method string getFrom()
  * @method string getTo()

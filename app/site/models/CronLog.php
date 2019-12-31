@@ -15,6 +15,7 @@ use \App\Base\Abstracts\Model;
 
 /**
  * Cron Log Model
+ *
  * @method int getId()
  * @method string getRunTime()
  * @method int getDuration()

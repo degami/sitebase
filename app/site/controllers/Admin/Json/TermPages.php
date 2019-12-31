@@ -25,6 +25,7 @@ class TermPages extends AdminJsonPage
 {
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -34,6 +35,7 @@ class TermPages extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -43,6 +45,7 @@ class TermPages extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getJsonData()
@@ -50,16 +53,22 @@ class TermPages extends AdminJsonPage
         $route_data = $this->getRouteInfo()->getVars();
         $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $route_data['id']]);
 
-        $pages = array_map(function ($el) use ($term) {
-            $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-            return $page->getTitle().
+        $pages = array_map(
+            function ($el) use ($term) {
+                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                return $page->getTitle().
                 ' <a class="deassoc_lnk" data-page_id="'.$page->id.'" data-term_id="'.$el->id.'" href="'.$this->getUrl('admin.json.termpages', ['id' => $term->id]).'?page_id='.$page->id.'&term_id='.$el->id.'&action=term_deassoc">&times;</a>';
-        }, $this->getDb()->page_taxonomyList()->where('taxonomy_id', $term->getId())->page()->fetchAll());
+            },
+            $this->getDb()->page_taxonomyList()->where('taxonomy_id', $term->getId())->page()->fetchAll()
+        );
 
-        $pagesData = array_map(function ($el) {
-            $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-            return $el->getData();
-        }, $this->getDb()->page_taxonomyList()->where('taxonomy_id', $term->getId())->page()->fetchAll());
+        $pagesData = array_map(
+            function ($el) {
+                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                return $el->getData();
+            },
+            $this->getDb()->page_taxonomyList()->where('taxonomy_id', $term->getId())->page()->fetchAll()
+        );
 
 
         if ($this->getRequest()->get('action') == 'term_deassoc') {
@@ -67,19 +76,25 @@ class TermPages extends AdminJsonPage
             $form = $pagesController->getForm();
 
             $form->setAction($this->getUrl('admin.pages').'?action='.$this->getRequest()->get('action'));
-            $form->addField('term_id', [
+            $form->addField(
+                'term_id',
+                [
                 'type' => 'hidden',
                 'default_value' => $term->getId(),
-            ]);
+                ]
+            );
         } else {
             $taxonomyController = $this->getContainer()->make(\App\Site\Controllers\Admin\Taxonomy::class);
             $form = $taxonomyController->getForm();
 
             $form->setAction($this->getUrl('admin.taxonomy').'?action='.$this->getRequest()->get('action'));
-            $form->addField('term_id', [
+            $form->addField(
+                'term_id',
+                [
                 'type' => 'hidden',
                 'default_value' => $term->getId(),
-            ]);
+                ]
+            );
         }
 
         return [

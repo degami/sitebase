@@ -26,6 +26,7 @@ abstract class BaseCodeBlock extends ContainerAwareObject
     
     /**
      * gets block html
+     *
      * @param  BasePage $current_page
      * @return string
      */

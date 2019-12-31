@@ -21,14 +21,19 @@ use \Exception;
  */
 abstract class FrontendPageWithObject extends FrontendPage
 {
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
-    /** @var RouteInfo route info object */
+    /**
+     * @var RouteInfo route info object
+     */
     protected $route_info = null;
 
     /**
      * gets route group
+     *
      * @return string
      */
     public static function getRouteGroup()
@@ -38,6 +43,7 @@ abstract class FrontendPageWithObject extends FrontendPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -61,6 +67,7 @@ abstract class FrontendPageWithObject extends FrontendPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getCurrentLocale()
@@ -76,6 +83,7 @@ abstract class FrontendPageWithObject extends FrontendPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -85,6 +93,7 @@ abstract class FrontendPageWithObject extends FrontendPage
 
     /**
      * sets object to show
+     *
      * @param Model $object
      */
     protected function setObject(Model $object)
@@ -95,6 +104,7 @@ abstract class FrontendPageWithObject extends FrontendPage
 
     /**
      * gets object to show
+     *
      * @return Model|null
      */
     protected function getObject()
@@ -104,17 +114,22 @@ abstract class FrontendPageWithObject extends FrontendPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     public function getTranslations()
     {
-        return array_map(function ($el) {
-            return $this->getRouting()->getBaseUrl() . $el;
-        }, $this->getContainer()->call([$this->getObject(), 'getTranslations']));
+        return array_map(
+            function ($el) {
+                return $this->getRouting()->getBaseUrl() . $el;
+            },
+            $this->getContainer()->call([$this->getObject(), 'getTranslations'])
+        );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @return boolean
      */
     public function canBeFPC()
@@ -124,6 +139,7 @@ abstract class FrontendPageWithObject extends FrontendPage
 
     /**
      * gets object class name for loading
+     *
      * @return string
      */
     abstract public static function getObjectClass();

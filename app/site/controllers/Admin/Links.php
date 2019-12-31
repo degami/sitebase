@@ -26,6 +26,7 @@ class Links extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -35,6 +36,7 @@ class Links extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -44,6 +46,7 @@ class Links extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -53,8 +56,9 @@ class Links extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -65,10 +69,13 @@ class Links extends AdminManageModelsPage
             $link = $this->loadObject($this->getRequest()->get('link_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -80,6 +87,7 @@ class Links extends AdminManageModelsPage
                     'btn btn-sm btn-light inToolSidePanel'
                 );
                 // intentional fall-trough
+                // no break
             case 'new':
                 $this->addBackButton();
 
@@ -102,62 +110,86 @@ class Links extends AdminManageModelsPage
                     $link_website = $link->website_id;
                     $link_active = $link->active;
                 }
-                $form->addField('url', [
+                $form->addField(
+                    'url',
+                    [
                     'type' => 'textfield',
                     'title' => 'Link url',
                     'default_value' => $link_url,
                     'validate' => ['required'],
-                ])
-                ->addField('title', [
-                    'type' => 'textfield',
-                    'title' => 'Title',
-                    'default_value' => $link_title,
-                    'validate' => ['required'],
-                ])
-                ->addField('website_id', [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $link_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                ])
-                ->addField('locale', [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $link_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                ])
-                ->addField('email', [
-                    'type' => 'textfield',
-                    'title' => 'Email',
-                    'default_value' => $link_email,
-                ])
-                ->addField('description', [
-                    'type' => 'tinymce',
-                    'title' => 'Description',
-                    'tinymce_options' => [
-                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                    ],
-                    'default_value' => $link_description,
-                    'rows' => 20,
-                ])
-                ->addField('active', [
-                    'type' => 'switchbox',
-                    'title' => 'Active',
-                    'default_value' => boolval($link_active) ? 1 : 0,
-                    'yes_value' => 1,
-                    'yes_label' => 'Yes',
-                    'no_value' => 0,
-                    'no_label' => 'No',
-                    'field_class' => 'switchbox',
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                        ]
+                )
+                    ->addField(
+                        'title',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Title',
+                        'default_value' => $link_title,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'website_id',
+                        [
+                        'type' => 'select',
+                        'title' => 'Website',
+                        'default_value' => $link_website,
+                        'options' => $websites,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'locale',
+                        [
+                        'type' => 'select',
+                        'title' => 'Locale',
+                        'default_value' => $link_locale,
+                        'options' => $languages,
+                        'validate' => ['required'],
+                        ]
+                    )
+                        ->addField(
+                            'email',
+                            [
+                            'type' => 'textfield',
+                            'title' => 'Email',
+                            'default_value' => $link_email,
+                            ]
+                        )
+                        ->addField(
+                            'description',
+                            [
+                            'type' => 'tinymce',
+                            'title' => 'Description',
+                            'tinymce_options' => [
+                            'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                            ],
+                            'default_value' => $link_description,
+                            'rows' => 20,
+                            ]
+                        )
+                        ->addField(
+                            'active',
+                            [
+                            'type' => 'switchbox',
+                            'title' => 'Active',
+                            'default_value' => boolval($link_active) ? 1 : 0,
+                            'yes_value' => 1,
+                            'yes_label' => 'Yes',
+                            'no_value' => 0,
+                            'no_label' => 'No',
+                            'field_class' => 'switchbox',
+                            ]
+                        )
+                        ->addField(
+                            'button',
+                            [
+                            'type' => 'submit',
+                            'value' => 'ok',
+                            'container_class' => 'form-item mt-3',
+                            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                            ]
+                        );
                 break;
 
             case 'delete':
@@ -166,27 +198,39 @@ class Links extends AdminManageModelsPage
 
             case 'term_deassoc':
                 $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
-                $form->addField('link_id', [
+                $form->addField(
+                    'link_id',
+                    [
                     'type' => 'hidden',
                     'default_value' => $link->id,
-                ])
-                ->addField('taxonomy_id', [
-                    'type' => 'hidden',
-                    'default_value' => $term->id,
-                ])
-                ->addField('confirm', [
-                    'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the "'.$link->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
-                    'suffix' => '<br /><br />',
-                ])
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termlinks', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
-                ->addField('button', [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'taxonomy_id',
+                        [
+                        'type' => 'hidden',
+                        'default_value' => $term->id,
+                        ]
+                    )
+                    ->addField(
+                        'confirm',
+                        [
+                        'type' => 'markup',
+                        'value' => 'Do you confirm the disassociation of the "'.$link->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
+                        'suffix' => '<br /><br />',
+                        ]
+                    )
+                    ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termlinks', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'container_tag' => null,
+                        'prefix' => '&nbsp;',
+                        'value' => 'Ok',
+                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
+                        ]
+                    );
 
                 break;
         }
@@ -196,8 +240,9 @@ class Links extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -209,13 +254,16 @@ class Links extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Page $link */
+        /**
+ * @var Page $link
+*/
         $link = $this->newEmptyObject();
         if ($this->getRequest()->get('link_id')) {
             $link = $this->loadObject($this->getRequest()->get('link_id'));
@@ -226,6 +274,7 @@ class Links extends AdminManageModelsPage
             case 'new':
                 $link->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
+                // no break
             case 'edit':
                 $link->url = $values['url'];
                 $link->title = $values['title'];
@@ -257,6 +306,7 @@ class Links extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -274,13 +324,15 @@ class Links extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($link) {
-            return [
+        return array_map(
+            function ($link) {
+                return [
                 'ID' => $link->id,
                 'Website' => $link->getWebsiteId() == null ? 'All websites' : $link->getWebsite()->domain,
                 'URL' => $link->url,
@@ -289,7 +341,9 @@ class Links extends AdminManageModelsPage
                 'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', $this->getCurrentLocale()),
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&link_id='. $link->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&link_id='. $link->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

@@ -19,11 +19,14 @@ use \App\Site\Models\QueueMessage;
  */
 abstract class BaseQueueWorker extends ContainerAwareObject
 {
-    /** @var QueueMessage message to work */
+    /**
+     * @var QueueMessage message to work
+     */
     private $message;
 
     /**
      * process message
+     *
      * @param  QueueMessage $message
      * @return mixed
      */
@@ -37,6 +40,7 @@ abstract class BaseQueueWorker extends ContainerAwareObject
 
     /**
      * gets message
+     *
      * @return QueueMessage
      */
     public function getMessage()
@@ -46,7 +50,8 @@ abstract class BaseQueueWorker extends ContainerAwareObject
 
     /**
      * set message
-     * @param QueueMessage $message
+     *
+     * @param  QueueMessage $message
      * @return self
      */
     public function setMessage(QueueMessage $message)
@@ -58,6 +63,7 @@ abstract class BaseQueueWorker extends ContainerAwareObject
 
     /**
      * do message work phase
+     *
      * @param  QueueMessage $message_data
      * @return mixed
      */

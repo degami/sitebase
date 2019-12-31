@@ -16,6 +16,7 @@ use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * News Model
+ *
  * @method int getWebsiteId()
  * @method string getUrl()
  * @method string getLocale()
@@ -32,6 +33,7 @@ class News extends FrontendModel
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getRewritePrefix()

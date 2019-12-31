@@ -15,6 +15,7 @@ use \App\Base\Abstracts\Model;
 
 /**
  * Permission Model
+ *
  * @method int getId()
  * @method string getName()
  * @method \DateTime getCreatedAt()

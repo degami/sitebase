@@ -33,6 +33,7 @@ class Deploy extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -42,10 +43,11 @@ class Deploy extends Command
         system("npm install && gulp");
 
         $symlinks = [
-            App::getDir('root').DS.'vendor' => App::getDir('pub').DS.'vendor',
+            App::getDir('root').DS.'vendor'.DS.'maximebf'.DS.'debugbar'.DS.'src'.DS.'DebugBar'.DS.'Resources' => App::getDir('pub').DS.'debugbar',
             App::getDir('root').DS.'vendor'.DS.'components'.DS.'bootstrap' => App::getDir('pub').DS.'bootstrap',
             App::getDir('root').DS.'vendor'.DS.'components'.DS.'jqueryui' => App::getDir('pub').DS.'jqueryui',
             App::getDir('root').DS.'vendor'.DS.'components'.DS.'jquery' => App::getDir('pub').DS.'jquery',
+            App::getDir('root').DS.'vendor'.DS.'tinymce'.DS.'tinymce' => App::getDir('pub').DS.'tinymce',
             App::getDir('flags') => App::getDir('pub').DS.'flags',
             App::getDir('assets').DS.'sitebase_logo.png' => App::getDir('pub').DS.'sitebase_logo.png',
             App::getDir('assets').DS.'favicon.ico' => App::getDir('pub').DS.'favicon.ico',

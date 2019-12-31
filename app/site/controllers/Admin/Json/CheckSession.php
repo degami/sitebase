@@ -23,6 +23,7 @@ class CheckSession extends AdminJsonPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -32,6 +33,7 @@ class CheckSession extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getJsonData()

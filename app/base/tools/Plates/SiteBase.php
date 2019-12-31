@@ -22,14 +22,19 @@ use \Psr\Container\ContainerInterface;
  */
 class SiteBase implements ExtensionInterface
 {
-    /** @var Engine templates engine */
+    /**
+     * @var Engine templates engine
+     */
     protected $engine;
 
-    /** @var ContainerInterface container */
+    /**
+     * @var ContainerInterface container
+     */
     protected $container;
 
     /**
      * constructor
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -39,6 +44,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * {@inheritdocs}
+     *
      * @param  Engine $engine [description]
      * @return void
      */
@@ -46,15 +52,16 @@ class SiteBase implements ExtensionInterface
     {
         $this->engine = $engine;
 
-//        foreach (get_class_methods(static::class) as $methodName) {
-//            $engine->registerFunction($methodName, [$this, $methodName]);
-//        }
+        //        foreach (get_class_methods(static::class) as $methodName) {
+        //            $engine->registerFunction($methodName, [$this, $methodName]);
+        //        }
 
         $engine->registerFunction('sitebase', [$this, 'getObject']);
     }
 
     /**
      * gets helper object
+     *
      * @return self
      */
     public function getObject()
@@ -64,6 +71,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets current locale
+     *
      * @return string
      */
     public function getCurrentLocale()
@@ -73,6 +81,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * render block for region
+     *
      * @param  string   $region
      * @param  BasePage $controller
      * @return string
@@ -84,6 +93,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets string translations
+     *
      * @param  string $string
      * @return string
      */
@@ -94,6 +104,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * return debugger object
+     *
      * @return \DebugBar\StandardDebugBar
      */
     public function getDebugbar()
@@ -103,6 +114,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets asset url
+     *
      * @param  string $asset_path
      * @return string
      */
@@ -113,6 +125,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets route url by name and params
+     *
      * @param  string $route_name
      * @param  array  $route_params
      * @return string
@@ -124,6 +137,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets assets manager object
+     *
      * @return \App\Base\Tools\Assets\Manager
      */
     protected function getAssets()
@@ -133,6 +147,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets html parts renderer
+     *
      * @return \App\Base\Tools\Utils\HtmlPartsRenderer
      */
     protected function getHtmlRenderer()
@@ -142,6 +157,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets app object
+     *
      * @return \App\App
      */
     protected function getApp()
@@ -151,6 +167,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets gravatar html
+     *
      * @param  string  $email
      * @param  integer $s
      * @param  string  $d
@@ -165,6 +182,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * draws icon
+     *
      * @param  string $icon_name
      * @return void
      */
@@ -175,6 +193,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets env variable
+     *
      * @param  string $variable
      * @return mixed
      */
@@ -185,6 +204,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * gets app version
+     *
      * @return string
      */
     public function version()
@@ -195,6 +215,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * draws flash messages
+     *
      * @param  BasePage $controller
      * @return void
      */
@@ -205,6 +226,7 @@ class SiteBase implements ExtensionInterface
 
     /**
      * summarize text
+     *
      * @param  string  $text
      * @param  integer $max_words
      * @return string

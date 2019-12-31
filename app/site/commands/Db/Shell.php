@@ -35,6 +35,7 @@ class Shell extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -84,8 +85,8 @@ class Shell extends Command
                                 break;
                             default:
                                 if ($statement->columnCount() == 0) {
-                                    # there is no result set, so the statement modifies rows
-                                     $output->writeln(sprintf("Number of rows affected: %d", (int)$statement->rowCount()));
+                                    // there is no result set, so the statement modifies rows
+                                    $output->writeln(sprintf("Number of rows affected: %d", (int)$statement->rowCount()));
                                 }
                                 break;
                         }

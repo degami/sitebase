@@ -20,38 +20,59 @@ use \App\Site\Models\Rewrite;
  */
 class RouteInfo
 {
-    /** @var array dispatcher info */
+    /**
+     * @var array dispatcher info
+     */
     protected $dispatcher_info;
 
-    /** @var integer dispatcher status */
+    /**
+     * @var integer dispatcher status
+     */
     protected $status;
 
-    /** @var mixed handler to invoke */
+    /**
+     * @var mixed handler to invoke
+     */
     protected $handler;
 
-    /** @var mixed allowed methods */
+    /**
+     * @var mixed allowed methods
+     */
     protected $allowed_methods;
 
-    /** @var mixed vars */
+    /**
+     * @var mixed vars
+     */
     protected $vars;
 
-    /** @var string uri */
+    /**
+     * @var string uri
+     */
     protected $uri;
 
-    /** @var string http method */
+    /**
+     * @var string http method
+     */
     protected $http_method;
 
-    /** @var string route */
+    /**
+     * @var string route
+     */
     protected $route;
 
-    /** @var string route name */
+    /**
+     * @var string route name
+     */
     protected $route_name;
 
-    /** @var integer|null rewrite id */
+    /**
+     * @var integer|null rewrite id
+     */
     protected $rewrite;
 
     /**
      * class constructor
+     *
      * @param array        $dispatcher_info
      * @param string       $http_method
      * @param string       $uri
@@ -90,6 +111,7 @@ class RouteInfo
 
     /**
      * gets dispatcher info
+     *
      * @return array
      */
     public function getDispatcherInfo()
@@ -99,7 +121,8 @@ class RouteInfo
 
     /**
      * sets dispatcher info
-     * @param array $dispatcher_info
+     *
+     * @param  array $dispatcher_info
      * @return self
      */
     public function setDispatcherInfo($dispatcher_info)
@@ -111,6 +134,7 @@ class RouteInfo
 
     /**
      * gets handler to call
+     *
      * @return mixed
      */
     public function getHandler()
@@ -120,7 +144,8 @@ class RouteInfo
 
     /**
      * sets handler to call
-     * @param mixed $handler
+     *
+     * @param  mixed $handler
      * @return self
      */
     public function setHandler($handler)
@@ -132,6 +157,7 @@ class RouteInfo
 
     /**
      * get router vars
+     *
      * @return mixed
      */
     public function getVars()
@@ -141,7 +167,8 @@ class RouteInfo
 
     /**
      * set router vars
-     * @param mixed $vars
+     *
+     * @param  mixed $vars
      * @return self
      */
     public function setVars($vars)
@@ -153,6 +180,7 @@ class RouteInfo
 
     /**
      * get allowed methods
+     *
      * @return mixed
      */
     public function getAllowedMethods()
@@ -162,6 +190,7 @@ class RouteInfo
 
     /**
      * sets allowed methods
+     *
      * @param mixed $allowed_methods
      *
      * @return self
@@ -175,6 +204,7 @@ class RouteInfo
 
     /**
      * gets status
+     *
      * @return mixed
      */
     public function getStatus()
@@ -184,6 +214,7 @@ class RouteInfo
 
     /**
      * sets status
+     *
      * @param mixed $status
      *
      * @return self
@@ -197,6 +228,7 @@ class RouteInfo
 
     /**
      * gets http method
+     *
      * @return string
      */
     public function getHttpMethod()
@@ -206,6 +238,7 @@ class RouteInfo
 
     /**
      * sets http method
+     *
      * @param string $http_method
      *
      * @return self
@@ -219,6 +252,7 @@ class RouteInfo
 
     /**
      * gets uri
+     *
      * @return string
      */
     public function getUri()
@@ -228,6 +262,7 @@ class RouteInfo
 
     /**
      * sets uri
+     *
      * @param string $uri
      *
      * @return self
@@ -241,6 +276,7 @@ class RouteInfo
 
     /**
      * gets route
+     *
      * @return string
      */
     public function getRoute()
@@ -250,6 +286,7 @@ class RouteInfo
 
     /**
      * sets route
+     *
      * @param string $route
      *
      * @return self
@@ -263,6 +300,7 @@ class RouteInfo
 
     /**
      * gets route name
+     *
      * @return string
      */
     public function getRouteName()
@@ -272,6 +310,7 @@ class RouteInfo
 
     /**
      * sets route name
+     *
      * @param string $route_name
      *
      * @return self
@@ -285,6 +324,7 @@ class RouteInfo
 
     /**
      * gets rewrite
+     *
      * @return integer|null
      */
     public function getRewrite()
@@ -294,7 +334,8 @@ class RouteInfo
 
     /**
      * sets rewrite
-     * @param integer $rewrite
+     *
+     * @param  integer $rewrite
      * @return self
      */
     public function setRewrite($rewrite)
@@ -306,6 +347,7 @@ class RouteInfo
 
     /**
      * checks if route works also if site is offline
+     *
      * @return boolean
      */
     public function worksOffline()
@@ -315,6 +357,7 @@ class RouteInfo
 
     /**
      * checks if route is administrative route
+     *
      * @return boolean
      */
     public function isAdminRoute()
@@ -324,6 +367,7 @@ class RouteInfo
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function toString()

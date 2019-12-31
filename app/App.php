@@ -46,13 +46,19 @@ class App extends ContainerAwareObject
     const TEMPLATES = 'templates';
     const TRANSLATIONS = 'translations';
 
-    /** @var Dispatcher dispatcher */
+    /**
+     * @var Dispatcher dispatcher
+     */
     protected $dispatcher;
 
-    /** @var string current locale */
+    /**
+     * @var string current locale
+     */
     protected $current_locale = null;
 
-    /** @var RouteInfo route info */
+    /**
+     * @var RouteInfo route info
+     */
     protected $route_info = null;
 
     /**
@@ -71,15 +77,20 @@ class App extends ContainerAwareObject
             $builder = new \DI\ContainerBuilder();
             $builder->addDefinitions($this->getDir(self::CONFIG) . DS . 'di.php');
 
-            /** @var ContainerInterface $this->container */
+            /**
+             * @var ContainerInterface $this->container
+             */
             $this->container = $builder->build();
-            $this->getContainer()->set('env', array_combine(
-                $dotenv->getEnvironmentVariableNames(),
-                array_map(
-                    'getenv',
-                    $dotenv->getEnvironmentVariableNames()
+            $this->getContainer()->set(
+                'env',
+                array_combine(
+                    $dotenv->getEnvironmentVariableNames(),
+                    array_map(
+                        'getenv',
+                        $dotenv->getEnvironmentVariableNames()
+                    )
                 )
-            ));
+            );
 
             $this->getTemplates()->addFolder('base', static::getDir(static::TEMPLATES));
             $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES).DS.'errors');
@@ -88,9 +99,12 @@ class App extends ContainerAwareObject
             $this->dispatcher = $this->getRouting()->getDispatcher();
 
             // dispatch "dispatcher_ready" event
-            $this->event('dispatcher_ready', [
+            $this->event(
+                'dispatcher_ready',
+                [
                 'dispatcher' => $this->dispatcher
-            ]);
+                ]
+            );
 
             if ($this->getEnv('DEBUG')) {
                 $debugbar = $this->getContainer()->get('debugbar');
@@ -112,6 +126,7 @@ class App extends ContainerAwareObject
 
     /**
      * application bootstrap
+     *
      * @return Response
      */
     public function bootstrap()
@@ -171,10 +186,13 @@ class App extends ContainerAwareObject
         }
 
         // dispatch "before_send" event
-        $this->event('before_send', [
+        $this->event(
+            'before_send',
+            [
             'app' => $this,
             'response' => $response
-        ]);
+            ]
+        );
         if ($response) {
             $response->send();
         }
@@ -182,6 +200,7 @@ class App extends ContainerAwareObject
 
     /**
      * checks if site is offline
+     *
      * @return boolean
      */
     protected function isSiteOffline()
@@ -191,8 +210,9 @@ class App extends ContainerAwareObject
 
     /**
      * emits an events
+     *
      * @param  string $event_name
-     * @param  mixed $event_data
+     * @param  mixed  $event_data
      * @return self
      */
     public function event($event_name, $event_data)
@@ -204,6 +224,7 @@ class App extends ContainerAwareObject
 
     /**
      * gets application directories
+     *
      * @return array
      */
     public static function getDirs()
@@ -231,6 +252,7 @@ class App extends ContainerAwareObject
 
     /**
      * gets application directory by type
+     *
      * @param  string $type
      * @return string
      */
@@ -246,6 +268,7 @@ class App extends ContainerAwareObject
 
     /**
      * sets current locale
+     *
      * @param string|null $locale
      */
     public function setCurrentLocale(string $locale = null)
@@ -257,6 +280,7 @@ class App extends ContainerAwareObject
 
     /**
      * gets current locale
+     *
      * @return string|null
      */
     public function getCurrentLocale()
@@ -266,6 +290,7 @@ class App extends ContainerAwareObject
 
     /**
      * sets route info
+     *
      * @param RouteInfo $route_info
      */
     public function setRouteInfo(RouteInfo $route_info)
@@ -276,6 +301,7 @@ class App extends ContainerAwareObject
 
     /**
      * gets route info
+     *
      * @return RouteInfo|null
      */
     public function getRouteInfo()
@@ -285,10 +311,11 @@ class App extends ContainerAwareObject
 
     /**
      * gets current website id
+     *
      * @return integer
      */
-    public function getCurrentWebsite()
+    public function getCurrentWebsiteId()
     {
-        return $this->getSiteData()->getCurrentWebsite();
+        return $this->getSiteData()->getCurrentWebsiteId();
     }
 }

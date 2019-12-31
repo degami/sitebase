@@ -27,17 +27,24 @@ use \App\App;
  */
 class Migrate extends Command
 {
-    /** @var \Genkgo\Migrations\Adapters\AbstractPdoAdapter adapter */
+    /**
+     * @var \Genkgo\Migrations\Adapters\AbstractPdoAdapter adapter
+     */
     protected $adapter;
 
-    /** @var \App\Base\Overrides\Migrations\Factory factory */
+    /**
+     * @var \App\Base\Overrides\Migrations\Factory factory
+     */
     protected $factory;
 
-    /** @var string directory */
+    /**
+     * @var string directory
+     */
     protected $directory;
 
     /**
      * {@inheritdocs}
+     *
      * @param string                  $name
      * @param ContainerInterface|null $container
      */
@@ -45,12 +52,15 @@ class Migrate extends Command
     {
         parent::__construct($name, $container);
         $this->adapter = $this->getContainer()->make(PdoMysqlAdapter::class, ['pdo' => $this->getPdo()]);
-        $this->factory = $this->getContainer()->make(Factory::class, [
+        $this->factory = $this->getContainer()->make(
+            Factory::class,
+            [
             'adapter' => $this->adapter,
             'classLoader' => function ($classname) use ($container) {
                 return new $classname($container);
             },
-        ]);
+            ]
+        );
         $this->directory = App::getDir(App::MIGRATIONS);
     }
 
@@ -60,22 +70,24 @@ class Migrate extends Command
     protected function configure()
     {
         $this->setDescription('Migrate')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('direction', 'd', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('direction', 'd', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-
         $direction = $input->getOption('direction');
         if ($direction == 'down') {
             $direction = MigrationInterface::DIRECTION_DOWN;

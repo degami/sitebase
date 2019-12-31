@@ -17,6 +17,7 @@ use \Psr\Container\ContainerInterface;
 
 /**
  * Queue Message Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getQueueName()
@@ -37,6 +38,7 @@ class QueueMessage extends Model
 
     /**
      * gets decoded message data
+     *
      * @return array
      */
     public function getMessageData()
@@ -46,6 +48,7 @@ class QueueMessage extends Model
 
     /**
      * gets message worker class
+     *
      * @return string
      */
     public function getWorkerClass()
@@ -55,6 +58,7 @@ class QueueMessage extends Model
 
     /**
      * gets next message on queue
+     *
      * @param  ContainerInterface $container
      * @param  string             $queue_name
      * @return self
@@ -66,8 +70,8 @@ class QueueMessage extends Model
             ['status' => self::STATUS_PENDING] + ($queue_name != null ? ['queue_name' => $queue_name] : []),
             ['created_at' => 'ASC']
         )
-        ->limit(1)
-        ->fetch();
+            ->limit(1)
+            ->fetch();
         if ($messageDBRow && $messageDBRow->id) {
             $message = $container->make(static::class, ['dbrow' => $messageDBRow]);
             $message->setStatus(self::STATUS_PROCESSED)->persist();

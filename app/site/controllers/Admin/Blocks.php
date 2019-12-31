@@ -25,6 +25,7 @@ class Blocks extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -55,6 +56,7 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -64,6 +66,7 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -73,6 +76,7 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -82,8 +86,9 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -94,10 +99,13 @@ class Blocks extends AdminManageModelsPage
             $block = $this->loadObject($this->getRequest()->get('block_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -113,9 +121,12 @@ class Blocks extends AdminManageModelsPage
 
                 $block_rewrites = [];
                 if ($block instanceof Block) {
-                    $block_rewrites = array_map(function ($el) {
-                        return $el->getId();
-                    }, $block->getRewrites());
+                    $block_rewrites = array_map(
+                        function ($el) {
+                            return $el->getId();
+                        },
+                        $block->getRewrites()
+                    );
                 }
 
                 $block_region = $block_locale = $block_title = $block_content = $block_order = '';
@@ -126,78 +137,102 @@ class Blocks extends AdminManageModelsPage
                     $block_content = $block->content;
                     $block_order = $block->order;
                 }
-                $form->addField('region', [
+                $form->addField(
+                    'region',
+                    [
                     'type' => 'select',
                     'title' => 'Block region',
                     'default_value' => $block_region,
                     'options' => $this->getUtils()->getBlockRegions(),
                     'validate' => ['required'],
-                ])
-                ->addField('title', [
-                    'type' => 'textfield',
-                    'title' => 'Title',
-                    'default_value' => $block_title,
-                    'validate' => ['required'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'title',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Title',
+                        'default_value' => $block_title,
+                        'validate' => ['required'],
+                        ]
+                    );
                 if ($type == 'new' || $block->instance_class == Block::class) {
-                    $form->addField('locale', [
+                    $form->addField(
+                        'locale',
+                        [
                         'type' => 'select',
                         'title' => 'Locale',
                         'default_value' => $block_locale,
                         'options' => $languages,
                         'validate' => ['required'],
-                    ])
-                    ->addField('content', [
-                        'type' => 'tinymce',
-                        'title' => 'Content',
-                        'tinymce_options' => [
+                        ]
+                    )
+                        ->addField(
+                            'content',
+                            [
+                            'type' => 'tinymce',
+                            'title' => 'Content',
+                            'tinymce_options' => [
                             'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                        ],
-                        'default_value' => $block_content,
-                        'rows' => 20,
-                    ]);
+                            ],
+                            'default_value' => $block_content,
+                            'rows' => 20,
+                            ]
+                        );
                 }
-                $form->addField('rewrites', [
+                $form->addField(
+                    'rewrites',
+                    [
                     'type' => 'select',
                     'multiple' => true,
                     'title' => 'Rewrites',
                     'default_value' => $block_rewrites,
                     'options' => $rewrite_options,
-                ])
-                ->addField('order', [
-                    'type' => 'textfield',
-                    'title' => 'Order',
-                    'default_value' => $block_order,
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'order',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Order',
+                        'default_value' => $block_order,
+                        ]
+                    );
 
 
                 if ($block != null && method_exists($block->getRealInstance(), 'additionalConfigFieldset')) {
                     $config_fields = call_user_func_array(
                         [$block->getRealInstance(), 'additionalConfigFieldset'],
                         [
-                            'form' => $form,
-                            'form_state' => &$form_state,
-                            'default_values' => json_decode($block->getConfig() ?? "{}", true),
+                        'form' => $form,
+                        'form_state' => &$form_state,
+                        'default_values' => json_decode($block->getConfig() ?? "{}", true),
                         ]
                     );
                     if (!empty($config_fields)) {
-                        $fieldset = $form->addField('config', [
-                            'type' => 'fieldset',
-                            'title' => 'Config',
-                        ]);
+                            $fieldset = $form->addField(
+                                'config',
+                                [
+                                'type' => 'fieldset',
+                                'title' => 'Config',
+                                    ]
+                            );
 
                         foreach ($config_fields as $key => $config_field) {
-                            $fieldset->addField($config_field->getName(), $config_field);
+                                $fieldset->addField($config_field->getName(), $config_field);
                         }
                     }
                 }
 
-                $form->addField('button', [
+                $form->addField(
+                    'button',
+                    [
                     'type' => 'submit',
                     'value' => 'ok',
                     'container_class' => 'form-item mt-3',
                     'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                );
 
 
                 break;
@@ -212,8 +247,9 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -225,13 +261,16 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Block $block */
+        /**
+ * @var Block $block
+*/
         $block = $this->newEmptyObject();
         if ($this->getRequest()->get('block_id')) {
             $block = $this->loadObject($this->getRequest()->get('block_id'));
@@ -244,6 +283,7 @@ class Blocks extends AdminManageModelsPage
                 $block->instance_class = Block::class;
 
                 // intentional fall trough
+                // no break
             case 'edit':
                 $block->region = $values['region'];
                 $block->title = $values['title'];
@@ -260,9 +300,12 @@ class Blocks extends AdminManageModelsPage
 
                 $block->persist();
 
-                $existing_rewrites = array_map(function ($el) {
-                    return $el->getId();
-                }, $block->getRewrites());
+                $existing_rewrites = array_map(
+                    function ($el) {
+                        return $el->getId();
+                    },
+                    $block->getRewrites()
+                );
 
                 $new_rewrites = !empty($values['rewrites']) ? array_values($values['rewrites']->getData()) : [];
                 $to_delete = array_diff($existing_rewrites, $new_rewrites);
@@ -273,11 +316,14 @@ class Blocks extends AdminManageModelsPage
                     $row->delete();
                 }
                 foreach ($to_add as $id_to_add) {
-                    $this->getDb()->createRow('block_rewrite', [
+                    $this->getDb()->createRow(
+                        'block_rewrite',
+                        [
                         'block_id' => $block->id,
                         'rewrite_id' => $id_to_add,
-                    ])
-                    ->save();
+                        ]
+                    )
+                        ->save();
                 }
 
                 break;
@@ -291,6 +337,7 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -309,25 +356,35 @@ class Blocks extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($block) {
-            return [
+        return array_map(
+            function ($block) {
+                return [
                 'ID' => $block->id,
                 'Website' => $block->getWebsiteId() == null ? $this->getUtils()->translate('All websites', $this->getCurrentLocale()) : $block->getWebsite()->domain,
                 'Region' => $block->region,
                 'Locale' => $block->isCodeBlock() ? $block->locale : $this->getUtils()->translate('All languages', $this->getCurrentLocale()),
                 'Title' => $block->title,
-                'Where' => (count($block->getRewrites())== 0) ? $this->getUtils()->translate('All Pages', $this->getCurrentLocale()) : implode("<br>", array_map(function ($e) {
-                    return $e->getUrl();
-                }, $block->getRewrites())),
+                'Where' => (count($block->getRewrites())== 0) ? $this->getUtils()->translate('All Pages', $this->getCurrentLocale()) : implode(
+                    "<br>",
+                    array_map(
+                        function ($e) {
+                            return $e->getUrl();
+                        },
+                        $block->getRewrites()
+                    )
+                ),
                 'Order' => $block->order,
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&block_id='. $block->id.'">'.$this->getUtils()->getIcon('edit') .'</a>' .
                     ((!$block->isCodeBlock()) ? '<a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&block_id='. $block->id.'">'.$this->getUtils()->getIcon('trash') .'</a>' : '')
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

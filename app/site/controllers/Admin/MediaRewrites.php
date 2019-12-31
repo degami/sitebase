@@ -23,6 +23,7 @@ class MediaRewrites extends AdminManageModelsPage
 {
     /**
      * {@inherithdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -33,6 +34,7 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -42,6 +44,7 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -51,6 +54,7 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -60,8 +64,9 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -72,10 +77,13 @@ class MediaRewrites extends AdminManageModelsPage
             $media_rewrite = $this->loadObject($this->getRequest()->get('media_rewrite_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -99,26 +107,35 @@ class MediaRewrites extends AdminManageModelsPage
                 }
 
                 $form
-                ->addField('rewrite_id', [
+                ->addField(
+                    'rewrite_id',
+                    [
                     'type' => 'select',
                     'title' => 'Rewrite',
                     'default_value' => $media_rewrite_rewrite_id,
                     'options' => $rewrites,
                     'validate' => ['required'],
-                ])
-                ->addField('media_id', [
-                    'type' => 'select',
-                    'title' => 'Media',
-                    'default_value' => $media_rewrite_media_id,
-                    'options' => $medias,
-                    'validate' => ['required'],
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'media_id',
+                        [
+                        'type' => 'select',
+                        'title' => 'Media',
+                        'default_value' => $media_rewrite_media_id,
+                        'options' => $medias,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -131,8 +148,9 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -144,13 +162,16 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Rewrite $rewrite */
+        /**
+ * @var Rewrite $rewrite
+*/
         $media_rewrite = $this->newEmptyObject();
         if ($this->getRequest()->get('media_rewrite_id')) {
             $media_rewrite = $this->loadObject($this->getRequest()->get('media_rewrite_id'));
@@ -174,6 +195,7 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -192,13 +214,15 @@ class MediaRewrites extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($elem) {
-            return [
+        return array_map(
+            function ($elem) {
+                return [
                 'ID' => $elem->getId(),
                 'Preview' => $elem->getMediaElement()->getThumb('100x100'),
                 'Filename - Path' => $elem->getMediaElement()->getFilename(),
@@ -208,7 +232,9 @@ class MediaRewrites extends AdminManageModelsPage
                 'Owner' => $elem->getOwner()->username,
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&media_rewrite_id='. $elem->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&media_rewrite_id='. $elem->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

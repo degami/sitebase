@@ -26,17 +26,24 @@ use function FastRoute\simpleDispatcher;
  */
 class Web extends ContainerAwareObject
 {
-    /** @var Dispatcher dispatcher */
+    /**
+     * @var Dispatcher dispatcher
+     */
     protected $dispatcher;
 
-    /** @var array routes */
+    /**
+     * @var array routes
+     */
     protected $routes;
 
-    /** @var array reserved parameter names */
+    /**
+     * @var array reserved parameter names
+     */
     protected $avoid_parameter_names = ['container', 'route_info', 'route_data'];
 
     /**
      * class constructor
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -51,9 +58,12 @@ class Web extends ContainerAwareObject
                 $route_name = str_replace("/", ".", trim($path, "/"));
 
                 if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
-                    $tmp = array_map(function ($el) {
-                        return "/".$el;
-                    }, $tmp);
+                    $tmp = array_map(
+                        function ($el) {
+                            return "/".$el;
+                        },
+                        $tmp
+                    );
                     if (!isset($this->routes[$tmp[0]])) {
                         $this->routes[$tmp[0]] = [];
                     }
@@ -81,21 +91,27 @@ class Web extends ContainerAwareObject
 
         $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
 
-        $this->dispatcher = simpleDispatcher(function (RouteCollector $r) {
-            foreach ($this->routes as $group => $paths) {
-                if ($group != "") {
-                    $r->addGroup($group, function (RouteCollector $r) use ($paths) {
+        $this->dispatcher = simpleDispatcher(
+            function (RouteCollector $r) {
+                foreach ($this->routes as $group => $paths) {
+                    if ($group != "") {
+                        $r->addGroup(
+                            $group,
+                            function (RouteCollector $r) use ($paths) {
+                                $this->_insertRoutes($r, $paths);
+                            }
+                        );
+                    } else {
                         $this->_insertRoutes($r, $paths);
-                    });
-                } else {
-                    $this->_insertRoutes($r, $paths);
+                    }
                 }
             }
-        });
+        );
     }
 
     /**
      * checks route parameters
+     *
      * @param  string $route
      * @return boolean
      */
@@ -109,6 +125,7 @@ class Web extends ContainerAwareObject
 
     /**
      * adds routes
+     *
      * @param  RouteCollector $r
      * @param  array          $paths
      * @return self
@@ -124,6 +141,7 @@ class Web extends ContainerAwareObject
 
     /**
      * adds a route
+     *
      * @param  RouteCollector $r
      * @param  array          $p
      * @return self
@@ -137,6 +155,7 @@ class Web extends ContainerAwareObject
 
     /**
      * gets route by class
+     *
      * @param  string $class
      * @return array
      */
@@ -144,15 +163,22 @@ class Web extends ContainerAwareObject
     {
         $out = [];
         foreach (array_keys($this->routes) as $group) {
-            $out = array_merge($out, array_filter($this->routes[$group], function ($el) use ($class) {
-                return $el['class'] == $class;
-            }));
+            $out = array_merge(
+                $out,
+                array_filter(
+                    $this->routes[$group],
+                    function ($el) use ($class) {
+                        return $el['class'] == $class;
+                    }
+                )
+            );
         }
         return reset($out);
     }
 
     /**
      * adds a route
+     *
      * @param string $group
      * @param string $name
      * @param string $path
@@ -167,6 +193,7 @@ class Web extends ContainerAwareObject
 
     /**
      * checks a route
+     *
      * @param  ContainerInterface $container
      * @param  string             $route
      * @return boolean
@@ -178,6 +205,7 @@ class Web extends ContainerAwareObject
 
     /**
      * gets dispatcher
+     *
      * @return Dispatcher
      */
     public function getDispatcher()
@@ -187,6 +215,7 @@ class Web extends ContainerAwareObject
 
     /**
      * gets routes
+     *
      * @return array
      */
     public function getRoutes()
@@ -196,6 +225,7 @@ class Web extends ContainerAwareObject
 
     /**
      * gets a single route
+     *
      * @param  string $name
      * @return array
      */
@@ -213,6 +243,7 @@ class Web extends ContainerAwareObject
 
     /**
      * return base site url
+     *
      * @return string
      */
     public function getBaseUrl()
@@ -221,13 +252,15 @@ class Web extends ContainerAwareObject
             return $this->getEnv('BASE_URL');
         }
 
-        $parsed = parse_url(sprintf(
-            "%s://%s%s%s",
-            (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https' : 'http',
-            (is_numeric($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) ? ':'.$_SERVER['SERVER_PORT'] : '',
-            $_SERVER['SERVER_NAME'],
-            $_SERVER['REQUEST_URI']
-        ));
+        $parsed = parse_url(
+            sprintf(
+                "%s://%s%s%s",
+                (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https' : 'http',
+                (is_numeric($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) ? ':'.$_SERVER['SERVER_PORT'] : '',
+                $_SERVER['SERVER_NAME'],
+                $_SERVER['REQUEST_URI']
+            )
+        );
         if ($parsed) {
             return $parsed['scheme'].'://'.$parsed['host'];
         }
@@ -236,6 +269,7 @@ class Web extends ContainerAwareObject
 
     /**
      * Returns url for given route
+     *
      * @param  string $route_name
      * @param  array  $route_params
      * @return string
@@ -251,6 +285,7 @@ class Web extends ContainerAwareObject
 
     /**
      * gets cached routes
+     *
      * @param  ContainerInterface $container
      * @return array
      */
@@ -265,6 +300,7 @@ class Web extends ContainerAwareObject
 
     /**
      * returns a RouteInfo instance for current request
+     *
      * @param  ContainerInterface $container
      * @param  string             $http_method
      * @param  string             $request_uri
@@ -303,7 +339,7 @@ class Web extends ContainerAwareObject
                 $rewrite_id = $rewrite->id;
             } else {
                 // if not found, check the rewrites table
-                $website_id = $container->get('site_data')->getCurrentWebsite();
+                $website_id = $container->get('site_data')->getCurrentWebsiteId();
                 $rewrite = $container->get('db')->rewrite()->where(['url' => $uri, 'website_id' => $website_id])->fetch();
                 if ($rewrite) {
                     $route = $rewrite->route;
@@ -333,13 +369,16 @@ class Web extends ContainerAwareObject
         }
 
         // return a RouteInfo instance
-        return $container->make(RouteInfo::class, [
+        return $container->make(
+            RouteInfo::class,
+            [
             'dispatcher_info' => $dispatcherInfo,
             'http_method' => $httpMethod,
             'uri' => $uri,
             'route' => $route,
             'route_name' => $route_name,
             'rewrite' => $rewrite_id,
-        ]);
+            ]
+        );
     }
 }

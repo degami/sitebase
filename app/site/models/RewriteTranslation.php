@@ -15,6 +15,7 @@ use \App\Base\Abstracts\Model;
 
 /**
  * Rewrite Translation Model
+ *
  * @method int getId()
  * @method int getSource()
  * @method string getSourceLocale()

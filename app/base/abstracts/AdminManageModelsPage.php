@@ -25,6 +25,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 {
     /**
      * {@inheriydocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -44,6 +45,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -53,6 +55,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
     /**
      * gets model table html
+     *
      * @return string
      */
     public function getTable()
@@ -62,6 +65,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
     /**
      * gets paginator html
+     *
      * @return string
      */
     public function getPaginator()
@@ -71,6 +75,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
     /**
      * defines table header
+     *
      * @return array|null
      */
     protected function getTableHeader()
@@ -80,6 +85,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
     /**
      * defines table rows
+     *
      * @param  array $data
      * @return array
      */

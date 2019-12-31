@@ -21,6 +21,7 @@ trait WithOwnerTrait
 {
     /**
      * gets owner
+     *
      * @return User
      */
     public function getOwner()

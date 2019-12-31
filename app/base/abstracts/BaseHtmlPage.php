@@ -28,11 +28,14 @@ abstract class BaseHtmlPage extends BasePage
 {
     use PageTrait;
 
-    /** @var Template template object */
+    /**
+     * @var Template template object
+     */
     protected $template;
 
     /**
      * prepare template object
+     *
      * @return Template
      */
     protected function prepareTemplate()
@@ -45,6 +48,7 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -80,9 +84,9 @@ abstract class BaseHtmlPage extends BasePage
             }
 
             return $this
-                    ->getResponse()
-                    ->prepare($this->getRequest())
-                    ->setContent($template_html);
+                ->getResponse()
+                ->prepare($this->getRequest())
+                ->setContent($template_html);
         } catch (Exception $e) {
             return $this->getUtils()->exceptionPage($e);
         }
@@ -90,6 +94,7 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * get current template
+     *
      * @return Template
      */
     public function getTemplate()
@@ -99,6 +104,7 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * prepares basic template data
+     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -112,6 +118,7 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * gets info about current page
+     *
      * @return array
      */
     public function getInfo()
@@ -147,6 +154,7 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * adds a flash message for next response
+     *
      * @param string $type
      * @param string $message
      */
@@ -162,6 +170,7 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * removes all currently stored flash messages
+     *
      * @return self
      */
     public function dropFlashMessages()
@@ -173,6 +182,7 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * gets currently stored flash messages
+     *
      * @return array
      */
     public function getFlashMessages()
@@ -182,12 +192,14 @@ abstract class BaseHtmlPage extends BasePage
 
     /**
      * gets current page template name
+     *
      * @return string
      */
     abstract protected function getTemplateName();
 
     /**
      * gets current page template data
+     *
      * @return array
      */
     abstract protected function getTemplateData();

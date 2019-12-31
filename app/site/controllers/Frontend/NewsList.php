@@ -24,17 +24,24 @@ use \Symfony\Component\HttpFoundation\Response;
  */
 class NewsList extends FrontendPage
 {
-    /** @var string locale */
+    /**
+     * @var string locale
+     */
     protected $locale = null;
 
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
-    /** @var RouteInfo route info object */
+    /**
+     * @var RouteInfo route info object
+     */
     protected $route_info = null;
 
     /**
      * gets route group
+     *
      * @return string
      */
     public static function getRouteGroup()
@@ -44,6 +51,7 @@ class NewsList extends FrontendPage
 
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -53,6 +61,7 @@ class NewsList extends FrontendPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -62,6 +71,7 @@ class NewsList extends FrontendPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -78,6 +88,7 @@ class NewsList extends FrontendPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getCurrentLocale()

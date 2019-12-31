@@ -37,16 +37,19 @@ class Add extends Command
     protected function configure()
     {
         $this->setDescription('Add a new website')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('name', null, InputOption::VALUE_OPTIONAL),
-                new InputOption('domain', null, InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('name', null, InputOption::VALUE_OPTIONAL),
+                    new InputOption('domain', null, InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

@@ -22,11 +22,14 @@ use \App\Site\Models\CronLog;
  */
 class Logs extends AdminPage
 {
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -36,6 +39,7 @@ class Logs extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -45,6 +49,7 @@ class Logs extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -59,11 +64,11 @@ class Logs extends AdminPage
                 $this->page_title = 'Requests Logs';
                 $data = $this->getContainer()->call([RequestLog::class, 'paginate']);
                 $this->templateData += [
-                    'header' => ['id', 'url', 'method', 'user_id', 'ip_address', 'created_at', 'updated_at'],
-                    'logs' => $data['items'],
-                    'total' => $data['total'],
-                    'current_page' => $data['page'],
-                    'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+                'header' => ['id', 'url', 'method', 'user_id', 'ip_address', 'created_at', 'updated_at'],
+                'logs' => $data['items'],
+                'total' => $data['total'],
+                'current_page' => $data['page'],
+                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
                 ];
 
                 break;
@@ -72,11 +77,11 @@ class Logs extends AdminPage
                 $this->page_title = 'Mail Logs';
                 $data = $this->getContainer()->call([MailLog::class, 'paginate']);
                 $this->templateData += [
-                    'header' => ['id', 'from', 'to', 'subject', 'template_name', 'result', 'created_at', 'updated_at'],
-                    'logs' => $data['items'],
-                    'total' => $data['total'],
-                    'current_page' => $data['page'],
-                    'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+                'header' => ['id', 'from', 'to', 'subject', 'template_name', 'result', 'created_at', 'updated_at'],
+                'logs' => $data['items'],
+                'total' => $data['total'],
+                'current_page' => $data['page'],
+                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
                 ];
 
                 break;
@@ -85,11 +90,11 @@ class Logs extends AdminPage
                 $this->page_title = 'Cron Logs';
                 $data = $this->getContainer()->call([CronLog::class, 'paginate']);
                 $this->templateData += [
-                    'header' => ['id', 'run_time', 'duration', 'tasks', 'created_at', 'updated_at'],
-                    'logs' => $data['items'],
-                    'total' => $data['total'],
-                    'current_page' => $data['page'],
-                    'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+                'header' => ['id', 'run_time', 'duration', 'tasks', 'created_at', 'updated_at'],
+                'logs' => $data['items'],
+                'total' => $data['total'],
+                'current_page' => $data['page'],
+                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
                 ];
 
                 break;

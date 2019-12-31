@@ -36,16 +36,19 @@ class Revoke extends Command
     protected function configure()
     {
         $this->setDescription('Revoke permission to role')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
-                new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                    new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -68,9 +71,12 @@ class Revoke extends Command
             return;
         }
 
-        $permissions_available = array_map(function ($el) {
-            return $el->getName();
-        }, $role->getPermissionsArray());
+        $permissions_available = array_map(
+            function ($el) {
+                return $el->getName();
+            },
+            $role->getPermissionsArray()
+        );
 
         if (empty($permissions_available)) {
             $io->error('No permission available to revoke');

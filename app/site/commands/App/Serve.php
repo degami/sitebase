@@ -32,16 +32,19 @@ class Serve extends Command
     protected function configure()
     {
         $this->setDescription('Run PHP Http Server')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('port', 'p', InputOption::VALUE_OPTIONAL),
-                new InputOption('website', 'w', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('port', 'p', InputOption::VALUE_OPTIONAL),
+                    new InputOption('website', 'w', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

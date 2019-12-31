@@ -22,11 +22,14 @@ use \App\App;
  */
 abstract class AdminFormPage extends AdminPage
 {
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -35,8 +38,8 @@ abstract class AdminFormPage extends AdminPage
         $this->templateData = [
             'action' => $this->getRequest()->get('action') ?? 'list',
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
-                        ->setValidate([ [$this, 'formValidate'] ])
-                        ->setSubmit([ [$this, 'formSubmitted'] ]),
+            ->setValidate([ [$this, 'formValidate'] ])
+            ->setSubmit([ [$this, 'formSubmitted'] ]),
         ];
 
         $this->processFormSubmit();
@@ -44,6 +47,7 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * gets form id
+     *
      * @return string
      */
     protected function getFormId()
@@ -54,6 +58,7 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * process form submission
+     *
      * @return void
      */
     private function processFormSubmit()
@@ -68,6 +73,7 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * {@inheritdocs}
+     *
      * @return Response|self
      */
     protected function beforeRender()
@@ -81,6 +87,7 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * loads object by id
+     *
      * @param  integer $id
      * @return \App\Base\Abstracts\Model
      */
@@ -95,6 +102,7 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * gets new empty model
+     *
      * @return \App\Base\Abstracts\Model
      */
     protected function newEmptyObject()
@@ -108,6 +116,7 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * gets add button html
+     *
      * @return string
      */
     public function getAddButton()
@@ -125,6 +134,7 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * get form object
+     *
      * @return FAPI\Form
      */
     public function getForm()
@@ -134,54 +144,65 @@ abstract class AdminFormPage extends AdminPage
 
     /**
      * gets a form for confirmation
-     * @param  string $confirm_message
+     *
+     * @param  string    $confirm_message
      * @param  FAPI\Form $form
      * @return FAPI\Form
      */
     protected function fillConfirmationForm($confirm_message, $form)
     {
-        $form->addField('confirm', [
+        $form->addField(
+            'confirm',
+            [
             'type' => 'markup',
             'value' => $this->getUtils()->translate($confirm_message, $this->getCurrentLocale()),
             'suffix' => '<br /><br />',
-        ])
+            ]
+        )
         ->addMarkup('<a class="btn btn-danger btn-sm" href="'.$this->getControllerUrl().'">'.$this->getUtils()->translate('Cancel', $this->getCurrentLocale()).'</a>')
-        ->addField('button', [
+        ->addField(
+            'button',
+            [
             'type' => 'submit',
             'container_tag' => null,
             'prefix' => '&nbsp;',
             'value' => 'Confirm',
             'attributes' => ['class' => 'btn btn-primary btn-sm'],
-        ]);
+            ]
+        );
         return $form;
     }
 
     /**
      * gets object to show class name for loading
+     *
      * @return string
      */
     abstract public function getObjectClass();
 
     /**
      * gets form definition object
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     abstract public function getFormDefinition(FAPI\Form $form, &$form_state);
 
     /**
      * validates form submission
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     abstract public function formValidate(FAPI\Form $form, &$form_state);
 
     /**
      * handles form submission
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed|Response
      */
     abstract public function formSubmitted(FAPI\Form $form, &$form_state);

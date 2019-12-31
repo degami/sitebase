@@ -29,6 +29,7 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -41,10 +42,13 @@ class Cron extends AdminManageModelsPage
                 foreach (get_class_methods($taskClass) as $key => $method_name) {
                     $cron_task_callable = json_encode([$taskClass, $method_name]);
 
-                    $cron_task_name = ltrim(strtolower(
-                        str_replace("App\\Site\\Cron\\Tasks", "", $taskClass)
-                    ) . "_" .
-                    strtolower($method_name), "\\");
+                    $cron_task_name = ltrim(
+                        strtolower(
+                            str_replace("App\\Site\\Cron\\Tasks", "", $taskClass)
+                        ) . "_" .
+                        strtolower($method_name),
+                        "\\"
+                    );
 
                     if (preg_match("/^__/i", $method_name)) {
                         continue;
@@ -79,6 +83,7 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -88,6 +93,7 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -97,6 +103,7 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -106,8 +113,9 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -118,10 +126,13 @@ class Cron extends AdminManageModelsPage
             $task = $this->loadObject($this->getRequest()->get('task_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -138,42 +149,57 @@ class Cron extends AdminManageModelsPage
                     $task_active = $task->active;
                 }
                 $form
-                ->addField('title', [
+                ->addField(
+                    'title',
+                    [
                     'type' => 'textfield',
                     'title' => 'Title',
                     'default_value' => $task_title,
                     'validate' => ['required'],
-                ])
-                ->addField('cron_task_callable', [
-                    'type' => 'textfield',
-                    'title' => 'Callable',
-                    'default_value' => $task_callable,
-                    'validate' => ['required'],
-                ])
-                ->addField('schedule', [
-                    'type' => 'textfield',
-                    'title' => 'Schedule',
-                    'default_value' => $task_schedule,
-                    'validate' => ['required'],
-                ])
-                ->addField('active', [
-                    'type' => 'switchbox',
-                    'title' => 'Active',
-//                    'value' => boolval($task_active) ? 1 : 0,
-//                    'default_value' => 1,
-                    'default_value' => boolval($task_active) ? 1 : 0,
-                    'yes_value' => 1,
-                    'yes_label' => 'Yes',
-                    'no_value' => 0,
-                    'no_label' => 'No',
-                    'field_class' => 'switchbox',
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'cron_task_callable',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Callable',
+                        'default_value' => $task_callable,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'schedule',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Schedule',
+                        'default_value' => $task_schedule,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'active',
+                        [
+                        'type' => 'switchbox',
+                        'title' => 'Active',
+                        //                    'value' => boolval($task_active) ? 1 : 0,
+                        //                    'default_value' => 1,
+                        'default_value' => boolval($task_active) ? 1 : 0,
+                        'yes_value' => 1,
+                        'yes_label' => 'Yes',
+                        'no_value' => 0,
+                        'no_label' => 'No',
+                        'field_class' => 'switchbox',
+                        ]
+                    )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'value' => 'ok',
+                        'container_class' => 'form-item mt-3',
+                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                        ]
+                    );
                 break;
 
             case 'delete':
@@ -186,8 +212,9 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -199,13 +226,16 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var CronTask $task */
+        /**
+ * @var CronTask $task
+*/
         $task = $this->newEmptyObject();
         if ($this->getRequest()->get('task_id')) {
             $task = $this->loadObject($this->getRequest()->get('task_id'));
@@ -216,6 +246,7 @@ class Cron extends AdminManageModelsPage
             case 'new':
                 $task->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
+                // no break
             case 'edit':
                 $task->title = $values['title'];
                 $task->cron_task_callable = $values['cron_task_callable'];
@@ -234,6 +265,7 @@ class Cron extends AdminManageModelsPage
 
     /**
      * gets last heart beat
+     *
      * @return string
      */
     protected function getLastHeartBeat()
@@ -241,11 +273,11 @@ class Cron extends AdminManageModelsPage
         $out = '<div class="alert alert-danger" role="alert">No heart beat run yet</div>';
         // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1
         $last_beat = $this->getDb()
-                ->cron_log()
-                ->where("1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0")
-                ->orderBy('run_time', 'DESC')
-                ->limit(1)
-                ->fetch();
+            ->cron_log()
+            ->where("1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0")
+            ->orderBy('run_time', 'DESC')
+            ->limit(1)
+            ->fetch();
 
         if ($last_beat != null) {
             $lasbeat_date = new DateTime($last_beat['run_time']);
@@ -260,6 +292,7 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -276,13 +309,15 @@ class Cron extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($task) {
-            return [
+        return array_map(
+            function ($task) {
+                return [
                 'ID' => $task->id,
                 'Title' => $task->title,
                 'Callable' => $task->cron_task_callable,
@@ -290,7 +325,9 @@ class Cron extends AdminManageModelsPage
                 'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', $this->getCurrentLocale()),
                 'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&task_id='. $task->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&task_id='. $task->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

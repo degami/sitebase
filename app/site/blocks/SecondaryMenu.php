@@ -24,8 +24,9 @@ class SecondaryMenu extends BaseCodeBlock
 {
     /**
      * {@inheritdocs}
-     * @param BasePage|null $current_page
-     * @param array $data
+     *
+     * @param  BasePage|null $current_page
+     * @param  array         $data
      * @return string
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
@@ -44,6 +45,7 @@ class SecondaryMenu extends BaseCodeBlock
 
     /**
      * internally renders menu
+     *
      * @param  array $menu_tree
      * @param  array $parent
      * @return string
@@ -70,7 +72,8 @@ class SecondaryMenu extends BaseCodeBlock
 
     /**
      * internally renders menu link
-     * @param  array $leaf
+     *
+     * @param  array  $leaf
      * @param  string $link_class
      * @return string
      */
@@ -82,9 +85,10 @@ class SecondaryMenu extends BaseCodeBlock
 
     /**
      * additional configuration fieldset
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
-     * @param  array    $default_values
+     * @param  array     &$form_state
+     * @param  array     $default_values
      * @return FAPI\Form
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
@@ -93,13 +97,16 @@ class SecondaryMenu extends BaseCodeBlock
 
         // @todo tabs per website
 
-        $current_website = $this->getSiteData()->getCurrentWebsite();
+        $current_website = $this->getSiteData()->getCurrentWebsiteId();
         foreach ($this->getSiteData()->getSiteLocales($current_website) as $locale) {
-            $config_fields[] = $form->getFieldObj('menu_name_'.$locale, [
+            $config_fields[] = $form->getFieldObj(
+                'menu_name_'.$locale,
+                [
                 'type' => 'textfield',
                 'title' => $locale.' menu name',
                 'default_value' => $default_values['menu_name_'.$locale] ?? '',
-            ]);
+                ]
+            );
         }
 
         return $config_fields;

@@ -26,6 +26,7 @@ class Command extends SymfonyCommand
 
     /**
      * constructor
+     *
      * @param string                  $name
      * @param ContainerInterface|null $container
      */
@@ -38,6 +39,7 @@ class Command extends SymfonyCommand
 
     /**
      * boostrap command
+     *
      * @return void
      */
     protected function bootstrap()
@@ -46,12 +48,15 @@ class Command extends SymfonyCommand
         $dotenv = Dotenv::create(App::getDir(App::ROOT));
         $dotenv->load();
 
-        $this->getContainer()->set('env', array_combine(
-            $dotenv->getEnvironmentVariableNames(),
-            array_map(
-                'getenv',
-                $dotenv->getEnvironmentVariableNames()
+        $this->getContainer()->set(
+            'env',
+            array_combine(
+                $dotenv->getEnvironmentVariableNames(),
+                array_map(
+                    'getenv',
+                    $dotenv->getEnvironmentVariableNames()
+                )
             )
-        ));
+        );
     }
 }

@@ -22,6 +22,7 @@ abstract class AdminJsonPage extends BaseJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return Response|self
      */
     protected function beforeRender()
@@ -35,6 +36,7 @@ abstract class AdminJsonPage extends BaseJsonPage
 
     /**
      * gets access permission name
+     *
      * @return string
      */
     abstract protected function getAccessPermission();

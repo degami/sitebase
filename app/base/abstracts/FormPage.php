@@ -23,11 +23,14 @@ use \App\App;
  */
 abstract class FormPage extends FrontendPage
 {
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -38,8 +41,8 @@ abstract class FormPage extends FrontendPage
 
         $this->templateData += [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
-                        ->setValidate([ [$this, 'formValidate'] ])
-                        ->setSubmit([ [$this, 'formSubmitted'] ]),
+            ->setValidate([ [$this, 'formValidate'] ])
+            ->setSubmit([ [$this, 'formSubmitted'] ]),
         ];
         $this->processFormSubmit();
 
@@ -48,6 +51,7 @@ abstract class FormPage extends FrontendPage
 
     /**
      * process form submission
+     *
      * @return void
      */
     private function processFormSubmit()
@@ -58,6 +62,7 @@ abstract class FormPage extends FrontendPage
 
     /**
      * {@intheritdocs}
+     *
      * @return Response|self
      */
     protected function beforeRender()
@@ -71,24 +76,27 @@ abstract class FormPage extends FrontendPage
 
     /**
      * gets form definition object
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     abstract public function getFormDefinition(FAPI\Form $form, &$form_state);
 
     /**
      * validates form submission
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     abstract public function formValidate(FAPI\Form $form, &$form_state);
 
     /**
      * handles form submission
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed|Response
      */
     abstract public function formSubmitted(FAPI\Form $form, &$form_state);

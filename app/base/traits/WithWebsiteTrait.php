@@ -21,6 +21,7 @@ trait WithWebsiteTrait
 {
     /**
      * gets website
+     *
      * @return Website
      */
     public function getWebsite()

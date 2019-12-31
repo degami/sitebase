@@ -28,6 +28,7 @@ class Media extends AdminManageModelsPage
 {
     /**
      * {@inherithdocs}
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -50,16 +51,20 @@ class Media extends AdminManageModelsPage
             $this->templateData += [
                 'media_elem' => $media,
                 'elem_data' => $elem_data,
-                'pages' => array_map(function ($el) {
-                    $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-                    return ['url' => $page->getUrl(), 'title' => $page->getTitle(). ' - '.$page->getRewrite()->getUrl(), 'id' => $page->getId()];
-                }, $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->get('media_id'))->page()->fetchAll()),
+                'pages' => array_map(
+                    function ($el) {
+                        $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                        return ['url' => $page->getRewrite()->getUrl(), 'title' => $page->getTitle(). ' - '.$page->getRewrite()->getUrl(), 'id' => $page->getId()];
+                    },
+                    $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->get('media_id'))->page()->fetchAll()
+                ),
             ];
         }
     }
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -69,6 +74,7 @@ class Media extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -78,6 +84,7 @@ class Media extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -87,8 +94,9 @@ class Media extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -99,11 +107,14 @@ class Media extends AdminManageModelsPage
             $media = $this->loadObject($this->getRequest()->get('media_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
-//        $form->addMarkup('<pre>'.var_export($type, true)."\n".var_export($_POST, true)."\n".var_export($_FILES, true).'</pre>');
+            ]
+        );
+        //        $form->addMarkup('<pre>'.var_export($type, true)."\n".var_export($_POST, true)."\n".var_export($_FILES, true).'</pre>');
         switch ($type) {
             case 'edit':
                 $elem_data = $media->getData();
@@ -112,9 +123,12 @@ class Media extends AdminManageModelsPage
                 unset($elem_data['id']);
                 unset($elem_data['user_id']);
 
-                array_walk($elem_data, function (&$el, $key) {
+                array_walk(
+                    $elem_data,
+                    function (&$el, $key) {
                         $el = '<strong>'.$key.'</strong>: '.$el;
-                });
+                    }
+                );
 
                 $this->addActionLink(
                     'pages-btn',
@@ -124,21 +138,30 @@ class Media extends AdminManageModelsPage
                     'btn btn-sm btn-light inToolSidePanel'
                 );
 
-                $form->addField('pre', [
+                $form->addField(
+                    'pre',
+                    [
                     'type' => 'markup',
                     'value' => '<ul><li>'.implode('</li><li>', $elem_data).'</li></ul>',
-                ]);
+                    ]
+                );
 
                 // intentional fall trough
+                // no break
             case 'new':
                 $this->addBackButton();
 
-                $form->addField('upload_file', [
+                $form->addField(
+                    'upload_file',
+                    [
                     'type' => 'file',
                     'destination' => App::getDir(App::MEDIA),
                     'title' => 'Upload new file',
-                ])
-                ->addField('lazyload', [
+                        ]
+                )
+                ->addField(
+                    'lazyload',
+                    [
                     'type' => 'switchbox',
                     'title' => 'Lazyload',
                     'default_value' => boolval($media->lazyload) ? 1 : 0,
@@ -147,77 +170,113 @@ class Media extends AdminManageModelsPage
                     'no_value' => 0,
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
-                ])
-                ->addField('button', [
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
                     'type' => 'submit',
                     'value' => 'ok',
                     'container_class' => 'form-item mt-3',
                     'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                    ]
+                );
                 if ($this->getRequest()->get('page_id')) {
                     $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
-                    $form->addField('page_id', [
+                    $form->addField(
+                        'page_id',
+                        [
                         'type' => 'hidden',
                         'default_value' => $page->id,
-                    ]);
+                        ]
+                    );
                 }
                 break;
             case 'deassoc':
                 $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
-                $form->addField('page_id', [
+                $form->addField(
+                    'page_id',
+                    [
                     'type' => 'hidden',
                     'default_value' => $page->id,
-                ])
-                ->addField('media_id', [
+                    ]
+                )
+                ->addField(
+                    'media_id',
+                    [
                     'type' => 'hidden',
                     'default_value' => $media->id,
-                ])
-                ->addField('confirm', [
+                    ]
+                )
+                ->addField(
+                    'confirm',
+                    [
                     'type' => 'markup',
                     'value' => 'Do you confirm the disassociation of the selected element from the "'.$page->title.'" page (ID: '.$page->id.') ?',
                     'suffix' => '<br /><br />',
-                ])
+                    ]
+                )
                 ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.pagemedia', ['id' => $page->id]).'?page_id='.$page->id.'&action=new">Cancel</a>')
-                ->addField('button', [
+                ->addField(
+                    'button',
+                    [
                     'type' => 'submit',
                     'container_tag' => null,
                     'prefix' => '&nbsp;',
                     'value' => 'Ok',
                     'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                ]);
+                    ]
+                );
                 break;
             case 'page_assoc':
-                $not_in = array_map(function ($el) {
-                    return $el->page_id;
-                }, $this->getDb()->page_media_elementList()->where('media_element_id', $media->id)->fetchAll());
+                $not_in = array_map(
+                    function ($el) {
+                        return $el->page_id;
+                    },
+                    $this->getDb()->page_media_elementList()->where('media_element_id', $media->id)->fetchAll()
+                );
 
-                $pages = array_filter(array_map(function ($el) use ($not_in) {
-                    if (in_array($el->id, $not_in)) {
-                        return null;
-                    }
-                    $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-                    return ['title' => $page->getTitle(). ' - '.$page->getRewrite()->getUrl(), 'id' => $page->getId()];
-                }, $this->getDb()->page()->fetchAll()));
+                $pages = array_filter(
+                    array_map(
+                        function ($el) use ($not_in) {
+                            if (in_array($el->id, $not_in)) {
+                                return null;
+                            }
+                            $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                            return ['title' => $page->getTitle(). ' - '.$page->getRewrite()->getUrl(), 'id' => $page->getId()];
+                        },
+                        $this->getDb()->page()->fetchAll()
+                    )
+                );
 
                 $pages = array_combine(array_column($pages, 'id'), array_column($pages, 'title'));
 
                 $form
-                ->addField('page_id', [
-                    'type' => 'select',
-                    'options' => ['' => ''] + $pages,
-                    'default_value' => '',
-                ])
-                ->addField('media_id', [
-                    'type' => 'hidden',
-                    'default_value' => $media->id,
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-block btn-lg'],
-                ]);
+                    ->addField(
+                        'page_id',
+                        [
+                        'type' => 'select',
+                        'options' => ['' => ''] + $pages,
+                        'default_value' => '',
+                        ]
+                    )
+                    ->addField(
+                        'media_id',
+                        [
+                        'type' => 'hidden',
+                        'default_value' => $media->id,
+                        ]
+                    )
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'container_tag' => null,
+                        'prefix' => '&nbsp;',
+                        'value' => 'Ok',
+                        'attributes' => ['class' => 'btn btn-primary btn-block btn-lg'],
+                        ]
+                    );
                 break;
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
@@ -229,8 +288,9 @@ class Media extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -242,13 +302,16 @@ class Media extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var MediaElement $media */
+        /**
+ * @var MediaElement $media
+*/
         $media = $this->newEmptyObject();
         if ($this->getRequest()->get('media_id')) {
             $media = $this->loadObject($this->getRequest()->get('media_id'));
@@ -259,6 +322,7 @@ class Media extends AdminManageModelsPage
             case 'new':
                 $media->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
+                // no break
             case 'edit':
                 if ($values->upload_file->filepath) {
                     $media->path = $values->upload_file->filepath;
@@ -278,9 +342,9 @@ class Media extends AdminManageModelsPage
 
                 if ($values['page_id'] != null) {
                     $this
-                        ->getContainer()
-                        ->call([Page::class, 'load'], ['id' => $values['page_id']])
-                        ->addMedia($media);
+                    ->getContainer()
+                    ->call([Page::class, 'load'], ['id' => $values['page_id']])
+                    ->addMedia($media);
                 }
                 break;
             case 'deassoc':
@@ -307,6 +371,7 @@ class Media extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -325,13 +390,15 @@ class Media extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($elem) {
-            return [
+        return array_map(
+            function ($elem) {
+                return [
                 'ID' => $elem->getId(),
                 'Preview' => $elem->getThumb('100x100', null, null, ['for_admin' => '']),
                 'Filename - Path' => $elem->getFilename() .'<br /><pre style="font-size: 0.6rem;">'. $elem->getPath() .'</pre>',
@@ -342,7 +409,9 @@ class Media extends AdminManageModelsPage
                 'actions' => '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=usage&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('zoom-in') .'</a>
                     <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

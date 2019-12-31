@@ -16,6 +16,7 @@ use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * Cront Task Model
+ *
  * @method int getId()
  * @method string getTitle()
  * @method string getCronTaskCallable()
@@ -31,6 +32,7 @@ class CronTask extends Model
 
     /**
      * gets information url about shedule
+     *
      * @return string
      */
     public function getInfoUrl()

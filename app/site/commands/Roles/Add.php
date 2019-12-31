@@ -36,15 +36,18 @@ class Add extends Command
     protected function configure()
     {
         $this->setDescription('Add a new role')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('name', '', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('name', '', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

@@ -25,6 +25,7 @@ class Permissions extends AdminFormPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -34,6 +35,7 @@ class Permissions extends AdminFormPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -43,6 +45,7 @@ class Permissions extends AdminFormPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -52,6 +55,7 @@ class Permissions extends AdminFormPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -65,13 +69,16 @@ class Permissions extends AdminFormPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
-        $table = $form->addField('table', [
+        $table = $form->addField(
+            'table',
+            [
             'type' => 'table_container',
             'attributes' => [
                 'class' => 'table table-striped',
@@ -80,11 +87,20 @@ class Permissions extends AdminFormPage
             'thead_attributes' => [
                 'class' => 'thead-dark',
             ],
-        ]);
+            ]
+        );
 
-        $table->setTableHeader(array_merge(["&nbsp;"], array_map(function ($el) {
-            return $el->name;
-        }, $this->getDb()->role()->fetchAll())));
+        $table->setTableHeader(
+            array_merge(
+                ["&nbsp;"],
+                array_map(
+                    function ($el) {
+                        return $el->name;
+                    },
+                    $this->getDb()->role()->fetchAll()
+                )
+            )
+        );
 
         $permnum = -1;
 
@@ -99,34 +115,46 @@ class Permissions extends AdminFormPage
             $permnum++;
             $table
                 ->addRow()
-                ->addField($permission->name.'_desc', [
+                ->addField(
+                    $permission->name.'_desc',
+                    [
                     'type' => 'markup',
                     'value' => $permission->name,
-                ], $permnum);
+                    ],
+                    $permnum
+                );
 
             foreach ($rolesArray as $role_model) {
-                $table->addField($permission->name.'|'.$role_model->name.'|enabled', [
+                $table->addField(
+                    $permission->name.'|'.$role_model->name.'|enabled',
+                    [
                     'type' => 'checkbox',
                     'default_value' => 1,
                     'value' => $role_model->checkPermission($permission->name),
-                ], $permnum);
+                    ],
+                    $permnum
+                );
             }
         }
 
-        $form->addField('button', [
+        $form->addField(
+            'button',
+            [
             'type' => 'submit',
             'value' => 'ok',
             'container_class' => 'form-item mt-3',
             'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-        ]);
+            ]
+        );
 
         return $form;
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -138,8 +166,9 @@ class Permissions extends AdminFormPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
@@ -158,7 +187,7 @@ class Permissions extends AdminFormPage
 
                 if ($value == true && $role_permission_model == null) {
                     $this->addPermission($role_model, $permission_model);
-                } else if ($value == false && $role_permission_model instanceof RolePermission) {
+                } elseif ($value == false && $role_permission_model instanceof RolePermission) {
                     $role_permission_model->delete();
                 }
             }

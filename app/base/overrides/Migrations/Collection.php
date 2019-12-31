@@ -23,17 +23,24 @@ use \Genkgo\Migrations\NotReadyToMigrateException;
  */
 class Collection extends GenkgoMigrationCollection
 {
-    /** @var AdapterInterface adapter */
+    /**
+     * @var AdapterInterface adapter
+     */
     private $adapter;
     
-    /** @var array migrations collection */
+    /**
+     * @var array migrations collection
+     */
     private $list = [];
     
-    /** @var string namespace */
+    /**
+     * @var string namespace
+     */
     private $namespace;
     
     /**
      * constructor
+     *
      * @param AdapterInterface $adapter
      */
     public function __construct(AdapterInterface $adapter)
@@ -43,6 +50,7 @@ class Collection extends GenkgoMigrationCollection
 
     /**
      * attach migration
+     *
      * @param MigrationInterface $migration
      */
     public function attach(MigrationInterface $migration)
@@ -52,6 +60,7 @@ class Collection extends GenkgoMigrationCollection
     
     /**
      * detach miggration
+     *
      * @param MigrationInterface $migration
      */
     public function detach(MigrationInterface $migration)
@@ -65,7 +74,8 @@ class Collection extends GenkgoMigrationCollection
 
     /**
      * sets namespace
-     * @param $namespace
+     *
+     * @param  $namespace
      * @return $this
      */
     public function setNamespace($namespace)
@@ -76,6 +86,7 @@ class Collection extends GenkgoMigrationCollection
 
     /**
      * gets namespace
+     *
      * @return string
      */
     public function getNamespace()
@@ -85,18 +96,22 @@ class Collection extends GenkgoMigrationCollection
 
     /**
      * do the migration
-     * @param int $direction
+     *
+     * @param  int $direction
      * @return Log
      */
     public function migrate($direction = MigrationInterface::DIRECTION_UP)
     {
         $result = new Log();
         
-        usort($this->list, function ($item1, $item2) {
-            $class1 = $item1->getName();
-            $class2 = $item2->getName();
-            return strcmp($class1, $class2);
-        });
+        usort(
+            $this->list,
+            function ($item1, $item2) {
+                $class1 = $item1->getName();
+                $class2 = $item2->getName();
+                return strcmp($class1, $class2);
+            }
+        );
 
         if ($direction == MigrationInterface::DIRECTION_DOWN) {
             $this->list = array_reverse($this->list);
@@ -107,9 +122,13 @@ class Collection extends GenkgoMigrationCollection
                 $this->execute($item, $direction);
                 $result->attach($item);
             } catch (AlreadyMigratedException $e) {
-                /** we will not execute migrations that are already executed */
+                /**
+                 * we will not execute migrations that are already executed
+                 */
             } catch (NotReadyToMigrateException $e) {
-                /** we will not execute migrations that are not ready to be executed */
+                /**
+                 * we will not execute migrations that are not ready to be executed
+                 */
             }
         }
         
@@ -118,6 +137,7 @@ class Collection extends GenkgoMigrationCollection
 
     /**
      * executes a single migration
+     *
      * @param MigrationInterface $migration
      * @param $direction
      */
@@ -138,6 +158,7 @@ class Collection extends GenkgoMigrationCollection
 
     /**
      * gets migrations count
+     *
      * @return int
      */
     public function count()

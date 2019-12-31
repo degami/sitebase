@@ -26,7 +26,9 @@ use \App\App;
  */
 class ModEnv extends Command
 {
-    /** @var array dotenv file sections */
+    /**
+     * @var array dotenv file sections
+     */
     protected $dotenv_sections = [
         'Basic Info' => ['APPNAME','APPDOMAIN','SALT'],
         'Database Info' => ['DATABASE_HOST','DATABASE_NAME','DATABASE_USER','DATABASE_PASS'],
@@ -47,6 +49,7 @@ class ModEnv extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

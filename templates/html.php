@@ -1,7 +1,7 @@
 <?php
 /** @var \DebugBar\StandardDebugBar $debugbar */
 $debugbar = $this->sitebase()->getDebugbar();
-$debugbarRenderer = $debugbar->getJavascriptRenderer();
+$debugbarRenderer = $debugbar->getJavascriptRenderer($this->sitebase()->getUrl('frontend.root').'debugbar');
 if (!isset($body_class)) {
     $body_class = "";
 }

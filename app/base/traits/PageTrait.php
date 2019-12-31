@@ -20,13 +20,16 @@ use \App\Site\Models\Page as PageModel;
  */
 trait PageTrait
 {
-    /** @var array current user data */
+    /**
+     * @var array current user data
+     */
     protected $current_user = null;
 
     /**
      * calculates JWT token id
+     *
      * @param  integer $uid
-     * @param  string $usename
+     * @param  string  $usename
      * @return string
      */
     public function calcTokenId($uid, $usename)
@@ -41,6 +44,7 @@ trait PageTrait
 
     /**
      * gets Authorization token header
+     *
      * @return string
      */
     protected function getToken()
@@ -51,6 +55,7 @@ trait PageTrait
 
     /**
      * checks if token is still active
+     *
      * @param  string $token
      * @return boolean
      */
@@ -61,6 +66,7 @@ trait PageTrait
 
     /**
      * gets token data
+     *
      * @return array|boolean
      */
     protected function getTokenData()
@@ -93,7 +99,7 @@ trait PageTrait
     {
         if ($this instanceof Page) {
             if ($this->getObject() instanceof PageModel && $this->getObject()->isLoaded()) {
-                $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsite(), $this->getObject()->getLocale());
+                $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsiteId(), $this->getObject()->getLocale());
 
                 if ($this->getObject()->getId() == $homepage_id) {
                     return true;

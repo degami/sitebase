@@ -37,16 +37,19 @@ class Edit extends Command
     protected function configure()
     {
         $this->setDescription('Edit a config')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('id', 'i', InputOption::VALUE_OPTIONAL),
-                new InputOption('value', null, InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('id', 'i', InputOption::VALUE_OPTIONAL),
+                    new InputOption('value', null, InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

@@ -23,14 +23,19 @@ trait AdminTrait
 {
     use PageTrait;
 
-    /** @var User current user model */
+    /**
+     * @var User current user model
+     */
     protected $current_user_model;
 
-    /** @var array action_buttons */
+    /**
+     * @var array action_buttons
+     */
     protected $action_buttons = [];
 
     /**
      * gets route group
+     *
      * @return string
      */
     public static function getRouteGroup()
@@ -40,6 +45,7 @@ trait AdminTrait
 
     /**
      * checks user credentials
+     *
      * @return boolean
      */
     protected function checkCredentials()
@@ -58,6 +64,7 @@ trait AdminTrait
 
     /**
      * checks if current user has permission
+     *
      * @param  string $permission_name
      * @return boolean
      */
@@ -75,6 +82,7 @@ trait AdminTrait
 
     /**
      * gets current user
+     *
      * @return User|GuestUser
      */
     public function getCurrentUser()
@@ -100,6 +108,7 @@ trait AdminTrait
 
     /**
      * renders action buttons
+     *
      * @return string
      */
     protected function renderActionButtons()
@@ -115,6 +124,7 @@ trait AdminTrait
 
     /**
      * adds an action button
+     *
      * @param string $key
      * @param string $button_id
      * @param string $button_text
@@ -122,7 +132,8 @@ trait AdminTrait
      */
     protected function addActionButton($key, $button_id, $button_text, $button_class = 'btn btn-sm btn-light')
     {
-        $button = (string)(new TagElement([
+        $button = (string)(new TagElement(
+            [
             'tag' => 'button',
             'id' => $button_id,
             'attributes' => [
@@ -130,7 +141,8 @@ trait AdminTrait
                 'title' => $button_text,
             ],
             'text' => $button_text,
-        ]));
+            ]
+        ));
         $this->action_buttons[$key] = $button;
 
         return $this;
@@ -138,6 +150,7 @@ trait AdminTrait
 
     /**
      * adds an action link
+     *
      * @param string $key
      * @param string $link_id
      * @param string $link_text
@@ -146,7 +159,8 @@ trait AdminTrait
      */
     protected function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light')
     {
-        $button = (string)(new TagElement([
+        $button = (string)(new TagElement(
+            [
             'tag' => 'a',
             'id' => $link_id,
             'attributes' => [
@@ -155,7 +169,8 @@ trait AdminTrait
                 'title' => $link_text,
             ],
             'text' => $link_text,
-        ]));
+            ]
+        ));
 
         $this->action_buttons[$key] = $button;
         return $this;

@@ -37,16 +37,19 @@ class Add extends Command
     protected function configure()
     {
         $this->setDescription('Add a new config')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('path', null, InputOption::VALUE_OPTIONAL),
-                new InputOption('value', null, InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('path', null, InputOption::VALUE_OPTIONAL),
+                    new InputOption('value', null, InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

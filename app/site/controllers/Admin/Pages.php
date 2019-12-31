@@ -27,6 +27,7 @@ class Pages extends AdminManageModelsPage
 {
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -36,6 +37,7 @@ class Pages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -45,6 +47,7 @@ class Pages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getObjectClass()
@@ -54,8 +57,9 @@ class Pages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -66,10 +70,13 @@ class Pages extends AdminManageModelsPage
             $page = $this->loadObject($this->getRequest()->get('page_id'));
         }
 
-        $form->addField('action', [
+        $form->addField(
+            'action',
+            [
             'type' => 'value',
             'value' => $type,
-        ]);
+            ]
+        );
 
         switch ($type) {
             case 'edit':
@@ -88,6 +95,7 @@ class Pages extends AdminManageModelsPage
                     'btn btn-sm btn-light inToolSidePanel'
                 );
                 // intentional fall-trough
+                // no break
             case 'new':
                 $this->addBackButton();
                 
@@ -120,68 +128,98 @@ class Pages extends AdminManageModelsPage
                     $page_html_title = $page->html_title;
                     $page_website = $page->website_id;
                 }
-                $form->addField('url', [
+                $form->addField(
+                    'url',
+                    [
                     'type' => 'textfield',
                     'title' => 'Page url',
                     'default_value' => $page_url,
                     'validate' => ['required'],
-                ])
-                ->addField('title', [
-                    'type' => 'textfield',
-                    'title' => 'Title',
-                    'default_value' => $page_title,
-                    'validate' => ['required'],
-                ])
-                ->addField('website_id', [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $page_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                ])
-                ->addField('locale', [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $page_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                ])
-                ->addField('meta_description', [
-                    'type' => 'textfield',
-                    'title' => 'Meta Description',
-                    'default_value' => $page_meta_description,
-                ])
-                ->addField('meta_keywords', [
-                    'type' => 'textfield',
-                    'title' => 'Meta Keywords',
-                    'default_value' => $page_meta_keywords,
-                ])
-                ->addField('html_title', [
-                    'type' => 'textfield',
-                    'title' => 'Html Title',
-                    'default_value' => $page_html_title,
-                ])
-                ->addField('template_name', [
-                    'type' => 'select',
-                    'title' => 'Template',
-                    'default_value' => $page_template_name,
-                    'options' => ['' => '--' ] + $templates,
-                ])
-                ->addField('content', [
-                    'type' => 'tinymce',
-                    'title' => 'Content',
-                    'tinymce_options' => [
-                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                    ],
-                    'default_value' => $page_content,
-                    'rows' => 20,
-                ])
-                ->addField('button', [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]);
+                        ]
+                )
+                    ->addField(
+                        'title',
+                        [
+                        'type' => 'textfield',
+                        'title' => 'Title',
+                        'default_value' => $page_title,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'website_id',
+                        [
+                        'type' => 'select',
+                        'title' => 'Website',
+                        'default_value' => $page_website,
+                        'options' => $websites,
+                        'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'locale',
+                        [
+                        'type' => 'select',
+                        'title' => 'Locale',
+                        'default_value' => $page_locale,
+                        'options' => $languages,
+                        'validate' => ['required'],
+                        ]
+                    )
+                        ->addField(
+                            'meta_description',
+                            [
+                            'type' => 'textfield',
+                            'title' => 'Meta Description',
+                            'default_value' => $page_meta_description,
+                            ]
+                        )
+                        ->addField(
+                            'meta_keywords',
+                            [
+                            'type' => 'textfield',
+                            'title' => 'Meta Keywords',
+                            'default_value' => $page_meta_keywords,
+                            ]
+                        )
+                        ->addField(
+                            'html_title',
+                            [
+                            'type' => 'textfield',
+                            'title' => 'Html Title',
+                            'default_value' => $page_html_title,
+                            ]
+                        )
+                        ->addField(
+                            'template_name',
+                            [
+                            'type' => 'select',
+                            'title' => 'Template',
+                            'default_value' => $page_template_name,
+                            'options' => ['' => '--' ] + $templates,
+                            ]
+                        )
+                        ->addField(
+                            'content',
+                            [
+                            'type' => 'tinymce',
+                            'title' => 'Content',
+                            'tinymce_options' => [
+                            'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                            ],
+                            'default_value' => $page_content,
+                            'rows' => 20,
+                            ]
+                        )
+                        ->addField(
+                            'button',
+                            [
+                            'type' => 'submit',
+                            'value' => 'ok',
+                            'container_class' => 'form-item mt-3',
+                            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                            ]
+                        );
                 break;
 
             case 'delete':
@@ -190,52 +228,76 @@ class Pages extends AdminManageModelsPage
 
             case 'media_deassoc':
                 $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
-                $form->addField('page_id', [
+                $form->addField(
+                    'page_id',
+                    [
                     'type' => 'hidden',
                     'default_value' => $page->id,
-                ])
-                ->addField('media_id', [
-                    'type' => 'hidden',
-                    'default_value' => $media->id,
-                ])
-                ->addField('confirm', [
-                    'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the "'.$page->title.'" page from the media ID: '.$media->id.'?',
-                    'suffix' => '<br /><br />',
-                ])
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?media_id='.$media->id.'&action=page_assoc">Cancel</a>')
-                ->addField('button', [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'media_id',
+                        [
+                        'type' => 'hidden',
+                        'default_value' => $media->id,
+                        ]
+                    )
+                    ->addField(
+                        'confirm',
+                        [
+                        'type' => 'markup',
+                        'value' => 'Do you confirm the disassociation of the "'.$page->title.'" page from the media ID: '.$media->id.'?',
+                        'suffix' => '<br /><br />',
+                        ]
+                    )
+                    ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?media_id='.$media->id.'&action=page_assoc">Cancel</a>')
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'container_tag' => null,
+                        'prefix' => '&nbsp;',
+                        'value' => 'Ok',
+                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
+                        ]
+                    );
                 break;
 
             case 'term_deassoc':
                 $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
-                $form->addField('page_id', [
+                $form->addField(
+                    'page_id',
+                    [
                     'type' => 'hidden',
                     'default_value' => $page->id,
-                ])
-                ->addField('taxonomy_id', [
-                    'type' => 'hidden',
-                    'default_value' => $term->id,
-                ])
-                ->addField('confirm', [
-                    'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the "'.$page->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
-                    'suffix' => '<br /><br />',
-                ])
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termpages', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
-                ->addField('button', [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                ]);
+                    ]
+                )
+                    ->addField(
+                        'taxonomy_id',
+                        [
+                        'type' => 'hidden',
+                        'default_value' => $term->id,
+                        ]
+                    )
+                    ->addField(
+                        'confirm',
+                        [
+                        'type' => 'markup',
+                        'value' => 'Do you confirm the disassociation of the "'.$page->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
+                        'suffix' => '<br /><br />',
+                        ]
+                    )
+                    ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termpages', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
+                    ->addField(
+                        'button',
+                        [
+                        'type' => 'submit',
+                        'container_tag' => null,
+                        'prefix' => '&nbsp;',
+                        'value' => 'Ok',
+                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
+                        ]
+                    );
 
                 break;
         }
@@ -245,8 +307,9 @@ class Pages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -258,13 +321,16 @@ class Pages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        /** @var Page $page */
+        /**
+ * @var Page $page
+*/
         $page = $this->newEmptyObject();
         if ($this->getRequest()->get('page_id')) {
             $page = $this->loadObject($this->getRequest()->get('page_id'));
@@ -275,6 +341,7 @@ class Pages extends AdminManageModelsPage
             case 'new':
                 $page->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
+                // no break
             case 'edit':
                 $page->url = $values['url'];
                 $page->title = $values['title'];
@@ -312,6 +379,7 @@ class Pages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTableHeader()
@@ -328,13 +396,15 @@ class Pages extends AdminManageModelsPage
 
     /**
      * {@inheritdocs}
-     * @param array $data
+     *
+     * @param  array $data
      * @return array
      */
     protected function getTableElements($data)
     {
-        return array_map(function ($page) {
-            return [
+        return array_map(
+            function ($page) {
+                return [
                 'ID' => $page->id,
                 'Website' => $page->getWebsiteId() == null ? 'All websites' : $page->getWebsite()->domain,
                 'URL' => $page->url,
@@ -343,7 +413,9 @@ class Pages extends AdminManageModelsPage
                 'actions' => '<a class="btn btn-light btn-sm" href="'. $page->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>                    
                     <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&page_id='. $page->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&page_id='. $page->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
-            ];
-        }, $data);
+                ];
+            },
+            $data
+        );
     }
 }

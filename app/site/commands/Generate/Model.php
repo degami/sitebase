@@ -31,7 +31,9 @@ class Model extends CodeGeneratorCommand
     const BASE_MODEL_NAMESPACE = "App\\Site\\Models\\";
     const BASE_MIGRATION_NAMESPACE = "App\\Site\\Migrations\\";
 
-    /** @var array columns */
+    /**
+     * @var array columns
+     */
     protected $columns = [];
 
     /**
@@ -40,16 +42,19 @@ class Model extends CodeGeneratorCommand
     protected function configure()
     {
         $this->setDescription('Generate a new Model class')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
-                new InputOption('migration_order', 'm', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
+                    new InputOption('migration_order', 'm', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -106,6 +111,7 @@ class Model extends CodeGeneratorCommand
 
     /**
      * ask colum informations
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return array
@@ -193,6 +199,7 @@ class Model extends CodeGeneratorCommand
 
     /**
      * gets model file contents
+     *
      * @param  string $className
      * @return string
      */
@@ -220,6 +227,7 @@ class ".$className." extends Model
 
     /**
      * gets migration file contents
+     *
      * @param  string  $className
      * @param  string  $modelClassName
      * @param  integer $migration_order
@@ -227,7 +235,6 @@ class ".$className." extends Model
      */
     protected function getMigrationFileContents($className, $modelClassName, $migration_order = 100)
     {
-
         $colums = '';
         foreach ($this->columns as $name => $column_info) {
             $colums .= "             ->addColumn(".

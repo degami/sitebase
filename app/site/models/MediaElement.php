@@ -20,6 +20,7 @@ use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * Media Element Model
+ *
  * @method int getId()
  * @method string getPath()
  * @method string getFilename()
@@ -38,6 +39,7 @@ class MediaElement extends Model
 
     /**
      * gets relative path
+     *
      * @return string
      */
     public function getRelativePath()
@@ -49,6 +51,7 @@ class MediaElement extends Model
 
     /**
      * gets thumbnail img html tag
+     *
      * @param  string $size
      * @param  string $mode
      * @param  string $class
@@ -68,7 +71,8 @@ class MediaElement extends Model
             $img_attributes['data-src'] = $this->getThumbUrl($size, $mode);
         }
 
-        return (string)(new TagElement([
+        return (string)(new TagElement(
+            [
             'tag' => 'img',
             'attributes' => [
                 'src' => boolval($this->lazyload) && !isset($img_attributes['for_admin']) ? static::TRANSPARENT_PIXEL : $this->getThumbUrl($size, $mode),
@@ -76,11 +80,13 @@ class MediaElement extends Model
                 'style' =>  preg_match('/img-fluid/i', $class) ? '' : "max-width:{$w}px;max-height:{$h}px;",
                 'border' => 0,
             ] + $img_attributes,
-        ]));
+            ]
+        ));
     }
 
     /**
      * gets thumbnail url
+     *
      * @param  string $size
      * @param  string $mode
      * @return string
@@ -124,10 +130,14 @@ class MediaElement extends Model
 
                     $size = new \Imagine\Image\Box($w, $h);
 
-                    if (!in_array($mode, [
+                    if (!in_array(
+                        $mode,
+                        [
                         \Imagine\Image\ImageInterface::THUMBNAIL_INSET,
                         \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND
-                    ])) {
+                        ]
+                    )
+                    ) {
                         $mode    = \Imagine\Image\ImageInterface::THUMBNAIL_INSET;
                         // or
                         // $mode    = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
@@ -154,6 +164,7 @@ class MediaElement extends Model
 
     /**
      * gets original image img tag
+     *
      * @param  string $class
      * @return string
      */
@@ -164,6 +175,7 @@ class MediaElement extends Model
 
     /**
      * gets original image url
+     *
      * @return string
      */
     public function getImageUrl()

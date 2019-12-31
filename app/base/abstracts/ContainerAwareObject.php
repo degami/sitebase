@@ -27,11 +27,14 @@ abstract class ContainerAwareObject
 {
     use ToolsTrait, ContainerAwareTrait;
 
-    /** @var array translators */
+    /**
+     * @var array translators
+     */
     protected $translators = [];
 
     /**
      * constructor
+     *
      * @param ContainerInterface $container
      */
     public function __construct(ContainerInterface $container)
@@ -41,6 +44,7 @@ abstract class ContainerAwareObject
 
     /**
      * gets translator
+     *
      * @param  string $locale_code
      * @return Translator
      */
@@ -63,22 +67,29 @@ abstract class ContainerAwareObject
         }
 
         // Create the translation
-        $translation = $this->getContainer()->make(Translation::class, [
+        $translation = $this->getContainer()->make(
+            Translation::class,
+            [
             'filename' => App::getDir(App::TRANSLATIONS) . DS . $locale->language()->code() . '.php',
-        ]);  // Can use .CSV, .PHP, .PO and .MO files
+            ]
+        );  // Can use .CSV, .PHP, .PO and .MO files
         // Create the translator
-        $this->translators[$locale_code] = $this->getContainer()->make(Translator::class, [
+        $this->translators[$locale_code] = $this->getContainer()->make(
+            Translator::class,
+            [
             'translations' => $translation->asArray(),
             'plural_rule' => $locale->pluralRule(),
-        ]);
+            ]
+        );
         // Use the translator
         return $this->translators[$locale_code];
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  string $name
-     * @param  mixed $arguments
+     * @param  mixed  $arguments
      * @return mixed
      */
     public function __call($name, $arguments)

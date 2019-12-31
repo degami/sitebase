@@ -25,14 +25,19 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 {
     const ITEMS_PER_PAGE = 50;
 
-    /** @var Row database row */
+    /**
+     * @var Row database row
+     */
     protected $dbrow;
 
-    /** @var string table name */
+    /**
+     * @var string table name
+     */
     public $tablename;
 
     /**
      * {@inheritdocs}
+     *
      * @param ContainerInterface $container
      * @param Row|null           $dbrow
      */
@@ -52,6 +57,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * gets object model name
+     *
      * @return string
      */
     protected function getModelName()
@@ -61,6 +67,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * gets table name
+     *
      * @return string
      */
     protected function getTableName()
@@ -73,7 +80,8 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * checks if Row object is from correct table
-     * @param  Row    $dbrow
+     *
+     * @param  Row $dbrow
      * @return self
      */
     private function checkDbName(Row $dbrow)
@@ -86,7 +94,20 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     }
 
     /**
+     * basic select statement
+     *
+     * @param  ContainerInterface $container
+     * @param  array              $options
+     * @return \PDOStatement
+     */
+    public static function select(ContainerInterface $container, $options = [])
+    {
+        return $container->get('db')->select(static::defaultTableName(), $options);
+    }
+
+    /**
      * gets basic where statement for model
+     *
      * @param  ContainerInterface $container
      * @param  array              $condition
      * @param  array              $order
@@ -116,6 +137,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * returns all found items
+     *
      * @param  ContainerInterface $container
      * @param  array              $condition
      * @param  array              $order
@@ -123,14 +145,17 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
      */
     public static function all(ContainerInterface $container, $condition = [], $order = [])
     {
-        return array_map(function ($el) use ($container) {
-            return $container->make(static::class, ['dbrow' => $el]);
-        },
-        static::getModelBasicWhere($container, $condition, $order)->fetchAll());
+        return array_map(
+            function ($el) use ($container) {
+                return $container->make(static::class, ['dbrow' => $el]);
+            },
+            static::getModelBasicWhere($container, $condition, $order)->fetchAll()
+        );
     }
 
     /**
      * return subset of found items (useful for paginate)
+     *
      * @param  ContainerInterface $container
      * @param  Request|null       $request
      * @param  integet            $page_size
@@ -146,10 +171,12 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
         $page = $request->get('page') ?? 0;
         $start = (int)$page * $page_size;
-        $items = array_map(function ($el) use ($container) {
-            return $container->make(static::class, ['dbrow' => $el]);
-        },
-        static::getModelBasicWhere($container, $condition, $order)->limit($page_size, $start)->fetchAll());
+        $items = array_map(
+            function ($el) use ($container) {
+                return $container->make(static::class, ['dbrow' => $el]);
+            },
+            static::getModelBasicWhere($container, $condition, $order)->limit($page_size, $start)->fetchAll()
+        );
 
         $total = $container->get('db')->table(
             static::defaultTableName()
@@ -160,6 +187,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * finds elements
+     *
      * @param  ContainerInterface $container
      * @param  array|string       $condition
      * @param  array              $order
@@ -167,14 +195,17 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
      */
     public static function where(ContainerInterface $container, $condition, $order = [])
     {
-        return array_map(function ($el) use ($container) {
-            return $container->make(static::class, ['dbrow' => $el]);
-        },
-        static::getModelBasicWhere($container, $condition, $order)->fetchAll());
+        return array_map(
+            function ($el) use ($container) {
+                return $container->make(static::class, ['dbrow' => $el]);
+            },
+            static::getModelBasicWhere($container, $condition, $order)->fetchAll()
+        );
     }
 
     /**
      * gets model table name
+     *
      * @return string
      */
     public static function defaultTableName()
@@ -185,6 +216,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * fills empty model with data
+     *
      * @param  integer $id
      * @return self
      */
@@ -205,6 +237,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * checks if model is loaded
+     *
      * @return boolean
      */
     public function isLoaded()
@@ -214,6 +247,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * ensures model is loaded
+     *
      * @return self
      */
     public function checkLoaded()
@@ -227,6 +261,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * resets model
+     *
      * @return self
      */
     public function reset()
@@ -243,6 +278,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * loads model by id
+     *
      * @param  ContainerInterface $container
      * @param  integeer           $id
      * @return self
@@ -255,6 +291,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * gets new empty model
+     *
      * @param  ContainerInterface $container
      * @return self
      */
@@ -266,6 +303,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * loads model by field - value pair
+     *
      * @param  ContainerInterface $container
      * @param  string             $field
      * @param  string             $value
@@ -428,6 +466,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * saves model on db
+     *
      * @return self
      */
     public function persist()
@@ -449,6 +488,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * pre persist hook
+     *
      * @return self
      */
     public function prePersist()
@@ -458,6 +498,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * post persist hook
+     *
      * @return self
      */
     public function postPersist()
@@ -475,6 +516,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * removes model from db
+     *
      * @return self
      */
     public function remove()
@@ -490,6 +532,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * pre remove hook
+     *
      * @return self
      */
     public function preRemove()
@@ -499,6 +542,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
     /**
      * post remove hook
+     *
      * @return self
      */
     public function postRemove()

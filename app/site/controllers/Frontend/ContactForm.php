@@ -28,14 +28,19 @@ use \Exception;
  */
 class ContactForm extends FormPage // and and is similar to FrontendPageWithObject
 {
-    /** @var array template data */
+    /**
+     * @var array template data
+     */
     protected $templateData = [];
 
-    /** @var RouteInfo route info object */
+    /**
+     * @var RouteInfo route info object
+     */
     protected $route_info = null;
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getTemplateName()
@@ -45,6 +50,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * gets route group
+     *
      * @return string
      */
     public static function getRouteGroup()
@@ -54,6 +60,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -63,6 +70,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -81,6 +89,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getCurrentLocale()
@@ -96,6 +105,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -107,6 +117,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData()
@@ -116,8 +127,9 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -125,22 +137,31 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         $contact = $this->templateData['object'];
         if ($contact instanceof Contact && $contact->isLoaded()) {
             $form->setId($contact->getName());
-            $form->addField('contact_id', [
+            $form->addField(
+                'contact_id',
+                [
                 'type' => 'hidden',
                 'default_value' => $contact->getId(),
-            ]);
-            $fieldset = $form->addField('form_definition', [
+                ]
+            );
+            $fieldset = $form->addField(
+                'form_definition',
+                [
                 'type' => 'tag_container',
                 'tag' => 'div',
                 'id' => 'fieldset-contactfields',
-            ]);
+                ]
+            );
             $fieldset = $contact->getFormDefinition($fieldset, $form_state);
-            $form->addField('button', [
+            $form->addField(
+                'button',
+                [
                 'type' => 'button',
                 'value' => $this->getUtils()->translate('Send', $this->getCurrentLocale()),
                 'container_class' => 'form-item mt-3',
                 'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-            ]);
+                ]
+            );
         }
 
         return $form;
@@ -148,8 +169,9 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -159,27 +181,32 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     
     /**
      * search component by name
+     *
      * @param  Contact $contact
-     * @param  string $name
+     * @param  string  $name
      * @return array
      */
     protected function searchComponentByName($contact, $name)
     {
         $filtered_arr = array_filter(
-            array_map(function ($el) use ($name) {
-                if ($el['field_label'] == $name) {
-                    return $el['id'];
-                }
-                return false;
-            }, $contact->getContactDefinition())
+            array_map(
+                function ($el) use ($name) {
+                    if ($el['field_label'] == $name) {
+                        return $el['id'];
+                    }
+                    return false;
+                },
+                $contact->getContactDefinition()
+            )
         );
         return reset($filtered_arr);
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
@@ -213,18 +240,22 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         //var_dump($form->get_triggering_element());
         // Reset the form if you want it to display again.
 
-        $this->getUtils()->addQueueMessage('contact_form_mail', [
+        $this->getUtils()->addQueueMessage(
+            'contact_form_mail',
+            [
             'from' => $this->getSiteData()->getSiteEmail(),
             'to' => $contact->getSubmitTo(),
             'subject' => 'New Submission - '.$contact->getTitle(),
             'body' => var_export($values, true),
-        ]);
+            ]
+        );
 
         $form->reset();
     }
 
     /**
      * {@inheritdocs}
+     *
      * @return [type] [description]
      */
     public static function getObjectClass()
@@ -234,12 +265,16 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     public function getTranslations()
     {
-        return array_map(function ($el) {
-            return $this->getRouting()->getBaseUrl() . $el;
-        }, $this->getContainer()->call([$this->templateData['object'], 'getTranslations']));
+        return array_map(
+            function ($el) {
+                return $this->getRouting()->getBaseUrl() . $el;
+            },
+            $this->getContainer()->call([$this->templateData['object'], 'getTranslations'])
+        );
     }
 }

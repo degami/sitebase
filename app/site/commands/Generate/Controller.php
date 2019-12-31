@@ -36,15 +36,18 @@ class Controller extends CodeGeneratorCommand
     protected function configure()
     {
         $this->setDescription('Generate a new Controller class')
-        ->setDefinition(
-            new InputDefinition([
-                new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
-            ])
-        );
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                    new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -78,6 +81,7 @@ class Controller extends CodeGeneratorCommand
 
     /**
      * gets file content
+     *
      * @param  string $className
      * @return string
      */

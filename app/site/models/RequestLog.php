@@ -18,6 +18,7 @@ use \App\Base\Traits\WithWebsiteTrait;
 
 /**
  * Request Log Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getUrl()
@@ -33,6 +34,7 @@ class RequestLog extends Model
 
     /**
      * fills log with request object
+     *
      * @param  Request           $request
      * @param  BaseHtmlPage|null $controller
      * @return self
@@ -54,6 +56,7 @@ class RequestLog extends Model
 
     /**
      * matches request log with website
+     *
      * @param  string $host
      * @return integer|null
      */

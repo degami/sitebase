@@ -23,6 +23,7 @@ class Hello extends Command
 {
     /**
      * {@inheritdocs}
+     *
      * @param string $name
      */
     public function __construct($name = null)
@@ -41,6 +42,7 @@ class Hello extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void

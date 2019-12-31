@@ -26,6 +26,7 @@ class BreadCrumbs extends BaseCodeBlock
 {
     /**
      * {@inheritdocs}
+     *
      * @param  BasePage|null $current_page
      * @return string
      */
@@ -46,7 +47,7 @@ class BreadCrumbs extends BaseCodeBlock
         $breadcrumbs_links = [];
 
         $homepageid = $this->getSiteData()->getHomePageId(
-            $this->getSiteData()->getCurrentWebsite(),
+            $this->getSiteData()->getCurrentWebsiteId(),
             $current_page->getCurrentLocale()
         );
 
@@ -61,24 +62,32 @@ class BreadCrumbs extends BaseCodeBlock
                 $breadcrumbs[] = $menu_item->getId();
             }
 
-            array_push($breadcrumbs_links, ...array_map(function ($id) use ($homepageid, $locale) {
-                $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
+            array_push(
+                $breadcrumbs_links,
+                ...array_map(
+                    function ($id) use ($homepageid, $locale) {
+                        $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
 
-                if ($menuItem->getRewriteId()) {
-                    /** @var Rewrite $rewrite */
-                    $rewrite = $this->getContainer()->make(Rewrite::class)->fill($menuItem->getRewriteId());
-                    if ($rewrite->getRoute() == '/page/'.$homepageid) {
-                        $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
-                    }
-                }
+                        if ($menuItem->getRewriteId()) {
+                            /**
+                    * @var Rewrite $rewrite
+                    */
+                            $rewrite = $this->getContainer()->make(Rewrite::class)->fill($menuItem->getRewriteId());
+                            if ($rewrite->getRoute() == '/page/'.$homepageid) {
+                                $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
+                            }
+                        }
 
-                $leaf = [
-                    'title' => $menuItem->getTitle(),
-                    'href' => $menuItem->getLinkUrl(),
-                    'target' => $menuItem->getTarget(),
-                ];
-                return $this->_renderLink($leaf);
-            }, array_filter($breadcrumbs)));
+                        $leaf = [
+                        'title' => $menuItem->getTitle(),
+                        'href' => $menuItem->getLinkUrl(),
+                        'target' => $menuItem->getTarget(),
+                        ];
+                        return $this->_renderLink($leaf);
+                    },
+                    array_filter($breadcrumbs)
+                )
+            );
         }
         $breadcrumbs_html .= implode('</li><li class="breadcrumb-item">', $breadcrumbs_links);
         $breadcrumbs_html .= '</li></ol></nav>';
@@ -87,7 +96,8 @@ class BreadCrumbs extends BaseCodeBlock
 
     /**
      * internally renders menu link
-     * @param  array $leaf
+     *
+     * @param  array  $leaf
      * @param  string $link_class
      * @return string
      */

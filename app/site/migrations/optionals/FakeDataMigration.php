@@ -20,26 +20,39 @@ use \Degami\SqlSchema\Index;
  */
 class FakeDataMigration extends Migration
 {
-    /** @var string lorem ipsum paragraph */
+    /**
+     * @var string lorem ipsum paragraph
+     */
     protected $lipsum_p = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra sapien nunc, id suscipit sem fermentum eget. Maecenas euismod mauris nibh, id interdum est ultricies nec. Integer euismod justo non ullamcorper facilisis. Fusce varius quam et enim tristique rutrum. Morbi feugiat pretium ultrices. Aenean eu sem ac massa commodo accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ullamcorper pharetra dictum. Fusce rutrum auctor sapien. Aenean vel lectus ex. Duis dictum nisl quis mauris ullamcorper ullamcorper. </p>';
 
-    /** @var array locales */
+    /**
+     * @var array locales
+     */
     protected $locales = ['en', 'fr', 'it', 'ro'];
 
-    /** @var array menu names */
+    /**
+     * @var array menu names
+     */
     protected $menu_names = [];
 
-    /** @var string site mail address */
+    /**
+     * @var string site mail address
+     */
     protected $site_email = 'admin@localhost';
 
-    /** @var array links */
+    /**
+     * @var array links
+     */
     protected $linkexchange_urls = ["https://www.google.com","https://www.wikipedia.org","https://stackoverflow.com","https://linux.org/","https://www.php.net"];
 
-    /** @var integer website id */
+    /**
+     * @var integer website id
+     */
     protected $website_id = 1;
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getName()
@@ -196,12 +209,14 @@ class FakeDataMigration extends Migration
                         $element_to = ${$arrayname}[$other_locale][$index];
 
                         $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
-                        $rewrite_translation_row->update([
+                        $rewrite_translation_row->update(
+                            [
                             'source' => $element_from->getRewrite()->getId(),
                             'source_locale' => $element_from->getRewrite()->getLocale(),
                             'destination' => $element_to->getRewrite()->getId(),
                             'destination_locale' => $element_to->getRewrite()->getLocale()
-                        ]);
+                            ]
+                        );
                     }
                 }
             }
@@ -211,12 +226,14 @@ class FakeDataMigration extends Migration
                 $element_from = $links_exchange_rewrites[$locale];
                 $element_to = $links_exchange_rewrites[$other_locale];
                 $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
-                $rewrite_translation_row->update([
+                $rewrite_translation_row->update(
+                    [
                     'source' => $element_from->getId(),
                     'source_locale' => $element_from->getLocale(),
                     'destination' => $element_to->getId(),
                     'destination_locale' => $element_to->getLocale()
-                ]);
+                    ]
+                );
             }
         }
 
@@ -255,13 +272,15 @@ class FakeDataMigration extends Migration
                 $config = $this->getDb()->createRow('configuration');
             }
 
-            $config->update([
+            $config->update(
+                [
                 'website_id' => $this->website_id,
                 'locale' => $locale,
                 'path' => 'app/frontend/main_menu',
                 'value' => $this->menu_names[$locale],
                 'is_system' => 1,
-            ]);
+                ]
+            );
 
             // ses
             $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'locale' => $locale, 'path'=> 'app/mail/ses_sender'])->fetch();
@@ -269,34 +288,40 @@ class FakeDataMigration extends Migration
                 $config = $this->getDb()->createRow('configuration');
             }
 
-            $config->update([
+            $config->update(
+                [
                 'website_id' => $this->website_id,
                 'locale' => $locale,
                 'path' => 'app/mail/ses_sender',
                 'value' => '',
                 'is_system' => 1,
-            ]);
+                ]
+            );
         }
 
         // email
         $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path'=> 'app/global/site_mail_address'])->fetch();
-        $config->update([
+        $config->update(
+            [
             'website_id' => $this->website_id,
             'locale' => null,
             'path' => 'app/global/site_mail_address',
             'value' => $this->site_email,
             'is_system' => 1,
-        ]);
+            ]
+        );
 
         // languages
         $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path'=> 'app/frontend/langs'])->fetch();
-        $config->update([
+        $config->update(
+            [
             'website_id' => $this->website_id,
             'locale' => null,
             'path' => 'app/frontend/langs',
             'value' => implode(',', $this->locales),
             'is_system' => 1,
-        ]);
+            ]
+        );
 
 
         $home_page = $this->getContainer()->call([\App\Site\Models\Page::class, 'load'], ['id' => 1]);
@@ -343,11 +368,12 @@ class FakeDataMigration extends Migration
 
     /**
      * adds a news model
-     * @param string $title
-     * @param string $content
+     *
+     * @param string    $title
+     * @param string    $content
      * @param \DateTime $date
-     * @param string $locale
-     * @param User $owner_model
+     * @param string    $locale
+     * @param User      $owner_model
      */
     private function addNews($title, $content, $date, $locale = 'en', $owner_model = null)
     {
@@ -367,11 +393,12 @@ class FakeDataMigration extends Migration
 
     /**
      * adds a page model
+     *
      * @param string $title
      * @param string $content
      * @param string $locale
      * @param array  $terms
-     * @param User $owner_model
+     * @param User   $owner_model
      * @param array  $images
      */
     private function addPage($title, $content, $locale = 'en', $terms = [], $owner_model = null, $images = [])
@@ -400,10 +427,11 @@ class FakeDataMigration extends Migration
 
     /**
      * adds a term model
+     *
      * @param string $title
      * @param string $content
      * @param string $locale
-     * @param User $owner_model
+     * @param User   $owner_model
      */
     private function addTerm($title, $content, $locale = 'en', $owner_model = null)
     {
@@ -423,11 +451,12 @@ class FakeDataMigration extends Migration
 
     /**
      * adds a link model
+     *
      * @param string $url
      * @param string $email
      * @param string $locale
      * @param array  $terms
-     * @param User $owner_model
+     * @param User   $owner_model
      */
     private function addLinkExchange($url, $email, $locale = 'en', $terms = [], $owner_model = null)
     {
@@ -453,11 +482,12 @@ class FakeDataMigration extends Migration
 
     /**
      * adds a contact form model
+     *
      * @param string $title
      * @param string $content
      * @param string $locale
      * @param array  $fields
-     * @param User $owner_model
+     * @param User   $owner_model
      */
     private function addContactForm($title, $content, $locale = 'en', $fields = [], $owner_model = null)
     {
@@ -474,13 +504,15 @@ class FakeDataMigration extends Migration
         $contact_model->persist();
 
         foreach ($fields as $key => $field) {
-            $this->getDb()->createRow('contact_definition')->update([
+            $this->getDb()->createRow('contact_definition')->update(
+                [
                 'contact_id' => $contact_model->id,
                 'field_label' => $field['label'],
                 'field_type' => $field['type'],
                 'field_required' => intval($field['required']),
                 'field_data' => $field['data'],
-            ]);
+                ]
+            );
         }
 
         return $contact_model;
@@ -488,11 +520,12 @@ class FakeDataMigration extends Migration
 
     /**
      * adds a menu item model
-     * @param string $title
-     * @param string $menu_name
+     *
+     * @param string  $title
+     * @param string  $menu_name
      * @param Rewrite $rewrite
-     * @param string $locale
-     * @param Menu $parent
+     * @param string  $locale
+     * @param Menu    $parent
      */
     private function addMenuItem($title, $menu_name, $rewrite, $locale = 'en', $parent = null)
     {
@@ -515,6 +548,7 @@ class FakeDataMigration extends Migration
 
     /**
      * adds a block model
+     *
      * @param string $title
      * @param string $content
      * @param string $region
@@ -536,11 +570,14 @@ class FakeDataMigration extends Migration
 
         if (!empty($rewrites)) {
             foreach ($rewrites as $rewrite) {
-                $this->getDb()->createRow('block_rewrite', [
+                $this->getDb()->createRow(
+                    'block_rewrite',
+                    [
                     'block_id' => $block_model->getId(),
                     'rewrite_id' => $rewrite->getId(),
-                ])
-                ->save();
+                    ]
+                )
+                    ->save();
             }
         }
 
@@ -549,6 +586,7 @@ class FakeDataMigration extends Migration
 
     /**
      * generates an image
+     *
      * @param  integer $w
      * @param  integer $h
      * @return MediaElement
@@ -595,6 +633,7 @@ class FakeDataMigration extends Migration
 
     /**
      * {@inheritdocs}
+     *
      * @return void
      */
     public function down()

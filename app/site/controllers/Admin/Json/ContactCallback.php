@@ -23,14 +23,19 @@ use \App\Site\Controllers\Admin\ContactForms as ContactFormsController;
  */
 class ContactCallback extends AdminJsonPage
 {
-    /** @var FAPI\Form form object */
+    /**
+     * @var FAPI\Form form object
+     */
     protected $form;
 
-    /** @var Contact contact object */
+    /**
+     * @var Contact contact object
+     */
     protected $contact = null;
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -40,8 +45,9 @@ class ContactCallback extends AdminJsonPage
 
     /**
      * returns an empty form
+     *
      * @param  FAPI\Form $form
-     * @param  array    &$form_state
+     * @param  array     &$form_state
      * @return FAPI\Form
      */
     public function emptyForm(FAPI\Form $form, &$form_state)
@@ -51,6 +57,7 @@ class ContactCallback extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
@@ -71,9 +78,9 @@ class ContactCallback extends AdminJsonPage
             }
 
             return $this
-                    ->getResponse()
-                    ->prepare($this->getRequest())
-                    ->setData($out);
+                ->getResponse()
+                ->prepare($this->getRequest())
+                ->setData($out);
         } catch (Exception $e) {
             return $this->getUtils()->exceptionJson($e);
         }
@@ -81,6 +88,7 @@ class ContactCallback extends AdminJsonPage
 
     /**
      * ajax callback
+     *
      * @param  FAPI\Form $form
      * @return FAPI\Abstracts\App\Base\Element
      */
@@ -92,6 +100,7 @@ class ContactCallback extends AdminJsonPage
     //not used on this class
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getJsonData()

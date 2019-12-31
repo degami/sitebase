@@ -34,6 +34,7 @@ class Stats extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -64,12 +65,14 @@ class Stats extends Command
         }
 
         $table
-            ->addRow([new TableCell(
-                $this->getCache()->getStats()->getInfo()."\n".
-                "Cache size: " . $this->getCache()->getStats()->getSize()."\n".
-                "Cache Lifetime: ".$this->getCache()->getCacheLifetime(),
-                ['colspan' => 2]
-            )]);
+            ->addRow(
+                [new TableCell(
+                    $this->getCache()->getStats()->getInfo()."\n".
+                    "Cache size: " . $this->getCache()->getStats()->getSize()."\n".
+                    "Cache Lifetime: ".$this->getCache()->getCacheLifetime(),
+                    ['colspan' => 2]
+                )]
+            );
 
         $table->render();
     }

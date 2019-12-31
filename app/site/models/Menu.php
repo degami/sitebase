@@ -17,6 +17,7 @@ use \Psr\Container\ContainerInterface;
 
 /**
  * Menu Item Model
+ *
  * @method int getId()
  * @method int getWebsiteId()
  * @method string getTitle()
@@ -36,6 +37,7 @@ class Menu extends ModelWithChildren
 
     /**
      * gets link URL
+     *
      * @return string
      */
     public function getLinkUrl()
@@ -45,7 +47,9 @@ class Menu extends ModelWithChildren
         }
 
         if ($this->getRewriteId()) {
-            /** @var Rewrite $rewrite */
+            /**
+ * @var Rewrite $rewrite
+*/
             $rewrite = $this->getContainer()->make(Rewrite::class)->fill($this->getRewriteId());
             return $this->getRouting()->getUrl('/') . '/' . ltrim($rewrite->getUrl(), '/');
         }
@@ -55,21 +59,25 @@ class Menu extends ModelWithChildren
 
     /**
      * gets all menu names
+     *
      * @param  ContainerInterface $container
      * @return array
      */
     public static function allMenusNames(ContainerInterface $container)
     {
-        return array_map(function ($el) use ($container) {
-            return  (object)($el);
-        },
-        $container->get('db')->query(
-            "SELECT menu_name FROM `".static::defaultTableName()."` WHERE 1 GROUP BY menu_name"
-        )->fetchAll());
+        return array_map(
+            function ($el) use ($container) {
+                return  (object)($el);
+            },
+            $container->get('db')->query(
+                "SELECT menu_name FROM `".static::defaultTableName()."` WHERE 1 GROUP BY menu_name"
+            )->fetchAll()
+        );
     }
 
     /**
      * gets parent object if any
+     *
      * @return self|null
      */
     public function getParentObj()
@@ -83,6 +91,7 @@ class Menu extends ModelWithChildren
 
     /**
      * gets parent ids tree
+     *
      * @return string
      */
     public function getParentIds()

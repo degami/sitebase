@@ -25,6 +25,7 @@ class MediaPages extends AdminJsonPage
 {
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -34,6 +35,7 @@ class MediaPages extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -43,6 +45,7 @@ class MediaPages extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getJsonData()
@@ -50,16 +53,22 @@ class MediaPages extends AdminJsonPage
         $route_data = $this->getRouteInfo()->getVars();
         $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $route_data['id']]);
 
-        $pages = array_map(function ($el) use ($media) {
-            $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-            return $page->getTitle().
+        $pages = array_map(
+            function ($el) use ($media) {
+                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                return $page->getTitle().
                 ' <a class="deassoc_lnk" data-page_id="'.$page->id.'" data-media_id="'.$el->id.'" href="'.$this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?page_id='.$page->id.'&media_id='.$el->id.'&action=media_deassoc">&times;</a>';
-        }, $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll());
+            },
+            $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll()
+        );
 
-        $pagesData = array_map(function ($el) {
-            $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-            return $el->getData();
-        }, $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll());
+        $pagesData = array_map(
+            function ($el) {
+                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                return $el->getData();
+            },
+            $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll()
+        );
 
 
         if ($this->getRequest()->get('action') == 'media_deassoc') {
@@ -67,19 +76,25 @@ class MediaPages extends AdminJsonPage
             $form = $pagesController->getForm();
 
             $form->setAction($this->getUrl('admin.pages').'?action='.$this->getRequest()->get('action'));
-            $form->addField('media_id', [
+            $form->addField(
+                'media_id',
+                [
                 'type' => 'hidden',
                 'default_value' => $media->getId(),
-            ]);
+                ]
+            );
         } else {
             $mediaController = $this->getContainer()->make(\App\Site\Controllers\Admin\Media::class);
             $form = $mediaController->getForm();
 
             $form->setAction($this->getUrl('admin.media').'?action='.$this->getRequest()->get('action'));
-            $form->addField('media_id', [
+            $form->addField(
+                'media_id',
+                [
                 'type' => 'hidden',
                 'default_value' => $media->getId(),
-            ]);
+                ]
+            );
         }
 
         return [

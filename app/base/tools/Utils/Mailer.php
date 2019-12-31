@@ -25,6 +25,7 @@ class Mailer extends ContainerAwareObject
 {
     /**
      * send a mail
+     *
      * @param  string  $from
      * @param  string  $to
      * @param  string  $subject
@@ -52,11 +53,12 @@ class Mailer extends ContainerAwareObject
 
     /**
      * send email using template
+     *
      * @param  string $from
      * @param  string $to
      * @param  string $subject
      * @param  string $mail_template
-     * @param  string  $mail_variables
+     * @param  string $mail_variables
      * @return boolean
      */
     public function sendTemplateMail($from, $to, $subject, $mail_template, $mail_variables = [])
@@ -76,6 +78,7 @@ class Mailer extends ContainerAwareObject
 
     /**
      * sends a mail using SMTP
+     *
      * @param  string $from
      * @param  string $to
      * @param  string $subject
@@ -95,11 +98,11 @@ class Mailer extends ContainerAwareObject
 
             // Create a message
             $message = $this->getContainer()->make(Swift_Message::class)
-              ->setFrom($from)
-              ->setTo($to)
-              ->setContentType($content_type)
-              ->setSubject($subject)
-              ->setBody($body);
+                ->setFrom($from)
+                ->setTo($to)
+                ->setContentType($content_type)
+                ->setSubject($subject)
+                ->setBody($body);
 
             // Send the message
             $result = $this->getSmtpMailer()->send($message);
@@ -114,6 +117,7 @@ class Mailer extends ContainerAwareObject
 
     /**
      * send a mail using SES
+     *
      * @param  string $from
      * @param  string $to
      * @param  string $subject
@@ -139,7 +143,8 @@ class Mailer extends ContainerAwareObject
         }
 
         try {
-            $result = $this->getSesMailer()->sendEmail([
+            $result = $this->getSesMailer()->sendEmail(
+                [
                 'Destination' => [
                     'ToAddresses' => $to,
                 ],
@@ -165,7 +170,8 @@ class Mailer extends ContainerAwareObject
                 // following line
 
                 // 'ConfigurationSetName' => $configuration_set,
-            ]);
+                ]
+            );
             $messageId = $result['MessageId'];
             return true;
         } catch (AwsException $e) {
@@ -177,11 +183,12 @@ class Mailer extends ContainerAwareObject
 
     /**
      * logs mail sent
-     * @param  string $from
-     * @param  string $to
-     * @param  string $subject
+     *
+     * @param  string  $from
+     * @param  string  $to
+     * @param  string  $subject
      * @param  integer $result
-     * @param  string $mail_template
+     * @param  string  $mail_template
      * @return MailLog|boolean
      */
     protected function logMail($from, $to, $subject, $result, $mail_template = null)

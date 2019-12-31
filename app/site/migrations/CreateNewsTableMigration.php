@@ -21,11 +21,14 @@ use \Degami\SqlSchema\Table;
  */
 class CreateNewsTableMigration extends DBMigration
 {
-    /** @var string table name */
+    /**
+     * @var string table name
+     */
     protected $tableName = 'news';
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     public function getName()
@@ -35,7 +38,8 @@ class CreateNewsTableMigration extends DBMigration
 
     /**
      * {@inheritdocs}
-     * @param Table $table
+     *
+     * @param  Table $table
      * @return Table
      */
     public function addDBTableDefinition(Table $table)
@@ -45,8 +49,8 @@ class CreateNewsTableMigration extends DBMigration
             ->addColumn('url', 'VARCHAR', [64])
             ->addColumn('locale', 'VARCHAR', [10])
             ->addColumn('title', 'VARCHAR', [255], [], false, null)
-             ->addColumn('content', 'TEXT', null, [], true, null)
-             ->addColumn('date', 'DATETIME', null, [], true, null)
+            ->addColumn('content', 'TEXT', null, [], true, null)
+            ->addColumn('date', 'DATETIME', null, [], true, null)
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')

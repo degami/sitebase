@@ -34,6 +34,7 @@ class Show extends Command
 
     /**
      * {@inheritdocs}
+     *
      * @param  InputInterface  $input
      * @param  OutputInterface $output
      * @return void
@@ -52,12 +53,14 @@ class Show extends Command
             }
 
             $table
-            ->addRow([
-                '<info>'.$user->getId().'</info>',
-                $user->getUsername(),
-                $user->getEmail(),
-                $user->getRole()->getName(),
-            ]);
+                ->addRow(
+                    [
+                    '<info>'.$user->getId().'</info>',
+                    $user->getUsername(),
+                    $user->getEmail(),
+                    $user->getRole()->getName(),
+                    ]
+                );
         }
         $table->render();
     }

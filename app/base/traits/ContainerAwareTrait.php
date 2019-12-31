@@ -20,11 +20,14 @@ use \App\Base\Exceptions\BasicException;
  */
 trait ContainerAwareTrait
 {
-    /** @var ContainerInterface container */
+    /**
+     * @var ContainerInterface container
+     */
     protected $container;
 
     /**
      * gets container object
+     *
      * @return ContainerInterface
      */
     public function getContainer()
@@ -34,6 +37,7 @@ trait ContainerAwareTrait
 
     /**
      * gets registered service
+     *
      * @param  string $service_key
      * @return mixed
      */
@@ -52,6 +56,7 @@ trait ContainerAwareTrait
 
     /**
      * gets app object
+     *
      * @return \App\App
      */
     public function getApp()
@@ -61,6 +66,7 @@ trait ContainerAwareTrait
 
     /**
      * gets log object
+     *
      * @return \Monolog\Logger
      */
     public function getLog()
@@ -70,6 +76,7 @@ trait ContainerAwareTrait
 
     /**
      * gets plates engine object
+     *
      * @return \League\Plates\Engine
      */
     public function getTemplates()
@@ -79,6 +86,7 @@ trait ContainerAwareTrait
 
     /**
      * gets db object
+     *
      * @return \LessQL\Database
      */
     public function getDb()
@@ -88,6 +96,7 @@ trait ContainerAwareTrait
 
     /**
      * gets PDO object
+     *
      * @return \PDO
      */
     public function getPdo()
@@ -97,6 +106,7 @@ trait ContainerAwareTrait
 
     /**
      * gets schema object
+     *
      * @return \Degami\SqlSchema\Schema
      */
     public function getSchema()
@@ -106,6 +116,7 @@ trait ContainerAwareTrait
 
     /**
      * gets events manager service
+     *
      * @return \Gplanchat\EventManager\SharedEventEmitter
      */
     public function getEventManager()
@@ -115,6 +126,7 @@ trait ContainerAwareTrait
 
     /**
      * gets routing service
+     *
      * @return \App\Site\Routing\Web
      */
     public function getRouting()
@@ -124,6 +136,7 @@ trait ContainerAwareTrait
 
     /**
      * gets global utils service
+     *
      * @return \App\Base\Tools\Utils\Globals
      */
     public function getUtils()
@@ -133,6 +146,7 @@ trait ContainerAwareTrait
 
     /**
      * gets site data service
+     *
      * @return \App\Base\Tools\Utils\SiteData
      */
     public function getSiteData()
@@ -142,6 +156,7 @@ trait ContainerAwareTrait
 
     /**
      * gets assets manager
+     *
      * @return \App\Base\Tools\Assets\Manager
      */
     public function getAssets()
@@ -151,6 +166,7 @@ trait ContainerAwareTrait
 
     /**
      * gets guzzle service
+     *
      * @return \GuzzleHttp\Client
      */
     public function getGuzzle()
@@ -160,6 +176,7 @@ trait ContainerAwareTrait
 
     /**
      * gets imagine service
+     *
      * @return \Imagine\Gd\Imagine
      */
     public function getImagine()
@@ -169,6 +186,7 @@ trait ContainerAwareTrait
 
     /**
      * gets mailer service
+     *
      * @return \App\Base\Tools\Utils\Mailer
      */
     public function getMailer()
@@ -178,6 +196,7 @@ trait ContainerAwareTrait
 
     /**
      * gets SES mailer service
+     *
      * @return \Aws\Ses\SesClient
      */
     public function getSesMailer()
@@ -187,6 +206,7 @@ trait ContainerAwareTrait
 
     /**
      * gets SMTP mailer service
+     *
      * @return \Swift_Mailer
      */
     public function getSmtpMailer()
@@ -196,6 +216,7 @@ trait ContainerAwareTrait
 
     /**
      * get cache manager
+     *
      * @return \App\Base\Tools\Cache\Manager
      */
     public function getCache()
@@ -205,6 +226,7 @@ trait ContainerAwareTrait
 
     /**
      * gets html renderer service
+     *
      * @return \App\Base\Tools\Utils\HtmlPartsRenderer
      */
     public function getHtmlRenderer()
@@ -214,6 +236,7 @@ trait ContainerAwareTrait
 
     /**
      * gets env variable
+     *
      * @param  string $variable
      * @return mixed
      */

@@ -17,6 +17,7 @@ use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * Contact Submission Model
+ *
  * @method int getId()
  * @method int getContactId()
  * @method int getUserId()
@@ -29,6 +30,7 @@ class ContactSubmission extends Model
 
     /**
      * gets submission Contact Form
+     *
      * @return Contact
      */
     public function getContact()
@@ -40,6 +42,7 @@ class ContactSubmission extends Model
 
     /**
      * submit data
+     *
      * @param  ContainerInterface $container
      * @param  array              $submission_data
      * @return self
@@ -63,17 +66,21 @@ class ContactSubmission extends Model
 
     /**
      * gets full key => value pairs data
+     *
      * @return array
      */
     public function getFullData()
     {
         $data = $this->getData();
         $data['user'] = $this->getContainer()->make(User::class)->fill($data['user_id'])->getData();
-        $values = array_map(function ($el) {
-            $field_label = $el->contact_definition()->fetch()->field_label;
-            $field_value = $el->field_value;
-            return [$field_label => $field_value];
-        }, $this->getDb()->table('contact_submission_data')->where(['contact_submission_id' => $this->id])->fetchAll());
+        $values = array_map(
+            function ($el) {
+                $field_label = $el->contact_definition()->fetch()->field_label;
+                $field_value = $el->field_value;
+                return [$field_label => $field_value];
+            },
+            $this->getDb()->table('contact_submission_data')->where(['contact_submission_id' => $this->id])->fetchAll()
+        );
 
         $data['values'] = [];
         foreach ($values as $row) {

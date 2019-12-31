@@ -25,6 +25,7 @@ class PageMedia extends AdminJsonPage
 {
     /**
      * return route path
+     *
      * @return string
      */
     public static function getRoutePath()
@@ -34,6 +35,7 @@ class PageMedia extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return string
      */
     protected function getAccessPermission()
@@ -43,6 +45,7 @@ class PageMedia extends AdminJsonPage
 
     /**
      * {@inheritdocs}
+     *
      * @return array
      */
     protected function getJsonData()
@@ -50,25 +53,34 @@ class PageMedia extends AdminJsonPage
         $route_data = $this->getRouteInfo()->getVars();
         $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $route_data['id']]);
 
-        $gallery = array_map(function ($el) use ($page) {
-            return '<div class="gallery-elem">'.
+        $gallery = array_map(
+            function ($el) use ($page) {
+                return '<div class="gallery-elem">'.
                 $el->getThumb("150x100", null, 'img-fluid img-thumbnail').
                 ' <a class="deassoc_lnk" data-page_id="'.$page->id.'" data-media_id="'.$el->id.'" href="'.$this->getUrl('admin.json.pagemedia', ['id' => $page->id]).'?page_id='.$page->id.'&media_id='.$el->id.'&action=deassoc">&times;</a>'.
                 '</div>';
-        }, $page->getGallery());
+            },
+            $page->getGallery()
+        );
 
-        $galleryData = array_map(function ($el) {
-            return $el->getData();
-        }, $page->getGallery());
+        $galleryData = array_map(
+            function ($el) {
+                return $el->getData();
+            },
+            $page->getGallery()
+        );
 
         $mediaController = $this->getContainer()->make(\App\Site\Controllers\Admin\Media::class);
         $form = $mediaController->getForm();
 
         $form->setAction($this->getUrl('admin.media').'?action='.$this->getRequest()->get('action'));
-        $form->addField('page_id', [
+        $form->addField(
+            'page_id',
+            [
             'type' => 'hidden',
             'default_value' => $page->getId(),
-        ]);
+            ]
+        );
 
         return [
             'success' => true,

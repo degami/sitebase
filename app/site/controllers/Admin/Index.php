@@ -59,7 +59,6 @@ class Index extends AdminPage
             return $this->getUtils()->errorPage(403);
         }
         
-        $this->addFlashMessage('info', 'test message');
         return $this->doRedirect($this->getUrl('admin.dashboard'));
     }
 }

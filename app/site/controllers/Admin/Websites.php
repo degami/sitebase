@@ -90,10 +90,11 @@ class Websites extends AdminManageModelsPage
 
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
-                $website_site_name = $website_domain = $website_default_locale = '';
+                $website_site_name = $website_domain = $website_aliases = $website_default_locale = '';
                 if ($website instanceof Website) {
                     $website_site_name = $website->site_name;
                     $website_domain = $website->domain;
+                    $website_aliases = $website->aliases;
                     $website_default_locale = $website->default_locale;
                 }
                 $form->addField(
@@ -105,34 +106,42 @@ class Websites extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'domain',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Domain',
-                        'default_value' => $website_domain,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'default_locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Default Locale',
-                        'default_value' => $website_default_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'domain',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Domain',
+                    'default_value' => $website_domain,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'aliases',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Domain',
+                    'default_value' => $website_aliases,
+                    ]
+                )
+                ->addField(
+                    'default_locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Default Locale',
+                    'default_value' => $website_default_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -181,15 +190,10 @@ class Websites extends AdminManageModelsPage
                 // intentional fall trough
                 // no break
             case 'edit':
-                $website->url = $values['url'];
-                $website->title = $values['title'];
-                $website->locale = $values['locale'];
-                $website->template_name = empty($values['template_name']) ? null : $values['template_name'];
-                $website->content = $values['content'];
-                $website->meta_keywords = $values['meta_keywords'];
-                $website->meta_description = $values['meta_description'];
-                $website->html_title = $values['html_title'];
-                $website->website_id = $values['website_id'];
+                $website->site_name = $values['site_name'];
+                $website->domain = $values['domain'];
+                $website->aliases = $values['aliases'];
+                $website->default_locale = $values['default_locale'];
 
                 $website->persist();
                 break;

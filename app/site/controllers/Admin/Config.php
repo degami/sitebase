@@ -98,13 +98,7 @@ class Config extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                if ($page instanceof Page) {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($page->getWebsiteId());
-                } else {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
-                }
-
-                $languages = [null => $this->getUtils()->translate('All languages')] + $languages;
+                $languages = [null => $this->getUtils()->translate('All languages')] + $this->getUtils()->getSiteLanguagesSelectOptions();
 
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
@@ -196,10 +190,13 @@ class Config extends AdminManageModelsPage
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
+        $values = $form->values();
+
         /**
- * @var Configuration $configuration
-*/
+         * @var Configuration $configuration
+         */
         $configuration = $this->newEmptyObject();
+
         if ($this->getRequest()->get('config_id')) {
             $configuration = $this->loadObject($this->getRequest()->get('config_id'));
 
@@ -212,7 +209,6 @@ class Config extends AdminManageModelsPage
             }
         }
 
-        $values = $form->values();
         switch ($values['action']) {
             case 'new':
             case 'edit':

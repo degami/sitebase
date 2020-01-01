@@ -24,9 +24,11 @@ $this->layout('base::html', ['title' => $title] + get_defined_vars()) ?>
         <?= $this->sitebase()->renderBlocks('post_header', $controller); ?>
     </div>
 
-    <?= $this->sitebase()->renderBlocks('pre_content', $controller); ?>
-    <?= $this->section('content'); ?>
-    <?= $this->sitebase()->renderBlocks('post_content', $controller); ?>
+    <div class="content">
+        <?= $this->sitebase()->renderBlocks('pre_content', $controller); ?>
+        <?= $this->section('content'); ?>
+        <?= $this->sitebase()->renderBlocks('post_content', $controller); ?>
+    </div>
 
     <div class="footer">
         <?= $this->sitebase()->renderBlocks('pre_footer', $controller); ?>

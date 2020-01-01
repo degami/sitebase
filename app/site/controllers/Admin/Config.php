@@ -201,7 +201,7 @@ class Config extends AdminManageModelsPage
             $configuration = $this->loadObject($this->getRequest()->get('config_id'));
 
             if (($values['action'] == 'edit' || $values['action'] == 'delete') && $this->getCache()->has('site.configuration')) {
-                $cached_config = $this->getUtils()->getCachedConfig();
+                $cached_config = $this->getSiteData()->getCachedConfig();
                 if (isset($cached_config[$configuration->path])) {
                     unset($cached_config[$configuration->path]);
                     $this->getCache()->set('site.configuration', $cached_config);

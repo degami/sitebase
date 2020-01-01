@@ -97,6 +97,7 @@ class Login extends FormPage
             $this->getAssets()->addCss('#login .form-control:focus {z-index: 2;}');
             $this->getAssets()->addCss('#login input[type="email"] {margin-bottom: -1px;border-bottom-right-radius: 0;border-bottom-left-radius: 0;}');
             $this->getAssets()->addCss('#login input[type="password"] {margin-bottom: 10px;border-top-left-radius: 0;border-top-right-radius: 0;}');
+            $this->getAssets()->addCss('.content {background: transparent; border: 0;}');
             $this->getAssets()->addCss('.footer .copy {text-align: center;}');
         }
         return parent::beforeRender();

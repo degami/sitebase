@@ -95,6 +95,11 @@ trait PageTrait
         return false;
     }
 
+    /**
+     * checks if current is homepage
+     *
+     * @return boolean
+     */
     public function isHomePage()
     {
         if ($this instanceof Page) {

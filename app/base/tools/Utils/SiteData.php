@@ -114,6 +114,11 @@ class SiteData extends ContainerAwareObject
         return null;
     }
 
+    /**
+     * gets preferred language by browser configuration
+     *
+     * @return string
+     */
     public function getBrowserPreferredLanguage()
     {
         $langs = [];

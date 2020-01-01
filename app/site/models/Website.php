@@ -23,8 +23,15 @@ use \App\Base\Abstracts\Model;
  */
 class Website extends Model
 {
+    /**
+     * {@inheritdocs}
+     *
+     * @return self
+     */
     public function prePersist()
     {
         $this->aliases = implode(",", array_filter(array_map('trim', explode(",", $this->aliases))));
+
+        return parent::prePersist();
     }
 }

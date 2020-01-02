@@ -34,6 +34,17 @@ use \Degami\PHPFormsApi\Accessories\TagElement;
  */
 class Globals extends ContainerAwareObject
 {
+
+    /**
+     * get page regions list
+     *
+     * @return array
+     */
+    public function getPageRegions()
+    {
+        return array_filter(array_map('trim', explode(",", $this->getEnv('PAGE_REGIONS', 'menu,header,content,footer'))));
+    }
+
     /**
      * gets available block regions
      *
@@ -41,24 +52,18 @@ class Globals extends ContainerAwareObject
      */
     public function getBlockRegions()
     {
-        return [
+        $out = [
             '' => '',
-
             'after_body_open' => 'After Body-Open',
             'before_body_close' => 'Before Body-Close',
-
-            'pre_menu' => 'Pre-Menu',
-            'post_menu' => 'Post-Menu',
-
-            'pre_header' => 'Pre-Header',
-            'post_header' => 'Post-Header',
-
-            'pre_content' => 'Pre-Content',
-            'post_content' => 'Post-Content',
-
-            'pre_footer' => 'Pre-Footer',
-            'post_footer' => 'Post-Footer',
         ];
+
+        foreach ($this->getPageRegions() as $region) {
+            $out['pre_'.$region] = 'Pre-'.ucfirst(strtolower($region));
+            $out['post_'.$region] = 'Post-'.ucfirst(strtolower($region));
+        }
+
+        return $out;
     }
 
     /**

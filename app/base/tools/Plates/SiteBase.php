@@ -240,4 +240,14 @@ class SiteBase implements ExtensionInterface
         }
         return implode(" ", array_slice($words, 0, $max_words)).' ...';
     }
+
+    /**
+     * returns page regions
+     *
+     * @return array
+     */
+    public function getPageRegions()
+    {
+        return $this->container->get('utils')->getPageRegions();
+    }
 }

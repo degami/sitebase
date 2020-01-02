@@ -12,27 +12,11 @@ $this->layout('base::html', ['title' => $title] + get_defined_vars()) ?>
 <?php $this->stop() ?>
 
 <div class="container-fluid">
-    <div class="menu">
-        <?= $this->sitebase()->renderBlocks('pre_menu', $controller); ?>
-        <?= $this->section('menu'); ?>
-        <?= $this->sitebase()->renderBlocks('post_menu', $controller); ?>
-    </div>
-
-    <div class="header">
-        <?= $this->sitebase()->renderBlocks('pre_header', $controller); ?>
-        <?= $this->section('header'); ?>
-        <?= $this->sitebase()->renderBlocks('post_header', $controller); ?>
-    </div>
-
-    <div class="content">
-        <?= $this->sitebase()->renderBlocks('pre_content', $controller); ?>
-        <?= $this->section('content'); ?>
-        <?= $this->sitebase()->renderBlocks('post_content', $controller); ?>
-    </div>
-
-    <div class="footer">
-        <?= $this->sitebase()->renderBlocks('pre_footer', $controller); ?>
-        <?= $this->section('footer'); ?>
-        <?= $this->sitebase()->renderBlocks('post_footer', $controller); ?>
-    </div>
+    <?php foreach ($this->sitebase()->getPageRegions() as $region) :?>
+        <div class="<?= $region; ?>">
+            <?= $this->sitebase()->renderBlocks('pre_'.$region, $controller); ?>
+            <?= $this->section($region); ?>
+            <?= $this->sitebase()->renderBlocks('post_'.$region, $controller); ?>
+        </div>
+    <?php endforeach; ?>
 </div>

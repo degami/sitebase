@@ -238,11 +238,12 @@ trait ContainerAwareTrait
      * gets env variable
      *
      * @param  string $variable
+     * @param  mixed  $default
      * @return mixed
      */
-    public function getEnv($variable)
+    public function getEnv($variable, $default = null)
     {
         $env = (array)$this->getService('env');
-        return $env[$variable] ?? null;
+        return $env[$variable] ?? $default;
     }
 }

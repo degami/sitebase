@@ -1,6 +1,6 @@
 <?php
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
-<div class="jumbotron">
+<div class="jumbotron p-4">
     <div class="row">
         <div class="col-2 text-center">
             <?php echo $this->sitebase()->getGravatar($current_user->email, 100);?>            

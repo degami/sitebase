@@ -15,6 +15,7 @@ use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \Spatie\DbDumper\Databases\MySql;
 use \Spatie\DbDumper\Compressors\GzipCompressor;
+use \App\Site\Models\QueueMessage;
 use \App\App;
 
 /**
@@ -60,5 +61,19 @@ class DbManager extends ContainerAwareObject
     {
         $statement = $this->getDb()->query('DELETE FROM cron_log WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR)');
         $statement->execute();
+
+        return true;
+    }
+
+    /**
+     * remove processed queue messages older than 12 hours
+     * @return boolean
+     */
+    public function dropOldQueueMessages()
+    {
+        $statement = $this->getDb()->query('DELETE FROM queue_message WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR) AND status = '.$db->quote(QueueMessage::STATUS_PROCESSED));
+        $statement->execute();
+
+        return true;
     }
 }

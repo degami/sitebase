@@ -1,8 +1,15 @@
 <?php
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 <div class="jumbotron">
-    <h4><?= $this->sitebase()->translate('Welcome home');?>, <?= $current_user->getNickname();?></h4>
-    <div class="info"><?= $current_user->getEmail();?> (<?= $this->sitebase()->translate('role');?>: <?= $current_user->getRole()->getName();?>)</div>
+    <div class="row">
+        <div class="col-2 text-center">
+            <?php echo $this->sitebase()->getGravatar($current_user->email, 100);?>            
+        </div>
+        <div class="col-10 mt-3">
+            <h4><?= $this->sitebase()->translate('Welcome home');?>, <?= $current_user->getNickname();?></h4>
+            <div class="info"><?= $current_user->getEmail();?> (<?= $this->sitebase()->translate('role');?>: <?= $current_user->getRole()->getName();?>)</div>            
+        </div>
+    </div>
 </div>
 
 <div class="counters">

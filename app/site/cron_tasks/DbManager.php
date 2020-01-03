@@ -50,4 +50,15 @@ class DbManager extends ContainerAwareObject
             ->useCompressor(new GzipCompressor())
             ->dumpToFile(App::getDir(App::DUMPS).DS.'dump.'.date("Ymd_His").'.sql.gz');
     }
+
+    /**
+     * remove cron logs older than 12 hours
+     *
+     * @return boolean
+     */
+    public function dropOldCronLogs()
+    {
+        $statement = $this->getDb()->query('DELETE FROM cron_log WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR)');
+        $statement->execute();
+    }
 }

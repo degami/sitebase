@@ -54,8 +54,8 @@ class Sitemap extends FrontendModel
                             'rewrite' => $rewrite->id,
                             'changefreq' => $el->change_freq,
                             'priority' => $el->priority,
-                            'loc' => $rewrite->getUrl(),
-                            'lastmod' => $rewrite->getUpdatedAt(),
+                            'loc' => $this->getRouting()->getUrl('frontend.root').ltrim($rewrite->getUrl(), '/'),
+                            'lastmod' => (new DateTime($rewrite->getUpdatedAt()))->format('Y-m-d'),
                         ];
                     },
                     $this->sitemap_rewriteList()->fetchAll()

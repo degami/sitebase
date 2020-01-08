@@ -249,7 +249,7 @@ class ContactForms extends AdminManageModelsPage
                                     'title' => $component['field_label'],
                                     'collapsible' => true,
                                     'collapsed' => true,
-                                        ],
+                                    ],
                                     $index
                                 ),
                                 $index,
@@ -315,15 +315,15 @@ class ContactForms extends AdminManageModelsPage
                     'default_value' => $contact_submit_to,
                     ]
                 )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -442,8 +442,8 @@ class ContactForms extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Contact $contact
-*/
+         * @var Contact $contact
+         */
         $contact = $this->newEmptyObject();
         if ($this->getRequest()->get('contact_id')) {
             $contact = $this->loadObject($this->getRequest()->get('contact_id'));

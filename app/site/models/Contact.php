@@ -12,7 +12,6 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\FrontendModel;
-use \App\Base\Traits\WithOwnerTrait;
 use \Degami\PHPFormsApi as FAPI;
 
 /**
@@ -34,8 +33,6 @@ use \Degami\PHPFormsApi as FAPI;
  */
 class Contact extends FrontendModel
 {
-    use WithOwnerTrait;
-
     /**
      * {@inheritdocs}
      *

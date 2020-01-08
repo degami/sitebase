@@ -117,6 +117,14 @@
     </li>
     <?php endif; ?>
 
+    <?php if ($controller->checkPermission('administer_sitemaps')) : ?>
+    <li class="nav-item">
+        <a class="nav-link" href="<?= $this->sitebase()->getUrl('admin.sitemaps');?>">
+            <?php $this->sitebase()->drawIcon('link'); ?> <span class="text"><?= $this->sitebase()->translate('Sitemaps');?></span>
+        </a>
+    </li>
+    <?php endif; ?>
+
     <?php if ($controller->checkPermission('administer_logs')) : ?>
     <li class="nav-item">
         <a class="nav-link" href="<?= $this->sitebase()->getUrl('admin.logs');?>">

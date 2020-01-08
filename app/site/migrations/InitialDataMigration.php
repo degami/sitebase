@@ -145,6 +145,7 @@ class InitialDataMigration extends Migration
             'administer_links',
             'administer_queue',
             'administer_news',
+            'administer_sitemaps',
         ];
         foreach ($permissions as $permission_name) {
             $this->addPermission($admin_role_model, $permission_name);

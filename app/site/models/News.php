@@ -12,7 +12,6 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\FrontendModel;
-use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * News Model
@@ -29,8 +28,6 @@ use \App\Base\Traits\WithOwnerTrait;
  */
 class News extends FrontendModel
 {
-    use WithOwnerTrait;
-
     /**
      * {@inheritdocs}
      *

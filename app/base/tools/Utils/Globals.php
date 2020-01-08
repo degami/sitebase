@@ -28,6 +28,7 @@ use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
 use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Spatie\ArrayToXml\ArrayToXml;
 
 /**
  * Global utils functions Helper Class
@@ -214,6 +215,35 @@ class Globals extends ContainerAwareObject
             ['Content-Type' => 'application/json']
         ));
     }
+
+    /**
+     * returns an exception error xml
+     *
+     * @param  \Exception $exception
+     * @return Response
+     */
+    public function exceptionXML(\Exception $exception)
+    {
+        if ($this->getEnv('DEBUG')) {
+            $content = [
+                'success' => false,
+                'message' => $exception->getMessage(),
+                'trace' => $exception->getTraceAsString(),
+            ];
+        } else {
+            $content = [
+                'success' => false,
+                'message' => 'Exception!',
+            ];
+        }
+
+        return (new Response(
+            ArrayToXml::convert($content),
+            500,
+            ['Content-Type' => 'text/xml']
+        ));
+    }
+
 
     /**
      * returns a "site is offline" error page

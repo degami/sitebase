@@ -18,14 +18,15 @@ use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Models\Rewrite;
 use \Exception;
 use \App\Base\Traits\WithWebsiteTrait;
+use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * A model that will be shown on frontend
  */
 abstract class FrontendModel extends Model
 {
-    use WithWebsiteTrait;
-    
+    use WithWebsiteTrait, WithOwnerTrait;
+
     /**
      * @var Rewrite|null rewrite object
      */
@@ -69,11 +70,11 @@ abstract class FrontendModel extends Model
     public function postPersist()
     {
         $rewrite = $this->getRewrite();
-        $rewrite->website_id = $this->website_id;
+        $rewrite->website_id = $this->getWebsiteId();
         $rewrite->url = $this->getFrontendUrl();
-        $rewrite->route = '/'.$this->getRewritePrefix().'/'.$this->id;
-        $rewrite->user_id = null; // not a property for all FrontendModels
-        $rewrite->locale = $this->locale;
+        $rewrite->route = '/'.$this->getRewritePrefix().'/'.$this->getId();
+        $rewrite->user_id = $this->getUserId();
+        $rewrite->locale = $this->getLocale();
         $rewrite->persist();
         
         return parent::postPersist();

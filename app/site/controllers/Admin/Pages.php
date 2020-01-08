@@ -135,91 +135,91 @@ class Pages extends AdminManageModelsPage
                     'title' => 'Page url',
                     'default_value' => $page_url,
                     'validate' => ['required'],
-                        ]
+                    ]
                 )
-                    ->addField(
-                        'title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $page_title,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $page_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $page_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                        ->addField(
-                            'meta_description',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Meta Description',
-                            'default_value' => $page_meta_description,
-                            ]
-                        )
-                        ->addField(
-                            'meta_keywords',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Meta Keywords',
-                            'default_value' => $page_meta_keywords,
-                            ]
-                        )
-                        ->addField(
-                            'html_title',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Html Title',
-                            'default_value' => $page_html_title,
-                            ]
-                        )
-                        ->addField(
-                            'template_name',
-                            [
-                            'type' => 'select',
-                            'title' => 'Template',
-                            'default_value' => $page_template_name,
-                            'options' => ['' => '--' ] + $templates,
-                            ]
-                        )
-                        ->addField(
-                            'content',
-                            [
-                            'type' => 'tinymce',
-                            'title' => 'Content',
-                            'tinymce_options' => [
-                            'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                            ],
-                            'default_value' => $page_content,
-                            'rows' => 20,
-                            ]
-                        )
-                        ->addField(
-                            'button',
-                            [
-                            'type' => 'submit',
-                            'value' => 'ok',
-                            'container_class' => 'form-item mt-3',
-                            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                            ]
-                        );
+                ->addField(
+                    'title',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $page_title,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'website_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $page_website,
+                    'options' => $websites,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $page_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'meta_description',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Meta Description',
+                    'default_value' => $page_meta_description,
+                    ]
+                )
+                ->addField(
+                    'meta_keywords',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Meta Keywords',
+                    'default_value' => $page_meta_keywords,
+                    ]
+                )
+                ->addField(
+                    'html_title',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Html Title',
+                    'default_value' => $page_html_title,
+                    ]
+                )
+                ->addField(
+                    'template_name',
+                    [
+                    'type' => 'select',
+                    'title' => 'Template',
+                    'default_value' => $page_template_name,
+                    'options' => ['' => '--' ] + $templates,
+                    ]
+                )
+                ->addField(
+                    'content',
+                    [
+                    'type' => 'tinymce',
+                    'title' => 'Content',
+                    'tinymce_options' => [
+                    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                    ],
+                    'default_value' => $page_content,
+                    'rows' => 20,
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -235,32 +235,32 @@ class Pages extends AdminManageModelsPage
                     'default_value' => $page->id,
                     ]
                 )
-                    ->addField(
-                        'media_id',
-                        [
-                        'type' => 'hidden',
-                        'default_value' => $media->id,
-                        ]
-                    )
-                    ->addField(
-                        'confirm',
-                        [
-                        'type' => 'markup',
-                        'value' => 'Do you confirm the disassociation of the "'.$page->title.'" page from the media ID: '.$media->id.'?',
-                        'suffix' => '<br /><br />',
-                        ]
-                    )
-                    ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?media_id='.$media->id.'&action=page_assoc">Cancel</a>')
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'container_tag' => null,
-                        'prefix' => '&nbsp;',
-                        'value' => 'Ok',
-                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                        ]
-                    );
+                ->addField(
+                    'media_id',
+                    [
+                    'type' => 'hidden',
+                    'default_value' => $media->id,
+                    ]
+                )
+                ->addField(
+                    'confirm',
+                    [
+                    'type' => 'markup',
+                    'value' => 'Do you confirm the disassociation of the "'.$page->title.'" page from the media ID: '.$media->id.'?',
+                    'suffix' => '<br /><br />',
+                    ]
+                )
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?media_id='.$media->id.'&action=page_assoc">Cancel</a>')
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'container_tag' => null,
+                    'prefix' => '&nbsp;',
+                    'value' => 'Ok',
+                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
+                    ]
+                );
                 break;
 
             case 'term_deassoc':
@@ -272,32 +272,32 @@ class Pages extends AdminManageModelsPage
                     'default_value' => $page->id,
                     ]
                 )
-                    ->addField(
-                        'taxonomy_id',
-                        [
-                        'type' => 'hidden',
-                        'default_value' => $term->id,
-                        ]
-                    )
-                    ->addField(
-                        'confirm',
-                        [
-                        'type' => 'markup',
-                        'value' => 'Do you confirm the disassociation of the "'.$page->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
-                        'suffix' => '<br /><br />',
-                        ]
-                    )
-                    ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termpages', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'container_tag' => null,
-                        'prefix' => '&nbsp;',
-                        'value' => 'Ok',
-                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                        ]
-                    );
+                ->addField(
+                    'taxonomy_id',
+                    [
+                    'type' => 'hidden',
+                    'default_value' => $term->id,
+                    ]
+                )
+                ->addField(
+                    'confirm',
+                    [
+                    'type' => 'markup',
+                    'value' => 'Do you confirm the disassociation of the "'.$page->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
+                    'suffix' => '<br /><br />',
+                    ]
+                )
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termpages', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'container_tag' => null,
+                    'prefix' => '&nbsp;',
+                    'value' => 'Ok',
+                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
+                    ]
+                );
 
                 break;
         }

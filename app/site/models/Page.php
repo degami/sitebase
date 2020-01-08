@@ -12,7 +12,6 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\FrontendModel;
-use \App\Base\Traits\WithOwnerTrait;
 
 /**
  * Page Model
@@ -33,8 +32,6 @@ use \App\Base\Traits\WithOwnerTrait;
  */
 class Page extends FrontendModel
 {
-    use WithOwnerTrait;
-
     /**
      * @var array page gallyer
      */

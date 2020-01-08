@@ -176,8 +176,8 @@ class Websites extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Page $website
-*/
+         * @var Website $website
+         */
         $website = $this->newEmptyObject();
         if ($this->getRequest()->get('website_id')) {
             $website = $this->loadObject($this->getRequest()->get('website_id'));

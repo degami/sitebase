@@ -29,7 +29,8 @@
         "phpfastcache/phpfastcache": "^7.1",
         "nadar/php-composer-reader": "^1.3",
         "spatie/db-dumper": "^2.13",
-        "stidges/country-flags": "^1.0"
+        "stidges/country-flags": "^1.0",
+        "spatie/array-to-xml": "^2.11"
     },
   "autoload": {
     "files": [

@@ -475,11 +475,15 @@ class HtmlPartsRenderer extends ContainerAwareObject
      */
     public function renderAdminTable($elements, $header = null, BasePage $current_page = null)
     {
+        $table_id = 'listing-table';
+
+
         $table = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
             'tag' => 'table',
             'width' => '100%',
+            'id' => $table_id,
             'cellspacing' => '0',
             'cellpadding' => '0',
             'border' => '0',
@@ -516,6 +520,42 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $header = array_unique(array_merge($header, array_keys($elem)));
             }
             $header = array_flip($header);
+        }
+
+        $add_searchrow = false;
+        if ($current_page instanceof BasePage) {
+            $search_row = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                'tag' => 'tr',
+                ]]
+            );
+            $style="max-width:80%;font-size: 9px;line-height: 11px;max-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
+            foreach ($header as $k => $v) {
+                if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
+                    $td = $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                        'tag' => 'td',
+                        'text' => '<input style="'.$style.'" name="search['.$v['search'].']" value="'.$current_page->getRequest()->query->get('search')[$v['search']].'"/>',
+                        ]]
+                    );
+                    $add_searchrow = true;
+                } else {
+                    $td = $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                        'tag' => 'td',
+                        'text' => '&nbsp;',
+                        ]]
+                    );
+                }
+
+                $search_row->addChild($td);
+            }
+            if ($add_searchrow) {
+                $tbody->addChild($search_row);
+            }
         }
 
         // tbody
@@ -571,19 +611,29 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-        foreach ($header as $th => $column_name) {
+        foreach ($header as $th => $column) {
             $th = $this->getUtils()->translate($th, $current_page->getCurrentLocale());
             $request_params = [];
             if ($current_page instanceof BasePage) {
                 $request_params = $current_page->getRequest()->query->all();
 
-                if (!empty($column_name)) {
-                    $val = 'DESC';
-                    if (isset($request_params['order'][$column_name])) {
-                        $val = ($request_params['order'][$column_name] == 'ASC') ? 'DESC' : 'ASC';
+                if (!empty($column)) {
+                    $orderby = null;
+                    if (is_array($column)) {
+                        if (isset($column['order'])) {
+                            $orderby = $column['order'];
+                        }
+                    } else {
+                        $orderby = $column;
                     }
-                    $request_params['order'][$column_name] = $val;
-                    $th = '<a class="ordering" href="'.($current_page->getControllerUrl().'?'.http_build_query($request_params)).'">'.$th.$this->getUtils()->getIcon($val == 'DESC' ? 'arrow-down' : 'arrow-up').'</a>';
+                    if (!empty($orderby)) {
+                        $val = 'DESC';
+                        if (isset($request_params['order'][$orderby])) {
+                            $val = ($request_params['order'][$orderby] == 'ASC') ? 'DESC' : 'ASC';
+                        }
+                        $request_params['order'][$orderby] = $val;
+                        $th = '<a class="ordering" href="'.($current_page->getControllerUrl().'?'.http_build_query($request_params)).'">'.$th.$this->getUtils()->getIcon($val == 'DESC' ? 'arrow-down' : 'arrow-up').'</a>';
+                    }
                 }
             }
 
@@ -603,6 +653,22 @@ class HtmlPartsRenderer extends ContainerAwareObject
             );
         }
         $thead->addChild($row);
+
+        if (($current_page instanceof BasePage)) {
+            $request_params = $current_page->getRequest()->query->all();
+            if (isset($request_params['order']) || isset($request_params['search'])) {
+                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', $current_page->getCurrentLocale()), $current_page->getControllerUrl(), 'btn btn-sm btn-warning');
+            }
+            if ($add_searchrow) {
+                $query_params = '';
+                if (!empty($request_params)) {
+                    $query_params = (array) $request_params;
+                    unset($query_params['search']);
+                    $query_params = http_build_query($query_params);
+                }
+                $current_page->addActionLink('search-btn', 'search-btn', $this->getUtils()->getIcon('zoom-in').$this->getUtils()->translate('Search', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?':'') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#'.$table_id]);
+            }
+        }
 
         return $table;
     }

@@ -23,11 +23,6 @@ use \App\App;
 abstract class AdminFormPage extends AdminPage
 {
     /**
-     * @var array template data
-     */
-    protected $templateData = [];
-
-    /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container

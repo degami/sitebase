@@ -66,6 +66,11 @@
                 });
 
                 $elem.appAdmin('checkLoggedStatus');
+
+                $('#search-btn').click(function(evt){
+                    evt.preventDefault();
+                    $elem.appAdmin('searchTableColumns', this);
+                })
             });
         },
         showOverlay: function() {
@@ -171,6 +176,11 @@
             window.setTimeout(function(){
                 $(that).appAdmin('checkLoggedStatus');
             }, 60000);
+        },
+        searchTableColumns: function(btn) {
+            var query = $('input', $(btn).data('target')).serialize();
+            var href = $(btn).attr('href');
+            document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD

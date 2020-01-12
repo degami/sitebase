@@ -157,8 +157,11 @@ trait AdminTrait
      * @param string $link_href
      * @param string $link_class
      */
-    protected function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light')
+    public function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light', $attributes = [])
     {
+        if (!is_array($attributes)) {
+            $attributes = [];
+        }
         $button = (string)(new TagElement(
             [
             'tag' => 'a',
@@ -166,8 +169,8 @@ trait AdminTrait
             'attributes' => [
                 'class' => $link_class,
                 'href' => $link_href,
-                'title' => $link_text,
-            ],
+                'title' => strip_tags($link_text),
+            ] + $attributes,
             'text' => $link_text,
             ]
         ));

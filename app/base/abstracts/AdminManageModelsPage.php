@@ -33,7 +33,19 @@ abstract class AdminManageModelsPage extends AdminFormPage
         parent::__construct($container);
         if ($this->templateData['action'] == 'list') {
             $this->addNewButton();
-            $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], ['order' => $this->getRequest()->query->get('order')]);
+
+            $paginate_params = [
+                'order' => $this->getRequest()->query->get('order'),
+                'condition' => $this->getRequest()->query->get('search')
+            ];
+            if (is_array($paginate_params['condition'])) {
+                foreach ($paginate_params['condition'] as $col => $search) {
+                    $paginate_params['condition'][$col . ' LIKE ?'] = ['%'.$search.'%'];
+                    unset($paginate_params['condition'][$col]);
+                }
+            }
+
+            $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], $paginate_params);
             $this->templateData += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
@@ -41,16 +53,6 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
             ];
         }
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return array
-     */
-    protected function getTemplateData()
-    {
-        return $this->templateData;
     }
 
     /**

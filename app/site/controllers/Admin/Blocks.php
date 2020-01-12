@@ -269,8 +269,8 @@ class Blocks extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Block $block
-*/
+         * @var Block $block
+         */
         $block = $this->newEmptyObject();
         if ($this->getRequest()->get('block_id')) {
             $block = $this->loadObject($this->getRequest()->get('block_id'));
@@ -343,11 +343,11 @@ class Blocks extends AdminManageModelsPage
     protected function getTableHeader()
     {
         return [
-            'ID' => 'id',
-            'Website' => 'website_id',
-            'Region' => 'region',
-            'Locale' => 'locale',
-            'Title' => 'title',
+            'ID' => ['order' => 'id'],
+            'Website' => ['order' => 'website_id'],
+            'Region' => ['order' => 'region', 'search' => 'region'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
             'Where' => null,
             'Order' => null,
             'actions' => null,

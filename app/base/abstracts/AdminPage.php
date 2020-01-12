@@ -34,6 +34,11 @@ abstract class AdminPage extends BaseHtmlPage
     protected $locale = null;
 
     /**
+     * @var array template data
+     */
+    protected $templateData = [];
+
+    /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
@@ -136,6 +141,16 @@ abstract class AdminPage extends BaseHtmlPage
     public function addBackButton()
     {
         $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind').' '.$this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl());
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return array
+     */
+    protected function getTemplateData()
+    {
+        return $this->templateData;
     }
 
     /**

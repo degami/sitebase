@@ -202,78 +202,78 @@ class Menus extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $menu_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $menu_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'menu_name',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Menu name',
-                        'default_value' => $menu_menuname,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'href',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Href',
-                        'default_value' => $menu_href,
-                        ]
-                    )
-                    ->addField(
-                        'rewrite_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Rewrite',
-                        'options' => $rewrites,
-                        'default_value' => $menu_rewriteid,
-                        ]
-                    )
-                    ->addField(
-                        'target',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Target',
-                        'default_value' => $menu_target,
-                        ]
-                    )
-                    ->addField(
-                        'breadcrumb',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Breadcrumb',
-                        'default_value' => $menu_breadcrumb,
-                        ]
-                    )
-                    ->addMarkup('<div class="clear"></div>')
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'website_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $menu_website,
+                    'options' => $websites,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $menu_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'menu_name',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Menu name',
+                    'default_value' => $menu_menuname,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'href',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Href',
+                    'default_value' => $menu_href,
+                    ]
+                )
+                ->addField(
+                    'rewrite_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Rewrite',
+                    'options' => $rewrites,
+                    'default_value' => $menu_rewriteid,
+                    ]
+                )
+                ->addField(
+                    'target',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Target',
+                    'default_value' => $menu_target,
+                    ]
+                )
+                ->addField(
+                    'breadcrumb',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Breadcrumb',
+                    'default_value' => $menu_breadcrumb,
+                    ]
+                )
+                ->addMarkup('<div class="clear"></div>')
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -308,8 +308,8 @@ class Menus extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Menu $menu
-*/
+         * @var Menu $menu
+         */
         $menu = $this->newEmptyObject();
         if ($this->getRequest()->get('menu_id')) {
             $menu = $this->loadObject($this->getRequest()->get('menu_id'));

@@ -147,15 +147,15 @@ class Blocks extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $block_title,
-                        'validate' => ['required'],
-                        ]
-                    );
+                ->addField(
+                    'title',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $block_title,
+                    'validate' => ['required'],
+                    ]
+                );
                 if ($type == 'new' || $block->instance_class == Block::class) {
                     $form->addField(
                         'locale',
@@ -167,18 +167,18 @@ class Blocks extends AdminManageModelsPage
                         'validate' => ['required'],
                         ]
                     )
-                        ->addField(
-                            'content',
-                            [
-                            'type' => 'tinymce',
-                            'title' => 'Content',
-                            'tinymce_options' => [
-                            'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                            ],
-                            'default_value' => $block_content,
-                            'rows' => 20,
-                            ]
-                        );
+                    ->addField(
+                        'content',
+                        [
+                        'type' => 'tinymce',
+                        'title' => 'Content',
+                        'tinymce_options' => [
+                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                        ],
+                        'default_value' => $block_content,
+                        'rows' => 20,
+                        ]
+                    );
                 }
                 $form->addField(
                     'rewrites',
@@ -190,14 +190,14 @@ class Blocks extends AdminManageModelsPage
                     'options' => $rewrite_options,
                     ]
                 )
-                    ->addField(
-                        'order',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Order',
-                        'default_value' => $block_order,
-                        ]
-                    );
+                ->addField(
+                    'order',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Order',
+                    'default_value' => $block_order,
+                    ]
+                );
 
 
                 if ($block != null && method_exists($block->getRealInstance(), 'additionalConfigFieldset')) {

@@ -92,15 +92,15 @@ class Roles extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -135,8 +135,8 @@ class Roles extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Role $role
-*/
+         * @var Role $role
+         */
         $role = $this->newEmptyObject();
         if ($this->getRequest()->get('role_id')) {
             $role = $this->loadObject($this->getRequest()->get('role_id'));
@@ -166,7 +166,7 @@ class Roles extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Name' => 'name',
+            'Name' => ['order' => 'name', 'search' => 'name'],
             'actions' => null,
         ];
     }

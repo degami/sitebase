@@ -119,77 +119,77 @@ class Links extends AdminManageModelsPage
                     'validate' => ['required'],
                         ]
                 )
-                    ->addField(
-                        'title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $link_title,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $link_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $link_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                        ->addField(
-                            'email',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Email',
-                            'default_value' => $link_email,
-                            ]
-                        )
-                        ->addField(
-                            'description',
-                            [
-                            'type' => 'tinymce',
-                            'title' => 'Description',
-                            'tinymce_options' => [
-                            'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                            ],
-                            'default_value' => $link_description,
-                            'rows' => 20,
-                            ]
-                        )
-                        ->addField(
-                            'active',
-                            [
-                            'type' => 'switchbox',
-                            'title' => 'Active',
-                            'default_value' => boolval($link_active) ? 1 : 0,
-                            'yes_value' => 1,
-                            'yes_label' => 'Yes',
-                            'no_value' => 0,
-                            'no_label' => 'No',
-                            'field_class' => 'switchbox',
-                            ]
-                        )
-                        ->addField(
-                            'button',
-                            [
-                            'type' => 'submit',
-                            'value' => 'ok',
-                            'container_class' => 'form-item mt-3',
-                            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                            ]
-                        );
+                ->addField(
+                    'title',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $link_title,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'website_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $link_website,
+                    'options' => $websites,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $link_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'email',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Email',
+                    'default_value' => $link_email,
+                    ]
+                )
+                ->addField(
+                    'description',
+                    [
+                    'type' => 'tinymce',
+                    'title' => 'Description',
+                    'tinymce_options' => [
+                    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                    ],
+                    'default_value' => $link_description,
+                    'rows' => 20,
+                    ]
+                )
+                ->addField(
+                    'active',
+                    [
+                    'type' => 'switchbox',
+                    'title' => 'Active',
+                    'default_value' => boolval($link_active) ? 1 : 0,
+                    'yes_value' => 1,
+                    'yes_label' => 'Yes',
+                    'no_value' => 0,
+                    'no_label' => 'No',
+                    'field_class' => 'switchbox',
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -314,9 +314,9 @@ class Links extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'URL' => 'url',
-            'Locale' => 'locale',
-            'Title' => 'title',
+            'URL' => ['order' => 'url', 'search' => 'url'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
             'Active' => 'active',
             'actions' => null,
         ];

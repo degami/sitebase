@@ -99,43 +99,43 @@ class Rewrites extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'route',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Route',
-                        'default_value' => $rewrite_route,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $rewrite_website,
-                        'options' => $websites,
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $rewrite_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'route',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Route',
+                    'default_value' => $rewrite_route,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'website_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $rewrite_website,
+                    'options' => $websites,
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $rewrite_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'translations':
@@ -203,8 +203,8 @@ class Rewrites extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Rewrite $rewrite
-*/
+         * @var Rewrite $rewrite
+         */
         $rewrite = $this->newEmptyObject();
         if ($this->getRequest()->get('rewrite_id')) {
             $rewrite = $this->loadObject($this->getRequest()->get('rewrite_id'));
@@ -263,9 +263,9 @@ class Rewrites extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'Url' => 'url',
-            'Route' => 'route',
-            'Locale' => null,
+            'URL' => ['order' => 'url', 'search' => 'url'],
+            'Route' => ['order' => 'route', 'search' => 'route'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'actions' => null,
         ];
     }

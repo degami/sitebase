@@ -310,8 +310,8 @@ class Media extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var MediaElement $media
-*/
+         * @var MediaElement $media
+         */
         $media = $this->newEmptyObject();
         if ($this->getRequest()->get('media_id')) {
             $media = $this->loadObject($this->getRequest()->get('media_id'));
@@ -379,9 +379,9 @@ class Media extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Preview' => null,
-            'Filename - Path' => 'filename',
-            'Mimetype' => 'mimetype',
-            'Filesize' => 'filesize',
+            'Filename - Path' => ['order' => 'filename', 'search' => 'filename'],
+            'Mimetype' => ['order' => 'mimetype', 'search' => 'mimetype'],
+            'Filesize' => ['order' => 'filesize', 'search' => 'filesize'],
             'Owner' => 'user_id',
             'Lazyload' => null,
             'actions' => null,

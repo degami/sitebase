@@ -446,8 +446,8 @@ class Sitemaps extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Site Name' => 'website_id',
-            'Locale' => 'locale',
-            'Title' => 'title',
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
             'Is Published' => 'published_on',
             'actions' => null,
         ];

@@ -40,9 +40,14 @@ abstract class AdminManageModelsPage extends AdminFormPage
             ];
             if (is_array($paginate_params['condition'])) {
                 foreach ($paginate_params['condition'] as $col => $search) {
-                    $paginate_params['condition'][$col . ' LIKE ?'] = ['%'.$search.'%'];
+                    if (trim($search) == '') {
+                        continue;
+                    }
+                    $paginate_params['condition']['`'.$col . '` LIKE ?'] = ['%'.$search.'%'];
                     unset($paginate_params['condition'][$col]);
                 }
+
+                $paginate_params['condition'] = array_filter($paginate_params['condition']);
             }
 
             $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], $paginate_params);

@@ -118,45 +118,45 @@ class Config extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $configuration_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $configuration_locale,
-                        'options' => $languages,
-                        //                    'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'value',
-                        [
-                        'type' => 'textarea',
-                        'title' => 'Configuration Value',
-                        'default_value' => $configuration_value,
-                        'rows' => 3,
-                        //                    'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'website_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $configuration_website,
+                    'options' => $websites,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $configuration_locale,
+                    'options' => $languages,
+                    //                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'value',
+                    [
+                    'type' => 'textarea',
+                    'title' => 'Configuration Value',
+                    'default_value' => $configuration_value,
+                    'rows' => 3,
+                    //                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -237,8 +237,8 @@ class Config extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'Locale' => 'locale',
-            'Path' => 'path',
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Path' => ['order' => 'path', 'search' => 'path'],
             'Value' => null,
             'Is System' => 'is_system',
             'actions' => null,

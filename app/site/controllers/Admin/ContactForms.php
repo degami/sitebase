@@ -516,9 +516,9 @@ class ContactForms extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'Title' => 'title',
-            'Locale' => 'locale',
-            'URL' => 'url',
+            'Title' => ['order' => 'title', 'search' => 'title'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'URL' => ['order' => 'url', 'search' => 'url'],
             '# Submissions' => null,
             'actions' => null,
         ];

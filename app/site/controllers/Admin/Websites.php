@@ -213,10 +213,10 @@ class Websites extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Site Name' => 'site_name',
-            'Domain' => 'domain',
-            'Aliases' => null,
-            'Default Locale' => 'default_locale',
+            'Site Name' => ['order' => 'site_name', 'search' => 'site_name'],
+            'Domain' => ['order' => 'domain', 'search' => 'domain'],
+            'Aliases' => ['order' => null, 'search' => 'aliases'],
+            'Default Locale' => ['order' => 'default_locale', 'search' => 'default_locale'],
             'actions' => null,
         ];
     }

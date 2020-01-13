@@ -107,65 +107,65 @@ class News extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $news_title,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'date',
-                        [
-                        'type' => 'datepicker',
-                        'title' => 'Date',
-                        'default_value' => $news_date,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $news_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $news_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'content',
-                        [
-                        'type' => 'tinymce',
-                        'title' => 'Content',
-                        'tinymce_options' => [
-                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                        ],
-                        'default_value' => $news_content,
-                        'rows' => 20,
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'title',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $news_title,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'date',
+                    [
+                    'type' => 'datepicker',
+                    'title' => 'Date',
+                    'default_value' => $news_date,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'website_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $news_website,
+                    'options' => $websites,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $news_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'content',
+                    [
+                    'type' => 'tinymce',
+                    'title' => 'Content',
+                    'tinymce_options' => [
+                    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                    ],
+                    'default_value' => $news_content,
+                    'rows' => 20,
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -200,8 +200,8 @@ class News extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var NewsModel $news
-*/
+         * @var NewsModel $news
+         */
         $news = $this->newEmptyObject();
         if ($this->getRequest()->get('news_id')) {
             $news = $this->loadObject($this->getRequest()->get('news_id'));
@@ -240,10 +240,10 @@ class News extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'URL' => 'url',
-            'Locale' => 'locale',
-            'Title' => 'title',
-            'Date' => 'date',
+            'URL' => ['order' => 'url', 'search' => 'url'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
+            'Date' => ['order' => 'date', 'search' => 'date'],
             'actions' => null,
         ];
     }

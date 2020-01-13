@@ -98,59 +98,59 @@ class Languages extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        '639-1',
-                        [
-                        'type' => 'textfield',
-                        'title' => '639-1',
-                        'default_value' => $language_639_1,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        '639-2',
-                        [
-                        'type' => 'textfield',
-                        'title' => '639-2',
-                        'default_value' => $language_639_2,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'name',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Name',
-                        'default_value' => $language_name,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'native',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Native',
-                        'default_value' => $language_native,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'family',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Family',
-                        'default_value' => $language_family,
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    '639-1',
+                    [
+                    'type' => 'textfield',
+                    'title' => '639-1',
+                    'default_value' => $language_639_1,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    '639-2',
+                    [
+                    'type' => 'textfield',
+                    'title' => '639-2',
+                    'default_value' => $language_639_2,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'name',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Name',
+                    'default_value' => $language_name,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'native',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Native',
+                    'default_value' => $language_native,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'family',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Family',
+                    'default_value' => $language_family,
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':
@@ -222,13 +222,13 @@ class Languages extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Locale' => 'locale',
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'Flag' => null,
-            '639-1' => "639-1",
-            '639-2' => "639-2",
-            'Name' => 'name',
-            'Native' => 'native',
-            'Family' => 'family',
+            '639-1' => ['order' => '639-1', 'search' => '639-1'],
+            '639-2' => ['order' => '639-2', 'search' => '639-2'],
+            'Name' => ['order' => 'name', 'search' => 'name'],
+            'Native' => ['order' => 'native', 'search' => 'native'],
+            'Family' => ['order' => 'family', 'search' => 'family'],
             'actions' => null,
         ];
     }

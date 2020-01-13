@@ -387,9 +387,9 @@ class Pages extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'URL' => 'url',
-            'Locale' => 'locale',
-            'Title' => 'title',
+            'URL' => ['order' => 'url', 'search' => 'url'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
             'actions' => null,
         ];
     }

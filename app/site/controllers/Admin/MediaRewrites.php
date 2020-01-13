@@ -117,25 +117,25 @@ class MediaRewrites extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'media_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Media',
-                        'default_value' => $media_rewrite_media_id,
-                        'options' => $medias,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'media_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Media',
+                    'default_value' => $media_rewrite_media_id,
+                    'options' => $medias,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'button',
+                    [
+                    'type' => 'submit',
+                    'value' => 'ok',
+                    'container_class' => 'form-item mt-3',
+                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                    ]
+                );
                 break;
 
             case 'delete':

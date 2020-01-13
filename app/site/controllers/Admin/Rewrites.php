@@ -283,7 +283,7 @@ class Rewrites extends AdminManageModelsPage
                 return [
                 'ID' => $rewrite->id,
                 'Website' => $rewrite->getWebsiteId() == null ? 'All websites' : $rewrite->getWebsite()->domain,
-                'Url' => $rewrite->url,
+                'URL' => $rewrite->url,
                 'Route' => $rewrite->route,
                 'Locale' => $rewrite->getLocale(),
                 'actions' => '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=translations&rewrite_id='. $rewrite->id.'">'.$this->getUtils()->getIcon('tag') .'</a>

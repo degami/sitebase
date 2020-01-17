@@ -110,16 +110,6 @@ abstract class AdminFormPage extends AdminPage
     }
 
     /**
-     * gets add button html
-     *
-     * @return string
-     */
-    public function getAddButton()
-    {
-        return '<a class="btn btn-success btn-sm" href="'.$this->getControllerUrl().'?action=new">' . $this->getIcons()->get('file-plus', [], false) . ' '.$this->getUtils()->translate('New', $this->getCurrentLocale()).'</a>';
-    }
-
-    /**
      * adds a "new" button
      */
     public function addNewButton()

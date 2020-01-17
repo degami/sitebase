@@ -117,9 +117,30 @@ trait AdminTrait
             return '';
         }
 
-        return '<ul class="navbar-nav mr-auto"><li class="nav-item active">' .
-                implode('</li><li class="nav-item ml-1">', $this->action_buttons) .
-                '</li></ul>';
+
+        $ul = $this->getContainer()->make(
+            TagElement::class,
+            ['options' => [
+            'tag' => 'ul',
+            'attributes' => ['class' => 'navbar-nav mr-auto'],
+            ]]
+        );
+
+
+        foreach ($this->action_buttons as $key => $button_html) {
+            $ul->addChild(
+                $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                    'tag' => 'li',
+                    'attributes' => ['class' => 'nav-item ml-1'],
+                    'text' => $button_html
+                    ]]
+                )
+            );
+        }
+
+        return (string) $ul;
     }
 
     /**

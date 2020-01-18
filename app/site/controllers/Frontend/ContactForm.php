@@ -45,6 +45,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     protected function getTemplateName()
     {
+        if ($this->templateData['object']->getTemplateName()) {
+            return $this->templateData['object']->getTemplateName();
+        }
+
         return 'contact_form';
     }
 
@@ -78,7 +82,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
         $this->route_info = $route_info;
-        
+
         $this->templateData['object'] = $this->getContainer()->call([Contact::class, 'load'], ['id' => $route_data['id']]);
         if (!($this->templateData['object'] instanceof Model && $this->templateData['object']->isLoaded())) {
             return $this->getUtils()->errorPage(404);
@@ -178,7 +182,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     {
         return true;
     }
-    
+
     /**
      * search component by name
      *

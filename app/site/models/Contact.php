@@ -21,6 +21,7 @@ use \Degami\PHPFormsApi as FAPI;
  * @method int getWebsiteId()
  * @method string getTitle()
  * @method string getContent()
+ * @method string getTemplateName()
  * @method string getMetaDescription()
  * @method string getMetaKeywords()
  * @method string getHtmlTitle()

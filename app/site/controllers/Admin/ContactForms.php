@@ -18,6 +18,7 @@ use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Contact;
 use \App\Site\Models\ContactSubmission;
 use \App\Site\Controllers\Admin\Json\ContactCallback;
+use \App\App;
 
 /**
  * "ContactForms" Admin Page
@@ -135,10 +136,11 @@ class ContactForms extends AdminManageFrontendModelsPage
             ]
         );
 
-        $contact_title = $contact_content = $contact_submit_to = "";
+        $contact_title = $contact_template_name = $contact_content = $contact_submit_to = "";
         if ($contact->isLoaded()) {
             $contact_title = $contact->title;
             $contact_content = $contact->content;
+            $contact_template_name = $contact->template_name;
             $contact_submit_to = $contact->submit_to;
         }
 
@@ -147,15 +149,32 @@ class ContactForms extends AdminManageFrontendModelsPage
             case 'new':
                 $this->addBackButton();
 
+                $templates = [];
+                $initial_dir = App::getDir(App::TEMPLATES).DS.'frontend'.DS;
+                foreach (glob($initial_dir.'contacts'.DS.'*.php') as $template) {
+                    $key = str_replace($initial_dir, "", $template);
+                    $key = preg_replace("/\.php$/i", "", $key);
+                    $templates[$key] = basename($template);
+                }
+
                 $form
                 ->addField(
                     'title',
                     [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $contact_title,
-                        'validate' => ['required'],
-                        ]
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $contact_title,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'template_name',
+                    [
+                    'type' => 'select',
+                    'title' => 'Template',
+                    'default_value' => $contact_template_name,
+                    'options' => ['' => '--' ] + $templates,
+                    ]
                 )
                 ->addField(
                     'content',
@@ -392,6 +411,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                 $contact->url = $values['frontend']['url'];
                 $contact->title = $values['title'];
                 $contact->locale = $values['frontend']['locale'];
+                $contact->template_name = $values['template_name'];
                 $contact->content = $values['content'];
                 $contact->submit_to = $values['submit_to'];
                 $contact->website_id = $values['frontend']['website_id'];

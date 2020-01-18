@@ -53,6 +53,7 @@ class CreateContactTableMigration extends DBMigration
             ->addColumn('meta_description', 'VARCHAR', [1024])
             ->addColumn('html_title', 'VARCHAR', [255])
             ->addColumn('content', 'TEXT', null)
+            ->addColumn('template_name', 'VARCHAR', [1024])
             ->addColumn('submit_to', 'VARCHAR', [255])
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')

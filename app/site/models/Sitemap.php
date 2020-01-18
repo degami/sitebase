@@ -85,7 +85,9 @@ class Sitemap extends FrontendModel
         );
 
         $this->setContent($xml);
-        $this->setPublishedOn(new DateTime());
+        if ($xml != null) {
+            $this->setPublishedOn(new DateTime());
+        }
 
         $this->persist();
         return $this;

@@ -84,6 +84,16 @@ class Blocks extends AdminManageModelsPage
         return Block::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'block_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -94,10 +104,7 @@ class Blocks extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $block = null;
-        if ($this->getRequest()->get('block_id')) {
-            $block = $this->loadObject($this->getRequest()->get('block_id'));
-        }
+        $block = $this->getObject();
 
         $form->addField(
             'action',
@@ -120,7 +127,7 @@ class Blocks extends AdminManageModelsPage
                 }
 
                 $block_rewrites = [];
-                if ($block instanceof Block) {
+                if ($block->isLoaded()) {
                     $block_rewrites = array_map(
                         function ($el) {
                             return $el->getId();
@@ -130,7 +137,7 @@ class Blocks extends AdminManageModelsPage
                 }
 
                 $block_region = $block_locale = $block_title = $block_content = $block_order = '';
-                if ($block instanceof Block) {
+                if ($block->isLoaded()) {
                     $block_region = $block->region;
                     $block_locale = $block->locale;
                     $block_title = $block->title;
@@ -224,16 +231,7 @@ class Blocks extends AdminManageModelsPage
                     }
                 }
 
-                $form->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
-                );
-
+                $this->addSubmitButton($form);
 
                 break;
 
@@ -271,10 +269,7 @@ class Blocks extends AdminManageModelsPage
         /**
          * @var Block $block
          */
-        $block = $this->newEmptyObject();
-        if ($this->getRequest()->get('block_id')) {
-            $block = $this->loadObject($this->getRequest()->get('block_id'));
-        }
+        $block = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {

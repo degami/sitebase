@@ -512,16 +512,16 @@
         },
         {
             "name": "degami/sql-schema",
-            "version": "1.0.0",
+            "version": "1.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/degami/sql-schema.git",
-                "reference": "4f0ba4d8bd09497775dcb9b502088fece2ca749b"
+                "reference": "a8e4d88c8ba658a2db528ed1722c3fb83f80daf9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/degami/sql-schema/zipball/4f0ba4d8bd09497775dcb9b502088fece2ca749b",
-                "reference": "4f0ba4d8bd09497775dcb9b502088fece2ca749b",
+                "url": "https://api.github.com/repos/degami/sql-schema/zipball/a8e4d88c8ba658a2db528ed1722c3fb83f80daf9",
+                "reference": "a8e4d88c8ba658a2db528ed1722c3fb83f80daf9",
                 "shasum": ""
             },
             "require": {
@@ -546,7 +546,7 @@
                 }
             ],
             "description": "Library for describe of the database schema.",
-            "time": "2019-10-24T21:36:18+00:00"
+            "time": "2020-01-18T14:37:37+00:00"
         },
         {
             "name": "doctrine/lexer",

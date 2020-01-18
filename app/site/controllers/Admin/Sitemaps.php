@@ -31,7 +31,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+   /*public function __construct(ContainerInterface $container)
     {
         AdminFormPage::__construct($container);
         $this->page_title = 'Sitemaps';
@@ -42,7 +42,7 @@ class Sitemaps extends AdminManageModelsPage
                 $this->addBackButton();
             }
             $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], ['order' => $this->getRequest()->query->get('order')]);
-            
+
             $this->templateData += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
@@ -50,7 +50,7 @@ class Sitemaps extends AdminManageModelsPage
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
             ];
         }
-    }
+    }*/
 
     /**
      * {@inheritdocs}
@@ -85,6 +85,16 @@ class Sitemaps extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'sitemap_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -92,10 +102,7 @@ class Sitemaps extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $sitemap = null;
-        if ($this->getRequest()->get('sitemap_id')) {
-            $sitemap = $this->loadObject($this->getRequest()->get('sitemap_id'));
-        }
+        $sitemap = $this->getObject();
 
         $form->addField(
             'action',
@@ -110,8 +117,8 @@ class Sitemaps extends AdminManageModelsPage
                 // intentional fall-trough
             case 'new':
                 $this->addBackButton();
-                
-                if ($sitemap instanceof Sitemap) {
+
+                if ($sitemap->isLoaded()) {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions($sitemap->getWebsite()->getId());
                 } else {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
@@ -120,7 +127,7 @@ class Sitemaps extends AdminManageModelsPage
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $sitemap_title = $sitemap_website = $sitemap_locale = '';
-                if ($sitemap instanceof Sitemap) {
+                if ($sitemap->isLoaded()) {
                     $sitemap_title = $sitemap->title;
                     $sitemap_website = $sitemap->website;
                     $sitemap_locale = $sitemap->locale;
@@ -155,7 +162,7 @@ class Sitemaps extends AdminManageModelsPage
                     ]
                 );
 
-                if ($sitemap instanceof Sitemap) {
+                if ($sitemap->isLoaded()) {
                     $fieldset = $form->addField(
                         'urlset',
                         [
@@ -236,18 +243,9 @@ class Sitemaps extends AdminManageModelsPage
                         );
                 }
 
-                $form
-                    ->addField(
-                        'save',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                $this->addSubmitButton($form);
 
-                if ($sitemap instanceof Sitemap) {
+                if ($sitemap->isLoaded()) {
                     $form
                     ->addField(
                         'save_publish',
@@ -379,10 +377,7 @@ class Sitemaps extends AdminManageModelsPage
         /**
          * @var Sitemap $sitemap
          */
-        $sitemap = $this->newEmptyObject();
-        if ($this->getRequest()->get('sitemap_id')) {
-            $sitemap = $this->loadObject($this->getRequest()->get('sitemap_id'));
-        }
+        $sitemap = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -468,8 +463,9 @@ class Sitemaps extends AdminManageModelsPage
                 'Site Name' => $sitemap->getWebsite()->site_name,
                 'Locale' => $sitemap->locale,
                 'Title' => $sitemap->title,
-                'Is Published' => $this->getUtils()->translate($sitemap->getPublishedOn() != null ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&sitemap_id='. $sitemap->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
+                'Is Published' => $this->getUtils()->translate($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? 'Yes' : 'No', $this->getCurrentLocale()),
+                'actions' => ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? '<a class="btn btn-success btn-sm" target="_blank" href="'. $sitemap->getFrontendUrl() .'">'.$this->getUtils()->getIcon('zoom-in') .'</a>' : '' ).
+                ' <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&sitemap_id='. $sitemap->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                 <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&sitemap_id='. $sitemap->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
                 ];
             },

@@ -62,6 +62,16 @@ class MediaRewrites extends AdminManageModelsPage
         return MediaElementRewrite::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'media_rewrite_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -72,10 +82,7 @@ class MediaRewrites extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $media_rewrite = null;
-        if ($this->getRequest()->get('media_rewrite_id')) {
-            $media_rewrite = $this->loadObject($this->getRequest()->get('media_rewrite_id'));
-        }
+        $media_rewrite = $this->getObject();
 
         $form->addField(
             'action',
@@ -89,7 +96,7 @@ class MediaRewrites extends AdminManageModelsPage
             case 'edit':
             case 'new':
                 $this->addBackButton();
-                
+
                 $rewrites = ['' => ''];
                 foreach ($this->getDb()->rewrite()->fetchAll() as $rewrite) {
                     $rewrites[$rewrite->id] = $rewrite->url." ({$rewrite->route})";
@@ -101,7 +108,7 @@ class MediaRewrites extends AdminManageModelsPage
                 }
 
                 $media_rewrite_rewrite_id = $media_rewrite_media_id = '';
-                if ($media_rewrite instanceof MediaElementRewrite) {
+                if ($media_rewrite->isLoaded()) {
                     $media_rewrite_rewrite_id = $media_rewrite->rewrite_id;
                     $media_rewrite_media_id = $media_rewrite->media_element_id;
                 }
@@ -126,16 +133,9 @@ class MediaRewrites extends AdminManageModelsPage
                     'options' => $medias,
                     'validate' => ['required'],
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -170,12 +170,9 @@ class MediaRewrites extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Rewrite $rewrite
-*/
-        $media_rewrite = $this->newEmptyObject();
-        if ($this->getRequest()->get('media_rewrite_id')) {
-            $media_rewrite = $this->loadObject($this->getRequest()->get('media_rewrite_id'));
-        }
+         * @var Rewrite $rewrite
+         */
+        $media_rewrite = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {

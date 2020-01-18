@@ -81,43 +81,6 @@ abstract class AdminFormPage extends AdminPage
     }
 
     /**
-     * loads object by id
-     *
-     * @param  integer $id
-     * @return \App\Base\Abstracts\Model
-     */
-    protected function loadObject($id)
-    {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
-            return null;
-        }
-
-        return $this->getContainer()->call([$this->getObjectClass(), 'load'], [ 'id' => $id]);
-    }
-
-    /**
-     * gets new empty model
-     *
-     * @return \App\Base\Abstracts\Model
-     */
-    protected function newEmptyObject()
-    {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
-            return null;
-        }
-
-        return $this->getContainer()->make($this->getObjectClass());
-    }
-
-    /**
-     * adds a "new" button
-     */
-    public function addNewButton()
-    {
-        $this->addActionLink('new-btn', 'new-btn', $this->getUtils()->getIcon('plus').' '.$this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl().'?action=new', 'btn btn-sm btn-success');
-    }
-
-    /**
      * get form object
      *
      * @return FAPI\Form
@@ -144,26 +107,47 @@ abstract class AdminFormPage extends AdminPage
             'suffix' => '<br /><br />',
             ]
         )
-        ->addMarkup('<a class="btn btn-danger btn-sm" href="'.$this->getControllerUrl().'">'.$this->getUtils()->translate('Cancel', $this->getCurrentLocale()).'</a>')
-        ->addField(
-            'button',
-            [
-            'type' => 'submit',
-            'container_tag' => null,
-            'prefix' => '&nbsp;',
-            'value' => 'Confirm',
-            'attributes' => ['class' => 'btn btn-primary btn-sm'],
-            ]
-        );
+        ->addMarkup('<a class="btn btn-danger btn-sm" href="'.$this->getControllerUrl().'">'.$this->getUtils()->translate('Cancel', $this->getCurrentLocale()).'</a>');
+        $this->addSubmitButton($form, true);
         return $form;
     }
 
     /**
-     * gets object to show class name for loading
+     * adds submit button to form
      *
-     * @return string
+     * @param  FAPI\Form $form
+     * @param  boolean    $inline_button
+     * @return FAPI\Form
      */
-    abstract public function getObjectClass();
+    protected function addSubmitButton(FAPI\Form $form, $inline_button = false)
+    {
+        if ($inline_button) {
+            $form
+            ->addField(
+                'button',
+                [
+                'type' => 'submit',
+                'container_tag' => null,
+                'prefix' => '&nbsp;',
+                'value' => 'Ok',
+                'attributes' => ['class' => 'btn btn-primary btn-sm'],
+                ]
+            );
+        } else {
+            $form
+            ->addField(
+                'button',
+                [
+                'type' => 'submit',
+                'value' => 'Ok',
+                'container_class' => 'form-item mt-3',
+                'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                ]
+            );
+        }
+
+        return $form;
+    }
 
     /**
      * gets form definition object

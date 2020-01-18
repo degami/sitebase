@@ -54,6 +54,16 @@ class Roles extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'role_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -61,10 +71,7 @@ class Roles extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $role = null;
-        if ($this->getRequest()->get('role_id')) {
-            $role = $this->loadObject($this->getRequest()->get('role_id'));
-        }
+        $role = $this->getObject();
 
         $form->addField(
             'action',
@@ -80,7 +87,7 @@ class Roles extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $role_name = '';
-                if ($role instanceof Role) {
+                if ($role->isLoaded()) {
                     $role_name = $role->name;
                 }
                 $form->addField(
@@ -91,16 +98,9 @@ class Roles extends AdminManageModelsPage
                     'default_value' => $role_name,
                     'validate' => ['required'],
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -137,10 +137,7 @@ class Roles extends AdminManageModelsPage
         /**
          * @var Role $role
          */
-        $role = $this->newEmptyObject();
-        if ($this->getRequest()->get('role_id')) {
-            $role = $this->loadObject($this->getRequest()->get('role_id'));
-        }
+        $role = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {

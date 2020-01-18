@@ -23,6 +23,8 @@ use \App\App;
  */
 abstract class AdminManageModelsPage extends AdminFormPage
 {
+    protected $objectInstance = null;
+
     /**
      * {@inheriydocs}
      *
@@ -58,6 +60,27 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
             ];
         }
+    }
+
+
+    /**
+     * gets model object (loaded or new)
+     *
+     * @return mixed
+     */
+    public function getObject()
+    {
+        if (($this->objectInstance != null) && (is_subclass_of($this->objectInstance, $this->getObjectClass()))) {
+            return $this->objectInstance;
+        }
+
+        if ($this->getRequest()->query->has($this->getObjectIdQueryParam())) {
+            $this->objectInstance = $this->loadObject($this->getRequest()->query->get($this->getObjectIdQueryParam()));
+        } else {
+            $this->objectInstance = $this->newEmptyObject();
+        }
+
+        return $this->objectInstance;
     }
 
     /**
@@ -97,4 +120,55 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @return array
      */
     abstract protected function getTableElements($data);
+
+    /**
+     * loads object by id
+     *
+     * @param  integer $id
+     * @return \App\Base\Abstracts\Model
+     */
+    protected function loadObject($id)
+    {
+        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
+            return null;
+        }
+
+        return $this->getContainer()->call([$this->getObjectClass(), 'load'], [ 'id' => $id]);
+    }
+
+    /**
+     * gets new empty model
+     *
+     * @return \App\Base\Abstracts\Model
+     */
+    protected function newEmptyObject()
+    {
+        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
+            return null;
+        }
+
+        return $this->getContainer()->make($this->getObjectClass());
+    }
+
+    /**
+     * adds a "new" button
+     */
+    public function addNewButton()
+    {
+        $this->addActionLink('new-btn', 'new-btn', $this->getUtils()->getIcon('plus').' '.$this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl().'?action=new', 'btn btn-sm btn-success');
+    }
+
+    /**
+     * gets object to show class name for loading
+     *
+     * @return string
+     */
+    abstract public function getObjectClass();
+
+    /**
+     * defines object id query param name
+     *
+     * @return string
+     */
+    abstract protected function getObjectIdQueryParam();
 }

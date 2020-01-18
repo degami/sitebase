@@ -51,6 +51,16 @@ class Queue extends AdminManageModelsPage
         return QueueMessage::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'message_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -61,10 +71,7 @@ class Queue extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $message = null;
-        if ($this->getRequest()->get('message_id')) {
-            $message = $this->loadObject($this->getRequest()->get('message_id'));
-        }
+        $message = $this->getObject();
 
         $form->addField(
             'action',
@@ -109,11 +116,7 @@ class Queue extends AdminManageModelsPage
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        $message = $this->newEmptyObject();
-        if ($this->getRequest()->get('message_id')) {
-            $message = $this->loadObject($this->getRequest()->get('message_id'));
-        }
-
+        $message = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {

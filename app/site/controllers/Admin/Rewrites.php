@@ -54,6 +54,16 @@ class Rewrites extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'rewrite_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -61,10 +71,7 @@ class Rewrites extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $rewrite = null;
-        if ($this->getRequest()->get('rewrite_id')) {
-            $rewrite = $this->loadObject($this->getRequest()->get('rewrite_id'));
-        }
+        $rewrite = $this->getObject();
 
         $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
         $websites = ['' => 'All Websites'] + $this->getUtils()->getWebsitesSelectOptions();
@@ -81,7 +88,7 @@ class Rewrites extends AdminManageModelsPage
             case 'edit':
             case 'new':
                 $this->addBackButton();
-                            
+
                 $rewrite_url = $rewrite_route = $rewrite_website = $rewrite_locale = '';
                 if ($rewrite instanceof Rewrite) {
                     $rewrite_url = $rewrite->url;
@@ -126,16 +133,9 @@ class Rewrites extends AdminManageModelsPage
                     'options' => $languages,
                     'validate' => ['required'],
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'translations':
@@ -159,16 +159,8 @@ class Rewrites extends AdminManageModelsPage
                         ]
                     );
                 }
-                $form->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-block'],
-                    ]
-                );
+
+                $this->addSubmitButton($form, true);
                 break;
 
             case 'delete':
@@ -205,10 +197,7 @@ class Rewrites extends AdminManageModelsPage
         /**
          * @var Rewrite $rewrite
          */
-        $rewrite = $this->newEmptyObject();
-        if ($this->getRequest()->get('rewrite_id')) {
-            $rewrite = $this->loadObject($this->getRequest()->get('rewrite_id'));
-        }
+        $rewrite = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -233,7 +222,7 @@ class Rewrites extends AdminManageModelsPage
                         if (!$rewrite_translation_row) {
                             $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
                         }
-                        
+
                         $rewrite_translation_row->update(
                             [
                             'source' => $rewrite->getId(),

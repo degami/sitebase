@@ -250,6 +250,16 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     }
 
     /**
+     * checks if model is new
+     *
+     * @return boolean
+     */
+    public function isNew()
+    {
+        return !$this->isLoaded();
+    }
+
+    /**
      * ensures model is loaded
      *
      * @return self

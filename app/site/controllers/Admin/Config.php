@@ -51,6 +51,16 @@ class Config extends AdminManageModelsPage
         return Configuration::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'config_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -80,10 +90,7 @@ class Config extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $configuration = null;
-        if ($this->getRequest()->get('config_id')) {
-            $configuration = $this->loadObject($this->getRequest()->get('config_id'));
-        }
+        $configuration = $this->getObject();
 
         $form->addField(
             'action',
@@ -103,7 +110,7 @@ class Config extends AdminManageModelsPage
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $configuration_path = $configuration_value = $configuration_website = $configuration_locale = '';
-                if ($configuration instanceof Configuration) {
+                if ($configuration->isLoaded()) {
                     $configuration_path = $configuration->path;
                     $configuration_value = $configuration->value;
                     $configuration_website = $configuration->website_id;
@@ -147,16 +154,9 @@ class Config extends AdminManageModelsPage
                     'rows' => 3,
                     //                    'validate' => ['required'],
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -195,11 +195,9 @@ class Config extends AdminManageModelsPage
         /**
          * @var Configuration $configuration
          */
-        $configuration = $this->newEmptyObject();
+        $configuration = $this->getObject();
 
         if ($this->getRequest()->get('config_id')) {
-            $configuration = $this->loadObject($this->getRequest()->get('config_id'));
-
             if (($values['action'] == 'edit' || $values['action'] == 'delete') && $this->getCache()->has('site.configuration')) {
                 $cached_config = $this->getSiteData()->getCachedConfig();
                 if (isset($cached_config[$configuration->path])) {

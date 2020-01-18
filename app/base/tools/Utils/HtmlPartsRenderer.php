@@ -523,7 +523,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         $add_searchrow = false;
-        if ($current_page instanceof BasePage) {
+        if (count($elements) > 0 && $current_page instanceof BasePage) {
             $search_row = $this->getContainer()->make(
                 TagElement::class,
                 ['options' => [
@@ -559,9 +559,55 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         // tbody
-        foreach ($elements as $key => $elem) {
-            // ensure all header cols are in row cols
-            $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
+
+        if (count($elements)) {
+            foreach ($elements as $key => $elem) {
+                // ensure all header cols are in row cols
+                $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
+                $row = $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                    'tag' => 'tr',
+                    'attributes' => ['class' => $key % 2 == 0 ? 'odd' : 'even'],
+                    ]]
+                );
+
+                foreach ($elem as $tk => $td) {
+                    if ($tk == 'actions') {
+                        continue;
+                    }
+                    $row->addChild(
+                        ($td instanceof TagElement && $td->getTag() == 'td') ? $td :
+                        $this->getContainer()->make(
+                            TagElement::class,
+                            ['options' => [
+                            'tag' => 'td',
+                            'text' => (string) $td
+                            ]]
+                        )
+                    );
+                }
+
+                $row->addChild(
+                    $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                        'tag' => 'td',
+                        'text' => $elem['actions'] ?? '',
+                        'attributes' => ['class' => 'text-right nowrap'],
+                        ]]
+                    )
+                );
+
+
+                $tbody->addChild($row);
+            }
+        } else {
+            $text = 'No elements found !';
+            if (($current_page instanceof BasePage)) {
+                $text = $this->getUtils()->translate($text, $current_page->getCurrentLocale());
+            }
+
             $row = $this->getContainer()->make(
                 TagElement::class,
                 ['options' => [
@@ -570,33 +616,16 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 ]]
             );
 
-            foreach ($elem as $tk => $td) {
-                if ($tk == 'actions') {
-                    continue;
-                }
-                $row->addChild(
-                    ($td instanceof TagElement && $td->getTag() == 'td') ? $td :
-                    $this->getContainer()->make(
-                        TagElement::class,
-                        ['options' => [
-                        'tag' => 'td',
-                        'text' => (string) $td
-                        ]]
-                    )
-                );
-            }
-
             $row->addChild(
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
                     'tag' => 'td',
-                    'text' => $elem['actions'] ?? '',
-                    'attributes' => ['class' => 'text-right nowrap'],
+                    'text' => $text,
+                    'attributes' => ['class' => 'text-center nowrap', 'colspan' => count($header)],
                     ]]
                 )
             );
-
 
             $tbody->addChild($row);
         }

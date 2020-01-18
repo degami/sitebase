@@ -13,7 +13,7 @@ namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\AdminManageModelsPage;
+use \App\Base\Abstracts\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\News as NewsModel;
 use \App\App;
@@ -21,7 +21,7 @@ use \App\App;
 /**
  * "News" Admin Page
  */
-class News extends AdminManageModelsPage
+class News extends AdminManageFrontendModelsPage
 {
     /**
      * {@inheritdocs}
@@ -53,6 +53,16 @@ class News extends AdminManageModelsPage
         return NewsModel::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'news_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -63,10 +73,7 @@ class News extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $news = null;
-        if ($this->getRequest()->get('news_id')) {
-            $news = $this->loadObject($this->getRequest()->get('news_id'));
-        }
+        $news = $this->getObject();
 
         $form->addField(
             'action',
@@ -80,33 +87,14 @@ class News extends AdminManageModelsPage
             case 'edit':
             case 'new':
                 $this->addBackButton();
-                
-                if ($news instanceof NewsModel) {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($news->getWebsiteId());
-                } else {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
-                }
 
-                $websites = $this->getUtils()->getWebsitesSelectOptions();
-
-                $news_url = $news_locale = $news_title = $news_content = $news_website = $news_date = '';
-                if ($news instanceof NewsModel) {
-                    $news_url = $news->url;
-                    $news_locale = $news->locale;
+                $news_title = $news_content = $news_date = '';
+                if ($news->isLoaded()) {
                     $news_title = $news->title;
                     $news_content = $news->content;
-                    $news_website = $news->website_id;
                     $news_date = $news->date;
                 }
-                $form->addField(
-                    'url',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Page url',
-                    'default_value' => $news_url,
-                    'validate' => ['required'],
-                    ]
-                )
+                $form
                 ->addField(
                     'title',
                     [
@@ -126,26 +114,6 @@ class News extends AdminManageModelsPage
                     ]
                 )
                 ->addField(
-                    'website_id',
-                    [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $news_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'locale',
-                    [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $news_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                    ]
-                )
-                ->addField(
                     'content',
                     [
                     'type' => 'tinymce',
@@ -156,16 +124,11 @@ class News extends AdminManageModelsPage
                     'default_value' => $news_content,
                     'rows' => 20,
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addFrontendFormElements($form, $form_state);
+                $this->addSubmitButton($form);
+
                 break;
 
             case 'delete':
@@ -202,23 +165,21 @@ class News extends AdminManageModelsPage
         /**
          * @var NewsModel $news
          */
-        $news = $this->newEmptyObject();
-        if ($this->getRequest()->get('news_id')) {
-            $news = $this->loadObject($this->getRequest()->get('news_id'));
-        }
+        $news = $this->getObject();
 
         $values = $form->values();
+
         switch ($values['action']) {
             case 'new':
                 $news->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
                 // no break
             case 'edit':
-                $news->url = $values['url'];
+                $news->url = $values['frontend']['url'];
                 $news->title = $values['title'];
-                $news->locale = $values['locale'];
+                $news->locale = $values['frontend']['locale'];
                 $news->content = $values['content'];
-                $news->website_id = $values['website_id'];
+                $news->website_id = $values['frontend']['website_id'];
                 $news->date = $values['date'];
 
                 $news->persist();
@@ -265,7 +226,7 @@ class News extends AdminManageModelsPage
                 'Locale' => $news->locale,
                 'Title' => $news->title,
                 'Date' => $news->date,
-                'actions' => '<a class="btn btn-light btn-sm" href="'. $news->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>                    
+                'actions' => '<a class="btn btn-light btn-sm" href="'. $news->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>
                     <a class="btn btn-primary btn-sm" href="'. $news->getControllerUrl() .'?action=edit&news_id='. $news->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $news->getControllerUrl() .'?action=delete&news_id='. $news->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
                 ];

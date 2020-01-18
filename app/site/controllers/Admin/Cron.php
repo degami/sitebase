@@ -111,6 +111,16 @@ class Cron extends AdminManageModelsPage
         return CronTask::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'task_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -121,10 +131,7 @@ class Cron extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $task = null;
-        if ($this->getRequest()->get('task_id')) {
-            $task = $this->loadObject($this->getRequest()->get('task_id'));
-        }
+        $task = $this->getObject();
 
         $form->addField(
             'action',
@@ -142,7 +149,7 @@ class Cron extends AdminManageModelsPage
                 $container = $this->getContainer();
 
                 $task_title = $task_callable = $task_schedule = $task_active = '';
-                if ($task instanceof CronTask) {
+                if ($task->isLoaded()) {
                     $task_title = $task->title;
                     $task_callable = $task->cron_task_callable;
                     $task_schedule = $task->schedule;
@@ -190,16 +197,9 @@ class Cron extends AdminManageModelsPage
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -234,12 +234,9 @@ class Cron extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var CronTask $task
-*/
-        $task = $this->newEmptyObject();
-        if ($this->getRequest()->get('task_id')) {
-            $task = $this->loadObject($this->getRequest()->get('task_id'));
-        }
+         * @var CronTask $task
+         */
+        $task = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {

@@ -54,6 +54,16 @@ class Users extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'user_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -61,9 +71,9 @@ class Users extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $user = $role = null;
-        if ($this->getRequest()->get('user_id')) {
-            $user = $this->loadObject($this->getRequest()->get('user_id'));
+        $user = $this->getObject();
+        $role = null;
+        if ($user->isLoaded()) {
             $role = $user->getRole();
         }
 
@@ -87,9 +97,13 @@ class Users extends AdminManageModelsPage
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 
                 $user_username = $user_roleid = $user_email = $user_nickname = $user_locale = '';
-                if ($user instanceof User) {
+                if ($user->isLoaded()) {
                     $user_username = $user->getUsername();
-                    $user_roleid = $user->getUserId();
+
+                    if ($role instanceof Role) {
+                        $user_roleid = $role->getId();
+                    }
+
                     $user_email = $user->getEmail();
                     $user_nickname = $user->getNickname();
                     $user_locale = $user->getLocale();
@@ -152,16 +166,9 @@ class Users extends AdminManageModelsPage
                     'options' => $languages,
                     'validate' => ['required'],
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -198,10 +205,7 @@ class Users extends AdminManageModelsPage
         /**
          * @var User $user
          */
-        $user = $this->newEmptyObject();
-        if ($this->getRequest()->get('user_id')) {
-            $user = $this->loadObject($this->getRequest()->get('user_id'));
-        }
+        $user = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {

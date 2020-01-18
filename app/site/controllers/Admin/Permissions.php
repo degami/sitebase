@@ -46,16 +46,6 @@ class Permissions extends AdminFormPage
     /**
      * {@inheritdocs}
      *
-     * @return string
-     */
-    public function getObjectClass()
-    {
-        return null; // not needed here
-    }
-
-    /**
-     * {@inheritdocs}
-     *
      * @return array
      */
     protected function getTemplateData()
@@ -137,15 +127,7 @@ class Permissions extends AdminFormPage
             }
         }
 
-        $form->addField(
-            'button',
-            [
-            'type' => 'submit',
-            'value' => 'ok',
-            'container_class' => 'form-item mt-3',
-            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-            ]
-        );
+        $this->addSubmitButton($form);
 
         return $form;
     }

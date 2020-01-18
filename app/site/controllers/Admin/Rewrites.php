@@ -148,19 +148,24 @@ class Rewrites extends AdminManageModelsPage
                 $translations = $rewrite->getTranslations();
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
                 unset($languages[$rewrite->getLocale()]);
-                foreach ($languages as $locale => $language_name) {
-                    $form->addField(
-                        'translation_'.$locale,
-                        [
-                        'type' => 'select',
-                        'title' => $language_name,
-                        'options' => ['' => ''] + $other_rewrites,
-                        'default_value' => isset($translations[$locale]) ? $translations[$locale]->id : '',
-                        ]
-                    );
-                }
 
-                $this->addSubmitButton($form, true);
+                if (count($languages) == 0) {
+                    $form->addMarkup('<h3 class="text-center">No translation needed!</h3>');
+                } else {
+                    foreach ($languages as $locale => $language_name) {
+                        $form->addField(
+                            'translation_'.$locale,
+                            [
+                            'type' => 'select',
+                            'title' => $language_name,
+                            'options' => ['' => ''] + $other_rewrites,
+                            'default_value' => isset($translations[$locale]) ? $translations[$locale]->id : '',
+                            ]
+                        );
+                    }
+
+                    $this->addSubmitButton($form, true);
+                }
                 break;
 
             case 'delete':

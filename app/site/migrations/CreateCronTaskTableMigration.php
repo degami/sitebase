@@ -44,7 +44,7 @@ class CreateCronTaskTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('title', 'VARCHAR', [255])
             ->addColumn('cron_task_callable', 'VARCHAR', [1024])
             ->addColumn('schedule', 'VARCHAR', [50])

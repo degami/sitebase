@@ -44,7 +44,7 @@ class CreateLinkExchangeTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('locale', 'VARCHAR', [10])
             ->addColumn('url', 'VARCHAR', [255], [], false, null)

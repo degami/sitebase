@@ -56,6 +56,16 @@ class Websites extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'website_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -63,10 +73,7 @@ class Websites extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $website = null;
-        if ($this->getRequest()->get('website_id')) {
-            $website = $this->loadObject($this->getRequest()->get('website_id'));
-        }
+        $website = $this->getObject();
 
         $form->addField(
             'action',
@@ -81,8 +88,8 @@ class Websites extends AdminManageModelsPage
                 // intentional fall-trough
             case 'new':
                 $this->addBackButton();
-                
-                if ($website instanceof Website) {
+
+                if ($website->isLoaded()) {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions($website->getId());
                 } else {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
@@ -91,7 +98,7 @@ class Websites extends AdminManageModelsPage
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $website_site_name = $website_domain = $website_aliases = $website_default_locale = '';
-                if ($website instanceof Website) {
+                if ($website->isLoaded()) {
                     $website_site_name = $website->site_name;
                     $website_domain = $website->domain;
                     $website_aliases = $website->aliases;
@@ -132,16 +139,9 @@ class Websites extends AdminManageModelsPage
                     'options' => $languages,
                     'validate' => ['required'],
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -178,10 +178,7 @@ class Websites extends AdminManageModelsPage
         /**
          * @var Website $website
          */
-        $website = $this->newEmptyObject();
-        if ($this->getRequest()->get('website_id')) {
-            $website = $this->loadObject($this->getRequest()->get('website_id'));
-        }
+        $website = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -213,10 +210,10 @@ class Websites extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Site Name' => 'site_name',
-            'Domain' => 'domain',
-            'Aliases' => null,
-            'Default Locale' => 'default_locale',
+            'Site Name' => ['order' => 'site_name', 'search' => 'site_name'],
+            'Domain' => ['order' => 'domain', 'search' => 'domain'],
+            'Aliases' => ['order' => null, 'search' => 'aliases'],
+            'Default Locale' => ['order' => 'default_locale', 'search' => 'default_locale'],
             'actions' => null,
         ];
     }

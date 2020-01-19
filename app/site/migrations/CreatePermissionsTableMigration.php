@@ -44,7 +44,7 @@ class CreatePermissionsTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('name', 'VARCHAR', [50])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')

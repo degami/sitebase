@@ -84,6 +84,16 @@ class Blocks extends AdminManageModelsPage
         return Block::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'block_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -94,10 +104,7 @@ class Blocks extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $block = null;
-        if ($this->getRequest()->get('block_id')) {
-            $block = $this->loadObject($this->getRequest()->get('block_id'));
-        }
+        $block = $this->getObject();
 
         $form->addField(
             'action',
@@ -120,7 +127,7 @@ class Blocks extends AdminManageModelsPage
                 }
 
                 $block_rewrites = [];
-                if ($block instanceof Block) {
+                if ($block->isLoaded()) {
                     $block_rewrites = array_map(
                         function ($el) {
                             return $el->getId();
@@ -130,7 +137,7 @@ class Blocks extends AdminManageModelsPage
                 }
 
                 $block_region = $block_locale = $block_title = $block_content = $block_order = '';
-                if ($block instanceof Block) {
+                if ($block->isLoaded()) {
                     $block_region = $block->region;
                     $block_locale = $block->locale;
                     $block_title = $block->title;
@@ -147,15 +154,15 @@ class Blocks extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $block_title,
-                        'validate' => ['required'],
-                        ]
-                    );
+                ->addField(
+                    'title',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $block_title,
+                    'validate' => ['required'],
+                    ]
+                );
                 if ($type == 'new' || $block->instance_class == Block::class) {
                     $form->addField(
                         'locale',
@@ -167,18 +174,18 @@ class Blocks extends AdminManageModelsPage
                         'validate' => ['required'],
                         ]
                     )
-                        ->addField(
-                            'content',
-                            [
-                            'type' => 'tinymce',
-                            'title' => 'Content',
-                            'tinymce_options' => [
-                            'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                            ],
-                            'default_value' => $block_content,
-                            'rows' => 20,
-                            ]
-                        );
+                    ->addField(
+                        'content',
+                        [
+                        'type' => 'tinymce',
+                        'title' => 'Content',
+                        'tinymce_options' => [
+                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                        ],
+                        'default_value' => $block_content,
+                        'rows' => 20,
+                        ]
+                    );
                 }
                 $form->addField(
                     'rewrites',
@@ -190,14 +197,14 @@ class Blocks extends AdminManageModelsPage
                     'options' => $rewrite_options,
                     ]
                 )
-                    ->addField(
-                        'order',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Order',
-                        'default_value' => $block_order,
-                        ]
-                    );
+                ->addField(
+                    'order',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Order',
+                    'default_value' => $block_order,
+                    ]
+                );
 
 
                 if ($block != null && method_exists($block->getRealInstance(), 'additionalConfigFieldset')) {
@@ -224,16 +231,7 @@ class Blocks extends AdminManageModelsPage
                     }
                 }
 
-                $form->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
-                );
-
+                $this->addSubmitButton($form);
 
                 break;
 
@@ -269,12 +267,9 @@ class Blocks extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Block $block
-*/
-        $block = $this->newEmptyObject();
-        if ($this->getRequest()->get('block_id')) {
-            $block = $this->loadObject($this->getRequest()->get('block_id'));
-        }
+         * @var Block $block
+         */
+        $block = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -343,11 +338,11 @@ class Blocks extends AdminManageModelsPage
     protected function getTableHeader()
     {
         return [
-            'ID' => 'id',
-            'Website' => 'website_id',
-            'Region' => 'region',
-            'Locale' => 'locale',
-            'Title' => 'title',
+            'ID' => ['order' => 'id'],
+            'Website' => ['order' => 'website_id'],
+            'Region' => ['order' => 'region', 'search' => 'region'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
             'Where' => null,
             'Order' => null,
             'actions' => null,

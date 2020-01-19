@@ -13,7 +13,7 @@ namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\AdminManageModelsPage;
+use \App\Base\Abstracts\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Page;
 use \App\Site\Models\Taxonomy;
@@ -23,7 +23,7 @@ use \App\App;
 /**
  * "Pages" Admin Page
  */
-class Pages extends AdminManageModelsPage
+class Pages extends AdminManageFrontendModelsPage
 {
     /**
      * {@inheritdocs}
@@ -55,6 +55,17 @@ class Pages extends AdminManageModelsPage
         return Page::class;
     }
 
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'page_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -65,10 +76,7 @@ class Pages extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $page = null;
-        if ($this->getRequest()->get('page_id')) {
-            $page = $this->loadObject($this->getRequest()->get('page_id'));
-        }
+        $page = $this->getObject();
 
         $form->addField(
             'action',
@@ -98,14 +106,6 @@ class Pages extends AdminManageModelsPage
                 // no break
             case 'new':
                 $this->addBackButton();
-                
-                if ($page instanceof Page) {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($page->getWebsiteId());
-                } else {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
-                }
-
-                $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $templates = [];
                 $initial_dir = App::getDir(App::TEMPLATES).DS.'frontend'.DS;
@@ -115,28 +115,13 @@ class Pages extends AdminManageModelsPage
                     $templates[$key] = basename($template);
                 }
 
-                $page_url = $page_locale = $page_title = $page_content = $page_meta_description =
-                $page_meta_keywords = $page_template_name = $page_website = $page_html_title = '';
-                if ($page instanceof Page) {
-                    $page_url = $page->url;
-                    $page_locale = $page->locale;
+                $page_title = $page_content = $page_template_name = '';
+                if ($page->isLoaded()) {
                     $page_title = $page->title;
                     $page_content = $page->content;
                     $page_template_name = $page->template_name;
-                    $page_meta_description = $page->meta_description;
-                    $page_meta_keywords = $page->meta_keywords;
-                    $page_html_title = $page->html_title;
-                    $page_website = $page->website_id;
                 }
-                $form->addField(
-                    'url',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Page url',
-                    'default_value' => $page_url,
-                    'validate' => ['required'],
-                    ]
-                )
+                $form
                 ->addField(
                     'title',
                     [
@@ -144,50 +129,6 @@ class Pages extends AdminManageModelsPage
                     'title' => 'Title',
                     'default_value' => $page_title,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'website_id',
-                    [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $page_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'locale',
-                    [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $page_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'meta_description',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Meta Description',
-                    'default_value' => $page_meta_description,
-                    ]
-                )
-                ->addField(
-                    'meta_keywords',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Meta Keywords',
-                    'default_value' => $page_meta_keywords,
-                    ]
-                )
-                ->addField(
-                    'html_title',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Html Title',
-                    'default_value' => $page_html_title,
                     ]
                 )
                 ->addField(
@@ -210,16 +151,12 @@ class Pages extends AdminManageModelsPage
                     'default_value' => $page_content,
                     'rows' => 20,
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addFrontendFormElements($form, $form_state);
+                $this->addSeoFormElements($form, $form_state);
+                $this->addSubmitButton($form);
+
                 break;
 
             case 'delete':
@@ -250,17 +187,9 @@ class Pages extends AdminManageModelsPage
                     'suffix' => '<br /><br />',
                     ]
                 )
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?media_id='.$media->id.'&action=page_assoc">Cancel</a>')
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                    ]
-                );
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?media_id='.$media->id.'&action=page_assoc">Cancel</a>');
+
+                $this->addSubmitButton($form, true);
                 break;
 
             case 'term_deassoc':
@@ -287,17 +216,9 @@ class Pages extends AdminManageModelsPage
                     'suffix' => '<br /><br />',
                     ]
                 )
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termpages', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                    ]
-                );
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termpages', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>');
+
+                $this->addSubmitButton($form, true);
 
                 break;
         }
@@ -329,29 +250,27 @@ class Pages extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Page $page
-*/
-        $page = $this->newEmptyObject();
-        if ($this->getRequest()->get('page_id')) {
-            $page = $this->loadObject($this->getRequest()->get('page_id'));
-        }
+         * @var Page $page
+         */
+        $page = $this->getObject();
 
         $values = $form->values();
+
         switch ($values['action']) {
             case 'new':
                 $page->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
                 // no break
             case 'edit':
-                $page->url = $values['url'];
+                $page->url = $values['frontend']['url'];
                 $page->title = $values['title'];
-                $page->locale = $values['locale'];
+                $page->locale = $values['frontend']['locale'];
                 $page->template_name = empty($values['template_name']) ? null : $values['template_name'];
                 $page->content = $values['content'];
-                $page->meta_keywords = $values['meta_keywords'];
-                $page->meta_description = $values['meta_description'];
-                $page->html_title = $values['html_title'];
-                $page->website_id = $values['website_id'];
+                $page->meta_keywords = $values['seo']['meta_keywords'];
+                $page->meta_description = $values['seo']['meta_description'];
+                $page->html_title = $values['seo']['html_title'];
+                $page->website_id = $values['frontend']['website_id'];
 
                 $page->persist();
                 break;
@@ -387,9 +306,9 @@ class Pages extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'URL' => 'url',
-            'Locale' => 'locale',
-            'Title' => 'title',
+            'URL' => ['order' => 'url', 'search' => 'url'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
             'actions' => null,
         ];
     }
@@ -410,7 +329,7 @@ class Pages extends AdminManageModelsPage
                 'URL' => $page->url,
                 'Locale' => $page->locale,
                 'Title' => $page->title,
-                'actions' => '<a class="btn btn-light btn-sm" href="'. $page->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>                    
+                'actions' => '<a class="btn btn-light btn-sm" href="'. $page->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>
                     <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&page_id='. $page->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
                     <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&page_id='. $page->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
                 ];

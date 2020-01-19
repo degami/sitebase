@@ -26,6 +26,11 @@ trait PageTrait
     protected $current_user = null;
 
     /**
+     * @var RouteInfo route info object
+     */
+    protected $route_info = null;
+
+    /**
      * calculates JWT token id
      *
      * @param  integer $uid
@@ -79,7 +84,7 @@ trait PageTrait
             $data = new \Lcobucci\JWT\ValidationData();
             $data->setIssuer($container->get('jwt_issuer'));
             $data->setAudience($container->get('jwt_audience'));
-            
+
             $claimUID = (string) $token->getClaim('uid');
             $claimUserName = (string) $token->getClaim('username');
 

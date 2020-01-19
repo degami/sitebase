@@ -44,7 +44,7 @@ class CreateWebsiteTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('site_name', 'VARCHAR', [255], [], false, null)
             ->addColumn('domain', 'VARCHAR', [255], [], false, null)
             ->addColumn('aliases', 'VARCHAR', [1024], [], false, null)

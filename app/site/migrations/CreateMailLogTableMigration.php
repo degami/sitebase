@@ -44,7 +44,7 @@ class CreateMailLogTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('from', 'VARCHAR', [1024])
             ->addColumn('to', 'VARCHAR', [1024])
             ->addColumn('subject', 'VARCHAR', [1024])

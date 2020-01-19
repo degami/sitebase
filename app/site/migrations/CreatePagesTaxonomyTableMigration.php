@@ -45,7 +45,7 @@ class CreatePagesTaxonomyTableMigration extends DBMigration
     public function addDBTableDefinition(Table $table)
     {
         $table
-            ->addColumn('id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('page_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('taxonomy_id', 'INT', null, ['UNSIGNED'])
             ->addIndex('page_taxonomy', ['page_id','taxonomy_id'], Index::TYPE_UNIQUE)

@@ -92,6 +92,16 @@ class Media extends AdminManageModelsPage
         return MediaElement::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'media_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -102,10 +112,7 @@ class Media extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $media = null;
-        if ($this->getRequest()->get('media_id')) {
-            $media = $this->loadObject($this->getRequest()->get('media_id'));
-        }
+        $media = $this->getObject();
 
         $form->addField(
             'action',
@@ -171,16 +178,10 @@ class Media extends AdminManageModelsPage
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addSubmitButton($form);
+
                 if ($this->getRequest()->get('page_id')) {
                     $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                     $form->addField(
@@ -216,17 +217,9 @@ class Media extends AdminManageModelsPage
                     'suffix' => '<br /><br />',
                     ]
                 )
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.pagemedia', ['id' => $page->id]).'?page_id='.$page->id.'&action=new">Cancel</a>')
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                    ]
-                );
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.pagemedia', ['id' => $page->id]).'?page_id='.$page->id.'&action=new">Cancel</a>');
+
+                $this->addSubmitButton($form, true);
                 break;
             case 'page_assoc':
                 $not_in = array_map(
@@ -266,17 +259,9 @@ class Media extends AdminManageModelsPage
                         'type' => 'hidden',
                         'default_value' => $media->id,
                         ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'container_tag' => null,
-                        'prefix' => '&nbsp;',
-                        'value' => 'Ok',
-                        'attributes' => ['class' => 'btn btn-primary btn-block btn-lg'],
-                        ]
                     );
+
+                    $this->addSubmitButton($form, true);
                 break;
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
@@ -310,12 +295,9 @@ class Media extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var MediaElement $media
-*/
-        $media = $this->newEmptyObject();
-        if ($this->getRequest()->get('media_id')) {
-            $media = $this->loadObject($this->getRequest()->get('media_id'));
-        }
+         * @var MediaElement $media
+         */
+        $media = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -379,9 +361,9 @@ class Media extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Preview' => null,
-            'Filename - Path' => 'filename',
-            'Mimetype' => 'mimetype',
-            'Filesize' => 'filesize',
+            'Filename - Path' => ['order' => 'filename', 'search' => 'filename'],
+            'Mimetype' => ['order' => 'mimetype', 'search' => 'mimetype'],
+            'Filesize' => ['order' => 'filesize', 'search' => 'filesize'],
             'Owner' => 'user_id',
             'Lazyload' => null,
             'actions' => null,
@@ -401,7 +383,7 @@ class Media extends AdminManageModelsPage
                 return [
                 'ID' => $elem->getId(),
                 'Preview' => $elem->getThumb('100x100', null, null, ['for_admin' => '']),
-                'Filename - Path' => $elem->getFilename() .'<br /><pre style="font-size: 0.6rem;">'. $elem->getPath() .'</pre>',
+                'Filename - Path' => $elem->getFilename() .'<br /><abbr style="font-size: 0.6rem;">'. $elem->getPath() .'</abbr>',
                 'Mimetype' => $elem->getMimetype(),
                 'Filesize' => $this->formatBytes($elem->getFilesize()),
                 'Owner' => $elem->getOwner()->username,

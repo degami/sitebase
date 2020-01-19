@@ -44,7 +44,7 @@ class CreateUsersTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('username', 'VARCHAR', [50])
             ->addColumn('password', 'VARCHAR', [255])
             ->addColumn('role_id', 'INT', null, ['UNSIGNED'])

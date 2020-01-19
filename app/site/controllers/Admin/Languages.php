@@ -51,6 +51,16 @@ class Languages extends AdminManageModelsPage
         return Language::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'language_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -61,10 +71,7 @@ class Languages extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $language = null;
-        if ($this->getRequest()->get('language_id')) {
-            $language = $this->loadObject($this->getRequest()->get('language_id'));
-        }
+        $language = $this->getObject();
 
         $form->addField(
             'action',
@@ -80,7 +87,7 @@ class Languages extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $language_locale = $language_639_1 = $language_639_2 = $language_name = $language_native = $language_family = '';
-                if ($language instanceof Language) {
+                if ($language->isLoaded()) {
                     $language_locale = $language->locale;
                     $language_639_1 = $language->{'639-1'};
                     $language_639_2 = $language->{'639-2'};
@@ -98,59 +105,52 @@ class Languages extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        '639-1',
-                        [
-                        'type' => 'textfield',
-                        'title' => '639-1',
-                        'default_value' => $language_639_1,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        '639-2',
-                        [
-                        'type' => 'textfield',
-                        'title' => '639-2',
-                        'default_value' => $language_639_2,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'name',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Name',
-                        'default_value' => $language_name,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'native',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Native',
-                        'default_value' => $language_native,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'family',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Family',
-                        'default_value' => $language_family,
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    '639-1',
+                    [
+                    'type' => 'textfield',
+                    'title' => '639-1',
+                    'default_value' => $language_639_1,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    '639-2',
+                    [
+                    'type' => 'textfield',
+                    'title' => '639-2',
+                    'default_value' => $language_639_2,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'name',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Name',
+                    'default_value' => $language_name,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'native',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Native',
+                    'default_value' => $language_native,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'family',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Family',
+                    'default_value' => $language_family,
+                    ]
+                );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -185,12 +185,9 @@ class Languages extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Language $language
-*/
-        $language = $this->newEmptyObject();
-        if ($this->getRequest()->get('language_id')) {
-            $language = $this->loadObject($this->getRequest()->get('language_id'));
-        }
+         * @var Language $language
+         */
+        $language = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -222,13 +219,13 @@ class Languages extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Locale' => 'locale',
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'Flag' => null,
-            '639-1' => "639-1",
-            '639-2' => "639-2",
-            'Name' => 'name',
-            'Native' => 'native',
-            'Family' => 'family',
+            '639-1' => ['order' => '639-1', 'search' => '639-1'],
+            '639-2' => ['order' => '639-2', 'search' => '639-2'],
+            'Name' => ['order' => 'name', 'search' => 'name'],
+            'Native' => ['order' => 'native', 'search' => 'native'],
+            'Family' => ['order' => 'family', 'search' => 'family'],
             'actions' => null,
         ];
     }

@@ -45,7 +45,7 @@ class CreateMediaElementsRewritesTableMigration extends DBMigration
     public function addDBTableDefinition(Table $table)
     {
         $table
-            ->addColumn('id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('media_element_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('rewrite_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])

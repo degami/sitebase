@@ -46,6 +46,10 @@ class Page extends FrontendPageWithObject
             return 'homepage';
         }
 
+        if ($this->getObject()->getTemplateName()) {
+            return $this->getObject()->getTemplateName();
+        }
+
         return 'page';
     }
 
@@ -59,7 +63,7 @@ class Page extends FrontendPageWithObject
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
         $this->route_info = $route_info;
-        
+
         if (isset($route_data['id'])) {
             $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $route_data['id']]));
         }

@@ -54,6 +54,16 @@ class Rewrites extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'rewrite_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -61,10 +71,7 @@ class Rewrites extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $rewrite = null;
-        if ($this->getRequest()->get('rewrite_id')) {
-            $rewrite = $this->loadObject($this->getRequest()->get('rewrite_id'));
-        }
+        $rewrite = $this->getObject();
 
         $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
         $websites = ['' => 'All Websites'] + $this->getUtils()->getWebsitesSelectOptions();
@@ -81,7 +88,7 @@ class Rewrites extends AdminManageModelsPage
             case 'edit':
             case 'new':
                 $this->addBackButton();
-                            
+
                 $rewrite_url = $rewrite_route = $rewrite_website = $rewrite_locale = '';
                 if ($rewrite instanceof Rewrite) {
                     $rewrite_url = $rewrite->url;
@@ -99,43 +106,36 @@ class Rewrites extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'route',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Route',
-                        'default_value' => $rewrite_route,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $rewrite_website,
-                        'options' => $websites,
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $rewrite_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'route',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Route',
+                    'default_value' => $rewrite_route,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'website_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $rewrite_website,
+                    'options' => $websites,
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $rewrite_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'translations':
@@ -148,27 +148,24 @@ class Rewrites extends AdminManageModelsPage
                 $translations = $rewrite->getTranslations();
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
                 unset($languages[$rewrite->getLocale()]);
-                foreach ($languages as $locale => $language_name) {
-                    $form->addField(
-                        'translation_'.$locale,
-                        [
-                        'type' => 'select',
-                        'title' => $language_name,
-                        'options' => ['' => ''] + $other_rewrites,
-                        'default_value' => isset($translations[$locale]) ? $translations[$locale]->id : '',
-                        ]
-                    );
+
+                if (count($languages) == 0) {
+                    $form->addMarkup('<h3 class="text-center">No translation needed!</h3>');
+                } else {
+                    foreach ($languages as $locale => $language_name) {
+                        $form->addField(
+                            'translation_'.$locale,
+                            [
+                            'type' => 'select',
+                            'title' => $language_name,
+                            'options' => ['' => ''] + $other_rewrites,
+                            'default_value' => isset($translations[$locale]) ? $translations[$locale]->id : '',
+                            ]
+                        );
+                    }
+
+                    $this->addSubmitButton($form, true);
                 }
-                $form->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'container_tag' => null,
-                    'prefix' => '&nbsp;',
-                    'value' => 'Ok',
-                    'attributes' => ['class' => 'btn btn-primary btn-block'],
-                    ]
-                );
                 break;
 
             case 'delete':
@@ -203,12 +200,9 @@ class Rewrites extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Rewrite $rewrite
-*/
-        $rewrite = $this->newEmptyObject();
-        if ($this->getRequest()->get('rewrite_id')) {
-            $rewrite = $this->loadObject($this->getRequest()->get('rewrite_id'));
-        }
+         * @var Rewrite $rewrite
+         */
+        $rewrite = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -233,7 +227,7 @@ class Rewrites extends AdminManageModelsPage
                         if (!$rewrite_translation_row) {
                             $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
                         }
-                        
+
                         $rewrite_translation_row->update(
                             [
                             'source' => $rewrite->getId(),
@@ -263,9 +257,9 @@ class Rewrites extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'Url' => 'url',
-            'Route' => 'route',
-            'Locale' => null,
+            'URL' => ['order' => 'url', 'search' => 'url'],
+            'Route' => ['order' => 'route', 'search' => 'route'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'actions' => null,
         ];
     }
@@ -283,7 +277,7 @@ class Rewrites extends AdminManageModelsPage
                 return [
                 'ID' => $rewrite->id,
                 'Website' => $rewrite->getWebsiteId() == null ? 'All websites' : $rewrite->getWebsite()->domain,
-                'Url' => $rewrite->url,
+                'URL' => $rewrite->url,
                 'Route' => $rewrite->route,
                 'Locale' => $rewrite->getLocale(),
                 'actions' => '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=translations&rewrite_id='. $rewrite->id.'">'.$this->getUtils()->getIcon('tag') .'</a>

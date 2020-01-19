@@ -45,7 +45,7 @@ class CreateSitemapsRewritesTableMigration extends DBMigration
     public function addDBTableDefinition(Table $table)
     {
         $table
-            ->addColumn('id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('sitemap_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('rewrite_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('priority', 'FLOAT', null, ['UNSIGNED'])

@@ -117,9 +117,30 @@ trait AdminTrait
             return '';
         }
 
-        return '<ul class="navbar-nav mr-auto"><li class="nav-item active">' .
-                implode('</li><li class="nav-item ml-1">', $this->action_buttons) .
-                '</li></ul>';
+
+        $ul = $this->getContainer()->make(
+            TagElement::class,
+            ['options' => [
+            'tag' => 'ul',
+            'attributes' => ['class' => 'navbar-nav mr-auto'],
+            ]]
+        );
+
+
+        foreach ($this->action_buttons as $key => $button_html) {
+            $ul->addChild(
+                $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                    'tag' => 'li',
+                    'attributes' => ['class' => 'nav-item ml-1'],
+                    'text' => $button_html
+                    ]]
+                )
+            );
+        }
+
+        return (string) $ul;
     }
 
     /**
@@ -157,8 +178,11 @@ trait AdminTrait
      * @param string $link_href
      * @param string $link_class
      */
-    protected function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light')
+    public function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light', $attributes = [])
     {
+        if (!is_array($attributes)) {
+            $attributes = [];
+        }
         $button = (string)(new TagElement(
             [
             'tag' => 'a',
@@ -166,8 +190,8 @@ trait AdminTrait
             'attributes' => [
                 'class' => $link_class,
                 'href' => $link_href,
-                'title' => $link_text,
-            ],
+                'title' => strip_tags($link_text),
+            ] + $attributes,
             'text' => $link_text,
             ]
         ));

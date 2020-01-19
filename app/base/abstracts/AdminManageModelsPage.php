@@ -23,6 +23,8 @@ use \App\App;
  */
 abstract class AdminManageModelsPage extends AdminFormPage
 {
+    protected $objectInstance = null;
+
     /**
      * {@inheriydocs}
      *
@@ -33,7 +35,24 @@ abstract class AdminManageModelsPage extends AdminFormPage
         parent::__construct($container);
         if ($this->templateData['action'] == 'list') {
             $this->addNewButton();
-            $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], ['order' => $this->getRequest()->query->get('order')]);
+
+            $paginate_params = [
+                'order' => $this->getRequest()->query->get('order'),
+                'condition' => $this->getRequest()->query->get('search')
+            ];
+            if (is_array($paginate_params['condition'])) {
+                foreach ($paginate_params['condition'] as $col => $search) {
+                    if (trim($search) == '') {
+                        continue;
+                    }
+                    $paginate_params['condition']['`'.$col . '` LIKE ?'] = ['%'.$search.'%'];
+                    unset($paginate_params['condition'][$col]);
+                }
+
+                $paginate_params['condition'] = array_filter($paginate_params['condition']);
+            }
+
+            $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], $paginate_params);
             $this->templateData += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
@@ -43,14 +62,25 @@ abstract class AdminManageModelsPage extends AdminFormPage
         }
     }
 
+
     /**
-     * {@inheritdocs}
+     * gets model object (loaded or new)
      *
-     * @return array
+     * @return mixed
      */
-    protected function getTemplateData()
+    public function getObject()
     {
-        return $this->templateData;
+        if (($this->objectInstance != null) && (is_subclass_of($this->objectInstance, $this->getObjectClass()))) {
+            return $this->objectInstance;
+        }
+
+        if ($this->getRequest()->query->has($this->getObjectIdQueryParam())) {
+            $this->objectInstance = $this->loadObject($this->getRequest()->query->get($this->getObjectIdQueryParam()));
+        } else {
+            $this->objectInstance = $this->newEmptyObject();
+        }
+
+        return $this->objectInstance;
     }
 
     /**
@@ -90,4 +120,55 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @return array
      */
     abstract protected function getTableElements($data);
+
+    /**
+     * loads object by id
+     *
+     * @param  integer $id
+     * @return \App\Base\Abstracts\Model
+     */
+    protected function loadObject($id)
+    {
+        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
+            return null;
+        }
+
+        return $this->getContainer()->call([$this->getObjectClass(), 'load'], [ 'id' => $id]);
+    }
+
+    /**
+     * gets new empty model
+     *
+     * @return \App\Base\Abstracts\Model
+     */
+    protected function newEmptyObject()
+    {
+        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
+            return null;
+        }
+
+        return $this->getContainer()->make($this->getObjectClass());
+    }
+
+    /**
+     * adds a "new" button
+     */
+    public function addNewButton()
+    {
+        $this->addActionLink('new-btn', 'new-btn', $this->getUtils()->getIcon('plus').' '.$this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl().'?action=new', 'btn btn-sm btn-success');
+    }
+
+    /**
+     * gets object to show class name for loading
+     *
+     * @return string
+     */
+    abstract public function getObjectClass();
+
+    /**
+     * defines object id query param name
+     *
+     * @return string
+     */
+    abstract protected function getObjectIdQueryParam();
 }

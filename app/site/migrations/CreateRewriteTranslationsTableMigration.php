@@ -44,7 +44,7 @@ class CreateRewriteTranslationsTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('source', 'INT', null, ['UNSIGNED'])
             ->addColumn('source_locale', 'VARCHAR', [10])
             ->addColumn('destination', 'INT', null, ['UNSIGNED'])

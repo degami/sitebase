@@ -45,7 +45,7 @@ class CreateBlocksRewritesTableMigration extends DBMigration
     public function addDBTableDefinition(Table $table)
     {
         $table
-            ->addColumn('id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('block_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('rewrite_id', 'INT', null, ['UNSIGNED'])
             ->addIndex('block_rewrite', ['block_id','rewrite_id'], Index::TYPE_UNIQUE)

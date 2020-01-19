@@ -45,7 +45,7 @@ class CreateRolesPermissionsTableMigration extends DBMigration
     public function addDBTableDefinition(Table $table)
     {
         $table
-            ->addColumn('id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('role_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('permission_id', 'INT', null, ['UNSIGNED'])
             ->addIndex('role_permission', ['role_id','permission_id'], Index::TYPE_UNIQUE)

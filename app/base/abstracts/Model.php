@@ -115,6 +115,9 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
      */
     protected static function getModelBasicWhere(ContainerInterface $container, $condition = [], $order = [])
     {
+        if ($condition == null) {
+            $condition = [];
+        }
         $stmt = $container->get('db')->table(
             static::defaultTableName()
         )->where($condition);
@@ -169,6 +172,10 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
             $request = Request::createFromGlobals();
         }
 
+        if ($condition == null) {
+            $condition = [];
+        }
+
         $page = $request->get('page') ?? 0;
         $start = (int)$page * $page_size;
         $items = array_map(
@@ -178,10 +185,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
             static::getModelBasicWhere($container, $condition, $order)->limit($page_size, $start)->fetchAll()
         );
 
-        $total = $container->get('db')->table(
-            static::defaultTableName()
-        )->where($condition, $order)->count();
-
+        $total = static::getModelBasicWhere($container, $condition, $order)->count();
         return ['items' => $items, 'page' => $page, 'total' => $total];
     }
 
@@ -243,6 +247,16 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     public function isLoaded()
     {
         return ($this->dbrow instanceof Row) && $this->dbrow->exists();
+    }
+
+    /**
+     * checks if model is new
+     *
+     * @return boolean
+     */
+    public function isNew()
+    {
+        return !$this->isLoaded();
     }
 
     /**

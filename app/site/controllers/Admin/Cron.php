@@ -111,6 +111,16 @@ class Cron extends AdminManageModelsPage
         return CronTask::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'task_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -121,10 +131,7 @@ class Cron extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $task = null;
-        if ($this->getRequest()->get('task_id')) {
-            $task = $this->loadObject($this->getRequest()->get('task_id'));
-        }
+        $task = $this->getObject();
 
         $form->addField(
             'action',
@@ -142,7 +149,7 @@ class Cron extends AdminManageModelsPage
                 $container = $this->getContainer();
 
                 $task_title = $task_callable = $task_schedule = $task_active = '';
-                if ($task instanceof CronTask) {
+                if ($task->isLoaded()) {
                     $task_title = $task->title;
                     $task_callable = $task->cron_task_callable;
                     $task_schedule = $task->schedule;
@@ -158,48 +165,41 @@ class Cron extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'cron_task_callable',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Callable',
-                        'default_value' => $task_callable,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'schedule',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Schedule',
-                        'default_value' => $task_schedule,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'active',
-                        [
-                        'type' => 'switchbox',
-                        'title' => 'Active',
-                        //                    'value' => boolval($task_active) ? 1 : 0,
-                        //                    'default_value' => 1,
-                        'default_value' => boolval($task_active) ? 1 : 0,
-                        'yes_value' => 1,
-                        'yes_label' => 'Yes',
-                        'no_value' => 0,
-                        'no_label' => 'No',
-                        'field_class' => 'switchbox',
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'cron_task_callable',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Callable',
+                    'default_value' => $task_callable,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'schedule',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Schedule',
+                    'default_value' => $task_schedule,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'active',
+                    [
+                    'type' => 'switchbox',
+                    'title' => 'Active',
+                    //                    'value' => boolval($task_active) ? 1 : 0,
+                    //                    'default_value' => 1,
+                    'default_value' => boolval($task_active) ? 1 : 0,
+                    'yes_value' => 1,
+                    'yes_label' => 'Yes',
+                    'no_value' => 0,
+                    'no_label' => 'No',
+                    'field_class' => 'switchbox',
+                    ]
+                );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -234,12 +234,9 @@ class Cron extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var CronTask $task
-*/
-        $task = $this->newEmptyObject();
-        if ($this->getRequest()->get('task_id')) {
-            $task = $this->loadObject($this->getRequest()->get('task_id'));
-        }
+         * @var CronTask $task
+         */
+        $task = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -299,9 +296,9 @@ class Cron extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Title' => 'title',
-            'Callable' => 'cron_task_callable',
-            'Schedule' => 'schedule',
+            'Title' => ['order' => 'title', 'search' => 'title'],
+            'Callable' => ['order' => 'cron_task_callable', 'search' => 'cron_task_callable'],
+            'Schedule' => ['order' => 'schedule', 'search' => 'schedule'],
             'Active' => 'active',
             'actions' => null,
         ];

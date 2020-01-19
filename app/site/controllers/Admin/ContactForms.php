@@ -13,16 +13,17 @@ namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\AdminFormPage;
-use \App\Base\Abstracts\AdminManageModelsPage;
+use \App\Base\Abstracts\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Contact;
 use \App\Site\Models\ContactSubmission;
 use \App\Site\Controllers\Admin\Json\ContactCallback;
+use \App\App;
 
 /**
  * "ContactForms" Admin Page
  */
-class ContactForms extends AdminManageModelsPage
+class ContactForms extends AdminManageFrontendModelsPage
 {
     /**
      * @var array available form field types
@@ -54,7 +55,7 @@ class ContactForms extends AdminManageModelsPage
                 ['order' => $this->getRequest()->query->get('order')] +
                 (($this->templateData['action'] == 'submissions') ? ['condition' => ['contact_id' => $this->getRequest()->get('contact_id')]] : [])
             );
-            
+
             $this->templateData += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
@@ -102,6 +103,19 @@ class ContactForms extends AdminManageModelsPage
         return Contact::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        if (($this->getRequest()->get('action') ?? 'list') == 'submissions') {
+            return 'submission_id';
+        }
+        return 'contact_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -112,19 +126,7 @@ class ContactForms extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $contact = null;
-        if ($this->getRequest()->get('contact_id')) {
-            $contact = $this->loadObject($this->getRequest()->get('contact_id'));
-        }
-
-        if ($contact instanceof Contact) {
-            $languages = $this->getUtils()->getSiteLanguagesSelectOptions($contact->getWebsiteId());
-        } else {
-            $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
-        }
-
-        $websites = $this->getUtils()->getWebsitesSelectOptions();
-
+        $contact = $this->getObject();
 
         $form->addField(
             'action',
@@ -134,18 +136,12 @@ class ContactForms extends AdminManageModelsPage
             ]
         );
 
-        $contact_url = $contact_title = $contact_content = $contact_locale = $contact_submit_to =
-        $contact_website = $contact_meta_description = $contact_meta_keywords = $contact_html_title ="";
-        if ($contact instanceof Contact) {
+        $contact_title = $contact_template_name = $contact_content = $contact_submit_to = "";
+        if ($contact->isLoaded()) {
             $contact_title = $contact->title;
-            $contact_url = $contact->url;
             $contact_content = $contact->content;
-            $contact_locale = $contact->locale;
+            $contact_template_name = $contact->template_name;
             $contact_submit_to = $contact->submit_to;
-            $contact_website = $contact->website_id;
-            $contact_meta_description = $contact->meta_keywords;
-            $contact_meta_keywords = $contact->meta_description;
-            $contact_html_title = $contact->html_title;
         }
 
         switch ($type) {
@@ -153,81 +149,47 @@ class ContactForms extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                $form->addField(
-                    'url',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Url',
-                    'default_value' => $contact_url,
-                    'validate' => ['required'],
-                    ]
-                )->addField(
+                $templates = [];
+                $initial_dir = App::getDir(App::TEMPLATES).DS.'frontend'.DS;
+                foreach (glob($initial_dir.'contacts'.DS.'*.php') as $template) {
+                    $key = str_replace($initial_dir, "", $template);
+                    $key = preg_replace("/\.php$/i", "", $key);
+                    $templates[$key] = basename($template);
+                }
+
+                $form
+                ->addField(
                     'title',
                     [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $contact_title,
-                        'validate' => ['required'],
-                        ]
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $contact_title,
+                    'validate' => ['required'],
+                    ]
                 )
-                    ->addField(
-                        'content',
-                        [
-                        'type' => 'tinymce',
-                        'title' => 'Content',
-                        'tinymce_options' => [
-                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                        ],
-                        'default_value' => $contact_content,
-                        'rows' => 20,
-                        ]
-                    )
-                    ->addField(
-                        'meta_description',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Meta Description',
-                        'default_value' => $contact_meta_description,
-                        ]
-                    )
-                    ->addField(
-                        'meta_keywords',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Meta Keywords',
-                        'default_value' => $contact_meta_keywords,
-                        ]
-                    )
-                    ->addField(
-                        'html_title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Html Title',
-                        'default_value' => $contact_html_title,
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $contact_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $contact_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    );
+                ->addField(
+                    'template_name',
+                    [
+                    'type' => 'select',
+                    'title' => 'Template',
+                    'default_value' => $contact_template_name,
+                    'options' => ['' => '--' ] + $templates,
+                    ]
+                )
+                ->addField(
+                    'content',
+                    [
+                    'type' => 'tinymce',
+                    'title' => 'Content',
+                    'tinymce_options' => [
+                    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                    ],
+                    'default_value' => $contact_content,
+                    'rows' => 20,
+                    ]
+                );
 
-                if ($contact instanceof Contact) {
+                if ($contact->isLoaded()) {
                     $fieldset = $form->addField(
                         'form_definition',
                         [
@@ -314,16 +276,12 @@ class ContactForms extends AdminManageModelsPage
                     'title' => 'Submit Results to',
                     'default_value' => $contact_submit_to,
                     ]
-                )
-                ->addField(
-                    'button',
-                    [
-                    'type' => 'submit',
-                    'value' => 'ok',
-                    'container_class' => 'form-item mt-3',
-                    'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                    ]
                 );
+
+                $this->addFrontendFormElements($form, $form_state);
+                $this->addSeoFormElements($form, $form_state);
+                $this->addSubmitButton($form);
+
                 break;
 
             case 'delete':
@@ -444,21 +402,22 @@ class ContactForms extends AdminManageModelsPage
         /**
          * @var Contact $contact
          */
-        $contact = $this->newEmptyObject();
-        if ($this->getRequest()->get('contact_id')) {
-            $contact = $this->loadObject($this->getRequest()->get('contact_id'));
-        }
+        $contact = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $contact->url = $values['url'];
+                $contact->url = $values['frontend']['url'];
                 $contact->title = $values['title'];
-                $contact->locale = $values['locale'];
+                $contact->locale = $values['frontend']['locale'];
+                $contact->template_name = $values['template_name'];
                 $contact->content = $values['content'];
                 $contact->submit_to = $values['submit_to'];
-                $contact->website_id = $values['website_id'];
+                $contact->website_id = $values['frontend']['website_id'];
+                $contact->meta_keywords = $values['seo']['meta_keywords'];
+                $contact->meta_description = $values['seo']['meta_description'];
+                $contact->html_title = $values['seo']['html_title'];
 
                 $contact->persist();
                 if ($values->form_definition) {
@@ -516,9 +475,9 @@ class ContactForms extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'Title' => 'title',
-            'Locale' => 'locale',
-            'URL' => 'url',
+            'Title' => ['order' => 'title', 'search' => 'title'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'URL' => ['order' => 'url', 'search' => 'url'],
             '# Submissions' => null,
             'actions' => null,
         ];

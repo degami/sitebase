@@ -44,7 +44,7 @@ class CreateBlocksTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('region', 'VARCHAR', [64])
             ->addColumn('locale', 'VARCHAR', [10])

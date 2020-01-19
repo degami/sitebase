@@ -44,7 +44,7 @@ class CreateContactDefinitionTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('contact_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('field_type', 'VARCHAR', [255])
             ->addColumn('field_label', 'VARCHAR', [255])

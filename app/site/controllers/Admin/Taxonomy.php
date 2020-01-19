@@ -13,7 +13,7 @@ namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\AdminManageModelsPage;
+use \App\Base\Abstracts\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Taxonomy as TaxonomyModel;
 use \App\Site\Models\Page;
@@ -22,7 +22,7 @@ use \App\App;
 /**
  * "Taxonomy" Admin Page
  */
-class Taxonomy extends AdminManageModelsPage
+class Taxonomy extends AdminManageFrontendModelsPage
 {
     /**
      * {@inheritdocs}
@@ -57,6 +57,16 @@ class Taxonomy extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'term_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -64,10 +74,7 @@ class Taxonomy extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $term = null;
-        if ($this->getRequest()->get('term_id')) {
-            $term = $this->loadObject($this->getRequest()->get('term_id'));
-        }
+        $term = $this->getObject();
 
         $form->addField(
             'action',
@@ -91,17 +98,6 @@ class Taxonomy extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                $container = $this->getContainer();
-
-                if ($term instanceof TaxonomyModel) {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($term->getWebsiteId());
-                } else {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
-                }
-
-                $websites = $this->getUtils()->getWebsitesSelectOptions();
-
-
                 $templates = [];
                 $initial_dir = App::getDir(App::TEMPLATES).DS.'frontend'.DS;
                 foreach (glob($initial_dir.'terms'.DS.'*.php') as $template) {
@@ -110,110 +106,48 @@ class Taxonomy extends AdminManageModelsPage
                     $templates[$key] = basename($template);
                 }
 
-                $term_url = $term_locale = $term_title = $term_content = $term_meta_description =
-                $term_meta_keywords = $term_template_name = $term_website = $term_html_title = '';
-                if ($term instanceof TaxonomyModel) {
-                    $term_url = $term->url;
-                    $term_locale = $term->locale;
+                $term_title = $term_content = $term_template_name = '';
+                if ($term->isLoaded()) {
                     $term_title = $term->title;
                     $term_content = $term->content;
                     $term_template_name = $term->template_name;
-                    $term_meta_description = $term->meta_description;
-                    $term_meta_keywords = $term->meta_keywords;
-                    $term_html_title = $term->html_title;
-                    $term_website = $term->website_id;
                 }
 
-                $form->addField(
-                    'url',
+                $form
+                ->addField(
+                    'title',
                     [
                     'type' => 'textfield',
-                    'title' => 'Term url',
-                    'default_value' => $term_url,
+                    'title' => 'Title',
+                    'default_value' => $term_title,
                     'validate' => ['required'],
-                        ]
+                    ]
                 )
-                    ->addField(
-                        'title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $term_title,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $term_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $term_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                        ->addField(
-                            'meta_description',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Meta Description',
-                            'default_value' => $term_meta_description,
-                            ]
-                        )
-                        ->addField(
-                            'meta_keywords',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Meta Keywords',
-                            'default_value' => $term_meta_keywords,
-                            ]
-                        )
-                        ->addField(
-                            'html_title',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Html Title',
-                            'default_value' => $term_html_title,
-                            ]
-                        )
-                        ->addField(
-                            'template_name',
-                            [
-                            'type' => 'select',
-                            'title' => 'Template',
-                            'default_value' => $term_template_name,
-                            'options' => ['' => '--' ] + $templates,
-                            ]
-                        )
-                        ->addField(
-                            'content',
-                            [
-                            'type' => 'textarea',
-                            'title' => 'Content',
-                            'default_value' => $term_content,
-                            'rows' => 2,
-                            ]
-                        )
-                        ->addMarkup('<div class="clear"></div>')
-                        ->addField(
-                            'button',
-                            [
-                            'type' => 'submit',
-                            'value' => 'ok',
-                            'container_class' => 'form-item mt-3',
-                            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                            ]
-                        );
+                ->addField(
+                    'template_name',
+                    [
+                    'type' => 'select',
+                    'title' => 'Template',
+                    'default_value' => $term_template_name,
+                    'options' => ['' => '--' ] + $templates,
+                    ]
+                )
+                ->addField(
+                    'content',
+                    [
+                    'type' => 'textarea',
+                    'title' => 'Content',
+                    'default_value' => $term_content,
+                    'rows' => 2,
+                    ]
+                )
+                ->addMarkup('<div class="clear"></div>');
+
+                $this->addFrontendFormElements($form, $form_state);
+                $this->addSeoFormElements($form, $form_state);
+                $this->addSubmitButton($form);
+
+
                 if ($this->getRequest()->get('page_id')) {
                     $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                     $form->addField(
@@ -234,32 +168,25 @@ class Taxonomy extends AdminManageModelsPage
                     'default_value' => $page->id,
                     ]
                 )
-                    ->addField(
-                        'taxonomy_id',
-                        [
-                        'type' => 'hidden',
-                        'default_value' => $term->id,
-                        ]
-                    )
-                    ->addField(
-                        'confirm',
-                        [
-                        'type' => 'markup',
-                        'value' => 'Do you confirm the disassociation of the selected element "'.$term->title.'" from the "'.$page->title.'" page (ID: '.$page->id.') ?',
-                        'suffix' => '<br /><br />',
-                        ]
-                    )
-                    ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.pageterms', ['id' => $page->id]).'?page_id='.$page->id.'&action=new">Cancel</a>')
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'container_tag' => null,
-                        'prefix' => '&nbsp;',
-                        'value' => 'Ok',
-                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                        ]
-                    );
+                ->addField(
+                    'taxonomy_id',
+                    [
+                    'type' => 'hidden',
+                    'default_value' => $term->id,
+                    ]
+                )
+                ->addField(
+                    'confirm',
+                    [
+                    'type' => 'markup',
+                    'value' => 'Do you confirm the disassociation of the selected element "'.$term->title.'" from the "'.$page->title.'" page (ID: '.$page->id.') ?',
+                    'suffix' => '<br /><br />',
+                    ]
+                )
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.pageterms', ['id' => $page->id]).'?page_id='.$page->id.'&action=new">Cancel</a>');
+
+                $this->addSubmitButton($form, true);
+
                 break;
             case 'page_assoc':
                 $not_in = array_map(
@@ -299,17 +226,9 @@ class Taxonomy extends AdminManageModelsPage
                         'type' => 'hidden',
                         'default_value' => $term->id,
                         ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'container_tag' => null,
-                        'prefix' => '&nbsp;',
-                        'value' => 'Ok',
-                        'attributes' => ['class' => 'btn btn-primary btn-block btn-lg'],
-                        ]
                     );
+
+                    $this->addSubmitButton($form, true);
                 break;
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
@@ -344,12 +263,9 @@ class Taxonomy extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var TaxonomyModel $term
-*/
-        $term = $this->newEmptyObject();
-        if ($this->getRequest()->get('term_id')) {
-            $term = $this->loadObject($this->getRequest()->get('term_id'));
-        }
+         * @var TaxonomyModel $term
+         */
+        $term = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -358,15 +274,15 @@ class Taxonomy extends AdminManageModelsPage
                 // intentional fall trough
                 // no break
             case 'edit':
-                $term->url = $values['url'];
+                $term->url = $values['frontend']['url'];
                 $term->title = $values['title'];
-                $term->locale = $values['locale'];
+                $term->locale = $values['frontend']['locale'];
                 $term->template_name = empty($values['template_name']) ? null : $values['template_name'];
                 $term->content = $values['content'];
-                $term->meta_keywords = $values['meta_keywords'];
-                $term->meta_description = $values['meta_description'];
-                $term->html_title = $values['html_title'];
-                $term->website_id = $values['website_id'];
+                $term->meta_keywords = $values['seo']['meta_keywords'];
+                $term->meta_description = $values['seo']['meta_description'];
+                $term->html_title = $values['seo']['html_title'];
+                $term->website_id = $values['frontend']['website_id'];
                 //$term->parent = $values['parent'];
 
                 $term->persist();
@@ -409,9 +325,9 @@ class Taxonomy extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'Locale' => 'locale',
-            'Title' => 'title',
-            'Content' => 'content',
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
+            'Content' => ['order' => 'content', 'search' => 'content'],
             'actions' => null,
         ];
     }

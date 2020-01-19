@@ -45,7 +45,7 @@ class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
     public function addDBTableDefinition(Table $table)
     {
         $table
-            ->addColumn('id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('link_exchange_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('taxonomy_id', 'INT', null, ['UNSIGNED'])
             ->addIndex('link_exchange_taxonomy', ['link_exchange_id','taxonomy_id'], Index::TYPE_UNIQUE)

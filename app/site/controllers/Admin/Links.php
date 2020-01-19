@@ -13,7 +13,7 @@ namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\AdminManageModelsPage;
+use \App\Base\Abstracts\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\LinkExchange;
 use \App\Site\Models\Taxonomy;
@@ -22,7 +22,7 @@ use \App\App;
 /**
  * "Links" Admin Page
  */
-class Links extends AdminManageModelsPage
+class Links extends AdminManageFrontendModelsPage
 {
     /**
      * {@inheritdocs}
@@ -54,6 +54,16 @@ class Links extends AdminManageModelsPage
         return LinkExchange::class;
     }
 
+   /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'link_id';
+    }
+
     /**
      * {@inheritdocs}
      *
@@ -64,10 +74,7 @@ class Links extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $link = null;
-        if ($this->getRequest()->get('link_id')) {
-            $link = $this->loadObject($this->getRequest()->get('link_id'));
-        }
+        $link = $this->getObject();
 
         $form->addField(
             'action',
@@ -91,7 +98,7 @@ class Links extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                if ($link instanceof LinkExchange) {
+                if ($link->isLoaded()) {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions($link->getWebsiteId());
                 } else {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
@@ -100,7 +107,7 @@ class Links extends AdminManageModelsPage
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $link_url = $link_locale = $link_title = $link_description = $link_email = $link_user = $link_website = $link_active = '';
-                if ($link instanceof LinkExchange) {
+                if ($link->isLoaded()) {
                     $link_url = $link->url;
                     $link_locale = $link->locale;
                     $link_title = $link->title;
@@ -119,77 +126,53 @@ class Links extends AdminManageModelsPage
                     'validate' => ['required'],
                         ]
                 )
-                    ->addField(
-                        'title',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Title',
-                        'default_value' => $link_title,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'website_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Website',
-                        'default_value' => $link_website,
-                        'options' => $websites,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $link_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                        ->addField(
-                            'email',
-                            [
-                            'type' => 'textfield',
-                            'title' => 'Email',
-                            'default_value' => $link_email,
-                            ]
-                        )
-                        ->addField(
-                            'description',
-                            [
-                            'type' => 'tinymce',
-                            'title' => 'Description',
-                            'tinymce_options' => [
-                            'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                            ],
-                            'default_value' => $link_description,
-                            'rows' => 20,
-                            ]
-                        )
-                        ->addField(
-                            'active',
-                            [
-                            'type' => 'switchbox',
-                            'title' => 'Active',
-                            'default_value' => boolval($link_active) ? 1 : 0,
-                            'yes_value' => 1,
-                            'yes_label' => 'Yes',
-                            'no_value' => 0,
-                            'no_label' => 'No',
-                            'field_class' => 'switchbox',
-                            ]
-                        )
-                        ->addField(
-                            'button',
-                            [
-                            'type' => 'submit',
-                            'value' => 'ok',
-                            'container_class' => 'form-item mt-3',
-                            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                            ]
-                        );
+                ->addField(
+                    'title',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $link_title,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'email',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Email',
+                    'default_value' => $link_email,
+                    ]
+                )
+                ->addField(
+                    'description',
+                    [
+                    'type' => 'tinymce',
+                    'title' => 'Description',
+                    'tinymce_options' => [
+                    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+                    ],
+                    'default_value' => $link_description,
+                    'rows' => 20,
+                    ]
+                )
+                ->addField(
+                    'active',
+                    [
+                    'type' => 'switchbox',
+                    'title' => 'Active',
+                    'default_value' => boolval($link_active) ? 1 : 0,
+                    'yes_value' => 1,
+                    'yes_label' => 'Yes',
+                    'no_value' => 0,
+                    'no_label' => 'No',
+                    'field_class' => 'switchbox',
+                    ]
+                );
+
+
+                $this->addFrontendFormElements($form, $form_state, ['website_id','locale']);
+                $this->addSubmitButton($form);
+
                 break;
 
             case 'delete':
@@ -205,32 +188,24 @@ class Links extends AdminManageModelsPage
                     'default_value' => $link->id,
                     ]
                 )
-                    ->addField(
-                        'taxonomy_id',
-                        [
-                        'type' => 'hidden',
-                        'default_value' => $term->id,
-                        ]
-                    )
-                    ->addField(
-                        'confirm',
-                        [
-                        'type' => 'markup',
-                        'value' => 'Do you confirm the disassociation of the "'.$link->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
-                        'suffix' => '<br /><br />',
-                        ]
-                    )
-                    ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termlinks', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>')
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'container_tag' => null,
-                        'prefix' => '&nbsp;',
-                        'value' => 'Ok',
-                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                        ]
-                    );
+                ->addField(
+                    'taxonomy_id',
+                    [
+                    'type' => 'hidden',
+                    'default_value' => $term->id,
+                    ]
+                )
+                ->addField(
+                    'confirm',
+                    [
+                    'type' => 'markup',
+                    'value' => 'Do you confirm the disassociation of the "'.$link->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
+                    'suffix' => '<br /><br />',
+                    ]
+                )
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termlinks', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>');
+
+                $this->addSubmitButton($form, true);
 
                 break;
         }
@@ -262,12 +237,9 @@ class Links extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var Page $link
-*/
-        $link = $this->newEmptyObject();
-        if ($this->getRequest()->get('link_id')) {
-            $link = $this->loadObject($this->getRequest()->get('link_id'));
-        }
+         * @var Page $link
+         */
+        $link = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -278,13 +250,11 @@ class Links extends AdminManageModelsPage
             case 'edit':
                 $link->url = $values['url'];
                 $link->title = $values['title'];
-                $link->locale = $values['locale'];
-                $link->template_name = empty($values['template_name']) ? null : $values['template_name'];
-                $link->content = $values['content'];
-                $link->meta_keywords = $values['meta_keywords'];
-                $link->meta_description = $values['meta_description'];
-                $link->html_title = $values['html_title'];
-                $link->website_id = $values['website_id'];
+                $link->email = $values['email'];
+                $link->description = $values['description'];
+                $link->active = $values['active'];
+                $link->locale = $values['frontend']['locale'];
+                $link->website_id = $values['frontend']['website_id'];
 
                 $link->persist();
                 break;
@@ -314,9 +284,9 @@ class Links extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => 'website_id',
-            'URL' => 'url',
-            'Locale' => 'locale',
-            'Title' => 'title',
+            'URL' => ['order' => 'url', 'search' => 'url'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Title' => ['order' => 'title', 'search' => 'title'],
             'Active' => 'active',
             'actions' => null,
         ];

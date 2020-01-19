@@ -45,7 +45,7 @@ class CreatePagesMediaElementsTableMigration extends DBMigration
     public function addDBTableDefinition(Table $table)
     {
         $table
-            ->addColumn('id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('page_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('media_element_id', 'INT', null, ['UNSIGNED'])
             ->addIndex('page_media_element', ['page_id','media_element_id'], Index::TYPE_UNIQUE)

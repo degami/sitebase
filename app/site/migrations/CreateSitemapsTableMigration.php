@@ -44,12 +44,12 @@ class CreateSitemapsTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table)
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'])
+        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('locale', 'VARCHAR', [10])
             ->addColumn('title', 'VARCHAR', [255])
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
-            ->addColumn('published_on', 'TIMESTAMP')
+            ->addColumn('published_on', 'TIMESTAMP', null, [], true, 'NULL')
             ->addColumn('content', 'TEXT', null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')

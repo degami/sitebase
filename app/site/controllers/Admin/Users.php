@@ -54,6 +54,16 @@ class Users extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return string
+     */
+    protected function getObjectIdQueryParam()
+    {
+        return 'user_id';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  FAPI\Form $form
      * @param  array     &$form_state
      * @return FAPI\Form
@@ -61,9 +71,9 @@ class Users extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
-        $user = $role = null;
-        if ($this->getRequest()->get('user_id')) {
-            $user = $this->loadObject($this->getRequest()->get('user_id'));
+        $user = $this->getObject();
+        $role = null;
+        if ($user->isLoaded()) {
             $role = $user->getRole();
         }
 
@@ -87,9 +97,13 @@ class Users extends AdminManageModelsPage
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 
                 $user_username = $user_roleid = $user_email = $user_nickname = $user_locale = '';
-                if ($user instanceof User) {
+                if ($user->isLoaded()) {
                     $user_username = $user->getUsername();
-                    $user_roleid = $user->getUserId();
+
+                    if ($role instanceof Role) {
+                        $user_roleid = $role->getId();
+                    }
+
                     $user_email = $user->getEmail();
                     $user_nickname = $user->getNickname();
                     $user_locale = $user->getLocale();
@@ -104,64 +118,57 @@ class Users extends AdminManageModelsPage
                     'validate' => ['required'],
                     ]
                 )
-                    ->addField(
-                        'password',
-                        [
-                        'type' => 'password',
-                        'with_confirm' => true,
-                        'with_strength_check' => true,
-                        'title' => 'Change Password',
-                        'default_value' => '',
-                        'validate' => [],
-                        ]
-                    )
-                    ->addField(
-                        'role_id',
-                        [
-                        'type' => 'select',
-                        'title' => 'Role',
-                        'options' => $roles,
-                        'default_value' => $user_roleid,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'email',
-                        [
-                        'type' => 'email',
-                        'title' => 'Email',
-                        'default_value' => $user_email,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'nickname',
-                        [
-                        'type' => 'textfield',
-                        'title' => 'Nickname',
-                        'default_value' => $user_nickname,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $user_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'button',
-                        [
-                        'type' => 'submit',
-                        'value' => 'ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        ]
-                    );
+                ->addField(
+                    'password',
+                    [
+                    'type' => 'password',
+                    'with_confirm' => true,
+                    'with_strength_check' => true,
+                    'title' => 'Change Password',
+                    'default_value' => '',
+                    'validate' => [],
+                    ]
+                )
+                ->addField(
+                    'role_id',
+                    [
+                    'type' => 'select',
+                    'title' => 'Role',
+                    'options' => $roles,
+                    'default_value' => $user_roleid,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'email',
+                    [
+                    'type' => 'email',
+                    'title' => 'Email',
+                    'default_value' => $user_email,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'nickname',
+                    [
+                    'type' => 'textfield',
+                    'title' => 'Nickname',
+                    'default_value' => $user_nickname,
+                    'validate' => ['required'],
+                    ]
+                )
+                ->addField(
+                    'locale',
+                    [
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $user_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
+                    ]
+                );
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'delete':
@@ -196,12 +203,9 @@ class Users extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
- * @var User $user
-*/
-        $user = $this->newEmptyObject();
-        if ($this->getRequest()->get('user_id')) {
-            $user = $this->loadObject($this->getRequest()->get('user_id'));
-        }
+         * @var User $user
+         */
+        $user = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
@@ -233,10 +237,10 @@ class Users extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Username' => 'username',
-            'Email' => 'email',
+            'Username' => ['order' => 'username', 'search' => 'username'],
+            'Email' => ['order' => 'email', 'search' => 'email'],
             'Role' => 'role_id',
-            'Nickname' => 'nickname',
+            'Nickname' => ['order' => 'nickname', 'search' => 'nickname'],
             'Created at' => 'created_at',
             'actions' => null,
         ];

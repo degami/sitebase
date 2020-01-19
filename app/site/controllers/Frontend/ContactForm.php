@@ -22,21 +22,14 @@ use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
 use \DateTime;
 use \Exception;
+use \App\Base\Traits\FrontendTrait;
 
 /**
  * Contact Form Page
  */
 class ContactForm extends FormPage // and and is similar to FrontendPageWithObject
 {
-    /**
-     * @var array template data
-     */
-    protected $templateData = [];
-
-    /**
-     * @var RouteInfo route info object
-     */
-    protected $route_info = null;
+    use FrontendTrait;
 
     /**
      * {@inheritdocs}
@@ -45,17 +38,11 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     protected function getTemplateName()
     {
-        return 'contact_form';
-    }
+        if ($this->templateData['object']->getTemplateName()) {
+            return $this->templateData['object']->getTemplateName();
+        }
 
-    /**
-     * gets route group
-     *
-     * @return string
-     */
-    public static function getRouteGroup()
-    {
-        return '';
+        return 'contact_form';
     }
 
     /**
@@ -78,29 +65,13 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
         $this->route_info = $route_info;
-        
+
         $this->templateData['object'] = $this->getContainer()->call([Contact::class, 'load'], ['id' => $route_data['id']]);
         if (!($this->templateData['object'] instanceof Model && $this->templateData['object']->isLoaded())) {
             return $this->getUtils()->errorPage(404);
         }
 
         return parent::process($route_info);
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return string
-     */
-    public function getCurrentLocale()
-    {
-        if ($this->templateData['object'] instanceof Model && $this->templateData['object']->isLoaded()) {
-            if ($this->templateData['object']->getLocale()) {
-                return $this->getApp()->setCurrentLocale($this->templateData['object']->getLocale())->getCurrentLocale();
-            }
-        }
-
-        return $this->getApp()->setCurrentLocale(parent::getCurrentLocale())->getCurrentLocale();
     }
 
     /**
@@ -113,16 +84,6 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()).' contact-'. $this->templateData['object']->id;
         return $out;
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return array
-     */
-    protected function getTemplateData()
-    {
-        return $this->templateData;
     }
 
     /**
@@ -178,7 +139,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     {
         return true;
     }
-    
+
     /**
      * search component by name
      *
@@ -261,20 +222,5 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     public static function getObjectClass()
     {
         return Contact::class;
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return array
-     */
-    public function getTranslations()
-    {
-        return array_map(
-            function ($el) {
-                return $this->getRouting()->getBaseUrl() . $el;
-            },
-            $this->getContainer()->call([$this->templateData['object'], 'getTranslations'])
-        );
     }
 }

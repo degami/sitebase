@@ -77,6 +77,11 @@ body {
         }
     }
 
+    .sidebar-sticky {
+        top: 0;
+        height: calc(100vh - 25px);
+    }
+
     .nav {
         margin-top: 50px;
 
@@ -147,7 +152,7 @@ body {
             & + main {
                 min-width: 0px !important;
                 padding-left: 1.5rem !important;
-            }            
+            }
         }
 
         .nav {
@@ -169,7 +174,7 @@ body {
                 .open-arrow{
                     display: inline;
                 }
-            }            
+            }
         }
     }
 }
@@ -303,7 +308,7 @@ body {
 
     &:hover {
         background-color: #444;
-    } 
+    }
 }
 
 #overlay {
@@ -337,7 +342,7 @@ body {
                 }
             }
         }
-    }    
+    }
 }
 
 .form-control.has-errors {
@@ -415,7 +420,7 @@ body {
             padding: 0;
             height: 20px;
             line-height: 19px;
-        }    
+        }
     }
 }
 

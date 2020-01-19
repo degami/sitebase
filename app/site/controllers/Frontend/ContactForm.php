@@ -22,21 +22,14 @@ use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
 use \DateTime;
 use \Exception;
+use \App\Base\Traits\FrontendTrait;
 
 /**
  * Contact Form Page
  */
 class ContactForm extends FormPage // and and is similar to FrontendPageWithObject
 {
-    /**
-     * @var array template data
-     */
-    protected $templateData = [];
-
-    /**
-     * @var RouteInfo route info object
-     */
-    protected $route_info = null;
+    use FrontendTrait;
 
     /**
      * {@inheritdocs}
@@ -50,16 +43,6 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         }
 
         return 'contact_form';
-    }
-
-    /**
-     * gets route group
-     *
-     * @return string
-     */
-    public static function getRouteGroup()
-    {
-        return '';
     }
 
     /**
@@ -94,22 +77,6 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdocs}
      *
-     * @return string
-     */
-    public function getCurrentLocale()
-    {
-        if ($this->templateData['object'] instanceof Model && $this->templateData['object']->isLoaded()) {
-            if ($this->templateData['object']->getLocale()) {
-                return $this->getApp()->setCurrentLocale($this->templateData['object']->getLocale())->getCurrentLocale();
-            }
-        }
-
-        return $this->getApp()->setCurrentLocale(parent::getCurrentLocale())->getCurrentLocale();
-    }
-
-    /**
-     * {@inheritdocs}
-     *
      * @return array
      */
     protected function getBaseTemplateData()
@@ -117,16 +84,6 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()).' contact-'. $this->templateData['object']->id;
         return $out;
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return array
-     */
-    protected function getTemplateData()
-    {
-        return $this->templateData;
     }
 
     /**
@@ -265,20 +222,5 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     public static function getObjectClass()
     {
         return Contact::class;
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return array
-     */
-    public function getTranslations()
-    {
-        return array_map(
-            function ($el) {
-                return $this->getRouting()->getBaseUrl() . $el;
-            },
-            $this->getContainer()->call([$this->templateData['object'], 'getTranslations'])
-        );
     }
 }

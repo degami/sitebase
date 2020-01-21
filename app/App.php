@@ -133,12 +133,21 @@ class App extends ContainerAwareObject
     {
         $response = null;
         try {
+            $website = null;
             if (php_sapi_name() == 'cli-server') {
                 $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
-                $routeInfo = $this->getRouting()->getRequestInfo($this->getContainer(), $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $website->domain);
-            } else {
-                $routeInfo = $this->getRouting()->getRequestInfo($this->getContainer(), $_SERVER['REQUEST_METHOD'], $_SERVER['REQUEST_URI'], $_SERVER['SERVER_NAME']);
             }
+
+
+            $routeInfo = $this->getContainer()->call(
+                [$this->getRouting(), 'getRequestInfo'],
+                [
+                'http_method' => $_SERVER['REQUEST_METHOD'],
+                'request_uri' => $_SERVER['REQUEST_URI'],
+                'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $_SERVER['SERVER_NAME']
+                ]
+            );
+
 
             $this->setRouteInfo($routeInfo);
 

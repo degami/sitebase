@@ -15,6 +15,7 @@ use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Models\RequestLog;
 use \App\Site\Routing\RouteInfo;
+use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * Base for frontend pages
@@ -27,6 +28,11 @@ abstract class FrontendPage extends BaseHtmlPage
     protected $locale = null;
 
     /**
+     * @var array page regions
+     */
+    protected $regions = [];
+
+    /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
@@ -34,9 +40,17 @@ abstract class FrontendPage extends BaseHtmlPage
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
+
         if (!$this->getTemplates()->getFolders()->exists('frontend')) {
             $this->getTemplates()->addFolder('frontend', App::getDir(App::TEMPLATES).DS.'frontend');
         }
+
+        foreach ($this->getUtils()->getPageRegions() as $region) {
+            $this->regions[$region] = [];
+        }
+
+        // 'content' is reserved for Plates
+        unset($this->regions['content']);
     }
 
     /**
@@ -52,6 +66,47 @@ abstract class FrontendPage extends BaseHtmlPage
             'locale' => $this->getCurrentLocale(),
             'body_class' => str_replace('.', '-', $this->getRouteName()),
         ];
+    }
+
+    /**
+     * get page region tags html
+     *
+     * @param  string $region
+     * @return string
+     */
+    protected function getRegionTags($region)
+    {
+        if (!isset($this->regions[$region])) {
+            return false;
+        }
+
+        $output = '';
+        foreach ($this->regions[$region] as $key => $tag) {
+            $output .= (string) $tag;
+        }
+
+        return $output;
+    }
+
+    /**
+     * adds a tag to page region
+     *
+     * @param string $region
+     * @param TagElement|array $tag
+     */
+    public function addTag(string $region, $tag)
+    {
+        if (!isset($this->regions[$region])) {
+            return false;
+        }
+
+        if (is_array($tag) && isset($tag['tag'])) {
+            $tag = new TagElement($tag);
+        }
+
+        if ($tag instanceof TagElement) {
+            $this->regions[$region][] = $tag;
+        }
     }
 
     /**
@@ -80,6 +135,12 @@ abstract class FrontendPage extends BaseHtmlPage
         $template->start('styles');
         echo $this->getAssets()->renderPageInlineCSS();
         $template->stop();
+
+        foreach ($this->regions as $region => $tags) {
+            $template->start($region);
+            echo $this->getRegionTags($region);
+            $template->stop();
+        }
 
         return $template;
     }

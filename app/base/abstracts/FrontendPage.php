@@ -120,10 +120,6 @@ abstract class FrontendPage extends BaseHtmlPage
         $template->data($this->getTemplateData()+$this->getBaseTemplateData());
         $locale = $template->data()['locale'] ?? $this->getCurrentLocale();
 
-        $template->start('menu');
-        echo $this->getHtmlRenderer()->renderSiteMenu($locale);
-        $template->stop();
-
         $template->start('head_scripts');
         echo $this->getAssets()->renderHeadInlineJS();
         $template->stop();
@@ -136,8 +132,11 @@ abstract class FrontendPage extends BaseHtmlPage
         echo $this->getAssets()->renderPageInlineCSS();
         $template->stop();
 
-        foreach ($this->regions as $region => $tags) {
+        foreach (array_keys($this->regions) as $region) {
             $template->start($region);
+            if ($region == 'menu') {
+                echo $this->getHtmlRenderer()->renderSiteMenu($locale);
+            }
             echo $this->getRegionTags($region);
             $template->stop();
         }

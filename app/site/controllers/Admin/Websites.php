@@ -183,7 +183,6 @@ class Websites extends AdminManageModelsPage
         $values = $form->values();
         switch ($values['action']) {
             case 'new':
-                $website->user_id = $this->getCurrentUser()->id;
                 // intentional fall trough
                 // no break
             case 'edit':

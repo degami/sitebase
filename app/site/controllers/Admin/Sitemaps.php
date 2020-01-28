@@ -464,9 +464,14 @@ class Sitemaps extends AdminManageModelsPage
                 'Locale' => $sitemap->locale,
                 'Title' => $sitemap->title,
                 'Is Published' => $this->getUtils()->translate($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? '<a class="btn btn-success btn-sm" target="_blank" href="'. $sitemap->getFrontendUrl() .'">'.$this->getUtils()->getIcon('zoom-in') .'</a>' : '' ).
-                ' <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&sitemap_id='. $sitemap->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&sitemap_id='. $sitemap->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? '<a class="btn btn-success btn-sm" target="_blank" href="'. $sitemap->getFrontendUrl() .'">'.$this->getUtils()->getIcon('zoom-in') .'</a>' : '' ),
+                    $this->getEditButton($sitemap->id),
+                    $this->getDeleteButton($sitemap->id),
+                    ]
+                ),
                 ];
             },
             $data

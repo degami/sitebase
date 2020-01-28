@@ -234,8 +234,13 @@ class Websites extends AdminManageModelsPage
                 'Domain' => $website->domain,
                 'Aliases' => $website->aliases,
                 'Default Locale' => $website->default_locale,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&website_id='. $website->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&website_id='. $website->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($website->id),
+                    $this->getDeleteButton($website->id),
+                    ]
+                ),
                 ];
             },
             $data

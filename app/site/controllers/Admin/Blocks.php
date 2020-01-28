@@ -375,8 +375,13 @@ class Blocks extends AdminManageModelsPage
                     )
                 ),
                 'Order' => $block->order,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&block_id='. $block->id.'">'.$this->getUtils()->getIcon('edit') .'</a>' .
-                    ((!$block->isCodeBlock()) ? '<a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&block_id='. $block->id.'">'.$this->getUtils()->getIcon('trash') .'</a>' : '')
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($block->id),
+                    $this->getDeleteButton($block->id),
+                    ]
+                ),
                 ];
             },
             $data

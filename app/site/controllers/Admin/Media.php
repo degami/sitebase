@@ -388,9 +388,14 @@ class Media extends AdminManageModelsPage
                 'Filesize' => $this->formatBytes($elem->getFilesize()),
                 'Owner' => $elem->getOwner()->username,
                 'Lazyload' => $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=usage&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('zoom-in') .'</a>
-                    <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=usage&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getEditButton($elem->id),
+                    $this->getDeleteButton($elem->id),
+                    ]
+                ),
                 ];
             },
             $data

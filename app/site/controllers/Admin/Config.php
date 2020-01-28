@@ -260,8 +260,13 @@ class Config extends AdminManageModelsPage
                 'Path' => $config->path,
                 'Value' => $config->value,
                 'Is System' => $config->is_system ? $this->getUtils()->getIcon('check') : '&nbsp;',
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&config_id='. $config->id.'">'.$this->getUtils()->getIcon('edit') .'</a>'.
-                ((!$config->getIsSystem()) ? '<a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&config_id='. $config->id.'">'.$this->getUtils()->getIcon('trash') .'</a>' : '')
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($config->id),
+                    (!$config->getIsSystem()) ? $this->getDeleteButton($config->id) : '',
+                    ]
+                ),
                 ];
             },
             $data

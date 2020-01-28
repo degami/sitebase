@@ -226,9 +226,14 @@ class News extends AdminManageFrontendModelsPage
                 'Locale' => $news->locale,
                 'Title' => $news->title,
                 'Date' => $news->date,
-                'actions' => '<a class="btn btn-light btn-sm" href="'. $news->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>
-                    <a class="btn btn-primary btn-sm" href="'. $news->getControllerUrl() .'?action=edit&news_id='. $news->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $news->getControllerUrl() .'?action=delete&news_id='. $news->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    '<a class="btn btn-light btn-sm" href="'. $news->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getEditButton($news->id),
+                    $this->getDeleteButton($news->id),
+                    ]
+                ),
                 ];
             },
             $data

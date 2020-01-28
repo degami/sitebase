@@ -249,8 +249,13 @@ class Languages extends AdminManageModelsPage
                 'Name' => $language->name,
                 'Native' => $language->native,
                 'Family' => $language->family,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&language_id='. $language->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&language_id='. $language->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($language->id),
+                    $this->getDeleteButton($language->id),
+                    ]
+                ),
                 ];
             },
             $data

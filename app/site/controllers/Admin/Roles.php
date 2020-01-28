@@ -181,8 +181,13 @@ class Roles extends AdminManageModelsPage
                 return [
                 'ID' => $role->id,
                 'Name' => $role->name,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&role_id='. $role->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&role_id='. $role->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($role->id),
+                    $this->getDeleteButton($role->id),
+                    ]
+                ),
                 ];
             },
             $data

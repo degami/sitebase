@@ -280,9 +280,14 @@ class Rewrites extends AdminManageModelsPage
                 'URL' => $rewrite->url,
                 'Route' => $rewrite->route,
                 'Locale' => $rewrite->getLocale(),
-                'actions' => '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=translations&rewrite_id='. $rewrite->id.'">'.$this->getUtils()->getIcon('tag') .'</a>
-                    <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&rewrite_id='. $rewrite->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&rewrite_id='. $rewrite->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=translations&rewrite_id='. $rewrite->id.'">'.$this->getUtils()->getIcon('tag') .'</a>',
+                    $this->getEditButton($rewrite->id),
+                    $this->getDeleteButton($rewrite->id),
+                    ]
+                ),
                 ];
             },
             $data

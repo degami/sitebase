@@ -158,6 +158,41 @@ abstract class AdminManageModelsPage extends AdminFormPage
         $this->addActionLink('new-btn', 'new-btn', $this->getUtils()->getIcon('plus').' '.$this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl().'?action=new', 'btn btn-sm btn-success');
     }
 
+
+    public function getDeleteButton($object_id)
+    {
+        $button = (string)(new TagElement(
+            [
+            'tag' => 'a',
+            'attributes' => [
+                'class' => 'btn btn-danger btn-sm',
+                'href' => $this->getControllerUrl() .'?action=delete&'.$this->getObjectIdQueryParam().'='.$object_id,
+                'title' => $this->getUtils()->translate('Delete', $this->getCurrentLocale()),
+            ],
+            'text' => $this->getUtils()->getIcon('trash'),
+            ]
+        ));
+
+        return (string) $button;
+    }
+
+    public function getEditButton($object_id)
+    {
+        $button = (string)(new TagElement(
+            [
+            'tag' => 'a',
+            'attributes' => [
+                'class' => 'btn btn-primary btn-sm',
+                'href' => $this->getControllerUrl() .'?action=edit&'.$this->getObjectIdQueryParam().'='.$object_id,
+                'title' => $this->getUtils()->translate('Edit', $this->getCurrentLocale()),
+            ],
+            'text' => $this->getUtils()->getIcon('edit'),
+            ]
+        ));
+
+        return $button;
+    }
+
     /**
      * gets object to show class name for loading
      *

@@ -309,8 +309,13 @@ class Links extends AdminManageFrontendModelsPage
                 'Locale' => $link->locale,
                 'Title' => $link->title,
                 'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&link_id='. $link->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&link_id='. $link->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($link->id),
+                    $this->getDeleteButton($link->id),
+                    ]
+                ),
                 ];
             },
             $data

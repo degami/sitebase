@@ -348,9 +348,14 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 'Locale' => $term->locale,
                 'Title' => $term->title,
                 'Content' => $term->content,
-                'actions' => '<a class="btn btn-light btn-sm" href="'. $term->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>
-                    <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&term_id='. $term->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&term_id='. $term->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    '<a class="btn btn-light btn-sm" href="'. $term->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getEditButton($term->id),
+                    $this->getDeleteButton($term->id),
+                    ]
+                ),
                 ];
             },
             $data

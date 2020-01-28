@@ -329,9 +329,14 @@ class Pages extends AdminManageFrontendModelsPage
                 'URL' => $page->url,
                 'Locale' => $page->locale,
                 'Title' => $page->title,
-                'actions' => '<a class="btn btn-light btn-sm" href="'. $page->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>
-                    <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&page_id='. $page->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&page_id='. $page->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    '<a class="btn btn-light btn-sm" href="'. $page->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getEditButton($page->id),
+                    $this->getDeleteButton($page->id),
+                    ]
+                ),
                 ];
             },
             $data

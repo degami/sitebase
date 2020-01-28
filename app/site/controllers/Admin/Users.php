@@ -263,8 +263,13 @@ class Users extends AdminManageModelsPage
                 'Role' => $user->getRole()->name,
                 'Nickname' => $user->nickname,
                 'Created at' => $user->created_at,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&user_id='. $user->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&user_id='. $user->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($user->id),
+                    $this->getDeleteButton($user->id),
+                    ]
+                ),
                 ];
             },
             $data

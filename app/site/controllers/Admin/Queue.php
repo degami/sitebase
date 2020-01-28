@@ -167,8 +167,13 @@ class Queue extends AdminManageModelsPage
                 'Status' => $message->status,
                 'Result' => $message->result,
                 'Created At' => $message->created_at,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=requeue&message_id='. $message->id.'">'.$this->getUtils()->getIcon('rotate-cw') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&message_id='. $message->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=requeue&message_id='. $message->id.'">'.$this->getUtils()->getIcon('rotate-cw') .'</a>',
+                    $this->getDeleteButton($message->id),
+                    ]
+                ),
                 ];
             },
             $data

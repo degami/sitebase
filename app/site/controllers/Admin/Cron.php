@@ -320,8 +320,13 @@ class Cron extends AdminManageModelsPage
                 'Callable' => $task->cron_task_callable,
                 'Schedule' => '<a href="'. $task->getInfoUrl() .'" target="_blank">'. $task->schedule .'</a>',
                 'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&task_id='. $task->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&task_id='. $task->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($task->id),
+                    $this->getDeleteButton($task->id),
+                    ]
+                ),
                 ];
             },
             $data

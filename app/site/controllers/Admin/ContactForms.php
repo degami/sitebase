@@ -514,10 +514,15 @@ class ContactForms extends AdminManageFrontendModelsPage
                 'Locale' => $contact->locale,
                 'URL' => $contact->url,
                 '# Submissions' => count($contact->getContactSubmissions()),
-                'actions' => '<a class="btn btn-light btn-sm" href="'. $contact->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>
-                    <a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=submissions&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('list') .'</a>
-                    <a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    '<a class="btn btn-light btn-sm" href="'. $contact->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=submissions&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('list') .'</a>',
+                    $this->getEditButton($contact->id),
+                    $this->getDeleteButton($contact->id),
+                    ]
+                ),
                 ];
             },
             $data

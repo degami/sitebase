@@ -227,8 +227,13 @@ class MediaRewrites extends AdminManageModelsPage
                 'Rewrite - Url' => $elem->getRewrite()->getUrl(),
                 'Locale' => $elem->getRewrite()->getLocale(),
                 'Owner' => $elem->getOwner()->username,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=edit&media_rewrite_id='. $elem->id.'">'.$this->getUtils()->getIcon('edit') .'</a>
-                    <a class="btn btn-danger btn-sm" href="'. $this->getControllerUrl() .'?action=delete&media_rewrite_id='. $elem->id.'">'.$this->getUtils()->getIcon('trash') .'</a>'
+                'actions' => implode(
+                    " ",
+                    [
+                    $this->getEditButton($elem->id),
+                    $this->getDeleteButton($elem->id),
+                    ]
+                ),
                 ];
             },
             $data

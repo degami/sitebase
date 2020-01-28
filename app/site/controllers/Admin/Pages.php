@@ -332,7 +332,7 @@ class Pages extends AdminManageFrontendModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    '<a class="btn btn-light btn-sm" href="'. $page->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getFrontendModelButton($page),
                     $this->getEditButton($page->id),
                     $this->getDeleteButton($page->id),
                     ]

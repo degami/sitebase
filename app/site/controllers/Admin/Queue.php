@@ -170,7 +170,7 @@ class Queue extends AdminManageModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=requeue&message_id='. $message->id.'">'.$this->getUtils()->getIcon('rotate-cw') .'</a>',
+                    $this->getActionButton('requeue', $message->id, 'primary', 'rotate-cw', 'ReQueue'),
                     $this->getDeleteButton($message->id),
                     ]
                 ),

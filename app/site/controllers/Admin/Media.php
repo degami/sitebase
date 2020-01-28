@@ -391,7 +391,7 @@ class Media extends AdminManageModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=usage&media_id='. $elem->id.'">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
                     $this->getEditButton($elem->id),
                     $this->getDeleteButton($elem->id),
                     ]

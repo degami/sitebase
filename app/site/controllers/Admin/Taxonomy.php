@@ -351,7 +351,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    '<a class="btn btn-light btn-sm" href="'. $term->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getFrontendModelButton($term),
                     $this->getEditButton($term->id),
                     $this->getDeleteButton($term->id),
                     ]

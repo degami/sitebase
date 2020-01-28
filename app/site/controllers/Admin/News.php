@@ -229,7 +229,7 @@ class News extends AdminManageFrontendModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    '<a class="btn btn-light btn-sm" href="'. $news->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
+                    $this->getFrontendModelButton($news),
                     $this->getEditButton($news->id),
                     $this->getDeleteButton($news->id),
                     ]

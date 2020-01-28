@@ -467,7 +467,7 @@ class Sitemaps extends AdminManageModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? '<a class="btn btn-success btn-sm" target="_blank" href="'. $sitemap->getFrontendUrl() .'">'.$this->getUtils()->getIcon('zoom-in') .'</a>' : '' ),
+                    ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? $this->getFrontendModelButton($sitemap) : '' ),
                     $this->getEditButton($sitemap->id),
                     $this->getDeleteButton($sitemap->id),
                     ]

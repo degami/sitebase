@@ -14,6 +14,7 @@ namespace App\Base\Abstracts;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Response;
 use \App\Base\Abstracts\AdminPage;
+use \App\Base\Abstracts\FrontendModel;
 use \Degami\PHPFormsApi as FAPI;
 use \Degami\PHPFormsApi\Accessories\TagElement;
 use \App\App;
@@ -159,38 +160,77 @@ abstract class AdminManageModelsPage extends AdminFormPage
     }
 
 
-    public function getDeleteButton($object_id)
+    /**
+     * gets action button html
+     *
+     * @param string $action
+     * @param integer $object_id
+     * @param string $class
+     * @param string $icon
+     * @param string $title
+     * @return string
+     */
+    public function getActionButton($action, $object_id, $class, $icon, $title = '')
     {
         $button = (string)(new TagElement(
             [
             'tag' => 'a',
             'attributes' => [
-                'class' => 'btn btn-danger btn-sm',
-                'href' => $this->getControllerUrl() .'?action=delete&'.$this->getObjectIdQueryParam().'='.$object_id,
-                'title' => $this->getUtils()->translate('Delete', $this->getCurrentLocale()),
+                'class' => 'btn btn-sm btn-'.$class,
+                'href' => $this->getControllerUrl() .'?action='.$action.'&'.$this->getObjectIdQueryParam().'='.$object_id,
+                'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
             ],
-            'text' => $this->getUtils()->getIcon('trash'),
+            'text' => $this->getUtils()->getIcon($icon),
             ]
         ));
 
         return (string) $button;
     }
 
+    /**
+     * gets delete button html
+     *
+     * @param integer $object_id
+     * @return string
+     */
+    public function getDeleteButton($object_id)
+    {
+        return $this->getActionButton('delete', $object_id, 'danger', 'trash', 'Delete');
+    }
+
+    /**
+     * gets edit button html
+     *
+     * @param integer $object_id
+     * @return string
+     */
     public function getEditButton($object_id)
+    {
+        return $this->getActionButton('edit', $object_id, 'primary', 'edit', 'Edit');
+    }
+
+    /**
+     * gets "to frontend" button html
+     *
+     * @param FrontendModel $object
+     * @return string
+     */
+    public function getFrontendModelButton(FrontendModel $object, $class = 'light', $icon = 'zoom-in')
     {
         $button = (string)(new TagElement(
             [
             'tag' => 'a',
             'attributes' => [
-                'class' => 'btn btn-primary btn-sm',
-                'href' => $this->getControllerUrl() .'?action=edit&'.$this->getObjectIdQueryParam().'='.$object_id,
-                'title' => $this->getUtils()->translate('Edit', $this->getCurrentLocale()),
+                'class' => 'btn btn-sm btn-'.$class,
+                'href' => $object->getFrontendUrl(),
+                'target' => '_blank',
+                'title' => $this->getUtils()->translate('View', $this->getCurrentLocale()),
             ],
-            'text' => $this->getUtils()->getIcon('edit'),
+            'text' => $this->getUtils()->getIcon($icon),
             ]
         ));
 
-        return $button;
+        return (string) $button;
     }
 
     /**

@@ -283,7 +283,7 @@ class Rewrites extends AdminManageModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=translations&rewrite_id='. $rewrite->id.'">'.$this->getUtils()->getIcon('tag') .'</a>',
+                    $this->getActionButton('translations', $rewrite->id, 'success', 'tag', 'Translations'),
                     $this->getEditButton($rewrite->id),
                     $this->getDeleteButton($rewrite->id),
                     ]

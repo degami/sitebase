@@ -517,8 +517,8 @@ class ContactForms extends AdminManageFrontendModelsPage
                 'actions' => implode(
                     " ",
                     [
-                    '<a class="btn btn-light btn-sm" href="'. $contact->getFrontendUrl() .'" target="_blank">'.$this->getUtils()->getIcon('zoom-in') .'</a>',
-                    '<a class="btn btn-success btn-sm" href="'. $this->getControllerUrl() .'?action=submissions&contact_id='. $contact->id.'">'.$this->getUtils()->getIcon('list') .'</a>',
+                    $this->getFrontendModelButton($contact),
+                    $this->getActionButton('submissions', $contact->id, 'success', 'list', 'Submissions'),
                     $this->getEditButton($contact->id),
                     $this->getDeleteButton($contact->id),
                     ]

@@ -279,6 +279,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $cache_key = strtolower('site.'.$website_id.'.blocks.'.$region.'.html.'.$locale);
         if ($current_page) {
+            if (method_exists($current_page, 'showBlocks') && $current_page->showBlocks() === false) {
+                return '';
+            }
+
             $route_info = $current_page->getRouteInfo();
             if ($route_info instanceof RouteInfo) {
                 $cache_key = strtolower('site.'.$website_id.'.'.trim(str_replace("/", ".", $route_info->getRoute()), '.').'.blocks.'.$region.'.html.'.$locale);

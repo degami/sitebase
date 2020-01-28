@@ -134,7 +134,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
         foreach (array_keys($this->regions) as $region) {
             $template->start($region);
-            if ($region == 'menu') {
+            if ($this->showMenu() && $region == 'menu') {
                 echo $this->getHtmlRenderer()->renderSiteMenu($locale);
             }
             echo $this->getRegionTags($region);
@@ -190,7 +190,12 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     public function getRewrite()
     {
-        $rewrite = null;
+        static $rewrite = null;
+
+        if ($rewrite != null) {
+            return $rewrite;
+        }
+
         if ($this->getRouteInfo()) {
             if ($this->getRouteInfo()->getRewrite()) {
                 // we have rewrite id into RouteInfo
@@ -239,5 +244,28 @@ abstract class FrontendPage extends BaseHtmlPage
             },
             $rewrite->getTranslations()
         );
+    }
+
+
+    /**
+     * show menu flag.
+     * utility function, subclasses can override this method to disable menu load
+     *
+     * @return boolean
+     */
+    public function showMenu()
+    {
+        return true;
+    }
+
+    /**
+     * show blocks flag.
+     * utility function, subclasses can override this method to disable blocks load
+     *
+     * @return boolean
+     */
+    public function showBlocks()
+    {
+        return true;
     }
 }

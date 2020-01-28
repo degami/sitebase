@@ -59,14 +59,29 @@ class Login extends FormPage
      */
     protected function getTemplateData()
     {
-        //        if ($this->templateData['form']->isSubmitted()) {
-        //            $result = $this->templateData['form']->getSubmitResults('App\Site\Controllers\Login::formSubmitted');
-        //            $token = $this->getContainer()->get('jwt:parser')->parse($result);
-        //            $this->templateData['result'] = $result;
-        //            $this->templateData['result'] .= '<pre>'.json_encode($token->getClaims()).'</pre>';
-        //        }
         return $this->templateData;
     }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return boolean
+     */
+    public function showMenu()
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return boolean
+     */
+    public function showBlocks()
+    {
+        return false;
+    }
+
 
     /**
      * {@inheritdocs}
@@ -218,5 +233,15 @@ class Login extends FormPage
             )
             ->getToken(); // Retrieves the generated token
         return "".$token;
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return string
+     */
+    public function getCurrentLocale()
+    {
+        return $this->getSiteData()->getDefaultLocale();
     }
 }

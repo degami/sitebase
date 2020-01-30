@@ -27,8 +27,8 @@ use \App\App;
 use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
-use \Degami\PHPFormsApi\Accessories\TagElement;
-use \Degami\PHPFormsApi\Accessories\TagList;
+use \Degami\Basics\Html\TagElement;
+use \Degami\Basics\Html\TagList;
 
 /**
  * Html Parts Renderer Helper Class

@@ -15,7 +15,7 @@ use \App\Base\Abstracts\BaseCodeBlock;
 use \App\Base\Abstracts\BasePage;
 use \App\Site\Models\MediaElementRewrite;
 use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Degami\Basics\Html\TagElement;
 use \Degami\PHPFormsApi as FAPI;
 
 /**

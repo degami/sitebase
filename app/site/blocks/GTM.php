@@ -14,7 +14,6 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\BaseCodeBlock;
 use \App\Base\Abstracts\BasePage;
 use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * GTM Block

@@ -15,7 +15,6 @@ use \App\Base\Abstracts\Model;
 use \App\Base\Traits\WithOwnerTrait;
 use \App\App;
 use \Exception;
-use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * Media Element Rewrite Pivot Model

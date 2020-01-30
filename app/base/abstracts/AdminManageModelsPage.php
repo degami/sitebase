@@ -16,7 +16,7 @@ use \Symfony\Component\HttpFoundation\Response;
 use \App\Base\Abstracts\AdminPage;
 use \App\Base\Abstracts\FrontendModel;
 use \Degami\PHPFormsApi as FAPI;
-use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Degami\Basics\Html\TagElement;
 use \App\App;
 
 /**

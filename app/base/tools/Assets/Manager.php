@@ -25,7 +25,6 @@ use \App\Base\Abstracts\Model;
 use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
-use \Degami\PHPFormsApi\Accessories\TagElement;
 
 /**
  * Assets manager

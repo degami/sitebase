@@ -15,7 +15,7 @@ use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Models\RequestLog;
 use \App\Site\Routing\RouteInfo;
-use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Degami\Basics\Html\TagElement;
 
 /**
  * Base for frontend pages

@@ -27,7 +27,6 @@ use \App\Base\Controllers\Dummy\NullPage;
 use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
-use \Degami\PHPFormsApi\Accessories\TagElement;
 use \Spatie\ArrayToXml\ArrayToXml;
 
 /**
@@ -159,7 +158,7 @@ class Globals extends ContainerAwareObject
                     $error_code
                 ));
         }
-        
+
         return (new Response(
             $this->getTemplates()->make('errors::500')->render(),
             500

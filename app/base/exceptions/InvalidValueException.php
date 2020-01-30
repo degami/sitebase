@@ -11,6 +11,8 @@
  */
 namespace App\Base\Exceptions;
 
+use Degami\Basics\Exceptions\BasicException;
+
 /**
  * "Invalid value" exception
  */

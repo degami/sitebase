@@ -14,7 +14,7 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\BaseCodeBlock;
 use \App\Base\Abstracts\BasePage;
 use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Degami\Basics\Html\TagElement;
 use \App\Site\Models\Website;
 
 /**

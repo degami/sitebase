@@ -14,7 +14,7 @@ namespace App\Base\Traits;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Models\User;
 use \App\Site\Models\GuestUser;
-use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Degami\Basics\Html\TagElement;
 
 /**
  * Administration pages Trait

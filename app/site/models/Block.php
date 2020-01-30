@@ -16,7 +16,7 @@ use \App\Base\Traits\BlockTrait;
 use \App\Base\Traits\WithWebsiteTrait;
 use \App\Base\Traits\WithOwnerTrait;
 use \App\Base\Abstracts\BasePage;
-use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Degami\Basics\Html\TagElement;
 
 /**
  * Block Model

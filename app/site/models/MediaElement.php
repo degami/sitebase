@@ -16,7 +16,7 @@ use \App\Base\Traits\WithOwnerTrait;
 use \App\App;
 use \Exception;
 use \App\Base\Exceptions\PermissionDeniedException;
-use \Degami\PHPFormsApi\Accessories\TagElement;
+use \Degami\Basics\Html\TagElement;
 
 /**
  * Media Element Model

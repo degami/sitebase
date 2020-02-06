@@ -42,7 +42,10 @@ return [
     'jwt:builder' => DI\create(\Lcobucci\JWT\Builder::class),
     'jwt:parser' => DI\create(\Lcobucci\JWT\Parser::class),
     'imagine' => DI\create(\Imagine\Gd\Imagine::class),
-    'schema' => DI\create(\Degami\SqlSchema\Schema::class),
+    'schema' => DI\autowire(\Degami\SqlSchema\Schema::class)
+                ->constructor(
+                    DI\get("pdo")
+                ),
     'forms' => DI\create(\Degami\PhpFormApi\FormBuilder::class),
     'icons' => DI\create(\Feather\Icons::class),
     'debugbar' => DI\create(\DebugBar\StandardDebugBar::class),

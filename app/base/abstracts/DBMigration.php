@@ -33,12 +33,14 @@ abstract class DBMigration extends Migration
             $schema = $this->getSchema();
             $table = $schema->addTable($this->tableName);
             $table = $this->addDBTableDefinition($table);
-            if ($this->getPdo()->exec($table->showCreate()) === false) {
+
+            $sql = $table->migrate();
+            if ($this->getPdo()->exec($sql) === false) {
                 throw new Exception("SQL Error: ".$this->getPdo()->errorInfo()[2], 1);
             }
         } catch (Exception $e) {
             if ($table instanceof Table) {
-                echo $table->showCreate();
+                echo "SQL query:" . $sql;
             }
             throw $e;
         }

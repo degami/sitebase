@@ -616,7 +616,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 TagElement::class,
                 ['options' => [
                 'tag' => 'tr',
-                'attributes' => ['class' => $key % 2 == 0 ? 'odd' : 'even'],
+                'attributes' => ['class' => 'odd'],
                 ]]
             );
 

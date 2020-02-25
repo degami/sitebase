@@ -64,10 +64,6 @@ class ContactCallback extends AdminJsonPage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $result = parent::process($route_info);
-        if ($result instanceof Response) {
-            return $result;
-        }
         try {
             $contact_form_controller = $this->getContainer()->make(ContactFormsController::class);
             $this->form = $contact_form_controller->getForm();

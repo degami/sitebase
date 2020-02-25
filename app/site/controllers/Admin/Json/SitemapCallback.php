@@ -64,10 +64,6 @@ class SitemapCallback extends AdminJsonPage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $result = parent::process($route_info);
-        if ($result instanceof Response) {
-            return $result;
-        }
         try {
             $sitemap_controller = $this->getContainer()->make(SitemapsController::class);
             $this->form = $sitemap_controller->getForm();

@@ -55,10 +55,6 @@ abstract class BaseHtmlPage extends BasePage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $result = parent::process($route_info);
-        if ($result instanceof Response) {
-            return $result;
-        }
         $this->template = $this->prepareTemplate();
         $this->getApp()->setCurrentLocale($this->getCurrentLocale());
         if ($this->getEnv('DEBUG')) {
@@ -164,7 +160,7 @@ abstract class BaseHtmlPage extends BasePage
         $flash_messages[$type][] = $message;
 
         $this->getResponse()->headers->setCookie(new Cookie('flash_messages', json_encode($flash_messages), time()+3600, "/"));
-        
+
         return $this;
     }
 

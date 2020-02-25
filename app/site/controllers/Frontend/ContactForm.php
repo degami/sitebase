@@ -16,6 +16,7 @@ use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\FormPage;
 use \App\App;
 use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\FrontendPage;
 use \App\Site\Models\Contact;
 use \App\Site\Models\ContactSubmission;
 use \App\Site\Routing\RouteInfo;
@@ -30,6 +31,20 @@ use \App\Base\Traits\FrontendTrait;
 class ContactForm extends FormPage // and and is similar to FrontendPageWithObject
 {
     use FrontendTrait;
+
+  /**
+     * {@inheritdocs}
+     *
+     * @param ContainerInterface $container
+     */
+    public function __construct(ContainerInterface $container)
+    {
+        // construct must be override in order to skip
+        // form construction
+
+        FrontendPage::__construct($container);
+    }
+
 
     /**
      * {@inheritdocs}
@@ -71,6 +86,14 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
             return $this->getUtils()->errorPage(404);
         }
 
+        $this->templateData += [
+            'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
+            ->setValidate([ [$this, 'formValidate'] ])
+            ->setSubmit([ [$this, 'formSubmitted'] ]),
+        ];
+
+        $this->processFormSubmit();
+
         return parent::process($route_info);
     }
 
@@ -95,7 +118,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
-        $contact = $this->templateData['object'];
+        $contact = $this->templateData['object'] ?? null;
         if ($contact instanceof Contact && $contact->isLoaded()) {
             $form->setId($contact->getName());
             $form->addField(

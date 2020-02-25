@@ -31,21 +31,30 @@ abstract class FormPage extends FrontendPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
-     * @return Response
+     * @param ContainerInterface $container
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function __construct(ContainerInterface $container)
     {
-        $this->route_info = $route_info;
+        parent::__construct($container);
 
         $this->templateData += [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
             ->setValidate([ [$this, 'formValidate'] ])
             ->setSubmit([ [$this, 'formSubmitted'] ]),
         ];
-        $this->processFormSubmit();
 
+        $this->processFormSubmit();
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @param  RouteInfo|null $route_info
+     * @param  array          $route_data
+     * @return Response
+     */
+    public function process(RouteInfo $route_info = null, $route_data = [])
+    {
         return parent::process($route_info, $route_data);
     }
 
@@ -54,7 +63,7 @@ abstract class FormPage extends FrontendPage
      *
      * @return void
      */
-    private function processFormSubmit()
+    protected function processFormSubmit()
     {
         $this->getApp()->event('before_form_process', ['form' => $this->templateData['form']]);
         $this->templateData['form']->process();
@@ -67,11 +76,19 @@ abstract class FormPage extends FrontendPage
      */
     protected function beforeRender()
     {
-        if ($this->templateData['form']->isSubmitted()) {
+        if ($this->templateData['form'] && $this->templateData['form']->isSubmitted()) {
             $this->getApp()->event('form_submitted', ['form' => $this->templateData['form']]);
             return $this->templateData['form']->getSubmitResults(get_class($this).'::formSubmitted');
         }
         return parent::beforeRender();
+    }
+
+    /**
+     * check if form is submitted
+     */
+    protected function isSubmitted()
+    {
+        return ($this->templateData['form'] && $this->templateData['form']->isSubmitted());
     }
 
     /**

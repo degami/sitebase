@@ -185,7 +185,7 @@ class Web extends ContainerAwareObject
      * @param string $class
      * @param string $method
      */
-    public function addRoute($group, $name, $path, $class, $method = 'process')
+    public function addRoute($group, $name, $path, $class, $method = 'renderPage')
     {
         $this->routes[$group][] = ['path' => $path, 'class' => $class, 'method' => $method, 'name' => $name];
         return $this;
@@ -360,7 +360,7 @@ class Web extends ContainerAwareObject
             $route = $uri;
             $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $uri);
         }
-        
+
         if ($dispatcherInfo[0] == Dispatcher::FOUND) {
             $route_info = $this->getRouteByClass($dispatcherInfo[1][0]);
             if (isset($route_info['name'])) {

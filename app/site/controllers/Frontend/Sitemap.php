@@ -58,7 +58,7 @@ class Sitemap extends BaseXMLPage
     {
         $this->route_info = $route_info;
         $sitemap = null;
-        
+
         if (isset($route_data['id'])) {
             $sitemap = $this->getContainer()->call([SitemapModel::class, 'load'], ['id' => $route_data['id']]);
         }
@@ -67,10 +67,6 @@ class Sitemap extends BaseXMLPage
             return $this->getUtils()->errorPage(404);
         }
 
-        $result = BasePage::process($route_info);
-        if ($result instanceof Response) {
-            return $result;
-        }
         try {
             $response = $this
                 ->getResponse()

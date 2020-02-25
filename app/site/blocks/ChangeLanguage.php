@@ -50,13 +50,13 @@ class ChangeLanguage extends BaseCodeBlock
                                 $text = '';
                                 $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
 
-                                if ($config['show-language'] == 'code') {
+                                if (isset($config['show-language']) && $config['show-language'] == 'code') {
                                     $text = $key;
                                 }
-                                if ($config['show-language'] == 'full') {
+                                if (isset($config['show-language']) && $config['show-language'] == 'full') {
                                     $text = $language->native;
                                 }
-                                if (boolval($config['show-flags'])) {
+                                if (isset($config['show-flags']) && boolval($config['show-flags'])) {
                                     $text .= ' '.$this->getHtmlRenderer()->renderFlag($key);
                                 }
 

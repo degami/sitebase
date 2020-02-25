@@ -67,13 +67,21 @@ abstract class AdminFormPage extends AdminPage
     }
 
     /**
+     * check if form is submitted
+     */
+    protected function isSubmitted()
+    {
+        return ($this->templateData['form'] && $this->templateData['form']->isSubmitted());
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @return Response|self
      */
     protected function beforeRender()
     {
-        if ($this->templateData['form']->isSubmitted()) {
+        if ($this->isSubmitted()) {
             $this->getApp()->event('form_submitted', ['form' => $this->templateData['form']]);
             return $this->templateData['form']->getSubmitResults(get_class($this).'::formSubmitted');
         }

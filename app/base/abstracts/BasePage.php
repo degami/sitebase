@@ -91,7 +91,7 @@ abstract class BasePage extends ContainerAwareObject
      * @param  array          $route_data
      * @return Response|self
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function renderPage(RouteInfo $route_info = null, $route_data = [])
     {
         $this->route_info = $route_info;
 
@@ -100,8 +100,9 @@ abstract class BasePage extends ContainerAwareObject
             return $before_result;
         }
 
-        return $this;
+        return $this->process($route_info, $route_data);
     }
+
 
     /**
      * checks if current user has specified permission
@@ -259,4 +260,13 @@ abstract class BasePage extends ContainerAwareObject
             ]
         );
     }
+
+    /**
+     * controller action
+     *
+     * @param  RouteInfo|null $route_info
+     * @param  array          $route_data
+     * @return Response|self
+     */
+    abstract public function process(RouteInfo $route_info = null, $route_data = []);
 }

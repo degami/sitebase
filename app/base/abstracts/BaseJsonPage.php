@@ -43,10 +43,6 @@ abstract class BaseJsonPage extends BasePage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $result = parent::process($route_info);
-        if ($result instanceof Response) {
-            return $result;
-        }
         try {
             return $this
                 ->getResponse()

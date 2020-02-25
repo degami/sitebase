@@ -90,7 +90,7 @@ class Login extends FormPage
      */
     protected function beforeRender()
     {
-        if ($this->templateData['form']->isSubmitted()) {
+        if ($this->isSubmitted()) {
             $result = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
             $token = $this->getContainer()->get('jwt:parser')->parse($result);
 

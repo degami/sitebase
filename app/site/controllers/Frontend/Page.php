@@ -46,11 +46,28 @@ class Page extends FrontendPageWithObject
             return 'homepage';
         }
 
-        if ($this->getObject()->getTemplateName()) {
+        if ($this->getObject() && $this->getObject()->getTemplateName()) {
             return $this->getObject()->getTemplateName();
         }
 
         return 'page';
+    }
+
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return Response|self
+     */
+    protected function beforeRender()
+    {
+        $route_data = $this->getRouteInfo()->getVars();
+
+        if (isset($route_data['id'])) {
+            $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $route_data['id']]));
+        }
+
+        return parent::beforeRender();
     }
 
     /**
@@ -62,11 +79,6 @@ class Page extends FrontendPageWithObject
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $this->route_info = $route_info;
-
-        if (isset($route_data['id'])) {
-            $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $route_data['id']]));
-        }
 
         if (!($this->getObject() instanceof PageModel && $this->getObject()->isLoaded())) {
             return $this->getUtils()->errorPage(404);
@@ -86,7 +98,7 @@ class Page extends FrontendPageWithObject
     public function showPage($id, RouteInfo $route_info = null, array $options = [])
     {
         $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $id]));
-        return $this->process($route_info);
+        return $this->renderPage($route_info);
     }
 
     /**

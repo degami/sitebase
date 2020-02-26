@@ -53,18 +53,28 @@ class Taxonomy extends FrontendPageWithObject
     /**
      * {@inheritdocs}
      *
+     * @return Response|self
+     */
+    protected function beforeRender()
+    {
+        $route_data = $this->getRouteInfo()->getVars();
+
+        if (isset($route_data['id'])) {
+            $this->setObject($this->getContainer()->call([TaxonomyModel::class, 'load'], ['id' => $route_data['id']]));
+        }
+
+        return parent::beforeRender();
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param  RouteInfo|null $route_info
      * @param  array          $route_data
      * @return Response
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $this->route_info = $route_info;
-
-        if (isset($route_data['id'])) {
-            $this->setObject($this->getContainer()->call([TaxonomyModel::class, 'load'], ['id' => $route_data['id']]));
-        }
-
         if (!($this->getObject() instanceof TaxonomyModel && $this->getObject()->isLoaded())) {
             return $this->getUtils()->errorPage(404);
         }

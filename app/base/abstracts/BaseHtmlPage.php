@@ -47,6 +47,32 @@ abstract class BaseHtmlPage extends BasePage
     }
 
     /**
+     * controller entrypoint
+     *
+     * @param  RouteInfo|null $route_info
+     * @param  array          $route_data
+     * @return Response|self
+     */
+    public function renderPage(RouteInfo $route_info = null, $route_data = [])
+    {
+        $this->route_info = $route_info;
+
+        $before_result = $this->beforeRender();
+        if ($before_result instanceof Response) {
+            return $before_result;
+        }
+
+        $this->template = $this->prepareTemplate();
+        $this->getApp()->setCurrentLocale($this->getCurrentLocale());
+        if ($this->getEnv('DEBUG')) {
+            $debugbar = $this->getContainer()->get('debugbar');
+            $debugbar->addCollector(new \App\Base\Tools\DataCollector\PageDataCollector($this));
+        }
+
+        return $this->process($route_info, $route_data);
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @param  RouteInfo|null $route_info
@@ -55,13 +81,6 @@ abstract class BaseHtmlPage extends BasePage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $this->template = $this->prepareTemplate();
-        $this->getApp()->setCurrentLocale($this->getCurrentLocale());
-        if ($this->getEnv('DEBUG')) {
-            $debugbar = $this->getContainer()->get('debugbar');
-            $debugbar->addCollector(new \App\Base\Tools\DataCollector\PageDataCollector($this));
-        }
-
         try {
             $template_html = '';
             $page_cache_key = 'site.fpc.'.trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');

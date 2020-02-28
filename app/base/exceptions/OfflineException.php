@@ -11,7 +11,7 @@
  */
 namespace App\Base\Exceptions;
 
-use Degami\Basics\Exceptions\BasicException;
+use \Degami\Basics\Exceptions\BasicException;
 
 /**
  * "Site offline" exception

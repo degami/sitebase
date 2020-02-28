@@ -40,7 +40,7 @@ class Page extends FrontendPageWithObject
      *
      * @return array
      */
-    public function getRouteVerbs()
+    public static function getRouteVerbs()
     {
         return ['GET'];
     }

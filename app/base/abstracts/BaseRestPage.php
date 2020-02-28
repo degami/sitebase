@@ -14,6 +14,7 @@ namespace App\Base\Abstracts;
 use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
+use \App\Site\Models\RequestLog;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \Exception;
@@ -39,7 +40,7 @@ abstract class BaseRestPage extends BasePage
      *
      * @return array
      */
-    public function getRouteVerbs()
+    public static function getRouteVerbs()
     {
         return ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
     }
@@ -56,7 +57,9 @@ abstract class BaseRestPage extends BasePage
             return $return;
         }
 
-        if ($this->getRequest()->getContentType() != 'application/json') {
+        if ($this->getRequest()->headers->get('Content-Type') != 'application/json' &&
+            $this->getRequest()->getContentType() != 'json'
+        ) {
             return $this->getUtils()->errorPage(403);
         }
 
@@ -97,11 +100,20 @@ abstract class BaseRestPage extends BasePage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $return = parent::process($route_info, $route_data);
-
         if (!empty($data = json_decode($this->getRequest()->getContent(), true))) {
             if (isset($data['id'])) {
                 unset($data['id']);
+            }
+        }
+
+        try {
+            $log = $this->getContainer()->make(RequestLog::class);
+            $log->fillWithRequest($this->getRequest(), $this);
+            $log->persist();
+        } catch (Exception $e) {
+            $this->getUtils()->logException($e, "Can't write RequestLog");
+            if ($this->getEnv('DEBUG')) {
+                return $this->getUtils()->errorException($e);
             }
         }
 
@@ -125,6 +137,16 @@ abstract class BaseRestPage extends BasePage
                 break;
             case 'GET':
                 // Read
+
+                if ($object->id == null) {
+                    return $this
+                        ->getResponse()
+                        ->prepare($this->getRequest())
+                        ->setData(array_map(function ($object) {
+                            return $object->getData();
+                        }, $this->getContainer()->call([$this->getObjectClass(), 'all'])));
+                }
+
                 return $this
                     ->getResponse()
                     ->prepare($this->getRequest())

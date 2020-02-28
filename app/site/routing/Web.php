@@ -81,11 +81,11 @@ class Web extends ContainerAwareObject
                 }
 
                 if (method_exists($controllerClass, 'getRouteGroup')) {
-                    $group = call_user_func([$controllerClass, 'getRouteGroup']) ?? $group;
+                    $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
                 }
 
                 if (method_exists($controllerClass, 'getRouteVerbs')) {
-                    $verbs = call_user_func([$controllerClass, 'getRouteVerbs']) ?? $verbs;
+                    $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $verbs;
                     if (!is_array($verbs)) {
                         $verbs = [$verbs];
                     }

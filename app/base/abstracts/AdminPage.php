@@ -58,7 +58,7 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return array
      */
-    public function getRouteVerbs()
+    public static function getRouteVerbs()
     {
         return ['GET','POST'];
     }

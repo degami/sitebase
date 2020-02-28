@@ -13,6 +13,7 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Model;
 use \App\Base\Abstracts\BaseHtmlPage;
+use \App\Base\Abstracts\BasePage;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Traits\WithWebsiteTrait;
 
@@ -39,7 +40,7 @@ class RequestLog extends Model
      * @param  BaseHtmlPage|null $controller
      * @return self
      */
-    public function fillWithRequest(Request $request, BaseHtmlPage $controller = null)
+    public function fillWithRequest(Request $request, BasePage $controller = null)
     {
         $this->setUrl($request->getUri());
         $this->setMethod($request->getMethod());

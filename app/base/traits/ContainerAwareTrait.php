@@ -13,7 +13,7 @@ namespace App\Base\Traits;
 
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Base\Exceptions\BasicException;
+use \Degami\Basics\Exceptions\BasicException;
 
 /**
  * Container Aware Object Trait
@@ -47,7 +47,7 @@ trait ContainerAwareTrait
             if ($this->getContainer()->has($service_key)) {
                 return $this->getContainer()->get($service_key);
             } else {
-                throw new BasicException("{$service_key} is not registered", 1);
+                throw new BasicException("{$service_key} is not registered ", 1);
             }
         }
 

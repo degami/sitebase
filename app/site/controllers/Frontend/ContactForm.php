@@ -75,7 +75,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @return array
      */
-    public function getRouteVerbs()
+    public static function getRouteVerbs()
     {
         return ['GET', 'POST'];
     }

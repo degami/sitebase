@@ -13,7 +13,7 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Model;
 use \App\Base\Exceptions\InvalidValueException;
-use \App\Base\Exceptions\BasicException;
+use \Degami\Basics\Exceptions\BasicException;
 
 /**
  * Role Model

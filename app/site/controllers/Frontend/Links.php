@@ -44,7 +44,7 @@ class Links extends FormPage
      *
      * @return array
      */
-    public function getRouteVerbs()
+    public static function getRouteVerbs()
     {
         return ['GET','POST'];
     }

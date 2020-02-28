@@ -26,6 +26,9 @@ use function FastRoute\simpleDispatcher;
  */
 class Web extends ContainerAwareObject
 {
+    const CLASS_METHOD = 'renderPage';
+    const HTTP_VERBS = ['GET', 'POST'];
+
     /**
      * @var Dispatcher dispatcher
      */
@@ -57,6 +60,9 @@ class Web extends ContainerAwareObject
                 $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
                 $route_name = str_replace("/", ".", trim($path, "/"));
 
+                $classMethod = self::CLASS_METHOD;
+                $verbs = self::HTTP_VERBS;
+
                 if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
                     $tmp = array_map(
                         function ($el) {
@@ -78,6 +84,16 @@ class Web extends ContainerAwareObject
                     $group = call_user_func([$controllerClass, 'getRouteGroup']) ?? $group;
                 }
 
+                if (method_exists($controllerClass, 'getRouteVerbs')) {
+                    $verbs = call_user_func([$controllerClass, 'getRouteVerbs']) ?? $verbs;
+                    if (!is_array($verbs)) {
+                        $verbs = [$verbs];
+                    }
+                    if (!empty($errors = $this->checkRouteVerbs($verbs))) {
+                        throw new InvalidValueException(implode(',', $errors).": Invalid route verbs", 1);
+                    }
+                }
+
                 if (method_exists($controllerClass, 'getRoutePath')) {
                     $path = call_user_func([$controllerClass, 'getRoutePath']) ?? $path;
                     if (!$this->checkRouteParameters($path)) {
@@ -85,7 +101,7 @@ class Web extends ContainerAwareObject
                     }
                 }
 
-                $this->addRoute($group, $route_name, "/".ltrim($path, "/ "), $controllerClass);
+                $this->addRoute($group, $route_name, "/".ltrim($path, "/ "), $controllerClass, $classMethod, $verbs);
             }
         }
 
@@ -124,6 +140,24 @@ class Web extends ContainerAwareObject
     }
 
     /**
+     * checks route http verbs
+     *
+     * @param  array $verbs
+     * @return array
+     */
+    protected function checkRouteVerbs($verbs)
+    {
+        if (!is_array($verbs)) {
+            $verbs = [$verbs];
+        }
+
+        return array_diff(
+            array_filter(array_map('strtoupper', array_map('trim', $verbs))),
+            ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT']
+        );
+    }
+
+    /**
      * adds routes
      *
      * @param  RouteCollector $r
@@ -148,7 +182,7 @@ class Web extends ContainerAwareObject
      */
     private function _insertRoute(RouteCollector $r, array $p)
     {
-        $r->addRoute(['GET','POST'], $p['path'], [$p['class'], $p['method']]);
+        $r->addRoute($p['verbs'], $p['path'], [$p['class'], $p['method']]);
 
         return $this;
     }
@@ -185,9 +219,15 @@ class Web extends ContainerAwareObject
      * @param string $class
      * @param string $method
      */
-    public function addRoute($group, $name, $path, $class, $method = 'renderPage')
+    public function addRoute($group, $name, $path, $class, $method = 'renderPage', $verbs = ['GET', 'POST'])
     {
-        $this->routes[$group][] = ['path' => $path, 'class' => $class, 'method' => $method, 'name' => $name];
+        $this->routes[$group][] = [
+            'path' => $path,
+            'class' => $class,
+            'method' => $method,
+            'name' => $name,
+            'verbs' => $verbs
+        ];
         return $this;
     }
 

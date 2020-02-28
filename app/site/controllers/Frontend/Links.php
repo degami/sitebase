@@ -40,6 +40,16 @@ class Links extends FormPage
     }
 
     /**
+     * returns valid route HTTP verbs
+     *
+     * @return array
+     */
+    public function getRouteVerbs()
+    {
+        return ['GET','POST'];
+    }
+
+    /**
      * return route path
      *
      * @return string
@@ -153,7 +163,7 @@ class Links extends FormPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         $values = $form->getValues();
-        
+
         $link = $this->getContainer()->call([LinkExchange::class, 'new']);
         $link->url = $values->url;
         $link->email = $values->email;

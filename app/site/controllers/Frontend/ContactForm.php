@@ -71,6 +71,16 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
+     * returns valid route HTTP verbs
+     *
+     * @return array
+     */
+    public function getRouteVerbs()
+    {
+        return ['GET', 'POST'];
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @return Response|self

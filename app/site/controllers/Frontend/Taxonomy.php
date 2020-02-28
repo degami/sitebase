@@ -35,6 +35,16 @@ class Taxonomy extends FrontendPageWithObject
     }
 
     /**
+     * returns valid route HTTP verbs
+     *
+     * @return array
+     */
+    public function getRouteVerbs()
+    {
+        return ['GET'];
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @return string

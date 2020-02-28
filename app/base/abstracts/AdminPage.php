@@ -54,6 +54,16 @@ abstract class AdminPage extends BaseHtmlPage
     }
 
     /**
+     * returns valid route HTTP verbs
+     *
+     * @return array
+     */
+    public function getRouteVerbs()
+    {
+        return ['GET','POST'];
+    }
+
+    /**
      * before render hook
      *
      * @return Response|self

@@ -53,6 +53,16 @@ class Login extends FormPage
     }
 
     /**
+     * returns valid route HTTP verbs
+     *
+     * @return array
+     */
+    public function getRouteVerbs()
+    {
+        return ['GET','POST'];
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @return array

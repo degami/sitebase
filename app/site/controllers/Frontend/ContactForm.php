@@ -87,10 +87,16 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     protected function beforeRender()
     {
-        $route_data = $this->getRouteInfo()->getVars();
+        $route_data = $this->getRouteData();
 
         if (isset($route_data['id'])) {
             $this->setObject($this->getContainer()->call([Contact::class, 'load'], ['id' => $route_data['id']]));
+
+            $this->templateData += [
+                'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
+                ->setValidate([ [$this, 'formValidate'] ])
+                ->setSubmit([ [$this, 'formSubmitted'] ]),
+            ];
         }
 
         return parent::beforeRender();
@@ -105,15 +111,12 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        if (!($this->getObject() instanceof Model && $this->templateData['object']->isLoaded())) {
+        if (!($this->getObject() instanceof Model &&
+            is_a($this->getObject(), $this->getObjectClass()) &&
+            $this->templateData['object']->isLoaded())
+        ) {
             return $this->getUtils()->errorPage(404);
         }
-
-        $this->templateData += [
-            'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
-            ->setValidate([ [$this, 'formValidate'] ])
-            ->setSubmit([ [$this, 'formSubmitted'] ]),
-        ];
 
         $this->processFormSubmit();
 
@@ -143,6 +146,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     {
         $contact = $this->templateData['object'] ?? null;
         if ($contact instanceof Contact && $contact->isLoaded()) {
+            $form->setFormId($this->slugify('form_'.$contact->getTitle()));
             $form->setId($contact->getName());
             $form->addField(
                 'contact_id',

@@ -56,7 +56,6 @@ class Sitemap extends BaseXMLPage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        $this->route_info = $route_info;
         $sitemap = null;
 
         if (isset($route_data['id'])) {

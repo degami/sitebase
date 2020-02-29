@@ -62,7 +62,7 @@ class NewsDetail extends FrontendPageWithObject
      */
     protected function beforeRender()
     {
-        $route_data = $this->getRouteInfo()->getVars();
+        $route_data = $this->getRouteData();
 
         if (isset($route_data['id'])) {
             $this->setObject($this->getContainer()->call([News::class, 'load'], ['id' => $route_data['id']]));

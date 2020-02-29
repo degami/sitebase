@@ -35,14 +35,16 @@ abstract class FrontendPageWithObject extends FrontendPage
     {
         $return = parent::process($route_info, $route_data);
 
-        if (!getenv('DEBUG')) {
-            if (!($this->templateData['object'] instanceof Model && $this->templateData['object']->isLoaded())) {
-                return $this->getUtils()->errorPage(404);
-            }
+        if (is_null($this->getObject())) {
+            throw new Exception('Missing "object" property');
         }
 
-        if (!isset($this->templateData['object'])) {
-            throw new Exception('Missing "object" property');
+        if (!(
+            $this->getObject() instanceof Model &&
+            is_a($this->getObject(), $this->getObjectClass()) &&
+            $this->getObject()->isLoaded())
+        ) {
+            return $this->getUtils()->errorPage(404);
         }
 
         return $return;

@@ -50,7 +50,7 @@ class MediaPages extends AdminJsonPage
      */
     protected function getJsonData()
     {
-        $route_data = $this->getRouteInfo()->getVars();
+        $route_data = $this->getRouteData();
         $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $route_data['id']]);
 
         $pages = array_map(

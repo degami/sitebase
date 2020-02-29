@@ -50,7 +50,7 @@ class TermPages extends AdminJsonPage
      */
     protected function getJsonData()
     {
-        $route_data = $this->getRouteInfo()->getVars();
+        $route_data = $this->getRouteData();
         $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $route_data['id']]);
 
         $pages = array_map(

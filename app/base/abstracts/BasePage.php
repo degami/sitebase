@@ -121,6 +121,21 @@ abstract class BasePage extends ContainerAwareObject
         return false;
     }
 
+
+    /**
+     * gets route data
+     *
+     * @return  array|null
+     */
+    protected function getRouteData()
+    {
+        if (is_null($this->route_info)) {
+            return null;
+        }
+
+        return $this->getRouteInfo()->getVars();
+    }
+
     /**
      * before render hook
      *

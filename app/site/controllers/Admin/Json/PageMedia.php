@@ -50,7 +50,7 @@ class PageMedia extends AdminJsonPage
      */
     protected function getJsonData()
     {
-        $route_data = $this->getRouteInfo()->getVars();
+        $route_data = $this->getRouteData();
         $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $route_data['id']]);
 
         $gallery = array_map(

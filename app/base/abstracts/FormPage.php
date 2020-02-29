@@ -47,26 +47,24 @@ abstract class FormPage extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
-     *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
-     * @return Response
-     */
-    public function process(RouteInfo $route_info = null, $route_data = [])
-    {
-        return parent::process($route_info, $route_data);
-    }
-
-    /**
      * process form submission
      *
      * @return void
      */
     protected function processFormSubmit()
     {
-        $this->getApp()->event('before_form_process', ['form' => $this->templateData['form']]);
-        $this->templateData['form']->process();
+        $this->getApp()->event('before_form_process', ['form' => $this->getForm()]);
+        $this->getForm()->process();
+    }
+
+    /**
+     * gets form object
+     *
+     * @return FAPI\Form|null
+     */
+    protected function getForm()
+    {
+        return $this->templateData['form'] ?? null;
     }
 
     /**
@@ -76,9 +74,9 @@ abstract class FormPage extends FrontendPage
      */
     protected function beforeRender()
     {
-        if ($this->templateData['form'] && $this->templateData['form']->isSubmitted()) {
-            $this->getApp()->event('form_submitted', ['form' => $this->templateData['form']]);
-            return $this->templateData['form']->getSubmitResults(get_class($this).'::formSubmitted');
+        if ($this->getForm() && $this->getForm()->isSubmitted()) {
+            $this->getApp()->event('form_submitted', ['form' => $this->getForm()]);
+            return $this->getForm()->getSubmitResults(get_class($this).'::formSubmitted');
         }
         return parent::beforeRender();
     }
@@ -88,7 +86,7 @@ abstract class FormPage extends FrontendPage
      */
     protected function isSubmitted()
     {
-        return ($this->templateData['form'] && $this->templateData['form']->isSubmitted());
+        return ($this->getForm() && $this->getForm()->isSubmitted());
     }
 
     /**

@@ -71,30 +71,13 @@ class Page extends FrontendPageWithObject
      */
     protected function beforeRender()
     {
-        $route_data = $this->getRouteInfo()->getVars();
+        $route_data = $this->getRouteData();
 
         if (isset($route_data['id'])) {
             $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $route_data['id']]));
         }
 
         return parent::beforeRender();
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
-     * @return Response
-     */
-    public function process(RouteInfo $route_info = null, $route_data = [])
-    {
-
-        if (!($this->getObject() instanceof PageModel && $this->getObject()->isLoaded())) {
-            return $this->getUtils()->errorPage(404);
-        }
-
-        return parent::process($route_info);
     }
 
     /**

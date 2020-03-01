@@ -250,10 +250,15 @@ class Cron extends AdminManageModelsPage
                 $task->schedule = $values['schedule'];
                 $task->active = intval($values['active']);
 
+                $this->setAdminActionLogData($task->getChangedData());
+
                 $task->persist();
                 break;
             case 'delete':
                 $task->delete();
+
+                $this->setAdminActionLogData('Deleted cron task '.$task->getId());
+
                 break;
         }
 

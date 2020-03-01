@@ -35,8 +35,15 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
      */
     public $tablename;
 
-    /** @var boolean is first save flag */
+    /**
+     * @var boolean first save flag
+     */
     protected $is_first_save;
+
+    /**
+     * @var array|null original model data
+     */
+    private $original_data = null;
 
     /**
      * {@inheritdocs}
@@ -240,6 +247,8 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
             $this->dbrow = $dbrow;
         }
 
+        $this->is_first_save = $this->isNew();
+
         return $this;
     }
 
@@ -288,8 +297,11 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
             $dbrow = $this->getDb()->table($this->dbrow->getTable(), $this->dbrow->getOriginalId());
             if ($dbrow) {
                 $this->dbrow = $dbrow;
+                $this->original_data = $this->dbrow->getData();
             }
         }
+
+        $this->is_first_save = $this->isNew();
 
         return $this;
     }
@@ -305,6 +317,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     {
         $dbrow = $container->get('db')->table(static::defaultTableName(), $id);
         $object = new static($container, $dbrow);
+        $object->setOriginalData($dbrow->getData());
         $object->setIsFirstSave(false);
         return $object;
     }
@@ -320,6 +333,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
         $dbrow = $container->get('db')->createRow(static::defaultTableName());
         $dbrow->setData($initialdata);
         $object = new static($container, $dbrow);
+        $object->setOriginalData(null);
         $object->setIsFirstSave(true);
         return $object;
     }
@@ -336,6 +350,7 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     {
         $dbrow = $container->get('db')->table(static::defaultTableName())->where($field, $value)->limit(1)->fetch();
         $object = new static($container, $dbrow);
+        $object->setOriginalData($dbrow->getData());
         $object->setIsFirstSave(false);
         return $object;
     }
@@ -521,6 +536,8 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
 
         $this->setIsFirstSave(false);
 
+        $this->original_data = $this->dbrow->getData();
+
         return $this;
     }
 
@@ -588,22 +605,47 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
         return $this;
     }
 
-    /**
-     *
-     * [isFirstSave description]
-     * */
     public function setIsFirstSave($is_first_save)
     {
         $this->is_first_save = $is_first_save;
         return $this;
     }
 
-    /**
-     *
-     * [isFirstSave description]
-     * */
     public function isFirstSave()
     {
         return ($this->is_first_save == true);
+    }
+
+
+    protected function setOriginalData($original_data)
+    {
+        $this->original_data = $original_data;
+        return $this;
+    }
+
+    protected function getOriginalData($key = null)
+    {
+        if ($key != null && array_key_exists($key, $this->original_data)) {
+            return $this->original_data[$key];
+        }
+
+        return $this->original_data;
+    }
+
+    public function getChangedData()
+    {
+        if ($this->getOriginalData() == null) {
+            return $this->getData();
+        }
+
+        $changed = [];
+
+        foreach ($this->getData() as $key => $value) {
+            if ($this->getOriginalData($key) != $value) {
+                $changed[$key] = ['now' => $value, 'original' => $this->getOriginalData($key)];
+            }
+        }
+
+        return $changed;
     }
 }

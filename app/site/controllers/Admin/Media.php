@@ -320,6 +320,8 @@ class Media extends AdminManageModelsPage
                 }
                 $media->lazyload = $values->lazyload;
 
+                $this->setAdminActionLogData($media->getChangedData());
+
                 $media->persist();
 
                 if ($values['page_id'] != null) {
@@ -343,6 +345,9 @@ class Media extends AdminManageModelsPage
                 break;
             case 'delete':
                 $media->delete();
+
+                $this->setAdminActionLogData('Deleted meida '.$media->getId());
+
                 break;
         }
         if ($this->getRequest()->request->get('page_id') != null) {

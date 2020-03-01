@@ -214,11 +214,17 @@ class Config extends AdminManageModelsPage
                 $configuration->value = $values['value'];
                 $configuration->website_id = $values['website_id'];
                 $configuration->locale = !empty($values['locale']) ? $values['locale'] : null;
+
+                $this->setAdminActionLogData($configuration->getChangedData());
+
                 $configuration->persist();
 
                 break;
             case 'delete':
                 $configuration->delete();
+
+                $this->setAdminActionLogData('Deleted config '.$configuration->getId());
+
                 break;
         }
 

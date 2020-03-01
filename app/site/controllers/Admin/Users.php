@@ -218,10 +218,15 @@ class Users extends AdminManageModelsPage
                 $user->nickname = $values['nickname'];
                 $user->locale = $values['locale'];
 
+                $this->setAdminActionLogData($user->getChangedData());
+
                 $user->persist();
                 break;
             case 'delete':
                 $user->delete();
+
+                $this->setAdminActionLogData('Deleted user '.$user->getId());
+
                 break;
         }
 

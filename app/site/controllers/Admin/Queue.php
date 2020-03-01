@@ -124,10 +124,15 @@ class Queue extends AdminManageModelsPage
                 $message->status = QueueMessage::STATUS_PENDING;
                 $message->persist();
 
+                $this->setAdminActionLogData('Requeued queue '.$queue->getId());
+
                 $this->addFlashMessage('success', $this->getUtils()->translate('Message has been set for re-queue'));
                 break;
             case 'delete':
                 $queue->delete();
+
+                $this->setAdminActionLogData('Deleted queue '.$queue->getId());
+
                 break;
         }
 

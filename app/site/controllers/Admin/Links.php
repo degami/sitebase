@@ -256,10 +256,15 @@ class Links extends AdminManageFrontendModelsPage
                 $link->locale = $values['frontend']['locale'];
                 $link->website_id = $values['frontend']['website_id'];
 
+                $this->setAdminActionLogData($link->getChangedData());
+
                 $link->persist();
                 break;
             case 'delete':
                 $link->delete();
+
+                $this->setAdminActionLogData('Deleted link '.$link->getId());
+
                 break;
             case 'term_deassoc':
                 if ($values['term_id']) {

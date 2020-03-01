@@ -285,6 +285,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 $term->website_id = $values['frontend']['website_id'];
                 //$term->parent = $values['parent'];
 
+                $this->setAdminActionLogData($term->getChangedData());
+
                 $term->persist();
                 if ($values['page_id'] != null) {
                     $this
@@ -307,6 +309,9 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 break;
             case 'delete':
                 $term->delete();
+
+                $this->setAdminActionLogData('Deleted term '.$term->getId());
+
                 break;
         }
         if ($this->getRequest()->request->get('page_id') != null) {

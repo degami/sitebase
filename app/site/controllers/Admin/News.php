@@ -182,10 +182,15 @@ class News extends AdminManageFrontendModelsPage
                 $news->website_id = $values['frontend']['website_id'];
                 $news->date = $values['date'];
 
+                $this->setAdminActionLogData($news->getChangedData());
+
                 $news->persist();
                 break;
             case 'delete':
                 $news->delete();
+
+                $this->setAdminActionLogData('Deleted news '.$news->getId());
+
                 break;
         }
         return $this->doRedirect($this->getControllerUrl());

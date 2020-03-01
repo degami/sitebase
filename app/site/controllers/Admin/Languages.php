@@ -200,10 +200,15 @@ class Languages extends AdminManageModelsPage
                 $language->native = $values['native'];
                 $language->family = $values['family'];
 
+                $this->setAdminActionLogData($language->getChangedData());
+
                 $language->persist();
                 break;
             case 'delete':
                 $language->delete();
+
+                $this->setAdminActionLogData('Deleted language '.$language->getId());
+
                 break;
         }
 

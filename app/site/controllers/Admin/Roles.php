@@ -144,10 +144,16 @@ class Roles extends AdminManageModelsPage
             case 'new':
             case 'edit':
                 $role->name = $values['name'];
+
+                $this->setAdminActionLogData($role->getChangedData());
+
                 $role->persist();
                 break;
             case 'delete':
                 $role->delete();
+
+                $this->setAdminActionLogData('Deleted role '.$role->getId());
+
                 break;
         }
 

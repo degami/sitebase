@@ -191,10 +191,15 @@ class Websites extends AdminManageModelsPage
                 $website->aliases = $values['aliases'];
                 $website->default_locale = $values['default_locale'];
 
+                $this->setAdminActionLogData($website->getChangedData());
+
                 $website->persist();
                 break;
             case 'delete':
                 $website->delete();
+
+                $this->setAdminActionLogData('Deleted website '.$website->getId());
+
                 break;
         }
         return $this->doRedirect($this->getControllerUrl());

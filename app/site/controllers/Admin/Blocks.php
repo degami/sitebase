@@ -293,6 +293,8 @@ class Blocks extends AdminManageModelsPage
                     $block->config = json_encode($values['config']->getData());
                 }
 
+                $this->setAdminActionLogData($block->getChangedData());
+
                 $block->persist();
 
                 $existing_rewrites = array_map(
@@ -324,6 +326,9 @@ class Blocks extends AdminManageModelsPage
                 break;
             case 'delete':
                 $block->delete();
+
+                $this->setAdminActionLogData('Deleted block '.$block->getId());
+
                 break;
         }
 

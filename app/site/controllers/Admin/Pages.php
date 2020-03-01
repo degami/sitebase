@@ -272,10 +272,15 @@ class Pages extends AdminManageFrontendModelsPage
                 $page->html_title = $values['seo']['html_title'];
                 $page->website_id = $values['frontend']['website_id'];
 
+                $this->setAdminActionLogData($page->getChangedData());
+
                 $page->persist();
                 break;
             case 'delete':
                 $page->delete();
+
+                $this->setAdminActionLogData('Deleted page '.$page->getId());
+
                 break;
             case 'media_deassoc':
                 if ($values['media_id']) {

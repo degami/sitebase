@@ -212,6 +212,9 @@ class Rewrites extends AdminManageModelsPage
                 $rewrite->route = $values['route'];
                 $rewrite->website_id = empty($values['website_id']) ? null : $values['website_id'];
                 $rewrite->locale = $values['locale'];
+
+                $this->setAdminActionLogData($rewrite->getChangedData());
+
                 $rewrite->persist();
                 break;
             case 'translations':
@@ -241,6 +244,9 @@ class Rewrites extends AdminManageModelsPage
                 break;
             case 'delete':
                 $rewrite->delete();
+
+                $this->setAdminActionLogData('Deleted rewrite '.$rewrite->getId());
+
                 break;
         }
 

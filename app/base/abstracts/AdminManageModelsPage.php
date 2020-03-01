@@ -26,6 +26,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
 {
     protected $objectInstance = null;
 
+    protected $admin_action_log_data = null;
+
     /**
      * {@inheriydocs}
      *
@@ -231,6 +233,19 @@ abstract class AdminManageModelsPage extends AdminFormPage
         ));
 
         return (string) $button;
+    }
+
+    public function setAdminActionLogData($admin_action_log_data)
+    {
+        $this->admin_action_log_data = $admin_action_log_data;
+
+        return $this;
+    }
+
+
+    public function getAdminActionLogData()
+    {
+        return $this->admin_action_log_data;
     }
 
     /**

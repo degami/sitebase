@@ -54,7 +54,7 @@ class AdminActionLog extends RequestLog
 
     public function getLogData()
     {
-        $log_data = $this->getData('log_data');
-        var_dump($log_data);
+        $log_data = unserialize($this->getData('log_data'));
+        return $log_data;
     }
 }

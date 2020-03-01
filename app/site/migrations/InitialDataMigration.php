@@ -216,6 +216,8 @@ class InitialDataMigration extends Migration
             'app/global/site_mail_address' => ['locale' => null, 'value' => ''],
             'app/mail/ses_sender' => ['locale' => $website_model->default_locale, 'value' => ''],
             'app/frontend/menu_with_logo' => ['locale' => null, 'value' => 1],
+            'app/backend/log_requests' => ['locale' => null, 'value' => 1],
+            'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
         ] as $path => $info) {
             $configuration_model = \App\Site\Models\Configuration::new($this->getContainer());
             $configuration_model->website_id = $website_model->id;

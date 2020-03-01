@@ -706,6 +706,128 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return $table;
     }
 
+
+    public function renderLog($log)
+    {
+        $table = $this->getContainer()->make(
+            TagElement::class,
+            ['options' => [
+            'tag' => 'table',
+            'width' => '100%',
+            'id' => $table_id,
+            'cellspacing' => '0',
+            'cellpadding' => '0',
+            'border' => '0',
+            'attributes' => ['class' => "table table-striped"],
+            ]]
+        );
+
+        $thead = $this->getContainer()->make(
+            TagElement::class,
+            ['options' => [
+            'tag' => 'thead',
+            ]]
+        );
+        $tbody = $this->getContainer()->make(
+            TagElement::class,
+            ['options' => [
+            'tag' => 'tbody',
+            ]]
+        );
+        $tfoot = $this->getContainer()->make(
+            TagElement::class,
+            ['options' => [
+            'tag' => 'tfoot',
+            ]]
+        );
+
+        $table->addChild($thead);
+
+        $row = $this->getContainer()->make(
+            TagElement::class,
+            ['options' => [
+            'tag' => 'tr',
+            'attributes' => ['class' => "thead-dark"],
+            ]]
+        );
+
+        $fields = ['Field Name', 'Field Value'];
+        foreach ($fields as $th) {
+            $row->addChild(
+                $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                    'tag' => 'th',
+                    'text' => $th,
+                    'scope' => 'col',
+                    'attributes' => ['class' => 'nowrap'],
+                    ]]
+                )
+            );
+        }
+        $thead->addChild($row);
+
+        $table->addChild($tbody);
+
+        $counter = 0;
+        foreach (array_keys($log->getData()) as $property) {
+            $handler = [$log, 'get'.$this->getUtils()->snakeCaseToPascalCase($property)];
+            $value = call_user_func($handler);
+
+            $row = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                'tag' => 'tr',
+                'attributes' => ['class' => $counter++ % 2 == 0 ? 'odd' : 'even'],
+                ]]
+            );
+
+            $row->addChild(
+                $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                    'tag' => 'td',
+                    'text' => $property,
+                    'scope' => 'col',
+                    'attributes' => ['class' => 'nowrap'],
+                    ]]
+                )
+            );
+
+            if (is_scalar($value)) {
+                $row->addChild(
+                    $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                        'tag' => 'td',
+                        'text' => $value,
+                        'scope' => 'col',
+                        'attributes' => ['class' => 'nowrap'],
+                        ]]
+                    )
+                );
+            } else {
+                $row->addChild(
+                    $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                        'tag' => 'td',
+                        'text' => "<pre>".var_export($value, true)."</pre>",
+                        'scope' => 'col',
+                        'attributes' => ['class' => 'nowrap'],
+                        ]]
+                    )
+                );
+            }
+            $tbody->addChild($row);
+        }
+
+        $table->addChild($tfoot);
+
+
+        return $table;
+    }
+
     /**
      * Get either a Gravatar image tag for a specified email address.
      *

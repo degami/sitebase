@@ -12,6 +12,7 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Model;
+use \App\Site\Models\Configuration;
 
 /**
  * Website Model
@@ -33,5 +34,36 @@ class Website extends Model
         $this->aliases = implode(",", array_filter(array_map('trim', explode(",", $this->aliases))));
 
         return parent::prePersist();
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return self
+     */
+    public function postPersist()
+    {
+        if ($this->isFirstSave()) {
+            $copy_from = 1;
+            $copy_configurations = $this->getContainer()->call([Configuration::class, 'where'], ['condition' => ['is_system' => 1, 'website_id' => $copy_from]]);
+            $configurations = [];
+            foreach ($copy_configurations as $to_copy) {
+                $data = [
+                    'path' => $to_copy->getPath(),
+                    'value' => $to_copy->getValue(),
+                    'locale' => $to_copy->getLocale() != null ? $this->getDefaultLocale() : null,
+                    'is_system' => 1,
+                    'website_id' => $this->getId(),
+                ];
+                $configuration = $this->getContainer()->call([Configuration::class, 'new'], ['initialdata' => $data]);
+                $configurations[$data['path']] = $configuration;
+            }
+
+            foreach ($configurations as $key => $config) {
+                $config->persist();
+            }
+        }
+
+        return parent::postPersist();
     }
 }

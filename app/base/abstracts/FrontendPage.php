@@ -165,18 +165,20 @@ abstract class FrontendPage extends BaseHtmlPage
      * @param  array          $route_data
      * @return Response
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function renderPage(RouteInfo $route_info = null, $route_data = [])
     {
-        $return = parent::process($route_info, $route_data);
+        $return = parent::renderPage($route_info, $route_data);
 
-        try {
-            $log = $this->getContainer()->make(RequestLog::class);
-            $log->fillWithRequest($this->getRequest(), $this);
-            $log->persist();
-        } catch (Exception $e) {
-            $this->getUtils()->logException($e, "Can't write RequestLog");
-            if ($this->getEnv('DEBUG')) {
-                return $this->getUtils()->errorException($e);
+        if ($this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
+            try {
+                $log = $this->getContainer()->make(RequestLog::class);
+                $log->fillWithRequest($this->getRequest(), $this);
+                $log->persist();
+            } catch (Exception $e) {
+                $this->getUtils()->logException($e, "Can't write RequestLog");
+                if ($this->getEnv('DEBUG')) {
+                    return $this->getUtils()->errorException($e);
+                }
             }
         }
 

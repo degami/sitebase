@@ -16,6 +16,7 @@ use \App\Base\Abstracts\AdminPage;
 use \App\Site\Models\MailLog;
 use \App\Site\Models\RequestLog;
 use \App\Site\Models\CronLog;
+use \App\Site\Models\AdminActionLog;
 
 /**
  * "Logs" Admin Page
@@ -58,47 +59,76 @@ class Logs extends AdminPage
             'logtype' => $this->getRequest()->get('logtype') ?? null,
             'action' => $this->getRequest()->get('logtype') ? 'logs' : 'buttons',
         ];
-        switch ($this->getRequest()->get('logtype')) {
-            case 'request':
-                $this->addBackButton();
-                $this->page_title = 'Requests Logs';
-                $data = $this->getContainer()->call([RequestLog::class, 'paginate']);
+
+        $header = $data = [];
+        $log = null;
+
+        if ($this->getRequest()->get('logtype')) {
+            $this->addBackButton();
+
+            switch ($this->getRequest()->get('logtype')) {
+                case 'request':
+                    $this->page_title = 'Requests Logs';
+
+                    if (is_numeric($this->getRequest()->query->get('id'))) {
+                        $log = $this->getContainer()->call([RequestLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    } else {
+                        $data = $this->getContainer()->call([RequestLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $header = ['id', 'url', 'method', 'user_id', 'ip_address', 'created_at', 'updated_at'];
+                    }
+
+                    break;
+                case 'mail':
+                    $this->page_title = 'Mail Logs';
+
+                    if (is_numeric($this->getRequest()->query->get('id'))) {
+                        $log = $this->getContainer()->call([MailLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    } else {
+                        $data = $this->getContainer()->call([MailLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $header = ['id', 'from', 'to', 'subject', 'template_name', 'result', 'created_at', 'updated_at'];
+                    }
+
+                    break;
+                case 'cron':
+                    $this->page_title = 'Cron Logs';
+
+                    if (is_numeric($this->getRequest()->query->get('id'))) {
+                        $log = $this->getContainer()->call([CronLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    } else {
+                        $data = $this->getContainer()->call([CronLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $header = ['id', 'run_time', 'duration', 'tasks', 'created_at', 'updated_at'];
+                    }
+
+                    break;
+                case 'adminactions':
+                    $this->page_title = 'Admin Actions Logs';
+
+                    if (is_numeric($this->getRequest()->query->get('id'))) {
+                        $log = $this->getContainer()->call([AdminActionLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    } else {
+                        $data = $this->getContainer()->call([AdminActionLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $header = ['id', 'action', 'method', 'request', 'created_at', 'updated_at'];
+                    }
+
+                    break;
+            }
+
+            if (is_numeric($this->getRequest()->query->get('id'))) {
                 $this->templateData += [
-                'header' => ['id', 'url', 'method', 'user_id', 'ip_address', 'created_at', 'updated_at'],
+                    'log' => $log,
+                    'logHtml' => $this->getHtmlRenderer()->renderLog($log),
+                ];
+            } else {
+                $this->templateData += [
+                'header' => $header,
                 'logs' => $data['items'],
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
                 ];
-
-                break;
-            case 'mail':
-                $this->addBackButton();
-                $this->page_title = 'Mail Logs';
-                $data = $this->getContainer()->call([MailLog::class, 'paginate']);
-                $this->templateData += [
-                'header' => ['id', 'from', 'to', 'subject', 'template_name', 'result', 'created_at', 'updated_at'],
-                'logs' => $data['items'],
-                'total' => $data['total'],
-                'current_page' => $data['page'],
-                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
-                ];
-
-                break;
-            case 'cron':
-                $this->addBackButton();
-                $this->page_title = 'Cron Logs';
-                $data = $this->getContainer()->call([CronLog::class, 'paginate']);
-                $this->templateData += [
-                'header' => ['id', 'run_time', 'duration', 'tasks', 'created_at', 'updated_at'],
-                'logs' => $data['items'],
-                'total' => $data['total'],
-                'current_page' => $data['page'],
-                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
-                ];
-
-                break;
+            }
         }
+
         return $this->templateData;
     }
 }

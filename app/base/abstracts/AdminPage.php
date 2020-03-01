@@ -14,6 +14,8 @@ namespace App\Base\Abstracts;
 use \Symfony\Component\HttpFoundation\Response;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Traits\AdminTrait;
+use \App\Site\Routing\RouteInfo;
+use \App\Site\Models\AdminActionLog;
 use \App\App;
 
 /**
@@ -75,6 +77,33 @@ abstract class AdminPage extends BaseHtmlPage
         }
 
         return parent::beforeRender();
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @param  RouteInfo|null $route_info
+     * @param  array          $route_data
+     * @return Response
+     */
+    public function renderPage(RouteInfo $route_info = null, $route_data = [])
+    {
+        $return = parent::renderPage($route_info, $route_data);
+
+        if ($this->getSiteData()->getConfigValue('app/backend/log_requests') == true) {
+            try {
+                $log = $this->getContainer()->make(AdminActionLog::class);
+                $log->fillWithRequest($this->getRequest(), $this);
+                $log->persist();
+            } catch (Exception $e) {
+                $this->getUtils()->logException($e, "Can't write AdminActionLog");
+                if ($this->getEnv('DEBUG')) {
+                    return $this->getUtils()->errorException($e);
+                }
+            }
+        }
+
+        return $return;
     }
 
     /**

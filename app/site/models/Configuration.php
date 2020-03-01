@@ -21,6 +21,8 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method int getWebsiteId()
  * @method string getPath()
  * @method string getValue()
+ * @method string getLocale()
+ * @method boolean getIsSystem()
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */

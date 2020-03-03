@@ -95,7 +95,7 @@ class Web extends ContainerAwareObject
                 }
 
                 if (method_exists($controllerClass, 'getRoutePath')) {
-                    $path = call_user_func([$controllerClass, 'getRoutePath']) ?? $path;
+                    $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
                     if (!$this->checkRouteParameters($path)) {
                         throw new InvalidValueException("'{$path}': Invalid route string", 1);
                     }

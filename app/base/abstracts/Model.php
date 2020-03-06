@@ -58,12 +58,14 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
         $name = $this->getTableName();
         if ($dbrow instanceof Row) {
             $this->checkDbName($dbrow);
+            $this->setOriginalData($dbrow->getData());
         } else {
             $dbrow = $this->getDb()->createRow($name);
+            $this->setOriginalData(null);
         }
-        $this->is_first_save = $this->isNew();
-        $this->tablename = $name;
-        $this->dbrow = $dbrow;
+        $this->setTablename($name);
+        $this->setDbrow($dbrow);
+        $this->setIsFirstSave($this->isNew());
     }
 
     /**
@@ -239,15 +241,14 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     {
         if ($id instanceof Row) {
             $this->checkDbName($id);
-            $this->dbrow = $id;
-            $this->tablename = $this->dbrow->getTable();
+            $this->setDbrow($id);
+            $this->setTablename($this->dbrow->getTable());
         } elseif (is_numeric($id)) {
-            $this->tablename = $this->getTableName();
+            $this->setTablename($this->getTableName());
             $dbrow = $this->getDb()->table(static::defaultTableName(), $id);
-            $this->dbrow = $dbrow;
+            $this->setDbrow($dbrow);
         }
-
-        $this->is_first_save = $this->isNew();
+        $this->setIsFirstSave($this->isNew());
 
         return $this;
     }
@@ -296,12 +297,11 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
         if ($this->dbrow->exists()) {
             $dbrow = $this->getDb()->table($this->dbrow->getTable(), $this->dbrow->getOriginalId());
             if ($dbrow) {
-                $this->dbrow = $dbrow;
-                $this->original_data = $this->dbrow->getData();
+                $this->setDbrow($dbrow);
+                $this->setOriginalData($dbrow->getData());
             }
         }
-
-        $this->is_first_save = $this->isNew();
+        $this->setIsFirstSave($this->isNew());
 
         return $this;
     }
@@ -317,8 +317,6 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     {
         $dbrow = $container->get('db')->table(static::defaultTableName(), $id);
         $object = new static($container, $dbrow);
-        $object->setOriginalData($dbrow->getData());
-        $object->setIsFirstSave(false);
         return $object;
     }
 
@@ -333,8 +331,6 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
         $dbrow = $container->get('db')->createRow(static::defaultTableName());
         $dbrow->setData($initialdata);
         $object = new static($container, $dbrow);
-        $object->setOriginalData(null);
-        $object->setIsFirstSave(true);
         return $object;
     }
 
@@ -350,8 +346,6 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
     {
         $dbrow = $container->get('db')->table(static::defaultTableName())->where($field, $value)->limit(1)->fetch();
         $object = new static($container, $dbrow);
-        $object->setOriginalData($dbrow->getData());
-        $object->setIsFirstSave(false);
         return $object;
     }
 
@@ -630,6 +624,38 @@ abstract class Model extends ContainerAwareObject implements \ArrayAccess, \Iter
         }
 
         return $this->original_data;
+    }
+
+    /**
+     * @return Row database row
+     */
+    public function getDbrow()
+    {
+        return $this->dbrow;
+    }
+
+    /**
+     * @param Row database row $dbrow
+     *
+     * @return self
+     */
+    public function setDbrow($dbrow)
+    {
+        $this->dbrow = $dbrow;
+
+        return $this;
+    }
+
+    /**
+     * @param string table name $tablename
+     *
+     * @return self
+     */
+    public function setTablename($tablename)
+    {
+        $this->tablename = $tablename;
+
+        return $this;
     }
 
     public function getChangedData()

@@ -9,19 +9,19 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
-use \Spatie\ArrayToXml\ArrayToXml;
+use \Symfony\Component\HttpFoundation\JsonResponse;
 use \Exception;
 
 /**
- * Base for pages rendering an XML response
+ * Base for pages rendering a JSON response
  */
-abstract class BaseXMLPage extends BasePage
+abstract class BaseJsonPage extends BasePage
 {
     /**
      * {@inheritdocs}
@@ -31,7 +31,7 @@ abstract class BaseXMLPage extends BasePage
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-        $this->response = $this->getContainer()->get(Response::class);
+        $this->response = $this->getContainer()->get(JsonResponse::class);
     }
 
     /**
@@ -47,17 +47,16 @@ abstract class BaseXMLPage extends BasePage
             return $this
                 ->getResponse()
                 ->prepare($this->getRequest())
-                ->setContent(ArrayToXml::convert($getXMLData))
-                ->headers->set('Content-Type', 'text/xml');
+                ->setData(array_merge(['success' => true,], $this->getJsonData()));
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionXml($e);
+            return $this->getUtils()->exceptionJson($e);
         }
     }
 
     /**
-     * gets XML data
+     * gets JSON data
      *
      * @return mixed
      */
-    abstract protected function getXMLData();
+    abstract protected function getJsonData();
 }

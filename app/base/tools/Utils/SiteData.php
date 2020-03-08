@@ -21,8 +21,8 @@ use \App\Site\Models\MailLog;
 use \App\Site\Models\RequestLog;
 use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
-use \App\Base\Abstracts\BasePage;
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Controllers\BasePage;
+use \App\Base\Abstracts\Models\BaseModel;
 use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
@@ -84,7 +84,7 @@ class SiteData extends ContainerAwareObject
         }
 
         $website = $this->getCurrentWebsite();
-        
+
         if ($website instanceof Website) {
             return $current_siteid = $website->id;
         }
@@ -106,7 +106,7 @@ class SiteData extends ContainerAwareObject
         }
 
         $website = $this->getCurrentWebsite();
-        
+
         if ($website instanceof Website) {
             return $website_default_locale = $website->getDefaultLocale();
         }

@@ -13,8 +13,8 @@ namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\AdminFormPage;
-use \App\Base\Abstracts\AdminManageModelsPage;
+use \App\Base\Abstracts\Controllers\AdminFormPage;
+use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Sitemap;
 use \App\Site\Models\Rewrite;

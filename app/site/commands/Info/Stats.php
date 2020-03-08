@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Info;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -22,7 +22,7 @@ use \Psr\Container\ContainerInterface;
 /**
  * Information Statistics Command
  */
-class Stats extends Command
+class Stats extends BaseCommand
 {
     /**
      * {@inheritdoc}

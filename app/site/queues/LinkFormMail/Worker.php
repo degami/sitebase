@@ -13,7 +13,7 @@ namespace App\Site\Queues\LinkFormMail;
 
 use \Psr\Container\ContainerInterface;
 use \App\Site\Models\QueueMessage;
-use \App\Base\Abstracts\BaseQueueWorker;
+use \App\Base\Abstracts\Queues\BaseQueueWorker;
 
 /**
  * Links Form Queue Worker

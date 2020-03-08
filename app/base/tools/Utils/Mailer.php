@@ -70,7 +70,7 @@ class Mailer extends ContainerAwareObject
         $template->data($mail_variables);
         $body = $template->render();
         $result = $this->sendMail($from, $to, $subject, $body, 'text/html', false);
-        
+
         $this->logMail($from, $to, $subject, $result, $mail_template);
 
         return $result;
@@ -130,7 +130,7 @@ class Mailer extends ContainerAwareObject
         // Specify a configuration set. If you do not want to use a configuration
         // set, comment the following variable, and the
         // 'ConfigurationSetName' => $configuration_set argument below.
-       
+
         // $configuration_set = 'ConfigSet';
 
         $char_set = 'UTF-8';

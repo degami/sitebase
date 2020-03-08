@@ -13,7 +13,7 @@ namespace App\Site\Queues\ContactFormMail;
 
 use \Psr\Container\ContainerInterface;
 use \App\Site\Models\QueueMessage;
-use \App\Base\Abstracts\BaseQueueWorker;
+use \App\Base\Abstracts\Queues\BaseQueueWorker;
 
 /**
  * Contacts Form Queue Worker

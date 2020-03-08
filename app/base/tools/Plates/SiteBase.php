@@ -13,7 +13,7 @@ namespace App\Base\Tools\Plates;
 
 use \League\Plates\Engine;
 use \League\Plates\Extension\ExtensionInterface;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \App\App;
 use \Psr\Container\ContainerInterface;
 

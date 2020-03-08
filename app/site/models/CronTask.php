@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithOwnerTrait;
 
 /**
@@ -26,7 +26,7 @@ use \App\Base\Traits\WithOwnerTrait;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class CronTask extends Model
+class CronTask extends BaseModel
 {
     use WithOwnerTrait;
 

@@ -9,7 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Models;
 
 use \LessQL\Row;
 use \Psr\Container\ContainerInterface;
@@ -23,7 +23,7 @@ use \App\Base\Traits\WithOwnerTrait;
 /**
  * A model that will be shown on frontend
  */
-abstract class FrontendModel extends Model
+abstract class FrontendModel extends BaseModel
 {
     use WithWebsiteTrait, WithOwnerTrait;
 
@@ -76,7 +76,7 @@ abstract class FrontendModel extends Model
         $rewrite->user_id = $this->getUserId();
         $rewrite->locale = $this->getLocale();
         $rewrite->persist();
-        
+
         return parent::postPersist();
     }
 

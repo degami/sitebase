@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\CodeGeneratorCommand;
+use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;

@@ -13,7 +13,7 @@ namespace App\Site\Controllers\Frontend;
 
 use \Psr\Container\ContainerInterface;
 use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Abstracts\FormPage;
+use \App\Base\Abstracts\Controllers\FormPage;
 use \App\App;
 use \App\Site\Models\LinkExchange;
 use \App\Site\Routing\RouteInfo;

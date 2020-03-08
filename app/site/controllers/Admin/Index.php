@@ -12,7 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\AdminPage;
+use \App\Base\Abstracts\Controllers\AdminPage;
 use \App\Site\Routing\RouteInfo;
 
 /**
@@ -62,7 +62,7 @@ class Index extends AdminPage
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             return $this->getUtils()->errorPage(403);
         }
-        
+
         return $this->doRedirect($this->getUrl('admin.dashboard'));
     }
 }

@@ -9,10 +9,11 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Queues;
 
 use \Psr\Container\ContainerInterface;
 use \App\Site\Models\QueueMessage;
+use \App\Base\Abstracts\ContainerAwareObject;
 
 /**
  * Base for queue workers

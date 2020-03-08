@@ -11,14 +11,14 @@
  */
 namespace App\Site\Migrations;
 
-use \App\Base\Abstracts\Migration;
+use \App\Base\Abstracts\Migrations\BaseMigration;
 use \Psr\Container\ContainerInterface;
 use \Degami\SqlSchema\Index;
 
 /**
  * basic data migration
  */
-class InitialDataMigration extends Migration
+class InitialDataMigration extends BaseMigration
 {
     /**
      * {@inheritdocs}

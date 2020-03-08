@@ -12,7 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\AdminPage;
+use \App\Base\Abstracts\Controllers\AdminPage;
 
 /**
  * "Dashboard" Admin Page

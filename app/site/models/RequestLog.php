@@ -11,9 +11,9 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
-use \App\Base\Abstracts\BaseHtmlPage;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Models\BaseModel;
+use \App\Base\Abstracts\Controllers\BaseHtmlPage;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Traits\WithWebsiteTrait;
 
@@ -29,7 +29,7 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class RequestLog extends Model
+class RequestLog extends BaseModel
 {
     use WithWebsiteTrait;
 

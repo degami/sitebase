@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Role Permission Pivot Model
@@ -20,6 +20,6 @@ use \App\Base\Abstracts\Model;
  * @method string gerRoleId()
  * @method string getPermissionId()
  */
-class RolePermission extends Model
+class RolePermission extends BaseModel
 {
 }

@@ -12,7 +12,7 @@
 namespace App\Site\Controllers\Admin\Json;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\AdminJsonPage;
+use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Contact;
 use \App\Site\Routing\RouteInfo;
 use \Degami\PHPFormsApi as FAPI;

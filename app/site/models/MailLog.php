@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Mail Log Model
@@ -25,6 +25,6 @@ use \App\Base\Abstracts\Model;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class MailLog extends Model
+class MailLog extends BaseModel
 {
 }

@@ -16,7 +16,7 @@ use \FastRoute\RouteCollector;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Exceptions\InvalidValueException;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Controllers\Frontend\Page;
 use function FastRoute\simpleDispatcher;

@@ -12,7 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\AdminManageModelsPage;
+use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \App\Site\Models\QueueMessage;
 use \Degami\PHPFormsApi as FAPI;
 
@@ -116,13 +116,13 @@ class Queue extends AdminManageModelsPage
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        $message = $this->getObject();
+        $queue = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
             case 'requeue':
-                $message->status = QueueMessage::STATUS_PENDING;
-                $message->persist();
+                $queue->status = QueueMessage::STATUS_PENDING;
+                $queue->persist();
 
                 $this->setAdminActionLogData('Requeued queue '.$queue->getId());
 

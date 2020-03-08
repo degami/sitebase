@@ -11,8 +11,8 @@
  */
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\BaseCodeBlock;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Blocks\BaseCodeBlock;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \Psr\Container\ContainerInterface;
 use \App\Site\Models\Menu;
 use \Degami\PHPFormsApi as FAPI;

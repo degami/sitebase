@@ -11,10 +11,8 @@
  */
 namespace App\Site\Controllers\Admin\Crud;
 
-use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\AdminRestPage;
+use \App\Base\Abstracts\Controllers\AdminRestPage;
 use \App\Site\Models\Permission as PermissionModel;
-use \App\Site\Routing\RouteInfo;
 
 /**
  * Permissions REST endpoint

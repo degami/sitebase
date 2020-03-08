@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\App;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -24,7 +24,7 @@ use \App\App;
 /**
  * Http Server Command
  */
-class Serve extends Command
+class Serve extends BaseCommand
 {
     /**
      * {@inheritdoc}

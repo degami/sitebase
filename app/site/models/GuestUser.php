@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\ContainerAwareObject;

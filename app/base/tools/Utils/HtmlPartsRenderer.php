@@ -14,8 +14,8 @@ namespace App\Base\Tools\Utils;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Base\Abstracts\BasePage;
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Controllers\BasePage;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Site\Models\Menu;
 use \App\Site\Models\Block;
 use \App\Site\Models\Rewrite;
@@ -367,7 +367,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param  integer  $visible_links
      * @return string
      */
-    public function renderPaginator($current_page, $total, BasePage $controller, $page_size = Model::ITEMS_PER_PAGE, $visible_links = 2)
+    public function renderPaginator($current_page, $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2)
     {
         $total_pages = ceil($total / $page_size) - 1;
         if ($total_pages < 1) {
@@ -714,7 +714,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ['options' => [
             'tag' => 'table',
             'width' => '100%',
-            'id' => $table_id,
+            'id' => 'log_table',
             'cellspacing' => '0',
             'cellpadding' => '0',
             'border' => '0',

@@ -9,13 +9,14 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \Exception;
 use \App\Base\Traits\FrontendTrait;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Base for a page diplaying a model
@@ -40,7 +41,7 @@ abstract class FrontendPageWithObject extends FrontendPage
         }
 
         if (!(
-            $this->getObject() instanceof Model &&
+            $this->getObject() instanceof BaseModel &&
             is_a($this->getObject(), $this->getObjectClass()) &&
             $this->getObject()->isLoaded())
         ) {

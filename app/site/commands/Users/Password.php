@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Users;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -28,7 +28,7 @@ use \Psr\Container\ContainerInterface;
 /**
  * Change User Password Command
  */
-class Password extends Command
+class Password extends BaseCommand
 {
     /**
      * {@inheritdoc}
@@ -84,7 +84,7 @@ class Password extends Command
 
         $user->password = $this->getUtils()->getEncodedPass($password);
         $user->persist();
-        
+
         $output->writeln('<info>Password changed</info>');
     }
 }

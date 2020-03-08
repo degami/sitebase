@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithOwnerTrait;
 use \App\App;
 use \Exception;
@@ -26,7 +26,7 @@ use \Exception;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class MediaElementRewrite extends Model
+class MediaElementRewrite extends BaseModel
 {
     use WithOwnerTrait;
 

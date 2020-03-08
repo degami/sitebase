@@ -13,10 +13,10 @@ namespace App\Site\Controllers\Frontend;
 
 use \Psr\Container\ContainerInterface;
 use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Abstracts\FormPage;
+use \App\Base\Abstracts\Controllers\FormPage;
 use \App\App;
-use \App\Base\Abstracts\Model;
-use \App\Base\Abstracts\FrontendPage;
+use \App\Base\Abstracts\Models\BaseModel;
+use \App\Base\Abstracts\Controllers\FrontendPage;
 use \App\Site\Models\Contact;
 use \App\Site\Models\ContactSubmission;
 use \App\Site\Routing\RouteInfo;
@@ -111,7 +111,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        if (!($this->getObject() instanceof Model &&
+        if (!($this->getObject() instanceof BaseModel &&
             is_a($this->getObject(), $this->getObjectClass()) &&
             $this->templateData['object']->isLoaded())
         ) {

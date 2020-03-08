@@ -13,7 +13,7 @@ namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\AdminManageFrontendModelsPage;
+use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\LinkExchange;
 use \App\Site\Models\Taxonomy;

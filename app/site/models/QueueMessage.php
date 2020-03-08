@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
 use \Psr\Container\ContainerInterface;
 
@@ -27,7 +27,7 @@ use \Psr\Container\ContainerInterface;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class QueueMessage extends Model
+class QueueMessage extends BaseModel
 {
     use WithWebsiteTrait;
 

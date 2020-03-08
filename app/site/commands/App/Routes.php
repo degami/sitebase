@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\App;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -20,7 +20,7 @@ use \Psr\Container\ContainerInterface;
 /**
  * Show Routes Command
  */
-class Routes extends Command
+class Routes extends BaseCommand
 {
     /**
      * {@inheritdoc}

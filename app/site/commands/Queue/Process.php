@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Queue;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -20,14 +20,14 @@ use Symfony\Component\Console\Style\SymfonyStyle;
 use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Models\QueueMessage;
-use \App\Base\Abstracts\BaseQueueWorker;
+use \App\Base\Abstracts\Queues\BaseQueueWorker;
 use \App\Base\Exceptions\InvalidValueException;
 use \Exception;
 
 /**
  * Process Queue Command
  */
-class Process extends Command
+class Process extends BaseCommand
 {
     const SLEEP_TIMEOUT = 500000; // 1/2 sec
     const MAX_EXECUTIONS_NUMBER = 100000;
@@ -85,6 +85,7 @@ class Process extends Command
                         $message = $this->getContainer()->call([QueueMessage::class, 'nextMessage'], ['queue_name' => $queue]);
                         if ($message instanceof QueueMessage) {
                             $worker_class = $message->getWorkerClass();
+
                             if (!is_subclass_of($worker_class, BaseQueueWorker::class)) {
                                 throw new InvalidValueException($worker_class." is not a QueueWorker", 1);
                             }

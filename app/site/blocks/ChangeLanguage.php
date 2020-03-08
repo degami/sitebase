@@ -12,8 +12,8 @@
 namespace App\Site\Blocks;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\BaseCodeBlock;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Blocks\BaseCodeBlock;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Language;
 use \Exception;

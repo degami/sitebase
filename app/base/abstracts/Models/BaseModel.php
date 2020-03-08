@@ -9,7 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Models;
 
 use \LessQL\Row;
 use \Psr\Container\ContainerInterface;
@@ -21,7 +21,7 @@ use \Exception;
 /**
  * A wrapper for LessQL Row
  */
-abstract class Model extends ContainerAwareObject implements \ArrayAccess, \IteratorAggregate
+abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \IteratorAggregate
 {
     const ITEMS_PER_PAGE = 50;
 

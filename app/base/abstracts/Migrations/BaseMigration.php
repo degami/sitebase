@@ -9,16 +9,17 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Migrations;
 
 use \Genkgo\Migrations\MigrationInterface;
 use \Verraes\ClassFunctions\ClassFunctions;
 use \Psr\Container\ContainerInterface;
+use \App\Base\Abstracts\ContainerAwareObject;
 
 /**
  * Base for migration objects
  */
-abstract class Migration extends ContainerAwareObject implements MigrationInterface
+abstract class BaseMigration extends ContainerAwareObject implements MigrationInterface
 {
     /**
      * do the migration
@@ -33,7 +34,7 @@ abstract class Migration extends ContainerAwareObject implements MigrationInterf
      * @return void
      */
     abstract public function down();
-    
+
     /**
      * gets migration name
      *

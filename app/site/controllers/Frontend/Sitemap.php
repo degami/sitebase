@@ -12,8 +12,8 @@
 namespace App\Site\Controllers\Frontend;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\BaseXMLPage;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Controllers\BaseXMLPage;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \App\App;
 use \App\Site\Models\Sitemap as SitemapModel;
 use \App\Site\Models\Website;

@@ -9,7 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Migrations;
 
 use \Exception;
 use \Degami\SqlSchema\Table;
@@ -17,7 +17,7 @@ use \Degami\SqlSchema\Table;
 /**
  * Base for database migrations
  */
-abstract class DBMigration extends Migration
+abstract class DBMigration extends BaseMigration
 {
     /**
      * @var string table name

@@ -9,27 +9,19 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Controllers;
 
-use \Psr\Container\ContainerInterface;
-use \App\App;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\JsonResponse;
 use \App\Base\Traits\AdminTrait;
-use \Exception;
 
 /**
- * Base for rest endopoints
+ * Base JSON page on admin
  */
-abstract class AdminRestPage extends BaseRestPage
+abstract class AdminJsonPage extends BaseJsonPage
 {
-
     use AdminTrait;
 
-
     /**
-     * before render hook
+     * {@inheritdocs}
      *
      * @return Response|self
      */

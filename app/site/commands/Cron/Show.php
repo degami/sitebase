@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Cron;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -23,7 +23,7 @@ use \DateTime;
 /**
  * Show Cron Command
  */
-class Show extends Command
+class Show extends BaseCommand
 {
     /**
      * {@inheritdoc}
@@ -45,7 +45,7 @@ class Show extends Command
         $output->writeln("");
         $output->writeln($this->getLastHeartBeat());
         $output->writeln("");
-        
+
         $table = new Table($output);
         $table->setHeaders(['ID', 'Title','Callable','Schedule', 'Active']);
 

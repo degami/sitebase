@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Cache;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -23,7 +23,7 @@ use \App\Base\Tools\Cache\Manager as CacheManager;
 /**
  * Cache Statistics Command
  */
-class Stats extends Command
+class Stats extends BaseCommand
 {
     /**
      * {@inheritdoc}

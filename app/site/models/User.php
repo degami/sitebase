@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * User Model
@@ -25,7 +25,7 @@ use \App\Base\Abstracts\Model;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class User extends Model
+class User extends BaseModel
 {
     /**
      * @var Role role object

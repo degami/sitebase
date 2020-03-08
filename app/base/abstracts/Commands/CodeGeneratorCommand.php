@@ -9,7 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Commands;
 
 use \Psr\Container\ContainerInterface;
 use \HaydenPierce\ClassFinder\ClassFinder;
@@ -20,7 +20,7 @@ use \App\App;
 /**
  * Base for "generation" commands
  */
-abstract class CodeGeneratorCommand extends Command
+abstract class CodeGeneratorCommand extends BaseCommand
 {
     /**
      * @var array files to dump

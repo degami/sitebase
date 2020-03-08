@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Db;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -24,7 +24,7 @@ use \Exception;
 /**
  * Dump Database Command
  */
-class Dump extends Command
+class Dump extends BaseCommand
 {
     /**
      * {@inheritdoc}

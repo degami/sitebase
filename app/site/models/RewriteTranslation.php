@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Rewrite Translation Model
@@ -24,6 +24,6 @@ use \App\Base\Abstracts\Model;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class RewriteTranslation extends Model
+class RewriteTranslation extends BaseModel
 {
 }

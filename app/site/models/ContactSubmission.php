@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Traits\WithOwnerTrait;
 
@@ -24,7 +24,7 @@ use \App\Base\Traits\WithOwnerTrait;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class ContactSubmission extends Model
+class ContactSubmission extends BaseModel
 {
     use WithOwnerTrait;
 

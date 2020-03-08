@@ -9,12 +9,11 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Response;
-use \App\Base\Abstracts\AdminPage;
-use \App\Base\Abstracts\FrontendModel;
+use \App\Base\Abstracts\Models\FrontendModel;
 use \Degami\PHPFormsApi as FAPI;
 use \Degami\Basics\Html\TagElement;
 use \App\App;
@@ -128,11 +127,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * loads object by id
      *
      * @param  integer $id
-     * @return \App\Base\Abstracts\Model
+     * @return \App\Base\Abstracts\Models\BaseModel
      */
     protected function loadObject($id)
     {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
+        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Models\BaseModel::class)) {
             return null;
         }
 
@@ -142,11 +141,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets new empty model
      *
-     * @return \App\Base\Abstracts\Model
+     * @return \App\Base\Abstracts\Models\BaseModel
      */
     protected function newEmptyObject()
     {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
+        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Models\BaseModel::class)) {
             return null;
         }
 

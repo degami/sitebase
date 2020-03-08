@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\ModelWithChildren;
+use \App\Base\Abstracts\Models\ModelWithChildren;
 use \App\Base\Traits\WithWebsiteTrait;
 use \Psr\Container\ContainerInterface;
 

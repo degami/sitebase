@@ -12,7 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\AdminFormPage;
+use \App\Base\Abstracts\Controllers\AdminFormPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Role;
 use \App\Site\Models\Permission;

@@ -12,7 +12,7 @@
 namespace App\Site\Models;
 
 use \App\Site\Routing\RouteInfo;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \Symfony\Component\HttpFoundation\Request;
 
 /**

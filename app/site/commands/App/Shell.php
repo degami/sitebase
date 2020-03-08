@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\App;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -22,7 +22,7 @@ use \Exception;
 /**
  * Application Shell Command
  */
-class Shell extends Command
+class Shell extends BaseCommand
 {
     /**
      * {@inheritdoc}

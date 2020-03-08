@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Permission Model
@@ -21,6 +21,6 @@ use \App\Base\Abstracts\Model;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class Permission extends Model
+class Permission extends BaseModel
 {
 }

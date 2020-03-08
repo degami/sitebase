@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -26,7 +26,7 @@ use \App\App;
 /**
  * Generate Documentation Command
  */
-class Docs extends Command
+class Docs extends BaseCommand
 {
     const BASE_NAMESPACE = "App\\Site\\Cron\\Tasks\\";
 

@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
 
 /**
@@ -26,7 +26,7 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class Configuration extends Model
+class Configuration extends BaseModel
 {
     use WithWebsiteTrait;
 }

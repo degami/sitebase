@@ -11,14 +11,14 @@
  */
 namespace App\Site\Migrations;
 
-use \App\Base\Abstracts\Migration;
+use \App\Base\Abstracts\Migrations\BaseMigration;
 use \Psr\Container\ContainerInterface;
 use \Degami\SqlSchema\Index;
 
 /**
  * fake data migration
  */
-class FakeDataMigration extends Migration
+class FakeDataMigration extends BaseMigration
 {
     /**
      * @var string lorem ipsum paragraph

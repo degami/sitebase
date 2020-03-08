@@ -9,7 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
 use \App\App;
@@ -80,11 +80,11 @@ abstract class BaseRestPage extends BasePage
      * loads object by id
      *
      * @param  integer $id
-     * @return \App\Base\Abstracts\Model
+     * @return \App\Base\Abstracts\Models\BaseModel
      */
     protected function loadObject($id)
     {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Model::class)) {
+        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Models\BaseModel::class)) {
             return null;
         }
 

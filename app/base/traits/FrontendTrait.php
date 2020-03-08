@@ -12,7 +12,7 @@
 namespace App\Base\Traits;
 
 use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Frontend pages Trait
@@ -49,9 +49,9 @@ trait FrontendTrait
     /**
      * sets object to show
      *
-     * @param Model $object
+     * @param BaseModel $object
      */
-    protected function setObject(Model $object)
+    protected function setObject(BaseModel $object)
     {
         $this->templateData['object'] = $object;
         return $this;
@@ -60,7 +60,7 @@ trait FrontendTrait
     /**
      * gets object to show
      *
-     * @return Model|null
+     * @return BaseModel|null
      */
     protected function getObject()
     {
@@ -91,7 +91,7 @@ trait FrontendTrait
      */
     public function getCurrentLocale()
     {
-        if (isset($this->templateData['object']) && ($this->templateData['object'] instanceof Model) && $this->templateData['object']->isLoaded()) {
+        if (isset($this->templateData['object']) && ($this->templateData['object'] instanceof BaseModel) && $this->templateData['object']->isLoaded()) {
             if ($this->templateData['object']->getLocale()) {
                 return $this->getApp()->setCurrentLocale($this->templateData['object']->getLocale())->getCurrentLocale();
             }

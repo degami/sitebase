@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\App;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
@@ -24,7 +24,7 @@ use \App\App;
 /**
  * Modify Env Command
  */
-class ModEnv extends Command
+class ModEnv extends BaseCommand
 {
     /**
      * @var array dotenv file sections
@@ -72,7 +72,7 @@ class ModEnv extends Command
                     continue;
                 }
                 $old_value = $dotenv[$key] ?? '';
-    
+
                 $question = new Question($key.' value? defaults to ['.$old_value.']');
                 $value = $helper->ask($input, $output, $question);
                 if (trim($value) == '') {

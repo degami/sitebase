@@ -9,7 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Controllers;
 
 use \Exception;
 use \Psr\Container\ContainerInterface;
@@ -17,6 +17,7 @@ use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \League\Plates\Template\Template;
+use \App\Base\Abstracts\ContainerAwareObject;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\GuestUser;

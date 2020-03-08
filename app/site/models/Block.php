@@ -11,11 +11,11 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\BlockTrait;
 use \App\Base\Traits\WithWebsiteTrait;
 use \App\Base\Traits\WithOwnerTrait;
-use \App\Base\Abstracts\BasePage;
+use \App\Base\Abstracts\Controllers\BasePage;
 use \Degami\Basics\Html\TagElement;
 
 /**
@@ -33,7 +33,7 @@ use \Degami\Basics\Html\TagElement;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class Block extends Model
+class Block extends BaseModel
 {
     use BlockTrait, WithWebsiteTrait, WithOwnerTrait;
 
@@ -43,7 +43,7 @@ class Block extends Model
     protected $rewrites = [];
 
     /**
-     * @var \App\Base\Abstracts\BaseCodeBlock code block instance
+     * @var \App\Base\Abstracts\Blocks\BaseCodeBlock code block instance
      */
     protected $codeBlockInstance = null;
 
@@ -83,7 +83,7 @@ class Block extends Model
     /**
      * loads code block instance
      *
-     * @return \App\Base\Abstracts\BaseCodeBlock
+     * @return \App\Base\Abstracts\Blocks\BaseCodeBlock
      */
     public function loadInstance()
     {
@@ -97,7 +97,7 @@ class Block extends Model
     /**
      * gets real block instance
      *
-     * @return self|\App\Base\Abstracts\BaseCodeBlock
+     * @return self|\App\Base\Abstracts\Blocks\BaseCodeBlock
      */
     public function getRealInstance()
     {

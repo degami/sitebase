@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\App;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Psr\Container\ContainerInterface;
@@ -20,7 +20,7 @@ use \App\App;
 /**
  * Site Online Command
  */
-class Online extends Command
+class Online extends BaseCommand
 {
     /**
      * {@inheritdoc}

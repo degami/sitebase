@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\FrontendModelWithChildren;
+use \App\Base\Abstracts\Models\FrontendModelWithChildren;
 
 /**
  * Taxonomy Model

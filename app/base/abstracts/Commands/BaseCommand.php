@@ -9,7 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Base\Abstracts;
+namespace App\Base\Abstracts\Commands;
 
 use \Symfony\Component\Console\Command\Command as SymfonyCommand;
 use \Psr\Container\ContainerInterface;
@@ -20,7 +20,7 @@ use \App\App;
 /**
  * Base for cli commands
  */
-class Command extends SymfonyCommand
+class BaseCommand extends SymfonyCommand
 {
     use ContainerAwareTrait;
 

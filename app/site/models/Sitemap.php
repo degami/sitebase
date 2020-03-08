@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\FrontendModel;
+use \App\Base\Abstracts\Models\FrontendModel;
 use \Spatie\ArrayToXml\ArrayToXml;
 use \DateTime;
 

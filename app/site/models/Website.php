@@ -11,8 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
-use \App\Site\Models\Configuration;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Website Model
@@ -22,7 +21,7 @@ use \App\Site\Models\Configuration;
  * @method string getAliases()
  * @method integer getDefaultLocale()
  */
-class Website extends Model
+class Website extends BaseModel
 {
     /**
      * {@inheritdocs}

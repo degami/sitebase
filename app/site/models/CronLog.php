@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Cron Log Model
@@ -23,6 +23,6 @@ use \App\Base\Abstracts\Model;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class CronLog extends Model
+class CronLog extends BaseModel
 {
 }

@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Cache;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -20,7 +20,7 @@ use \Psr\Container\ContainerInterface;
 /**
  * Cache Clear Command
  */
-class Clear extends Command
+class Clear extends BaseCommand
 {
     /**
      * {@inheritdoc}

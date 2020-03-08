@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Config;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -28,7 +28,7 @@ use \Psr\Container\ContainerInterface;
 /**
  * Delete Configuration Command
  */
-class Delete extends Command
+class Delete extends BaseCommand
 {
     /**
      * {@inheritdoc}

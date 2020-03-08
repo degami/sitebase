@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Exceptions\InvalidValueException;
 use \Degami\Basics\Exceptions\BasicException;
 
@@ -23,7 +23,7 @@ use \Degami\Basics\Exceptions\BasicException;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class Role extends Model
+class Role extends BaseModel
 {
     /**
      * @var array permissions

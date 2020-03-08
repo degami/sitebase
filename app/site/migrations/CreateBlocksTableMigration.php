@@ -11,7 +11,7 @@
  */
 namespace App\Site\Migrations;
 
-use \App\Base\Abstracts\DBMigration;
+use \App\Base\Abstracts\Migrations\DBMigration;
 use \Psr\Container\ContainerInterface;
 use \Degami\SqlSchema\Index;
 use \Degami\SqlSchema\Table;

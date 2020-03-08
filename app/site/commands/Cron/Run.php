@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Cron;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -25,7 +25,7 @@ use \DateTime;
 /**
  * Run Cron Command
  */
-class Run extends Command
+class Run extends BaseCommand
 {
     /**
      * {@inheritdoc}

@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Config;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -29,7 +29,7 @@ use \Exception;
 /**
  * Add Configuration Command
  */
-class Add extends Command
+class Add extends BaseCommand
 {
     /**
      * {@inheritdoc}

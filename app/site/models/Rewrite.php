@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Model;
+use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
 use \App\Base\Traits\WithOwnerTrait;
 
@@ -26,7 +26,7 @@ use \App\Base\Traits\WithOwnerTrait;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class Rewrite extends Model
+class Rewrite extends BaseModel
 {
     /**
      * @var array rewrite translations

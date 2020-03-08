@@ -12,7 +12,7 @@
 namespace App\Site\Controllers\Admin\Json;
 
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\AdminJsonPage;
+use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
 use \App\Site\Models\Media;
 use \App\Site\Routing\RouteInfo;

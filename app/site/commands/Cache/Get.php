@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Cache;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -25,7 +25,7 @@ use \Psr\Container\ContainerInterface;
 /**
  * Cache Get Element Command
  */
-class Get extends Command
+class Get extends BaseCommand
 {
     /**
      * {@inheritdoc}

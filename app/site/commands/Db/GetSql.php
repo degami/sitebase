@@ -11,7 +11,7 @@
  */
 namespace App\Site\Commands\Db;
 
-use \App\Base\Abstracts\Command;
+use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -25,7 +25,7 @@ use \App\App;
 /**
  * Migrate Database Command
  */
-class GetSql extends Command
+class GetSql extends BaseCommand
 {
     /**
      * {@inheritdoc}

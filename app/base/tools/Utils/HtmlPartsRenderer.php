@@ -534,22 +534,54 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 'tag' => 'tr',
                 ]]
             );
-            $style="max-width:80%;font-size: 9px;line-height: 11px;max-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
+            //$style="max-width:100%;font-size: 9px;line-height: 11px;min-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
             foreach ($header as $k => $v) {
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
                     $td = $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
                         'tag' => 'td',
-                        'text' => '<input style="'.$style.'" name="search['.$v['search'].']" value="'.$current_page->getRequest()->query->get('search')[$v['search']].'"/>',
+                        'attributes' => ['class' => 'small'],
+                        'text' => '<input class="form-control" name="search['.$v['search'].']" value="'.$current_page->getRequest()->query->get('search')[$v['search']].'"/>',
                         ]]
                     );
+                    $add_searchrow = true;
+                } else if (is_array($v) && isset($v['foreign']) && boolval($v['foreign']) == true) {
+                    $dbtable = $this->getSchema()->getTable($v['table'], $this->getPdo());
+                    $select_options = [];
+                    foreach ($dbtable->getForeignKeys() as $fkobj) {
+                        if (in_array($v['foreign'], $fkobj->getColumns())) {
+                            $foreign_key = $fkobj->getTargetColumns()[0];
+                            $stmt = $this->getDb()->table(
+                                $fkobj->getTargetTable()
+                            );
+
+                            foreach ($stmt as $row) {
+                                $select_options[$row->{$foreign_key}] = $row->{$v['view']};
+                            }
+                        }
+                    }
+
+                    $select_options = array_map(function ($val, $key) {
+                        return '<option value="'.$key.'">'.$val.'</option>';
+                    }, $select_options, array_keys($select_options));
+
+                    $td = $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                        'tag' => 'td',
+                        'attributes' => ['class' => 'small'],
+                        'text' => '<select name="foreign['.$v['foreign'].']">'.implode("", $select_options).'</select>',
+                        ]]
+                    );
+
                     $add_searchrow = true;
                 } else {
                     $td = $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
                         'tag' => 'td',
+                        'attributes' => ['class' => 'small'],
                         'text' => '&nbsp;',
                         ]]
                     );

@@ -310,7 +310,7 @@ class Pages extends AdminManageFrontendModelsPage
     {
         return [
             'ID' => 'id',
-            'Website' => 'website_id',
+            'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
             'URL' => ['order' => 'url', 'search' => 'url'],
             'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'Title' => ['order' => 'title', 'search' => 'title'],

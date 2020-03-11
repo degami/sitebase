@@ -440,7 +440,7 @@ class Sitemaps extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Site Name' => 'website_id',
+            'Site Name' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
             'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'Title' => ['order' => 'title', 'search' => 'title'],
             'Is Published' => 'published_on',

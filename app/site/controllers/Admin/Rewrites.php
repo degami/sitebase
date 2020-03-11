@@ -262,7 +262,7 @@ class Rewrites extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Website' => 'website_id',
+            'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
             'URL' => ['order' => 'url', 'search' => 'url'],
             'Route' => ['order' => 'route', 'search' => 'route'],
             'Locale' => ['order' => 'locale', 'search' => 'locale'],

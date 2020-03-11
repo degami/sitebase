@@ -448,3 +448,22 @@ body {
 .logo-image {
     max-height: 30px;
 }
+
+.small {
+    .form-control,
+    .select2-selection {
+        font-size: 9px;
+        line-height: 11px;
+        height: 22px;
+    }
+    .select2-container--default {
+        .select2-selection--single {
+            .select2-selection__arrow {
+                height: 22px;
+            }
+            .select2-selection__rendered  {
+                line-height: 22px;
+            }
+        }
+    }
+}

@@ -240,7 +240,7 @@ class Config extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Website' => 'website_id',
+            'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
             'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'Path' => ['order' => 'path', 'search' => 'path'],
             'Value' => null,

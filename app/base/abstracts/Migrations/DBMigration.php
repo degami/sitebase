@@ -12,6 +12,7 @@
 namespace App\Base\Abstracts\Migrations;
 
 use \Exception;
+use \Degami\SqlSchema\Schema;
 use \Degami\SqlSchema\Table;
 
 /**
@@ -30,7 +31,7 @@ abstract class DBMigration extends BaseMigration
     public function up()
     {
         try {
-            $schema = $this->getSchema();
+            $schema = $this->getContainer()->make(Schema::class, ['pdo' => $this->getPdo(), 'preload' => true]);
             $table = $schema->addTable($this->tableName);
             $table = $this->addDBTableDefinition($table);
 

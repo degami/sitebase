@@ -4,7 +4,7 @@
         "php": "^7.2",
         "php-di/php-di": "^6.0",
         "degami/php-forms-api": "^2.3",
-        "degami/sql-schema": "^1.0.2",
+        "degami/sql-schema": "^1.0.4",
         "degami/lessql": "dev-master",
         "degami/basics": "dev-master",
         "nikic/fast-route": "^1.3",

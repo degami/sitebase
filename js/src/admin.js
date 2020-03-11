@@ -10,7 +10,7 @@
             return $.fn.appAdmin.methods.init.apply( this, arguments );
         } else {
             $.error( 'Method ' +  methodOrOptions + ' does not exist on jQuery.appAdmin' );
-        } 
+        }
     };
     $.fn.appAdmin.methods = {
         $elem: null,
@@ -31,7 +31,7 @@
                 $('select', $elem).select2({'width':'100%'});
                 $('a.inToolSidePanel[href]', $elem).click(function(evt){
                     if($(this).attr('href') != '#') {
-                       evt.preventDefault(); 
+                       evt.preventDefault();
                        $elem.appAdmin('loadPanelContent', $(this).attr('title') || '', $(this).attr('href'), true, true);
                     }
                 });
@@ -83,7 +83,7 @@
             return $(this).data('appAdmin').settings;
         },
         openSidePanel: function() {
-            $(this).appAdmin('showOverlay');            
+            $(this).appAdmin('showOverlay');
             $('.sidepanel', this).css({'width': '95%'});
         },
         closeSidePanel: function() {
@@ -105,7 +105,7 @@
 
             $.getJSON(url, function (response){
                 if (store_last_url) {
-                    $('.sidepanel', that).data('lastLoadedUrl', url);                    
+                    $('.sidepanel', that).data('lastLoadedUrl', url);
                 }
                 $('.sidepanel', that).find('.card-title').html(title);
                 $('.sidepanel', that).find('.card-block').html(response.html || '');
@@ -134,15 +134,15 @@
                     return false;
                 });
 
-                if( $.trim(response.js) != '' ){ 
-                    eval(response.js); 
+                if( $.trim(response.js) != '' ){
+                    eval(response.js);
                 };
                 if (open_panel) {
-                    $(that).appAdmin('openSidePanel');                    
+                    $(that).appAdmin('openSidePanel');
                 }
                 $('.sidepanel', that).find('.card-block a[href]').click(function(evt){
                     if($(this).attr('href') != '#') {
-                       evt.preventDefault(); 
+                       evt.preventDefault();
                        $(that).appAdmin('loadPanelContent', title, $(this).attr('href'), false, false);
                     }
                 });
@@ -178,7 +178,7 @@
             }, 60000);
         },
         searchTableColumns: function(btn) {
-            var query = $('input', $(btn).data('target')).serialize();
+            var query = $('input, select, textarea', $(btn).data('target')).serialize();
             var href = $(btn).attr('href');
             document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
@@ -191,4 +191,4 @@
         'checkLoggedUrl': null,
         'logoutUrl': null,
     }
-})(jQuery);  
+})(jQuery);

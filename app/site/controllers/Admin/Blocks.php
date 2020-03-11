@@ -344,7 +344,7 @@ class Blocks extends AdminManageModelsPage
     {
         return [
             'ID' => ['order' => 'id'],
-            'Website' => ['order' => 'website_id'],
+            'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
             'Region' => ['order' => 'region', 'search' => 'region'],
             'Locale' => ['order' => 'locale', 'search' => 'locale'],
             'Title' => ['order' => 'title', 'search' => 'title'],

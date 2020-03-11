@@ -40,18 +40,29 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
             $paginate_params = [
                 'order' => $this->getRequest()->query->get('order'),
-                'condition' => $this->getRequest()->query->get('search')
+                'condition' => $this->getSearchParameters(),
             ];
+
             if (is_array($paginate_params['condition'])) {
-                foreach ($paginate_params['condition'] as $col => $search) {
-                    if (trim($search) == '') {
-                        continue;
+                $conditions = [];
+                if (isset($paginate_params['condition']['like'])) {
+                    foreach ($paginate_params['condition']['like'] as $col => $search) {
+                        if (trim($search) == '') {
+                            continue;
+                        }
+                        $conditions['`'.$col . '` LIKE ?'] = ['%'.$search.'%'];
                     }
-                    $paginate_params['condition']['`'.$col . '` LIKE ?'] = ['%'.$search.'%'];
-                    unset($paginate_params['condition'][$col]);
+                }
+                if (isset($paginate_params['condition']['eq'])) {
+                    foreach ($paginate_params['condition']['eq'] as $col => $search) {
+                        if (trim($search) == '') {
+                            continue;
+                        }
+                        $conditions['`'.$col . '` = ?'] = [$search];
+                    }
                 }
 
-                $paginate_params['condition'] = array_filter($paginate_params['condition']);
+                $paginate_params['condition'] = array_filter($conditions);
             }
 
             $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], $paginate_params);
@@ -62,6 +73,15 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
             ];
         }
+    }
+
+    protected function getSearchParameters()
+    {
+        $out = array_filter([
+            'like' => $this->getRequest()->query->get('search'),
+            'eq' =>  $this->getRequest()->query->get('foreign'),
+        ]);
+        return !empty($out) ? $out : null;
     }
 
 
@@ -245,6 +265,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
     public function getAdminActionLogData()
     {
         return $this->admin_action_log_data;
+    }
+
+    public function getModelTableName()
+    {
+        return $this->getContainer()->call([$this->getObjectClass(), 'defaultTableName']);
     }
 
     /**

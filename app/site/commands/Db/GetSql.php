@@ -20,6 +20,7 @@ use \Psr\Container\ContainerInterface;
 use \App\Base\Overrides\Migrations\Factory;
 use \Genkgo\Migrations\Adapters\PdoMysqlAdapter;
 use \Genkgo\Migrations\MigrationInterface;
+use \Degami\SqlSchema\Schema;
 use \App\App;
 
 /**
@@ -44,7 +45,7 @@ class GetSql extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        foreach ($this->getSchema()->getTables() as $key => $table) {
+        foreach ($this->getSchema()->preload()->getTables() as $key => $table) {
             $output->writeln("");
             $output->writeln("-- Table ".$table->getName());
             $output->writeln("");

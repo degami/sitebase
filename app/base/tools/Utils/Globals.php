@@ -291,8 +291,8 @@ class Globals extends ContainerAwareObject
             $out = array_map(
                 function ($el) use ($menu_name, $website_id, $locale) {
                     /**
-                * @var Menu $menu_model
-                */
+                     * @var Menu $menu_model
+                     */
                     $menu_model = $this->getContainer()->make(Menu::class, ['dbrow' => $el]);
                     return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
                 },

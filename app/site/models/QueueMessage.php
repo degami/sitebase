@@ -11,6 +11,7 @@
  */
 namespace App\Site\Models;
 
+use \Exception;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
 use \Psr\Container\ContainerInterface;
@@ -65,17 +66,21 @@ class QueueMessage extends BaseModel
      */
     public static function nextMessage(ContainerInterface $container, $queue_name = null)
     {
-        $messageDBRow = static::getModelBasicWhere(
-            $container,
-            ['status' => self::STATUS_PENDING] + ($queue_name != null ? ['queue_name' => $queue_name] : []),
-            ['created_at' => 'ASC']
-        )
-            ->limit(1)
-            ->fetch();
-        if ($messageDBRow && $messageDBRow->id) {
-            $message = $container->make(static::class, ['dbrow' => $messageDBRow]);
-            $message->setStatus(self::STATUS_PROCESSED)->persist();
-            return $message;
+        try {
+            $messageDBRow = static::getModelBasicWhere(
+                $container,
+                ['status' => self::STATUS_PENDING] + ($queue_name != null ? ['queue_name' => $queue_name] : []),
+                ['created_at' => 'ASC']
+            )
+                ->limit(1)
+                ->fetch();
+            if ($messageDBRow && $messageDBRow->id) {
+                $message = $container->make(static::class, ['dbrow' => $messageDBRow]);
+                $message->setStatus(self::STATUS_PROCESSED)->persist();
+                return $message;
+            }
+        } catch (Exception $e) {
+            // ignore
         }
         return null;
     }

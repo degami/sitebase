@@ -14,6 +14,7 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \Psr\Container\ContainerInterface;
+use \Degami\Basics\Html\TagElement;
 
 /**
  * GTM Block
@@ -61,6 +62,25 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
         height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
         <!-- End Google Tag Manager (noscript) -->
         */
-        return '<noscript><iframe src="https://www.googletagmanager.com/ns.html?id='.$this->getEnv('GTMID').'" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>';
+
+        $options = [
+            'tag' => 'iframe',
+            'attributes' => [
+                'class' => '',
+                'src' => 'https://www.googletagmanager.com/ns.html?id='.$this->getEnv('GTMID'),
+                'height' => 0,
+                'width' => 0,
+                'style' => "display:none;visibility:hidden",
+            ],
+        ];
+
+        $iframe = $this->getContainer()->make(TagElement::class, ['options' => $options]);
+
+        return $this->getContainer()->make(TagElement::class, ['options' => [
+            'tag' => 'noscript',
+            'attributes' => [
+                'class' => '',
+            ]
+        ]])->addChild($iframe);
     }
 }

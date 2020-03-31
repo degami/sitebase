@@ -198,20 +198,32 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         if ($this->getSiteData()->getShowLogoOnMenu($website_id)) {
             // add logo
-            $menu->addChild(
-                $this->getContainer()->make(
-                    TagElement::class,
-                    ['options' => [
+            $logo = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'img',
+                    'attributes' => [
+                        'class' => '',
+                        'title' => $this->getEnv('APPNAME'),
+                        'src' => $this->getAssets()->assetUrl('/sitebase_logo.png'),
+                    ],
+                ]]
+            );
+
+            $atag = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
                     'tag' => 'a',
                     'attributes' => [
-                    'class' => 'navbar-brand',
-                    'href' => $this->getRouting()->getUrl('frontend.root'),
-                    'title' => $this->getEnv('APPNAME'),
+                        'class' => 'navbar-brand',
+                        'href' => $this->getRouting()->getUrl('frontend.root'),
+                        'title' => $this->getEnv('APPNAME'),
                     ],
-                    'text' => '<img src="'.$this->getAssets()->assetUrl('/sitebase_logo.png').'" />',
-                    ]]
-                )
+                ]]
             );
+
+            $atag->addChild($logo);
+            $menu->addChild($atag);
         }
 
         // add mobile toggle button

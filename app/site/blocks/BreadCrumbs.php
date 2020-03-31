@@ -18,6 +18,7 @@ use \App\Site\Models\Menu;
 use \App\Base\Traits\AdminTrait;
 use \App\Site\Controllers\Frontend\Page;
 use \App\Site\Models\Rewrite;
+use \Degami\Basics\Html\TagElement;
 
 /**
  * Breadcrumbs Block
@@ -44,7 +45,13 @@ class BreadCrumbs extends BaseCodeBlock
         $menu_item = reset($menuitems);
         $home_url = $this->getRouting()->getUrl('frontend.root');
 
-        $breadcrumbs_links = [];
+        $breadcrumbs_links = $this->getContainer()->make(TagElement::class, ['options' =>  [
+            'tag' => 'ol',
+            'attributes' => [
+                'class' => 'breadcrumb',
+            ],
+        ]]);
+
 
         $homepageid = $this->getSiteData()->getHomePageId(
             $this->getSiteData()->getCurrentWebsiteId(),
@@ -52,46 +59,82 @@ class BreadCrumbs extends BaseCodeBlock
         );
 
         if (!$current_page->isHomePage()) {
-            $breadcrumbs_links[] = '<a href="'.$home_url.'">'.$this->getUtils()->translate('Home', $locale).'</a>';
+            $li = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                'tag' => 'li',
+                'attributes' => ['class' => 'breadcrumb-item'],
+                ]]
+            );
+
+            $atag = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'a',
+                    'attributes' => [
+                        'class' => 'breadcrumb-link',
+                        'href' => $home_url,
+                        'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
+                    ],
+                    'text' => $this->getUtils()->translate('Home', $locale),
+                ]]
+            );
+
+            $li->addChild($atag);
+            $breadcrumbs_links->addChild($li);
         }
 
-        $breadcrumbs_html = '<nav aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item">';
         if ($menu_item instanceof Menu) {
             $breadcrumbs = explode('/', $menu_item->getBreadcrumb());
             if (count($breadcrumbs) == 0 || $breadcrumbs[count($breadcrumbs)-1] != $menu_item->getId()) {
                 $breadcrumbs[] = $menu_item->getId();
             }
 
-            array_push(
-                $breadcrumbs_links,
-                ...array_map(
-                    function ($id) use ($homepageid, $locale) {
-                        $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
+            foreach (array_map(
+                function ($id) use ($homepageid, $locale) {
+                    $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
 
-                        if ($menuItem->getRewriteId()) {
-                            /**
-                    * @var Rewrite $rewrite
-                    */
-                            $rewrite = $this->getContainer()->make(Rewrite::class)->fill($menuItem->getRewriteId());
-                            if ($rewrite->getRoute() == '/page/'.$homepageid) {
-                                $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
-                            }
+                    if ($menuItem->getRewriteId()) {
+                        /**
+                         * @var Rewrite $rewrite
+                         */
+                        $rewrite = $this->getContainer()->make(Rewrite::class)->fill($menuItem->getRewriteId());
+                        if ($rewrite->getRoute() == '/page/'.$homepageid) {
+                            $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
                         }
+                    }
 
-                        $leaf = [
-                        'title' => $menuItem->getTitle(),
-                        'href' => $menuItem->getLinkUrl(),
-                        'target' => $menuItem->getTarget(),
-                        ];
-                        return $this->_renderLink($leaf);
-                    },
-                    array_filter($breadcrumbs)
-                )
-            );
+                    $leaf = [
+                    'title' => $menuItem->getTitle(),
+                    'href' => $menuItem->getLinkUrl(),
+                    'target' => $menuItem->getTarget(),
+                    ];
+                    return $this->_renderLink($leaf);
+                },
+                array_filter($breadcrumbs)
+            ) as $atag) {
+                $li = $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                    'tag' => 'li',
+                    'attributes' => ['class' => 'breadcrumb-item'],
+                    ]]
+                );
+
+                $li->addChild($atag);
+                $breadcrumbs_links->addChild($li);
+            }
         }
-        $breadcrumbs_html .= implode('</li><li class="breadcrumb-item">', $breadcrumbs_links);
-        $breadcrumbs_html .= '</li></ol></nav>';
-        return $breadcrumbs_html;
+
+        $breadcrumbs_container = $this->getContainer()->make(TagElement::class, ['options' =>  [
+            'tag' => 'nav',
+            'attributes' => [
+                'aria-label' => 'breadcrumb',
+            ],
+        ]]);
+
+        $breadcrumbs_container->addChild($breadcrumbs_links);
+        return $breadcrumbs_container;
     }
 
     /**
@@ -103,6 +146,20 @@ class BreadCrumbs extends BaseCodeBlock
      */
     protected function _renderLink($leaf, $link_class = 'breadcrumb-link')
     {
-        return '<a class="'.$link_class.'" href="'.$leaf['href'].'"'. (($leaf['target']) ? ' target="'.$leaf['target'].'"':'') .'>'.$leaf['title'].'</a>';
+        $link_options = [
+            'tag' => 'a',
+            'attributes' => [
+                'class' => $link_class,
+                'href' => $leaf['href'],
+                'title' => $leaf['title'],
+            ],
+            'text' => $leaf['title'],
+        ];
+
+        if ($leaf['target']) {
+            $link_options['attributes']['target'] = $leaf['target'];
+        }
+
+        return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
     }
 }

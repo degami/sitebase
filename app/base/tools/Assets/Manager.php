@@ -22,6 +22,7 @@ use \App\Site\Models\RequestLog;
 use \App\Site\Routing\RouteInfo;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \App\Base\Abstracts\Models\BaseModel;
+use \Degami\Basics\Html\TagElement;
 use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
@@ -218,13 +219,21 @@ class Manager extends ContainerAwareObject
      */
     public function renderPageInlineJS()
     {
-        $output = '';
         $js = $this->generatePageJs();
         if (!empty($js)) {
-            $output .= "\n<script type=\"text/javascript\">\n".$js."\n</script>\n";
+            $options = [
+                'tag' => 'script',
+                'type' => 'text/javascript',
+                'attributes' => [
+                    'class' => '',
+                ],
+                'text' => $js,
+            ];
+
+            return $this->getContainer()->make(TagElement::class, ['options' => $options]);
         }
 
-        return $output;
+        return '';
     }
 
     /**
@@ -234,13 +243,21 @@ class Manager extends ContainerAwareObject
      */
     public function renderHeadInlineJS()
     {
-        $output = '';
         $js = $this->generateHeadJs();
         if (!empty($js)) {
-            $output .= "\n<script type=\"text/javascript\">\n".$js."\n</script>\n";
+            $options = [
+                'tag' => 'script',
+                'type' => 'text/javascript',
+                'attributes' => [
+                    'class' => '',
+                ],
+                'text' => $js,
+            ];
+
+            return $this->getContainer()->make(TagElement::class, ['options' => $options]);
         }
 
-        return $output;
+        return '';
     }
 
     /**
@@ -288,12 +305,16 @@ class Manager extends ContainerAwareObject
      */
     public function renderPageInlineCSS()
     {
-        $output = '';
         if (count($this->getCss()) > 0) {
-            $output .= '<style>'.implode("\n", $this->getCss())."</style>";
+            $options = [
+                'tag' => 'style',
+                'text' => implode("\n", $this->getCss()),
+            ];
+
+            return $this->getContainer()->make(TagElement::class, ['options' => $options]);
         }
 
-        return $output;
+        return '';
     }
 
     /**

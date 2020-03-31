@@ -16,6 +16,7 @@ use \App\Base\Abstracts\Controllers\BasePage;
 use \Psr\Container\ContainerInterface;
 use \App\Site\Models\Menu;
 use \Degami\PHPFormsApi as FAPI;
+use \Degami\Basics\Html\TagElement;
 
 /**
  * Secondary Menu Block
@@ -31,6 +32,7 @@ class SecondaryMenu extends BaseCodeBlock
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
     {
+        $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $locale = $current_page->getCurrentLocale();
         $config = array_filter(json_decode($data['config'] ?? '{}', true));
         $menu_name = $config['menu_name_'.$locale] ?? '';
@@ -38,9 +40,27 @@ class SecondaryMenu extends BaseCodeBlock
             return "";
         }
 
-        return '<nav class="secondary-menu">
-          <div class="menu">' .$this->_renderSiteMenu($this->getUtils()->getSiteMenu($menu_name, $website_id, $locale)). '</div>
-        </nav>';
+        $tree = $this->getUtils()->getSiteMenu($menu_name, $website_id, $locale);
+
+        $menu_container = $this->getContainer()->make(TagElement::class, ['options' =>  [
+            'tag' => 'div',
+            'attributes' => [
+                'class' => 'menu',
+            ],
+        ]]);
+
+        $menu_container->addChild($this->_renderSiteMenu($tree));
+
+        $out = $this->getContainer()->make(TagElement::class, ['options' =>  [
+            'tag' => 'nav',
+            'attributes' => [
+                'class' => 'secondary-menu',
+            ],
+        ]]);
+
+        $out->addChild($menu_container);
+
+        return $out;
     }
 
     /**
@@ -52,22 +72,34 @@ class SecondaryMenu extends BaseCodeBlock
      */
     protected function _renderSiteMenu($menu_tree, $parent = null)
     {
-        $out = '<ul class="navbar-nav mr-auto">';
+        $menu_list = $this->getContainer()->make(TagElement::class, ['options' =>  [
+            'tag' => 'ul',
+            'attributes' => [
+                'class' => 'navbar-nav mr-auto',
+            ],
+        ]]);
+
         foreach ($menu_tree as $leaf) {
-            $out .= '<li class="menu-item">';
-            $out .= $this->_renderMenuLink($leaf);
+            $li = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                'tag' => 'li',
+                'attributes' => ['class' => 'menu-item'],
+                ]]
+            );
+            $menu_list->addChild($li);
+
+            $li->addChild($this->_renderMenuLink($leaf));
 
             if (isset($leaf['children']) && !empty($leaf['children'])) {
-                $out .= $this->_renderMenuLink($leaf, 'submenu-elem');
+                $li->addChild($this->_renderMenuLink($leaf, 'submenu-elem'));
                 $parent_item = $leaf;
                 unset($parent_item['children']);
-                $out .= $this->_renderSiteMenu($leaf['children'], $parent_item);
+                $li->addChild($this->_renderMenuLink($leaf['children'], $parent_item));
             }
-            $out .= '</li>';
         }
-        $out .= '</ul>';
 
-        return $out;
+        return $menu_list;
     }
 
     /**
@@ -79,8 +111,21 @@ class SecondaryMenu extends BaseCodeBlock
      */
     protected function _renderMenuLink($leaf, $link_class = 'menu-elem')
     {
-        return '<a class="'.$link_class.'" href="'.$leaf['href'].'"'.
-                    (($leaf['target']) ? ' target="'.$leaf['target'].'"':'') .'>'.$leaf['title'].'</a>';
+        $link_options = [
+            'tag' => 'a',
+            'attributes' => [
+                'class' => $link_class,
+                'href' => $leaf['href'],
+                'title' => $leaf['title'],
+            ],
+            'text' => $leaf['title'],
+        ];
+
+        if ($leaf['target']) {
+            $link_options['attributes']['target'] = $leaf['target'];
+        }
+
+        return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
     }
 
     /**

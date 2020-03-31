@@ -13,7 +13,7 @@ body {
     background: $lightgrey;
     color: #636b6f;
     font-family: 'Raleway', sans-serif;
-    font-weight: 100;    
+    font-weight: 100;
 }
 
 .alert {
@@ -45,16 +45,20 @@ ul.choose-lang {
 
         }
         .link-title {
-            
+
         }
         .link-description {
-            
+
         }
     }
 }
 
 .nav-item {
     position: relative;
+}
+
+ol.breadcrumb {
+    width: 100%;
 }
 
 ul.breadcrumbs {

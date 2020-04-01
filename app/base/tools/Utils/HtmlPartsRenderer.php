@@ -423,7 +423,32 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item',
                     $current_base.'?'.http_build_query($query_params + ['page' =>($current_page-1)]),
-                    '<span aria-hidden="true">&laquo;</span><span class="sr-only">'.$this->getUtils()->translate('Previous', $controller->getCurrentLocale()).'</span>'
+                    $this->getContainer()->make(
+                        TagList::class
+                    )->addChild(
+                        $this->getContainer()->make(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'span',
+                                'attributes' => [
+                                    'class' => '',
+                                     'aria-hidden'=>"true",
+                                ],
+                                'text' => '&laquo;',
+                            ]]
+                        )
+                    )->addChild(
+                        $this->getContainer()->make(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'span',
+                                'attributes' => [
+                                    'class' => 'sr-only',
+                                ],
+                                'text' => $this->getUtils()->translate('Previous', $controller->getCurrentLocale()),
+                            ]]
+                        )
+                    )
                 )
             );
         }
@@ -433,7 +458,16 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item disabled',
                     null,
-                    '<span class="page-link">...</span>'
+                    $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'span',
+                            'attributes' => [
+                                'class' => 'page-link',
+                            ],
+                            'text' => '...',
+                        ]]
+                    )
                 )
             );
         }
@@ -453,7 +487,16 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item disabled',
                     null,
-                    '<span class="page-link">...</span>'
+                    $this->getContainer()->make(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'span',
+                            'attributes' => [
+                                'class' => 'page-link',
+                            ],
+                            'text' => '...',
+                        ]]
+                    )
                 )
             );
         }
@@ -464,7 +507,32 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item',
                     $current_base.'?'.http_build_query($query_params + ['page' =>($current_page + 1)]),
-                    '<span aria-hidden="true">&raquo;</span><span class="sr-only">'.$this->getUtils()->translate('Next', $controller->getCurrentLocale()).'</span>'
+                    $this->getContainer()->make(
+                        TagList::class
+                    )->addChild(
+                        $this->getContainer()->make(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'span',
+                                'attributes' => [
+                                    'class' => '',
+                                     'aria-hidden'=>"true",
+                                ],
+                                'text' => '&raquo;',
+                            ]]
+                        )
+                    )->addChild(
+                        $this->getContainer()->make(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'span',
+                                'attributes' => [
+                                    'class' => 'sr-only',
+                                ],
+                                'text' => $this->getUtils()->translate('Next', $controller->getCurrentLocale()),
+                            ]]
+                        )
+                    )
                 )
             );
         }

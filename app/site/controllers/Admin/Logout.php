@@ -67,7 +67,7 @@ class Logout extends AdminPage
         );
 
         return RedirectResponse::create(
-            $this->getUrl("frontend.login"),
+            $this->getUrl("admin.login"),
             302,
             [
             "Authorization" => null,

@@ -41,8 +41,15 @@ abstract class FrontendPage extends BaseHtmlPage
     {
         parent::__construct($container);
 
+        $this->getTemplates()->setDirectory(App::getDir(App::TEMPLATES).DS.'frontend');
+
+
         if (!$this->getTemplates()->getFolders()->exists('frontend')) {
             $this->getTemplates()->addFolder('frontend', App::getDir(App::TEMPLATES).DS.'frontend');
+        }
+
+        if (!$this->getTemplates()->getFolders()->exists('theme') && $this->getSiteData()->getThemeName() != null) {
+            $this->getTemplates()->addFolder('theme', App::getDir(App::TEMPLATES).DS.'frontend'.DS.$this->getSiteData()->getThemeName(), true);
         }
 
         foreach ($this->getUtils()->getPageRegions() as $region) {
@@ -116,7 +123,15 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     protected function prepareTemplate()
     {
-        $template = $this->getTemplates()->make('frontend::'.$this->getTemplateName());
+
+        if ($this->getTemplates()->getFolders()->exists('theme')) {
+            $template = $this->getTemplates()->make('theme::'.$this->getTemplateName());
+        } else {
+            // fallback to "frontend"
+            $template = $this->getTemplates()->make('frontend::'.$this->getTemplateName());
+        }
+
+
         $template->data($this->getTemplateData()+$this->getBaseTemplateData());
         $locale = $template->data()['locale'] ?? $this->getCurrentLocale();
 

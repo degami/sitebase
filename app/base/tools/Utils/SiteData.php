@@ -39,6 +39,8 @@ class SiteData extends ContainerAwareObject
     const SITE_EMAIL_PATH = 'app/global/site_mail_address';
     const CONFIGURATION_CACHE_KEY = 'site.configuration';
     const MENU_LOGO_PATH = 'app/frontend/menu_with_logo';
+    const THEMENAME_PATH = 'app/frontend/themename';
+    const DEFAULT_LOCALE = 'en';
 
     /**
      * gets current website id
@@ -191,6 +193,10 @@ class SiteData extends ContainerAwareObject
             $locale = $this->getApp()->getCurrentLocale();
         }
 
+        if ($locale == null) {
+            $locale = static::DEFAULT_LOCALE;
+        }
+
         $cached_configuration = $this->getCachedConfig();
         if (isset($cached_configuration[$website_id][$config_path][$locale])) {
             return $cached_configuration[$website_id][$config_path][$locale];
@@ -219,7 +225,7 @@ class SiteData extends ContainerAwareObject
     public function getHomePageId($website_id = null, $locale = null)
     {
         if ($locale == null) {
-            $locale = 'en';
+            $locale = static::DEFAULT_LOCALE;
         }
 
         return  $this->getConfigValue(self::HOMEPAGE_ID_PATH, $website_id, $locale);
@@ -278,9 +284,19 @@ class SiteData extends ContainerAwareObject
      */
     public function getMainMenuName($website_id = null, $locale = null)
     {
-        if ($locale == null) {
-            $locale = 'en';
-        }
-        return $this->getSiteData()->getConfigValue(self::MAINMENU_PATH, $website_id, $locale);
+        return $this->getConfigValue(self::MAINMENU_PATH, $website_id, $locale);
+    }
+
+
+    /**
+     * gets main menu name
+     *
+     * @param  integer $website_id
+     * @param  string  $locale
+     * @return string
+     */
+    public function getThemeName($website_id = null, $locale = null)
+    {
+        return $this->getConfigValue(self::THEMENAME_PATH, $website_id, $locale);
     }
 }

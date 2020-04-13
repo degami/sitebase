@@ -88,7 +88,7 @@ class Cron extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'cron';
+        return 'base_admin_page';
     }
 
     /**

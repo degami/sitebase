@@ -30,7 +30,7 @@ class Websites extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'websites';
+        return 'base_admin_page';
     }
 
     /**

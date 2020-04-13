@@ -32,7 +32,7 @@ class Pages extends AdminManageFrontendModelsPage
      */
     protected function getTemplateName()
     {
-        return 'pages';
+        return 'base_admin_page';
     }
 
     /**

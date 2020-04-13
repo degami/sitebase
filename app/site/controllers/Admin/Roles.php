@@ -28,7 +28,7 @@ class Roles extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'roles';
+        return 'base_admin_page';
     }
 
     /**

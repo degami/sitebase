@@ -30,7 +30,7 @@ class News extends AdminManageFrontendModelsPage
      */
     protected function getTemplateName()
     {
-        return 'news';
+        return 'base_admin_page';
     }
 
     /**

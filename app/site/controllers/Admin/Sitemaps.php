@@ -59,7 +59,7 @@ class Sitemaps extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'sitemaps';
+        return 'base_admin_page';
     }
 
     /**

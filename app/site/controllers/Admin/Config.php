@@ -28,7 +28,7 @@ class Config extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'config';
+        return 'base_admin_page';
     }
 
     /**

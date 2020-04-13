@@ -61,7 +61,7 @@ class Blocks extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'blocks';
+        return 'base_admin_page';
     }
 
     /**

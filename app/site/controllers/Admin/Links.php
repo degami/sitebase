@@ -31,7 +31,7 @@ class Links extends AdminManageFrontendModelsPage
      */
     protected function getTemplateName()
     {
-        return 'links';
+        return 'base_admin_page';
     }
 
     /**

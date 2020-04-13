@@ -31,7 +31,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      */
     protected function getTemplateName()
     {
-        return 'taxonomy';
+        return 'base_admin_page';
     }
 
     /**

@@ -39,7 +39,7 @@ class MediaRewrites extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'media_rewrites';
+        return 'base_admin_page';
     }
 
     /**

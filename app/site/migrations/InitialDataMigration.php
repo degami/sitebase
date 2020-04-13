@@ -218,7 +218,7 @@ class InitialDataMigration extends BaseMigration
             'app/frontend/menu_with_logo' => ['locale' => null, 'value' => 1],
             'app/backend/log_requests' => ['locale' => null, 'value' => 1],
             'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
-            'app/frontend/themename' => ['locale' => $website_model->default_locale, 'value' => 'theme'],
+            'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
         ] as $path => $info) {
             $configuration_model = \App\Site\Models\Configuration::new($this->getContainer());
             $configuration_model->website_id = $website_model->id;

@@ -115,6 +115,15 @@ class Pages extends AdminManageFrontendModelsPage
                     $templates[$key] = basename($template);
                 }
 
+                if (($theme_name = $this->getSiteData()->getThemeName($page->getWebsiteId())) != null) {
+                    $theme_dir = App::getDir(App::TEMPLATES).DS.'frontend'.DS.$theme_name.DS;
+                    foreach (glob($theme_dir.'pages'.DS.'*.php') as $template) {
+                        $key = str_replace($theme_dir, "", $template);
+                        $key = preg_replace("/\.php$/i", "", $key);
+                        $templates[$key] = basename($template)." (".$theme_name.")";
+                    }
+                }
+
                 $page_title = $page_content = $page_template_name = '';
                 if ($page->isLoaded()) {
                     $page_title = $page->title;

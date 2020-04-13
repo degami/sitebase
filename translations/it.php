@@ -100,4 +100,5 @@ return [
     'Show Flag' => 'Mostra Bandiera',
     'News' => 'Novit&agrave;',
     'Date' => 'Data',
+    'Search' => 'Cerca',
 ];

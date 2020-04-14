@@ -74,7 +74,7 @@ class Logs extends AdminPage
                         $log = $this->getContainer()->call([RequestLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
                         $data = $this->getContainer()->call([RequestLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
-                        $header = ['id', 'url', 'method', 'user_id', 'ip_address', 'created_at', 'updated_at'];
+                        $header = ['id', 'url', 'method', 'response_code', 'user_id', 'ip_address', 'created_at', 'updated_at'];
                     }
 
                     break;

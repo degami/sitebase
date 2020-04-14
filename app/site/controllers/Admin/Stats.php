@@ -53,11 +53,11 @@ class Stats extends AdminPage
     {
         $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind').' '.$this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getRouting()->getUrl('admin.dashboard'));
 
-        $stmt = $this->getPdo()->prepare('SELECT ip_address, COUNT(id) AS cnt FROM request_log GROUP BY ip_address ORDER BY cnt DESC LIMIT 10');
+        $stmt = $this->getDb()->prepare('SELECT ip_address, COUNT(id) AS cnt FROM request_log GROUP BY ip_address ORDER BY cnt DESC LIMIT 10');
         $stmt->execute();
         $top_visitors = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 
-        $stmt = $this->getPdo()->prepare('SELECT url, COUNT(id) AS cnt FROM request_log GROUP BY url ORDER BY cnt DESC LIMIT 10');
+        $stmt = $this->getDb()->prepare('SELECT url, COUNT(id) AS cnt FROM request_log GROUP BY url ORDER BY cnt DESC LIMIT 10');
         $stmt->execute();
         $most_viewed = $stmt->fetchAll(\PDO::FETCH_ASSOC);
 

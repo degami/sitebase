@@ -59,6 +59,9 @@ abstract class BasePage extends ContainerAwareObject
             ]
         );
         $this->response = $this->getContainer()->make(Response::class);
+
+        // let App know this is the controller object
+        $this->getApp()->getRouteInfo()->setControllerObject($this);
     }
 
     /**

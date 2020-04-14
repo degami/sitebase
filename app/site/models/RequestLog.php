@@ -26,6 +26,7 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method string getMethod()
  * @method string getUserId()
  * @method string getIpAddress()
+ * @method int getResponseCode()
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
@@ -48,7 +49,7 @@ class RequestLog extends BaseModel
 
         $this->setWebsiteId($this->matchWebsite($request->getHost()));
 
-        if ($controller != null && $controller->hasLoggedUser()) {
+        if ($controller instanceof BasePage && $controller->hasLoggedUser()) {
             $this->setUserId($controller->getCurrentUser()->id);
         }
 

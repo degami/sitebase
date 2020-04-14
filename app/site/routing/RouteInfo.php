@@ -14,6 +14,7 @@ namespace App\Site\Routing;
 use \Psr\Container\ContainerInterface;
 use \FastRoute\Dispatcher;
 use \App\Site\Models\Rewrite;
+use \App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * Route Information Class
@@ -69,6 +70,11 @@ class RouteInfo
      * @var integer|null rewrite id
      */
     protected $rewrite;
+
+    /**
+     * @var BasePage|null controller object instance
+     */
+    protected $controller_object = null;
 
     /**
      * class constructor
@@ -373,5 +379,42 @@ class RouteInfo
     public function toString()
     {
         return implode("::", $this->handler)."(".serialize($this->vars).")";
+    }
+
+    /**
+     * @return BasePage|null controller object instance
+     */
+    public function getControllerObject()
+    {
+        return $this->controller_object;
+    }
+
+    /**
+     * @param BasePage|null controller object instance $controller_object
+     *
+     * @return self
+     */
+    public function setControllerObject(BasePage $controller_object)
+    {
+        $this->controller_object = $controller_object;
+
+        return $this;
+    }
+
+
+    public function getData()
+    {
+        return [
+            'dispatcher_info' => $this->dispatcher_info,
+            'status' => $this->status,
+            'handler' => $this->handler,
+            'allowed_methods' => $this->allowed_methods,
+            'vars' => $this->vars,
+            'uri' => $this->uri,
+            'http_method' => $this->http_method,
+            'route' => $this->route,
+            'route_name' => $this->route_name,
+            'rewrite' => $this->rewrite,
+        ];
     }
 }

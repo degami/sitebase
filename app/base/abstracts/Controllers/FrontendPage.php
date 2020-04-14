@@ -188,6 +188,7 @@ abstract class FrontendPage extends BaseHtmlPage
             try {
                 $log = $this->getContainer()->make(RequestLog::class);
                 $log->fillWithRequest($this->getRequest(), $this);
+                $log->setResponseCode($return instanceof Response ? $return->getStatusCode() : 200);
                 $log->persist();
             } catch (Exception $e) {
                 $this->getUtils()->logException($e, "Can't write RequestLog");

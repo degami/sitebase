@@ -49,6 +49,7 @@ class CreateRequestLogTableMigration extends DBMigration
             ->addColumn('url', 'VARCHAR', [1024])
             ->addColumn('method', 'VARCHAR', [10])
             ->addColumn('ip_address', 'VARCHAR', [32])
+            ->addColumn('response_code', 'INT', null, ['UNSIGNED'])
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'], 'NULL')
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')

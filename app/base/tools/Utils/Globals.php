@@ -24,6 +24,7 @@ use \App\Site\Routing\RouteInfo;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Controllers\Dummy\NullPage;
+use \App\App;
 use \LessQL\Row;
 use \Swift_Message;
 use \Exception;
@@ -138,10 +139,26 @@ class Globals extends ContainerAwareObject
      *
      * @param  integer $error_code
      * @param  array   $template_data
+     * @param  RouteInfo|null $route_info
      * @return Response
      */
     public function errorPage($error_code, $template_data = [])
     {
+        if ($this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
+            $route_info = $this->getApp()->getRouteInfo();
+            $controller = $route_info->getControllerObject();
+            if (!$route_info->isAdminRoute()) {
+                try {
+                    $log = $this->getContainer()->make(RequestLog::class);
+                    $log->fillWithRequest(Request::createFromGlobals(), $controller);
+                    $log->setResponseCode($error_code);
+                    $log->persist();
+                } catch (Exception $e) {
+                    $this->getUtils()->logException($e, "Can't write RequestLog");
+                }
+            }
+        }
+
         switch ($error_code) {
             case 403:
             case 404:

@@ -51,6 +51,21 @@ class Index extends AdminPage
     }
 
     /**
+     * before render hook
+     *
+     * @return Response|self
+     */
+    protected function beforeRender()
+    {
+        if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
+            return $this->doRedirect($this->getUrl('admin.login'));
+//            return $this->getUtils()->errorPage(403);
+        }
+
+        return parent::beforeRender();
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @param  RouteInfo|null $route_info
@@ -59,10 +74,6 @@ class Index extends AdminPage
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
-        if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
-            return $this->getUtils()->errorPage(403);
-        }
-
         return $this->doRedirect($this->getUrl('admin.dashboard'));
     }
 }

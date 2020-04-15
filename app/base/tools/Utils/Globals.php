@@ -134,6 +134,23 @@ class Globals extends ContainerAwareObject
         );
     }
 
+
+    protected function logRequestIfNeeded($status_code)
+    {
+        if ($this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
+            $route_info = $this->getApp()->getRouteInfo();
+            $controller = $route_info->getControllerObject();
+            try {
+                $log = $this->getContainer()->make(RequestLog::class);
+                $log->fillWithRequest(Request::createFromGlobals(), $controller);
+                $log->setResponseCode($status_code);
+                $log->persist();
+            } catch (Exception $e) {
+                $this->logException($e, "Can't write RequestLog");
+            }
+        }
+    }
+
     /**
      * return an error page
      *
@@ -144,19 +161,16 @@ class Globals extends ContainerAwareObject
      */
     public function errorPage($error_code, $template_data = [])
     {
-        if ($this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
-            $route_info = $this->getApp()->getRouteInfo();
-            $controller = $route_info->getControllerObject();
-            if (!$route_info->isAdminRoute()) {
-                try {
-                    $log = $this->getContainer()->make(RequestLog::class);
-                    $log->fillWithRequest(Request::createFromGlobals(), $controller);
-                    $log->setResponseCode($error_code);
-                    $log->persist();
-                } catch (Exception $e) {
-                    $this->getUtils()->logException($e, "Can't write RequestLog");
-                }
-            }
+        $this->logRequestIfNeeded($error_code);
+
+        if (!is_array($template_data)) {
+            $template_data = [$template_data];
+        }
+        if (!isset($template_data['controller'])) {
+            $template_data['controller'] = $this->getContainer()->make(NullPage::class);
+        }
+        if (!isset($template_data['body_class'])) {
+            $template_data['body_class'] = 'error';
         }
 
         switch ($error_code) {
@@ -164,16 +178,31 @@ class Globals extends ContainerAwareObject
             case 404:
             case 405:
                 $template = $this->getTemplates()->make('errors::'.$error_code);
-                $template_data['controller'] = $this->getContainer()->make(NullPage::class);
-                if (!isset($template_data['body_class'])) {
-                    $template_data['body_class'] = 'error';
-                }
                 $template->data($template_data);
 
                 return (new Response(
                     $template->render(),
                     $error_code
                 ));
+            case 503:
+                $template = $this->getTemplates()->make('errors::offline');
+                $template_data['body_class'] = 'manteinance';
+                $template->data($template_data);
+
+                return (new Response(
+                    $template->render(),
+                    $error_code
+                ));
+        }
+
+        if ($error_code == 500 && isset($template_data['e'])) {
+            $template = $this->getTemplates()->make('errors::exception');
+            $template->data($template_data);
+
+            return (new Response(
+                $template->render(),
+                500
+            ));
         }
 
         return (new Response(
@@ -190,18 +219,11 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionPage(\Exception $exception)
     {
-        $template = $this->getTemplates()->make('errors::exception');
         $template_data = [
             'e' => $exception,
-            'controller' =>  $this->getContainer()->make(NullPage::class),
-            'body_class' => 'error',
         ];
-        $template->data($template_data);
 
-        return (new Response(
-            $template->render(),
-            500
-        ));
+        return $this->getErrorPage(500, $template_data, 'errors::exception');
     }
 
     /**
@@ -212,6 +234,8 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionJson(\Exception $exception)
     {
+        $this->logRequestIfNeeded(500);
+
         if ($this->getEnv('DEBUG')) {
             $content = [
                 'success' => false,
@@ -240,6 +264,8 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionXML(\Exception $exception)
     {
+        $this->logRequestIfNeeded(500);
+
         if ($this->getEnv('DEBUG')) {
             $content = [
                 'success' => false,
@@ -268,17 +294,7 @@ class Globals extends ContainerAwareObject
      */
     public function offlinePage()
     {
-        $template = $this->getTemplates()->make('errors::offline');
-        $template_data = [
-            'controller' =>  $this->getContainer()->make(NullPage::class),
-            'body_class' => 'manteinance',
-        ];
-        $template->data($template_data);
-
-        return (new Response(
-            $template->render(),
-            500
-        ));
+        return $this->errorPage(503);
     }
 
     /**

@@ -53,18 +53,18 @@ class Stats extends AdminPage
     {
         $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind').' '.$this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getRouting()->getUrl('admin.dashboard'));
 
-        $stmt = $this->getDb()->prepare('SELECT ip_address, COUNT(id) AS cnt FROM request_log GROUP BY ip_address ORDER BY cnt DESC LIMIT 10');
-        $stmt->execute();
-        $top_visitors = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        $stmt = $this->getDb()->prepare('SELECT url, COUNT(id) AS cnt FROM request_log GROUP BY url ORDER BY cnt DESC LIMIT 10');
-        $stmt->execute();
-        $most_viewed = $stmt->fetchAll(\PDO::FETCH_ASSOC);
-
-        $this->templateData = [
-            'top_visitors' => $top_visitors,
-            'most_viewed' => $most_viewed,
+        $queries = [
+            'top_visitors' => 'SELECT ip_address, COUNT(id) AS cnt FROM request_log GROUP BY ip_address ORDER BY cnt DESC LIMIT 10',
+            'most_viewed' => 'SELECT url, COUNT(id) AS cnt FROM request_log GROUP BY url ORDER BY cnt DESC LIMIT 10',
+            'top_errors' => 'SELECT response_code, url, ip_address, COUNT(id) AS cnt FROM request_log WHERE response_code NOT IN (200, 301, 302) GROUP BY url, response_code, ip_address ORDER BY cnt DESC LIMIT 10',
         ];
+
+        foreach ($queries as $key => $query) {
+            $stmt = $this->getDb()->prepare($query);
+            $stmt->execute();
+            $this->templateData[$key] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+        }
+
         return $this->templateData;
     }
 }

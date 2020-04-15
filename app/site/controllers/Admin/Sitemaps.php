@@ -29,32 +29,6 @@ class Sitemaps extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param ContainerInterface $container
-     */
-   /*public function __construct(ContainerInterface $container)
-    {
-        AdminFormPage::__construct($container);
-        $this->page_title = 'Sitemaps';
-        if ($this->templateData['action'] == 'list') {
-            if ($this->templateData['action'] == 'list') {
-                $this->addNewButton();
-            } else {
-                $this->addBackButton();
-            }
-            $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], ['order' => $this->getRequest()->query->get('order')]);
-
-            $this->templateData += [
-                'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
-                'total' => $data['total'],
-                'current_page' => $data['page'],
-                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
-            ];
-        }
-    }*/
-
-    /**
-     * {@inheritdocs}
-     *
      * @return string
      */
     protected function getTemplateName()

@@ -15,6 +15,7 @@ use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\RequestLog;
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \Exception;
@@ -29,9 +30,9 @@ abstract class BaseRestPage extends BasePage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        parent::__construct($container);
+        parent::__construct($container, $request);
         $this->response = $this->getContainer()->get(JsonResponse::class);
     }
 

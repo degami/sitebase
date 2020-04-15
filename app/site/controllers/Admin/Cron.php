@@ -12,6 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
@@ -32,9 +33,9 @@ class Cron extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        AdminFormPage::__construct($container);
+        AdminFormPage::__construct($container, $request);
         $this->page_title = 'Cron Tasks';
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
             $taskClasses = ClassFinder::getClassesInNamespace('App\Site\Cron\Tasks');
@@ -75,7 +76,7 @@ class Cron extends AdminManageModelsPage
                 }
             }
         }
-        parent::__construct($container);
+        parent::__construct($container, $request);
         $this->templateData += [
             'last_beat' => $this->getLastHeartBeat(),
         ];

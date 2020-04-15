@@ -159,7 +159,7 @@ class Globals extends ContainerAwareObject
      * @param  RouteInfo|null $route_info
      * @return Response
      */
-    public function errorPage($error_code, $template_data = [])
+    public function errorPage($error_code, $template_data = [], $template_name = null)
     {
         $this->logRequestIfNeeded($error_code);
 
@@ -177,7 +177,7 @@ class Globals extends ContainerAwareObject
             case 403:
             case 404:
             case 405:
-                $template = $this->getTemplates()->make('errors::'.$error_code);
+                $template = $this->getTemplates()->make($template_name ?: 'errors::'.$error_code);
                 $template->data($template_data);
 
                 return (new Response(
@@ -185,7 +185,7 @@ class Globals extends ContainerAwareObject
                     $error_code
                 ));
             case 503:
-                $template = $this->getTemplates()->make('errors::offline');
+                $template = $this->getTemplates()->make($template_name ?: 'errors::offline');
                 $template_data['body_class'] = 'manteinance';
                 $template->data($template_data);
 
@@ -196,7 +196,7 @@ class Globals extends ContainerAwareObject
         }
 
         if ($error_code == 500 && isset($template_data['e'])) {
-            $template = $this->getTemplates()->make('errors::exception');
+            $template = $this->getTemplates()->make($template_name ?: 'errors::exception');
             $template->data($template_data);
 
             return (new Response(
@@ -223,8 +223,25 @@ class Globals extends ContainerAwareObject
             'e' => $exception,
         ];
 
-        return $this->getErrorPage(500, $template_data, 'errors::exception');
+        return $this->errorPage(500, $template_data, 'errors::exception');
     }
+
+
+    /**
+     * returns a blocked ip exception error page
+     *
+     * @param  Request $request
+     * @return Response
+     */
+    public function blockedIpPage(Request $request)
+    {
+        $template_data = [
+            'ip_addr' => $request->getClientIp(),
+        ];
+
+        return $this->errorPage(503, $template_data, 'errors::blocked');
+    }
+
 
     /**
      * returns an exception error json

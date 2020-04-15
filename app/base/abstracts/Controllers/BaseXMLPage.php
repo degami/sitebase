@@ -14,6 +14,7 @@ namespace App\Base\Abstracts\Controllers;
 use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Spatie\ArrayToXml\ArrayToXml;
 use \Exception;
@@ -28,9 +29,9 @@ abstract class BaseXMLPage extends BasePage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        parent::__construct($container);
+        parent::__construct($container, $request);
         $this->response = $this->getContainer()->get(Response::class);
     }
 

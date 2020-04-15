@@ -12,6 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\MediaElementRewrite;
@@ -26,9 +27,9 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        parent::__construct($container);
+        parent::__construct($container, $request);
         $this->page_title = 'Rewrite / Media';
     }
 

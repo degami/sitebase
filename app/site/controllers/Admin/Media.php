@@ -12,6 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \Symfony\Component\HttpFoundation\Response;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
@@ -31,11 +32,11 @@ class Media extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        AdminFormPage::__construct($container);
+        AdminFormPage::__construct($container, $request);
         if ($this->templateData['action'] == 'list') {
-            parent::__construct($container);
+            parent::__construct($container, $request);
         } elseif ($this->templateData['action'] == 'usage') {
             $media = $this->getContainer()->make(MediaElement::class)->fill($this->getRequest()->get('media_id'));
             $elem_data = $media->getData();

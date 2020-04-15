@@ -12,6 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
 use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
@@ -40,9 +41,9 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        AdminFormPage::__construct($container);
+        AdminFormPage::__construct($container, $request);
         $this->page_title = 'Contact Forms';
         if ($this->templateData['action'] == 'list' || $this->templateData['action'] == 'submissions') {
             if ($this->templateData['action'] == 'list') {

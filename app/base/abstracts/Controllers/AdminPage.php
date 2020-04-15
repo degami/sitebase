@@ -11,6 +11,7 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Traits\AdminTrait;
@@ -45,11 +46,11 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
         $this->page_title = ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
 
-        parent::__construct($container);
+        parent::__construct($container, $request);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
             $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES).DS.'admin');
         }

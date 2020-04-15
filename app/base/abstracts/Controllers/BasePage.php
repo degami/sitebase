@@ -47,11 +47,12 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
         parent::__construct($container);
-        $this->request = Request::createFromGlobals();
-        // dispatch "before_send" event
+        $this->request = $request ?: Request::createFromGlobals();
+
+        // dispatch "request_created" event
         $this->getApp()->event(
             'request_created',
             [

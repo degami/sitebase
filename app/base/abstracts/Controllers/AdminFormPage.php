@@ -12,6 +12,7 @@
 namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Degami\PHPFormsApi as FAPI;
 use \App\App;
@@ -26,9 +27,9 @@ abstract class AdminFormPage extends AdminPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        parent::__construct($container);
+        parent::__construct($container, $request);
         $this->templateData = [
             'action' => $this->getRequest()->get('action') ?? 'list',
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())

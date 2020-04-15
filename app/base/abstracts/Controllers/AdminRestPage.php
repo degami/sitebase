@@ -14,6 +14,7 @@ namespace App\Base\Abstracts\Controllers;
 use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \App\Base\Traits\AdminTrait;

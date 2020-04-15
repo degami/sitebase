@@ -11,6 +11,7 @@
  */
 namespace App;
 
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \FastRoute\Dispatcher;
 use \Psr\Container\ContainerInterface;
@@ -21,6 +22,7 @@ use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \App\Base\Exceptions\OfflineException;
+use \App\Base\Exceptions\BlockedIpException;
 use \Exception;
 
 /**
@@ -62,6 +64,11 @@ class App extends ContainerAwareObject
     protected $route_info = null;
 
     /**
+     * @var array blocked ips list
+     */
+    protected $blocked_ips = [];
+
+    /**
      * class constructor
      */
     public function __construct()
@@ -76,6 +83,23 @@ class App extends ContainerAwareObject
 
             $builder = new \DI\ContainerBuilder();
             $builder->addDefinitions($this->getDir(self::CONFIG) . DS . 'di.php');
+
+            if (is_file($this->getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
+                $this->blocked_ips = include($this->getDir(self::CONFIG) . DS . 'blocked_ips.php');
+                if (!is_array($this->blocked_ips)) {
+                    $this->blocked_ips = [$this->blocked_ips];
+                }
+                $this->blocked_ips = array_filter($this->blocked_ips, function ($el) {
+                    return is_string($el);
+                });
+
+                // do not block localhost
+                foreach (['127.0.0.1', '::1', 'localhost'] as $unblock) {
+                    if (in_array($unblock, $this->blocked_ips)) {
+                        unset($this->blocked_ips[array_search($unblock, $this->blocked_ips)]);
+                    }
+                }
+            }
 
             /**
              * @var ContainerInterface $this->container
@@ -132,6 +156,7 @@ class App extends ContainerAwareObject
     public function bootstrap()
     {
         $response = null;
+        $request = Request::createFromGlobals();
         try {
             $website = null;
             if (php_sapi_name() == 'cli-server') {
@@ -151,6 +176,11 @@ class App extends ContainerAwareObject
 
             $this->setRouteInfo($routeInfo);
 
+            if ($this->isBlocked($request->getClientIp())) {
+                // if blocked stop immediately
+                throw new BlockedIpException();
+            }
+
             switch ($routeInfo->getStatus()) {
                 case Dispatcher::NOT_FOUND:
                     // ... 404 Not Found
@@ -167,6 +197,9 @@ class App extends ContainerAwareObject
 
                     // inject container into vars
                     $vars['container'] = $this->getContainer();
+
+                    // inject request object into vars
+                    $vars['request'] = $request;
 
                     // inject routeInfo
                     $vars['route_info'] = $this->getRouteInfo();
@@ -190,6 +223,8 @@ class App extends ContainerAwareObject
             }
         } catch (OfflineException $e) {
             $response = $this->getUtils()->offlinePage();
+        } catch (BlockedIpException $e) {
+            $response = $this->getUtils()->blockedIpPage($request);
         } catch (Exception $e) {
             $response = $this->getUtils()->exceptionPage($e);
         }
@@ -215,6 +250,16 @@ class App extends ContainerAwareObject
     protected function isSiteOffline()
     {
         return is_file(static::getDir(static::APP).DS.'offline.flag');
+    }
+
+    /**
+     * checks if ip address is blocked
+     *
+     * @return boolean
+     */
+    protected function isBlocked($ip_address)
+    {
+        return in_array($ip_address, $this->blocked_ips);
     }
 
     /**

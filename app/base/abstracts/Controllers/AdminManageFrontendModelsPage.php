@@ -22,16 +22,6 @@ use \App\App;
  */
 abstract class AdminManageFrontendModelsPage extends AdminManageModelsPage
 {
-    /**
-     * {@inheriydocs}
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        parent::__construct($container);
-    }
-
     protected function addFrontendFormElements(FAPI\Form $form, &$form_state, $form_elements = ['url', 'website_id', 'locale'])
     {
         $object = $this->getObject();

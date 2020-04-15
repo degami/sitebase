@@ -12,6 +12,7 @@
 namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \App\App;
 use \App\Site\Models\RequestLog;
 use \App\Site\Routing\RouteInfo;
@@ -37,9 +38,9 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        parent::__construct($container);
+        parent::__construct($container, $request);
 
         $this->getTemplates()->setDirectory(App::getDir(App::TEMPLATES).DS.'frontend');
 

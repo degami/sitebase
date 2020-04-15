@@ -12,6 +12,7 @@
 namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \App\Site\Routing\RouteInfo;
 use \Degami\PHPFormsApi as FAPI;
@@ -32,9 +33,9 @@ abstract class FormPage extends FrontendPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        parent::__construct($container);
+        parent::__construct($container, $request);
 
         $this->templateData += [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])

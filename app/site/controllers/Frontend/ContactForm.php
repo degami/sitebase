@@ -20,6 +20,7 @@ use \App\Base\Abstracts\Controllers\FrontendPage;
 use \App\Site\Models\Contact;
 use \App\Site\Models\ContactSubmission;
 use \App\Site\Routing\RouteInfo;
+use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \DateTime;
 use \Exception;
@@ -37,12 +38,12 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
         // construct must be override in order to skip
         // form construction
 
-        FrontendPage::__construct($container);
+        FrontendPage::__construct($container, $request);
     }
 
 

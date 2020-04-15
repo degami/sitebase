@@ -12,6 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use \Psr\Container\ContainerInterface;
+use \Symfony\Component\HttpFoundation\Request;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
@@ -28,9 +29,9 @@ class Blocks extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
+    public function __construct(ContainerInterface $container, Request $request = null)
     {
-        AdminFormPage::__construct($container);
+        AdminFormPage::__construct($container, $request);
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
             $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');
 
@@ -51,7 +52,7 @@ class Blocks extends AdminManageModelsPage
             }
         }
 
-        parent::__construct($container);
+        parent::__construct($container, $request);
     }
 
     /**

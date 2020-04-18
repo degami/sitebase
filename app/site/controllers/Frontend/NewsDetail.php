@@ -81,7 +81,7 @@ class NewsDetail extends FrontendPageWithObject
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
         if (!($this->getObject() instanceof News && $this->getObject()->isLoaded())) {
-            return $this->getUtils()->errorPage(404);
+            return $this->getUtils()->errorPage(404, $this->getRequest());
         }
 
         return parent::process($route_info);

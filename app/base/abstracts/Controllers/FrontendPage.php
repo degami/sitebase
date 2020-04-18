@@ -168,7 +168,7 @@ abstract class FrontendPage extends BaseHtmlPage
     protected function beforeRender()
     {
         if (!$this->getRouteInfo()->isAdminRoute() && !$this->checkPermission('view_site')) {
-            return $this->getUtils()->errorPage(403);
+            return $this->getUtils()->errorPage(403, $this->getRequest());
         }
 
         return parent::beforeRender();

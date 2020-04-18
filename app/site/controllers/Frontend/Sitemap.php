@@ -63,7 +63,7 @@ class Sitemap extends BaseXMLPage
         }
 
         if (!($sitemap instanceof SitemapModel && $sitemap->isLoaded())) {
-            return $this->getUtils()->errorPage(404);
+            return $this->getUtils()->errorPage(404, $this->getRequest());
         }
 
         try {

@@ -74,7 +74,7 @@ abstract class AdminPage extends BaseHtmlPage
     protected function beforeRender()
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
-            return $this->getUtils()->errorPage(403);
+            return $this->getUtils()->errorPage(403, $this->getRequest());
         }
 
         return parent::beforeRender();

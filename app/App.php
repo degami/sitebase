@@ -184,12 +184,12 @@ class App extends ContainerAwareObject
             switch ($routeInfo->getStatus()) {
                 case Dispatcher::NOT_FOUND:
                     // ... 404 Not Found
-                    $this->getUtils()->errorPage(404)->send();
+                    $this->getUtils()->errorPage(404, $request)->send();
                     break;
                 case Dispatcher::METHOD_NOT_ALLOWED:
                     $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
                     // ... 405 Method Not Allowed
-                    $this->getUtils()->errorPage(405, ['allowedMethods' => $allowedMethods])->send();
+                    $this->getUtils()->errorPage(405, $request, ['allowedMethods' => $allowedMethods])->send();
                     break;
                 case Dispatcher::FOUND:
                     $handler = $this->getRouteInfo()->getHandler();
@@ -222,11 +222,11 @@ class App extends ContainerAwareObject
                     break;
             }
         } catch (OfflineException $e) {
-            $response = $this->getUtils()->offlinePage();
+            $response = $this->getUtils()->offlinePage($request);
         } catch (BlockedIpException $e) {
             $response = $this->getUtils()->blockedIpPage($request);
         } catch (Exception $e) {
-            $response = $this->getUtils()->exceptionPage($e);
+            $response = $this->getUtils()->exceptionPage($e, $request);
         }
 
         // dispatch "before_send" event
@@ -257,7 +257,7 @@ class App extends ContainerAwareObject
      *
      * @return boolean
      */
-    protected function isBlocked($ip_address)
+    public function isBlocked($ip_address)
     {
         return in_array($ip_address, $this->blocked_ips);
     }

@@ -103,7 +103,7 @@ abstract class BaseHtmlPage extends BasePage
                 ->prepare($this->getRequest())
                 ->setContent($template_html);
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionPage($e);
+            return $this->getUtils()->exceptionPage($e, $this->getRequest());
         }
     }
 

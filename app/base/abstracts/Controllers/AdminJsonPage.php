@@ -28,7 +28,7 @@ abstract class AdminJsonPage extends BaseJsonPage
     protected function beforeRender()
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
-            return $this->getUtils()->errorPage(403);
+            return $this->getUtils()->errorPage(403, $this->getRequest());
         }
 
         return parent::beforeRender();

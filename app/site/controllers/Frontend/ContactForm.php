@@ -116,7 +116,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
             is_a($this->getObject(), $this->getObjectClass()) &&
             $this->templateData['object']->isLoaded())
         ) {
-            return $this->getUtils()->errorPage(404);
+            return $this->getUtils()->errorPage(404, $this->getRequest());
         }
 
         $this->processFormSubmit();

@@ -45,7 +45,7 @@ abstract class FrontendPageWithObject extends FrontendPage
             is_a($this->getObject(), $this->getObjectClass()) &&
             $this->getObject()->isLoaded())
         ) {
-            return $this->getUtils()->errorPage(404);
+            return $this->getUtils()->errorPage(404, $this->getRequest());
         }
 
         return $return;

@@ -59,7 +59,7 @@ abstract class AdminFormPage extends AdminPage
     private function processFormSubmit()
     {
         if (!$this->checkCredentials()) {
-            $this->templateData['form']->setSubmitResults(get_class($this).'::formSubmitted', $this->getUtils()->errorPage(403));
+            $this->templateData['form']->setSubmitResults(get_class($this).'::formSubmitted', $this->getUtils()->errorPage(403, $this->getRequest()));
         } else {
             $this->getApp()->event('before_form_process', ['form' => $this->templateData['form']]);
             $this->templateData['form']->process();

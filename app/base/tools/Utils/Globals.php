@@ -135,9 +135,9 @@ class Globals extends ContainerAwareObject
     }
 
 
-    protected function logRequestIfNeeded($status_code)
+    protected function logRequestIfNeeded($status_code, Request $request)
     {
-        if ($this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
+        if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
             $route_info = $this->getApp()->getRouteInfo();
             $controller = $route_info->getControllerObject();
             try {
@@ -159,9 +159,12 @@ class Globals extends ContainerAwareObject
      * @param  RouteInfo|null $route_info
      * @return Response
      */
-    public function errorPage($error_code, $template_data = [], $template_name = null)
+    public function errorPage($error_code, Request $request = null, $template_data = [], $template_name = null)
     {
-        $this->logRequestIfNeeded($error_code);
+        if ($request == null) {
+            $request = Request::createFromGlobals();
+        }
+        $this->logRequestIfNeeded($error_code, $request);
 
         if (!is_array($template_data)) {
             $template_data = [$template_data];
@@ -217,13 +220,13 @@ class Globals extends ContainerAwareObject
      * @param  \Exception $exception
      * @return Response
      */
-    public function exceptionPage(\Exception $exception)
+    public function exceptionPage(\Exception $exception, Request $request = null)
     {
         $template_data = [
             'e' => $exception,
         ];
 
-        return $this->errorPage(500, $template_data, 'errors::exception');
+        return $this->errorPage(500, $request, $template_data, 'errors::exception');
     }
 
 
@@ -239,7 +242,7 @@ class Globals extends ContainerAwareObject
             'ip_addr' => $request->getClientIp(),
         ];
 
-        return $this->errorPage(503, $template_data, 'errors::blocked');
+        return $this->errorPage(503, $request, $template_data, 'errors::blocked');
     }
 
 
@@ -309,9 +312,9 @@ class Globals extends ContainerAwareObject
      *
      * @return Response
      */
-    public function offlinePage()
+    public function offlinePage(Request $request = null)
     {
-        return $this->errorPage(503);
+        return $this->errorPage(503, $request);
     }
 
     /**

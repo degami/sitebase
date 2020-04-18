@@ -61,7 +61,7 @@ abstract class BaseRestPage extends BasePage
         if ($this->getRequest()->headers->get('Content-Type') != 'application/json' &&
             $this->getRequest()->getContentType() != 'json'
         ) {
-            return $this->getUtils()->errorPage(403);
+            return $this->getUtils()->errorPage(403, $this->getRequest());
         }
 
         return $this;

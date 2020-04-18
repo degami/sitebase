@@ -151,7 +151,7 @@ abstract class BasePage extends ContainerAwareObject
         if (method_exists($this, 'getAccessPermission') && method_exists($this, 'getCurrentUser')) {
             try {
                 if (!$this->checkPermission($this->getAccessPermission())) {
-                    return $this->getUtils()->errorPage(403);
+                    return $this->getUtils()->errorPage(403, $this->getRequest());
                 }
             } catch (\Exception $e) {
                 $this->getUtils()->logException($e);

@@ -9,41 +9,34 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
-namespace App\Site\Controllers\Admin;
+namespace App\Site\Controllers\Frontend\Users;
 
 use \Psr\Container\ContainerInterface;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \App\Base\Traits\AdminTrait;
+use \App\Base\Traits\FrontendTrait;
 use \Gplanchat\EventManager\Event;
 use \App\App;
 use \App\Site\Models\User;
+use \App\Base\Exceptions\NotFoundException;
 
 /**
  * Login Page
  */
 class Login extends FormPage
 {
-    use AdminTrait;
-
-    /**
-     * {@inheritdocs}
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container, Request $request = null)
-    {
-        parent::__construct($container, $request);
-        if (!$this->getTemplates()->getFolders()->exists('admin')) {
-            $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES).DS.'admin');
-        }
-    }
+    use FrontendTrait;
 
     /**
      * @var array template data
      */
     protected $templateData = [];
+
+    /**
+     * @var string locale
+     */
+    protected $locale = null;
 
     /**
      * {@inheritdocs}
@@ -53,6 +46,16 @@ class Login extends FormPage
     protected function getTemplateName()
     {
         return 'login';
+    }
+
+    /**
+     * gets route group
+     *
+     * @return string
+     */
+    public static function getRouteGroup()
+    {
+        return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/'.getenv('LOGGEDPAGES_GROUP') : null;
     }
 
     /**
@@ -92,7 +95,7 @@ class Login extends FormPage
      */
     public function showMenu()
     {
-        return false;
+        return true;
     }
 
     /**
@@ -102,48 +105,7 @@ class Login extends FormPage
      */
     public function showBlocks()
     {
-        return false;
-    }
-
-    /**
-     * {@inheritfocs}
-     *
-     * @return \League\Plates\Template\Template
-     */
-    protected function prepareTemplate()
-    {
-        $template = $this->getTemplates()->make('admin::'.$this->getTemplateName());
-        $template->data($this->getTemplateData()+$this->getBaseTemplateData());
-
-        $template->data($this->getTemplateData()+$this->getBaseTemplateData());
-        $locale = $template->data()['locale'] ?? $this->getCurrentLocale();
-
-        $this->getAssets()->addCss('html,body {height: 100%;}');
-        $this->getAssets()->addCss('body {display: -ms-flexbox;display: flex;-ms-flex-align: center;align-items: center;padding-top: 40px;padding-bottom: 40px;background-color: #f5f5f5;}');
-        $this->getAssets()->addCss('#login {width: 100%;max-width: 330px;padding: 15px;margin: auto;}');
-        $this->getAssets()->addCss('#login label {display: none;}');
-        $this->getAssets()->addCss('#login .checkbox {font-weight: 400;}');
-        $this->getAssets()->addCss('#login .form-control {position: relative;box-sizing: border-box;height: auto;padding: 10px;font-size: 16px;}');
-        $this->getAssets()->addCss('#login .form-control:focus {z-index: 2;}');
-        $this->getAssets()->addCss('#login input[type="email"] {margin-bottom: -1px;border-bottom-right-radius: 0;border-bottom-left-radius: 0;}');
-        $this->getAssets()->addCss('#login input[type="password"] {margin-bottom: 10px;border-top-left-radius: 0;border-top-right-radius: 0;}');
-        $this->getAssets()->addCss('.content {background: transparent; border: 0;}');
-        $this->getAssets()->addCss('.footer .copy {text-align: center;}');
-
-
-        $template->start('head_scripts');
-        echo $this->getAssets()->renderHeadInlineJS();
-        $template->stop();
-
-        $template->start('scripts');
-        echo $this->getAssets()->renderPageInlineJS();
-        $template->stop();
-
-        $template->start('styles');
-        echo $this->getAssets()->renderPageInlineCSS();
-        $template->stop();
-
-        return $template;
+        return true;
     }
 
 
@@ -159,7 +121,7 @@ class Login extends FormPage
             $token = $this->getContainer()->get('jwt:parser')->parse($result);
 
             return RedirectResponse::create(
-                $this->getUrl("admin.dashboard"),
+                $this->getUrl("frontend.users.profile"),
                 302,
                 [
                 "Authorization" => $token,
@@ -285,15 +247,5 @@ class Login extends FormPage
             )
             ->getToken(); // Retrieves the generated token
         return "".$token;
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return string
-     */
-    public function getCurrentLocale()
-    {
-        return $this->getSiteData()->getDefaultLocale();
     }
 }

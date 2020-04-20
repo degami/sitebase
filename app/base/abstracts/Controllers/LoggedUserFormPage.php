@@ -14,15 +14,14 @@ namespace App\Base\Abstracts\Controllers;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
-use \App\Site\Routing\RouteInfo;
 use \Degami\PHPFormsApi as FAPI;
 use \App\App;
 use \App\Base\Traits\FormPageTrait;
 
 /**
- * Base frontend page for displaying a form
+ * Base for admin form page
  */
-abstract class FormPage extends FrontendPage
+abstract class LoggedUserFormPage extends LoggedUserPage
 {
     use FormPageTrait;
 
@@ -34,9 +33,8 @@ abstract class FormPage extends FrontendPage
     public function __construct(ContainerInterface $container, Request $request = null)
     {
         parent::__construct($container, $request);
-
-        $this->templateData += [
-            'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
+        $this->templateData = [
+            'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
             ->setValidate([ [$this, 'formValidate'] ])
             ->setSubmit([ [$this, 'formSubmitted'] ]),
         ];
@@ -51,7 +49,11 @@ abstract class FormPage extends FrontendPage
      */
     protected function processFormSubmit()
     {
-        $this->getApp()->event('before_form_process', ['form' => $this->getForm()]);
-        $this->getForm()->process();
+        if (!$this->checkCredentials()) {
+            $this->templateData['form']->setSubmitResults(get_class($this).'::formSubmitted', $this->getUtils()->errorPage(403, $this->getRequest()));
+        } else {
+            $this->getApp()->event('before_form_process', ['form' => $this->templateData['form']]);
+            $this->templateData['form']->process();
+        }
     }
 }

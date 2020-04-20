@@ -7,6 +7,8 @@ require dirname(__DIR__).'/vendor/autoload.php';
 error_reporting(E_ALL & ~E_NOTICE);
 
 use \Symfony\Component\Console\Application;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Input\ArgvInput;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use \Symfony\Component\Console\Command\Command;
 use \App\App;
@@ -22,6 +24,28 @@ $builder->addDefinitions(App::getDir(App::CONFIG).DS.'di.php');
 
 /** @var ContainerInterface $container */
 $container = $builder->build();
+
+$applicationDefinition = $application->getDefinition();
+$applicationDefinition->addOptions([
+    new InputOption('website', 'w', InputOption::VALUE_OPTIONAL, 'Website ID'),
+]);
+
+// reading with like this as trying to bind applicationDefinition to a new ArgvInput
+// leads to no options during "run"
+foreach (array_slice($argv, 1) as $console_token) {
+    if (preg_match("/--website=([0-9]+)|-w\s?([0-9]+)/msi", $console_token, $matches)) {
+        $website_id = $matches[1];
+        try {
+            $website = $container->get('db')->table('website', $website_id);
+        } catch (Exception $e) {}
+    }
+}
+
+if ($website == null) {
+    $website = $container->get('db')->table('website')->limit(1)->fetch();
+}
+// put website into environment variables
+putenv('website_id='.$website->id);
 
 // ... register commands
 

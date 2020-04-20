@@ -23,6 +23,8 @@ use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \App\Base\Exceptions\OfflineException;
 use \App\Base\Exceptions\BlockedIpException;
+use \App\Base\Exceptions\NotFoundException;
+use \App\Base\Exceptions\NotAllowedException;
 use \Exception;
 
 /**
@@ -184,12 +186,11 @@ class App extends ContainerAwareObject
             switch ($routeInfo->getStatus()) {
                 case Dispatcher::NOT_FOUND:
                     // ... 404 Not Found
-                    $this->getUtils()->errorPage(404, $request)->send();
+                    throw new NotFoundException();
                     break;
                 case Dispatcher::METHOD_NOT_ALLOWED:
-                    $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
                     // ... 405 Method Not Allowed
-                    $this->getUtils()->errorPage(405, $request, ['allowedMethods' => $allowedMethods])->send();
+                    throw new NotAllowedException();
                     break;
                 case Dispatcher::FOUND:
                     $handler = $this->getRouteInfo()->getHandler();
@@ -225,6 +226,11 @@ class App extends ContainerAwareObject
             $response = $this->getUtils()->offlinePage($request);
         } catch (BlockedIpException $e) {
             $response = $this->getUtils()->blockedIpPage($request);
+        } catch (NotFoundException $e) {
+            $response = $this->getUtils()->errorPage(404, $request);
+        } catch (NotAllowedException $e) {
+            $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
+            $this->getUtils()->errorPage(405, $request, ['allowedMethods' => $allowedMethods])->send();
         } catch (Exception $e) {
             $response = $this->getUtils()->exceptionPage($e, $request);
         }

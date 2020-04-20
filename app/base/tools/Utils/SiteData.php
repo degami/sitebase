@@ -56,7 +56,7 @@ class SiteData extends ContainerAwareObject
         }
 
         $website = null;
-        if (php_sapi_name() == 'cli-server') {
+        if (php_sapi_name() == 'cli-server' || php_sapi_name() == 'cli') {
             $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
         } else {
             //$website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
@@ -189,7 +189,7 @@ class SiteData extends ContainerAwareObject
             $website_id = $this->getCurrentWebsiteId();
         }
 
-        if ($locale == null) {
+        if ($locale == null && $this->getContainer()->has('app')) {
             $locale = $this->getApp()->getCurrentLocale();
         }
 

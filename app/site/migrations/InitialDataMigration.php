@@ -116,6 +116,10 @@ class InitialDataMigration extends BaseMigration
         $guest_role_model->name = 'guest';
         $guest_role_model->persist();
 
+        $logged_role_model = \App\Site\Models\Role::new($this->getContainer());
+        $logged_role_model->name = 'logged_user';
+        $logged_role_model->persist();
+
         $admin_role_model = \App\Site\Models\Role::new($this->getContainer());
         $admin_role_model->name = 'admin';
         $admin_role_model->persist();
@@ -124,6 +128,14 @@ class InitialDataMigration extends BaseMigration
         $permissions = ['view_site'];
         foreach ($permissions as $permission_name) {
             $this->addPermission($guest_role_model, $permission_name);
+            $this->addPermission($logged_role_model, $permission_name);
+            $this->addPermission($admin_role_model, $permission_name);
+        }
+
+        // base logged permissions
+        $permissions = ['view_logged_site'];
+        foreach ($permissions as $permission_name) {
+            $this->addPermission($logged_role_model, $permission_name);
             $this->addPermission($admin_role_model, $permission_name);
         }
 

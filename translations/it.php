@@ -101,4 +101,7 @@ return [
     'News' => 'Novit&agrave;',
     'Date' => 'Data',
     'Search' => 'Cerca',
+    'Edit' => 'Modifica',
+    'Registered since' => 'Registrato da',
+    'Change password' => 'Cambia password',
 ];

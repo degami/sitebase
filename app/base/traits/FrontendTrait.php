@@ -13,6 +13,8 @@ namespace App\Base\Traits;
 
 use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Base\Abstracts\Models\BaseModel;
+use \App\Site\Models\User;
+use \App\Site\Models\GuestUser;
 
 /**
  * Frontend pages Trait
@@ -25,6 +27,12 @@ trait FrontendTrait
      * @var array template data
      */
     protected $templateData = [];
+
+
+    /**
+     * @var User current user model
+     */
+    protected $current_user_model;
 
     /**
      * gets route group
@@ -98,5 +106,51 @@ trait FrontendTrait
         }
 
         return $this->getApp()->setCurrentLocale(parent::getCurrentLocale())->getCurrentLocale();
+    }
+
+    /**
+     * gets current user
+     *
+     * @return User|GuestUser
+     */
+    public function getCurrentUser()
+    {
+        if ($this->current_user_model instanceof User) {
+            return $this->current_user_model;
+        }
+
+        if (!$this->current_user && !$this->getTokenData()) {
+            return $this->getContainer()->make(GuestUser::class);
+        }
+
+        if (!$this->current_user) {
+            $this->getTokenData();
+        }
+
+        if (is_object($this->current_user) && property_exists($this->current_user, 'id') && !$this->current_user_model instanceof User) {
+            $this->current_user_model = $this->getContainer()->call([User::class, 'load'], ['id' => $this->current_user->id]);
+        }
+
+        return $this->current_user_model;
+    }
+
+    /**
+     *
+     * checks user credentials
+     *
+     * @return boolean
+     */
+    protected function checkCredentials()
+    {
+        try {
+            if ($this->getTokenData()) {
+                $this->current_user_model = $this->getCurrentUser();
+                return $this->current_user_model->checkPermission('view_logged_site');
+            }
+        } catch (\Exception $e) {
+            $this->getUtils()->logException($e);
+        }
+
+        return false;
     }
 }

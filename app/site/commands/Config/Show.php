@@ -33,7 +33,7 @@ class Show extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('website', null, InputOption::VALUE_OPTIONAL),
+                    //new InputOption('website', null, InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );

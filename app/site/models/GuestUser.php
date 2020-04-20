@@ -11,7 +11,7 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
+use \App\Base\Abstracts\Models\AccountModel;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -30,7 +30,7 @@ use \Exception;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class GuestUser extends ContainerAwareObject
+class GuestUser extends AccountModel
 {
     const ROLE_ID = 1;
 

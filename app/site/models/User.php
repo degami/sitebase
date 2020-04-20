@@ -11,7 +11,8 @@
  */
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
+use \App\Base\Abstracts\Models\AccountModel;
+use \DateTime;
 
 /**
  * User Model
@@ -25,7 +26,7 @@ use \App\Base\Abstracts\Models\BaseModel;
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
-class User extends BaseModel
+class User extends AccountModel
 {
     /**
      * @var Role role object
@@ -76,5 +77,19 @@ class User extends BaseModel
         $this->checkLoaded();
 
         return $this->getRole()->checkPermission($permission_name);
+    }
+
+    public function getRegisteredSince()
+    {
+        if ($this->isLoaded()) {
+            $date = new DateTime($this->getCreatedAt());
+            $now = new DateTime();
+
+            $interval = date_diff($date, $now);
+            $differenceFormat = '%y years %m months %d days';
+            return $date->format('Y-m-d').' ('.$interval->format($differenceFormat).')';
+        }
+
+        return "";
     }
 }

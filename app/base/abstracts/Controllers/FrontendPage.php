@@ -244,6 +244,18 @@ abstract class FrontendPage extends BaseHtmlPage
                 $rewrite = $this->getContainer()->make(\App\Site\Models\Rewrite::class, ['dbrow' => $rewrite]);
                 $this->locale = $rewrite->locale;
             }
+
+            if ($this->locale == null && $this->getRouteData('locale') != null) {
+                $this->locale = $this->getCurrentUser()->getLocale();
+            }
+
+            if ($this->locale == null && $this->getCurrentUser()) {
+                $this->locale = $this->getCurrentUser()->getLocale();
+            }
+
+            if ($this->locale == null) {
+                $this->locale = $this->getSiteData()->getDefaultLocale();
+            }
         }
         $this->getApp()->setCurrentLocale($this->locale);
         return $this->locale;

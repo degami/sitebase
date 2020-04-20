@@ -36,7 +36,7 @@ class Serve extends BaseCommand
                 new InputDefinition(
                     [
                     new InputOption('port', 'p', InputOption::VALUE_OPTIONAL),
-                    new InputOption('website', 'w', InputOption::VALUE_OPTIONAL),
+                    //new InputOption('website', 'w', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );

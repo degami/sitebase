@@ -118,7 +118,7 @@ abstract class BasePage extends ContainerAwareObject
     protected function checkPermission($permission_name)
     {
         try {
-            return in_array($permission_name, $this->getCurrentUser()->permissions);
+            return $this->getCurrentUser() && $this->getCurrentUser()->checkPermission($permission_name);
         } catch (\Exception $e) {
             $this->getUtils()->logException($e);
         }
@@ -132,13 +132,18 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return  array|null
      */
-    protected function getRouteData()
+    protected function getRouteData($varname = null)
     {
         if (is_null($this->route_info)) {
             return null;
         }
 
-        return $this->getRouteInfo()->getVars();
+        if ($varname == null) {
+            return $this->getRouteInfo()->getVars();
+        }
+
+        $vars = $this->getRouteInfo()->getVars();
+        return is_array($vars) && isset($vars[$varname]) ? $vars[$varname] : null;
     }
 
     /**
@@ -239,15 +244,20 @@ abstract class BasePage extends ContainerAwareObject
         $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower(get_class($this))));
         if (method_exists(static::class, 'getRoutePath')) {
             $path = call_user_func([static::class, 'getRoutePath']);
-        }
+            if (method_exists(static::class, 'getRouteGroup')) {
+                $path = call_user_func([static::class, 'getRouteGroup']).'/'.$path;
+            }
 
-        $route_vars = [];
-        if ($this->getRouteInfo() instanceof RouteInfo) {
-            $route_vars = $this->getRouteInfo()->getVars();
-        }
+            $route_vars = [];
+            if ($this->getRouteInfo() instanceof RouteInfo) {
+                $route_vars = $this->getRouteInfo()->getVars();
+            }
 
-        foreach ($route_vars as $varname => $value) {
-            $path = preg_replace("/\{".$varname."(:.*?)?\}/", $value, $path);
+            foreach ($route_vars as $varname => $value) {
+                $path = preg_replace("/\{".$varname."(:.*?)?\}/", $value, $path);
+            }
+
+            return $this->getRouting()->getBaseUrl().$path;
         }
 
         $routename = str_replace("/", ".", trim($path, "/"));

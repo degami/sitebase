@@ -101,7 +101,10 @@ class Web extends ContainerAwareObject
                     }
                 }
 
-                $this->addRoute($group, $route_name, "/".ltrim($path, "/ "), $controllerClass, $classMethod, $verbs);
+                // multiple paths can be specified, comma separated
+                foreach (explode(",", $path) as $key => $path_value) {
+                    $this->addRoute($group, $route_name, "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                }
             }
         }
 

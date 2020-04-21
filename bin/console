@@ -30,22 +30,25 @@ $applicationDefinition->addOptions([
     new InputOption('website', 'w', InputOption::VALUE_OPTIONAL, 'Website ID'),
 ]);
 
-// reading with like this as trying to bind applicationDefinition to a new ArgvInput
-// leads to no options during "run"
-foreach (array_slice($argv, 1) as $console_token) {
-    if (preg_match("/--website=([0-9]+)|-w\s?([0-9]+)/msi", $console_token, $matches)) {
-        $website_id = $matches[1];
-        try {
-            $website = $container->get('db')->table('website', $website_id);
-        } catch (Exception $e) {}
-    }
-}
 
-if ($website == null) {
-    $website = $container->get('db')->table('website')->limit(1)->fetch();
-}
-// put website into environment variables
-putenv('website_id='.$website->id);
+try {
+    // reading with like this as trying to bind applicationDefinition to a new ArgvInput
+    // leads to no options during "run"
+    foreach (array_slice($argv, 1) as $console_token) {
+        if (preg_match("/--website=([0-9]+)|-w\s?([0-9]+)/msi", $console_token, $matches)) {
+            $website_id = $matches[1];
+            try {
+                $website = $container->get('db')->table('website', $website_id);
+            } catch (Exception $e) {}
+        }
+    }
+
+    if ($website == null) {
+        $website = $container->get('db')->table('website')->limit(1)->fetch();
+    }
+    // put website into environment variables
+    putenv('website_id='.$website->id);
+} catch(\Exception $e){}
 
 // ... register commands
 

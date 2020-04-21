@@ -23,7 +23,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
     <tbody>
     <?php foreach ($top_visitors as $row) : ?>
         <tr>
-            <td><?= $row['ip_address'];?></td>
+            <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['ip_address' => $row['ip_address']]]) ?>"><?= $row['ip_address'];?></a></td>
             <td><?= $row['cnt'];?></td>
         </tr>
     <?php endforeach;?>
@@ -43,7 +43,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
     <tbody>
     <?php foreach ($most_viewed as $row) : ?>
         <tr>
-            <td><?= $row['url'];?></td>
+            <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['url' => $row['url']]]) ?>"><?= $row['url'];?></a></td>
             <td><?= $row['cnt'];?></td>
         </tr>
     <?php endforeach;?>
@@ -65,10 +65,14 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
     <tbody>
     <?php foreach ($top_errors as $row) : ?>
         <tr>
-            <td><?= $row['url'];?></td>
-            <td><?= $row['ip_address'];?></td>
-            <td><?= $row['response_code'];?></td>
-            <td><?= $row['cnt'];?></td>
+            <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['url' => $row['url']]]) ?>"><?= $row['url'];?></a></td>
+            <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['ip_address' => $row['ip_address']]]) ?>"><?= $row['ip_address'];?></a></td>
+            <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['response_code' => $row['response_code']]]) ?>"><?= $row['response_code'];?></a></td>
+            <td>
+                <a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['url' => $row['url'], 'ip_address' => $row['ip_address'], 'response_code' => $row['response_code']]]) ?>">
+                    <?= $row['cnt'];?>
+                </a>
+            </td>
         </tr>
     <?php endforeach;?>
     </tbody>
@@ -88,7 +92,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
     <tbody>
     <?php foreach ($top_scanners as $row) : ?>
         <tr>
-            <td><?= $row['ip_address'];?></td>
+            <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['ip_address' => $row['ip_address']]]) ?>"><?= $row['ip_address'];?></a></td>
             <td><?= $row['codes'];?></td>
             <td><?= $row['cnt'];?></td>
         </tr>

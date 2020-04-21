@@ -178,9 +178,20 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * adds a back button to page
      */
-    public function addBackButton()
+    public function addBackButton($queryparams = null)
     {
-        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind').' '.$this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl());
+        if (is_array($queryparams)) {
+            $queryparams = http_build_query($queryparams);
+        }
+
+        if ($queryparams != null) {
+            $queryparams = trim($queryparams);
+            if (strlen($queryparams)>0) {
+                $queryparams = ($queryparams[0] != '?' ? '?' : '') . $queryparams;
+            }
+        }
+
+        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind').' '.$this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl().$queryparams);
     }
 
     /**

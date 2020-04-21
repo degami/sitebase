@@ -802,7 +802,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
         if (($current_page instanceof BasePage)) {
             $request_params = $current_page->getRequest()->query->all();
             if (isset($request_params['order']) || isset($request_params['search'])) {
-                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', $current_page->getCurrentLocale()), $current_page->getControllerUrl(), 'btn btn-sm btn-warning');
+                $request_params_nosearch = $request_params;
+                unset($request_params_nosearch['search']);
+                $add_query_parameters = http_build_query($request_params_nosearch);
+                if (strlen($add_query_parameters)) {
+                    $add_query_parameters = '?'.$add_query_parameters;
+                }
+                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', $current_page->getCurrentLocale()), $current_page->getControllerUrl().$add_query_parameters, 'btn btn-sm btn-warning');
             }
             if ($add_searchrow) {
                 $query_params = '';

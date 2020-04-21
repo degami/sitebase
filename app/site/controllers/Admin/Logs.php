@@ -64,7 +64,38 @@ class Logs extends AdminPage
         $log = null;
 
         if ($this->getRequest()->get('logtype')) {
-            $this->addBackButton();
+            if ($this->getRequest()->get('id')) {
+                $this->addBackButton(['logtype' => $this->getRequest()->get('logtype')]);
+            } else {
+                $this->addBackButton();
+            }
+
+            $paginate_params = [
+                'order' => $this->getRequest()->query->get('order') ?? ['created_at' => 'DESC'],
+                'condition' => $this->getSearchParameters(),
+            ];
+
+            if (is_array($paginate_params['condition'])) {
+                $conditions = [];
+                if (isset($paginate_params['condition']['like'])) {
+                    foreach ($paginate_params['condition']['like'] as $col => $search) {
+                        if (trim($search) == '') {
+                            continue;
+                        }
+                        $conditions['`'.$col . '` LIKE ?'] = ['%'.$search.'%'];
+                    }
+                }
+                if (isset($paginate_params['condition']['eq'])) {
+                    foreach ($paginate_params['condition']['eq'] as $col => $search) {
+                        if (trim($search) == '') {
+                            continue;
+                        }
+                        $conditions['`'.$col . '` = ?'] = [$search];
+                    }
+                }
+
+                $paginate_params['condition'] = array_filter($conditions);
+            }
 
             switch ($this->getRequest()->get('logtype')) {
                 case 'request':
@@ -73,7 +104,7 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([RequestLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([RequestLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $data = $this->getContainer()->call([RequestLog::class, 'paginate'], $paginate_params);
                         $header = ['id', 'url', 'method', 'response_code', 'user_id', 'ip_address', 'created_at', 'updated_at'];
                     }
 
@@ -84,7 +115,7 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([MailLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([MailLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $data = $this->getContainer()->call([MailLog::class, 'paginate'], $paginate_params);
                         $header = ['id', 'from', 'to', 'subject', 'template_name', 'result', 'created_at', 'updated_at'];
                     }
 
@@ -95,7 +126,7 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([CronLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([CronLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $data = $this->getContainer()->call([CronLog::class, 'paginate'], $paginate_params);
                         $header = ['id', 'run_time', 'duration', 'tasks', 'created_at', 'updated_at'];
                     }
 
@@ -106,7 +137,7 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([AdminActionLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([AdminActionLog::class, 'paginate'], ['order' => ['created_at' => 'DESC']]);
+                        $data = $this->getContainer()->call([AdminActionLog::class, 'paginate'], $paginate_params);
                         $header = ['id', 'action', 'method', 'url', 'created_at', 'updated_at'];
                     }
 
@@ -120,6 +151,8 @@ class Logs extends AdminPage
                 ];
             } else {
                 $this->templateData += [
+                'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items'], $header), $this->getTableHeader($header), $this),
+
                 'header' => $header,
                 'logs' => $data['items'],
                 'total' => $data['total'],
@@ -130,5 +163,49 @@ class Logs extends AdminPage
         }
 
         return $this->templateData;
+    }
+
+
+    protected function getSearchParameters()
+    {
+        $out = array_filter([
+            'like' => $this->getRequest()->query->get('search'),
+            'eq' =>  $this->getRequest()->query->get('foreign'),
+        ]);
+        return !empty($out) ? $out : null;
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @param  array $data
+     * @return array
+     */
+    protected function getTableElements($data, $header)
+    {
+        return array_map(function ($log) use ($header) {
+            $data = $log->getData();
+            $out = [];
+            foreach ($header as $element) {
+                $out[$element] = $data[$element] ?? null;
+            }
+            $out['actions'] = '<a href="'. $this->getControllerUrl().'?logtype='. $this->getRequest()->query->get('logtype').'&id='. $log->id.'">'. $this->getUtils()->getIcon('zoom-in', ['style' => 'vertical-align: middle']).' '. $this->getUtils()->translate('View').'</a>';
+            return $out;
+        }, $data);
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return array
+     */
+    protected function getTableHeader($header)
+    {
+        $out = [];
+        foreach ($header as $element) {
+            $out[$element] = ['order' => $element, 'search' => $element];
+        }
+        $out['actions'] = null;
+        return $out;
     }
 }

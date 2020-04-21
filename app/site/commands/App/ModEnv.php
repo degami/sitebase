@@ -34,7 +34,7 @@ class ModEnv extends BaseCommand
         'Database Info' => ['DATABASE_HOST','DATABASE_NAME','DATABASE_USER','DATABASE_PASS'],
         'Admin Info' => ['ADMINPAGES_GROUP','ADMIN_USER','ADMIN_PASS','ADMIN_EMAIL'],
         'Cache Info' => ['CACHE_LIFETIME','DISABLE_CACHE','ENABLE_FPC'],
-        'Other Info' => ['DEBUG','GTMID'],
+        'Other Info' => ['LOGGEDPAGES_GROUP','DEBUG','GTMID'],
         'Smtp Info' => ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASS'],
         'SES Info' => ['SES_REGION','SES_PROFILE'],
     ];
@@ -84,7 +84,7 @@ class ModEnv extends BaseCommand
 
         $dotenv = '';
         foreach ($this->dotenv_sections as $label => $keys) {
-            $dotenv .= "\n; -- {$label} --\n";
+            $dotenv .= "\n# -- {$label} --\n";
             foreach ($keys as $key) {
                 $value = $values[$key];
                 $dotenv .= "{$key}={$value}\n";

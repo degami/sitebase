@@ -21,6 +21,8 @@ use \App\Base\Abstracts\ContainerAwareObject;
 use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\GuestUser;
+use \App\Site\Models\User;
+use \App\Base\Abstracts\Models\AccountModel;
 
 /**
  * Base for all controllers
@@ -76,6 +78,10 @@ abstract class BasePage extends ContainerAwareObject
             return $this->getContainer()->make(GuestUser::class);
         }
 
+        if ($this->current_user->id) {
+            return $this->getContainer()->call([User::class, 'load'], ['id' => $this->current_user->id]);
+        }
+
         return $this->current_user;
     }
 
@@ -118,7 +124,7 @@ abstract class BasePage extends ContainerAwareObject
     protected function checkPermission($permission_name)
     {
         try {
-            return $this->getCurrentUser() && $this->getCurrentUser()->checkPermission($permission_name);
+            return ($this->getCurrentUser() instanceof AccountModel) && $this->getCurrentUser()->checkPermission($permission_name);
         } catch (\Exception $e) {
             $this->getUtils()->logException($e);
         }

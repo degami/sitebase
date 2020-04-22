@@ -229,6 +229,10 @@ class Login extends FormPage
         } else {
             $form_state['logged_user'] = $this->getContainer()->make(User::class, ['dbrow' => $user]);
 
+            if (!$form_state['logged_user']->checkPermission('administer_site')) {
+                return $this->getUtils()->translate("Your account is not allowed to access", $this->getCurrentLocale());
+            }
+
             // dispatch "user_logged_in" event
             $this->getApp()->event(
                 'user_logged_in',

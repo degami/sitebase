@@ -25,6 +25,7 @@ use \Symfony\Component\HttpFoundation\Response;
 use \DateTime;
 use \Exception;
 use \App\Base\Traits\FrontendTrait;
+use \App\Base\Exceptions\NotFoundException;
 
 /**
  * Contact Form Page
@@ -116,7 +117,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
             is_a($this->getObject(), $this->getObjectClass()) &&
             $this->templateData['object']->isLoaded())
         ) {
-            return $this->getUtils()->errorPage(404, $this->getRequest());
+            throw new NotFoundException();
         }
 
         $this->processFormSubmit();

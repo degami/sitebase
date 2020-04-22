@@ -19,6 +19,7 @@ use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \Exception;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for rest endopoints
@@ -61,7 +62,7 @@ abstract class BaseRestPage extends BasePage
         if ($this->getRequest()->headers->get('Content-Type') != 'application/json' &&
             $this->getRequest()->getContentType() != 'json'
         ) {
-            return $this->getUtils()->errorPage(403, $this->getRequest());
+            throw new PermissionDeniedException();
         }
 
         return $this;

@@ -25,6 +25,7 @@ use \App\Base\Exceptions\OfflineException;
 use \App\Base\Exceptions\BlockedIpException;
 use \App\Base\Exceptions\NotFoundException;
 use \App\Base\Exceptions\NotAllowedException;
+use \App\Base\Exceptions\PermissionDeniedException;
 use \Exception;
 
 /**
@@ -228,6 +229,8 @@ class App extends ContainerAwareObject
             $response = $this->getUtils()->blockedIpPage($request);
         } catch (NotFoundException $e) {
             $response = $this->getUtils()->errorPage(404, $request);
+        } catch (PermissionDeniedException $e) {
+            $response = $this->getUtils()->errorPage(403, $request);
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
             $this->getUtils()->errorPage(405, $request, ['allowedMethods' => $allowedMethods])->send();

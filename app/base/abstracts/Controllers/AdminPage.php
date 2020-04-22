@@ -15,6 +15,7 @@ use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Traits\AdminTrait;
+use \App\Base\Exceptions\PermissionDeniedException;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\AdminActionLog;
 use \App\App;
@@ -74,7 +75,7 @@ abstract class AdminPage extends BaseHtmlPage
     protected function beforeRender()
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
-            return $this->getUtils()->errorPage(403, $this->getRequest());
+            throw new PermissionDeniedException();
         }
 
         return parent::beforeRender();

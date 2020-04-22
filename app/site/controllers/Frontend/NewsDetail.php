@@ -19,6 +19,7 @@ use \App\Site\Models\News;
 use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
+use \App\Base\Exceptions\NotFoundException;
 
 /**
  * News Detail Page
@@ -81,7 +82,7 @@ class NewsDetail extends FrontendPageWithObject
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
         if (!($this->getObject() instanceof News && $this->getObject()->isLoaded())) {
-            return $this->getUtils()->errorPage(404, $this->getRequest());
+            throw new NotFoundException();
         }
 
         return parent::process($route_info);

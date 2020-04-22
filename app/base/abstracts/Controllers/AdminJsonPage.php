@@ -12,6 +12,7 @@
 namespace App\Base\Abstracts\Controllers;
 
 use \App\Base\Traits\AdminTrait;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base JSON page on admin
@@ -28,7 +29,7 @@ abstract class AdminJsonPage extends BaseJsonPage
     protected function beforeRender()
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
-            return $this->getUtils()->errorPage(403, $this->getRequest());
+            throw new PermissionDeniedException();
         }
 
         return parent::beforeRender();

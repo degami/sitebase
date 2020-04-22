@@ -196,4 +196,20 @@ class GuestUser extends AccountModel
     {
         return $this->getSiteData()->getDefaultLocale();
     }
+
+    /**
+     * no save for this model
+     */
+    public function persist()
+    {
+        return $this;
+    }
+
+    /**
+     * no delete for this model
+     */
+    public function remove()
+    {
+        return $this;
+    }
 }

@@ -21,6 +21,7 @@ use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
 use \Spatie\ArrayToXml\ArrayToXml;
 use \Exception;
+use \App\Base\Exceptions\NotFoundException;
 
 /**
  * A Sitemap
@@ -63,7 +64,7 @@ class Sitemap extends BaseXMLPage
         }
 
         if (!($sitemap instanceof SitemapModel && $sitemap->isLoaded())) {
-            return $this->getUtils()->errorPage(404, $this->getRequest());
+            throw new NotFoundException();
         }
 
         try {

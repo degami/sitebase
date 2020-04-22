@@ -59,7 +59,6 @@ class Index extends AdminPage
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             return $this->doRedirect($this->getUrl('admin.login'));
-//            return $this->getUtils()->errorPage(403);
         }
 
         return parent::beforeRender();

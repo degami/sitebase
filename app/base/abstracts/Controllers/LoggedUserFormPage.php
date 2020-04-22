@@ -17,6 +17,7 @@ use \Symfony\Component\HttpFoundation\Response;
 use \Degami\PHPFormsApi as FAPI;
 use \App\App;
 use \App\Base\Traits\FormPageTrait;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for admin form page
@@ -50,7 +51,7 @@ abstract class LoggedUserFormPage extends LoggedUserPage
     protected function processFormSubmit()
     {
         if (!$this->checkCredentials()) {
-            $this->templateData['form']->setSubmitResults(get_class($this).'::formSubmitted', $this->getUtils()->errorPage(403, $this->getRequest()));
+            throw new PermissionDeniedException();
         } else {
             $this->getApp()->event('before_form_process', ['form' => $this->templateData['form']]);
             $this->templateData['form']->process();

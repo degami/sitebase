@@ -17,6 +17,7 @@ use \App\Site\Routing\RouteInfo;
 use \Exception;
 use \App\Base\Traits\FrontendTrait;
 use \App\Base\Abstracts\Models\BaseModel;
+use \App\Base\Exceptions\NotFoundException;
 
 /**
  * Base for a page diplaying a model
@@ -45,7 +46,7 @@ abstract class FrontendPageWithObject extends FrontendPage
             is_a($this->getObject(), $this->getObjectClass()) &&
             $this->getObject()->isLoaded())
         ) {
-            return $this->getUtils()->errorPage(404, $this->getRequest());
+            throw new NotFoundException();
         }
 
         return $return;

@@ -19,6 +19,7 @@ use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \App\Base\Traits\AdminTrait;
 use \Exception;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for rest endopoints
@@ -37,7 +38,7 @@ abstract class AdminRestPage extends BaseRestPage
     protected function beforeRender()
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
-            return $this->getUtils()->errorPage(403, $this->getRequest());
+            throw new PermissionDeniedException();
         }
 
         return parent::beforeRender();

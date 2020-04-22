@@ -18,6 +18,7 @@ use \App\Base\Traits\FrontendTrait;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\AdminActionLog;
 use \App\App;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for admin pages
@@ -71,7 +72,7 @@ abstract class LoggedUserPage extends FrontendPage
     protected function beforeRender()
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
-            return $this->getUtils()->errorPage(403, $this->getRequest());
+            throw new PermissionDeniedException();
         }
 
         return parent::beforeRender();

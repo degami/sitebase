@@ -17,6 +17,7 @@ use \App\App;
 use \App\Site\Models\RequestLog;
 use \App\Site\Routing\RouteInfo;
 use \Degami\Basics\Html\TagElement;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for frontend pages
@@ -168,7 +169,7 @@ abstract class FrontendPage extends BaseHtmlPage
     protected function beforeRender()
     {
         if (!$this->getRouteInfo()->isAdminRoute() && !$this->checkPermission('view_site')) {
-            return $this->getUtils()->errorPage(403, $this->getRequest());
+            throw new PermissionDeniedException();
         }
 
         return parent::beforeRender();

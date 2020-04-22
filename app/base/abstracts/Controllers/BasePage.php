@@ -23,6 +23,7 @@ use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\GuestUser;
 use \App\Site\Models\User;
 use \App\Base\Abstracts\Models\AccountModel;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for all controllers
@@ -68,34 +69,6 @@ abstract class BasePage extends ContainerAwareObject
     }
 
     /**
-     * gets current user
-     *
-     * @return \App\Site\Model\User|\App\Site\Model\GuestUser
-     */
-    public function getCurrentUser()
-    {
-        if (!$this->current_user && !$this->getTokenData()) {
-            return $this->getContainer()->make(GuestUser::class);
-        }
-
-        if ($this->current_user->id) {
-            return $this->getContainer()->call([User::class, 'load'], ['id' => $this->current_user->id]);
-        }
-
-        return $this->current_user;
-    }
-
-    /**
-     * checks if user is logged in
-     *
-     * @return boolean
-     */
-    public function hasLoggedUser()
-    {
-        return is_object($this->getCurrentUser()) && isset($this->getCurrentUser()->id) && $this->getCurrentUser()->id > 0;
-    }
-
-    /**
      * controller entrypoint
      *
      * @param  RouteInfo|null $route_info
@@ -112,24 +85,6 @@ abstract class BasePage extends ContainerAwareObject
         }
 
         return $this->process($route_info, $route_data);
-    }
-
-
-    /**
-     * checks if current user has specified permission
-     *
-     * @param  string $permission_name
-     * @return boolean
-     */
-    protected function checkPermission($permission_name)
-    {
-        try {
-            return ($this->getCurrentUser() instanceof AccountModel) && $this->getCurrentUser()->checkPermission($permission_name);
-        } catch (\Exception $e) {
-            $this->getUtils()->logException($e);
-        }
-
-        return false;
     }
 
 
@@ -160,12 +115,8 @@ abstract class BasePage extends ContainerAwareObject
     protected function beforeRender()
     {
         if (method_exists($this, 'getAccessPermission') && method_exists($this, 'getCurrentUser')) {
-            try {
-                if (!$this->checkPermission($this->getAccessPermission())) {
-                    return $this->getUtils()->errorPage(403, $this->getRequest());
-                }
-            } catch (\Exception $e) {
-                $this->getUtils()->logException($e);
+            if (!$this->checkPermission($this->getAccessPermission())) {
+                throw new PermissionDeniedException();
             }
         }
 

@@ -141,9 +141,13 @@ class Rewrites extends AdminManageModelsPage
             case 'translations':
                 $this->addBackButton();
 
+                $form->addMarkup(
+                    '<h4>'.sprintf($this->getUtils()->translate('Translations for <strong>%s</strong>'), $rewrite->getUrl()).'</h4>'
+                );
+
                 $other_rewrites = [];
                 foreach ($this->getDb()->table('rewrite')->where('id != ?', $rewrite->getId())->fetchAll() as $item) {
-                    $other_rewrites[$item->id] = $item->route.' - '.$item->locale;
+                    $other_rewrites[$item->id] = $item->route.' - '.$item->locale . " (".$item->url.")";
                 }
                 $translations = $rewrite->getTranslations();
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();

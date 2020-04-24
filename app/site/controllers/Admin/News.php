@@ -235,6 +235,7 @@ class News extends AdminManageFrontendModelsPage
                     " ",
                     [
                     $this->getFrontendModelButton($news),
+                    $this->getTranslationsButton($news),
                     $this->getEditButton($news->id),
                     $this->getDeleteButton($news->id),
                     ]

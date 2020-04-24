@@ -194,7 +194,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getActionButton($action, $object_id, $class, $icon, $title = '')
     {
-        $button = (string)(new TagElement(
+        $button = new TagElement(
             [
             'tag' => 'a',
             'attributes' => [
@@ -204,7 +204,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             ],
             'text' => $this->getUtils()->getIcon($icon),
             ]
-        ));
+        );
 
         return (string) $button;
     }

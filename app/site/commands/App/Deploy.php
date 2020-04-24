@@ -42,15 +42,20 @@ class Deploy extends BaseCommand
     {
         system("npm install && gulp");
 
+        if ($nestable_js = $this->getUtils()->httpRequest('https://raw.githubusercontent.com/degami/Nestable/master/jquery.nestable.js')) {
+            mkdir(App::getDir(App::WEBROOT).DS.'js'.DS.'jquery-nestable', 0755, true);
+            file_put_contents(App::getDir(App::WEBROOT).DS.'js'.DS.'jquery-nestable'.DS.'jquery.nestable.js', $nestable_js);
+        }
+
         $symlinks = [
-            App::getDir('root').DS.'vendor'.DS.'maximebf'.DS.'debugbar'.DS.'src'.DS.'DebugBar'.DS.'Resources' => App::getDir('pub').DS.'debugbar',
-            App::getDir('root').DS.'vendor'.DS.'components'.DS.'bootstrap' => App::getDir('pub').DS.'bootstrap',
-            App::getDir('root').DS.'vendor'.DS.'components'.DS.'jqueryui' => App::getDir('pub').DS.'jqueryui',
-            App::getDir('root').DS.'vendor'.DS.'components'.DS.'jquery' => App::getDir('pub').DS.'jquery',
-            App::getDir('root').DS.'vendor'.DS.'tinymce'.DS.'tinymce' => App::getDir('pub').DS.'tinymce',
-            App::getDir('flags') => App::getDir('pub').DS.'flags',
-            App::getDir('assets').DS.'sitebase_logo.png' => App::getDir('pub').DS.'sitebase_logo.png',
-            App::getDir('assets').DS.'favicon.ico' => App::getDir('pub').DS.'favicon.ico',
+            App::getDir(App::ROOT).DS.'vendor'.DS.'maximebf'.DS.'debugbar'.DS.'src'.DS.'DebugBar'.DS.'Resources' => App::getDir('pub').DS.'debugbar',
+            App::getDir(App::ROOT).DS.'vendor'.DS.'components'.DS.'bootstrap' => App::getDir('pub').DS.'bootstrap',
+            App::getDir(App::ROOT).DS.'vendor'.DS.'components'.DS.'jqueryui' => App::getDir('pub').DS.'jqueryui',
+            App::getDir(App::ROOT).DS.'vendor'.DS.'components'.DS.'jquery' => App::getDir('pub').DS.'jquery',
+            App::getDir(App::ROOT).DS.'vendor'.DS.'tinymce'.DS.'tinymce' => App::getDir('pub').DS.'tinymce',
+            App::getDir(App::FLAGS) => App::getDir('pub').DS.'flags',
+            App::getDir(App::ASSETS).DS.'sitebase_logo.png' => App::getDir('pub').DS.'sitebase_logo.png',
+            App::getDir(App::ASSETS).DS.'favicon.ico' => App::getDir('pub').DS.'favicon.ico',
         ];
 
         foreach ($symlinks as $from => $to) {

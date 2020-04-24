@@ -357,6 +357,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     " ",
                     [
                     $this->getFrontendModelButton($term),
+                    $this->getTranslationsButton($term),
                     $this->getEditButton($term->id),
                     $this->getDeleteButton($term->id),
                     ]

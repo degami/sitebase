@@ -141,4 +141,24 @@ abstract class AdminManageFrontendModelsPage extends AdminManageModelsPage
 
         return $form;
     }
+
+    protected function getTranslationsButton($object)
+    {
+        if (!$object->getRewrite()) {
+            return '';
+        }
+        $button = new TagElement(
+            [
+            'tag' => 'a',
+            'attributes' => [
+                'class' => 'btn btn-sm btn-success',
+                'href' => $this->getUrl('admin.rewrites') .'?action=translations&rewrite_id='.$object->getRewrite()->id,
+                'title' => $this->getUtils()->translate('Translations', $this->getCurrentLocale()),
+            ],
+            'text' => $this->getUtils()->getIcon('tag'),
+            ]
+        );
+
+        return (string) $button;
+    }
 }

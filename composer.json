@@ -25,7 +25,6 @@
         "aws/aws-sdk-php": "^3.87",
         "gplanchat/php-event-manager": "^1.1",
         "tinymce/tinymce": "^5.0",
-        "rjacobsen/jquery-nestable": "^1.0",
         "dragonmantank/cron-expression": "^2.3",
         "swiftmailer/swiftmailer": "^6.2",
         "phpfastcache/phpfastcache": "^7.1",

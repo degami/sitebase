@@ -2,15 +2,14 @@
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>
-<link rel="stylesheet" type="text/css" href="/vendor/rjacobsen/jquery-nestable/src/jquery.nestable.css" />
-<script type="text/javascript" src="/vendor/rjacobsen/jquery-nestable/src/jquery.nestable.js"></script>
+<script type="text/javascript" src="/js/jquery-nestable/jquery.nestable.js"></script>
 <style>
     .dd-item.level-0 > .dd-panel{
         visibility: hidden;
         height: 0;
     }
-    .dd-item > button[data-action="collapse"]:before { 
-        display: none; 
+    .dd-item > button[data-action="collapse"]:before {
+        display: none;
     }
     .dd-item.level-0 > .dd-list {
         padding-left: 0;
@@ -29,7 +28,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <thead class="thead-dark">
             <tr>
                 <th scope="col"><?= $this->sitebase()->translate('Menu Name');?></th>
-                <th scope="col"></th>                                    
+                <th scope="col"></th>
             </tr>
         </thead>
         <tbody>
@@ -40,7 +39,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     <a class="btn btn-primary btn-sm" href="<?= $controller->getControllerUrl();?>?action=view-menu-name&menu_name=<?= $menu->menu_name; ?>"><?php $this->sitebase()->drawIcon('zoom-in'); ?></a>
                 </td>
             </tr>
-        <?php endforeach;?>            
+        <?php endforeach;?>
         </tbody>
     </table>
     </div>

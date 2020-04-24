@@ -347,6 +347,7 @@ class Pages extends AdminManageFrontendModelsPage
                     " ",
                     [
                     $this->getFrontendModelButton($page),
+                    $this->getTranslationsButton($page),
                     $this->getEditButton($page->id),
                     $this->getDeleteButton($page->id),
                     ]

@@ -43,7 +43,7 @@ class Deploy extends BaseCommand
         system("npm install && gulp");
 
         if ($nestable_js = $this->getUtils()->httpRequest('https://raw.githubusercontent.com/degami/Nestable/master/jquery.nestable.js')) {
-            mkdir(App::getDir(App::WEBROOT).DS.'js'.DS.'jquery-nestable', 0755, true);
+            @mkdir(App::getDir(App::WEBROOT).DS.'js'.DS.'jquery-nestable', 0755, true);
             file_put_contents(App::getDir(App::WEBROOT).DS.'js'.DS.'jquery-nestable'.DS.'jquery.nestable.js', $nestable_js);
         }
 

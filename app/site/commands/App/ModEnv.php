@@ -87,6 +87,9 @@ class ModEnv extends BaseCommand
             $dotenv .= "\n# -- {$label} --\n";
             foreach ($keys as $key) {
                 $value = $values[$key];
+                if (preg_match("/\s/i", $value)) {
+                    $value = '"'.$value.'"';
+                }
                 $dotenv .= "{$key}={$value}\n";
             }
         }

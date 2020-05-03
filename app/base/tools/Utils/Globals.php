@@ -254,7 +254,7 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionJson(\Exception $exception)
     {
-        $this->logRequestIfNeeded(500);
+        $this->logRequestIfNeeded(500, Request::createFromGlobals());
 
         if ($this->getEnv('DEBUG')) {
             $content = [
@@ -284,7 +284,7 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionXML(\Exception $exception)
     {
-        $this->logRequestIfNeeded(500);
+        $this->logRequestIfNeeded(500, Request::createFromGlobals());
 
         if ($this->getEnv('DEBUG')) {
             $content = [

@@ -29,6 +29,11 @@ trait PageTrait
     protected $current_user = null;
 
     /**
+     * @var User current user model
+     */
+    protected $current_user_model = null;
+
+    /**
      * @var RouteInfo route info object
      */
     protected $route_info = null;

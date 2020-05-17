@@ -276,6 +276,7 @@ class PasswordForgot extends FormPage
         } else {
             $user_model = $this->getContainer()->call([User::class, 'load'], ['id' => $values['user_id']]);
             $user_model->password = $this->getUtils()->getEncodedPass($values['password']);
+            $user_model->confirmation_code = null;
         }
 
         $user_model->persist();

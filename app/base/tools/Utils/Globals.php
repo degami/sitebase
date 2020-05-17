@@ -464,4 +464,15 @@ class Globals extends ContainerAwareObject
         $message->persist();
         return $message;
     }
+
+    public function randString($length = 10)
+    {
+        $characters = implode("", array_merge(range(0, 9), range('a', 'z'), range('A', 'Z')));
+        $charactersLength = strlen($characters);
+        $randomString = '';
+        for ($i = 0; $i < $length; $i++) {
+            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        }
+        return $randomString;
+    }
 }

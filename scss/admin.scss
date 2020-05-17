@@ -467,3 +467,13 @@ body {
         }
     }
 }
+
+.btn.btnaddmore {
+  color: #fff;
+  background-color: #007bff;
+
+    &:hover {
+      color: #fff;
+      background-color: #0069d9;
+    }
+}

@@ -20,6 +20,7 @@ use \Gplanchat\EventManager\Event;
 use \App\App;
 use \App\Site\Models\User;
 use \App\Base\Exceptions\NotFoundException;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Login Page
@@ -116,6 +117,10 @@ class Login extends FormPage
      */
     protected function beforeRender()
     {
+        if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+            throw new PermissionDeniedException();
+        }
+
         if ($this->isSubmitted()) {
             $result = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
             $token = $this->getContainer()->get('jwt:parser')->parse($result);

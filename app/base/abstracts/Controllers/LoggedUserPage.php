@@ -71,6 +71,10 @@ abstract class LoggedUserPage extends FrontendPage
      */
     protected function beforeRender()
     {
+        if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+            throw new PermissionDeniedException();
+        }
+
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             throw new PermissionDeniedException();
         }

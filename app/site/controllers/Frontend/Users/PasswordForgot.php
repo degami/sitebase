@@ -20,6 +20,7 @@ use \Gplanchat\EventManager\Event;
 use \App\App;
 use \App\Site\Models\User;
 use \App\Base\Exceptions\NotFoundException;
+use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * PasswordForgot Page
@@ -116,6 +117,10 @@ class PasswordForgot extends FormPage
      */
     protected function beforeRender()
     {
+        if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+            throw new PermissionDeniedException();
+        }
+
         if ($this->isSubmitted()) {
             if ($this->getForm()->getFormId() == 'changepass') {
                 $container = $this->getContainer();

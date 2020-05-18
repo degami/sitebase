@@ -51,7 +51,7 @@ class CreateUsersTableMigration extends DBMigration
             ->addColumn('email', 'VARCHAR', [255])
             ->addColumn('nickname', 'VARCHAR', [255])
             ->addColumn('locale', 'VARCHAR', [10])
-            ->addColumn('confirmation_code', 'VARCHAR', [20], true, null)
+            ->addColumn('confirmation_code', 'VARCHAR', [20], [], true, null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)

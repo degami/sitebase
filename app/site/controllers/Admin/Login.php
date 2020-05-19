@@ -254,41 +254,8 @@ class Login extends FormPage
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
-        $container = $this->getContainer();
         $logged_user = $form_state['logged_user'];
-        $user_permissions = $logged_user->getRole()->getPermissionsArray();
-
-        $token = $container->get('jwt:builder')
-            ->setIssuer($container->get('jwt_issuer'))
-            ->setAudience($container->get('jwt_audience'))
-            ->setId($this->calcTokenId($logged_user->id, $logged_user->username), true)
-                // Configures the id (jti claim), replicating as a header item
-            ->setIssuedAt(time())
-                // Configures the time that the token was issue (iat claim)
-            ->setNotBefore(time())
-                // Configures the time that the token can be used (nbf claim)
-            ->setExpiration(time() + 3600)
-                // Configures the expiration time of the token (exp claim)
-            ->set('uid', $logged_user->id)
-                // Configures a new claim, called "uid"
-            ->set('username', $logged_user->username)
-            ->set(
-                'userdata',
-                (object)[
-                'id' => $logged_user->id,
-                'username'=>$logged_user->username,
-                'email'=>$logged_user->email,
-                'nickname'=>$logged_user->nickname,
-                'permissions'=>array_map(
-                    function ($el) {
-                        return $el->name;
-                    },
-                    $user_permissions
-                )
-                ]
-            )
-            ->getToken(); // Retrieves the generated token
-        return "".$token;
+        return "".$logged_user->getJWT();
     }
 
     /**

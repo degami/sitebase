@@ -92,4 +92,55 @@ class User extends AccountModel
 
         return "";
     }
+
+
+    /**
+     * calculates JWT token id
+     *
+     * @return string
+     */
+    protected function calcTokenId()
+    {
+        $string = $this->getId().$this->getUsername();
+        $string = $this->getContainer()->get('jwt_id').$string;
+        return substr(sha1($string), 0, 10);
+    }
+
+    /**
+     * get JWT token
+     *
+     * @return string
+     */
+    public function getJWT()
+    {
+        $this->checkLoaded();
+
+        return $this->getContainer()->get('jwt:builder')
+        ->setIssuer($this->getContainer()->get('jwt_issuer'))
+        ->setAudience($this->getContainer()->get('jwt_audience'))
+        ->setId($this->calcTokenId(), true)
+            // Configures the id (jti claim), replicating as a header item
+        ->setIssuedAt(time())
+            // Configures the time that the token was issue (iat claim)
+        ->setNotBefore(time())
+            // Configures the time that the token can be used (nbf claim)
+        ->setExpiration(time() + 3600)
+            // Configures the expiration time of the token (exp claim)
+        ->set('uid', $this->getId())
+            // Configures a new claim, called "uid"
+        ->set('username', $this->getUsername())
+        ->set('userdata', (object)[
+            'id' => $this->getId(),
+            'username'=>$this->getUsername(),
+            'email'=>$this->getEmail(),
+            'nickname'=>$this->getNickname(),
+            'permissions'=>array_map(
+                function ($el) {
+                    return $el->name;
+                },
+                $this->getRole()->getPermissionsArray()
+            )
+        ])
+        ->getToken(); // Retrieves the generated token
+    }
 }

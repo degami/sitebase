@@ -123,41 +123,8 @@ class PasswordForgot extends FormPage
 
         if ($this->isSubmitted()) {
             if ($this->getForm()->getFormId() == 'changepass') {
-                $container = $this->getContainer();
                 $user_model = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
-                $user_permissions = $user_model->getRole()->getPermissionsArray();
-
-                $token = $container->get('jwt:builder')
-                    ->setIssuer($container->get('jwt_issuer'))
-                    ->setAudience($container->get('jwt_audience'))
-                    ->setId($this->calcTokenId($user_model->id, $user_model->username), true)
-                        // Configures the id (jti claim), replicating as a header item
-                    ->setIssuedAt(time())
-                        // Configures the time that the token was issue (iat claim)
-                    ->setNotBefore(time())
-                        // Configures the time that the token can be used (nbf claim)
-                    ->setExpiration(time() + 3600)
-                        // Configures the expiration time of the token (exp claim)
-                    ->set('uid', $user_model->id)
-                        // Configures a new claim, called "uid"
-                    ->set('username', $user_model->username)
-                    ->set(
-                        'userdata',
-                        (object)[
-                        'id' => $user_model->id,
-                        'username'=>$user_model->username,
-                        'email'=>$user_model->email,
-                        'nickname'=>$user_model->nickname,
-                        'permissions'=>array_map(
-                            function ($el) {
-                                return $el->name;
-                            },
-                            $user_permissions
-                        )
-                        ]
-                    )
-                    ->getToken(); // Retrieves the generated token
-
+                $token = $user_model->getJWT();
 
                 return RedirectResponse::create(
                     $this->getUrl("frontend.users.profile"),

@@ -118,40 +118,47 @@ class MediaElement extends BaseModel
             }
 
             try {
-                if (preg_match("/^image\/(.*?)/", $this->mimetype) && ($image = $this->getImagine()->open($this->path))) {
-                    if ($thumb_sizes) {
-                        $w = $thumb_sizes[1];
-                        $h = $thumb_sizes[2];
-                    } else {
-                        $sizes = $image->getSize();
-                        $w = $sizes->getWidth();
-                        $h = $sizes->getHeight();
+                if ($this->mimetype == 'image/svg+xml') {
+                    // copy file to destination, does not need resampling
+                    if (!copy($this->path, $thumb_path)) {
+                        throw new Exception("Errors copying file ".$this->path." into ".$thumb_path);
                     }
-
-                    $size = new \Imagine\Image\Box($w, $h);
-
-                    if (!in_array(
-                        $mode,
-                        [
-                        \Imagine\Image\ImageInterface::THUMBNAIL_INSET,
-                        \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND
-                        ]
-                    )
-                    ) {
-                        $mode    = \Imagine\Image\ImageInterface::THUMBNAIL_INSET;
-                        // or
-                        // $mode    = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
-                    }
-
-                    $this->getImagine()
-                        ->open($this->path)
-                        ->thumbnail($size, $mode)
-                        ->save($thumb_path);
                 } else {
-                    // @todo thumb in base a mimetype
-                    $type = explode('/', $this->mimetype);
-                    if (is_array($type)) {
-                        $svg = $this->getUtils()->getIcon(array_pop($type));
+                    if (preg_match("/^image\/(.*?)/", $this->mimetype) && ($image = $this->getImagine()->open($this->path))) {
+                        if ($thumb_sizes) {
+                            $w = $thumb_sizes[1];
+                            $h = $thumb_sizes[2];
+                        } else {
+                            $sizes = $image->getSize();
+                            $w = $sizes->getWidth();
+                            $h = $sizes->getHeight();
+                        }
+
+                        $size = new \Imagine\Image\Box($w, $h);
+
+                        if (!in_array(
+                            $mode,
+                            [
+                            \Imagine\Image\ImageInterface::THUMBNAIL_INSET,
+                            \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND
+                            ]
+                        )
+                        ) {
+                            $mode    = \Imagine\Image\ImageInterface::THUMBNAIL_INSET;
+                            // or
+                            // $mode    = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
+                        }
+
+                        $this->getImagine()
+                            ->open($this->path)
+                            ->thumbnail($size, $mode)
+                            ->save($thumb_path);
+                    } else {
+                        // @todo thumb in base a mimetype
+                        $type = explode('/', $this->mimetype);
+                        if (is_array($type)) {
+                            $svg = $this->getUtils()->getIcon(array_pop($type));
+                        }
                     }
                 }
             } catch (Exception $e) {

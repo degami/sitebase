@@ -40,11 +40,11 @@ class Rewrite extends BaseModel
      *
      * @return array
      */
-    public function getTranslations()
+    public function getTranslations($reset = false)
     {
         $this->checkLoaded();
 
-        if (empty($this->translations)) {
+        if (empty($this->translations) || $reset == true) {
             $elements = array_filter(
                 array_map(
                     function ($el) {

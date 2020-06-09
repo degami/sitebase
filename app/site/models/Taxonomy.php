@@ -50,11 +50,11 @@ class Taxonomy extends FrontendModelWithChildren
      *
      * @return array
      */
-    public function getPages()
+    public function getPages($reset = false)
     {
         $this->checkLoaded();
 
-        if (!(is_array($this->pages) && !empty($this->pages))) {
+        if (!(is_array($this->pages) && !empty($this->pages)) || $reset == true) {
             $this->pages = array_map(
                 function ($el) {
                     return $this->getContainer()->make(Page::class, ['dbrow' => $el]);

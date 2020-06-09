@@ -42,11 +42,11 @@ class LinkExchange extends BaseModel
      *
      * @return array
      */
-    public function getTerms()
+    public function getTerms($reset = false)
     {
         $this->checkLoaded();
 
-        if (!(is_array($this->terms) && !empty($this->terms))) {
+        if (!(is_array($this->terms) && !empty($this->terms)) || $reset == true) {
             $this->terms = array_map(
                 function ($el) {
                     return $this->getContainer()->make(Taxonomy::class, ['dbrow' => $el]);

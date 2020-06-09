@@ -130,11 +130,11 @@ class Block extends BaseModel
      *
      * @return array
      */
-    public function getRewrites()
+    public function getRewrites($reset = false)
     {
         $this->checkLoaded();
 
-        if (!(is_array($this->rewrites) && !empty($this->rewrites))) {
+        if (!(is_array($this->rewrites) && !empty($this->rewrites)) || $reset == true) {
             $this->rewrites = array_map(
                 function ($el) {
                     return $this->getContainer()->make(Rewrite::class, ['dbrow' => $el]);

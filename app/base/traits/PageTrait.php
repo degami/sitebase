@@ -42,12 +42,12 @@ trait PageTrait
      * calculates JWT token id
      *
      * @param  integer $uid
-     * @param  string  $usename
+     * @param  string  $username
      * @return string
      */
-    public function calcTokenId($uid, $usename)
+    public function calcTokenId($uid, $username)
     {
-        $string = $uid.$usename;
+        $string = $uid.$username;
         if ($this instanceof ContainerAwareObject) {
             $string = $this->getContainer()->get('jwt_id').$string;
         }
@@ -113,9 +113,9 @@ trait PageTrait
      *
      * @return User|GuestUser
      */
-    public function getCurrentUser()
+    public function getCurrentUser($reset = false)
     {
-        if ($this->current_user_model instanceof User) {
+        if (($this->current_user_model instanceof User) && $reset != true) {
             return $this->current_user_model;
         }
 
@@ -127,7 +127,7 @@ trait PageTrait
             $this->getTokenData();
         }
 
-        if (is_object($this->current_user) && property_exists($this->current_user, 'id') && !$this->current_user_model instanceof User) {
+        if (is_object($this->current_user) && property_exists($this->current_user, 'id')) {
             $this->current_user_model = $this->getContainer()->call([User::class, 'load'], ['id' => $this->current_user->id]);
         }
 

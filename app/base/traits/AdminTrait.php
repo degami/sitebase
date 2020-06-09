@@ -81,32 +81,6 @@ trait AdminTrait
     }
 
     /**
-     * gets current user
-     *
-     * @return User|GuestUser
-     */
-    public function getCurrentUser()
-    {
-        if ($this->current_user_model instanceof User) {
-            return $this->current_user_model;
-        }
-
-        if (!$this->current_user && !$this->getTokenData()) {
-            return $this->getContainer()->make(GuestUser::class);
-        }
-
-        if (!$this->current_user) {
-            $this->getTokenData();
-        }
-
-        if (is_object($this->current_user) && property_exists($this->current_user, 'id') && !$this->current_user_model instanceof User) {
-            $this->current_user_model = $this->getContainer()->call([User::class, 'load'], ['id' => $this->current_user->id]);
-        }
-
-        return $this->current_user_model;
-    }
-
-    /**
      * renders action buttons
      *
      * @return string

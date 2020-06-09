@@ -40,11 +40,11 @@ class Sitemap extends FrontendModel
      *
      * @return array
      */
-    public function getUrlset()
+    public function getUrlset($reset = false)
     {
         $this->checkLoaded();
 
-        if (!(is_array($this->urlset) && !empty($this->urlset))) {
+        if (!(is_array($this->urlset) && !empty($this->urlset)) || $reset == true) {
             $this->urlset = [
                 'url' => array_map(
                     function ($el) {

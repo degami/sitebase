@@ -158,8 +158,18 @@ class Login extends FormPage
             $result = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
             $token = $this->getContainer()->get('jwt:parser')->parse($result);
 
+            $goto_url = $this->getUrl("admin.dashboard");
+
+            if ($this->getRequest()->get('dest')) {
+                $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
+
+                if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnv('SALT'))) {
+                    $goto_url = implode(':', array_slice($tmp, 0, count($tmp)-1));
+                }
+            }
+
             return RedirectResponse::create(
-                $this->getUrl("admin.dashboard"),
+                $goto_url,
                 302,
                 [
                 "Authorization" => $token,

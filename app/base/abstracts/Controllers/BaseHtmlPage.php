@@ -202,7 +202,7 @@ abstract class BaseHtmlPage extends BasePage
      */
     public function getFlashMessages()
     {
-        return json_decode($this->getRequest()->cookies->get('flash_messages'));
+        return json_decode($this->getRequest()->cookies->get('flash_messages'), true);
     }
 
     /**

@@ -221,6 +221,14 @@ abstract class BasePage extends ContainerAwareObject
         return $this->getUrl($routename);
     }
 
+    public function getDestParam($destination_url = null)
+    {
+        if (empty($destination_url)) {
+            $destination_url = $this->getControllerUrl();
+        }
+        return urlencode(base64_encode($destination_url.':'.sha1($this->getEnv('SALT'))));
+    }
+
     /**
      * specifies if this controller is eligible for full page cache
      *

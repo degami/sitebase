@@ -197,9 +197,9 @@ class SiteBase implements ExtensionInterface
      * @param  string $variable
      * @return mixed
      */
-    public function env($variable)
+    public function env($variable, $default = null)
     {
-        return $this->container->get('utils')->getEnv($variable);
+        return $this->container->get('utils')->getEnv($variable, $default);
     }
 
     /**

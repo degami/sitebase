@@ -617,12 +617,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
             //$style="max-width:100%;font-size: 9px;line-height: 11px;min-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
             foreach ($header as $k => $v) {
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
+                    $searchqueryparam = (is_array($current_page->getRequest()->query->get('search')) && isset($current_page->getRequest()->query->get('search')[$v['search']])) ? $current_page->getRequest()->query->get('search')[$v['search']] : '';
+
                     $td = $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
                         'tag' => 'td',
                         'attributes' => ['class' => 'small'],
-                        'text' => '<input class="form-control" name="search['.$v['search'].']" value="'.$current_page->getRequest()->query->get('search')[$v['search']].'"/>',
+                        'text' => '<input class="form-control" name="search['.$v['search'].']" value="'.$searchqueryparam.'"/>',
                         ]]
                     );
                     $add_searchrow = true;

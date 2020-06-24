@@ -23,6 +23,9 @@ use \DateTime;
  * @method int getRoleId()
  * @method string getEmail()
  * @method string getNickname()
+ * @method string getLocale()
+ * @method string getConfirmationCode()
+ * @method string getAdditionalData()
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  */
@@ -93,7 +96,6 @@ class User extends AccountModel
         return "";
     }
 
-
     /**
      * calculates JWT token id
      *
@@ -115,7 +117,7 @@ class User extends AccountModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->get('jwt:builder')
+        $token = $this->getContainer()->get('jwt:builder')
         ->setIssuer($this->getContainer()->get('jwt_issuer'))
         ->setAudience($this->getContainer()->get('jwt_audience'))
         ->setId($this->calcTokenId(), true)
@@ -142,5 +144,7 @@ class User extends AccountModel
             )
         ])
         ->getToken(); // Retrieves the generated token
+
+        return $token;
     }
 }

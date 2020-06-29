@@ -135,9 +135,8 @@ class Login extends FormPage
                 }
             }
 
-            return RedirectResponse::create(
+            return $this->doRedirect(
                 $goto_url,
-                302,
                 [
                 "Authorization" => $token,
                 "Set-Cookie" => "Authorization=".$token

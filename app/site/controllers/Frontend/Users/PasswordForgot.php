@@ -126,9 +126,8 @@ class PasswordForgot extends FormPage
                 $user_model = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
                 $token = $user_model->getJWT();
 
-                return RedirectResponse::create(
+                return $this->doRedirect(
                     $this->getUrl("frontend.users.profile"),
-                    302,
                     [
                     "Authorization" => $token,
                     "Set-Cookie" => "Authorization=".$token

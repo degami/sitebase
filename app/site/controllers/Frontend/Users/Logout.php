@@ -76,9 +76,8 @@ class Logout extends LoggedUserPage
             ]
         );
 
-        return RedirectResponse::create(
+        return$this->doRedirect(
             $this->getUrl("frontend.user.login"),
-            302,
             [
             "Authorization" => null,
             "Set-Cookie" => "Authorization=;expires=".date("r", time()-3600)

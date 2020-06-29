@@ -13,7 +13,7 @@
             <?php if ($controller->getRequest()->get('action') == 'edit' || $controller->getRequest()->get('action') == 'change_pass') :?>
                 <?= $form;?>
             <?php else :?>
-                <div class="card" style="width: 400px;">
+                <div class="card" style="width: 400px;max-width: 100%;">
                   <?php echo $this->sitebase()->getGravatar($current_user->email, 400, 'mp', 'g', 'card-img-top');?>
                   <div class="card-body">
                     <h5 class="card-title"><?= $current_user->getNickname();?> (<?= $current_user->getUsername();?>)</h5>

@@ -245,14 +245,15 @@ abstract class BasePage extends ContainerAwareObject
      * @param  string $url
      * @return RedirectResponse
      */
-    protected function doRedirect($url)
+    protected function doRedirect($url, $additional_headers = [])
     {
         return RedirectResponse::create(
             $url,
             302,
-            [
-            "Set-Cookie" => $this->getResponse()->headers->get("Set-Cookie")
-            ]
+            array_merge(
+                ["Set-Cookie" => $this->getResponse()->headers->get("Set-Cookie")],
+                $additional_headers
+            )
         );
     }
 

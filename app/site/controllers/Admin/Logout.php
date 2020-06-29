@@ -66,9 +66,8 @@ class Logout extends AdminPage
             ]
         );
 
-        return RedirectResponse::create(
+        return $this->doRedirect(
             $this->getUrl("admin.login"),
-            302,
             [
             "Authorization" => null,
             "Set-Cookie" => "Authorization=;expires=".date("r", time()-3600)

@@ -73,6 +73,7 @@ trait FormPageTrait
                 'prefix' => '&nbsp;',
                 'value' => 'Ok',
                 'attributes' => ['class' => 'btn btn-primary btn-sm'],
+                'weight' => 100,
                 ]
             );
         } else {
@@ -84,6 +85,7 @@ trait FormPageTrait
                 'value' => 'Ok',
                 'container_class' => 'form-item mt-3',
                 'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+                'weight' => 110,
                 ]
             );
         }
@@ -98,7 +100,7 @@ trait FormPageTrait
      * @param  FAPI\Form $form
      * @return FAPI\Form
      */
-    protected function fillConfirmationForm($confirm_message, $form)
+    protected function fillConfirmationForm($confirm_message, $form, $cancel_url = null)
     {
         $form->addField(
             'confirm',
@@ -106,9 +108,10 @@ trait FormPageTrait
             'type' => 'markup',
             'value' => $this->getUtils()->translate($confirm_message, $this->getCurrentLocale()),
             'suffix' => '<br /><br />',
-            ]
+            'weight' => -100,
+            ],
         )
-        ->addMarkup('<a class="btn btn-danger btn-sm" href="'.$this->getControllerUrl().'">'.$this->getUtils()->translate('Cancel', $this->getCurrentLocale()).'</a>');
+        ->addMarkup('<a class="btn btn-danger btn-sm" href="'.($cancel_url ?: $this->getControllerUrl()).'">'.$this->getUtils()->translate('Cancel', $this->getCurrentLocale()).'</a>');
         $this->addSubmitButton($form, true);
         return $form;
     }

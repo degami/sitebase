@@ -92,6 +92,7 @@ class App extends ContainerAwareObject
                 if (!is_array($this->blocked_ips)) {
                     $this->blocked_ips = [$this->blocked_ips];
                 }
+                $this->blocked_ips = array_unique($this->blocked_ips);
                 $this->blocked_ips = array_filter($this->blocked_ips, function ($el) {
                     return is_string($el);
                 });

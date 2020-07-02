@@ -109,7 +109,7 @@ trait FormPageTrait
             'value' => $this->getUtils()->translate($confirm_message, $this->getCurrentLocale()),
             'suffix' => '<br /><br />',
             'weight' => -100,
-            ],
+            ]
         )
         ->addMarkup('<a class="btn btn-danger btn-sm" href="'.($cancel_url ?: $this->getControllerUrl()).'">'.$this->getUtils()->translate('Cancel', $this->getCurrentLocale()).'</a>');
         $this->addSubmitButton($form, true);

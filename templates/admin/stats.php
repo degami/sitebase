@@ -60,6 +60,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <th>Ip Address</th>
         <th>Response code</th>
         <th>Visits</th>
+        <th></th>
         </tr>
     </thead>
     <tbody>
@@ -73,6 +74,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     <?= $row['cnt'];?>
                 </a>
             </td>
+            <td><a class="btn btn-sm btn-danger" href="<?= $this->sitebase()->getUrl('admin.banip').'?'.http_build_query(['ip' => $row['ip_address']]);?>"><?php $this->sitebase()->drawIcon('slash');?></a></td>
         </tr>
     <?php endforeach;?>
     </tbody>
@@ -87,6 +89,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <th>Ip Address</th>
         <th>Response codes</th>
         <th>Visits</th>
+        <th></th>
         </tr>
     </thead>
     <tbody>
@@ -95,6 +98,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
             <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['ip_address' => $row['ip_address']]]) ?>"><?= $row['ip_address'];?></a></td>
             <td><?= $row['codes'];?></td>
             <td><?= $row['cnt'];?></td>
+            <td><a class="btn btn-sm btn-danger" href="<?= $this->sitebase()->getUrl('admin.banip').'?'.http_build_query(['ip' => $row['ip_address']]);?>"><?php $this->sitebase()->drawIcon('slash');?></a></td>
         </tr>
     <?php endforeach;?>
     </tbody>

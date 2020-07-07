@@ -18,6 +18,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <tr>
         <th>Ip Address</th>
         <th>Visits</th>
+        <th>Whois</th>
         </tr>
     </thead>
     <tbody>
@@ -25,6 +26,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <tr>
             <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['ip_address' => $row['ip_address']]]) ?>"><?= $row['ip_address'];?></a></td>
             <td><?= $row['cnt'];?></td>
+            <td><a class="btn btn-info btn-sm" href="https://www.whois.com/whois/<?= $row['ip_address'];?>" target="_blank"><?php $this->sitebase()->drawIcon('help-circle');?></a></td>
         </tr>
     <?php endforeach;?>
     </tbody>
@@ -38,6 +40,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <tr>
         <th>Url</th>
         <th>Visits</th>
+        <th>Whois</th>
         </tr>
     </thead>
     <tbody>
@@ -45,6 +48,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <tr>
             <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['url' => $row['url']]]) ?>"><?= $row['url'];?></a></td>
             <td><?= $row['cnt'];?></td>
+            <td><a class="btn btn-info btn-sm" href="https://www.whois.com/whois/<?= $row['ip_address'];?>" target="_blank"><?php $this->sitebase()->drawIcon('help-circle');?></a></td>
         </tr>
     <?php endforeach;?>
     </tbody>
@@ -60,6 +64,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <th>Ip Address</th>
         <th>Response code</th>
         <th>Visits</th>
+        <th>Whois</th>
         <th></th>
         </tr>
     </thead>
@@ -74,6 +79,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     <?= $row['cnt'];?>
                 </a>
             </td>
+            <td><a class="btn btn-info btn-sm" href="https://www.whois.com/whois/<?= $row['ip_address'];?>" target="_blank"><?php $this->sitebase()->drawIcon('help-circle');?></a></td>
             <td><a class="btn btn-sm btn-danger" href="<?= $this->sitebase()->getUrl('admin.banip').'?'.http_build_query(['ip' => $row['ip_address']]);?>"><?php $this->sitebase()->drawIcon('slash');?></a></td>
         </tr>
     <?php endforeach;?>
@@ -89,6 +95,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <th>Ip Address</th>
         <th>Response codes</th>
         <th>Visits</th>
+        <th>Whois</th>
         <th></th>
         </tr>
     </thead>
@@ -98,6 +105,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
             <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['ip_address' => $row['ip_address']]]) ?>"><?= $row['ip_address'];?></a></td>
             <td><?= $row['codes'];?></td>
             <td><?= $row['cnt'];?></td>
+            <td><a class="btn btn-info btn-sm" href="https://www.whois.com/whois/<?= $row['ip_address'];?>" target="_blank"><?php $this->sitebase()->drawIcon('help-circle');?></a></td>
             <td><a class="btn btn-sm btn-danger" href="<?= $this->sitebase()->getUrl('admin.banip').'?'.http_build_query(['ip' => $row['ip_address']]);?>"><?php $this->sitebase()->drawIcon('slash');?></a></td>
         </tr>
     <?php endforeach;?>

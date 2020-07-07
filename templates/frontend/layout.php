@@ -14,6 +14,10 @@ $this->layout('base::html', ['title' => $title] + get_defined_vars()) ?>
 <div class="container-fluid">
     <?php foreach ($this->sitebase()->getPageRegions() as $region) :?>
         <div class="<?= $region; ?>">
+            <?php if ($region == 'content') {
+                $this->sitebase()->renderFlashMessages($controller);
+            }
+            ?>
             <?= $this->sitebase()->renderBlocks('pre_'.$region, $controller); ?>
             <?= $this->section($region); ?>
             <?= $this->sitebase()->renderBlocks('post_'.$region, $controller); ?>

@@ -26,6 +26,7 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method string getMethod()
  * @method string getUserId()
  * @method string getIpAddress()
+ * @method string getUserAgent()
  * @method int getResponseCode()
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
@@ -46,6 +47,7 @@ class RequestLog extends BaseModel
         $this->setUrl($request->getUri());
         $this->setMethod($request->getMethod());
         $this->setIpAddress($request->getClientIp());
+        $this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
 
         $this->setWebsiteId($this->matchWebsite($request->getHost()));
 

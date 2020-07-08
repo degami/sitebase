@@ -32,7 +32,18 @@ abstract class DBMigration extends BaseMigration
     {
         try {
             $schema = $this->getContainer()->make(Schema::class, ['pdo' => $this->getPdo(), 'preload' => true]);
-            $table = $schema->addTable($this->tableName);
+
+            $table = null;
+            try {
+                $table = $schema->getTable($this->tableName);
+            } catch (Exception $e) {
+                $table = $schema->addTable($this->tableName);
+            }
+
+            if ($table == null) {
+                throw new Exception("Errors with table ". $this->tableName, 1);
+            }
+
             $table = $this->addDBTableDefinition($table);
 
             $sql = $table->migrate();

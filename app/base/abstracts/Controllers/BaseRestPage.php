@@ -111,6 +111,7 @@ abstract class BaseRestPage extends BasePage
         try {
             $log = $this->getContainer()->make(RequestLog::class);
             $log->fillWithRequest($this->getRequest(), $this);
+            $log->setResponseCode(200);
             $log->persist();
         } catch (Exception $e) {
             $this->getUtils()->logException($e, "Can't write RequestLog");

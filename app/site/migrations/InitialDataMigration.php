@@ -55,7 +55,10 @@ class InitialDataMigration extends BaseMigration
     {
         $website_model = \App\Site\Models\Website::new($this->getContainer());
         $website_model->site_name = $this->getEnv('APPNAME');
-        $website_model->domain = $this->getEnv('APPDOMAIN');
+
+        $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim($this->getEnv('APPDOMAIN')))), 'www.');
+        $website_model->domain = $site_domain;
+        $website_model->aliases = 'www.'.$site_domain;
         $website_model->default_locale = 'en';
 
         $website_model->persist();

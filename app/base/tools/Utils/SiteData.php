@@ -124,6 +124,7 @@ class SiteData extends ContainerAwareObject
     public function getBrowserPreferredLanguage()
     {
         $langs = [];
+        $lang = null;
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // break up string into pieces (languages and q factors)
             preg_match_all(
@@ -145,12 +146,14 @@ class SiteData extends ContainerAwareObject
             }
         }
 
-        //extract most important (first)
-        $lang = array_keys($langs)[0];
+        if (count($langs) > 1) {
+            //extract most important (first)
+            $lang = array_keys($langs)[0];
 
-        //if complex language simplify it
-        if (stristr($lang, "-")) {
-            $lang = explode("-", $lang)[0];
+            //if complex language simplify it
+            if (stristr($lang, "-")) {
+                $lang = explode("-", $lang)[0];
+            }
         }
 
         if (!in_array($lang, $this->getSiteLocales()) || empty($lang)) {

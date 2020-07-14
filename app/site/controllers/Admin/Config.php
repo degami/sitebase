@@ -100,13 +100,16 @@ class Config extends AdminManageModelsPage
             ]
         );
 
+        if ($type == 'new') {
+            $configuration->setWebsiteId($this->getSiteData()->getCurrentWebsite()->getId());
+        }
+
         switch ($type) {
             case 'edit':
             case 'new':
                 $this->addBackButton();
 
-                $languages = [null => $this->getUtils()->translate('All languages')] + $this->getUtils()->getSiteLanguagesSelectOptions();
-
+                $languages = [null => $this->getUtils()->translate('All languages')] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $configuration_path = $configuration_value = $configuration_website = $configuration_locale = '';

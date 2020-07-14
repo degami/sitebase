@@ -300,7 +300,7 @@ class Web extends ContainerAwareObject
                 "%s://%s%s%s",
                 (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https' : 'http',
                 (is_numeric($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) ? ':'.$_SERVER['SERVER_PORT'] : '',
-                $_SERVER['SERVER_NAME'],
+                $this->getSiteData()->currentServerName(),
                 $_SERVER['REQUEST_URI']
             )
         );
@@ -359,7 +359,7 @@ class Web extends ContainerAwareObject
             $request_uri = $_SERVER['REQUEST_URI'];
         }
         if (empty($domain)) {
-            $domain = $_SERVER['SERVER_NAME'];
+            $domain = $container->get('site_data')->currentServerName();
         }
 
         // Fetch method and URI from somewhere

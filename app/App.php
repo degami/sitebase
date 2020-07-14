@@ -173,7 +173,7 @@ class App extends ContainerAwareObject
                 [
                 'http_method' => $_SERVER['REQUEST_METHOD'],
                 'request_uri' => $_SERVER['REQUEST_URI'],
-                'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $_SERVER['SERVER_NAME']
+                'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $this->getSiteData()->currentServerName()
                 ]
             );
 

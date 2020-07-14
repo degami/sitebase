@@ -42,6 +42,12 @@ class SiteData extends ContainerAwareObject
     const THEMENAME_PATH = 'app/frontend/themename';
     const DEFAULT_LOCALE = 'en';
 
+
+    public function currentServerName()
+    {
+        return $_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME'];
+    }
+
     /**
      * gets current website id
      *
@@ -60,7 +66,7 @@ class SiteData extends ContainerAwareObject
             $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
         } else {
             //$website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
-            $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = '.$this->getDb()->quote($_SERVER['SERVER_NAME']).' OR (FIND_IN_SET('.$this->getDb()->quote($_SERVER['SERVER_NAME']).', aliases) > 0)']]])->fetch();
+            $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = '.$this->getDb()->quote($this->currentServerName()).' OR (FIND_IN_SET('.$this->getDb()->quote($this->currentServerName()).', aliases) > 0)']]])->fetch();
             $dbrow = $this->getContainer()->make(Row::class, ['db' => $this->getDb(), 'name' => 'website', 'properties' => $result]);
             $website = $this->getContainer()->make(Website::class, ['dbrow' => $dbrow]);
         }

@@ -13,6 +13,7 @@ namespace App\Base\Abstracts\Controllers;
 
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Response;
+use \App\Base\Abstracts\Models\FrontendModel;
 use \Degami\PHPFormsApi as FAPI;
 use \Degami\Basics\Html\TagElement;
 use \App\App;

@@ -107,7 +107,7 @@ class Web extends ContainerAwareObject
                 }
             }
         }
-
+        $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');
         $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
 
         $this->dispatcher = simpleDispatcher(

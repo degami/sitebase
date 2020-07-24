@@ -284,7 +284,7 @@ class Blocks extends AdminManageModelsPage
                 $block->region = $values['region'];
                 $block->title = $values['title'];
                 $block->locale = $values['locale'];
-                $block->order = $values['order'];
+                $block->order = intval($values['order']);
 
                 if ($values['action'] == 'new' || $block->getInstance() == Block::class) {
                     $block->content = $values['content'];

@@ -102,11 +102,13 @@ class Page extends FrontendPageWithObject
      */
     public function showFrontPage(RouteInfo $route_info = null)
     {
+        $route_vars = $route_info->getVars();
+
         $homepage_id = null;
-        if ($this->getSiteData()->getHomePageRedirectsToLanguage($this->getSiteData()->getCurrentWebsiteId())) {
+        if (isset($route_vars['lang']) || $this->getSiteData()->getHomePageRedirectsToLanguage($this->getSiteData()->getCurrentWebsiteId())) {
             $homepage_id = $this->getSiteData()->getHomePageId(
                 $this->getSiteData()->getCurrentWebsiteId(),
-                $this->getSiteData()->getBrowserPreferredLanguage()
+                $route_vars['lang'] ?? $this->getSiteData()->getBrowserPreferredLanguage()
             );
 
             if ($homepage_id) {
@@ -114,7 +116,7 @@ class Page extends FrontendPageWithObject
                 return $this->doRedirect($page_model->getFrontendUrl());
             }
         } else {
-            $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsiteId(), null);
+            $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsiteId(), $route_vars['lang'] ?? null);
         }
 
         if ($homepage_id) {

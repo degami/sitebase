@@ -12,6 +12,7 @@
 namespace App\Base\Traits;
 
 use \App\Base\Abstracts\ContainerAwareObject;
+use \App\Base\Abstracts\Models\FrontendModel;
 use \Degami\Basics\Html\TagElement;
 use \Degami\PHPFormsApi as FAPI;
 
@@ -34,7 +35,7 @@ trait AdminFormTrait
                 ${"object_".$element} = $object->{$element};
             }
         } else {
-            $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
+            $languages = $this->getUtils()->getSiteLanguagesSelectOptions($form_state['input_values']['website_id'] ?? null);
         }
 
         $websites = $this->getUtils()->getWebsitesSelectOptions();

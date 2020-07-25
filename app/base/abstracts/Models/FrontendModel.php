@@ -117,7 +117,7 @@ abstract class FrontendModel extends BaseModel
      */
     public function getPageTitle()
     {
-        return $this->html_title ?? $this->title;
+        return $this->html_title ?: $this->title;
     }
 
     /**

@@ -70,6 +70,16 @@ class SiteBase implements ExtensionInterface
     }
 
     /**
+     * gets current website
+     *
+     * @return Website
+     */
+    public function getCurrentWebsite()
+    {
+        return $this->container->get('site_data')->getCurrentWebsite();
+    }
+
+    /**
      * gets current locale
      *
      * @return string

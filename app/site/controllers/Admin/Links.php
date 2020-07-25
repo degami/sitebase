@@ -148,9 +148,7 @@ class Links extends AdminManageFrontendModelsPage
                     [
                     'type' => 'tinymce',
                     'title' => 'Description',
-                    'tinymce_options' => [
-                    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                    ],
+                    'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
                     'default_value' => $link_description,
                     'rows' => 20,
                     ]

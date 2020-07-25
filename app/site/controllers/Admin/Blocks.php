@@ -180,9 +180,7 @@ class Blocks extends AdminManageModelsPage
                         [
                         'type' => 'tinymce',
                         'title' => 'Content',
-                        'tinymce_options' => [
-                        'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
-                        ],
+                        'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
                         'default_value' => $block_content,
                         'rows' => 20,
                         ]

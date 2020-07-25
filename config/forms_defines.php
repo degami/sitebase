@@ -16,3 +16,12 @@ define(
     'FORMS_HIGHLIGHTS_TEMPLATE',
     '<div class="alert alert-info"><ul>%s</ul></div>'
 );
+define(
+    'DEFAULT_TINYMCE_OPTIONS',
+    [
+    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+    'relative_urls' => false,
+    'remove_script_host' => true,
+    'document_base_url' => "",
+    ]
+);

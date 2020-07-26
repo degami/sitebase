@@ -222,6 +222,8 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionPage(\Exception $exception, Request $request = null)
     {
+        $this->logException($exception);
+
         $template_data = [
             'e' => $exception,
         ];

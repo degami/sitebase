@@ -19,7 +19,7 @@ define(
 define(
     'DEFAULT_TINYMCE_OPTIONS',
     [
-    'plugins' => "code,link,lists,hr,preview,searchreplace,media mediaembed,table,powerpaste",
+    'plugins' => "code,link,lists,hr,preview,searchreplace,media,table",
     'relative_urls' => false,
     'remove_script_host' => true,
     'document_base_url' => "",

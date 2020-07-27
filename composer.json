@@ -1,4 +1,11 @@
 {
+    "license": "MIT",
+    "authors": [
+    {
+      "name": "degami@github.com",
+      "homepage": "https://github.com/degami/php-forms-api"
+    }
+    ],
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",

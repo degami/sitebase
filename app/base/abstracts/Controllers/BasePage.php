@@ -11,18 +11,14 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
 use \Exception;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \League\Plates\Template\Template;
 use \App\Base\Abstracts\ContainerAwareObject;
-use \App\App;
 use \App\Site\Routing\RouteInfo;
-use \App\Site\Models\GuestUser;
-use \App\Site\Models\User;
-use \App\Base\Abstracts\Models\AccountModel;
 use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
@@ -46,9 +42,11 @@ abstract class BasePage extends ContainerAwareObject
     protected $route_info = null;
 
     /**
-     * class constructor
+     * BasePage constructor.
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -71,9 +69,10 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * controller entrypoint
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     public function renderPage(RouteInfo $route_info = null, $route_data = [])
     {
@@ -91,7 +90,8 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * gets route data
      *
-     * @return  array|null
+     * @param null $varname
+     * @return mixed|null
      */
     protected function getRouteData($varname = null)
     {
@@ -111,10 +111,13 @@ abstract class BasePage extends ContainerAwareObject
      * before render hook
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
-        if (method_exists($this, 'getAccessPermission') && method_exists($this, 'getCurrentUser')) {
+        if (method_exists($this, 'getAccessPermission') &&
+            method_exists($this, 'checkPermission') &&
+            method_exists($this, 'getCurrentUser')) {
             if (!$this->checkPermission($this->getAccessPermission())) {
                 throw new PermissionDeniedException();
             }
@@ -146,7 +149,7 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * get route_info array
      *
-     * @return array
+     * @return RouteInfo
      */
     public function getRouteInfo()
     {
@@ -170,9 +173,10 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * gets url by route_name and params
      *
-     * @param  string $route_name
-     * @param  array  $route_params
+     * @param string $route_name
+     * @param array $route_params
      * @return string
+     * @throws BasicException
      */
     public function getUrl($route_name, $route_params = [])
     {
@@ -187,14 +191,14 @@ abstract class BasePage extends ContainerAwareObject
     public function getRouteName()
     {
         $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower(get_class($this))));
-        $routename = str_replace("/", ".", trim($path, "/"));
-        return $routename;
+        return str_replace("/", ".", trim($path, "/"));
     }
 
     /**
      * gets current controller url
      *
      * @return string
+     * @throws BasicException
      */
     public function getControllerUrl()
     {
@@ -221,6 +225,13 @@ abstract class BasePage extends ContainerAwareObject
         return $this->getUrl($routename);
     }
 
+    /**
+     * gets the destination param
+     *
+     * @param null $destination_url
+     * @return string
+     * @throws BasicException
+     */
     public function getDestParam($destination_url = null)
     {
         if (empty($destination_url)) {
@@ -242,7 +253,8 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * returns a redirect object
      *
-     * @param  string $url
+     * @param $url
+     * @param array $additional_headers
      * @return RedirectResponse
      */
     protected function doRedirect($url, $additional_headers = [])

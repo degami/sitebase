@@ -12,20 +12,12 @@
 namespace App\Base\Tools\Assets;
 
 use \App\Base\Abstracts\ContainerAwareObject;
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Site\Models\Menu;
-use \App\Site\Models\Block;
-use \App\Site\Models\Rewrite;
-use \App\Site\Models\MailLog;
-use \App\Site\Models\RequestLog;
-use \App\Site\Routing\RouteInfo;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\Base\Abstracts\Models\BaseModel;
+use Degami\Basics\Exceptions\BasicException;
+use Degami\PHPFormsApi\Abstracts\Base\Field;
+use Degami\PHPFormsApi\Abstracts\Base\FieldsContainer;
+use Degami\PHPFormsApi\Form;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\Basics\Html\TagElement;
-use \LessQL\Row;
-use \Swift_Message;
-use \Exception;
 
 /**
  * Assets manager
@@ -80,13 +72,13 @@ class Manager extends ContainerAwareObject
     }
 
     /**
-     * add js to element
+     * add js
      *
-     * @param  string / array $js       javascript to add
-     * @param  boolean        $as_is    no "minification"
-     * @param  string         $position
-     * @param  boolean        $on_ready
-     * @return Element
+     * @param string|array $js javascript to add
+     * @param bool $as_is  no "minification"
+     * @param string|null $position
+     * @param bool $on_ready
+     * @return $this
      */
     public function addJs($js, $as_is = false, $position = null, $on_ready = true)
     {
@@ -120,21 +112,17 @@ class Manager extends ContainerAwareObject
     /**
      * generate the js string
      *
-     * @param  string $position
+     * @param  string|null $position
      * @return string the js into a jquery sandbox
      */
     protected function generateJs($position = null)
     {
-        $js = [];
-        switch ($position) {
-            case 'head':
-                $position = 'head_';
-                $js = $this->getHeadJs();
-                break;
-            default:
-                $position = '';
-                $js = $this->getJs();
-                break;
+        if ($position == 'head') {
+            $position = 'head_';
+            $js = $this->getHeadJs();
+        } else {
+            $js = $this->getJs();
+            $position = '';
         }
 
         if (!empty($js) && !$this->{trim($position)."js_generated"}) {
@@ -263,8 +251,8 @@ class Manager extends ContainerAwareObject
     /**
      * Add css to element
      *
-     * @param  string / array $css css to add
-     * @return Element
+     * @param string|array $css css to add
+     * @return $this
      */
     public function addCss($css)
     {
@@ -289,7 +277,7 @@ class Manager extends ContainerAwareObject
             $css = array_filter(array_map('trim', $this->css));
             foreach ($this->getFields() as $field) {
                 /**
-                 * @var \Degami\PHPFormsApi\Abstracts\App\Base\Field $field
+                 * @var Field $field
                  */
                 $css = array_merge($css, $field->getCss());
             }
@@ -320,10 +308,12 @@ class Manager extends ContainerAwareObject
     /**
      * gets url for asset
      *
-     * @param  string  $asset_path
-     * @param  integet $website_id
-     * @param  string  $locale
+     * @param string $asset_path
+     * @param integer|null $website_id
+     * @param string|null $locale
      * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function assetUrl($asset_path, $website_id = null, $locale = null)
     {

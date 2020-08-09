@@ -12,14 +12,13 @@
 namespace App\Site\Commands\Db;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Spatie\DbDumper\Exceptions\CannotStartDump;
+use Spatie\DbDumper\Exceptions\DumpFailed;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
-use \Psr\Container\ContainerInterface;
 use \Spatie\DbDumper\Databases\MySql;
 use \Spatie\DbDumper\Compressors\GzipCompressor;
 use \App\App;
-use \Exception;
 
 /**
  * Dump Database Command
@@ -43,13 +42,17 @@ class Dump extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        MySql::create()
-            ->setDbName($this->getContainer()->get('dbname'))
-            ->setUserName($this->getContainer()->get('dbuser'))
-            ->setPassword($this->getContainer()->get('dbpass'))
-        //            ->useSingleTransaction()
-        //            ->skipLockTables()
-            ->useCompressor(new GzipCompressor())
-            ->dumpToFile(App::getDir(App::DUMPS).DS.'dump.'.date("Ymd_His").'.sql.gz');
+        try {
+            MySql::create()
+                ->setDbName($this->getContainer()->get('dbname'))
+                ->setUserName($this->getContainer()->get('dbuser'))
+                ->setPassword($this->getContainer()->get('dbpass'))
+                //            ->useSingleTransaction()
+                //            ->skipLockTables()
+                ->useCompressor(new GzipCompressor())
+                ->dumpToFile(App::getDir(App::DUMPS) . DS . 'dump.' . date("Ymd_His") . '.sql.gz');
+        } catch (CannotStartDump $e) {
+        } catch (DumpFailed $e) {
+        }
     }
 }

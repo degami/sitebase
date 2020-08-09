@@ -11,12 +11,11 @@
  */
 namespace App\Site\Controllers\Admin\Json;
 
-use \Psr\Container\ContainerInterface;
+use App\Site\Controllers\Admin\Pages;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
 use \App\Site\Models\MediaElement as Media;
-use \App\Site\Routing\RouteInfo;
-use \Degami\PHPFormsApi as FAPI;
 
 /**
  * pages for media JSON
@@ -47,6 +46,11 @@ class MediaPages extends AdminJsonPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getJsonData()
     {
@@ -65,14 +69,14 @@ class MediaPages extends AdminJsonPage
         $pagesData = array_map(
             function ($el) {
                 $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-                return $el->getData();
+                return $page->getData();
             },
             $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll()
         );
 
 
         if ($this->getRequest()->get('action') == 'media_deassoc') {
-            $pagesController = $this->getContainer()->make(\App\Site\Controllers\Admin\Pages::class);
+            $pagesController = $this->getContainer()->make(Pages::class);
             $form = $pagesController->getForm();
 
             $form->setAction($this->getUrl('admin.pages').'?action='.$this->getRequest()->get('action'));
@@ -104,8 +108,5 @@ class MediaPages extends AdminJsonPage
             'html' => ($this->getRequest()->get('action') == 'page_assoc' ? "<ul class=\"elements_list\"><li>".implode("</li><li>", $pages) . "</li></ul><hr />" : '').$form->render(),
             'js' => "",
         ];
-
-
-        return [];
     }
 }

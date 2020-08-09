@@ -12,12 +12,13 @@
 namespace App\Site\Commands\Cron;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
 use \Symfony\Component\Console\Helper\TableSeparator;
 use \App\Site\Models\CronTask;
-use \Psr\Container\ContainerInterface;
 use \DateTime;
 
 /**
@@ -36,9 +37,11 @@ class Show extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws BasicException
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -74,6 +77,7 @@ class Show extends BaseCommand
      * gets last heart beat
      *
      * @return string
+     * @throws Exception
      */
     protected function getLastHeartBeat()
     {

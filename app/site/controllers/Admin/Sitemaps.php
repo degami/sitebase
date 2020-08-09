@@ -11,15 +11,15 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\Controllers\AdminFormPage;
+use Degami\Basics\Exceptions\BasicException;
+use Degami\PHPFormsApi\Abstracts\Base\Element;
+use Exception;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Sitemap;
 use \App\Site\Models\Rewrite;
 use \App\Site\Controllers\Admin\Json\SitemapCallback;
-use \App\App;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
  * "Sitemaps" Admin Page
@@ -69,9 +69,11 @@ class Sitemaps extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -244,10 +246,11 @@ class Sitemaps extends AdminManageModelsPage
     /**
      * adds a component
      *
-     * @param \Degami\PHPFormsApi\Abstracts\Base\Element $form_component
-     * @param integer                                    $index
-     * @param Sitemap                                    $sitemap
-     * @param array                                      $component
+     * @param Element $form_component
+     * @param integer $index
+     * @param Sitemap $sitemap
+     * @param array|null $component
+     * @return Element
      */
     private function addComponent($form_component, $index, $sitemap, $component = null)
     {
@@ -334,17 +337,20 @@ class Sitemaps extends AdminManageModelsPage
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
-        // @todo : check if page language is in page website languages?
+        //$values = $form->values();
         return true;
     }
 
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -425,8 +431,13 @@ class Sitemaps extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
+     * @param array $data
      * @return array
+     * @throws BasicException
+     * @throws BasicException
+     * @throws Exception
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTableElements($data)
     {

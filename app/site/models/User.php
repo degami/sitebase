@@ -13,6 +13,8 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\AccountModel;
 use \DateTime;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 
 /**
  * User Model
@@ -26,8 +28,8 @@ use \DateTime;
  * @method string getLocale()
  * @method string getConfirmationCode()
  * @method string getAdditionalData()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class User extends AccountModel
 {
@@ -54,6 +56,7 @@ class User extends AccountModel
      * sets user role
      *
      * @param Role|integer|string $role
+     * @throws BasicException
      */
     public function setRole($role)
     {
@@ -72,8 +75,9 @@ class User extends AccountModel
     /**
      * checks if user has permission
      *
-     * @param  string $permission_name
+     * @param string $permission_name
      * @return boolean
+     * @throws Exception
      */
     public function checkPermission($permission_name)
     {
@@ -82,6 +86,12 @@ class User extends AccountModel
         return $this->getRole()->checkPermission($permission_name);
     }
 
+    /**
+     * gets registered since
+     *
+     * @return string
+     * @throws Exception
+     */
     public function getRegisteredSince()
     {
         if ($this->isLoaded()) {
@@ -112,6 +122,7 @@ class User extends AccountModel
      * get JWT token
      *
      * @return string
+     * @throws Exception
      */
     public function getJWT()
     {

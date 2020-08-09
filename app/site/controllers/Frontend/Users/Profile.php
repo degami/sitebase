@@ -11,10 +11,15 @@
  */
 namespace App\Site\Controllers\Frontend\Users;
 
-use \Psr\Container\ContainerInterface;
+use App\Site\Models\Role;
+use App\Site\Models\User;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Models\AccountModel;
 use \App\Base\Abstracts\Controllers\LoggedUserFormPage;
 use \Degami\PHPFormsApi as FAPI;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Profile" Logged Page
@@ -72,7 +77,11 @@ class Profile extends LoggedUserFormPage
     /**
      * {@inheritdocs}
      *
+     * @param FAPI\Form $form
+     * @param array $form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -162,19 +171,23 @@ class Profile extends LoggedUserFormPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean|string
+     * @param FAPI\Form $form
+     * @param array $form_state
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
-
+        //$values = $form->values();
         return true;
     }
 
     /**
      * {@inheritdocs}
      *
-     * @return mixed|Response
+     * @param FAPI\Form $form
+     * @param array $form_state
+     * @return mixed|RedirectResponse|Response
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {

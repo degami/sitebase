@@ -13,6 +13,7 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithOwnerTrait;
+use DateTime;
 
 /**
  * Cront Task Model
@@ -23,15 +24,15 @@ use \App\Base\Traits\WithOwnerTrait;
  * @method string getSchedule()
  * @method boolean getActive()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class CronTask extends BaseModel
 {
     use WithOwnerTrait;
 
     /**
-     * gets information url about shedule
+     * gets information url about schedule
      *
      * @return string
      */

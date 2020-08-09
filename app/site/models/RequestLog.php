@@ -12,8 +12,9 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Abstracts\Controllers\BaseHtmlPage;
 use \App\Base\Abstracts\Controllers\BasePage;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Traits\WithWebsiteTrait;
 
@@ -28,8 +29,8 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method string getIpAddress()
  * @method string getUserAgent()
  * @method int getResponseCode()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class RequestLog extends BaseModel
 {
@@ -38,9 +39,10 @@ class RequestLog extends BaseModel
     /**
      * fills log with request object
      *
-     * @param  Request           $request
-     * @param  BaseHtmlPage|null $controller
-     * @return self
+     * @param Request $request
+     * @param BasePage|null $controller
+     * @return $this
+     * @throws BasicException
      */
     public function fillWithRequest(Request $request, BasePage $controller = null)
     {
@@ -61,8 +63,9 @@ class RequestLog extends BaseModel
     /**
      * matches request log with website
      *
-     * @param  string $host
+     * @param string $host
      * @return integer|null
+     * @throws BasicException
      */
     private function matchWebsite($host)
     {

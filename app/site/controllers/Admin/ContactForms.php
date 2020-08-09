@@ -11,6 +11,11 @@
  */
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Degami\PHPFormsApi\Abstracts\Base\Element;
+use Degami\SqlSchema\Exceptions\OutOfRangeException;
+use Exception;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
@@ -40,6 +45,12 @@ class ContactForms extends AdminManageFrontendModelsPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PermissionDeniedException
+     * @throws OutOfRangeException
+     * @throws Exception
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -120,9 +131,11 @@ class ContactForms extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -294,9 +307,10 @@ class ContactForms extends AdminManageFrontendModelsPage
     /**
      * adds a component
      *
-     * @param \Degami\PHPFormsApi\Abstracts\Base\Element $form_component
-     * @param integer                                    $index
-     * @param array                                      $component
+     * @param Element $form_component
+     * @param integer $index
+     * @param array|null $component
+     * @return Element
      */
     private function addComponent($form_component, $index, $component = null)
     {
@@ -392,9 +406,13 @@ class ContactForms extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -485,8 +503,9 @@ class ContactForms extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
+     * @param array $data
      * @return array
+     * @throws Exception
      */
     protected function getTableElements($data)
     {

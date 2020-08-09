@@ -11,10 +11,10 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminPage;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \Gplanchat\EventManager\Event;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Logout" Admin Page
@@ -54,7 +54,8 @@ class Logout extends AdminPage
     /**
      * {@inheritdocs}
      *
-     * @return Response
+     * @return AdminPage|RedirectResponse|Response
+     * @throws BasicException
      */
     public function beforeRender()
     {

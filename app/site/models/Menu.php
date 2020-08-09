@@ -13,6 +13,8 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\ModelWithChildren;
 use \App\Base\Traits\WithWebsiteTrait;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
 
 /**
@@ -28,8 +30,8 @@ use \Psr\Container\ContainerInterface;
  * @method string getTarget()
  * @method int getParent()
  * @method string getBreadcumb()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Menu extends ModelWithChildren
 {
@@ -39,6 +41,7 @@ class Menu extends ModelWithChildren
      * gets link URL
      *
      * @return string
+     * @throws BasicException
      */
     public function getLinkUrl()
     {

@@ -11,9 +11,26 @@
  */
 namespace App\Site\Migrations;
 
+use App\App;
 use \App\Base\Abstracts\Migrations\BaseMigration;
-use \Psr\Container\ContainerInterface;
-use \Degami\SqlSchema\Index;
+use App\Site\Models\Block;
+use App\Site\Models\Contact;
+use App\Site\Models\LinkExchange;
+use App\Site\Models\MediaElement;
+use App\Site\Models\MediaElementRewrite;
+use App\Site\Models\Menu;
+use App\Site\Models\News as NewsModel;
+use App\Site\Models\Page;
+use App\Site\Models\Rewrite;
+use App\Site\Models\Taxonomy;
+use App\Site\Models\User;
+use DateInterval;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
+use Imagine\Image\Box;
+use Imagine\Image\Palette\RGB;
+use Imagine\Image\Point;
 
 /**
  * fake data migration
@@ -62,10 +79,19 @@ class FakeDataMigration extends BaseMigration
 
     /**
      * {@inheritdocs}
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws Exception
      */
     public function up()
     {
-        $adminUser = $this->getContainer()->call([\App\Site\Models\User::class, 'load'], ['id' => 1]);
+        $adminUser = $this->getContainer()->call([User::class, 'load'], ['id' => 1]);
 
         $terms = [];
         $pages = [];
@@ -110,7 +136,7 @@ class FakeDataMigration extends BaseMigration
         }
 
         for ($i=1; $i<=15; $i++) {
-            $now = new \DateTime();
+            $now = new DateTime();
 
             $interval_spec = 'P';
             foreach ([
@@ -121,7 +147,7 @@ class FakeDataMigration extends BaseMigration
                 $interval_spec.= $value.strtoupper($key);
             }
 
-            $date = $now->add(new \DateInterval($interval_spec));
+            $date = $now->add(new DateInterval($interval_spec));
             foreach ($this->locales as $locale) {
                 $news[$locale][] = $this->addNews(
                     'News '.$i,
@@ -181,7 +207,7 @@ class FakeDataMigration extends BaseMigration
         }
 
         foreach ($this->locales as $locale) {
-            $rewrite_model = $this->getContainer()->make(\App\Site\Models\Rewrite::class);
+            $rewrite_model = $this->getContainer()->make(Rewrite::class);
             $rewrite_model->url = '/'.$locale.'/links.html';
             $rewrite_model->route = '/links';
             $rewrite_model->locale = $locale;
@@ -192,7 +218,7 @@ class FakeDataMigration extends BaseMigration
         }
 
         foreach ($this->locales as $locale) {
-            $rewrite_model = $this->getContainer()->make(\App\Site\Models\Rewrite::class);
+            $rewrite_model = $this->getContainer()->make(Rewrite::class);
             $rewrite_model->url = '/'.$locale.'/news.html';
             $rewrite_model->route = '/news';
             $rewrite_model->locale = $locale;
@@ -237,6 +263,7 @@ class FakeDataMigration extends BaseMigration
             }
         }
 
+        $lastMenuItem = null;
         foreach ($this->locales as $locale) {
             foreach (['pages', 'terms','contacts'] as $arrayname) {
                 foreach (${$arrayname}[$locale] as $index => $element) {
@@ -324,7 +351,7 @@ class FakeDataMigration extends BaseMigration
         );
 
 
-        $home_page = $this->getContainer()->call([\App\Site\Models\Page::class, 'load'], ['id' => 1]);
+        $home_page = $this->getContainer()->call([Page::class, 'load'], ['id' => 1]);
         foreach ($this->locales as $locale) {
             $rewrites = [];
             $rewrites[] = $home_page->getRewrite();
@@ -356,7 +383,7 @@ class FakeDataMigration extends BaseMigration
                 $media = $backgrounds[$i];
 
                 if ($media->id && $rewrite->id) {
-                    $media_rewrite = $this->getContainer()->make(\App\Site\Models\MediaElementRewrite::class);
+                    $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class);
                     $media_rewrite->media_element_id = $media->id;
                     $media_rewrite->rewrite_id = $rewrite->id;
 
@@ -369,15 +396,17 @@ class FakeDataMigration extends BaseMigration
     /**
      * adds a news model
      *
-     * @param string    $title
-     * @param string    $content
-     * @param \DateTime $date
-     * @param string    $locale
-     * @param User      $owner_model
+     * @param string $title
+     * @param string $content
+     * @param DateTime $date
+     * @param string $locale
+     * @param User|null $owner_model
+     * @return NewsModel
+     * @throws BasicException
      */
     private function addNews($title, $content, $date, $locale = 'en', $owner_model = null)
     {
-        $news_model = $this->getContainer()->make(\App\Site\Models\News::class);
+        $news_model = $this->getContainer()->make(NewsModel::class);
 
         $news_model->website_id =  $this->website_id;
         $news_model->url = $this->getUtils()->slugify($title);
@@ -397,13 +426,15 @@ class FakeDataMigration extends BaseMigration
      * @param string $title
      * @param string $content
      * @param string $locale
-     * @param array  $terms
-     * @param User   $owner_model
-     * @param array  $images
+     * @param array $terms
+     * @param User|null $owner_model
+     * @param array $images
+     * @return Page
+     * @throws BasicException
      */
     private function addPage($title, $content, $locale = 'en', $terms = [], $owner_model = null, $images = [])
     {
-        $page_model = $this->getContainer()->make(\App\Site\Models\Page::class);
+        $page_model = $this->getContainer()->make(Page::class);
 
         $page_model->website_id =  $this->website_id;
         $page_model->url = $this->getUtils()->slugify($title);
@@ -431,11 +462,13 @@ class FakeDataMigration extends BaseMigration
      * @param string $title
      * @param string $content
      * @param string $locale
-     * @param User   $owner_model
+     * @param User|null $owner_model
+     * @return Taxonomy
+     * @throws BasicException
      */
     private function addTerm($title, $content, $locale = 'en', $owner_model = null)
     {
-        $term_model = $this->getContainer()->make(\App\Site\Models\Taxonomy::class);
+        $term_model = $this->getContainer()->make(Taxonomy::class);
 
         $term_model->website_id =  $this->website_id;
         $term_model->url = $this->getUtils()->slugify($title);
@@ -455,12 +488,13 @@ class FakeDataMigration extends BaseMigration
      * @param string $url
      * @param string $email
      * @param string $locale
-     * @param array  $terms
-     * @param User   $owner_model
+     * @param array $terms
+     * @param User|null $owner_model
+     * @return LinkExchange
      */
     private function addLinkExchange($url, $email, $locale = 'en', $terms = [], $owner_model = null)
     {
-        $link_exchange_model = $this->getContainer()->make(\App\Site\Models\LinkExchange::class);
+        $link_exchange_model = $this->getContainer()->make(LinkExchange::class);
 
         $link_exchange_model->website_id =  $this->website_id;
         $link_exchange_model->url = $url;
@@ -486,12 +520,15 @@ class FakeDataMigration extends BaseMigration
      * @param string $title
      * @param string $content
      * @param string $locale
-     * @param array  $fields
-     * @param User   $owner_model
+     * @param array $fields
+     * @param User|null $owner_model
+     * @return Contact
+     * @throws BasicException
+     * @throws BasicException
      */
     private function addContactForm($title, $content, $locale = 'en', $fields = [], $owner_model = null)
     {
-        $contact_model = $this->getContainer()->make(\App\Site\Models\Contact::class);
+        $contact_model = $this->getContainer()->make(Contact::class);
 
         $contact_model->website_id =  $this->website_id;
         $contact_model->url = $this->getUtils()->slugify($title);
@@ -521,15 +558,16 @@ class FakeDataMigration extends BaseMigration
     /**
      * adds a menu item model
      *
-     * @param string  $title
-     * @param string  $menu_name
+     * @param string $title
+     * @param string $menu_name
      * @param Rewrite $rewrite
-     * @param string  $locale
-     * @param Menu    $parent
+     * @param string $locale
+     * @param Menu|null $parent
+     * @return Menu
      */
     private function addMenuItem($title, $menu_name, $rewrite, $locale = 'en', $parent = null)
     {
-        $menu_item_model = $this->getContainer()->make(\App\Site\Models\Menu::class);
+        $menu_item_model = $this->getContainer()->make(Menu::class);
 
         $menu_item_model->menu_name = $menu_name;
         $menu_item_model->website_id =  $this->website_id;
@@ -553,16 +591,18 @@ class FakeDataMigration extends BaseMigration
      * @param string $content
      * @param string $region
      * @param string $locale
-     * @param array  $rewrites
+     * @param array $rewrites
+     * @return Block
+     * @throws BasicException
      */
     private function addBlock($title, $content, $region, $locale = 'en', $rewrites = [])
     {
-        $block_model = $this->getContainer()->make(\App\Site\Models\Block::class);
+        $block_model = $this->getContainer()->make(Block::class);
 
         $block_model->website_id =  $this->website_id;
         $block_model->title = $title;
         $block_model->locale = $locale;
-        $block_model->instance_class = \App\Site\Models\Block::class;
+        $block_model->instance_class = Block::class;
         $block_model->content = $content;
         $block_model->region = $region;
 
@@ -587,14 +627,15 @@ class FakeDataMigration extends BaseMigration
     /**
      * generates an image
      *
-     * @param  integer $w
-     * @param  integer $h
+     * @param integer $w
+     * @param integer $h
      * @return MediaElement
+     * @throws BasicException
      */
     private function createImage($w = 400, $h = 400)
     {
-        $palette = new \Imagine\Image\Palette\RGB();
-        $size  = new \Imagine\Image\Box($w, $h);
+        $palette = new RGB();
+        $size  = new Box($w, $h);
 
         $white = $palette->color('#ffffff', 100);
         $black = $palette->color('#000000', 100);
@@ -607,17 +648,17 @@ class FakeDataMigration extends BaseMigration
         $image = $this->getImagine()->create($size, $white);
         $image
             ->draw()
-            ->rectangle(new \Imagine\Image\Point(1, 1), new \Imagine\Image\Point(($w/2)-1, ($h/2)-1), $color1, true)
-            ->rectangle(new \Imagine\Image\Point(($w/2)+1, 1), new \Imagine\Image\Point($w-1, ($h/4)-1), $color2, true)
-            ->rectangle(new \Imagine\Image\Point(1, ($h/2)+1), new \Imagine\Image\Point(($w/4)-1, $h-1), $color3, true)
-            ->rectangle(new \Imagine\Image\Point(($w/2)+1, ($h/2)+1), new \Imagine\Image\Point($w-1, $h-1), $color4, true)
-            ->circle(new \Imagine\Image\Point($w/2, $h/2), $h/2, $black, false, 1);
+            ->rectangle(new Point(1, 1), new Point(($w/2)-1, ($h/2)-1), $color1, true)
+            ->rectangle(new Point(($w/2)+1, 1), new Point($w-1, ($h/4)-1), $color2, true)
+            ->rectangle(new Point(1, ($h/2)+1), new Point(($w/4)-1, $h-1), $color3, true)
+            ->rectangle(new Point(($w/2)+1, ($h/2)+1), new Point($w-1, $h-1), $color4, true)
+            ->circle(new Point($w/2, $h/2), $h/2, $black, false, 1);
 
 
-        $filename = \App\App::getDir(\App\App::MEDIA).DS.'image-'.rand().'-'.date("YmdHis").'.png';
+        $filename = App::getDir(App::MEDIA).DS.'image-'.rand().'-'.date("YmdHis").'.png';
         $image->save($filename);
 
-        $media = $this->getContainer()->make(\App\Site\Models\MediaElement::class);
+        $media = $this->getContainer()->make(MediaElement::class);
         $media->path = $filename;
         $media->filename = basename($filename);
 

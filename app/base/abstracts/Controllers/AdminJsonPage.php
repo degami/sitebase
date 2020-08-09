@@ -13,6 +13,7 @@ namespace App\Base\Abstracts\Controllers;
 
 use \App\Base\Traits\AdminTrait;
 use \App\Base\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Base JSON page on admin
@@ -25,6 +26,7 @@ abstract class AdminJsonPage extends BaseJsonPage
      * {@inheritdocs}
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {

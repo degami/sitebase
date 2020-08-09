@@ -11,11 +11,11 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
 use \Degami\PHPFormsApi as FAPI;
-use \App\App;
 use \App\Base\Traits\FormPageTrait;
 use \App\Base\Exceptions\PermissionDeniedException;
 
@@ -30,6 +30,11 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PermissionDeniedException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -47,6 +52,9 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * process form submission
      *
      * @return void
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function processFormSubmit()
     {

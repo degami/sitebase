@@ -11,12 +11,15 @@
  */
 namespace App\Site\Controllers\Admin\Json;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Contact;
 use \App\Site\Routing\RouteInfo;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Controllers\Admin\Sitemaps as SitemapsController;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Contact Form AJAX callback
@@ -58,9 +61,11 @@ class SitemapCallback extends AdminJsonPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
@@ -85,8 +90,8 @@ class SitemapCallback extends AdminJsonPage
     /**
      * ajax callback
      *
-     * @param  FAPI\Form $form
-     * @return FAPI\Abstracts\App\Base\Element
+     * @param FAPI\Form $form
+     * @return FAPI\Abstracts\Base\Element|null
      */
     public static function sitemapFormsCallback(FAPI\Form $form)
     {

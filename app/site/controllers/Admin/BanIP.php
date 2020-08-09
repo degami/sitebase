@@ -11,24 +11,36 @@
  */
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Degami\PHPFormsApi\Exceptions\FormException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
-use \App\Base\Abstracts\Models\FrontendModel;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
 use \App\Site\Models\RequestLog;
 use \Degami\PHPFormsApi as FAPI;
-use \Degami\Basics\Html\TagElement;
 use \App\App;
 
+/**
+ * Class BanIP
+ * @package App\Site\Controllers\Admin
+ */
 class BanIP extends AdminFormPage
 {
+    /**
+     * @var array blocked ips list
+     */
     protected $blocked_ips = [];
 
     /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws FormException
+     * @throws PermissionDeniedException
+     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -40,6 +52,7 @@ class BanIP extends AdminFormPage
      * {@intheritdocs}
      *
      * @return Response|self
+     * @throws BasicException
      */
     protected function beforeRender()
     {
@@ -75,9 +88,10 @@ class BanIP extends AdminFormPage
     /**
      * gets form definition object
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -93,9 +107,7 @@ class BanIP extends AdminFormPage
             'default_value' => 1,
         ]);
 
-
         $this->fillConfirmationForm("Do you really want to ban IP: ".$this->getRequest()->get('ip'), $form, $this->getUrl('admin.dashboard'));
-
 
         return $form;
     }
@@ -115,9 +127,10 @@ class BanIP extends AdminFormPage
     /**
      * handles form submission
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed|Response
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -147,11 +160,21 @@ class BanIP extends AdminFormPage
         return $this->doRedirect($this->getUrl('admin.dashboard'));
     }
 
+    /**
+     * gets ban IPS file path
+     *
+     * @return string
+     */
     protected function getBanFileName()
     {
         return App::getDir(App::CONFIG) . DS . 'blocked_ips.php';
     }
 
+    /**
+     * gets new ban IPS file contents
+     *
+     * @return string
+     */
     protected function getBanFileContents()
     {
         return "<?php\n\nreturn \$blocked_ips = [\n".implode("", array_map(function ($el) {

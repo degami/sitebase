@@ -11,6 +11,7 @@
  */
 namespace App\Site\Models;
 
+use DateTime;
 use \Exception;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
@@ -25,8 +26,8 @@ use \Psr\Container\ContainerInterface;
  * @method string getMessage()
  * @method string getStatus()
  * @method string getResult()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class QueueMessage extends BaseModel
 {
@@ -60,9 +61,9 @@ class QueueMessage extends BaseModel
     /**
      * gets next message on queue
      *
-     * @param  ContainerInterface $container
-     * @param  string             $queue_name
-     * @return self
+     * @param ContainerInterface $container
+     * @param string|null $queue_name
+     * @return self|null
      */
     public static function nextMessage(ContainerInterface $container, $queue_name = null)
     {

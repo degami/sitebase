@@ -11,8 +11,9 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
-use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
@@ -28,6 +29,8 @@ abstract class BaseJsonPage extends BasePage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -38,9 +41,11 @@ abstract class BaseJsonPage extends BasePage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {

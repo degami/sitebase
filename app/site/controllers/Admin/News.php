@@ -11,12 +11,11 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\JsonResponse;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\News as NewsModel;
-use \App\App;
 
 /**
  * "News" Admin Page
@@ -66,9 +65,10 @@ class News extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -146,7 +146,7 @@ class News extends AdminManageFrontendModelsPage
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
+        //$values = $form->values();
         // @todo : check if page language is in page website languages?
         return true;
     }
@@ -154,9 +154,10 @@ class News extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -215,8 +216,11 @@ class News extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
+     * @param array $data
      * @return array
+     * @throws BasicException
+     * @throws BasicException
+     * @throws Exception
      */
     protected function getTableElements($data)
     {

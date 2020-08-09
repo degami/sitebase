@@ -12,6 +12,8 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \Spatie\ArrayToXml\ArrayToXml;
 use \DateTime;
 
@@ -23,10 +25,10 @@ use \DateTime;
  * @method string getLocale()
  * @method string getTitle()
  * @method int getUserId()
- * @method \DateTime getPublishedOn()
+ * @method DateTime getPublishedOn()
  * @method string getContent()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Sitemap extends FrontendModel
 {
@@ -38,7 +40,10 @@ class Sitemap extends FrontendModel
     /**
      * gets sitemap urlset
      *
+     * @param false $reset
      * @return array
+     * @throws BasicException
+     * @throws Exception
      */
     public function getUrlset($reset = false)
     {
@@ -65,6 +70,12 @@ class Sitemap extends FrontendModel
         return $this->urlset;
     }
 
+    /**
+     * generate sitemap
+     *
+     * @return $this
+     * @throws BasicException
+     */
     public function generate()
     {
         $urlset = $this->getUrlset();
@@ -107,6 +118,8 @@ class Sitemap extends FrontendModel
      * {@inheritdocs}
      *
      * @return string
+     * @throws BasicException
+     * @throws Exception
      */
     public function getFrontendUrl()
     {

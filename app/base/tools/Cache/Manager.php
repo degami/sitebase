@@ -11,17 +11,21 @@
  */
 namespace App\Base\Tools\Cache;
 
+use DateInterval;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
+use Psr\Cache\InvalidArgumentException;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
-use \Exception;
 use \Phpfastcache\Core\Item\ExtendedCacheItemInterface;
 use \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use \Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use \Phpfastcache\Exceptions\PhpfastcacheLogicException;
 use \Phpfastcache\Exceptions\PhpfastcacheRootException;
 use \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\SimpleCache\CacheInterface;
+use Traversable;
+use function is_int;
+use function iterator_to_array;
 
 /**
  * Cache Manager
@@ -49,10 +53,11 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * retrieves element from cache
      *
-     * @param  string $key
-     * @param  null   $default
+     * @param string $key
+     * @param null $default
      * @return mixed|null
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     public function get($key, $default = null)
     {
@@ -75,22 +80,24 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * gets cache lifetime
      *
-     * @param  int|\DateInterval $ttl
-     * @return int|\Dateinterval
+     * @param int|DateInterval|null $ttl
+     * @return int|Dateinterval
+     * @throws BasicException
      */
     public function getCacheLifetime($ttl = null)
     {
-        return (is_int($ttl) || $ttl instanceof \DateInterval) ? $ttl : ($this->getEnv('CACHE_LIFETIME') ?? 300);
+        return (is_int($ttl) || $ttl instanceof DateInterval) ? $ttl : ($this->getEnv('CACHE_LIFETIME') ?? 300);
     }
 
     /**
      * saves element in cache
      *
-     * @param  string $key
-     * @param  mixed  $value
-     * @param  null   $ttl
+     * @param string $key
+     * @param mixed $value
+     * @param null $ttl
      * @return bool
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     public function set($key, $value, $ttl = null): bool
     {
@@ -105,9 +112,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
                 ->getItem($key)
                 ->set($value)
                 ->addTag(self::CACHE_TAG);
-            if (\is_int($ttl) && $ttl <= 0) {
-                $cacheItem->expiresAt((new \DateTime('@0')));
-            } elseif (\is_int($ttl) || $ttl instanceof \DateInterval) {
+            if (is_int($ttl) && $ttl <= 0) {
+                $cacheItem->expiresAt((new DateTime('@0')));
+            } elseif (is_int($ttl) || $ttl instanceof DateInterval) {
                 $cacheItem->expiresAfter($ttl);
             }
             return $this->internalCacheInstance->save($cacheItem);
@@ -119,9 +126,10 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * deletes cached element
      *
-     * @param  string $key
+     * @param string $key
      * @return bool
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws InvalidArgumentException
      */
     public function delete($key): bool
     {
@@ -136,7 +144,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * clears cache
      *
      * @return bool
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function clear(): bool
     {
@@ -152,13 +160,13 @@ class Manager extends ContainerAwareObject implements CacheInterface
      *
      * @param  string[] $keys
      * @param  null     $default
-     * @return \iterable
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @return iterable
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getMultiple($keys, $default = null)
     {
-        if ($keys instanceof \Traversable) {
-            $keys = \iterator_to_array($keys);
+        if ($keys instanceof Traversable) {
+            $keys = iterator_to_array($keys);
         }
         try {
             return array_map(
@@ -175,10 +183,11 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * sets multiple elements into cache
      *
-     * @param  string[]               $values
-     * @param  null|int|\DateInterval $ttl
+     * @param string[] $values
+     * @param null|int|DateInterval $ttl
      * @return bool
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     public function setMultiple($values, $ttl = null): bool
     {
@@ -188,9 +197,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
             foreach ($values as $key => $value) {
                 $cacheItem = $this->internalCacheInstance->getItem($key)->set($value);
 
-                if (\is_int($ttl) && $ttl <= 0) {
-                    $cacheItem->expiresAt((new \DateTime('@0')));
-                } elseif (\is_int($ttl) || $ttl instanceof \DateInterval) {
+                if (is_int($ttl) && $ttl <= 0) {
+                    $cacheItem->expiresAt((new DateTime('@0')));
+                } elseif (is_int($ttl) || $ttl instanceof DateInterval) {
                     $cacheItem->expiresAfter($ttl);
                 }
                 $this->internalCacheInstance->saveDeferred($cacheItem);
@@ -205,15 +214,16 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * deletes multiple elements from cache
      *
-     * @param  string[] $keys
+     * @param string[] $keys
      * @return bool
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws InvalidArgumentException
      */
     public function deleteMultiple($keys): bool
     {
         try {
-            if ($keys instanceof \Traversable) {
-                return $this->internalCacheInstance->deleteItems(\iterator_to_array($keys));
+            if ($keys instanceof Traversable) {
+                return $this->internalCacheInstance->deleteItems(iterator_to_array($keys));
             } elseif (is_array($keys)) {
                 return $this->internalCacheInstance->deleteItems($keys);
             } else {
@@ -227,9 +237,10 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * checks if element is present
      *
-     * @param  string $key
+     * @param string $key
      * @return bool
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     public function has($key): bool
     {
@@ -253,7 +264,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * gets internal cache instance
      *
-     * @return \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface
+     * @return ExtendedCacheItemPoolInterface
      */
     public function getInternalCacheInstance(): ExtendedCacheItemPoolInterface
     {
@@ -285,7 +296,6 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * get items by tag
      *
-     * @inheritdoc
      * @param      string $tagName
      * @return     array
      */

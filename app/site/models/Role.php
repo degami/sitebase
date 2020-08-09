@@ -13,15 +13,17 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Exceptions\InvalidValueException;
+use DateTime;
 use \Degami\Basics\Exceptions\BasicException;
+use Exception;
 
 /**
  * Role Model
  *
  * @method int getId()
  * @method string getName()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Role extends BaseModel
 {
@@ -33,8 +35,9 @@ class Role extends BaseModel
     /**
      * returns permissions array
      *
-     * @param  boolean $reset
+     * @param boolean $reset
      * @return array
+     * @throws Exception
      */
     public function getPermissionsArray($reset = false)
     {
@@ -54,9 +57,10 @@ class Role extends BaseModel
     /**
      * checks if role has permission
      *
-     * @param  string  $permission_name
-     * @param  boolean $reset
+     * @param string $permission_name
+     * @param boolean $reset
      * @return boolean
+     * @throws Exception
      */
     public function checkPermission($permission_name, $reset = false)
     {
@@ -74,8 +78,9 @@ class Role extends BaseModel
     /**
      * grants permission to role
      *
-     * @param  string $permission_name
+     * @param string $permission_name
      * @return self
+     * @throws InvalidValueException
      */
     public function grantPermission($permission_name)
     {
@@ -96,8 +101,11 @@ class Role extends BaseModel
     /**
      * revokes permission from role
      *
-     * @param  string $permission_name
-     * @return self
+     * @param $permission_name
+     * @return $this
+     * @throws BasicException
+     * @throws InvalidValueException
+     * @throws Exception
      */
     public function revokePermission($permission_name)
     {
@@ -110,7 +118,8 @@ class Role extends BaseModel
             throw new InvalidValueException("permission not found: ".$permission_name);
         }
 
-        $pivot_model = reset($this->getContainer()->call([RolePermission::class, 'where'], ['condition' => [ 'permission_id' => $permission_model->id, 'role_id' => $this->id]]));
+        $pivot_model = $this->getContainer()->call([RolePermission::class, 'where'], ['condition' => [ 'permission_id' => $permission_model->id, 'role_id' => $this->id]]);
+        $pivot_model = reset($pivot_model);
         if (!$pivot_model->isLoaded()) {
             throw new BasicException("errors finding pivot model");
         }

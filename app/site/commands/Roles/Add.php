@@ -17,12 +17,8 @@ use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableSeparator;
 use \App\Site\Models\Role;
-use \Psr\Container\ContainerInterface;
 use \Exception;
 
 /**
@@ -69,7 +65,7 @@ class Add extends BaseCommand
         }
 
         try {
-            $role = $this->getContainer()->call([\App\Site\Models\Role::class,'new']);
+            $role = $this->getContainer()->call([Role::class,'new']);
             $role->name = $name;
             $role->persist();
 

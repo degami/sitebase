@@ -14,6 +14,10 @@ namespace App\Site\Models;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
 use \App\Base\Traits\WithOwnerTrait;
+use App\Site\Routing\RouteInfo;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 
 /**
  * Rewrite Model
@@ -23,8 +27,8 @@ use \App\Base\Traits\WithOwnerTrait;
  * @method string getUrl()
  * @method string getRoute()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Rewrite extends BaseModel
 {
@@ -38,7 +42,10 @@ class Rewrite extends BaseModel
     /**
      * gets object translations
      *
+     * @param false $reset
      * @return array
+     * @throws BasicException
+     * @throws Exception
      */
     public function getTranslations($reset = false)
     {
@@ -71,6 +78,7 @@ class Rewrite extends BaseModel
      * gets route info object
      *
      * @return RouteInfo
+     * @throws BasicException
      */
     public function getRouteInfo()
     {

@@ -11,6 +11,10 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
+use League\Plates\Template\Template;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Psr\Container\ContainerInterface;
@@ -19,6 +23,7 @@ use \App\Base\Exceptions\PermissionDeniedException;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\AdminActionLog;
 use \App\App;
+use Throwable;
 
 /**
  * Base for admin pages
@@ -46,6 +51,8 @@ abstract class AdminPage extends BaseHtmlPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -71,6 +78,7 @@ abstract class AdminPage extends BaseHtmlPage
      * before render hook
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -84,9 +92,13 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws Throwable
      */
     public function renderPage(RouteInfo $route_info = null, $route_data = [])
     {
@@ -100,7 +112,7 @@ abstract class AdminPage extends BaseHtmlPage
             } catch (Exception $e) {
                 $this->getUtils()->logException($e, "Can't write AdminActionLog");
                 if ($this->getEnv('DEBUG')) {
-                    return $this->getUtils()->errorException($e);
+                    return $this->getUtils()->exceptionPage($e);
                 }
             }
         }
@@ -111,7 +123,8 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * {@inheritfocs}
      *
-     * @return \League\Plates\Template\Template
+     * @return Template
+     * @throws BasicException
      */
     protected function prepareTemplate()
     {
@@ -165,6 +178,7 @@ abstract class AdminPage extends BaseHtmlPage
      * {@inheritdocs}
      *
      * @return string
+     * @throws BasicException
      */
     public function getCurrentLocale()
     {
@@ -178,6 +192,9 @@ abstract class AdminPage extends BaseHtmlPage
 
     /**
      * adds a back button to page
+     *
+     * @param array|null $queryparams
+     * @throws BasicException
      */
     public function addBackButton($queryparams = null)
     {

@@ -12,6 +12,7 @@
 namespace App\Site\Commands\Generate;
 
 use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -19,9 +20,6 @@ use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use \Symfony\Component\Console\Helper\Table;
-use \Psr\Container\ContainerInterface;
-use \App\App;
 
 /**
  * Generate Model Command
@@ -55,9 +53,10 @@ class Model extends CodeGeneratorCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -105,7 +104,7 @@ class Model extends CodeGeneratorCommand
                 $output->writeln("<error>\n\n ".$error."\n</error>");
             }
         } else {
-            $output->writeln('<info>File(s) saved</info>');
+            $output->writeln('<info>'.count($files_written).' File(s) saved</info>');
         }
     }
 
@@ -200,8 +199,9 @@ class Model extends CodeGeneratorCommand
     /**
      * gets model file contents
      *
-     * @param  string $className
+     * @param string $className
      * @return string
+     * @throws BasicException
      */
     protected function getModelFileContents($className)
     {
@@ -228,10 +228,11 @@ class ".$className." extends BaseModel
     /**
      * gets migration file contents
      *
-     * @param  string  $className
-     * @param  string  $modelClassName
-     * @param  integer $migration_order
+     * @param string $className
+     * @param string $modelClassName
+     * @param integer $migration_order
      * @return string
+     * @throws BasicException
      */
     protected function getMigrationFileContents($className, $modelClassName, $migration_order = 100)
     {

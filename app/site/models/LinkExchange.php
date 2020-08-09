@@ -14,6 +14,8 @@ namespace App\Site\Models;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
 use \App\Base\Traits\WithOwnerTrait;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 
 /**
  * Link Exchange Model
@@ -40,7 +42,9 @@ class LinkExchange extends BaseModel
     /**
      * gets Link Taxonomy Terms
      *
+     * @param false $reset
      * @return array
+     * @throws Exception
      */
     public function getTerms($reset = false)
     {
@@ -60,8 +64,9 @@ class LinkExchange extends BaseModel
     /**
      * adds a Taxonomy Term to Link
      *
-     * @param  Taxonomy $term
+     * @param Taxonomy $term
      * @return self
+     * @throws BasicException
      */
     public function addTerm($term)
     {
@@ -78,8 +83,9 @@ class LinkExchange extends BaseModel
     /**
      * removes a Taxonomy term from link
      *
-     * @param  Taxonomy $term
+     * @param Taxonomy $term
      * @return self
+     * @throws BasicException
      */
     public function removeTerm($term)
     {

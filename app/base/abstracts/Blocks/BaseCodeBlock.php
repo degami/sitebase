@@ -11,9 +11,7 @@
  */
 namespace App\Base\Abstracts\Blocks;
 
-use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
-use \App\App;
 use \App\Base\Traits\BlockTrait;
 use \App\Base\Abstracts\Controllers\BasePage;
 

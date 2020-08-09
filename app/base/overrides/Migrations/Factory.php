@@ -32,10 +32,10 @@ class Factory extends GenkgoMigrationFactory
     private $classLoader;
 
     /**
-     * constructor
+     * Factory constructor.
      *
      * @param AdapterInterface $adapter
-     * @param Closure          $classLoader
+     * @param Closure|null $classLoader
      */
     public function __construct(AdapterInterface $adapter, Closure $classLoader = null)
     {

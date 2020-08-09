@@ -11,8 +11,7 @@
  */
 namespace App\Base\Abstracts\Models;
 
-use \Psr\Container\ContainerInterface;
-use \Exception;
+use App\Site\Models\Role;
 
 /**
  * A account model

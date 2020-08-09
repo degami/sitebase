@@ -14,7 +14,6 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \App\Site\Models\MediaElementRewrite;
-use \Psr\Container\ContainerInterface;
 use \Degami\Basics\Html\TagElement;
 use \Degami\PHPFormsApi as FAPI;
 
@@ -32,7 +31,6 @@ class RewriteMedia extends BaseCodeBlock
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
     {
-        $images = [];
         $images = array_map(
             function ($el) {
                 $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class, ['dbrow' => $el]);
@@ -62,10 +60,11 @@ class RewriteMedia extends BaseCodeBlock
     /**
      * additional configuration fieldset
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
-     * @param  array     $default_values
-     * @return FAPI\Form
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @param $default_values
+     * @return array
+     * @throws FAPI\Exceptions\FormException
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
     {

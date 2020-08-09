@@ -12,20 +12,10 @@
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Site\Models\Menu;
-use \App\Site\Models\Block;
-use \App\Site\Models\Rewrite;
-use \App\Site\Models\MailLog;
-use \App\Site\Models\RequestLog;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Site\Models\Website;
-use \App\Site\Routing\RouteInfo;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\Base\Abstracts\Models\BaseModel;
 use \LessQL\Row;
-use \Swift_Message;
-use \Exception;
 
 /**
  * Site Data Helper Class
@@ -43,6 +33,11 @@ class SiteData extends ContainerAwareObject
     const DEFAULT_LOCALE = 'en';
 
 
+    /**
+     * gets current server name
+     *
+     * @return string
+     */
     public function currentServerName()
     {
         return $_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME'];
@@ -51,7 +46,8 @@ class SiteData extends ContainerAwareObject
     /**
      * gets current website id
      *
-     * @return Website|null
+     * @return Website|int|string|null
+     * @throws BasicException
      */
     public function getCurrentWebsite()
     {
@@ -82,6 +78,7 @@ class SiteData extends ContainerAwareObject
      * gets current website id
      *
      * @return integer|null
+     * @throws BasicException
      */
     public function getCurrentWebsiteId()
     {
@@ -104,6 +101,7 @@ class SiteData extends ContainerAwareObject
      * gets default site locale
      *
      * @return string|null
+     * @throws BasicException
      */
     public function getDefaultLocale()
     {
@@ -126,6 +124,8 @@ class SiteData extends ContainerAwareObject
      * gets preferred language by browser configuration
      *
      * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getBrowserPreferredLanguage()
     {
@@ -174,6 +174,10 @@ class SiteData extends ContainerAwareObject
      * get cached config
      *
      * @return array
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     public function getCachedConfig()
     {
@@ -187,10 +191,12 @@ class SiteData extends ContainerAwareObject
     /**
      * gets config value
      *
-     * @param  string  $config_path
-     * @param  integer $website_id
-     * @param  string  $locale
+     * @param string $config_path
+     * @param integer|null $website_id
+     * @param string|null $locale
      * @return mixed
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     public function getConfigValue($config_path, $website_id = null, $locale = null)
     {
@@ -227,9 +233,11 @@ class SiteData extends ContainerAwareObject
     /**
      * gets homepage page id
      *
-     * @param  integer $website_id
-     * @param  string  $locale
-     * @return integer
+     * @param null $website_id
+     * @param null $locale
+     * @return mixed|null
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getHomePageId($website_id = null, $locale = null)
     {
@@ -243,8 +251,10 @@ class SiteData extends ContainerAwareObject
     /**
      * gets homepage redirects to default language preference
      *
-     * @param  integer $website_id
-     * @return boolean
+     * @param null $website_id
+     * @return bool
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getHomePageRedirectsToLanguage($website_id = null)
     {
@@ -254,8 +264,10 @@ class SiteData extends ContainerAwareObject
     /**
      * gets show logo in menu preference
      *
-     * @param  integer $website_id
-     * @return boolean
+     * @param null $website_id
+     * @return bool
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getShowLogoOnMenu($website_id = null)
     {
@@ -265,8 +277,10 @@ class SiteData extends ContainerAwareObject
     /**
      * gets website email address
      *
-     * @param  integer $website_id
-     * @return string
+     * @param null $website_id
+     * @return mixed|null
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getSiteEmail($website_id = null)
     {
@@ -276,8 +290,10 @@ class SiteData extends ContainerAwareObject
     /**
      * gets site enabled locales
      *
-     * @param  integer $website_id
-     * @return array
+     * @param null $website_id
+     * @return false|string[]
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getSiteLocales($website_id = null)
     {
@@ -287,9 +303,11 @@ class SiteData extends ContainerAwareObject
     /**
      * gets main menu name
      *
-     * @param  integer $website_id
-     * @param  string  $locale
-     * @return string
+     * @param null $website_id
+     * @param null $locale
+     * @return mixed|null
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getMainMenuName($website_id = null, $locale = null)
     {
@@ -300,9 +318,11 @@ class SiteData extends ContainerAwareObject
     /**
      * gets main menu name
      *
-     * @param  integer $website_id
-     * @param  string  $locale
-     * @return string
+     * @param null $website_id
+     * @param null $locale
+     * @return mixed|null
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getThemeName($website_id = null, $locale = null)
     {

@@ -11,12 +11,10 @@
  */
 namespace App\Site\Controllers\Admin\Json;
 
-use \Psr\Container\ContainerInterface;
+use App\Site\Controllers\Admin\Taxonomy;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
-use \App\Site\Models\Media;
-use \App\Site\Routing\RouteInfo;
-use \Degami\PHPFormsApi as FAPI;
 
 /**
  * terms for page JSON
@@ -47,6 +45,8 @@ class PageTerms extends AdminJsonPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getJsonData()
     {
@@ -67,7 +67,7 @@ class PageTerms extends AdminJsonPage
             $page->getTerms()
         );
 
-        $taxonomyController = $this->getContainer()->make(\App\Site\Controllers\Admin\Taxonomy::class);
+        $taxonomyController = $this->getContainer()->make(Taxonomy::class);
         $form = $taxonomyController->getForm();
 
         if ($this->getRequest()->get('action') == 'new') {

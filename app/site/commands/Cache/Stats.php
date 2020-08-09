@@ -12,12 +12,12 @@
 namespace App\Site\Commands\Cache;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
 use \Symfony\Component\Console\Helper\TableCell;
 use \Symfony\Component\Console\Helper\TableSeparator;
-use \Psr\Container\ContainerInterface;
 use \App\Base\Tools\Cache\Manager as CacheManager;
 
 /**
@@ -36,9 +36,13 @@ class Stats extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

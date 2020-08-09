@@ -11,6 +11,7 @@
  */
 namespace App\Base\Abstracts\Migrations;
 
+use Degami\Basics\Exceptions\BasicException;
 use \Exception;
 use \Degami\SqlSchema\Schema;
 use \Degami\SqlSchema\Table;
@@ -27,13 +28,14 @@ abstract class DBMigration extends BaseMigration
 
     /**
      * {@inheritdocs}
+     * @throws Exception
      */
     public function up()
     {
+        $table = $sql = null;
         try {
             $schema = $this->getContainer()->make(Schema::class, ['pdo' => $this->getPdo(), 'preload' => true]);
 
-            $table = null;
             try {
                 $table = $schema->getTable($this->tableName);
             } catch (Exception $e) {
@@ -51,7 +53,7 @@ abstract class DBMigration extends BaseMigration
                 throw new Exception("SQL Error: ".$this->getPdo()->errorInfo()[2], 1);
             }
         } catch (Exception $e) {
-            if ($table instanceof Table) {
+            if (isset($sql) && ($table instanceof Table)) {
                 echo "SQL query:" . $sql;
             }
             throw $e;
@@ -60,6 +62,7 @@ abstract class DBMigration extends BaseMigration
 
     /**
      * {@inheritdocs}
+     * @throws BasicException
      */
     public function down()
     {

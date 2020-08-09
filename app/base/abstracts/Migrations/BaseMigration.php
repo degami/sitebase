@@ -13,7 +13,6 @@ namespace App\Base\Abstracts\Migrations;
 
 use \Genkgo\Migrations\MigrationInterface;
 use \Verraes\ClassFunctions\ClassFunctions;
-use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
 
 /**

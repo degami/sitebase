@@ -11,8 +11,9 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use App\Base\Abstracts\Models\BaseModel;
+use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
-use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\RequestLog;
 use \Symfony\Component\HttpFoundation\Request;
@@ -20,9 +21,10 @@ use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \Exception;
 use \App\Base\Exceptions\PermissionDeniedException;
+use Throwable;
 
 /**
- * Base for rest endopoints
+ * Base for rest endpoints
  */
 abstract class BaseRestPage extends BasePage
 {
@@ -30,6 +32,8 @@ abstract class BaseRestPage extends BasePage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -51,6 +55,7 @@ abstract class BaseRestPage extends BasePage
      * before render hook
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -82,11 +87,11 @@ abstract class BaseRestPage extends BasePage
      * loads object by id
      *
      * @param  integer $id
-     * @return \App\Base\Abstracts\Models\BaseModel
+     * @return BaseModel
      */
     protected function loadObject($id)
     {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Models\BaseModel::class)) {
+        if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
             return null;
         }
 
@@ -96,9 +101,11 @@ abstract class BaseRestPage extends BasePage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws BasicException
+     * @throws Throwable
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
@@ -116,10 +123,11 @@ abstract class BaseRestPage extends BasePage
         } catch (Exception $e) {
             $this->getUtils()->logException($e, "Can't write RequestLog");
             if ($this->getEnv('DEBUG')) {
-                return $this->getUtils()->errorException($e);
+                return $this->getUtils()->exceptionPage($e);
             }
         }
 
+        /** @var BaseModel $object */
         $object = $this->getContainer()->call([$this->getObjectClass(), 'new']);
         if (in_array($this->getVerb(), ['GET', 'PUT', 'DELETE'])) {
             $object = $this->loadObject($route_data['id']);
@@ -137,7 +145,6 @@ abstract class BaseRestPage extends BasePage
                     ->getResponse()
                     ->prepare($this->getRequest())
                     ->setData($object->getData());
-                break;
             case 'GET':
                 // Read
 
@@ -154,7 +161,6 @@ abstract class BaseRestPage extends BasePage
                     ->getResponse()
                     ->prepare($this->getRequest())
                     ->setData($object->getData());
-                break;
             case 'DELETE':
                 // Delete
                 $old_data = $object->getData();
@@ -165,10 +171,9 @@ abstract class BaseRestPage extends BasePage
                     ->getResponse()
                     ->prepare($this->getRequest())
                     ->setData($old_data);
-                break;
         }
 
-        return $return;
+        return $this->getUtils()->errorPage(500);
     }
 
     /**

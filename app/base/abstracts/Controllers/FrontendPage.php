@@ -11,6 +11,13 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use App\Site\Models\Menu;
+use App\Site\Models\Rewrite;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
+use League\Plates\Template\Template;
+use LessQL\Result;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\App;
@@ -18,6 +25,8 @@ use \App\Site\Models\RequestLog;
 use \App\Site\Routing\RouteInfo;
 use \Degami\Basics\Html\TagElement;
 use \App\Base\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * Base for frontend pages
@@ -38,6 +47,9 @@ abstract class FrontendPage extends BaseHtmlPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -66,6 +78,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
      */
     protected function getBaseTemplateData()
     {
@@ -102,6 +115,8 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @param string $region
      * @param TagElement|array $tag
+     *
+     * @return self|false
      */
     public function addTag(string $region, $tag)
     {
@@ -116,12 +131,16 @@ abstract class FrontendPage extends BaseHtmlPage
         if ($tag instanceof TagElement) {
             $this->regions[$region][] = $tag;
         }
+
+        return $this;
     }
 
     /**
      * {@inheritdocs}
      *
-     * @return \League\Plates\Template\Template
+     * @return Template
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     protected function prepareTemplate()
     {
@@ -165,6 +184,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * {@inheritdocs}
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -178,9 +198,13 @@ abstract class FrontendPage extends BaseHtmlPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
-     * @return Response
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
+     * @return BaseHtmlPage|BasePage|mixed|Response
+     * @throws BasicException
+     * @throws PermissionDeniedException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws Throwable
      */
     public function renderPage(RouteInfo $route_info = null, $route_data = [])
     {
@@ -195,7 +219,7 @@ abstract class FrontendPage extends BaseHtmlPage
             } catch (Exception $e) {
                 $this->getUtils()->logException($e, "Can't write RequestLog");
                 if ($this->getEnv('DEBUG')) {
-                    return $this->getUtils()->errorException($e);
+                    return $this->getUtils()->exceptionPage($e);
                 }
             }
         }
@@ -206,7 +230,9 @@ abstract class FrontendPage extends BaseHtmlPage
     /**
      * gets Rewrite object for current page
      *
-     * @return Rewrite|null
+     * @return Result|null
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getRewrite()
     {
@@ -219,10 +245,10 @@ abstract class FrontendPage extends BaseHtmlPage
         if ($this->getRouteInfo()) {
             if ($this->getRouteInfo()->getRewrite()) {
                 // we have rewrite id into RouteInfo
-                $rewrite = $this->getDb()->rewrite($this->getRouteInfo()->getRewrite());
+                $rewrite = $this->getDb()->table('rewrite', $this->getRouteInfo()->getRewrite());
             } else {
                 // no data into RouteInfo, try by route
-                $rewrite = $this->getDb()->rewrite()->where(['route' => $this->getRouteInfo()->getRoute()]);
+                $rewrite = $this->getDb()->table('rewrite')->where(['route' => $this->getRouteInfo()->getRoute()]);
             }
         }
         return $rewrite;
@@ -232,6 +258,8 @@ abstract class FrontendPage extends BaseHtmlPage
      * gets current page's locale
      *
      * @return string
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getCurrentLocale()
     {
@@ -239,10 +267,10 @@ abstract class FrontendPage extends BaseHtmlPage
             // try by menu
             $rewrite = $this->getRewrite();
             if ($rewrite != null && (($menu_obj = $rewrite->menuList()->fetch()) != null)) {
-                $menu_obj = $this->getContainer()->make(\App\Site\Models\Menu::class, ['dbrow' => $menu_obj]);
+                $menu_obj = $this->getContainer()->make(Menu::class, ['dbrow' => $menu_obj]);
                 $this->locale = $menu_obj->locale;
             } elseif ($rewrite != null) {
-                $rewrite = $this->getContainer()->make(\App\Site\Models\Rewrite::class, ['dbrow' => $rewrite]);
+                $rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $rewrite]);
                 $this->locale = $rewrite->locale;
             }
 
@@ -266,10 +294,11 @@ abstract class FrontendPage extends BaseHtmlPage
      * get current page translations urls
      *
      * @return array
+     * @throws BasicException
      */
     public function getTranslations()
     {
-        $rewrite = $this->getContainer()->make(\App\Site\Models\Rewrite::class, ['dbrow' => $this->getRewrite()]);
+        $rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $this->getRewrite()]);
         return array_map(
             function ($el) {
                 return $el->url;

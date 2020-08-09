@@ -27,9 +27,9 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
     protected $subject;
 
     /**
-     * constructor
+     * PageDataCollector constructor.
      *
-     * @param BasePage $page
+     * @param BasePage|null $page
      */
     public function __construct(BasePage $page = null)
     {

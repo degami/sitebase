@@ -12,23 +12,19 @@
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
+use Degami\Basics\Exceptions\BasicException;
+use GuzzleHttp\Exception\GuzzleException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Site\Models\Menu;
 use \App\Site\Models\Block;
-use \App\Site\Models\Rewrite;
-use \App\Site\Models\MailLog;
 use \App\Site\Models\RequestLog;
 use \App\Site\Models\QueueMessage;
-use \App\Site\Routing\RouteInfo;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Controllers\Dummy\NullPage;
-use \App\App;
-use \LessQL\Row;
-use \Swift_Message;
 use \Exception;
 use \Spatie\ArrayToXml\ArrayToXml;
+use Throwable;
 
 /**
  * Global utils functions Helper Class
@@ -40,6 +36,7 @@ class Globals extends ContainerAwareObject
      * get page regions list
      *
      * @return array
+     * @throws BasicException
      */
     public function getPageRegions()
     {
@@ -50,6 +47,7 @@ class Globals extends ContainerAwareObject
      * gets available block regions
      *
      * @return array
+     * @throws BasicException
      */
     public function getBlockRegions()
     {
@@ -70,8 +68,9 @@ class Globals extends ContainerAwareObject
     /**
      * gets all blocks for current locale
      *
-     * @param  string $locale
+     * @param string|null $locale
      * @return array
+     * @throws BasicException
      */
     public function getAllPageBlocks($locale = null)
     {
@@ -98,6 +97,7 @@ class Globals extends ContainerAwareObject
      * gets websites options for selects
      *
      * @return array
+     * @throws BasicException
      */
     public function getWebsitesSelectOptions()
     {
@@ -111,8 +111,10 @@ class Globals extends ContainerAwareObject
     /**
      * gets site languages options for selects
      *
-     * @param  integer $website_id
+     * @param integer|null $website_id
      * @return array
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getSiteLanguagesSelectOptions($website_id = null)
     {
@@ -134,7 +136,14 @@ class Globals extends ContainerAwareObject
         );
     }
 
-
+    /**
+     * logs request (if needed)
+     *
+     * @param $status_code
+     * @param Request $request
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
     protected function logRequestIfNeeded($status_code, Request $request)
     {
         if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
@@ -154,10 +163,14 @@ class Globals extends ContainerAwareObject
     /**
      * return an error page
      *
-     * @param  integer $error_code
-     * @param  array   $template_data
-     * @param  RouteInfo|null $route_info
+     * @param integer $error_code
+     * @param Request|null $request
+     * @param array $template_data
+     * @param string|null $template_name
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws Throwable
      */
     public function errorPage($error_code, Request $request = null, $template_data = [], $template_name = null)
     {
@@ -217,10 +230,14 @@ class Globals extends ContainerAwareObject
     /**
      * returns a exception error page
      *
-     * @param  \Exception $exception
+     * @param Exception $exception
+     * @param Request|null $request
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws Throwable
      */
-    public function exceptionPage(\Exception $exception, Request $request = null)
+    public function exceptionPage(Exception $exception, Request $request = null)
     {
         $this->logException($exception);
 
@@ -231,12 +248,13 @@ class Globals extends ContainerAwareObject
         return $this->errorPage(500, $request, $template_data, 'errors::exception');
     }
 
-
     /**
      * returns a blocked ip exception error page
      *
-     * @param  Request $request
+     * @param Request $request
      * @return Response
+     * @throws BasicException
+     * @throws Throwable
      */
     public function blockedIpPage(Request $request)
     {
@@ -251,10 +269,12 @@ class Globals extends ContainerAwareObject
     /**
      * returns an exception error json
      *
-     * @param  \Exception $exception
+     * @param Exception $exception
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function exceptionJson(\Exception $exception)
+    public function exceptionJson(Exception $exception)
     {
         $this->logRequestIfNeeded(500, Request::createFromGlobals());
 
@@ -281,10 +301,12 @@ class Globals extends ContainerAwareObject
     /**
      * returns an exception error xml
      *
-     * @param  \Exception $exception
+     * @param Exception $exception
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function exceptionXML(\Exception $exception)
+    public function exceptionXML(Exception $exception)
     {
         $this->logRequestIfNeeded(500, Request::createFromGlobals());
 
@@ -308,11 +330,13 @@ class Globals extends ContainerAwareObject
         ));
     }
 
-
     /**
      * returns a "site is offline" error page
      *
+     * @param Request|null $request
      * @return Response
+     * @throws BasicException
+     * @throws Throwable
      */
     public function offlinePage(Request $request = null)
     {
@@ -322,11 +346,12 @@ class Globals extends ContainerAwareObject
     /**
      * returns site menu
      *
-     * @param  string    $menu_name
-     * @param  integer   $website_id
-     * @param  string    $locale
-     * @param  Menu|null $menu_element
+     * @param string $menu_name
+     * @param integer $website_id
+     * @param string $locale
+     * @param Menu|null $menu_element
      * @return array
+     * @throws BasicException
      */
     public function getSiteMenu($menu_name, $website_id, $locale, $menu_element = null)
     {
@@ -360,10 +385,10 @@ class Globals extends ContainerAwareObject
     /**
      * logs an exception
      *
-     * @param  Exception $e
-     * @param  string    $prefix
-     * @param  boolean   $with_request
-     * @return void
+     * @param Exception $e
+     * @param string|null $prefix
+     * @param bool $with_request
+     * @throws BasicException
      */
     public function logException(Exception $e, $prefix = null, $with_request = true)
     {
@@ -392,10 +417,12 @@ class Globals extends ContainerAwareObject
     /**
      * executes an http request
      *
-     * @param  string $url
-     * @param  string $method
-     * @param  array  $options
+     * @param string $url
+     * @param string $method
+     * @param array $options
      * @return string|boolean
+     * @throws GuzzleException
+     * @throws BasicException
      */
     public function httpRequest($url, $method = 'GET', array $options = [])
     {
@@ -414,9 +441,10 @@ class Globals extends ContainerAwareObject
     /**
      * translates a string
      *
-     * @param  string $string
-     * @param  string $locale
+     * @param string$string
+     * @param string|null $locale
      * @return string
+     * @throws BasicException
      */
     public function translate($string, $locale = null)
     {
@@ -435,15 +463,16 @@ class Globals extends ContainerAwareObject
      */
     public function checkPass($pass, $encoded_pass)
     {
-        $salt = substr($encoded_pass, strrpos($encdoded_pass, ':')+1);
+        $salt = substr($encoded_pass, strrpos($encoded_pass, ':')+1);
         return (sha1($salt.$pass).':'.$salt) == $encoded_pass;
     }
 
     /**
      * gets encoded version of password
      *
-     * @param  string $pass
+     * @param string $pass
      * @return string
+     * @throws BasicException
      */
     public function getEncodedPass($pass)
     {
@@ -454,7 +483,9 @@ class Globals extends ContainerAwareObject
      * adds message to queue
      *
      * @param string $queue_name
-     * @param mixed  $data
+     * @param mixed $data
+     * @return QueueMessage
+     * @throws BasicException
      */
     public function addQueueMessage($queue_name, $data)
     {
@@ -467,6 +498,12 @@ class Globals extends ContainerAwareObject
         return $message;
     }
 
+    /**
+     * computes a random string
+     *
+     * @param int $length
+     * @return string
+     */
     public function randString($length = 10)
     {
         $characters = implode("", array_merge(range(0, 9), range('a', 'z'), range('A', 'Z')));

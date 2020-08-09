@@ -11,11 +11,7 @@
  */
 namespace App\Base\Controllers\Dummy;
 
-use \Psr\Container\ContainerInterface;
-use \App\App;
 use \App\Base\Abstracts\Controllers\BaseHtmlPage;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Response;
 
 /**
  * This page does nothing

@@ -11,10 +11,16 @@
  */
 namespace App\Base\Tools\Plates;
 
+use App\Base\Tools\Assets\Manager as AssetsManager;
+use App\Base\Tools\Utils\HtmlPartsRenderer;
+use App\Site\Models\Website;
+use DebugBar\StandardDebugBar;
+use Degami\Basics\Exceptions\BasicException;
 use \League\Plates\Engine;
 use \League\Plates\Extension\ExtensionInterface;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \App\App;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 
 /**
@@ -92,9 +98,11 @@ class SiteBase implements ExtensionInterface
     /**
      * render block for region
      *
-     * @param  string   $region
-     * @param  BasePage $controller
+     * @param $region
+     * @param BasePage $controller
      * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function renderBlocks($region, BasePage $controller)
     {
@@ -115,7 +123,7 @@ class SiteBase implements ExtensionInterface
     /**
      * return debugger object
      *
-     * @return \DebugBar\StandardDebugBar
+     * @return StandardDebugBar
      */
     public function getDebugbar()
     {
@@ -125,8 +133,10 @@ class SiteBase implements ExtensionInterface
     /**
      * gets asset url
      *
-     * @param  string $asset_path
+     * @param $asset_path
      * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function assetUrl($asset_path)
     {
@@ -148,7 +158,7 @@ class SiteBase implements ExtensionInterface
     /**
      * gets assets manager object
      *
-     * @return \App\Base\Tools\Assets\Manager
+     * @return AssetsManager
      */
     protected function getAssets()
     {
@@ -158,7 +168,7 @@ class SiteBase implements ExtensionInterface
     /**
      * gets html parts renderer
      *
-     * @return \App\Base\Tools\Utils\HtmlPartsRenderer
+     * @return HtmlPartsRenderer
      */
     protected function getHtmlRenderer()
     {
@@ -168,7 +178,7 @@ class SiteBase implements ExtensionInterface
     /**
      * gets app object
      *
-     * @return \App\App
+     * @return App
      */
     protected function getApp()
     {
@@ -204,7 +214,8 @@ class SiteBase implements ExtensionInterface
     /**
      * gets env variable
      *
-     * @param  string $variable
+     * @param string $variable
+     * @param null $default
      * @return mixed
      */
     public function env($variable, $default = null)

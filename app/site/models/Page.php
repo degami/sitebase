@@ -12,6 +12,9 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 
 /**
  * Page Model
@@ -27,8 +30,8 @@ use \App\Base\Abstracts\Models\FrontendModel;
  * @method string getMetaKeywords()
  * @method string getHtmlTitle()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Page extends FrontendModel
 {
@@ -45,7 +48,9 @@ class Page extends FrontendModel
     /**
      * gets page gallery
      *
+     * @param false $reset
      * @return array
+     * @throws Exception
      */
     public function getGallery($reset = false)
     {
@@ -65,8 +70,9 @@ class Page extends FrontendModel
     /**
      * adds media to page
      *
-     * @param  MediaElement $media_element
+     * @param MediaElement $media_element
      * @return self
+     * @throws BasicException
      */
     public function addMedia($media_element)
     {
@@ -83,8 +89,9 @@ class Page extends FrontendModel
     /**
      * removes media from page
      *
-     * @param  MediaElement $media_element
+     * @param MediaElement $media_element
      * @return self
+     * @throws BasicException
      */
     public function removeMedia($media_element)
     {
@@ -100,7 +107,9 @@ class Page extends FrontendModel
     /**
      * get page terms
      *
+     * @param false $reset
      * @return array
+     * @throws Exception
      */
     public function getTerms($reset = false)
     {
@@ -120,8 +129,9 @@ class Page extends FrontendModel
     /**
      * adds a term to page
      *
-     * @param  Taxonomy $term
+     * @param Taxonomy $term
      * @return self
+     * @throws BasicException
      */
     public function addTerm($term)
     {
@@ -138,8 +148,9 @@ class Page extends FrontendModel
     /**
      * removes a term from page
      *
-     * @param  Taxonomy $term
+     * @param Taxonomy $term
      * @return self
+     * @throws BasicException
      */
     public function removeTerm($term)
     {

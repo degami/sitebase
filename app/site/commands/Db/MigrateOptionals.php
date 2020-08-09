@@ -11,10 +11,8 @@
  */
 namespace App\Site\Commands\Db;
 
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
-use \App\Site\Commands\Db\Migrate;
 use \App\App;
 
 /**
@@ -25,8 +23,9 @@ class MigrateOptionals extends Migrate
     /**
      * {@inheritdocs}
      *
-     * @param string                  $name
+     * @param string|null $name
      * @param ContainerInterface|null $container
+     * @throws BasicException
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {

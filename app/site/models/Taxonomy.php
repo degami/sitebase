@@ -12,6 +12,8 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModelWithChildren;
+use DateTime;
+use Exception;
 
 /**
  * Taxonomy Model
@@ -25,8 +27,8 @@ use \App\Base\Abstracts\Models\FrontendModelWithChildren;
  * @method string getHtmlTitle()
  * @method int getUserId()
  * @method int getParent()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Taxonomy extends FrontendModelWithChildren
 {
@@ -48,7 +50,9 @@ class Taxonomy extends FrontendModelWithChildren
     /**
      * gets term pages
      *
+     * @param false $reset
      * @return array
+     * @throws Exception
      */
     public function getPages($reset = false)
     {

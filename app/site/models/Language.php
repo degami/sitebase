@@ -12,6 +12,7 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
+use DateTime;
 
 /**
  * Language Model
@@ -20,8 +21,8 @@ use \App\Base\Abstracts\Models\BaseModel;
  * @method string getName()
  * @method string getNative()
  * @method string getFamily()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Language extends BaseModel
 {

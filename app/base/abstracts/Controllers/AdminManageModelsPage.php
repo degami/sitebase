@@ -11,27 +11,40 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Degami\PHPFormsApi\Exceptions\FormException;
+use Exception;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
 use \App\Base\Abstracts\Models\FrontendModel;
-use \Degami\PHPFormsApi as FAPI;
 use \Degami\Basics\Html\TagElement;
-use \App\App;
 
 /**
  * Base for admin page that manages a Model
  */
 abstract class AdminManageModelsPage extends AdminFormPage
 {
+    /**
+     * @var BaseModel|null object instance
+     */
     protected $objectInstance = null;
 
+    /**
+     * @var array|null admin_log data
+     */
     protected $admin_action_log_data = null;
 
     /**
      * {@inheriydocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws FormException
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -76,6 +89,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
         }
     }
 
+    /**
+     * gets search parameters
+     *
+     * @return array|null
+     */
     protected function getSearchParameters()
     {
         $out = array_filter([
@@ -148,11 +166,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * loads object by id
      *
      * @param  integer $id
-     * @return \App\Base\Abstracts\Models\BaseModel
+     * @return BaseModel
      */
     protected function loadObject($id)
     {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Models\BaseModel::class)) {
+        if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
             return null;
         }
 
@@ -162,11 +180,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets new empty model
      *
-     * @return \App\Base\Abstracts\Models\BaseModel
+     * @return BaseModel
      */
     protected function newEmptyObject()
     {
-        if (!is_subclass_of($this->getObjectClass(), \App\Base\Abstracts\Models\BaseModel::class)) {
+        if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
             return null;
         }
 
@@ -175,6 +193,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
     /**
      * adds a "new" button
+     * @throws BasicException
      */
     public function addNewButton()
     {
@@ -194,19 +213,24 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getActionButton($action, $object_id, $class, $icon, $title = '')
     {
-        $button = new TagElement(
-            [
-            'tag' => 'a',
-            'attributes' => [
-                'class' => 'btn btn-sm btn-'.$class,
-                'href' => $this->getControllerUrl() .'?action='.$action.'&'.$this->getObjectIdQueryParam().'='.$object_id,
-                'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
-            ],
-            'text' => $this->getUtils()->getIcon($icon),
-            ]
-        );
+        try {
+            $button = new TagElement(
+                [
+                    'tag' => 'a',
+                    'attributes' => [
+                        'class' => 'btn btn-sm btn-' . $class,
+                        'href' => $this->getControllerUrl() . '?action=' . $action . '&' . $this->getObjectIdQueryParam() . '=' . $object_id,
+                        'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
+                    ],
+                    'text' => $this->getUtils()->getIcon($icon),
+                ]
+            );
 
-        return (string) $button;
+            return (string) $button;
+        } catch (BasicException $e) {
+        }
+
+        return '';
     }
 
     /**
@@ -235,7 +259,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * gets "to frontend" button html
      *
      * @param FrontendModel $object
+     * @param string $class
+     * @param string $icon
      * @return string
+     * @throws BasicException
+     * @throws Exception
      */
     public function getFrontendModelButton(FrontendModel $object, $class = 'light', $icon = 'zoom-in')
     {
@@ -255,6 +283,12 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return (string) $button;
     }
 
+    /**
+     * sets admin log data
+     *
+     * @param $admin_action_log_data
+     * @return $this
+     */
     public function setAdminActionLogData($admin_action_log_data)
     {
         $this->admin_action_log_data = $admin_action_log_data;
@@ -262,12 +296,21 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return $this;
     }
 
-
+    /**
+     * gets admin log data
+     *
+     * @return array|null
+     */
     public function getAdminActionLogData()
     {
         return $this->admin_action_log_data;
     }
 
+    /**
+     * gets model class table name
+     *
+     * @return mixed
+     */
     public function getModelTableName()
     {
         return $this->getContainer()->call([$this->getObjectClass(), 'defaultTableName']);

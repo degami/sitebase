@@ -11,13 +11,14 @@
  */
 namespace App\Site\Controllers\Admin\Json;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Base\Traits\AdminFormTrait;
-use \App\Site\Models\Contact;
 use \App\Site\Routing\RouteInfo;
 use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Controllers\Admin\ContactForms as ContactFormsController;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Contact Form AJAX callback
@@ -32,11 +33,21 @@ class WebsiteLanguagesCallback extends AdminJsonPage
     protected $form;
 
 
+    /**
+     * gets object class
+     *
+     * @return mixed|null
+     */
     public function getObjectClass()
     {
         return $this->getRequest()->get('object_class');
     }
 
+    /**
+     * gets an object class instance
+     *
+     * @return mixed
+     */
     public function getObject()
     {
         return $this->getContainer()->make($this->getRequest()->get('object_class'));
@@ -69,9 +80,11 @@ class WebsiteLanguagesCallback extends AdminJsonPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {

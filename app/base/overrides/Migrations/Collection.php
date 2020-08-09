@@ -17,6 +17,7 @@ use \Genkgo\Migrations\AdapterInterface;
 use \Genkgo\Migrations\MigrationInterface;
 use \Genkgo\Migrations\AlreadyMigratedException;
 use \Genkgo\Migrations\NotReadyToMigrateException;
+use InvalidArgumentException;
 
 /**
  * Overrides migrations collection in order to have them sorted
@@ -45,7 +46,7 @@ class Collection extends GenkgoMigrationCollection
      */
     public function __construct(AdapterInterface $adapter)
     {
-        $this->adapter = $adapter;
+        parent::__construct($adapter);
     }
 
     /**

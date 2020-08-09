@@ -11,8 +11,9 @@
  */
 namespace App\Site\Models;
 
-use \App\Site\Routing\RouteInfo;
 use \App\Base\Abstracts\Controllers\BasePage;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -24,19 +25,18 @@ use \Symfony\Component\HttpFoundation\Request;
  * @method string getMethod()
  * @method string getUserId()
  * @method string getIpAddress()
- * @method RouteInfo getRouteInfo()
- * @method mixed getLogData()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class AdminActionLog extends RequestLog
 {
     /**
      * fills log with request object
      *
-     * @param  Request           $request
-     * @param  BaseHtmlPage|null $controller
-     * @return self
+     * @param Request $request
+     * @param BasePage|null $controller
+     * @return $this|AdminActionLog
+     * @throws BasicException
      */
     public function fillWithRequest(Request $request, BasePage $controller = null)
     {
@@ -51,15 +51,23 @@ class AdminActionLog extends RequestLog
         return $this;
     }
 
+    /**
+     * gets route info
+     *
+     * @return mixed
+     */
     public function getRouteInfo()
     {
-        $route_info = unserialize($this->getData('route_info'));
-        return $route_info;
+        return unserialize($this->getData('route_info'));
     }
 
+    /**
+     * gets log data
+     *
+     * @return mixed
+     */
     public function getLogData()
     {
-        $log_data = unserialize($this->getData('log_data'));
-        return $log_data;
+        return unserialize($this->getData('log_data'));
     }
 }

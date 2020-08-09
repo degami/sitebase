@@ -11,15 +11,15 @@
  */
 namespace App\Site\Controllers\Frontend;
 
-use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi as FAPI;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use \App\App;
 use \App\Site\Models\News;
-use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
 use \App\Base\Exceptions\NotFoundException;
+use Throwable;
 
 /**
  * News Detail Page
@@ -60,6 +60,7 @@ class NewsDetail extends FrontendPageWithObject
      * {@inheritdocs}
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -75,9 +76,12 @@ class NewsDetail extends FrontendPageWithObject
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws Exception
+     * @throws NotFoundException
+     * @throws Throwable
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
@@ -92,6 +96,7 @@ class NewsDetail extends FrontendPageWithObject
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
      */
     protected function getBaseTemplateData()
     {
@@ -103,7 +108,7 @@ class NewsDetail extends FrontendPageWithObject
     /**
      * {@inheritdocs}
      *
-     * @return [type] [description]
+     * @return string
      */
     public static function getObjectClass()
     {

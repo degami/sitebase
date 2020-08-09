@@ -11,13 +11,12 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Traits\FrontendTrait;
-use \App\Site\Routing\RouteInfo;
-use \App\Site\Models\AdminActionLog;
-use \App\App;
 use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
@@ -46,6 +45,9 @@ abstract class LoggedUserPage extends FrontendPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -68,6 +70,8 @@ abstract class LoggedUserPage extends FrontendPage
      * before render hook
      *
      * @return Response|self
+     * @throws PermissionDeniedException
+     * @throws BasicException
      */
     protected function beforeRender()
     {

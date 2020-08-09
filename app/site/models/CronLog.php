@@ -12,6 +12,7 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
+use DateTime;
 
 /**
  * Cron Log Model
@@ -20,8 +21,8 @@ use \App\Base\Abstracts\Models\BaseModel;
  * @method string getRunTime()
  * @method int getDuration()
  * @method string getTasks()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class CronLog extends BaseModel
 {

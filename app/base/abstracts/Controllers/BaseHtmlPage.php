@@ -11,15 +11,15 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
-use \Exception;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
+use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Tools\DataCollector\PageDataCollector;
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Cookie;
 use \League\Plates\Template\Template;
-use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \App\Base\Traits\PageTrait;
+use \Throwable;
 
 /**
  * Base for pages rendering an html response
@@ -37,6 +37,7 @@ abstract class BaseHtmlPage extends BasePage
      * prepare template object
      *
      * @return Template
+     * @throws BasicException
      */
     protected function prepareTemplate()
     {
@@ -49,9 +50,12 @@ abstract class BaseHtmlPage extends BasePage
     /**
      * controller entrypoint
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response|self
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     * @throws Throwable
      */
     public function renderPage(RouteInfo $route_info = null, $route_data = [])
     {
@@ -66,7 +70,7 @@ abstract class BaseHtmlPage extends BasePage
         $this->getApp()->setCurrentLocale($this->getCurrentLocale());
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getContainer()->get('debugbar');
-            $debugbar->addCollector(new \App\Base\Tools\DataCollector\PageDataCollector($this));
+            $debugbar->addCollector(new PageDataCollector($this));
         }
 
         return $this->process($route_info, $route_data);
@@ -75,9 +79,11 @@ abstract class BaseHtmlPage extends BasePage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
-     * @return Response
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
+     * @return BasePage|Response
+     * @throws BasicException
+     * @throws Throwable
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
@@ -102,7 +108,7 @@ abstract class BaseHtmlPage extends BasePage
                 ->getResponse()
                 ->prepare($this->getRequest())
                 ->setContent($template_html);
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             return $this->getUtils()->exceptionPage($e, $this->getRequest());
         }
     }
@@ -172,6 +178,7 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @param string $type
      * @param string $message
+     * @return BaseHtmlPage
      */
     public function addFlashMessage($type, $message)
     {

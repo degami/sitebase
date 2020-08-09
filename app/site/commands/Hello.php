@@ -24,7 +24,7 @@ class Hello extends Command
     /**
      * {@inheritdocs}
      *
-     * @param string $name
+     * @param string|null $name
      */
     public function __construct($name = null)
     {

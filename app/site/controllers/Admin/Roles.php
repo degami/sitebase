@@ -11,7 +11,7 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \App\Site\Models\Role;
 use \Degami\PHPFormsApi as FAPI;
@@ -64,9 +64,10 @@ class Roles extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -120,17 +121,17 @@ class Roles extends AdminManageModelsPage
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
-
+        //$values = $form->values();
         return true;
     }
 
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -177,7 +178,7 @@ class Roles extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
+     * @param array $data
      * @return array
      */
     protected function getTableElements($data)

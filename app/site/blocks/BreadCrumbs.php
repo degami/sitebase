@@ -13,10 +13,10 @@ namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Site\Models\Menu;
 use \App\Base\Traits\AdminTrait;
-use \App\Site\Controllers\Frontend\Page;
 use \App\Site\Models\Rewrite;
 use \Degami\Basics\Html\TagElement;
 
@@ -28,15 +28,17 @@ class BreadCrumbs extends BaseCodeBlock
     /**
      * {@inheritdocs}
      *
-     * @param  BasePage|null $current_page
+     * @param BasePage|null $current_page
      * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function renderHTML(BasePage $current_page = null)
     {
         $locale = $current_page->getCurrentLocale();
         $route_info = $current_page->getRouteInfo();
 
-        $current_page_handler = $route_info->getHandler();
+        // $current_page_handler = $route_info->getHandler();
         if ($current_page->getRouteGroup() == AdminTrait::getRouteGroup() || $route_info->isAdminRoute()) {
             return '';
         }
@@ -74,7 +76,7 @@ class BreadCrumbs extends BaseCodeBlock
                     'attributes' => [
                         'class' => 'breadcrumb-link',
                         'href' => $home_url,
-                        'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
+                        'title' => $this->getUtils()->translate('Home', $locale),
                     ],
                     'text' => $this->getUtils()->translate('Home', $locale),
                 ]]

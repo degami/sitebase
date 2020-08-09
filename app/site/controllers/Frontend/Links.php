@@ -11,13 +11,11 @@
  */
 namespace App\Site\Controllers\Frontend;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
-use \App\App;
 use \App\Site\Models\LinkExchange;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Response;
 
 /**
  * Link Exchange Page
@@ -73,6 +71,8 @@ class Links extends FormPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTemplateData()
     {
@@ -156,9 +156,11 @@ class Links extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -194,6 +196,7 @@ class Links extends FormPage
      * {@inheritdocs}
      *
      * @return string
+     * @throws BasicException
      */
     public function getCurrentLocale()
     {

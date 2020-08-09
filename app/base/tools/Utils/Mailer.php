@@ -11,12 +11,16 @@
  */
 namespace App\Base\Tools\Utils;
 
+use App\App;
 use \App\Base\Abstracts\ContainerAwareObject;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Swift_Message;
 use \Exception;
 use \Aws\Exception\AwsException;
 use \App\Site\Models\MailLog;
 use \Swift_TransportException;
+use Throwable;
 
 /**
  * Mailer Helper Class
@@ -26,18 +30,18 @@ class Mailer extends ContainerAwareObject
     /**
      * send a mail
      *
-     * @param  string  $from
-     * @param  string  $to
-     * @param  string  $subject
-     * @param  string  $body
-     * @param  string  $content_type
-     * @param  boolean $log
-     * @return boolean
+     * @param $from
+     * @param $to
+     * @param $subject
+     * @param $body
+     * @param string $content_type
+     * @param bool $log
+     * @return bool
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function sendMail($from, $to, $subject, $body, $content_type = 'text/html', $log = true)
     {
-        $result = false;
-
         $use_ses = (trim($this->getEnv('SES_REGION')) != '' && trim($this->getSiteData()->getConfigValue('app/mail/ses_sender')) != '');
         if (!$use_ses || ($result = $this->sendSesMail($from, $to, $subject, $body, $content_type)) != true) {
             // use smtp or fallback to smtp
@@ -54,12 +58,15 @@ class Mailer extends ContainerAwareObject
     /**
      * send email using template
      *
-     * @param  string $from
-     * @param  string $to
-     * @param  string $subject
-     * @param  string $mail_template
-     * @param  string $mail_variables
-     * @return boolean
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $mail_template
+     * @param array $mail_variables
+     * @return bool
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws Throwable
      */
     public function sendTemplateMail($from, $to, $subject, $mail_template, $mail_variables = [])
     {
@@ -79,12 +86,14 @@ class Mailer extends ContainerAwareObject
     /**
      * sends a mail using SMTP
      *
-     * @param  string $from
-     * @param  string $to
-     * @param  string $subject
-     * @param  string $body
-     * @param  string $content_type
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param string $content_type
      * @return boolean
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function sendSmtpMail($from, $to, $subject, $body, $content_type = 'text/html')
     {
@@ -105,9 +114,7 @@ class Mailer extends ContainerAwareObject
                 ->setBody($body);
 
             // Send the message
-            $result = $this->getSmtpMailer()->send($message);
-
-            return $result;
+            return $this->getSmtpMailer()->send($message);
         } catch (Swift_TransportException $e) {
             $this->getUtils()->logException($e, "Error sending SMTP mail");
         }
@@ -118,12 +125,14 @@ class Mailer extends ContainerAwareObject
     /**
      * send a mail using SES
      *
-     * @param  string $from
-     * @param  string $to
-     * @param  string $subject
-     * @param  string $body
-     * @param  string $content_type
-     * @return boolean
+     * @param $from
+     * @param $to
+     * @param $subject
+     * @param $body
+     * @param string $content_type
+     * @return bool
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     protected function sendSesMail($from, $to, $subject, $body, $content_type = 'text/html')
     {
@@ -143,7 +152,7 @@ class Mailer extends ContainerAwareObject
         }
 
         try {
-            $result = $this->getSesMailer()->sendEmail(
+            $this->getSesMailer()->sendEmail(
                 [
                 'Destination' => [
                     'ToAddresses' => $to,
@@ -172,7 +181,7 @@ class Mailer extends ContainerAwareObject
                 // 'ConfigurationSetName' => $configuration_set,
                 ]
             );
-            $messageId = $result['MessageId'];
+            //$messageId = $result['MessageId'];
             return true;
         } catch (AwsException $e) {
             // output error message if fails
@@ -184,12 +193,13 @@ class Mailer extends ContainerAwareObject
     /**
      * logs mail sent
      *
-     * @param  string  $from
-     * @param  string  $to
-     * @param  string  $subject
-     * @param  integer $result
-     * @param  string  $mail_template
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param integer $result
+     * @param string|null $mail_template
      * @return MailLog|boolean
+     * @throws BasicException
      */
     protected function logMail($from, $to, $subject, $result, $mail_template = null)
     {

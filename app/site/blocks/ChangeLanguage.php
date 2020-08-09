@@ -11,7 +11,6 @@
  */
 namespace App\Site\Blocks;
 
-use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \Degami\PHPFormsApi as FAPI;
@@ -104,10 +103,11 @@ class ChangeLanguage extends BaseCodeBlock
     /**
      * additional configuration fieldset
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
-     * @param  array     $default_values
-     * @return FAPI\Form
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @param $default_values
+     * @return array
+     * @throws FAPI\Exceptions\FormException
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
     {

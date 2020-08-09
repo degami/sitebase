@@ -11,10 +11,9 @@
  */
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Models\User;
-use \App\Site\Models\GuestUser;
 use \Degami\Basics\Html\TagElement;
+use Exception;
 
 /**
  * Administration pages Trait
@@ -55,7 +54,7 @@ trait AdminTrait
                 $this->current_user_model = $this->getCurrentUser();
                 return $this->current_user_model->checkPermission('administer_site');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->getUtils()->logException($e);
         }
 
@@ -73,7 +72,7 @@ trait AdminTrait
         try {
             $this->current_user_model = $this->getCurrentUser();
             return $this->current_user_model->checkPermission($permission_name);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->getUtils()->logException($e);
         }
 
@@ -124,6 +123,7 @@ trait AdminTrait
      * @param string $button_id
      * @param string $button_text
      * @param string $button_class
+     * @return AdminTrait
      */
     protected function addActionButton($key, $button_id, $button_text, $button_class = 'btn btn-sm btn-light')
     {
@@ -146,11 +146,13 @@ trait AdminTrait
     /**
      * adds an action link
      *
-     * @param string $key
-     * @param string $link_id
-     * @param string $link_text
+     * @param $key
+     * @param $link_id
+     * @param $link_text
      * @param string $link_href
      * @param string $link_class
+     * @param array $attributes
+     * @return $this
      */
     public function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light', $attributes = [])
     {

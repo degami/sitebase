@@ -11,12 +11,13 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use Degami\PHPFormsApi\Abstracts\Base\Element;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Menu;
 use \App\Site\Models\Rewrite;
-use \App\App;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
  * "Menus" Admin Page
@@ -82,11 +83,17 @@ class Menus extends AdminManageModelsPage
     /**
      * adds a menu level
      *
-     * @param \FAPI\Abstracts\App\Base\Element $parentFormElement
-     * @param string                           $menu_name
-     * @param Menu|null                        $menuElement
+     * @param Element $parentFormElement
+     * @param string $menu_name
+     * @param Menu|null $menuElement
+     * @return Element
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
-    private function addLevel(/*FAPI\Abstracts\App\Base\Element*/ $parentFormElement, $menu_name, $menuElement = null)
+    private function addLevel($parentFormElement, $menu_name, $menuElement = null)
     {
         $parent_id = null;
         $thisFormElement = null;
@@ -135,9 +142,11 @@ class Menus extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -283,17 +292,17 @@ class Menus extends AdminManageModelsPage
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
-
+        //$values = $form->values();
         return true;
     }
 
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -335,7 +344,7 @@ class Menus extends AdminManageModelsPage
     /**
      * saves level
      *
-     * @param  stromg $menu_name
+     * @param  string $menu_name
      * @param  array  $level
      * @param  array  $parent
      * @return void
@@ -366,8 +375,10 @@ class Menus extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
+     * @param array $data
      * @return array
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTableElements($data)
     {

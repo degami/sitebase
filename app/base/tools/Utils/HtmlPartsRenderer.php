@@ -11,22 +11,15 @@
  */
 namespace App\Base\Tools\Utils;
 
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\Request;
+use Degami\Basics\Exceptions\BasicException;
+use Degami\SqlSchema\Exceptions\OutOfRangeException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \App\Base\Abstracts\Models\BaseModel;
-use \App\Site\Models\Menu;
-use \App\Site\Models\Block;
 use \App\Site\Models\Rewrite;
-use \App\Site\Models\MailLog;
-use \App\Site\Models\RequestLog;
-use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \App\App;
-use \LessQL\Row;
-use \Swift_Message;
-use \Exception;
 use \Degami\Basics\Html\TagElement;
 use \Degami\Basics\Html\TagList;
 
@@ -48,7 +41,6 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $messages_container = $this->getContainer()->make(TagList::class);
 
-        $out = '';
         foreach ((array) $flash_messages as $type => $messages) {
             $messages_list = $this->getContainer()->make(TagList::class);
 
@@ -107,8 +99,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $link_options['attributes']['aria-expanded'] = 'false';
         }
 
-        $link = $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
-        return $link;
+        return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
     }
 
     /**
@@ -166,8 +157,22 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * render site menu
      *
-     * @param  string $locale
+     * @param string $locale
      * @return string
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function renderSiteMenu($locale)
     {
@@ -277,10 +282,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * render region blocks
      *
-     * @param  string        $region
-     * @param  string        $locale
-     * @param  BasePage|null $current_page
-     * @return string
+     * @param string $region
+     * @param string|null $locale
+     * @param BasePage|null $current_page
+     * @return mixed|string|null
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function renderBlocks($region, $locale = null, BasePage $current_page = null)
     {
@@ -289,6 +296,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
+        $route_info = null;
         $cache_key = strtolower('site.'.$website_id.'.blocks.'.$region.'.html.'.$locale);
         if ($current_page) {
             if (method_exists($current_page, 'showBlocks') && $current_page->showBlocks() === false) {
@@ -372,12 +380,17 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * renders paginator
      *
-     * @param  integer  $current_page
-     * @param  integer  $total
-     * @param  BasePage $controller
-     * @param  integer  $page_size
-     * @param  integer  $visible_links
+     * @param integer $current_page
+     * @param integer $total
+     * @param BasePage $controller
+     * @param integer $page_size
+     * @param integer $visible_links
      * @return string
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function renderPaginator($current_page, $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2)
     {
@@ -552,10 +565,23 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * renders admin table
      *
-     * @param  array         $elements
-     * @param  array|null    $header
-     * @param  BasePage|null $current_page
+     * @param array $elements
+     * @param array|null $header
+     * @param BasePage|null $current_page
      * @return string
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws OutOfRangeException
+     * @throws BasicException
      */
     public function renderAdminTable($elements, $header = null, BasePage $current_page = null)
     {
@@ -760,7 +786,6 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         foreach ($header as $th => $column) {
             $th = $this->getUtils()->translate($th, $current_page->getCurrentLocale());
-            $request_params = [];
             if ($current_page instanceof BasePage) {
                 $request_params = $current_page->getRequest()->query->all();
 
@@ -827,6 +852,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
     }
 
 
+    /**
+     * renders log
+     *
+     * @param $log
+     * @return mixed
+     * @throws BasicException
+     */
     public function renderLog($log)
     {
         $table = $this->getContainer()->make(
@@ -951,11 +983,11 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * Get either a Gravatar image tag for a specified email address.
      *
-     * @param  string $email The email address
-     * @param  string $s     Size in pixels, defaults to 80px [ 1 - 2048 ]
-     * @param  string $d     Default imageset to use \[ 404 | mp | identicon | monsterid | wavatar ]
-     * @param  string $r     Maximum rating (inclusive) [ g | pg | r | x ]
-     * @param  string $class html class
+     * @param  string  $email The email address
+     * @param  integer $s     Size in pixels, defaults to 80px [ 1 - 2048 ]
+     * @param  string  $d     Default imageset to use \[ 404 | mp | identicon | monsterid | wavatar ]
+     * @param  string  $r     Maximum rating (inclusive) [ g | pg | r | x ]
+     * @param  string  $class html class
      * @return String containing a complete image tag
      */
     public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle')
@@ -979,10 +1011,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * renders a flag icon
      *
-     * @param  string  $country_code
-     * @param  string  $class
-     * @param  integer $width
+     * @param $country_code
+     * @param string $class
+     * @param int $width
      * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function renderFlag($country_code, $class = 'flag-icon', $width = 20)
     {

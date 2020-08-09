@@ -12,8 +12,7 @@
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
-use \Psr\Container\ContainerInterface;
-use \Degami\SqlSchema\Index;
+use Degami\SqlSchema\Exceptions\DuplicateException;
 use \Degami\SqlSchema\Table;
 
 /**
@@ -39,8 +38,9 @@ class AddNavigatorToAdminActionLogTableMigration extends DBMigration
     /**
      * {@inheritdocs}
      *
-     * @param  Table $table
+     * @param Table $table
      * @return Table
+     * @throws DuplicateException
      */
     public function addDBTableDefinition(Table $table)
     {

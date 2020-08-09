@@ -11,7 +11,7 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminPage;
 use \App\Site\Models\MailLog;
 use \App\Site\Models\RequestLog;
@@ -52,6 +52,11 @@ class Logs extends AdminPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTemplateData()
     {
@@ -166,6 +171,9 @@ class Logs extends AdminPage
     }
 
 
+    /**
+     * gets search parameters
+     */
     protected function getSearchParameters()
     {
         $out = array_filter([
@@ -178,8 +186,10 @@ class Logs extends AdminPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
-     * @return array
+     * @param array $data
+     * @param array $header
+     * @return array[]
+     * @throws BasicException
      */
     protected function getTableElements($data, $header)
     {
@@ -197,6 +207,7 @@ class Logs extends AdminPage
     /**
      * {@inheritdocs}
      *
+     * @param array $header
      * @return array
      */
     protected function getTableHeader($header)

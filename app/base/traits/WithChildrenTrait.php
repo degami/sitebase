@@ -11,8 +11,6 @@
  */
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\ContainerAwareObject;
-
 /**
  * Trait for elements with children
  */
@@ -26,7 +24,7 @@ trait WithChildrenTrait
     /**
      * gets children
      *
-     * @param  string  $locale
+     * @param  string|null  $locale
      * @param  boolean $reset
      * @return array
      */

@@ -12,12 +12,13 @@
 namespace App\Site\Commands\Queue;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
+use Monolog\Logger;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use \Psr\Container\ContainerInterface;
 use \App\App;
 use \App\Site\Models\QueueMessage;
 use \App\Base\Abstracts\Queues\BaseQueueWorker;
@@ -57,9 +58,12 @@ class Process extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -77,7 +81,7 @@ class Process extends BaseCommand
 
                 while (self::MAX_EXECUTIONS_NUMBER > $this->executions++) {
                     if (file_exists(App::getDir(App::TMP).DS.self::KILLFILE_NAME)) {
-                        $this->getLog()->log("KILLFILE_NAME found.");
+                        $this->getLog()->log("KILLFILE_NAME found.", Logger::INFO);
                         $this->executions = self::MAX_EXECUTIONS_NUMBER + 1;
                     }
 
@@ -89,7 +93,8 @@ class Process extends BaseCommand
                             if (!is_subclass_of($worker_class, BaseQueueWorker::class)) {
                                 throw new InvalidValueException($worker_class." is not a QueueWorker", 1);
                             }
-                            $result = $this->getContainer()->call([$worker_class, 'process'], ['message' => $message]);
+                            //$result =
+                            $this->getContainer()->call([$worker_class, 'process'], ['message' => $message]);
                         }
                     } catch (Exception $e) {
                         echo $e->getMessage();
@@ -99,7 +104,7 @@ class Process extends BaseCommand
                     usleep(self::SLEEP_TIMEOUT);
                 }
 
-                $this->getLog()->log("MAX_EXECUTIONS_NUMBER reached. Exiting");
+                $this->getLog()->log("MAX_EXECUTIONS_NUMBER reached. Exiting", Logger::INFO);
                 flock($fp, LOCK_UN);    // release the lock
             } else {
                 $io->error("Couldn't get the lock!");

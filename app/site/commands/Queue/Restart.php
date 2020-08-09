@@ -13,16 +13,8 @@ namespace App\Site\Commands\Queue;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use \Psr\Container\ContainerInterface;
 use \App\App;
-use \App\Site\Models\QueueMessage;
-use \App\Base\Abstracts\Queues\BaseQueueWorker;
-use \App\Base\Exceptions\InvalidValueException;
-use \Exception;
 
 /**
  * Restart Queue Command
@@ -48,7 +40,7 @@ class Restart extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
+        //$io = new SymfonyStyle($input, $output);
         $kill_flag = App::getDir(App::TMP).DS.self::KILLFILE_NAME;
         if (!file_exists($kill_flag)) {
             @touch($kill_flag);

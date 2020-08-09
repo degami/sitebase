@@ -11,9 +11,10 @@
  */
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Site\Models\Rewrite;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
 use \Degami\PHPFormsApi as FAPI;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Form Page Trait
@@ -96,8 +97,9 @@ trait FormPageTrait
     /**
      * gets a form for confirmation
      *
-     * @param  string    $confirm_message
+     * @param string $confirm_message
      * @param  FAPI\Form $form
+     * @param string|null $cancel_url
      * @return FAPI\Form
      */
     protected function fillConfirmationForm($confirm_message, $form, $cancel_url = null)
@@ -120,6 +122,8 @@ trait FormPageTrait
      * {@intheritdocs}
      *
      * @return Response|self
+     * @throws PermissionDeniedException
+     * @throws BasicException
      */
     protected function beforeRender()
     {

@@ -11,7 +11,8 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use PDO;
 use \App\Base\Abstracts\Controllers\AdminPage;
 
 /**
@@ -48,6 +49,11 @@ class Stats extends AdminPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTemplateData()
     {
@@ -63,7 +69,7 @@ class Stats extends AdminPage
         foreach ($queries as $key => $query) {
             $stmt = $this->getDb()->prepare($query);
             $stmt->execute();
-            $this->templateData[$key] = $stmt->fetchAll(\PDO::FETCH_ASSOC);
+            $this->templateData[$key] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         return $this->templateData;

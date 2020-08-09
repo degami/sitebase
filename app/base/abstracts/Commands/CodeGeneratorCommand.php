@@ -11,8 +11,8 @@
  */
 namespace App\Base\Abstracts\Commands;
 
+use Exception;
 use \Psr\Container\ContainerInterface;
-use \HaydenPierce\ClassFinder\ClassFinder;
 use \Nadar\PhpComposerReader\ComposerReader;
 use \Nadar\PhpComposerReader\AutoloadSection;
 use \App\App;
@@ -28,15 +28,16 @@ abstract class CodeGeneratorCommand extends BaseCommand
     protected $filesToDump = [];
 
     /**
-     * @var PhpComposerReader composer reader
+     * @var ComposerReader composer reader
      */
     protected $composer_reader;
 
     /**
      * {@inheritdocs}
      *
-     * @param string                  $name
+     * @param string|null $name
      * @param ContainerInterface|null $container
+     * @throws Exception
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {
@@ -53,10 +54,12 @@ abstract class CodeGeneratorCommand extends BaseCommand
      *
      * @param string $fullClassName
      * @param string $filecontents
+     * @return CodeGeneratorCommand
      */
     protected function addClass($fullClassName, $filecontents)
     {
-        $className = array_pop(explode("\\", ltrim($fullClassName, "\\")));
+        $arr = explode("\\", ltrim($fullClassName, "\\"));
+        $className = array_pop($arr);
         $nameSpace = implode("\\", array_slice(explode("\\", ltrim($fullClassName, "\\")), 0, -1))."\\";
 
         $section = new AutoloadSection($this->composer_reader, AutoloadSection::TYPE_PSR4);

@@ -11,9 +11,8 @@
  */
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Abstracts\Models\FrontendModel;
-use \Degami\Basics\Html\TagElement;
 use \Degami\PHPFormsApi as FAPI;
 
 /**
@@ -21,8 +20,17 @@ use \Degami\PHPFormsApi as FAPI;
  */
 trait AdminFormTrait
 {
+    /**
+     * adds frontend elements to form
+     *
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @param string[] $form_elements
+     * @return FAPI\Form
+     */
     protected function addFrontendFormElements(FAPI\Form $form, &$form_state, $form_elements = ['url', 'website_id', 'locale'])
     {
+        /** @var BaseModel $object */
         $object = $this->getObject();
 
         $form_elements = array_intersect($form_elements, ['url', 'website_id', 'locale']);
@@ -112,11 +120,24 @@ trait AdminFormTrait
         return $form;
     }
 
+    /**
+     * callback for "changed website form select" event
+     *
+     * @param FAPI\Form $form
+     * @return mixed
+     */
     public function changedWebsiteCallback(FAPI\Form $form)
     {
         return $form->getField('frontend')->getField('locale');
     }
 
+    /**
+     * adds SEO elements to form
+     *
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @return FAPI\Form
+     */
     protected function addSeoFormElements(FAPI\Form $form, &$form_state)
     {
         $object = $this->getObject();

@@ -11,10 +11,6 @@
  */
 namespace App\Base\Abstracts\Models;
 
-use \LessQL\Row;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Models\Rewrite;
 use \Exception;
 use \App\Base\Traits\WithWebsiteTrait;
@@ -36,6 +32,7 @@ abstract class FrontendModel extends BaseModel
      * gets object rewrite model
      *
      * @return Rewrite
+     * @throws Exception
      */
     public function getRewrite()
     {
@@ -54,6 +51,7 @@ abstract class FrontendModel extends BaseModel
      * gets frontend url for object
      *
      * @return string
+     * @throws Exception
      */
     public function getFrontendUrl()
     {
@@ -66,6 +64,7 @@ abstract class FrontendModel extends BaseModel
      * post persist hook
      *
      * @return self
+     * @throws Exception
      */
     public function postPersist()
     {
@@ -84,6 +83,7 @@ abstract class FrontendModel extends BaseModel
      * pre remove hook
      *
      * @return self
+     * @throws Exception
      */
     public function preRemove()
     {
@@ -96,6 +96,7 @@ abstract class FrontendModel extends BaseModel
      * returns object translations urls
      *
      * @return array
+     * @throws Exception
      */
     public function getTranslations()
     {

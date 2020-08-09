@@ -9,6 +9,9 @@
     "minimum-stability": "dev",
     "require": {
         "php": "^7.2",
+        "ext-pdo": "*",
+        "ext-json": "*",
+        "ext-fileinfo": "*",
         "php-di/php-di": "^6.0",
         "degami/php-forms-api": "dev-master",
         "degami/sql-schema": "dev-master",

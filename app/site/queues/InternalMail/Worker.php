@@ -11,8 +11,8 @@
  */
 namespace App\Site\Queues\InternalMail;
 
-use \Psr\Container\ContainerInterface;
-use \App\Site\Models\QueueMessage;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Queues\BaseQueueWorker;
 
 /**
@@ -23,8 +23,10 @@ class Worker extends BaseQueueWorker
     /**
      * {@inheritdocs}
      *
-     * @param  array $message_data
+     * @param array $message_data
      * @return boolean
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     protected function processMessage($message_data)
     {

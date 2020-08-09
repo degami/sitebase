@@ -11,14 +11,16 @@
  */
 namespace App\Site\Controllers\Frontend;
 
-use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\BaseHtmlPage;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use \App\App;
 use \App\Site\Models\Page as PageModel;
-use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * A Site Page
@@ -49,6 +51,8 @@ class Page extends FrontendPageWithObject
      * {@inheritdocs}
      *
      * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     protected function getTemplateName()
     {
@@ -68,6 +72,7 @@ class Page extends FrontendPageWithObject
      * {@inheritdocs}
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -83,12 +88,15 @@ class Page extends FrontendPageWithObject
     /**
      * shows a page
      *
-     * @param  integer        $id
-     * @param  RouteInfo|null $route_info
-     * @param  array          $options
-     * @return Response
+     * @param $id
+     * @param RouteInfo|null $route_info
+     * @return BaseHtmlPage|BasePage|mixed|Response
+     * @throws BasicException
+     * @throws PermissionDeniedException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws Throwable
      */
-    public function showPage($id, RouteInfo $route_info = null, array $options = [])
+    public function showPage($id, RouteInfo $route_info = null)
     {
         $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $id]));
         return $this->renderPage($route_info);
@@ -97,8 +105,10 @@ class Page extends FrontendPageWithObject
     /**
      * shows homepage
      *
-     * @param  RouteInfo|null $route_info
+     * @param RouteInfo|null $route_info
      * @return Response
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException|Throwable
      */
     public function showFrontPage(RouteInfo $route_info = null)
     {
@@ -141,6 +151,7 @@ class Page extends FrontendPageWithObject
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
      */
     protected function getBaseTemplateData()
     {
@@ -152,7 +163,7 @@ class Page extends FrontendPageWithObject
     /**
      * {@inheritdocs}
      *
-     * @return [type] [description]
+     * @return string
      */
     public static function getObjectClass()
     {

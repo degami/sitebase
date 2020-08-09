@@ -12,15 +12,13 @@
 namespace App\Site\Commands\Cache;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use \Symfony\Component\Console\Helper\Table;
-use \Psr\Container\ContainerInterface;
 
 /**
  * Cache Get Element Command
@@ -46,9 +44,11 @@ class Get extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -67,8 +67,6 @@ class Get extends BaseCommand
                 $callback = 'json_encode';
                 break;
             case 'serialize':
-                $callback = 'serialize';
-                break;
             default:
                 $callback = 'serialize';
                 break;

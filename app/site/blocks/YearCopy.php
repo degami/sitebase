@@ -13,9 +13,9 @@ namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
-use \Psr\Container\ContainerInterface;
 use \Degami\Basics\Html\TagElement;
 use \App\Site\Models\Website;
+use Exception;
 
 /**
  * Year&Copy Block
@@ -25,7 +25,7 @@ class YearCopy extends BaseCodeBlock
     /**
      * {@inheritdocs}
      *
-     * @param  BasePage|null $current_page
+     * @param BasePage|null $current_page
      * @return string
      */
     public function renderHTML(BasePage $current_page = null)

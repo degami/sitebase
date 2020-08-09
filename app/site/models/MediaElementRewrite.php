@@ -13,7 +13,7 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithOwnerTrait;
-use \App\App;
+use DateTime;
 use \Exception;
 
 /**
@@ -23,8 +23,8 @@ use \Exception;
  * @method int getMediaElementId()
  * @method int getRewriteId()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class MediaElementRewrite extends BaseModel
 {
@@ -34,6 +34,7 @@ class MediaElementRewrite extends BaseModel
      * gets Media Element object
      *
      * @return MediaElement
+     * @throws Exception
      */
     public function getMediaElement()
     {
@@ -46,6 +47,7 @@ class MediaElementRewrite extends BaseModel
      * gets Rewrite object
      *
      * @return Rewrite
+     * @throws Exception
      */
     public function getRewrite()
     {

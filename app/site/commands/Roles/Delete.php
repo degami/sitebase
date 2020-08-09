@@ -17,13 +17,8 @@ use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableSeparator;
 use \App\Site\Models\Role;
-use \Psr\Container\ContainerInterface;
 
 /**
  * Delete Role Command
@@ -63,7 +58,7 @@ class Delete extends BaseCommand
             return;
         }
 
-        $role = $this->getContainer()->call([\App\Site\Models\Role::class,'load'], ['id' => $id]);
+        $role = $this->getContainer()->call([Role::class,'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
             $io->error('Role does not exists');

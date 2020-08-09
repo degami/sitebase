@@ -12,6 +12,8 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
+use DateTime;
+use Exception;
 
 /**
  * News Model
@@ -21,10 +23,9 @@ use \App\Base\Abstracts\Models\FrontendModel;
  * @method string getLocale()
  * @method string getTitle()
  * @method string getContent()
- * @method \DateTime getDate()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class News extends FrontendModel
 {
@@ -42,9 +43,10 @@ class News extends FrontendModel
      * gets formatted Date
      *
      * @return string
+     * @throws Exception
      */
     public function getDate()
     {
-        return (new \DateTime($this->date))->format('Y-m-d');
+        return (new DateTime($this->date))->format('Y-m-d');
     }
 }

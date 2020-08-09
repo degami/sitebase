@@ -15,7 +15,6 @@ use \App\Base\Abstracts\Commands\BaseCommand;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use \Psr\Container\ContainerInterface;
 use \App\App;
 use \Exception;
 
@@ -42,7 +41,7 @@ class Shell extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $app = new \App\App;
+        $app = new App;
         $this->getContainer()->set('app', $app);
 
         $history = [];

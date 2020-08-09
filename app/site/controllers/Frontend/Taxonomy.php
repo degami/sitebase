@@ -11,12 +11,10 @@
  */
 namespace App\Site\Controllers\Frontend;
 
-use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi as FAPI;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use \App\App;
 use \App\Site\Models\Taxonomy as TaxonomyModel;
-use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -64,6 +62,7 @@ class Taxonomy extends FrontendPageWithObject
      * {@inheritdocs}
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -80,6 +79,7 @@ class Taxonomy extends FrontendPageWithObject
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
      */
     protected function getBaseTemplateData()
     {
@@ -91,7 +91,7 @@ class Taxonomy extends FrontendPageWithObject
     /**
      * {@inheritdocs}
      *
-     * @return [type] [description]
+     * @return string
      */
     public static function getObjectClass()
     {

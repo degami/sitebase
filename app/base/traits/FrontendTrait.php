@@ -11,10 +11,10 @@
  */
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Site\Models\User;
-use \App\Site\Models\GuestUser;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 
 /**
  * Frontend pages Trait
@@ -58,6 +58,7 @@ trait FrontendTrait
      * sets object to show
      *
      * @param BaseModel $object
+     * @return FrontendTrait
      */
     protected function setObject(BaseModel $object)
     {
@@ -96,6 +97,7 @@ trait FrontendTrait
      * {@inheritdocs}
      *
      * @return string
+     * @throws BasicException
      */
     public function getCurrentLocale()
     {
@@ -121,7 +123,7 @@ trait FrontendTrait
                 $this->current_user_model = $this->getCurrentUser();
                 return $this->current_user_model->checkPermission('view_logged_site');
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->getUtils()->logException($e);
         }
 

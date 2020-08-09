@@ -17,11 +17,7 @@ use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use \Symfony\Component\Console\Helper\Table;
-use \Psr\Container\ContainerInterface;
-use \App\App;
 
 /**
  * Generate Command Command
@@ -75,7 +71,7 @@ class Command extends CodeGeneratorCommand
                 $output->writeln("<error>\n\n ".$error."\n</error>");
             }
         } else {
-            $output->writeln('<info>File(s) saved</info>');
+            $output->writeln('<info>'.count($files_written).' File(s) saved</info>');
         }
     }
 

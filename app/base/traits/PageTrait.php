@@ -17,6 +17,12 @@ use \App\Site\Models\Page as PageModel;
 use \App\Base\Abstracts\Models\AccountModel;
 use \App\Site\Models\GuestUser;
 use \App\Site\Models\User;
+use App\Site\Routing\RouteInfo;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
+use Lcobucci\JWT\Token;
+use Lcobucci\JWT\ValidationData;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
  * Pages Trait
@@ -60,21 +66,57 @@ trait PageTrait
      *
      * @return string
      */
-    protected function getToken()
+    protected function getTokenHeader()
     {
         $token = $this->getRequest()->headers->get('Authorization');
         return $token ?: $this->getRequest()->cookies->get('Authorization');
     }
 
     /**
+     * gets Authorization token Object
+     *
+     * @return Token
+     */
+    protected function getToken()
+    {
+        $auth_token = $this->getTokenHeader();
+        return $this->getContainer()->get('jwt:parser')->parse((string) $auth_token);
+    }
+
+    /**
+     * gets token validation data
+     *
+     * @param $token
+     * @return ValidationData
+     */
+    protected function getTokenValidationData($token)
+    {
+        $data = $this->getContainer()->make(ValidationData::class);
+        $data->setIssuer($this->getContainer()->get('jwt_issuer'));
+        $data->setAudience($this->getContainer()->get('jwt_audience'));
+
+        $claimUID = (string) $token->getClaim('uid');
+        $claimUserName = (string) $token->getClaim('username');
+
+        $data->setId($this->calcTokenId($claimUID, $claimUserName));
+
+        return $data;
+    }
+
+    /**
      * checks if token is still active
      *
-     * @param  string $token
+     * @param  Token $token
      * @return boolean
      */
     public function tokenIsActive($token)
     {
-        return true;
+        $data = $this->getTokenValidationData($token);
+        if ($token->validate($data) && !$token->isExpired()) {
+            return true;
+        }
+
+        return false;
     }
 
     /**
@@ -85,23 +127,13 @@ trait PageTrait
     protected function getTokenData()
     {
         try {
-            $container = $this->getContainer();
-            $auth_token = $this->getToken();
-            $token = $container->get('jwt:parser')->parse((string) $auth_token);
-
-            $data = new \Lcobucci\JWT\ValidationData();
-            $data->setIssuer($container->get('jwt_issuer'));
-            $data->setAudience($container->get('jwt_audience'));
-
-            $claimUID = (string) $token->getClaim('uid');
-            $claimUserName = (string) $token->getClaim('username');
-
-            $data->setId($this->calcTokenId($claimUID, $claimUserName));
+            $token = $this->getToken();
+            $data = $this->getTokenValidationData($token);
             if ($token->validate($data)) {
                 $this->current_user = $token->getClaim('userdata');
                 return $this->current_user;
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             //$this->getUtils()->logException($e);
         }
 
@@ -111,7 +143,8 @@ trait PageTrait
     /**
      * gets current user
      *
-     * @return User|GuestUser
+     * @param false $reset
+     * @return User|GuestUser|null
      */
     public function getCurrentUser($reset = false)
     {
@@ -120,7 +153,10 @@ trait PageTrait
         }
 
         if (!$this->current_user && !$this->getTokenData()) {
-            return $this->getContainer()->make(GuestUser::class);
+            if ($this->current_user_model instanceof AccountModel) {
+                return $this->current_user_model;
+            }
+            return ($this->current_user_model = $this->getContainer()->make(GuestUser::class));
         }
 
         if (!$this->current_user) {
@@ -144,7 +180,7 @@ trait PageTrait
     {
         try {
             return ($this->getCurrentUser() instanceof AccountModel) && $this->getCurrentUser()->checkPermission($permission_name);
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->getUtils()->logException($e);
         }
 
@@ -165,6 +201,8 @@ trait PageTrait
      * checks if current is homepage
      *
      * @return boolean
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function isHomePage()
     {

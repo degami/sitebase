@@ -11,9 +11,13 @@
  */
 namespace App\Site\Controllers\Frontend\Users;
 
-use \Psr\Container\ContainerInterface;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\LoggedUserPage;
 use \App\Site\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Index" Logged Page
@@ -61,9 +65,11 @@ class Index extends LoggedUserPage
     }
 
     /**
-     * before render hook
+     * {@inheritdocs}
      *
-     * @return Response|self
+     * @return LoggedUserPage|RedirectResponse|Response
+     * @throws BasicException
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -77,9 +83,10 @@ class Index extends LoggedUserPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
-     * @return Response
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
+     * @return BasePage|RedirectResponse|Response
+     * @throws BasicException
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {

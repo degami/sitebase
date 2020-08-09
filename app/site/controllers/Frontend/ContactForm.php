@@ -11,10 +11,12 @@
  */
 namespace App\Site\Controllers\Frontend;
 
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
-use \App\App;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Abstracts\Controllers\FrontendPage;
 use \App\Site\Models\Contact;
@@ -22,10 +24,10 @@ use \App\Site\Models\ContactSubmission;
 use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
-use \DateTime;
 use \Exception;
 use \App\Base\Traits\FrontendTrait;
 use \App\Base\Exceptions\NotFoundException;
+use Throwable;
 
 /**
  * Contact Form Page
@@ -34,10 +36,13 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 {
     use FrontendTrait;
 
-  /**
+    /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -85,7 +90,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdocs}
      *
-     * @return Response|self
+     * @return ContactForm|Response
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -107,9 +115,12 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws NotFoundException
+     * @throws BasicException
+     * @throws Throwable
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {
@@ -129,6 +140,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
      */
     protected function getBaseTemplateData()
     {
@@ -140,9 +152,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -165,7 +178,8 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
                 'id' => 'fieldset-contactfields',
                 ]
             );
-            $fieldset = $contact->getFormDefinition($fieldset, $form_state);
+            // $fieldset =
+            $contact->getFormDefinition($fieldset, $form_state);
             $form->addField(
                 'button',
                 [
@@ -195,9 +209,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * search component by name
      *
-     * @param  Contact $contact
-     * @param  string  $name
+     * @param Contact $contact
+     * @param string $name
      * @return array
+     * @throws Exception
      */
     protected function searchComponentByName($contact, $name)
     {
@@ -218,9 +233,11 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
+     * @throws Exception
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -247,7 +264,8 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
             ];
         }
 
-        $submission_obj = $this->getContainer()->call([ContactSubmission::class, 'submit'], ['submission_data' => $submission]);
+        //$submission_obj =
+        $this->getContainer()->call([ContactSubmission::class, 'submit'], ['submission_data' => $submission]);
 
         $form->addHighlight('Thanks for your submission!');
         //var_dump($form->get_triggering_element());
@@ -269,7 +287,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdocs}
      *
-     * @return [type] [description]
+     * @return string
      */
     public static function getObjectClass()
     {

@@ -12,6 +12,8 @@
 namespace App\Site\Commands\Db;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
+use Genkgo\Migrations\Adapters\AbstractPdoAdapter;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -28,12 +30,12 @@ use \App\App;
 class Migrate extends BaseCommand
 {
     /**
-     * @var \Genkgo\Migrations\Adapters\AbstractPdoAdapter adapter
+     * @var AbstractPdoAdapter adapter
      */
     protected $adapter;
 
     /**
-     * @var \App\Base\Overrides\Migrations\Factory factory
+     * @var Factory factory
      */
     protected $factory;
 
@@ -45,8 +47,9 @@ class Migrate extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param string                  $name
+     * @param string|null $name
      * @param ContainerInterface|null $container
+     * @throws BasicException
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {

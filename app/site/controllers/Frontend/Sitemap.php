@@ -11,15 +11,12 @@
  */
 namespace App\Site\Controllers\Frontend;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Controllers\BaseXMLPage;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\App;
 use \App\Site\Models\Sitemap as SitemapModel;
-use \App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \Symfony\Component\HttpFoundation\Response;
-use \Spatie\ArrayToXml\ArrayToXml;
 use \Exception;
 use \App\Base\Exceptions\NotFoundException;
 
@@ -51,9 +48,12 @@ class Sitemap extends BaseXMLPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws BasicException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {

@@ -11,9 +11,27 @@
  */
 namespace App\Base\Traits;
 
+use App\App;
+use App\Base\Tools\Assets\Manager as AssetsManager;
+use App\Base\Tools\Cache\Manager as CacheManager;
+use App\Base\Tools\Utils\Globals;
+use App\Base\Tools\Utils\HtmlPartsRenderer;
+use App\Base\Tools\Utils\Mailer;
+use App\Base\Tools\Utils\SiteData;
+use App\Site\Routing\Web;
+use Aws\Ses\SesClient;
+use Degami\SqlSchema\Schema;
+use Feather\Icons;
+use Gplanchat\EventManager\SharedEventEmitter;
+use GuzzleHttp\Client;
+use Imagine\Gd\Imagine;
+use League\Plates\Engine;
+use LessQL\Database;
+use Monolog\Logger;
+use PDO;
 use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\ContainerAwareObject;
 use \Degami\Basics\Exceptions\BasicException;
+use Swift_Mailer;
 
 /**
  * Container Aware Object Trait
@@ -38,8 +56,9 @@ trait ContainerAwareTrait
     /**
      * gets registered service
      *
-     * @param  string $service_key
+     * @param string $service_key
      * @return mixed
+     * @throws BasicException
      */
     protected function getService($service_key)
     {
@@ -57,7 +76,8 @@ trait ContainerAwareTrait
     /**
      * gets app object
      *
-     * @return \App\App
+     * @return App
+     * @throws BasicException
      */
     public function getApp()
     {
@@ -67,7 +87,8 @@ trait ContainerAwareTrait
     /**
      * gets log object
      *
-     * @return \Monolog\Logger
+     * @return Logger
+     * @throws BasicException
      */
     public function getLog()
     {
@@ -77,7 +98,8 @@ trait ContainerAwareTrait
     /**
      * gets plates engine object
      *
-     * @return \League\Plates\Engine
+     * @return Engine
+     * @throws BasicException
      */
     public function getTemplates()
     {
@@ -87,7 +109,8 @@ trait ContainerAwareTrait
     /**
      * gets db object
      *
-     * @return \LessQL\Database
+     * @return Database
+     * @throws BasicException
      */
     public function getDb()
     {
@@ -97,7 +120,8 @@ trait ContainerAwareTrait
     /**
      * gets PDO object
      *
-     * @return \PDO
+     * @return PDO
+     * @throws BasicException
      */
     public function getPdo()
     {
@@ -107,7 +131,8 @@ trait ContainerAwareTrait
     /**
      * gets schema object
      *
-     * @return \Degami\SqlSchema\Schema
+     * @return Schema
+     * @throws BasicException
      */
     public function getSchema()
     {
@@ -117,7 +142,8 @@ trait ContainerAwareTrait
     /**
      * gets events manager service
      *
-     * @return \Gplanchat\EventManager\SharedEventEmitter
+     * @return SharedEventEmitter
+     * @throws BasicException
      */
     public function getEventManager()
     {
@@ -127,7 +153,8 @@ trait ContainerAwareTrait
     /**
      * gets routing service
      *
-     * @return \App\Site\Routing\Web
+     * @return Web
+     * @throws BasicException
      */
     public function getRouting()
     {
@@ -137,7 +164,8 @@ trait ContainerAwareTrait
     /**
      * gets global utils service
      *
-     * @return \App\Base\Tools\Utils\Globals
+     * @return Globals
+     * @throws BasicException
      */
     public function getUtils()
     {
@@ -147,7 +175,8 @@ trait ContainerAwareTrait
     /**
      * gets site data service
      *
-     * @return \App\Base\Tools\Utils\SiteData
+     * @return SiteData
+     * @throws BasicException
      */
     public function getSiteData()
     {
@@ -157,7 +186,8 @@ trait ContainerAwareTrait
     /**
      * gets assets manager
      *
-     * @return \App\Base\Tools\Assets\Manager
+     * @return AssetsManager
+     * @throws BasicException
      */
     public function getAssets()
     {
@@ -167,7 +197,8 @@ trait ContainerAwareTrait
     /**
      * gets guzzle service
      *
-     * @return \GuzzleHttp\Client
+     * @return Client
+     * @throws BasicException
      */
     public function getGuzzle()
     {
@@ -177,7 +208,8 @@ trait ContainerAwareTrait
     /**
      * gets imagine service
      *
-     * @return \Imagine\Gd\Imagine
+     * @return Imagine
+     * @throws BasicException
      */
     public function getImagine()
     {
@@ -187,7 +219,8 @@ trait ContainerAwareTrait
     /**
      * gets mailer service
      *
-     * @return \App\Base\Tools\Utils\Mailer
+     * @return Mailer
+     * @throws BasicException
      */
     public function getMailer()
     {
@@ -197,7 +230,8 @@ trait ContainerAwareTrait
     /**
      * gets SES mailer service
      *
-     * @return \Aws\Ses\SesClient
+     * @return SesClient
+     * @throws BasicException
      */
     public function getSesMailer()
     {
@@ -207,7 +241,8 @@ trait ContainerAwareTrait
     /**
      * gets SMTP mailer service
      *
-     * @return \Swift_Mailer
+     * @return Swift_Mailer
+     * @throws BasicException
      */
     public function getSmtpMailer()
     {
@@ -217,7 +252,8 @@ trait ContainerAwareTrait
     /**
      * get cache manager
      *
-     * @return \App\Base\Tools\Cache\Manager
+     * @return CacheManager
+     * @throws BasicException
      */
     public function getCache()
     {
@@ -227,7 +263,8 @@ trait ContainerAwareTrait
     /**
      * gets html renderer service
      *
-     * @return \App\Base\Tools\Utils\HtmlPartsRenderer
+     * @return HtmlPartsRenderer
+     * @throws BasicException
      */
     public function getHtmlRenderer()
     {
@@ -235,11 +272,23 @@ trait ContainerAwareTrait
     }
 
     /**
+     * gets icons service
+     *
+     * @return Icons
+     * @throws BasicException
+     */
+    public function getIcons()
+    {
+        return $this->getService('icons');
+    }
+
+    /**
      * gets env variable
      *
-     * @param  string $variable
-     * @param  mixed  $default
+     * @param string $variable
+     * @param mixed $default
      * @return mixed
+     * @throws BasicException
      */
     public function getEnv($variable, $default = null)
     {

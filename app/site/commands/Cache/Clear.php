@@ -12,10 +12,10 @@
 namespace App\Site\Commands\Cache;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
-use \Symfony\Component\Console\Helper\Table;
-use \Psr\Container\ContainerInterface;
 
 /**
  * Cache Clear Command
@@ -33,9 +33,11 @@ class Clear extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

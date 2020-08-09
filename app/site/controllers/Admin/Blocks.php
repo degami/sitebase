@@ -11,6 +11,10 @@
  */
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \HaydenPierce\ClassFinder\ClassFinder;
@@ -28,6 +32,11 @@ class Blocks extends AdminManageModelsPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PermissionDeniedException
+     * @throws Exception
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -98,9 +107,11 @@ class Blocks extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -123,7 +134,7 @@ class Blocks extends AdminManageModelsPage
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 
                 $rewrite_options = [];
-                foreach ($this->getDb()->rewrite()->fetchAll() as $rewrite) {
+                foreach ($this->getDb()->table('rewrite')->fetchAll() as $rewrite) {
                     $rewrite_options[$rewrite->id] = $rewrite->url;
                 }
 
@@ -251,17 +262,17 @@ class Blocks extends AdminManageModelsPage
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
-
+        // $values = $form->values();
         return true;
     }
 
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws Exception
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -356,8 +367,9 @@ class Blocks extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
+     * @param array $data
      * @return array
+     * @throws BasicException
      */
     protected function getTableElements($data)
     {

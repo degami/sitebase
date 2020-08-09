@@ -11,13 +11,10 @@
  */
 namespace App\Site\Controllers\Frontend;
 
-use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi as FAPI;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\FrontendPage;
-use \App\App;
 use \App\Site\Models\News;
 use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Response;
 
 /**
  * News List Page
@@ -73,6 +70,8 @@ class NewsList extends FrontendPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTemplateData()
     {
@@ -90,6 +89,7 @@ class NewsList extends FrontendPage
      * {@inheritdocs}
      *
      * @return string
+     * @throws BasicException
      */
     public function getCurrentLocale()
     {

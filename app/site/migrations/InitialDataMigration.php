@@ -12,11 +12,21 @@
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\BaseMigration;
-use \Psr\Container\ContainerInterface;
-use \Degami\SqlSchema\Index;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Exceptions\InvalidValueException;
+use App\Site\Models\Configuration;
+use App\Site\Models\Language;
+use App\Site\Models\Page;
+use App\Site\Models\Permission;
+use App\Site\Models\Role;
+use App\Site\Models\RolePermission;
+use App\Site\Models\User;
+use App\Site\Models\Website;
+use Degami\Basics\Exceptions\BasicException;
 
 /**
  * basic data migration
+ * @package App\Site\Migrations
  */
 class InitialDataMigration extends BaseMigration
 {
@@ -34,6 +44,7 @@ class InitialDataMigration extends BaseMigration
      * {@inheritdocs}
      *
      * @return void
+     * @throws BasicException
      */
     public function up()
     {
@@ -49,11 +60,13 @@ class InitialDataMigration extends BaseMigration
     /**
      * adds website model
      *
-     * @return Website
+     * @return BaseModel
+     * @throws BasicException
+     * @throws InvalidValueException
      */
     private function addWebsite()
     {
-        $website_model = \App\Site\Models\Website::new($this->getContainer());
+        $website_model = Website::new($this->getContainer());
         $website_model->site_name = $this->getEnv('APPNAME');
 
         $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim($this->getEnv('APPDOMAIN')))), 'www.');
@@ -69,11 +82,13 @@ class InitialDataMigration extends BaseMigration
     /**
      * adds admin user model
      *
-     * @return User
+     * @return BaseModel
+     * @throws BasicException
+     * @throws InvalidValueException
      */
     private function addAdmin()
     {
-        $admin_model = \App\Site\Models\User::new($this->getContainer());
+        $admin_model = User::new($this->getContainer());
         $admin_model->username = $this->getEnv('ADMIN_USER');
         $admin_model->nickname = $this->getEnv('ADMIN_USER');
         $admin_model->password = $this->getUtils()->getEncodedPass($this->getEnv('ADMIN_PASS'));
@@ -89,22 +104,23 @@ class InitialDataMigration extends BaseMigration
     /**
      * adds permission to role
      *
-     * @param  Role   $role_model
-     * @param  string $permission_name
-     * @return RolePermission
+     * @param Role $role_model
+     * @param string $permission_name
+     * @throws BasicException
+     * @throws InvalidValueException
      */
     private function addPermission($role_model, $permission_name)
     {
         $permission_dbrow = $this->getDb()->permission()->where(['name' => $permission_name])->fetch();
-        $permission_model = \App\Site\Models\Permission::new($this->getContainer());
+        $permission_model = Permission::new($this->getContainer());
         if ($permission_dbrow) {
-            $permission_model = $this->getContainer()->make(\App\Site\Models\Permission::class, ['dbrow' => $permission_dbrow]);
+            $permission_model = $this->getContainer()->make(Permission::class, ['dbrow' => $permission_dbrow]);
         } else {
             $permission_model->name = $permission_name;
             $permission_model->persist();
         }
 
-        $pivot_model = \App\Site\Models\RolePermission::new($this->getContainer());
+        $pivot_model = RolePermission::new($this->getContainer());
         $pivot_model->permission_id = $permission_model->id;
         $pivot_model->role_id = $role_model->id;
         $pivot_model->persist();
@@ -112,18 +128,23 @@ class InitialDataMigration extends BaseMigration
 
     /**
      * adds permissions and roles
+     *
+     * @throws BasicException
+     * @throws InvalidValueException
+     * @throws BasicException
+     * @throws BasicException
      */
     private function addRolesPermissions()
     {
-        $guest_role_model = \App\Site\Models\Role::new($this->getContainer());
+        $guest_role_model = Role::new($this->getContainer());
         $guest_role_model->name = 'guest';
         $guest_role_model->persist();
 
-        $logged_role_model = \App\Site\Models\Role::new($this->getContainer());
+        $logged_role_model = Role::new($this->getContainer());
         $logged_role_model->name = 'logged_user';
         $logged_role_model->persist();
 
-        $admin_role_model = \App\Site\Models\Role::new($this->getContainer());
+        $admin_role_model = Role::new($this->getContainer());
         $admin_role_model->name = 'admin';
         $admin_role_model->persist();
 
@@ -169,6 +190,9 @@ class InitialDataMigration extends BaseMigration
 
     /**
      * adds languages
+     *
+     * @throws BasicException
+     * @throws InvalidValueException
      */
     private function addLanguages()
     {
@@ -180,7 +204,7 @@ class InitialDataMigration extends BaseMigration
             } else {
                 $lang = array_combine($header, $row);
 
-                $lang_model = \App\Site\Models\Language::new($this->getContainer());
+                $lang_model = Language::new($this->getContainer());
                 $lang_model->locale = $lang['639-1'];
                 $lang_model->{"639-1"} = $lang['639-1'];
                 $lang_model->{"639-2"} = $lang['639-2'];
@@ -196,13 +220,15 @@ class InitialDataMigration extends BaseMigration
     /**
      * adds homepage model
      *
-     * @param  Website $website_model
-     * @param  User    $owner_model
-     * @return Page
+     * @param $website_model
+     * @param $owner_model
+     * @return BaseModel
+     * @throws BasicException
+     * @throws InvalidValueException
      */
     private function addHomePage($website_model, $owner_model)
     {
-        $page_model = \App\Site\Models\Page::new($this->getContainer());
+        $page_model = Page::new($this->getContainer());
 
         $page_model->website_id = $website_model->id;
         $page_model->url = 'homepage';
@@ -219,7 +245,9 @@ class InitialDataMigration extends BaseMigration
      * adds configuration variables
      *
      * @param Website $website_model
-     * @param Page    $homePage
+     * @param Page $homePage
+     * @throws BasicException
+     * @throws InvalidValueException
      */
     private function addVariables($website_model, $homePage)
     {
@@ -235,7 +263,7 @@ class InitialDataMigration extends BaseMigration
             'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
             'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
         ] as $path => $info) {
-            $configuration_model = \App\Site\Models\Configuration::new($this->getContainer());
+            $configuration_model = Configuration::new($this->getContainer());
             $configuration_model->website_id = $website_model->id;
             $configuration_model->locale = $info['locale'];
             $configuration_model->path = $path;

@@ -13,7 +13,6 @@ namespace App\Site\Cron\Tasks;
 
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
-use \App\App;
 
 /**
  * Cron HeartBeat

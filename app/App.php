@@ -11,12 +11,13 @@
  */
 namespace App;
 
+use Degami\Basics\Exceptions\BasicException;
+use DI\ContainerBuilder;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \FastRoute\Dispatcher;
 use \Psr\Container\ContainerInterface;
 use \Gplanchat\EventManager\Event;
-use \App\Base\Tools\Utils\Globals as GlobalUtils;
 use \Dotenv\Dotenv;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Models\Website;
@@ -27,6 +28,7 @@ use \App\Base\Exceptions\NotFoundException;
 use \App\Base\Exceptions\NotAllowedException;
 use \App\Base\Exceptions\PermissionDeniedException;
 use \Exception;
+use \Throwable;
 
 /**
  * App class
@@ -84,7 +86,7 @@ class App extends ContainerAwareObject
             $dotenv = Dotenv::create($this->getDir(self::ROOT));
             $dotenv->load();
 
-            $builder = new \DI\ContainerBuilder();
+            $builder = new ContainerBuilder();
             $builder->addDefinitions($this->getDir(self::CONFIG) . DS . 'di.php');
 
             if (is_file($this->getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
@@ -108,7 +110,7 @@ class App extends ContainerAwareObject
             /**
              * @var ContainerInterface $this->container
              */
-            $this->container = $builder->build();
+            parent::__construct($builder->build());
             $this->getContainer()->set(
                 'env',
                 array_combine(
@@ -155,7 +157,8 @@ class App extends ContainerAwareObject
     /**
      * application bootstrap
      *
-     * @return Response
+     * @throws BasicException
+     * @throws Throwable
      */
     public function bootstrap()
     {
@@ -189,11 +192,9 @@ class App extends ContainerAwareObject
                 case Dispatcher::NOT_FOUND:
                     // ... 404 Not Found
                     throw new NotFoundException();
-                    break;
                 case Dispatcher::METHOD_NOT_ALLOWED:
                     // ... 405 Method Not Allowed
                     throw new NotAllowedException();
-                    break;
                 case Dispatcher::FOUND:
                     $handler = $this->getRouteInfo()->getHandler();
                     $vars = $this->getRouteInfo()->getVars();
@@ -235,6 +236,8 @@ class App extends ContainerAwareObject
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
             $this->getUtils()->errorPage(405, $request, ['allowedMethods' => $allowedMethods])->send();
+        } catch (BasicException $e) {
+            $response = $this->getUtils()->exceptionPage($e, $request);
         } catch (Exception $e) {
             $response = $this->getUtils()->exceptionPage($e, $request);
         }
@@ -265,7 +268,8 @@ class App extends ContainerAwareObject
     /**
      * checks if ip address is blocked
      *
-     * @return boolean
+     * @param $ip_address
+     * @return bool
      */
     public function isBlocked($ip_address)
     {
@@ -275,9 +279,10 @@ class App extends ContainerAwareObject
     /**
      * emits an events
      *
-     * @param  string $event_name
-     * @param  mixed  $event_data
+     * @param string $event_name
+     * @param mixed $event_data
      * @return self
+     * @throws BasicException
      */
     public function event($event_name, $event_data)
     {
@@ -334,6 +339,7 @@ class App extends ContainerAwareObject
      * sets current locale
      *
      * @param string|null $locale
+     * @return App
      */
     public function setCurrentLocale(string $locale = null)
     {
@@ -356,6 +362,7 @@ class App extends ContainerAwareObject
      * sets route info
      *
      * @param RouteInfo $route_info
+     * @return App
      */
     public function setRouteInfo(RouteInfo $route_info)
     {
@@ -377,6 +384,7 @@ class App extends ContainerAwareObject
      * gets current website id
      *
      * @return integer
+     * @throws BasicException
      */
     public function getCurrentWebsiteId()
     {

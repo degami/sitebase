@@ -11,7 +11,7 @@
  */
 namespace App\Base\Abstracts;
 
-use \Exception;
+use App\Base\Exceptions\InvalidValueException;
 use \Psr\Container\ContainerInterface;
 use \Fisharebest\Localization\Locale;
 use \Fisharebest\Localization\Translation;
@@ -45,7 +45,7 @@ abstract class ContainerAwareObject
     /**
      * gets translator
      *
-     * @param  string $locale_code
+     * @param string|null $locale_code
      * @return Translator
      */
     public function getTranslator($locale_code = null)
@@ -88,9 +88,10 @@ abstract class ContainerAwareObject
     /**
      * {@inheritdocs}
      *
-     * @param  string $name
-     * @param  mixed  $arguments
+     * @param string $name
+     * @param mixed $arguments
      * @return mixed
+     * @throws InvalidValueException
      */
     public function __call($name, $arguments)
     {
@@ -100,6 +101,6 @@ abstract class ContainerAwareObject
             return $this->getContainer()->get($prop);
         }
 
-        throw new Exception("Method not found!", 1);
+        throw new InvalidValueException("Method not found!", 1);
     }
 }

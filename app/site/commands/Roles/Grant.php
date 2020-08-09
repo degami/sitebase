@@ -12,18 +12,15 @@
 namespace App\Site\Commands\Roles;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
-use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableSeparator;
 use \App\Site\Models\Role;
-use \Psr\Container\ContainerInterface;
 
 /**
  * Grant Permission to Role Command
@@ -49,9 +46,10 @@ class Grant extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -64,7 +62,7 @@ class Grant extends BaseCommand
             return;
         }
 
-        $role = $this->getContainer()->call([\App\Site\Models\Role::class,'load'], ['id' => $id]);
+        $role = $this->getContainer()->call([Role::class,'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
             $io->error('Role does not exists');

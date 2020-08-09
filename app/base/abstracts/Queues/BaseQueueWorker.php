@@ -11,7 +11,6 @@
  */
 namespace App\Base\Abstracts\Queues;
 
-use \Psr\Container\ContainerInterface;
 use \App\Site\Models\QueueMessage;
 use \App\Base\Abstracts\ContainerAwareObject;
 

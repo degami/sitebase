@@ -12,7 +12,10 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
 use \Degami\PHPFormsApi as FAPI;
+use Exception;
 
 /**
  * Contact Form Model
@@ -29,8 +32,8 @@ use \Degami\PHPFormsApi as FAPI;
  * @method string getUrl()
  * @method string getSubmitTo()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Contact extends FrontendModel
 {
@@ -48,6 +51,7 @@ class Contact extends FrontendModel
      * gets contact form definition
      *
      * @return array
+     * @throws Exception
      */
     public function getContactDefinition()
     {
@@ -65,6 +69,7 @@ class Contact extends FrontendModel
      * gets contact form submissions
      *
      * @return array
+     * @throws Exception
      */
     public function getContactSubmissions()
     {
@@ -81,8 +86,9 @@ class Contact extends FrontendModel
     /**
      * gets contact form specific submission
      *
-     * @param  integer $submission_id
+     * @param integer $submission_id
      * @return array
+     * @throws Exception
      */
     public function getContactSubmission($submission_id)
     {
@@ -99,11 +105,13 @@ class Contact extends FrontendModel
     /**
      * fills form with elements
      *
-     * @param  FAPI\Abstracts\App\Base\Element $container
-     * @param  array                           &$form_state
-     * @return FAPI\Abstracts\App\Base\Element
+     * @param FAPI\Abstracts\Base\Element $container
+     * @param array                       &$form_state
+     * @return FAPI\Abstracts\Base\Element
+     * @throws Exception
+     * @throws BasicException
      */
-    public function getFormDefinition(/*FAPI\Abstracts\App\Base\Element*/ $container, &$form_state)
+    public function getFormDefinition($container, &$form_state)
     {
         foreach ($this->getContactDefinition() as $field) {
             $field_data = (array)json_decode($field['field_data']);
@@ -122,7 +130,8 @@ class Contact extends FrontendModel
     /**
      * {@inheritdocs}
      *
-     * @return self
+     * @return FrontendModel
+     * @throws Exception
      */
     public function preRemove()
     {

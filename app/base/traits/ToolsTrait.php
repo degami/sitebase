@@ -11,8 +11,12 @@
  */
 namespace App\Base\Traits;
 
+use App\Base\Abstracts\ContainerAwareObject;
 use \Exception;
 use \Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
+use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
+use GuzzleHttp\Psr7\Response;
 
 /**
  * utils Trait
@@ -24,10 +28,12 @@ trait ToolsTrait
     /**
      * executes an http request
      *
-     * @param  string $url
-     * @param  string $method
-     * @param  array  $options
+     * @param string $url
+     * @param string $method
+     * @param array $options
      * @return string|boolean
+     * @throws Exception
+     * @throws GuzzleException
      */
     public function requestUrl($url, $method = 'GET', $options = [])
     {
@@ -41,15 +47,16 @@ trait ToolsTrait
                     $request_uri .= '?'.$parsed['query'];
                 }
 
+                /** @var Client $client */
                 $client = $this->getContainer()->make(
-                    \GuzzleHttp\Client::class,
+                    Client::class,
                     [
                     'base_uri' => $base_uri,
                     ]
                 );
-                $request->request($method, $request_uri, $options);
+                /** @var Response $request */
+                $response = $client->request($method, $request_uri, $options);
 
-                $response = $request->send();
                 return $response->getBody();
             }
             return false;

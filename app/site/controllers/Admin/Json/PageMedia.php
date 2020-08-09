@@ -11,12 +11,10 @@
  */
 namespace App\Site\Controllers\Admin\Json;
 
-use \Psr\Container\ContainerInterface;
+use App\Site\Controllers\Admin\Media;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
-use \App\Site\Models\MediaElement as Media;
-use \App\Site\Routing\RouteInfo;
-use \Degami\PHPFormsApi as FAPI;
 
 /**
  * media for page JSON
@@ -47,6 +45,8 @@ class PageMedia extends AdminJsonPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getJsonData()
     {
@@ -70,7 +70,7 @@ class PageMedia extends AdminJsonPage
             $page->getGallery()
         );
 
-        $mediaController = $this->getContainer()->make(\App\Site\Controllers\Admin\Media::class);
+        $mediaController = $this->getContainer()->make(Media::class);
         $form = $mediaController->getForm();
 
         $form->setAction($this->getUrl('admin.media').'?action='.$this->getRequest()->get('action'));
@@ -89,8 +89,5 @@ class PageMedia extends AdminJsonPage
             'html' => ($this->getRequest()->get('action') == 'new' ? "<div class=\"page-gallery\">".implode("", $gallery) . "</div><hr />" : '').$form->render(),
             'js' => "",
         ];
-
-
-        return [];
     }
 }

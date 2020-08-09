@@ -11,11 +11,10 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
 use \Degami\PHPFormsApi as FAPI;
-use \App\App;
 use \App\Base\Traits\FormPageTrait;
 use \App\Base\Exceptions\PermissionDeniedException;
 
@@ -30,6 +29,10 @@ abstract class AdminFormPage extends AdminPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PermissionDeniedException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -48,6 +51,8 @@ abstract class AdminFormPage extends AdminPage
      * process form submission
      *
      * @return void
+     * @throws PermissionDeniedException
+     * @throws BasicException
      */
     private function processFormSubmit()
     {

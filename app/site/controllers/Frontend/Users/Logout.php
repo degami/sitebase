@@ -11,10 +11,10 @@
  */
 namespace App\Site\Controllers\Frontend\Users;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\LoggedUserPage;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \Gplanchat\EventManager\Event;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Logout" Logged Page
@@ -64,7 +64,8 @@ class Logout extends LoggedUserPage
     /**
      * {@inheritdocs}
      *
-     * @return Response
+     * @return LoggedUserPage|RedirectResponse|Response
+     * @throws BasicException
      */
     public function beforeRender()
     {

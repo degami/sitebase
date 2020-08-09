@@ -12,18 +12,14 @@
 namespace App\Site\Commands\Website;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\Website;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableSeparator;
-use \App\Site\Models\User;
-use \Psr\Container\ContainerInterface;
 use \Exception;
 
 /**
@@ -66,7 +62,7 @@ class Edit extends BaseCommand
             return;
         }
 
-        $website = $this->getContainer()->call([\App\Site\Models\Website::class,'load'], ['id' => $id]);
+        $website = $this->getContainer()->call([Website::class,'load'], ['id' => $id]);
 
         if (!$website->isLoaded()) {
             $io->error('Website does not exists');
@@ -74,12 +70,14 @@ class Edit extends BaseCommand
         }
 
         $name = $input->getOption('name');
+        $value = null;
         while (trim($value) == '') {
             $question = new Question('Name? ', $website->name);
             $value = $helper->ask($input, $output, $question);
         }
 
         $domain = $input->getOption('domain');
+        $value = null;
         while (trim($value) == '') {
             $question = new Question('Domain? ', $website->domain);
             $value = $helper->ask($input, $output, $question);

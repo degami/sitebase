@@ -12,22 +12,19 @@
 namespace App\Site\Commands\Website;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\Configuration;
+use App\Site\Models\Website;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableSeparator;
-use \App\Site\Models\User;
-use \Psr\Container\ContainerInterface;
 use \Exception;
 
 /**
  * Add Website Command
+ * @package App\Site\Commands\Website
  */
 class Add extends BaseCommand
 {
@@ -60,13 +57,13 @@ class Add extends BaseCommand
 
         $name = $input->getOption('name');
         while (trim($name) == '') {
-            $question = new Question('Name? ', $website->name);
+            $question = new Question('Name? ');
             $name = $helper->ask($input, $output, $question);
         }
 
         $domain = $input->getOption('domain');
         while (trim($domain) == '') {
-            $question = new Question('Domain? ', $website->domain);
+            $question = new Question('Domain? ');
             $domain = $helper->ask($input, $output, $question);
         }
 
@@ -77,14 +74,14 @@ class Add extends BaseCommand
         }
 
         try {
-            $website = $this->getContainer()->call([\App\Site\Models\Website::class,'new']);
+            $website = $this->getContainer()->call([Website::class,'new']);
             $website->site_name = $name;
             $website->domain = $domain;
             $website->persist();
 
             foreach ($this->getDb()->table('configuration')->where(['is_system' => 1, 'website_id' => 1])->fetchAll() as $config) {
                 // copy at least is_system configurations
-                $configuration_model = \App\Site\Models\Configuration::new($this->getContainer());
+                $configuration_model = Configuration::new($this->getContainer());
                 $configuration_model->website_id = $website->id;
                 $configuration_model->path = $config->path;
                 $configuration_model->value = '';
@@ -92,7 +89,7 @@ class Add extends BaseCommand
                 $configuration_model->persist();
             }
 
-            $output->writeln('<info>Wesite added</info>');
+            $output->writeln('<info>Website added</info>');
         } catch (Exception $e) {
             $output->writeln("<error>\n\n".$e->getMessage()."\n</error>");
         }

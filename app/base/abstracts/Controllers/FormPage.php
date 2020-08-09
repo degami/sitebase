@@ -11,12 +11,11 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \App\Site\Routing\RouteInfo;
 use \Degami\PHPFormsApi as FAPI;
-use \App\App;
 use \App\Base\Traits\FormPageTrait;
 
 /**
@@ -30,6 +29,10 @@ abstract class FormPage extends FrontendPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -48,6 +51,7 @@ abstract class FormPage extends FrontendPage
      * process form submission
      *
      * @return void
+     * @throws BasicException
      */
     protected function processFormSubmit()
     {

@@ -12,18 +12,13 @@
 namespace App\Site\Commands\Config;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\Configuration;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Style\SymfonyStyle;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableSeparator;
-use \App\Site\Models\User;
-use \Psr\Container\ContainerInterface;
 use \Exception;
 
 /**
@@ -77,7 +72,7 @@ class Add extends BaseCommand
         }
 
         try {
-            $configuration = $this->getContainer()->call([\App\Site\Models\Configuration::class,'new']);
+            $configuration = $this->getContainer()->call([Configuration::class,'new']);
             $configuration->path = $path;
             $configuration->value = $value;
             $configuration->persist();

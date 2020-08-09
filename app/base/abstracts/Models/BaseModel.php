@@ -11,7 +11,12 @@
  */
 namespace App\Base\Abstracts\Models;
 
+use ArrayAccess;
+use Degami\Basics\Exceptions\BasicException;
+use IteratorAggregate;
+use LessQL\Result;
 use \LessQL\Row;
+use PDOStatement;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -20,8 +25,9 @@ use \Exception;
 
 /**
  * A wrapper for LessQL Row
+ * @package App\Base\Abstracts\Models
  */
-abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \IteratorAggregate
+abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, IteratorAggregate
 {
     const ITEMS_PER_PAGE = 50;
 
@@ -49,7 +55,10 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Row|null           $dbrow
+     * @param Row|null $dbrow
+     * @throws InvalidValueException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, $dbrow = null)
     {
@@ -94,8 +103,9 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
     /**
      * checks if Row object is from correct table
      *
-     * @param  Row $dbrow
+     * @param Row $dbrow
      * @return self
+     * @throws InvalidValueException
      */
     private function checkDbName(Row $dbrow)
     {
@@ -111,7 +121,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
      *
      * @param  ContainerInterface $container
      * @param  array              $options
-     * @return \PDOStatement
+     * @return PDOStatement
      */
     public static function select(ContainerInterface $container, $options = [])
     {
@@ -124,7 +134,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
      * @param  ContainerInterface $container
      * @param  array              $condition
      * @param  array              $order
-     * @return \LessQL\Result
+     * @return Result
      */
     protected static function getModelBasicWhere(ContainerInterface $container, $condition = [], $order = [])
     {
@@ -174,7 +184,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
      *
      * @param  ContainerInterface $container
      * @param  Request|null       $request
-     * @param  integet            $page_size
+     * @param  integer            $page_size
      * @param  array              $condition
      * @param  array              $order
      * @return array
@@ -208,7 +218,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
      * @param  ContainerInterface $container
      * @param  array|string       $condition
      * @param  array              $order
-     * @return \LessQL\Result
+     * @return array
      */
     public static function where(ContainerInterface $container, $condition, $order = [])
     {
@@ -234,8 +244,10 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
     /**
      * fills empty model with data
      *
-     * @param  integer $id
+     * @param integer|Row $id
      * @return self
+     * @throws InvalidValueException
+     * @throws BasicException
      */
     public function fill($id)
     {
@@ -277,6 +289,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
      * ensures model is loaded
      *
      * @return self
+     * @throws Exception
      */
     public function checkLoaded()
     {
@@ -291,6 +304,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
      * resets model
      *
      * @return self
+     * @throws BasicException
      */
     public function reset()
     {
@@ -309,48 +323,54 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
     /**
      * loads model by id
      *
-     * @param  ContainerInterface $container
-     * @param  integeer           $id
+     * @param ContainerInterface $container
+     * @param integer $id
      * @return self
+     * @throws InvalidValueException
+     * @throws BasicException
      */
     public static function load(ContainerInterface $container, $id)
     {
         $dbrow = $container->get('db')->table(static::defaultTableName(), $id);
-        $object = new static($container, $dbrow);
-        return $object;
+        return new static($container, $dbrow);
     }
 
     /**
      * gets new empty model
      *
-     * @param  ContainerInterface $container
+     * @param ContainerInterface $container
+     * @param array $initialdata
      * @return self
+     * @throws InvalidValueException
+     * @throws BasicException
      */
     public static function new(ContainerInterface $container, $initialdata = [])
     {
         $dbrow = $container->get('db')->createRow(static::defaultTableName());
         $dbrow->setData($initialdata);
-        $object = new static($container, $dbrow);
-        return $object;
+        return new static($container, $dbrow);
     }
 
     /**
      * loads model by field - value pair
      *
-     * @param  ContainerInterface $container
-     * @param  string             $field
-     * @param  string             $value
+     * @param ContainerInterface $container
+     * @param string $field
+     * @param string $value
      * @return self
+     * @throws InvalidValueException
+     * @throws BasicException
      */
     public static function loadBy(ContainerInterface $container, $field, $value)
     {
         $dbrow = $container->get('db')->table(static::defaultTableName())->where($field, $value)->limit(1)->fetch();
-        $object = new static($container, $dbrow);
-        return $object;
+        return new static($container, $dbrow);
     }
 
     /**
      * {@inheritdocs}
+     * @param $key
+     * @return mixed
      */
     public function __get($key)
     {
@@ -359,6 +379,9 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $key
+     * @param $value
+     * @return BaseModel
      */
     public function __set($key, $value)
     {
@@ -368,6 +391,8 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $name
+     * @return bool
      */
     public function __isset($name)
     {
@@ -376,6 +401,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $name
      */
     public function __unset($name)
     {
@@ -384,6 +410,10 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $name
+     * @param $arguments
+     * @return BaseModel|bool|mixed
+     * @throws Exception
      */
     public function __call($name, $arguments)
     {
@@ -431,6 +461,9 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $offset
+     * @param $value
+     * @return BaseModel
      */
     public function offsetSet($offset, $value)
     {
@@ -439,6 +472,8 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $offset
+     * @return bool
      */
     public function offsetExists($offset)
     {
@@ -447,6 +482,7 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $offset
      */
     public function offsetUnset($offset)
     {
@@ -455,6 +491,8 @@ abstract class BaseModel extends ContainerAwareObject implements \ArrayAccess, \
 
     /**
      * {@inheritdocs}
+     * @param $offset
+     * @return mixed
      */
     public function offsetGet($offset)
     {

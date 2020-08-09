@@ -11,14 +11,19 @@
  */
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use League\Plates\Template\Template;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \App\Base\Traits\AdminTrait;
-use \Gplanchat\EventManager\Event;
 use \App\App;
 use \App\Site\Models\User;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Login Page
@@ -31,6 +36,10 @@ class Login extends FormPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -108,7 +117,22 @@ class Login extends FormPage
     /**
      * {@inheritfocs}
      *
-     * @return \League\Plates\Template\Template
+     * @return Template
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function prepareTemplate()
     {
@@ -116,7 +140,7 @@ class Login extends FormPage
         $template->data($this->getTemplateData()+$this->getBaseTemplateData());
 
         $template->data($this->getTemplateData()+$this->getBaseTemplateData());
-        $locale = $template->data()['locale'] ?? $this->getCurrentLocale();
+        //$locale = $template->data()['locale'] ?? $this->getCurrentLocale();
 
         $this->getAssets()->addCss('html,body {height: 100%;}');
         $this->getAssets()->addCss('body {display: -ms-flexbox;display: flex;-ms-flex-align: center;align-items: center;padding-top: 40px;padding-bottom: 40px;background-color: #f5f5f5;}');
@@ -146,11 +170,12 @@ class Login extends FormPage
         return $template;
     }
 
-
     /**
      * {@inheritdocs}
      *
-     * @return self
+     * @return Login|RedirectResponse|Response
+     * @throws BasicException
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -182,9 +207,14 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -220,9 +250,15 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -271,6 +307,7 @@ class Login extends FormPage
      * {@inheritdocs}
      *
      * @return string
+     * @throws BasicException
      */
     public function getCurrentLocale()
     {

@@ -25,9 +25,9 @@ class BaseCommand extends SymfonyCommand
     use ContainerAwareTrait;
 
     /**
-     * constructor
+     * BaseCommand constructor.
      *
-     * @param string                  $name
+     * @param null $name
      * @param ContainerInterface|null $container
      */
     public function __construct($name = null, ContainerInterface $container = null)

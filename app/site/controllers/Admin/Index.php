@@ -11,9 +11,13 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminPage;
 use \App\Site\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Index" Admin Page
@@ -53,7 +57,9 @@ class Index extends AdminPage
     /**
      * before render hook
      *
-     * @return Response|self
+     * @return AdminPage|RedirectResponse|Response
+     * @throws BasicException
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -67,9 +73,10 @@ class Index extends AdminPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
-     * @return Response
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
+     * @return BasePage|RedirectResponse|Response
+     * @throws BasicException
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {

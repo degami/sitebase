@@ -12,16 +12,9 @@
 namespace App\Site\Commands\Db;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
 use \Symfony\Component\Console\Output\OutputInterface;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Overrides\Migrations\Factory;
-use \Genkgo\Migrations\Adapters\PdoMysqlAdapter;
-use \Genkgo\Migrations\MigrationInterface;
-use \Degami\SqlSchema\Schema;
-use \App\App;
 
 /**
  * Migrate Database Command
@@ -39,9 +32,10 @@ class GetSql extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

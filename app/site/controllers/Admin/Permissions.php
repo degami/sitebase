@@ -11,7 +11,8 @@
  */
 namespace App\Site\Controllers\Admin;
 
-use \Psr\Container\ContainerInterface;
+use App\Base\Exceptions\InvalidValueException;
+use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Role;
@@ -20,6 +21,7 @@ use \App\Site\Models\RolePermission;
 
 /**
  * "Permissions" Admin Page
+ * @package App\Site\Controllers\Admin
  */
 class Permissions extends AdminFormPage
 {
@@ -47,6 +49,8 @@ class Permissions extends AdminFormPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTemplateData()
     {
@@ -60,9 +64,12 @@ class Permissions extends AdminFormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -141,17 +148,17 @@ class Permissions extends AdminFormPage
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
-
+        //$values = $form->values();
         return true;
     }
 
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -178,6 +185,14 @@ class Permissions extends AdminFormPage
         return $this->doRedirect($this->getControllerUrl());
     }
 
+    /**
+     * load role permission
+     *
+     * @param Role $role_model
+     * @param Permission $permission_model
+     * @return RolePermission|null
+     * @throws BasicException
+     */
     private function loadRolePermission($role_model, $permission_model)
     {
         $role_permission_dbrow = $this->getDb()->table('role_permission')->where(['role_id' => $role_model->id, 'permission_id' => $permission_model->id])->fetch();
@@ -188,6 +203,14 @@ class Permissions extends AdminFormPage
         return null;
     }
 
+    /**
+     * adds permissione to role
+     *
+     * @param Role $role_model
+     * @param Permission $permission_model
+     * @throws BasicException
+     * @throws InvalidValueException
+     */
     private function addPermission($role_model, $permission_model)
     {
         $pivot_model = RolePermission::new($this->getContainer());

@@ -11,6 +11,9 @@
  */
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
@@ -32,6 +35,11 @@ class Cron extends AdminManageModelsPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
+     * @param Request|null $request
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PermissionDeniedException
+     * @throws Exception
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -125,9 +133,10 @@ class Cron extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -147,7 +156,7 @@ class Cron extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                $container = $this->getContainer();
+                //$container = $this->getContainer();
 
                 $task_title = $task_callable = $task_schedule = $task_active = '';
                 if ($task->isLoaded()) {
@@ -220,7 +229,7 @@ class Cron extends AdminManageModelsPage
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
-        $values = $form->values();
+        //$values = $form->values();
 
         return true;
     }
@@ -228,9 +237,10 @@ class Cron extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -270,6 +280,8 @@ class Cron extends AdminManageModelsPage
      * gets last heart beat
      *
      * @return string
+     * @throws Exception
+     * @throws BasicException
      */
     protected function getLastHeartBeat()
     {
@@ -313,8 +325,12 @@ class Cron extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  array $data
+     * @param array $data
      * @return array
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     protected function getTableElements($data)
     {

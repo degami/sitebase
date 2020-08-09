@@ -11,9 +11,7 @@
  */
 namespace App\Site\Routing;
 
-use \Psr\Container\ContainerInterface;
 use \FastRoute\Dispatcher;
-use \App\Site\Models\Rewrite;
 use \App\Base\Abstracts\Controllers\BasePage;
 
 /**
@@ -382,6 +380,8 @@ class RouteInfo
     }
 
     /**
+     * gets controller object
+     *
      * @return BasePage|null controller object instance
      */
     public function getControllerObject()
@@ -390,8 +390,9 @@ class RouteInfo
     }
 
     /**
-     * @param BasePage|null controller object instance $controller_object
+     * sets controller object
      *
+     * @param BasePage|null controller object instance $controller_object
      * @return self
      */
     public function setControllerObject(BasePage $controller_object)
@@ -401,7 +402,11 @@ class RouteInfo
         return $this;
     }
 
-
+    /**
+     * gets routeinfo data
+     *
+     * @return array
+     */
     public function getData()
     {
         return [

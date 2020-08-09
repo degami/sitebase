@@ -11,9 +11,10 @@
  */
 namespace App\Site\Cron\Tasks;
 
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
-use \App\App;
 
 /**
  * Cache manager cron
@@ -36,6 +37,7 @@ class CacheManager extends ContainerAwareObject
      * flush cache method
      *
      * @return boolean
+     * @throws PhpfastcacheSimpleCacheException|BasicException
      */
     public function flush()
     {

@@ -11,16 +11,16 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
-use \Psr\Container\ContainerInterface;
-use \App\App;
 use \App\Site\Routing\RouteInfo;
 use \Exception;
 use \App\Base\Traits\FrontendTrait;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Exceptions\NotFoundException;
+use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
- * Base for a page diplaying a model
+ * Base for a page displaying a model
  */
 abstract class FrontendPageWithObject extends FrontendPage
 {
@@ -29,9 +29,11 @@ abstract class FrontendPageWithObject extends FrontendPage
     /**
      * {@inheritdocs}
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response
+     * @throws Exception
+     * @throws Throwable
      */
     public function process(RouteInfo $route_info = null, $route_data = [])
     {

@@ -11,6 +11,8 @@
  */
 namespace App\Site\Cron\Tasks;
 
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \Spatie\DbDumper\Databases\MySql;
@@ -42,20 +44,29 @@ class DbManager extends ContainerAwareObject
      */
     public function dumpDB()
     {
-        return MySql::create()
-            ->setDbName($this->getContainer()->get('dbname'))
-            ->setUserName($this->getContainer()->get('dbuser'))
-            ->setPassword($this->getContainer()->get('dbpass'))
-        //            ->useSingleTransaction()
-        //            ->skipLockTables()
-            ->useCompressor(new GzipCompressor())
-            ->dumpToFile(App::getDir(App::DUMPS).DS.'dump.'.date("Ymd_His").'.sql.gz');
+        try {
+            MySql::create()
+                ->setDbName($this->getContainer()->get('dbname'))
+                ->setUserName($this->getContainer()->get('dbuser'))
+                ->setPassword($this->getContainer()->get('dbpass'))
+                //            ->useSingleTransaction()
+                //            ->skipLockTables()
+                ->useCompressor(new GzipCompressor())
+                ->dumpToFile(App::getDir(App::DUMPS).DS.'dump.'.date("Ymd_His").'.sql.gz');
+
+            return true;
+        } catch (Exception $e) {
+
+        }
+
+        return false;
     }
 
     /**
      * remove cron logs older than 12 hours
      *
      * @return boolean
+     * @throws BasicException
      */
     public function dropOldCronLogs()
     {
@@ -68,10 +79,12 @@ class DbManager extends ContainerAwareObject
     /**
      * remove processed queue messages older than 12 hours
      * @return boolean
+     * @throws BasicException
+     * @throws BasicException
      */
     public function dropOldQueueMessages()
     {
-        $statement = $this->getDb()->query('DELETE FROM queue_message WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR) AND status = '.$db->quote(QueueMessage::STATUS_PROCESSED));
+        $statement = $this->getDb()->query('DELETE FROM queue_message WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR) AND status = '.$this->getDb()->quote(QueueMessage::STATUS_PROCESSED));
         $statement->execute();
 
         return true;

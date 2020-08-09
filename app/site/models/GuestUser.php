@@ -12,23 +12,13 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\AccountModel;
+use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Base\Abstracts\ContainerAwareObject;
 use \DateTime;
 use \Exception;
 
 /**
  * Guest User Model
- *
- * @method int getId()
- * @method string getUsername()
- * @method string getPassword()
- * @method int getRoleId()
- * @method string getEmail()
- * @method string getNickname()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
  */
 class GuestUser extends AccountModel
 {
@@ -68,6 +58,7 @@ class GuestUser extends AccountModel
      * class constructor
      *
      * @param ContainerInterface $container
+     * @throws Exception
      */
     public function __construct(ContainerInterface $container)
     {
@@ -85,8 +76,9 @@ class GuestUser extends AccountModel
     /**
      * checks if user has permission
      *
-     * @param  string $permission_name
+     * @param string $permission_name
      * @return boolean
+     * @throws Exception
      */
     public function checkPermission($permission_name)
     {
@@ -170,7 +162,7 @@ class GuestUser extends AccountModel
     /**
      * gets user creation date
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getCreatedAt()
     {
@@ -180,7 +172,7 @@ class GuestUser extends AccountModel
     /**
      * gets user last update time
      *
-     * @return \DateTime
+     * @return DateTime
      */
     public function getUpdatedAt()
     {
@@ -191,6 +183,7 @@ class GuestUser extends AccountModel
      * gets user locale
      *
      * @return string
+     * @throws BasicException
      */
     public function getLocale()
     {

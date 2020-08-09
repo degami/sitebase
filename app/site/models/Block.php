@@ -11,12 +11,15 @@
  */
 namespace App\Site\Models;
 
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\BlockTrait;
 use \App\Base\Traits\WithWebsiteTrait;
 use \App\Base\Traits\WithOwnerTrait;
 use \App\Base\Abstracts\Controllers\BasePage;
+use DateTime;
 use \Degami\Basics\Html\TagElement;
+use Exception;
 
 /**
  * Block Model
@@ -30,8 +33,8 @@ use \Degami\Basics\Html\TagElement;
  * @method string getContent()
  * @method string getConfig()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Block extends BaseModel
 {
@@ -43,15 +46,16 @@ class Block extends BaseModel
     protected $rewrites = [];
 
     /**
-     * @var \App\Base\Abstracts\Blocks\BaseCodeBlock code block instance
+     * @var BaseCodeBlock code block instance
      */
     protected $codeBlockInstance = null;
 
     /**
      * {@inheritdocs}
      *
-     * @param  BasePage $current_page
+     * @param BasePage $current_page
      * @return string
+     * @throws Exception
      */
     public function renderHTML(BasePage $current_page)
     {
@@ -83,7 +87,7 @@ class Block extends BaseModel
     /**
      * loads code block instance
      *
-     * @return \App\Base\Abstracts\Blocks\BaseCodeBlock
+     * @return BaseCodeBlock
      */
     public function loadInstance()
     {
@@ -97,7 +101,7 @@ class Block extends BaseModel
     /**
      * gets real block instance
      *
-     * @return self|\App\Base\Abstracts\Blocks\BaseCodeBlock
+     * @return self|BaseCodeBlock
      */
     public function getRealInstance()
     {
@@ -107,8 +111,9 @@ class Block extends BaseModel
     /**
      * renders block
      *
-     * @param  BasePage|null $current_page
+     * @param BasePage|null $current_page
      * @return string
+     * @throws Exception
      */
     public function render(BasePage $current_page = null)
     {
@@ -128,7 +133,9 @@ class Block extends BaseModel
     /**
      * gets block rewrite objects
      *
+     * @param false $reset
      * @return array
+     * @throws Exception
      */
     public function getRewrites($reset = false)
     {
@@ -148,8 +155,9 @@ class Block extends BaseModel
     /**
      * checks if block can be shown on specific rewrite
      *
-     * @param  Rewrite $rewrite
+     * @param Rewrite $rewrite
      * @return boolean
+     * @throws Exception
      */
     public function checkValidRewrite($rewrite)
     {
@@ -159,7 +167,7 @@ class Block extends BaseModel
             array_filter(
                 $this->getRewrites(),
                 function ($el) use ($rewrite) {
-                    return ($el->getId() == $rewrite->getId()) ? true : false;
+                    return $el->getId() == $rewrite->getId();
                 }
             )
         ) > 0);

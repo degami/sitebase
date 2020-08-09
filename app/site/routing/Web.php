@@ -11,6 +11,8 @@
  */
 namespace App\Site\Routing;
 
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \FastRoute\Dispatcher;
 use \FastRoute\RouteCollector;
 use \HaydenPierce\ClassFinder\ClassFinder;
@@ -48,6 +50,9 @@ class Web extends ContainerAwareObject
      * class constructor
      *
      * @param ContainerInterface $container
+     * @throws InvalidValueException
+     * @throws InvalidValueException
+     * @throws Exception
      */
     public function __construct(ContainerInterface $container)
     {
@@ -76,9 +81,10 @@ class Web extends ContainerAwareObject
 
                     $group = $tmp[0];
                     $path = $tmp[1];
-                } else {
-                    // everithing should be fine
                 }
+                /*else {
+                    // everithing should be fine
+                }*/
 
                 if (method_exists($controllerClass, 'getRouteGroup')) {
                     $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
@@ -221,6 +227,8 @@ class Web extends ContainerAwareObject
      * @param string $path
      * @param string $class
      * @param string $method
+     * @param string[] $verbs
+     * @return Web
      */
     public function addRoute($group, $name, $path, $class, $method = 'renderPage', $verbs = ['GET', 'POST'])
     {
@@ -288,6 +296,9 @@ class Web extends ContainerAwareObject
      * return base site url
      *
      * @return string
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getBaseUrl()
     {
@@ -313,9 +324,10 @@ class Web extends ContainerAwareObject
     /**
      * Returns url for given route
      *
-     * @param  string $route_name
-     * @param  array  $route_params
+     * @param string $route_name
+     * @param array $route_params
      * @return string
+     * @throws BasicException
      */
     public function getUrl($route_name, $route_params = [])
     {
@@ -345,9 +357,9 @@ class Web extends ContainerAwareObject
      * returns a RouteInfo instance for current request
      *
      * @param  ContainerInterface $container
-     * @param  string             $http_method
-     * @param  string             $request_uri
-     * @param  string             $domain
+     * @param  string|null        $http_method
+     * @param  string|null        $request_uri
+     * @param  string|null        $domain
      * @return RouteInfo
      */
     public function getRequestInfo(ContainerInterface $container, $http_method = null, $request_uri = null, $domain = null)

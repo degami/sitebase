@@ -12,12 +12,11 @@
 namespace App\Site\Commands\Db;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use PDO;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use \Symfony\Component\Console\Helper\Table;
-use \Psr\Container\ContainerInterface;
-use \App\App;
 use \Exception;
 
 /**
@@ -74,7 +73,7 @@ class Shell extends BaseCommand
                             case 'SELECT':
                                 $table = new Table($output);
                                 $count = 0;
-                                while ($row = $statement->fetch(\PDO::FETCH_ASSOC)) {
+                                while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                                     if ($count == 0) {
                                         $table->setHeaders(array_keys($row));
                                     }

@@ -12,7 +12,8 @@
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
-use \Psr\Container\ContainerInterface;
+use Degami\SqlSchema\Exceptions\DuplicateException;
+use Degami\SqlSchema\Exceptions\EmptyException;
 use \Degami\SqlSchema\Index;
 use \Degami\SqlSchema\Table;
 
@@ -39,8 +40,21 @@ class CreateMediaElementsTableMigration extends DBMigration
     /**
      * {@inheritdocs}
      *
-     * @param  Table $table
+     * @param Table $table
      * @return Table
+     * @throws EmptyException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
+     * @throws DuplicateException
      */
     public function addDBTableDefinition(Table $table)
     {

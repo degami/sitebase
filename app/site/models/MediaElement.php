@@ -14,9 +14,13 @@ namespace App\Site\Models;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithOwnerTrait;
 use \App\App;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
 use \Exception;
 use \App\Base\Exceptions\PermissionDeniedException;
 use \Degami\Basics\Html\TagElement;
+use Imagine\Image\Box;
+use Imagine\Image\ImageInterface;
 
 /**
  * Media Element Model
@@ -28,8 +32,8 @@ use \Degami\Basics\Html\TagElement;
  * @method int getFilesize()
  * @method int getUserId()
  * @method boolean getLazyload()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class MediaElement extends BaseModel
 {
@@ -41,6 +45,7 @@ class MediaElement extends BaseModel
      * gets relative path
      *
      * @return string
+     * @throws Exception
      */
     public function getRelativePath()
     {
@@ -52,19 +57,20 @@ class MediaElement extends BaseModel
     /**
      * gets thumbnail img html tag
      *
-     * @param  string $size
-     * @param  string $mode
-     * @param  string $class
-     * @param  array  $img_attributes
+     * @param string $size
+     * @param string|null $mode
+     * @param string|null $class
+     * @param array $img_attributes
      * @return string
+     * @throws PermissionDeniedException
+     * @throws BasicException
      */
     public function getThumb($size, $mode = null, $class = null, $img_attributes = [])
     {
-        $style = "";
+        $w = $h = null;
         if (preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
             $w = $thumb_sizes[1];
             $h = $thumb_sizes[2];
-            $style = "style=\"max-width:{$w}px;max-height:{$h}px;\" ";
         }
 
         if (boolval($this->lazyload) && !isset($img_attributes['for_admin'])) {
@@ -87,9 +93,12 @@ class MediaElement extends BaseModel
     /**
      * gets thumbnail url
      *
-     * @param  string $size
-     * @param  string $mode
+     * @param string $size
+     * @param string|null $mode
      * @return string
+     * @throws BasicException
+     * @throws PermissionDeniedException
+     * @throws Exception
      */
     public function getThumbUrl($size, $mode = null)
     {
@@ -134,17 +143,17 @@ class MediaElement extends BaseModel
                             $h = $sizes->getHeight();
                         }
 
-                        $size = new \Imagine\Image\Box($w, $h);
+                        $size = new Box($w, $h);
 
                         if (!in_array(
                             $mode,
                             [
-                            \Imagine\Image\ImageInterface::THUMBNAIL_INSET,
-                            \Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND
+                            ImageInterface::THUMBNAIL_INSET,
+                            ImageInterface::THUMBNAIL_OUTBOUND
                             ]
                         )
                         ) {
-                            $mode    = \Imagine\Image\ImageInterface::THUMBNAIL_INSET;
+                            $mode    = ImageInterface::THUMBNAIL_INSET;
                             // or
                             // $mode    = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
                         }
@@ -157,7 +166,7 @@ class MediaElement extends BaseModel
                         // @todo thumb in base a mimetype
                         $type = explode('/', $this->mimetype);
                         if (is_array($type)) {
-                            $svg = $this->getUtils()->getIcon(array_pop($type));
+                            return $this->getUtils()->getIcon(array_pop($type));
                         }
                     }
                 }
@@ -172,8 +181,10 @@ class MediaElement extends BaseModel
     /**
      * gets original image img tag
      *
-     * @param  string $class
+     * @param string $class
      * @return string
+     * @throws PermissionDeniedException
+     * @throws BasicException
      */
     public function getImage($class = 'img-fluid')
     {
@@ -184,6 +195,8 @@ class MediaElement extends BaseModel
      * gets original image url
      *
      * @return string
+     * @throws PermissionDeniedException
+     * @throws BasicException
      */
     public function getImageUrl()
     {

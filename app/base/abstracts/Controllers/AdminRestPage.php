@@ -11,18 +11,12 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
-use \Psr\Container\ContainerInterface;
-use \App\App;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\JsonResponse;
 use \App\Base\Traits\AdminTrait;
-use \Exception;
 use \App\Base\Exceptions\PermissionDeniedException;
 
 /**
- * Base for rest endopoints
+ * Base for rest endpoints
  */
 abstract class AdminRestPage extends BaseRestPage
 {
@@ -34,6 +28,7 @@ abstract class AdminRestPage extends BaseRestPage
      * before render hook
      *
      * @return Response|self
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {

@@ -11,16 +11,15 @@
  */
 namespace App\Site\Controllers\Frontend\Users;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \App\Base\Traits\FrontendTrait;
-use \Gplanchat\EventManager\Event;
-use \App\App;
 use \App\Site\Models\User;
-use \App\Base\Exceptions\NotFoundException;
 use \App\Base\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * PasswordForgot Page
@@ -113,7 +112,9 @@ class PasswordForgot extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return self
+     * @return PasswordForgot|RedirectResponse|Response
+     * @throws BasicException
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -144,9 +145,15 @@ class PasswordForgot extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -192,9 +199,11 @@ class PasswordForgot extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
+     * @throws BasicException
+     * @throws BasicException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -219,13 +228,17 @@ class PasswordForgot extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         $values = $form->values();
+
+        $user_model = null;
 
         if ($form->getFormId() == 'confirmemail') {
             if ($form_state['found_user']) {
@@ -250,7 +263,9 @@ class PasswordForgot extends FormPage
             $user_model->confirmation_code = null;
         }
 
-        $user_model->persist();
+        if ($user_model instanceof  User) {
+            $user_model->persist();
+        }
 
         return $user_model;
     }

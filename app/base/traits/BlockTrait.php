@@ -11,9 +11,6 @@
  */
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Site\Models\Rewrite;
-
 /**
  * Block Trait
  */

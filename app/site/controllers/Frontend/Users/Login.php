@@ -11,16 +11,14 @@
  */
 namespace App\Site\Controllers\Frontend\Users;
 
-use \Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
 use \App\Base\Traits\FrontendTrait;
-use \Gplanchat\EventManager\Event;
-use \App\App;
 use \App\Site\Models\User;
-use \App\Base\Exceptions\NotFoundException;
 use \App\Base\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Login Page
@@ -113,7 +111,9 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return self
+     * @return Login|RedirectResponse|Response
+     * @throws BasicException
+     * @throws PermissionDeniedException
      */
     protected function beforeRender()
     {
@@ -149,9 +149,14 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -187,9 +192,14 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
+     * @throws BasicException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

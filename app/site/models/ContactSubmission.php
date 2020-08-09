@@ -12,6 +12,9 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
+use DateTime;
+use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Traits\WithOwnerTrait;
 
@@ -21,8 +24,8 @@ use \App\Base\Traits\WithOwnerTrait;
  * @method int getId()
  * @method int getContactId()
  * @method int getUserId()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class ContactSubmission extends BaseModel
 {
@@ -32,6 +35,7 @@ class ContactSubmission extends BaseModel
      * gets submission Contact Form
      *
      * @return Contact
+     * @throws Exception
      */
     public function getContact()
     {
@@ -68,6 +72,7 @@ class ContactSubmission extends BaseModel
      * gets full key => value pairs data
      *
      * @return array
+     * @throws BasicException
      */
     public function getFullData()
     {

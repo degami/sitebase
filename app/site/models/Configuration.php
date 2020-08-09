@@ -13,6 +13,7 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Traits\WithWebsiteTrait;
+use DateTime;
 
 /**
  * Configuration Model
@@ -23,8 +24,8 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method string getValue()
  * @method string getLocale()
  * @method boolean getIsSystem()
- * @method \DateTime getCreatedAt()
- * @method \DateTime getUpdatedAt()
+ * @method DateTime getCreatedAt()
+ * @method DateTime getUpdatedAt()
  */
 class Configuration extends BaseModel
 {

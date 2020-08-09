@@ -13,8 +13,8 @@ namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
-use \Psr\Container\ContainerInterface;
-use \App\Site\Models\Menu;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\PHPFormsApi as FAPI;
 use \Degami\Basics\Html\TagElement;
 
@@ -26,9 +26,11 @@ class SecondaryMenu extends BaseCodeBlock
     /**
      * {@inheritdocs}
      *
-     * @param  BasePage|null $current_page
-     * @param  array         $data
+     * @param BasePage|null $current_page
+     * @param array $data
      * @return string
+     * @throws BasicException
+     * @throws BasicException
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
     {
@@ -66,9 +68,9 @@ class SecondaryMenu extends BaseCodeBlock
     /**
      * internally renders menu
      *
-     * @param  array $menu_tree
-     * @param  array $parent
-     * @return string
+     * @param array $menu_tree
+     * @param array|null $parent
+     * @return string|mixed
      */
     protected function _renderSiteMenu($menu_tree, $parent = null)
     {
@@ -131,10 +133,13 @@ class SecondaryMenu extends BaseCodeBlock
     /**
      * additional configuration fieldset
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
-     * @param  array     $default_values
-     * @return FAPI\Form
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @param $default_values
+     * @return array
+     * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
     {

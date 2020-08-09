@@ -12,6 +12,8 @@
 namespace App\Site\Commands\Users;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -19,10 +21,7 @@ use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableSeparator;
 use \App\Site\Models\User;
-use \Psr\Container\ContainerInterface;
 use \Exception;
 
 /**
@@ -52,9 +51,11 @@ class Add extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -117,7 +118,7 @@ class Add extends BaseCommand
         }
 
         try {
-            $user = $this->getContainer()->call([\App\Site\Models\User::class,'new']);
+            $user = $this->getContainer()->call([User::class,'new']);
             $user->username = $username;
             $user->nickname = $username;
             $user->email = $email;

@@ -50,10 +50,6 @@ class Stats extends AdminPage
      *
      * @return array
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     protected function getTemplateData()
     {

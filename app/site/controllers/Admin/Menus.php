@@ -88,10 +88,6 @@ class Menus extends AdminManageModelsPage
      * @param Menu|null $menuElement
      * @return Element
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     private function addLevel($parentFormElement, $menu_name, $menuElement = null)
     {
@@ -377,7 +373,6 @@ class Menus extends AdminManageModelsPage
      *
      * @param array $data
      * @return array
-     * @throws BasicException
      * @throws BasicException
      */
     protected function getTableElements($data)

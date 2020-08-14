@@ -72,7 +72,6 @@ class Links extends FormPage
      *
      * @return array
      * @throws BasicException
-     * @throws BasicException
      */
     protected function getTemplateData()
     {
@@ -190,6 +189,7 @@ class Links extends FormPage
         );
 
         $form->reset();
+        return null;
     }
 
     /**

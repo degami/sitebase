@@ -93,7 +93,6 @@ class Mailer extends ContainerAwareObject
      * @param string $content_type
      * @return boolean
      * @throws BasicException
-     * @throws BasicException
      */
     protected function sendSmtpMail($from, $to, $subject, $body, $content_type = 'text/html')
     {

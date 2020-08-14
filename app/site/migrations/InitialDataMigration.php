@@ -11,6 +11,7 @@
  */
 namespace App\Site\Migrations;
 
+use App\App;
 use \App\Base\Abstracts\Migrations\BaseMigration;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\InvalidValueException;
@@ -60,7 +61,7 @@ class InitialDataMigration extends BaseMigration
     /**
      * adds website model
      *
-     * @return BaseModel
+     * @return Website
      * @throws BasicException
      * @throws InvalidValueException
      */
@@ -98,6 +99,20 @@ class InitialDataMigration extends BaseMigration
         $admin_model->setRole('admin');
         $admin_model->persist();
 
+        if (file_exists(App::getDir(App::ROOT).DS.".env")) {
+            if ($contents = file(App::getDir(App::ROOT).DS.".env")) {
+                if ($fp = fopen(App::getDir(App::ROOT).DS.".env", "w")) {
+                    foreach($contents as $line) {
+                        if (preg_match("/ADMIN_(EMAIL|USER|PASS)=/", $line)) {
+                            continue;
+                        }
+                        fwrite($fp, $line);
+                    }
+                    fclose($fp);
+                }
+            }
+        }
+
         return $admin_model;
     }
 
@@ -111,7 +126,7 @@ class InitialDataMigration extends BaseMigration
      */
     private function addPermission($role_model, $permission_name)
     {
-        $permission_dbrow = $this->getDb()->permission()->where(['name' => $permission_name])->fetch();
+        $permission_dbrow = $this->getDb()->table('permission')->where(['name' => $permission_name])->fetch();
         $permission_model = Permission::new($this->getContainer());
         if ($permission_dbrow) {
             $permission_model = $this->getContainer()->make(Permission::class, ['dbrow' => $permission_dbrow]);
@@ -131,7 +146,6 @@ class InitialDataMigration extends BaseMigration
      *
      * @throws BasicException
      * @throws InvalidValueException
-     * @throws BasicException
      * @throws BasicException
      */
     private function addRolesPermissions()
@@ -222,7 +236,7 @@ class InitialDataMigration extends BaseMigration
      *
      * @param $website_model
      * @param $owner_model
-     * @return BaseModel
+     * @return Page
      * @throws BasicException
      * @throws InvalidValueException
      */

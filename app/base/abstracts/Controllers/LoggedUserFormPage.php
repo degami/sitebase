@@ -54,7 +54,6 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * @return void
      * @throws PermissionDeniedException
      * @throws BasicException
-     * @throws BasicException
      */
     protected function processFormSubmit()
     {

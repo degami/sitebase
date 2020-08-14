@@ -119,20 +119,6 @@ class Login extends FormPage
      *
      * @return Template
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     protected function prepareTemplate()
     {
@@ -211,10 +197,6 @@ class Login extends FormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -253,11 +235,6 @@ class Login extends FormPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return boolean|string
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      * @throws BasicException
      */
     public function formValidate(FAPI\Form $form, &$form_state)

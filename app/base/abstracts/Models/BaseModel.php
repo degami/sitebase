@@ -58,7 +58,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param Row|null $dbrow
      * @throws InvalidValueException
      * @throws BasicException
-     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, $dbrow = null)
     {
@@ -340,7 +339,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      *
      * @param ContainerInterface $container
      * @param array $initialdata
-     * @return self
+     * @return static
      * @throws InvalidValueException
      * @throws BasicException
      */

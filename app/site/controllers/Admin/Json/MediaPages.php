@@ -47,10 +47,6 @@ class MediaPages extends AdminJsonPage
      *
      * @return array
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     protected function getJsonData()
     {

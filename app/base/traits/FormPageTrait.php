@@ -44,7 +44,11 @@ trait FormPageTrait
      */
     public function getForm()
     {
-        return $this->getTemplateData()['form'] ?? null;
+        if (!is_null($this->getTemplate())) {
+            return $this->getTemplate()->data()['form'] ?? null;
+        }
+
+        return $this->templateData['form'] ?? null;
     }
 
     /**

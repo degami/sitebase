@@ -80,7 +80,6 @@ class DbManager extends ContainerAwareObject
      * remove processed queue messages older than 12 hours
      * @return boolean
      * @throws BasicException
-     * @throws BasicException
      */
     public function dropOldQueueMessages()
     {

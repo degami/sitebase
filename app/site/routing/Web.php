@@ -51,7 +51,6 @@ class Web extends ContainerAwareObject
      *
      * @param ContainerInterface $container
      * @throws InvalidValueException
-     * @throws InvalidValueException
      * @throws Exception
      */
     public function __construct(ContainerInterface $container)
@@ -290,14 +289,13 @@ class Web extends ContainerAwareObject
                 }
             }
         }
+        return null;
     }
 
     /**
      * return base site url
      *
      * @return string
-     * @throws BasicException
-     * @throws BasicException
      * @throws BasicException
      */
     public function getBaseUrl()

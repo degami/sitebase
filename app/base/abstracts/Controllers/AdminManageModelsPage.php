@@ -44,7 +44,6 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @throws FormException
      * @throws PermissionDeniedException
      * @throws BasicException
-     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request = null)
     {
@@ -131,7 +130,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getTable()
     {
-        return $this->getTemplateData()['table'];
+        if (!is_null($this->getTemplate())) {
+            return $this->getTemplate()->data()['table'] ?? null;
+        }
+
+        return $this->getTemplateData()['table'] ?? null;
     }
 
     /**
@@ -141,7 +144,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getPaginator()
     {
-        return $this->getTemplateData()['paginator'];
+        if (!is_null($this->getTemplate())) {
+            return $this->getTemplate()->data()['paginator'] ?? null;
+        }
+
+        return $this->getTemplateData()['paginator'] ?? null;
     }
 
     /**

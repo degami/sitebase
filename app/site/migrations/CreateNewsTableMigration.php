@@ -44,19 +44,6 @@ class CreateNewsTableMigration extends DBMigration
      * @return Table
      * @throws EmptyException
      * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
-     * @throws DuplicateException
      */
     public function addDBTableDefinition(Table $table)
     {

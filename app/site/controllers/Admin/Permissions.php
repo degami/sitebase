@@ -50,7 +50,6 @@ class Permissions extends AdminFormPage
      *
      * @return array
      * @throws BasicException
-     * @throws BasicException
      */
     protected function getTemplateData()
     {
@@ -67,8 +66,6 @@ class Permissions extends AdminFormPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form
-     * @throws BasicException
-     * @throws BasicException
      * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)

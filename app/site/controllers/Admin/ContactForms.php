@@ -135,7 +135,6 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -409,9 +408,6 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return mixed
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)

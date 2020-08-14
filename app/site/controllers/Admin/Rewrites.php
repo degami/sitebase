@@ -203,8 +203,6 @@ class Rewrites extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {

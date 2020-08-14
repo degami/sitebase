@@ -348,9 +348,6 @@ class Sitemaps extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -434,10 +431,7 @@ class Sitemaps extends AdminManageModelsPage
      * @param array $data
      * @return array
      * @throws BasicException
-     * @throws BasicException
      * @throws Exception
-     * @throws BasicException
-     * @throws BasicException
      */
     protected function getTableElements($data)
     {

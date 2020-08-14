@@ -406,12 +406,13 @@ class Globals extends ContainerAwareObject
     /**
      * gets an icon
      *
-     * @param  string $icon_name
+     * @param string $icon_name
+     * @param array $attributes
      * @return string
      */
-    public function getIcon($icon_name)
+    public function getIcon($icon_name, $attributes = [])
     {
-        return $this->getContainer()->get('icons')->get($icon_name, [], false);
+        return $this->getContainer()->get('icons')->get($icon_name, $attributes, false);
     }
 
     /**

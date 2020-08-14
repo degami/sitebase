@@ -27,7 +27,6 @@ class GTM extends BaseCodeBlock
      *
      * @param ContainerInterface $container
      * @throws BasicException
-     * @throws BasicException
      */
     public function __construct(ContainerInterface $container)
     {

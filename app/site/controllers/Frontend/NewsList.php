@@ -71,7 +71,6 @@ class NewsList extends FrontendPage
      *
      * @return array
      * @throws BasicException
-     * @throws BasicException
      */
     protected function getTemplateData()
     {

@@ -111,15 +111,35 @@ class App extends ContainerAwareObject
              * @var ContainerInterface $this->container
              */
             parent::__construct($builder->build());
+
+            $env_variables = array_combine(
+                $dotenv->getEnvironmentVariableNames(),
+                array_map(
+                    'getenv',
+                    $dotenv->getEnvironmentVariableNames()
+                )
+            );
+
+            // remove some sensible data from _SERVER
+            if (!getenv('DEBUG')) {
+                foreach ([
+                             'DATABASE_HOST',
+                             'DATABASE_NAME',
+                             'DATABASE_USER',
+                             'DATABASE_PASS',
+                             'SMTP_HOST',
+                             'SMTP_PORT',
+                             'SMTP_USER',
+                             'SMTP_PASS'
+                         ] as $key) {
+                    unset($_SERVER[$key]);
+                    unset($_ENV[$key]);
+                }
+            }
+
             $this->getContainer()->set(
                 'env',
-                array_combine(
-                    $dotenv->getEnvironmentVariableNames(),
-                    array_map(
-                        'getenv',
-                        $dotenv->getEnvironmentVariableNames()
-                    )
-                )
+                $env_variables
             );
 
             $this->getTemplates()->addFolder('base', static::getDir(static::TEMPLATES));

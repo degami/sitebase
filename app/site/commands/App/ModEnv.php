@@ -65,6 +65,10 @@ class ModEnv extends BaseCommand
 
         foreach ($this->dotenv_sections as $label => $keys) {
             foreach ($keys as $key) {
+                if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL','ADMIN_PASS','ADMIN_USER'])) {
+                    continue;
+                }
+
                 if (substr($key, 0, 1) == '#' || substr($key, 0, 1) == ';') {
                     continue;
                 }
@@ -83,6 +87,10 @@ class ModEnv extends BaseCommand
         foreach ($this->dotenv_sections as $label => $keys) {
             $dotenv .= "\n# -- {$label} --\n";
             foreach ($keys as $key) {
+                if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL','ADMIN_PASS','ADMIN_USER'])) {
+                    continue;
+                }
+
                 $value = $values[$key];
                 if (preg_match("/\s/i", $value)) {
                     $value = '"'.$value.'"';

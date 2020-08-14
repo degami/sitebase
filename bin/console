@@ -55,7 +55,8 @@ try {
 $commandsClasses = ClassFinder::getClassesInNamespace('App\Site\Commands', ClassFinder::RECURSIVE_MODE);
 foreach($commandsClasses as $commandClass){
     try{
-        $classname = array_pop(explode("\\", $commandClass));
+        $array = explode("\\", $commandClass);
+        $classname = array_pop($array);
         $commandname = str_replace("App\\Site\\Commands\\", "", $commandClass);
         $commandname = preg_replace("/".$classname."$/", "", $commandname) . $container->get('utils')->pascalCaseToSnakeCase($classname);
         $commandname = strtolower(str_replace("\\", ":", $commandname));

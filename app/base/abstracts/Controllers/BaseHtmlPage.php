@@ -145,11 +145,11 @@ abstract class BaseHtmlPage extends BasePage
     public function getInfo()
     {
         $templateName = $this->getTemplateName();
-        $templateData = $this->getTemplateData();
         $variablesInfo = [];
         if ($this->getTemplate() instanceof Template) {
-            $templateName = $this->getTemplateName();
             $templateData = $this->getTemplate()->data();
+        } else {
+            $templateData = $this->getTemplateData();
         }
 
         foreach ($templateData as $index => $elem) {

@@ -30,7 +30,6 @@ class SecondaryMenu extends BaseCodeBlock
      * @param array $data
      * @return string
      * @throws BasicException
-     * @throws BasicException
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
     {

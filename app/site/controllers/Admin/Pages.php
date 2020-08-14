@@ -336,7 +336,6 @@ class Pages extends AdminManageFrontendModelsPage
      * @param array $data
      * @return array
      * @throws BasicException
-     * @throws BasicException
      * @throws Exception
      */
     protected function getTableElements($data)

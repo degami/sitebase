@@ -62,8 +62,6 @@ class Process extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

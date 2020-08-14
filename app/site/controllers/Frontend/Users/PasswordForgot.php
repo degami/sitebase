@@ -149,11 +149,6 @@ class PasswordForgot extends FormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -202,7 +197,6 @@ class PasswordForgot extends FormPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return boolean|string
-     * @throws BasicException
      * @throws BasicException
      */
     public function formValidate(FAPI\Form $form, &$form_state)

@@ -304,9 +304,6 @@ class Links extends AdminManageFrontendModelsPage
      * @param array $data
      * @return array
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     protected function getTableElements($data)
     {

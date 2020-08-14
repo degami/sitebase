@@ -72,10 +72,6 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -348,7 +344,6 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @param array $data
      * @return array
-     * @throws BasicException
      * @throws BasicException
      * @throws Exception
      */

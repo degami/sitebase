@@ -282,6 +282,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         );
 
         $form->reset();
+        return null;
     }
 
     /**

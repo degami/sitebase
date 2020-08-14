@@ -161,30 +161,18 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @return string
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
-     * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function renderSiteMenu($locale)
     {
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
         if (empty($locale)) {
-            return;
+            return null;
         }
 
         $menu_name = $this->getSiteData()->getMainMenuName($website_id, $locale);
         if (empty($menu_name)) {
-            return;
+            return null;
         }
 
         $cache_key = strtolower('site.'.$website_id.'.menu.html.'.$locale);
@@ -387,10 +375,6 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param integer $visible_links
      * @return string
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function renderPaginator($current_page, $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2)
     {
@@ -570,16 +554,6 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param BasePage|null $current_page
      * @return string
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      * @throws OutOfRangeException
      * @throws BasicException
      */
@@ -655,7 +629,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     );
                     $add_searchrow = true;
                 } else if (is_array($v) && isset($v['foreign']) && boolval($v['foreign']) == true) {
-                    $dbtable = $this->getSchema()->getTable($v['table'], $this->getPdo());
+                    $dbtable = $this->getSchema()->getTable($v['table']);
                     $select_options = [];
                     foreach ($dbtable->getForeignKeys() as $fkobj) {
                         if (in_array($v['foreign'], $fkobj->getColumns())) {

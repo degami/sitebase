@@ -232,7 +232,6 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return Result|null
      * @throws BasicException
-     * @throws BasicException
      */
     public function getRewrite()
     {
@@ -258,7 +257,6 @@ abstract class FrontendPage extends BaseHtmlPage
      * gets current page's locale
      *
      * @return string
-     * @throws BasicException
      * @throws BasicException
      */
     public function getCurrentLocale()

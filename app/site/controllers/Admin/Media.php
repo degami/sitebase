@@ -115,10 +115,6 @@ class Media extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -391,10 +387,6 @@ class Media extends AdminManageModelsPage
      *
      * @param array $data
      * @return array
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      * @throws BasicException
      */
     protected function getTableElements($data)

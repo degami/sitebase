@@ -80,13 +80,6 @@ class FakeDataMigration extends BaseMigration
     /**
      * {@inheritdocs}
      * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
-     * @throws BasicException
      * @throws Exception
      */
     public function up()
@@ -523,7 +516,6 @@ class FakeDataMigration extends BaseMigration
      * @param array $fields
      * @param User|null $owner_model
      * @return Contact
-     * @throws BasicException
      * @throws BasicException
      */
     private function addContactForm($title, $content, $locale = 'en', $fields = [], $owner_model = null)

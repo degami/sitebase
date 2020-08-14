@@ -8,7 +8,7 @@ if (!isset($body_class)) {
 ?><!doctype html>
 <html lang="<?= $this->sitebase()->getCurrentLocale() ?>">
 <head>
-    <title><?=$this->e($title)?></title>
+    <title><?= $this->sitebase()->translate($title)?></title>
     <meta charset="utf-8">
     <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/bootstrap/css/bootstrap.min.css');?>" />
     <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/jqueryui/themes/base/all.css');?>">

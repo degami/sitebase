@@ -1,4 +1,20 @@
 <?php
+/**
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var $current_user \App\Base\Abstracts\Models\AccountModel
+ * @var $websites integer
+ * @var $users integer
+ * @var $pages integer
+ * @var $contact_forms integer
+ * @var $contact_submissions integer
+ * @var $taxonomy_terms integer
+ * @var $news integer
+ * @var $links integer
+ * @var $blocks integer
+ * @var $media integer
+ * @var $page_views integer
+ * @var $mails_sent integer
+ */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 <div class="jumbotron p-4">
     <div class="row">

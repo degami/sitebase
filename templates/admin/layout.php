@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var $title string
+ * @var $current_user \App\Base\Abstracts\Models\AccountModel
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ */
 $this->layout('base::html', ['title' => $title] + get_defined_vars());?>
 
 <?php $this->start('head') ?>

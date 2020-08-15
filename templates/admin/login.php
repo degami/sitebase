@@ -1,4 +1,8 @@
-<?php $this->layout('frontend::layout', ['title' => 'Login'] + get_defined_vars()) ?>
+<?php
+/**
+ * @var $form \Degami\PHPFormsApi\Form
+ */
+$this->layout('frontend::layout', ['title' => 'Login'] + get_defined_vars()) ?>
 <?php $this->start('menu') ?><?php $this->stop() ?>
 
 <?php $this->start('head') ?>

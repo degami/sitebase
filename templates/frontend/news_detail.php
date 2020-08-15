@@ -1,4 +1,8 @@
-<?php $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_defined_vars()) ?>
+<?php
+/**
+ * @var $object \App\Base\Abstracts\Models\FrontendModel
+ */
+$this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>
 <link rel="canonical" href="<?= $object->getFrontendUrl();?>" />

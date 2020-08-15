@@ -1,4 +1,7 @@
 <?php
+/**
+ * @var $object \App\Base\Abstracts\Models\FrontendModel
+ */
 $this->layout('frontend::layout', ['title' => $this->sitebase()->env('APPNAME')] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>

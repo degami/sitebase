@@ -1,4 +1,12 @@
 <?php
+/**
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var $action string
+ * @var $request \Symfony\Component\HttpFoundation\Request
+ * @var $logHtml string
+ * @var $table string
+ * @var $paginator string
+ */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()); ?>
 <?php if ($action == 'logs' && is_numeric($request->query->get('id'))) : ?>
     <?= $logHtml; ?>

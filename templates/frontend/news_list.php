@@ -1,4 +1,10 @@
-<?php $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('News')] + get_defined_vars()) ?>
+<?php
+/**
+ * @var $paginator array
+ * @var $news array
+ * @var $page_title string
+ */
+$this->layout('frontend::layout', ['title' => $this->sitebase()->translate('News')] + get_defined_vars()) ?>
 
 <h1 class="page-title"><?php echo $page_title;?></h1>
 <div class="row">

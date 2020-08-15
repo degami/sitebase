@@ -1,4 +1,11 @@
 <?php
+/**
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var $top_visitors array
+ * @var $most_viewed array
+ * @var $top_errors array
+ * @var $top_scanners array
+ */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
 <nav>

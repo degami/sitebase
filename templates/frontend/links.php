@@ -1,4 +1,12 @@
-<?php $this->layout('frontend::layout', ['title' => 'Links'] + get_defined_vars()) ?>
+<?php
+/**
+ * @var $page_title string
+ * @var $links array
+ * @var $paginator string
+ * @var $locale string
+ * @var $form \Degami\PHPFormsApi\Form
+ */
+$this->layout('frontend::layout', ['title' => 'Links'] + get_defined_vars()) ?>
 
 <h1 class="page-title"><?php echo $page_title;?></h1>
 <div class="row">

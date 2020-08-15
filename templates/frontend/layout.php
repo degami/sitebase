@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var $title string
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ */
 $this->layout('base::html', ['title' => $title] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>

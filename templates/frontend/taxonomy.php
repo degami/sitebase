@@ -1,4 +1,8 @@
-<?php $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_defined_vars()) ?>
+<?php
+/**
+ * @var \App\Base\Abstracts\Models\FrontendModel $object
+ */
+$this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>
 <meta name="description" content="<?= $object->meta_description;?>">

@@ -1,4 +1,10 @@
-<?php $this->layout('frontend::layout', ['title' => 'Profile'] + get_defined_vars()) ?>
+<?php
+/**
+ * @var $current_user \App\Base\Abstracts\Models\AccountModel
+ * @var $form \Degami\PHPFormsApi\Form
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ */
+$this->layout('frontend::layout', ['title' => 'Profile'] + get_defined_vars()) ?>
 
 
 <div class="container-fluid">

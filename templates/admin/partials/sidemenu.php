@@ -1,4 +1,8 @@
-<ul class="nav flex-column">
+<?php
+/**
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ */
+?><ul class="nav flex-column">
 
 <?php
 $links = [

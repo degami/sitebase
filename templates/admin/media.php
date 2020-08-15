@@ -1,4 +1,15 @@
 <?php
+/**
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var $action string
+ * @var $table string
+ * @var $paginator string
+ * @var $media_elem \App\Site\Models\MediaElement
+ * @var $elem_data array
+ * @var $pages array
+ * @var $form \Degami\PHPFormsApi\Form
+ * @var $submission \App\Site\Models\ContactSubmission
+ */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
 <?php if ($action == 'list') : ?>

@@ -1,4 +1,8 @@
-<?php $this->layout('base::html', ['title' => $title] + get_defined_vars()) ?>
+<?php
+/**
+ * @var $title string
+ */
+$this->layout('base::html', ['title' => $title] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>
 <link rel="stylesheet" type="text/css" href="/css/site.css">

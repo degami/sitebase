@@ -1,4 +1,8 @@
 <?php
+/**
+ * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var $title string
+ */
 /** @var \DebugBar\StandardDebugBar $debugbar */
 $debugbar = $this->sitebase()->getDebugbar();
 $debugbarRenderer = $debugbar->getJavascriptRenderer($this->sitebase()->getUrl('frontend.root').'debugbar');

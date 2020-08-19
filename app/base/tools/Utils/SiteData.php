@@ -53,7 +53,7 @@ class SiteData extends ContainerAwareObject
     {
         static $current_website = null;
 
-        if (is_numeric($current_website)) {
+        if ($current_website instanceof Website) {
             return $current_website;
         }
 

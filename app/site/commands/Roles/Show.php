@@ -47,7 +47,7 @@ class Show extends BaseCommand
             ->setHeaders(['ID', 'Name','Permissions']);
 
         foreach ($this->getDb()->table('role')->fetchAll() as $k => $role_dbrow) {
-            $role = $this->getContainer()->make(Role::class)->fill($role_dbrow);
+            $role = $this->getContainer()->make(Role::class, ['dbrow' => $role_dbrow]);
 
             if ($k > 0) {
                 $table->addRow(new TableSeparator());

@@ -31,12 +31,22 @@ class RewriteMedia extends BaseCodeBlock
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
     {
+
+        $rewrite_id = [];
+        if ($current_page != null && $current_page->getRewrite() && $current_page->getRewrite()->getId()) {
+            $rewrite_id[] = $current_page->getRewrite()->getId();
+            $rewrite_id[] = null;
+        } else {
+            $rewrite_id = null;
+        }
+
         $images = array_map(
             function ($el) {
                 $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class, ['dbrow' => $el]);
                 return $media_rewrite->getMediaElement()->getImage();
             },
-            $current_page->getRewrite()->media_element_rewriteList()->fetchAll()
+            $this->getDb()->table('media_element_rewrite')->where(['rewrite_id' => $rewrite_id])->fetchAll()
+            //$current_page->getRewrite()->media_element_rewriteList()->fetchAll()
         );
 
 

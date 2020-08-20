@@ -100,7 +100,7 @@ class BreadCrumbs extends BaseCodeBlock
                         /**
                          * @var Rewrite $rewrite
                          */
-                        $rewrite = $this->getContainer()->make(Rewrite::class)->fill($menuItem->getRewriteId());
+                        $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $menuItem->getRewriteId()]);
                         if ($rewrite->getRoute() == '/page/'.$homepageid) {
                             $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
                         }

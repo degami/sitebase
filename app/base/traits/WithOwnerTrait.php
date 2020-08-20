@@ -27,6 +27,6 @@ trait WithOwnerTrait
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(User::class)->fill($this->user()->fetch());
+        return $this->getContainer()->make(User::class, ['dbrow' => $this->user()->fetch()]);
     }
 }

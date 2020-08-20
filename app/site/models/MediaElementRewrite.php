@@ -40,7 +40,7 @@ class MediaElementRewrite extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(MediaElement::class)->fill($this->media_element()->fetch());
+        return $this->getContainer()->make(MediaElement::class, ['dbrow' => $this->media_element()->fetch()]);
     }
 
     /**
@@ -53,6 +53,6 @@ class MediaElementRewrite extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(Rewrite::class)->fill($this->rewrite()->fetch());
+        return $this->getContainer()->make(Rewrite::class, ['dbrow' => $this->rewrite()->fetch()]);
     }
 }

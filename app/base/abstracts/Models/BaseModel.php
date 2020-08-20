@@ -51,6 +51,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     private $original_data = null;
 
+    private static $loadedObjects = [];
+
     /**
      * {@inheritdocs}
      *
@@ -324,15 +326,64 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      *
      * @param ContainerInterface $container
      * @param integer $id
+     * @param bool $reset
      * @return self
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public static function load(ContainerInterface $container, $id)
+    public static function load(ContainerInterface $container, $id, $reset = false)
     {
+        if (isset(static::$loadedObjects[static::defaultTableName()][$id]) && !$reset) {
+            return static::$loadedObjects[static::defaultTableName()][$id];
+        }
+
         $dbrow = $container->get('db')->table(static::defaultTableName(), $id);
-        return new static($container, $dbrow);
+        return static::$loadedObjects[static::defaultTableName()][$id] = new static($container, $dbrow);
     }
+
+    /**
+     * loads model by id
+     *
+     * @param ContainerInterface $container
+     * @param array $ids
+     * @param bool $reset
+     * @return array
+     * @throws InvalidValueException
+     * @throws BasicException
+     */
+    public static function loadMultiple(ContainerInterface $container, $ids, $reset = false)
+    {
+        $ids = array_filter($ids, function($el){
+            return is_numeric($el) && $el > 0;
+        });
+
+        return static::loadMultipleByCondition($container,  ['id' => $ids]);
+    }
+
+    /**
+     * loads model by id
+     *
+     * @param ContainerInterface $container
+     * @param array $ids
+     * @param bool $reset
+     * @return array
+     * @throws InvalidValueException
+     * @throws BasicException
+     */
+    public static function loadMultipleByCondition(ContainerInterface $container, $condition, $reset = false)
+    {
+        $ids = [];
+        foreach($container->get('db')->table(static::defaultTableName())->where($condition)->fetchAll() as $dbrow) {
+            $ids[] = $dbrow->id;
+            /** @var Result $dbrow */
+            if (!isset($loadedObjects[static::defaultTableName()][$dbrow->id]) || $reset) {
+                static::$loadedObjects[static::defaultTableName()][$dbrow->id] = new static($container, $dbrow);
+            }
+        }
+
+        return array_intersect_key(static::$loadedObjects[static::defaultTableName()], $ids);
+    }
+
 
     /**
      * gets new empty model

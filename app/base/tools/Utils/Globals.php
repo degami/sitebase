@@ -383,6 +383,41 @@ class Globals extends ContainerAwareObject
     }
 
     /**
+     * returns site menu
+     *
+     * @param $menu_items
+     * @param Menu|null $menu_element
+     * @return array
+     * @throws BasicException
+     */
+    public function buildSiteMenu($menu_items, $menu_element = null)
+    {
+        $out = [];
+        if ($menu_element instanceof Menu) {
+            $out['menu_id'] = $menu_element->getId();
+            $out['title'] = $menu_element->getTitle();
+            $out['href'] = $menu_element->getLinkUrl();
+            $out['target'] = $menu_element->getTarget();
+            $out['breadcrumb'] = $menu_element->getBreadcumb();
+            $out['children'] = [];
+            foreach ($menu_items as $child) {
+                /** @var Menu $child */
+                if ($child->getParentId() == $menu_element->getId()) {
+                    $out['children'][] = $this->buildSiteMenu($menu_items, $child);
+                }
+            }
+        } else {
+            foreach ($menu_items as $item) {
+                /** @var Menu $item */
+                if ($item->getParentId() == null) {
+                    $out[] = $this->buildSiteMenu($menu_items, $item);
+                }
+            }
+        }
+        return $out;
+    }
+
+    /**
      * logs an exception
      *
      * @param Exception $e

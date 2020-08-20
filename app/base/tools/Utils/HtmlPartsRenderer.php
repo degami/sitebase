@@ -11,6 +11,7 @@
  */
 namespace App\Base\Tools\Utils;
 
+use App\Site\Models\Menu;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -180,6 +181,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
             return $this->getCache()->get($cache_key);
         }
 
+        // preload rewrite
+        $rewrite_ids = [];
+        $menuitems = $this->getContainer()->call([Menu::class, 'loadMultipleByCondition'], ['condition' => ['menu_name' => $menu_name, 'website_id' => $website_id]]);
+        foreach( $menuitems as $menuitem) {
+            $rewrite_ids[] = $menuitem->getRewriteId();
+        }
+        $this->getContainer()->call([Rewrite::class, 'loadMultiple'], ['ids' => $rewrite_ids]);
+
         $menu = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
@@ -259,7 +268,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
             'id' => 'navbarSupportedContent',
             ]]
         );
-        $menu_content->addChild($this->_renderSiteMenu($this->getUtils()->getSiteMenu($menu_name, $website_id, $locale)));
+        $menu_content->addChild($this->_renderSiteMenu($this->getUtils()->buildSiteMenu($menuitems)));
+        // $menu_content->addChild($this->_renderSiteMenu($this->getUtils()->getSiteMenu($menu_name, $website_id, $locale)));
         $menu->addChild($menu_content);
 
         // store into cache

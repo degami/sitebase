@@ -43,7 +43,7 @@ class Media extends AdminManageModelsPage
         if ($this->templateData['action'] == 'list') {
             parent::__construct($container, $request);
         } elseif ($this->templateData['action'] == 'usage') {
-            $media = $this->getContainer()->make(MediaElement::class)->fill($this->getRequest()->get('media_id'));
+            $media = $this->getContainer()->call([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
             $elem_data = $media->getData();
             $elem_data['owner'] = $media->getOwner()->username;
 

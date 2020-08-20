@@ -27,6 +27,6 @@ trait WithWebsiteTrait
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(Website::class)->fill($this->website()->fetch());
+        return $this->getContainer()->make(Website::class, ['dbrow' => $this->website()->fetch()]);
     }
 }

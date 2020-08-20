@@ -41,7 +41,7 @@ class ContactSubmission extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(Contact::class)->fill($this->contact()->fetch());
+        return $this->getContainer()->make(Contact::class, ['dbrow' => $this->contact()->fetch()]);
     }
 
     /**
@@ -77,7 +77,7 @@ class ContactSubmission extends BaseModel
     public function getFullData()
     {
         $data = $this->getData();
-        $data['user'] = $this->getContainer()->make(User::class)->fill($data['user_id'])->getData();
+        $data['user'] = $this->getContainer()->call([User::class, 'load'], ['id' => $data['user_id']])->getData();
         $values = array_map(
             function ($el) {
                 $field_label = $el->contact_definition()->fetch()->field_label;

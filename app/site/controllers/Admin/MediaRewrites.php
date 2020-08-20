@@ -106,7 +106,7 @@ class MediaRewrites extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                $rewrites = ['' => ''];
+                $rewrites = ['none' => ''];
                 foreach ($this->getDb()->rewrite()->fetchAll() as $rewrite) {
                     $rewrites[$rewrite->id] = $rewrite->url." ({$rewrite->route})";
                 }
@@ -187,7 +187,7 @@ class MediaRewrites extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $media_rewrite->rewrite_id = $values['rewrite_id'];
+                $media_rewrite->rewrite_id = $values['rewrite_id'] == 'none' ? null : $values['rewrite_id'];
                 $media_rewrite->media_element_id = $values['media_id'];
                 $media_rewrite->persist();
                 break;
@@ -232,9 +232,9 @@ class MediaRewrites extends AdminManageModelsPage
                 'ID' => $elem->getId(),
                 'Preview' => $elem->getMediaElement()->getThumb('100x100'),
                 'Filename - Path' => $elem->getMediaElement()->getFilename(),
-                'Website' => $elem->getRewrite()->getWebsite()->getDomain(),
-                'Rewrite - Url' => $elem->getRewrite()->getUrl(),
-                'Locale' => $elem->getRewrite()->getLocale(),
+                'Website' => $elem->getRewriteId() != null ? $elem->getRewrite()->getWebsite()->getDomain() : 'All',
+                'Rewrite - Url' => $elem->getRewriteId() != null ? $elem->getRewrite()->getUrl() : 'Everywhere',
+                'Locale' => $elem->getRewriteId() != null ? $elem->getRewrite()->getLocale() : 'Any',
                 'Owner' => $elem->getOwner()->username,
                 'actions' => implode(
                     " ",

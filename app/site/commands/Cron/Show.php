@@ -53,7 +53,7 @@ class Show extends BaseCommand
         $table->setHeaders(['ID', 'Title','Callable','Schedule', 'Active']);
 
         foreach ($this->getDb()->table('cron_task')->fetchAll() as $k => $cron_dbrow) {
-            $cron = $this->getContainer()->make(CronTask::class)->fill($cron_dbrow);
+            $cron = $this->getContainer()->make(CronTask::class, ['dbrow' => $cron_dbrow]);
 
             if ($k > 0) {
                 $table->addRow(new TableSeparator());

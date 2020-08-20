@@ -39,6 +39,11 @@ abstract class FrontendPage extends BaseHtmlPage
     protected $locale = null;
 
     /**
+     * @var Rewrite|null rewrite
+     */
+    protected $rewrite = null;
+
+    /**
      * @var array page regions
      */
     protected $regions = [];
@@ -144,14 +149,12 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     protected function prepareTemplate()
     {
-
         if ($this->getTemplates()->getFolders()->exists('theme')) {
             $template = $this->getTemplates()->make('theme::'.$this->getTemplateName());
         } else {
             // fallback to "frontend"
             $template = $this->getTemplates()->make('frontend::'.$this->getTemplateName());
         }
-
 
         $template->data($this->getTemplateData()+$this->getBaseTemplateData());
         $locale = $template->data()['locale'] ?? $this->getCurrentLocale();
@@ -230,27 +233,27 @@ abstract class FrontendPage extends BaseHtmlPage
     /**
      * gets Rewrite object for current page
      *
-     * @return Result|null
+     * @param bool $reset
+     * @return Rewrite|null
      * @throws BasicException
      */
-    public function getRewrite()
+    public function getRewrite($reset = false)
     {
-        static $rewrite = null;
-
-        if ($rewrite != null) {
-            return $rewrite;
+        if ($this->rewrite != null && !$reset) {
+            return $this->rewrite;
         }
 
         if ($this->getRouteInfo()) {
             if ($this->getRouteInfo()->getRewrite()) {
                 // we have rewrite id into RouteInfo
-                $rewrite = $this->getDb()->table('rewrite', $this->getRouteInfo()->getRewrite());
+                $rewrite_db = $this->getDb()->table('rewrite', $this->getRouteInfo()->getRewrite());
             } else {
                 // no data into RouteInfo, try by route
-                $rewrite = $this->getDb()->table('rewrite')->where(['route' => $this->getRouteInfo()->getRoute()]);
+                $rewrite_db = $this->getDb()->table('rewrite')->where(['route' => $this->getRouteInfo()->getRoute()]);
             }
+            $this->rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $rewrite_db]);
         }
-        return $rewrite;
+        return $this->rewrite;
     }
 
     /**
@@ -268,7 +271,6 @@ abstract class FrontendPage extends BaseHtmlPage
                 $menu_obj = $this->getContainer()->make(Menu::class, ['dbrow' => $menu_obj]);
                 $this->locale = $menu_obj->locale;
             } elseif ($rewrite != null) {
-                $rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $rewrite]);
                 $this->locale = $rewrite->locale;
             }
 

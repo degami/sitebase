@@ -28,7 +28,7 @@ use \Psr\Container\ContainerInterface;
  * @method int getRewriteId()
  * @method string getHref()
  * @method string getTarget()
- * @method int getParent()
+ * @method int getParentId()
  * @method string getBreadcumb()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
@@ -51,9 +51,9 @@ class Menu extends ModelWithChildren
 
         if ($this->getRewriteId()) {
             /**
- * @var Rewrite $rewrite
-*/
-            $rewrite = $this->getContainer()->make(Rewrite::class)->fill($this->getRewriteId());
+             * @var Rewrite $rewrite
+            */
+            $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
             return $this->getRouting()->getUrl('/') . '/' . ltrim($rewrite->getUrl(), '/');
         }
 

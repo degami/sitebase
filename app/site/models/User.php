@@ -49,7 +49,7 @@ class User extends AccountModel
             return $this->roleObj;
         }
 
-        return $this->roleObj = $this->getContainer()->make(Role::class)->fill($this->role()->fetch());
+        return $this->roleObj = $this->getContainer()->make(Role::class, ['dbrow' => $this->role()->fetch()]);
     }
 
     /**

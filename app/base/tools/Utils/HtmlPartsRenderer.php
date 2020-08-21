@@ -181,13 +181,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
             return $this->getCache()->get($cache_key);
         }
 
-        // preload rewrite
-        $rewrite_ids = [];
+        // preload menu items
         $menuitems = $this->getContainer()->call([Menu::class, 'loadMultipleByCondition'], ['condition' => ['menu_name' => $menu_name, 'website_id' => $website_id]]);
-        foreach( $menuitems as $menuitem) {
-            $rewrite_ids[] = $menuitem->getRewriteId();
-        }
-        $this->getContainer()->call([Rewrite::class, 'loadMultiple'], ['ids' => $rewrite_ids]);
 
         $menu = $this->getContainer()->make(
             TagElement::class,

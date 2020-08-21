@@ -172,12 +172,18 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function all(ContainerInterface $container, $condition = [], $order = [])
     {
-        return array_map(
+        $items = array_map(
             function ($el) use ($container) {
                 return $container->make(static::class, ['dbrow' => $el]);
             },
             static::getModelBasicWhere($container, $condition, $order)->fetchAll()
         );
+
+        foreach($items as $item) {
+            static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
+        }
+
+        return $items;
     }
 
     /**
@@ -209,6 +215,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             static::getModelBasicWhere($container, $condition, $order)->limit($page_size, $start)->fetchAll()
         );
 
+        foreach($items as $item) {
+            static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
+        }
+
         $total = static::getModelBasicWhere($container, $condition, $order)->count();
         return ['items' => $items, 'page' => $page, 'total' => $total];
     }
@@ -223,12 +233,18 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function where(ContainerInterface $container, $condition, $order = [])
     {
-        return array_map(
+        $items = array_map(
             function ($el) use ($container) {
                 return $container->make(static::class, ['dbrow' => $el]);
             },
             static::getModelBasicWhere($container, $condition, $order)->fetchAll()
         );
+
+        foreach($items as $item) {
+            return static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
+        }
+
+        return $items;
     }
 
     /**
@@ -353,11 +369,23 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function loadMultiple(ContainerInterface $container, $ids, $reset = false)
     {
-        $ids = array_filter($ids, function($el){
-            return is_numeric($el) && $el > 0;
-        });
+        $already_loaded = [];
+        if(!$reset && isset(static::$loadedObjects[static::defaultTableName()])) {
+            $new_ids = array_diff(array_filter($ids, function($el){
+                return is_numeric($el) && $el > 0;
+            }), array_keys(static::$loadedObjects[static::defaultTableName()]));
 
-        return static::loadMultipleByCondition($container,  ['id' => $ids]);
+            $already_loaded = array_diff($ids, $new_ids);
+            $ids = $new_ids;
+        } else {
+            $ids = array_filter($ids, function($el){
+                return is_numeric($el) && $el > 0;
+            });
+        }
+
+        return
+            (!empty($ids) ? static::loadMultipleByCondition($container,  ['id' => $ids], $reset) : []) +
+            (!empty($already_loaded) ?  array_intersect_key(static::$loadedObjects[static::defaultTableName()], $already_loaded) : []);
     }
 
     /**
@@ -414,7 +442,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     public static function loadBy(ContainerInterface $container, $field, $value)
     {
         $dbrow = $container->get('db')->table(static::defaultTableName())->where($field, $value)->limit(1)->fetch();
-        return new static($container, $dbrow);
+        return static::$loadedObjects[static::defaultTableName()][$dbrow->id] = new static($container, $dbrow);
     }
 
     /**

@@ -46,7 +46,7 @@ class Collection extends GenkgoMigrationCollection
      */
     public function __construct(AdapterInterface $adapter)
     {
-        parent::__construct($adapter);
+        $this->adapter = $adapter;
     }
 
     /**

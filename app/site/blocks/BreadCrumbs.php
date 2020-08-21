@@ -14,6 +14,7 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
+use LessQL\Row;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Site\Models\Menu;
 use \App\Base\Traits\AdminTrait;
@@ -36,6 +37,7 @@ class BreadCrumbs extends BaseCodeBlock
     public function renderHTML(BasePage $current_page = null)
     {
         $locale = $current_page->getCurrentLocale();
+        $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $route_info = $current_page->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
@@ -45,6 +47,9 @@ class BreadCrumbs extends BaseCodeBlock
 
         $menuitems = $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['rewrite_id' => $route_info->getRewrite()]]);
         $menu_item = reset($menuitems);
+        if ($menu_item instanceof Row) {
+            $menu_item = $this->getContainer()->make(Menu::class, ['dbrow' => $menu_item]);
+        }
         $home_url = $this->getRouting()->getUrl('frontend.root');
 
         $breadcrumbs_links = $this->getContainer()->make(TagElement::class, ['options' =>  [
@@ -54,11 +59,7 @@ class BreadCrumbs extends BaseCodeBlock
             ],
         ]]);
 
-
-        $homepageid = $this->getSiteData()->getHomePageId(
-            $this->getSiteData()->getCurrentWebsiteId(),
-            $current_page->getCurrentLocale()
-        );
+        $homepageid = $this->getSiteData()->getHomePageId($website_id, $locale);
 
         if (!$current_page->isHomePage()) {
             $li = $this->getContainer()->make(

@@ -142,12 +142,19 @@ class Block extends BaseModel
         $this->checkLoaded();
 
         if (!(is_array($this->rewrites) && !empty($this->rewrites)) || $reset == true) {
+/*
             $this->rewrites = array_map(
                 function ($el) {
                     return $this->getContainer()->make(Rewrite::class, ['dbrow' => $el]);
                 },
                 $this->block_rewriteList()->rewrite()->fetchAll()
             );
+*/
+            $query = $this->getDb()->prepare("SELECT rewrite_id FROM block_rewrite WHERE block_id = :id");
+            $query->execute(['id' => $this->id]);
+            $ids = $query->fetchAll(\PDO::FETCH_COLUMN, 0);
+
+            $this->rewrites = $this->getContainer()->call([Rewrite::class, 'loadMultiple'], ['ids' => $ids]);
         }
         return $this->rewrites;
     }

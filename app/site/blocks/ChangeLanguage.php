@@ -53,12 +53,12 @@ class ChangeLanguage extends BaseCodeBlock
                     foreach (array_map(
                         function ($el, $key) use ($config) {
                             $text = '';
-                            $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
 
                             if (isset($config['show-language']) && $config['show-language'] == 'code') {
                                 $text = $key;
                             }
                             if (isset($config['show-language']) && $config['show-language'] == 'full') {
+                                $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
                                 $text = $language->native;
                             }
                             if (isset($config['show-flags']) && boolval($config['show-flags'])) {

@@ -11,8 +11,12 @@
  */
 namespace App;
 
+use App\Base\Tools\Utils\SiteData;
+use App\Site\Models\Configuration;
+use App\Site\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use DI\ContainerBuilder;
+use LessQL\Row;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \FastRoute\Dispatcher;
@@ -190,6 +194,20 @@ class App extends ContainerAwareObject
                 $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
             }
 
+            if ($this->getEnv('PRELOAD_REWRITES')) {
+                // preload all rewrites
+                $this->getContainer()->call([Rewrite::class, 'all']);
+            }
+
+            // preload configuration
+            $cached_configuration = [];
+            // $results = $this->getDb()->table('configuration')->fetchAll();
+
+            $results = $this->getContainer()->call([Configuration::class, 'all']);
+            foreach ($results as $result) {
+                $cached_configuration[$result->website_id][$result->path][$result->locale ?? 'default'] = $result->value;
+            }
+            $this->getCache()->set(SiteData::CONFIGURATION_CACHE_KEY, $cached_configuration);
 
             $routeInfo = $this->getContainer()->call(
                 [$this->getRouting(), 'getRequestInfo'],

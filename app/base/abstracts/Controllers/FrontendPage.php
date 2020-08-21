@@ -246,12 +246,12 @@ abstract class FrontendPage extends BaseHtmlPage
         if ($this->getRouteInfo()) {
             if ($this->getRouteInfo()->getRewrite()) {
                 // we have rewrite id into RouteInfo
-                $rewrite_db = $this->getDb()->table('rewrite', $this->getRouteInfo()->getRewrite());
+                $this->rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
             } else {
                 // no data into RouteInfo, try by route
                 $rewrite_db = $this->getDb()->table('rewrite')->where(['route' => $this->getRouteInfo()->getRoute()]);
+                $this->rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $rewrite_db]);
             }
-            $this->rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $rewrite_db]);
         }
         return $this->rewrite;
     }
@@ -298,12 +298,11 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     public function getTranslations()
     {
-        $rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $this->getRewrite()]);
         return array_map(
             function ($el) {
                 return $el->url;
             },
-            $rewrite->getTranslations()
+            $this->getRewrite()->getTranslations()
         );
     }
 

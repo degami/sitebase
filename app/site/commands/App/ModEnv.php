@@ -30,7 +30,7 @@ class ModEnv extends BaseCommand
         'Basic Info' => ['APPNAME','APPDOMAIN','SALT'],
         'Database Info' => ['DATABASE_HOST','DATABASE_NAME','DATABASE_USER','DATABASE_PASS'],
         'Admin Info' => ['ADMINPAGES_GROUP','ADMIN_USER','ADMIN_PASS','ADMIN_EMAIL'],
-        'Cache Info' => ['CACHE_LIFETIME','DISABLE_CACHE','ENABLE_FPC'],
+        'Cache Info' => ['CACHE_LIFETIME','DISABLE_CACHE','ENABLE_FPC', 'PRELOAD_REWRITES'],
         'Other Info' => ['ENABLE_LOGGEDPAGES','LOGGEDPAGES_GROUP','DEBUG','GTMID'],
         'Smtp Info' => ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASS'],
         'SES Info' => ['SES_REGION','SES_PROFILE'],

@@ -51,7 +51,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     private $original_data = null;
 
-    private static $loadedObjects = [];
+    /**
+     * @var array objects cache
+     */
+    protected static $loadedObjects = [];
 
     /**
      * {@inheritdocs}

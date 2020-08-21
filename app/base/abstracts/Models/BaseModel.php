@@ -241,7 +241,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         );
 
         foreach($items as $item) {
-            return static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
+            static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
         }
 
         return $items;

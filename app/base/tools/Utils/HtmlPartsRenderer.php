@@ -263,6 +263,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             'id' => 'navbarSupportedContent',
             ]]
         );
+
         $menu_content->addChild($this->_renderSiteMenu($this->getUtils()->buildSiteMenu($menuitems)));
         // $menu_content->addChild($this->_renderSiteMenu($this->getUtils()->getSiteMenu($menu_name, $website_id, $locale)));
         $menu->addChild($menu_content);

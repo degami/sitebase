@@ -388,7 +388,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         return
             (!empty($ids) ? static::loadMultipleByCondition($container,  ['id' => $ids], $reset) : []) +
-            (!empty($already_loaded) ?  array_intersect_key(static::$loadedObjects[static::defaultTableName()], $already_loaded) : []);
+            (!empty($already_loaded) ?  array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($already_loaded)) : []);
     }
 
     /**
@@ -405,14 +405,14 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     {
         $ids = [];
         foreach($container->get('db')->table(static::defaultTableName())->where($condition)->fetchAll() as $dbrow) {
-            $ids[] = $dbrow->id;
+            $ids[] = intval($dbrow->id);
             /** @var Result $dbrow */
             if (!isset($loadedObjects[static::defaultTableName()][$dbrow->id]) || $reset) {
                 static::$loadedObjects[static::defaultTableName()][$dbrow->id] = new static($container, $dbrow);
             }
         }
 
-        return array_intersect_key(static::$loadedObjects[static::defaultTableName()], $ids);
+        return array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($ids));
     }
 
 

@@ -93,6 +93,11 @@ class App extends ContainerAwareObject
             $builder = new ContainerBuilder();
             $builder->addDefinitions($this->getDir(self::CONFIG) . DS . 'di.php');
 
+            /**
+             * @var ContainerInterface $this->container
+             */
+            parent::__construct($builder->build());
+
             if (is_file($this->getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
                 $this->blocked_ips = include($this->getDir(self::CONFIG) . DS . 'blocked_ips.php');
                 if (!is_array($this->blocked_ips)) {
@@ -110,11 +115,6 @@ class App extends ContainerAwareObject
                     }
                 }
             }
-
-            /**
-             * @var ContainerInterface $this->container
-             */
-            parent::__construct($builder->build());
 
             $env_variables = array_combine(
                 $dotenv->getEnvironmentVariableNames(),
@@ -146,10 +146,14 @@ class App extends ContainerAwareObject
                 $env_variables
             );
 
+            if ($this->getEnv('DEBUG')) {
+                $debugbar = $this->getDebugbar();
+                $debugbar['time']->startMeasure('app_construct', 'App construct');
+            }
+
             $this->getTemplates()->addFolder('base', static::getDir(static::TEMPLATES));
             $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES).DS.'errors');
 
-            /* @var Dispatcher $this->dispatcher */
             $this->dispatcher = $this->getRouting()->getDispatcher();
 
             // dispatch "dispatcher_ready" event
@@ -168,6 +172,11 @@ class App extends ContainerAwareObject
 
             // let app be visible from everywhere
             $this->getContainer()->set('app', $this);
+
+            if ($this->getEnv('DEBUG')) {
+                $debugbar = $this->getDebugbar();
+                $debugbar['time']->stopMeasure('app_construct');
+            }
         } catch (Exception $e) {
             $response = new Response(
                 'Critical: '.$e->getMessage(),
@@ -186,6 +195,11 @@ class App extends ContainerAwareObject
      */
     public function bootstrap()
     {
+        if ($this->getEnv('DEBUG')) {
+            $debugbar = $this->getDebugbar();
+            $debugbar['time']->startMeasure('app_bootstrap', 'App bootstrap');
+        }
+
         $response = null;
         $request = Request::createFromGlobals();
         try {
@@ -253,6 +267,11 @@ class App extends ContainerAwareObject
                         throw new OfflineException();
                     }
 
+                    if ($this->getEnv('DEBUG')) {
+                        $debugbar = $this->getDebugbar();
+                        $debugbar['time']->startMeasure('handler_action', implode('::', $handler));
+                    }
+
                     // ... call $handler with $vars
                     $result = $this->getContainer()->call($handler, $vars);
                     if ($result instanceof Response) {
@@ -260,6 +279,14 @@ class App extends ContainerAwareObject
                     } else {
                         $response = new Response((string)$result, 200);
                     }
+
+                    if ($this->getEnv('DEBUG')) {
+                        $debugbar = $this->getDebugbar();
+                        if ($debugbar['time']->hasStartedMeasure('handler_action')) {
+                            $debugbar['time']->stopMeasure('handler_action');
+                        }
+                    }
+
 
                     break;
             }
@@ -288,6 +315,14 @@ class App extends ContainerAwareObject
             'response' => $response
             ]
         );
+
+        if ($this->getEnv('DEBUG')) {
+            $debugbar = $this->getDebugbar();
+            if ($debugbar['time']->hasStartedMeasure('app_bootstrap')) {
+                $debugbar['time']->stopMeasure('app_bootstrap');
+            }
+        }
+
         if ($response) {
             $response->send();
         }

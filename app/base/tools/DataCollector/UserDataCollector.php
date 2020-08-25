@@ -11,31 +11,32 @@
  */
 namespace App\Base\Tools\DataCollector;
 
+use App\Base\Abstracts\Models\AccountModel;
+use App\Site\Models\GuestUser;
 use \DebugBar\DataCollector\DataCollector;
 use \DebugBar\DataCollector\Renderable;
 use \DebugBar\DataCollector\AssetProvider;
-use \App\Base\Abstracts\Controllers\BasePage;
 
 /**
- * Page data collector for debugging
+ * Session data collector for debugging
  */
-class PageDataCollector extends DataCollector implements Renderable, AssetProvider
+class UserDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    const NAME = "Page Data";
+    const NAME = "User Data";
 
     /**
-     * @var BasePage subject object
+     * @var AccountModel subject object
      */
     protected $subject;
 
     /**
      * PageDataCollector constructor.
      *
-     * @param BasePage|null $page
+     * @param AccountModel|null $user
      */
-    public function __construct(BasePage $page = null)
+    public function __construct(AccountModel $user = null)
     {
-        $this->subject = $page;
+        $this->subject = $user;
     }
 
     /**
@@ -45,7 +46,12 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
      */
     public function collect()
     {
-        return $this->subject->getInfo();
+        return [
+            'user_id' => $this->subject->getId(),
+            'username' => $this->subject->getUsername(),
+            'since' => ($this->subject instanceof GuestUser) ? null : $this->subject->getCreatedAt(),
+            'role' => $this->subject->getRole()->getName(),
+        ];
     }
 
     /**
@@ -68,7 +74,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "Page Variables",
+                "tooltip" => "User Data",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => self::NAME,
                 "default" => "''"

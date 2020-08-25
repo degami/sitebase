@@ -101,6 +101,6 @@ abstract class ContainerAwareObject
             return $this->getContainer()->get($prop);
         }
 
-        throw new InvalidValueException("Method not found!", 1);
+        throw new InvalidValueException("Method \"{$name}\" not found in class\"".get_class($this)."\"!", 1);
     }
 }

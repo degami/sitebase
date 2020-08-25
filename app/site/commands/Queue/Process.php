@@ -96,7 +96,7 @@ class Process extends BaseCommand
                         }
                     } catch (Exception $e) {
                         echo $e->getMessage();
-                        $this->getUtils()->logException($e, static::class, false);
+                        $this->getUtils()->logException($e, static::class);
                     }
 
                     usleep(self::SLEEP_TIMEOUT);

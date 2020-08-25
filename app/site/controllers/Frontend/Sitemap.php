@@ -78,7 +78,7 @@ class Sitemap extends BaseXMLPage
 
             return $response;
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionXml($e);
+            return $this->getUtils()->exceptionXml($e, $this->getRequest());
         }
     }
 

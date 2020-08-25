@@ -55,7 +55,7 @@ abstract class BaseJsonPage extends BasePage
                 ->prepare($this->getRequest())
                 ->setData(array_merge(['success' => true,], $this->getJsonData()));
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionJson($e);
+            return $this->getUtils()->exceptionJson($e, $this->getRequest());
         }
     }
 

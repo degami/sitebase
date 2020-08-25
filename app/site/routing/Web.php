@@ -56,64 +56,74 @@ class Web extends ContainerAwareObject
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-        $this->routes = [];
-        $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
-        foreach ($controllerClasses as $controllerClass) {
-            if (is_subclass_of($controllerClass, BasePage::class)) {
-                $group = "";
-                $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
-                $route_name = str_replace("/", ".", trim($path, "/"));
 
-                $classMethod = self::CLASS_METHOD;
-                $verbs = self::HTTP_VERBS;
+        if ($this->getEnv('DEBUG')) {
+            $debugbar = $this->getDebugbar();
+            $debugbar['time']->startMeasure('web_construct', 'Web construct');
+        }
 
-                if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
-                    $tmp = array_map(
-                        function ($el) {
-                            return "/".$el;
-                        },
-                        $tmp
-                    );
-                    if (!isset($this->routes[$tmp[0]])) {
-                        $this->routes[$tmp[0]] = [];
+        $this->routes = $this->getCachedControllers($container);
+        if (empty($this->routes)) {
+            // collect routes
+
+            $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
+            foreach ($controllerClasses as $controllerClass) {
+                if (is_subclass_of($controllerClass, BasePage::class)) {
+                    $group = "";
+                    $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
+                    $route_name = str_replace("/", ".", trim($path, "/"));
+
+                    $classMethod = self::CLASS_METHOD;
+                    $verbs = self::HTTP_VERBS;
+
+                    if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
+                        $tmp = array_map(
+                            function ($el) {
+                                return "/".$el;
+                            },
+                            $tmp
+                        );
+                        if (!isset($this->routes[$tmp[0]])) {
+                            $this->routes[$tmp[0]] = [];
+                        }
+
+                        $group = $tmp[0];
+                        $path = $tmp[1];
                     }
 
-                    $group = $tmp[0];
-                    $path = $tmp[1];
-                }
-                /*else {
-                    // everithing should be fine
-                }*/
-
-                if (method_exists($controllerClass, 'getRouteGroup')) {
-                    $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
-                }
-
-                if (method_exists($controllerClass, 'getRouteVerbs')) {
-                    $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $verbs;
-                    if (!is_array($verbs)) {
-                        $verbs = [$verbs];
+                    if (method_exists($controllerClass, 'getRouteGroup')) {
+                        $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
                     }
-                    if (!empty($errors = $this->checkRouteVerbs($verbs))) {
-                        throw new InvalidValueException(implode(',', $errors).": Invalid route verbs", 1);
-                    }
-                }
 
-                if (method_exists($controllerClass, 'getRoutePath')) {
-                    $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
-                    if (!$this->checkRouteParameters($path)) {
-                        throw new InvalidValueException("'{$path}': Invalid route string", 1);
+                    if (method_exists($controllerClass, 'getRouteVerbs')) {
+                        $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $verbs;
+                        if (!is_array($verbs)) {
+                            $verbs = [$verbs];
+                        }
+                        if (!empty($errors = $this->checkRouteVerbs($verbs))) {
+                            throw new InvalidValueException(implode(',', $errors).": Invalid route verbs", 1);
+                        }
                     }
-                }
 
-                // multiple paths can be specified, comma separated
-                foreach (explode(",", $path) as $key => $path_value) {
-                    $this->addRoute($group, $route_name, "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                    if (method_exists($controllerClass, 'getRoutePath')) {
+                        $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
+                        if (!$this->checkRouteParameters($path)) {
+                            throw new InvalidValueException("'{$path}': Invalid route string", 1);
+                        }
+                    }
+
+                    // multiple paths can be specified, comma separated
+                    foreach (explode(",", $path) as $key => $path_value) {
+                        $this->addRoute($group, $route_name, "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                    }
                 }
             }
+            $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');
+            $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
+
+            // cache controllers for faster access
+            $container->get('cache')->set('web.controllers', $this->routes);
         }
-        $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');
-        $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
 
         $this->dispatcher = simpleDispatcher(
             function (RouteCollector $r) {
@@ -131,6 +141,11 @@ class Web extends ContainerAwareObject
                 }
             }
         );
+
+        if ($this->getEnv('DEBUG')) {
+            $debugbar = $this->getDebugbar();
+            $debugbar['time']->stopMeasure('web_construct');
+        }
     }
 
     /**
@@ -330,10 +345,14 @@ class Web extends ContainerAwareObject
     public function getUrl($route_name, $route_params = [])
     {
         $dispatcherInfo = $this->getRoute($route_name);
-        foreach ($route_params as $varname => $value) {
-            $dispatcherInfo['path'] = preg_replace("/\{".$varname."(:.*?)?\}/i", $value, $dispatcherInfo['path']);
+        if ($dispatcherInfo != null) {
+            foreach ($route_params as $varname => $value) {
+                $dispatcherInfo['path'] = preg_replace("/\{".$varname."(:.*?)?\}/i", $value, $dispatcherInfo['path']);
+            }
+            return $this->getBaseUrl() . $dispatcherInfo['path'];
         }
-        return $this->getBaseUrl() . $dispatcherInfo['path'];
+
+        return $this->getBaseUrl();
     }
 
     /**
@@ -350,6 +369,22 @@ class Web extends ContainerAwareObject
 
         return [];
     }
+
+    /**
+     * gets cached controllers
+     *
+     * @param  ContainerInterface $container
+     * @return array
+     */
+    protected function getCachedControllers(ContainerInterface $container)
+    {
+        if ($container->get('cache')->has('web.controllers')) {
+            return $container->get('cache')->get('web.controllers');
+        }
+
+        return [];
+    }
+
 
     /**
      * returns a RouteInfo instance for current request

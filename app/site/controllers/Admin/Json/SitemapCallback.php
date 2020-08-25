@@ -83,7 +83,7 @@ class SitemapCallback extends AdminJsonPage
                 ->prepare($this->getRequest())
                 ->setData($out);
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionJson($e);
+            return $this->getUtils()->exceptionJson($e, $this->getRequest());
         }
     }
 

@@ -151,11 +151,11 @@ class Globals extends ContainerAwareObject
             $controller = $route_info->getControllerObject();
             try {
                 $log = $this->getContainer()->make(RequestLog::class);
-                $log->fillWithRequest(Request::createFromGlobals(), $controller);
+                $log->fillWithRequest($request, $controller);
                 $log->setResponseCode($status_code);
                 $log->persist();
             } catch (Exception $e) {
-                $this->logException($e, "Can't write RequestLog");
+                $this->logException($e, "Can't write RequestLog", $request);
             }
         }
     }
@@ -239,7 +239,7 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionPage(Exception $exception, Request $request = null)
     {
-        $this->logException($exception);
+        $this->logException($exception, null, $request);
 
         $template_data = [
             'e' => $exception,
@@ -274,9 +274,9 @@ class Globals extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function exceptionJson(Exception $exception)
+    public function exceptionJson(Exception $exception, Request $request)
     {
-        $this->logRequestIfNeeded(500, Request::createFromGlobals());
+        $this->logRequestIfNeeded(500, $request);
 
         if ($this->getEnv('DEBUG')) {
             $content = [
@@ -306,9 +306,9 @@ class Globals extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function exceptionXML(Exception $exception)
+    public function exceptionXML(Exception $exception, Request $request)
     {
-        $this->logRequestIfNeeded(500, Request::createFromGlobals());
+        $this->logRequestIfNeeded(500, $request);
 
         if ($this->getEnv('DEBUG')) {
             $content = [
@@ -425,15 +425,11 @@ class Globals extends ContainerAwareObject
      * @param bool $with_request
      * @throws BasicException
      */
-    public function logException(Exception $e, $prefix = null, $with_request = true)
+    public function logException(Exception $e, $prefix = null, Request $request = null)
     {
-        if ($with_request == true) {
-            $request = Request::createFromGlobals();
-        }
-
         $this->getLog()->error($prefix . ($prefix != null ? ' - ':'') . $e->getMessage());
         $this->getLog()->debug($e->getTraceAsString());
-        if ($with_request == true && !empty($request->request->all())) {
+        if ($request != null && !empty($request->request->all())) {
             $this->getLog()->debug(serialize($request->request->all()));
         }
     }

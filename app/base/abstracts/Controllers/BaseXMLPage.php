@@ -58,7 +58,7 @@ abstract class BaseXMLPage extends BasePage
 
             return $this->getResponse();
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionXml($e);
+            return $this->getUtils()->exceptionXml($e, $this->getRequest());
         }
     }
 

@@ -148,7 +148,7 @@ trait PageTrait
      */
     public function getCurrentUser($reset = false)
     {
-        if (($this->current_user_model instanceof User) && $reset != true) {
+        if (($this->current_user_model instanceof AccountModel) && $reset != true) {
             return $this->current_user_model;
         }
 

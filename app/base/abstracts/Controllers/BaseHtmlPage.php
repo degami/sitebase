@@ -13,6 +13,8 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Tools\DataCollector\PageDataCollector;
+use App\Base\Tools\DataCollector\UserDataCollector;
+use DebugBar\DebugBar;
 use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Cookie;
@@ -69,8 +71,10 @@ abstract class BaseHtmlPage extends BasePage
         $this->template = $this->prepareTemplate();
         $this->getApp()->setCurrentLocale($this->getCurrentLocale());
         if ($this->getEnv('DEBUG')) {
+            /** @var DebugBar $debugbar */
             $debugbar = $this->getContainer()->get('debugbar');
             $debugbar->addCollector(new PageDataCollector($this));
+            $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
         }
 
         return $this->process($route_info, $route_data);

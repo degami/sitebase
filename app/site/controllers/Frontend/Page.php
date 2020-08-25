@@ -98,7 +98,15 @@ class Page extends FrontendPageWithObject
      */
     public function showPage($id, RouteInfo $route_info = null)
     {
+        if ($this->getEnv('DEBUG')) {
+            $debugbar = $this->getDebugbar();
+            $debugbar['time']->startMeasure('showpage');
+        }
         $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $id]));
+        if ($this->getEnv('DEBUG')) {
+            $debugbar = $this->getDebugbar();
+            $debugbar['time']->stopMeasure('showpage');
+        }
         return $this->renderPage($route_info);
     }
 

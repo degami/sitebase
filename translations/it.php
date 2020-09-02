@@ -104,4 +104,6 @@ return [
     'Edit' => 'Modifica',
     'Registered since' => 'Registrato da',
     'Change password' => 'Cambia password',
+    'We use cookies to ensure that we give you the best experience on our website. <a href="%s" target="_blank">Click here</a> for more information.' => 'Utilizziamo i cookie per assicurarci di darti la migliore esperienza sul nostro sito web. <a href="%s" target="_blank">Fare clic qui</a> per ulteriori informazioni.',
+    'Got it!' => 'Ricevuto!',
 ];

@@ -122,19 +122,35 @@ class Page extends FrontendPageWithObject
     {
         $route_vars = $route_info->getVars();
 
+        $website_id = $this->getSiteData()->getCurrentWebsiteId();
+        $browser_locale = $this->getSiteData()->getBrowserPreferredLanguage();
+
         $homepage_id = null;
-        if (isset($route_vars['lang']) || $this->getSiteData()->getHomePageRedirectsToLanguage($this->getSiteData()->getCurrentWebsiteId())) {
+        if (isset($route_vars['lang']) || $this->getSiteData()->getHomePageRedirectsToLanguage($website_id)) {
             $homepage_id = $this->getSiteData()->getHomePageId(
-                $this->getSiteData()->getCurrentWebsiteId(),
-                $route_vars['lang'] ?? $this->getSiteData()->getBrowserPreferredLanguage()
+                $website_id,
+                $route_vars['lang'] ?? $browser_locale
             );
 
             if ($homepage_id) {
+                /** @var \App\Site\Models\Page $page_model */
                 $page_model = $this->getContainer()->call([PageModel::class, 'load'], ['id' => $homepage_id]);
                 return $this->doRedirect($page_model->getFrontendUrl());
             }
         } else {
-            $homepage_id = $this->getSiteData()->getHomePageId($this->getSiteData()->getCurrentWebsiteId(), $route_vars['lang'] ?? null);
+            $homepage_id = $this->getSiteData()->getHomePageId($website_id, $route_vars['lang'] ?? null);
+        }
+
+        if (!$homepage_id) {
+            $homepage_id = $this->getSiteData()->getHomePageId($website_id, null);
+            if ($homepage_id) {
+                /** @var \App\Site\Models\Page $page_model */
+                $page_model = $this->getContainer()->call([PageModel::class, 'load'], ['id' => $homepage_id]);
+                $translations = $page_model->getTranslations();
+                if (isset($translations[$route_vars['lang'] ?? $browser_locale])) {
+                    return $this->doRedirect($translations[$route_vars['lang'] ?? $browser_locale]);
+                }
+            }
         }
 
         if ($homepage_id) {
@@ -142,7 +158,7 @@ class Page extends FrontendPageWithObject
         }
 
         // if page was not found, try to redirect to language
-        return $this->doRedirect("/".$this->getSiteData()->getBrowserPreferredLanguage());
+        return $this->doRedirect("/".$browser_locale);
     }
 
     /**

@@ -16,3 +16,10 @@ function __($string, $locale = null)
 
     return $app->getUtils()->translate($string, $locale);
 }
+
+function k($variable, $level = 'debug')
+{
+    global $app;
+
+    $app->getContainer()->get('debugbar')['messages']->log($level, $variable);
+}

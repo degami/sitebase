@@ -12,6 +12,7 @@
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Tools\Utils\Globals;
 use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
 use \App\Site\Routing\RouteInfo;
@@ -35,7 +36,7 @@ abstract class BaseRestPage extends BasePage
      * @param Request|null $request
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
         $this->response = $this->getContainer()->get(JsonResponse::class);
@@ -173,7 +174,7 @@ abstract class BaseRestPage extends BasePage
                     ->setData($old_data);
         }
 
-        return $this->getUtils()->errorPage(500);
+        return $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 500]);
     }
 
     /**

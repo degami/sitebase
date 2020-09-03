@@ -41,7 +41,7 @@ class Cron extends AdminManageModelsPage
      * @throws PermissionDeniedException
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         AdminFormPage::__construct($container, $request);
         $this->page_title = 'Cron Tasks';

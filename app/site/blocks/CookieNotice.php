@@ -69,8 +69,11 @@ class CookieNotice extends BaseCodeBlock
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
     {
-
-        if ($current_page->getRouteInfo()->isAdminRoute()) {
+        if (
+            $current_page instanceof BasePage &&
+            $current_page->getRouteInfo() &&
+            $current_page->getRouteInfo()->isAdminRoute()
+        ) {
             return '';
         }
 

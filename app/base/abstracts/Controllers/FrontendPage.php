@@ -56,7 +56,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
 

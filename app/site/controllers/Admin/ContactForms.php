@@ -52,7 +52,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @throws OutOfRangeException
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         AdminFormPage::__construct($container, $request);
         $this->page_title = 'Contact Forms';

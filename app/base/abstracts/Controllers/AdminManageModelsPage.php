@@ -45,7 +45,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
         if ($this->templateData['action'] == 'list') {

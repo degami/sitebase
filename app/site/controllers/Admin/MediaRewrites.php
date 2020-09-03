@@ -34,7 +34,7 @@ class MediaRewrites extends AdminManageModelsPage
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
         $this->page_title = 'Rewrite / Media';

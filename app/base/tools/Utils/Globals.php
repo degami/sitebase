@@ -172,11 +172,8 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function errorPage($error_code, Request $request = null, $template_data = [], $template_name = null)
+    public function errorPage($error_code, Request $request, $template_data = [], $template_name = null)
     {
-        if ($request == null) {
-            $request = Request::createFromGlobals();
-        }
         $this->logRequestIfNeeded($error_code, $request);
 
         if (!is_array($template_data)) {
@@ -237,7 +234,7 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function exceptionPage(Exception $exception, Request $request = null)
+    public function exceptionPage(Exception $exception, Request $request)
     {
         $this->logException($exception, null, $request);
 
@@ -338,7 +335,7 @@ class Globals extends ContainerAwareObject
      * @throws BasicException
      * @throws Throwable
      */
-    public function offlinePage(Request $request = null)
+    public function offlinePage(Request $request)
     {
         return $this->errorPage(503, $request);
     }

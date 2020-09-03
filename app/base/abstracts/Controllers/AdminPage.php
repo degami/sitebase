@@ -54,7 +54,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @param Request|null $request
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         $this->page_title = ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
 

@@ -37,7 +37,7 @@ class Media extends AdminManageModelsPage
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         AdminFormPage::__construct($container, $request);
         if ($this->templateData['action'] == 'list') {

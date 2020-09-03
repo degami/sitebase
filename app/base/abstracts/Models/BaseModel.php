@@ -12,6 +12,7 @@
 namespace App\Base\Abstracts\Models;
 
 use ArrayAccess;
+use DebugBar\DebugBar;
 use Degami\Basics\Exceptions\BasicException;
 use IteratorAggregate;
 use LessQL\Result;
@@ -193,18 +194,14 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * return subset of found items (useful for paginate)
      *
      * @param  ContainerInterface $container
-     * @param  Request|null       $request
+     * @param  Request            $request
      * @param  integer            $page_size
      * @param  array              $condition
      * @param  array              $order
      * @return array
      */
-    public static function paginate(ContainerInterface $container, Request $request = null, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = [])
+    public static function paginate(ContainerInterface $container, Request $request, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = [])
     {
-        if ($request == null) {
-            $request = Request::createFromGlobals();
-        }
-
         if ($condition == null) {
             $condition = [];
         }
@@ -352,12 +349,29 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function load(ContainerInterface $container, $id, $reset = false)
     {
+        /** @var DebugBar $debugbar */
+        $debugbar = $container->get('debugbar');
+
+        $measure_key = 'load model: '.static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
         if (isset(static::$loadedObjects[static::defaultTableName()][$id]) && !$reset) {
+            if (getenv('DEBUG')) {
+                $debugbar['time']->stopMeasure($measure_key);
+            }
             return static::$loadedObjects[static::defaultTableName()][$id];
         }
 
         $dbrow = $container->get('db')->table(static::defaultTableName(), $id);
-        return static::$loadedObjects[static::defaultTableName()][$id] = new static($container, $dbrow);
+
+        static::$loadedObjects[static::defaultTableName()][$id] = new static($container, $dbrow);
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->stopMeasure($measure_key);
+        }
+        return static::$loadedObjects[static::defaultTableName()][$id];
     }
 
     /**

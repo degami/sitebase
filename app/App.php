@@ -11,6 +11,7 @@
  */
 namespace App;
 
+use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\Configuration;
 use App\Site\Models\Rewrite;
@@ -71,6 +72,11 @@ class App extends ContainerAwareObject
      * @var RouteInfo route info
      */
     protected $route_info = null;
+
+    /**
+     * @var Request request
+     */
+    protected $request = null;
 
     /**
      * @var array blocked ips list
@@ -171,7 +177,8 @@ class App extends ContainerAwareObject
             }
 
             // let app be visible from everywhere
-            $this->getContainer()->set('app', $this);
+            $this->getContainer()->set(App::class, $this);
+            $this->getContainer()->set('app', $this->getContainer()->get(App::class));
 
             if ($this->getEnv('DEBUG')) {
                 $debugbar = $this->getDebugbar();
@@ -201,8 +208,9 @@ class App extends ContainerAwareObject
         }
 
         $response = null;
-        $request = Request::createFromGlobals();
         try {
+            $this->setRequest($this->getContainer()->get(Request::class));
+
             $website = null;
             if (php_sapi_name() == 'cli-server') {
                 $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
@@ -235,7 +243,7 @@ class App extends ContainerAwareObject
 
             $this->setRouteInfo($routeInfo);
 
-            if ($this->isBlocked($request->getClientIp())) {
+            if ($this->isBlocked($this->getRequest()->getClientIp())) {
                 // if blocked stop immediately
                 throw new BlockedIpException();
             }
@@ -252,10 +260,10 @@ class App extends ContainerAwareObject
                     $vars = $this->getRouteInfo()->getVars();
 
                     // inject container into vars
-                    $vars['container'] = $this->getContainer();
+                    //$vars['container'] = $this->getContainer();
 
                     // inject request object into vars
-                    $vars['request'] = $request;
+                    //$vars['request'] = $this->getRequest();
 
                     // inject routeInfo
                     $vars['route_info'] = $this->getRouteInfo();
@@ -287,24 +295,23 @@ class App extends ContainerAwareObject
                         }
                     }
 
-
                     break;
             }
         } catch (OfflineException $e) {
-            $response = $this->getUtils()->offlinePage($request);
+            $response = $this->getContainer()->call([$this->getUtils(), 'offlinePage']);
         } catch (BlockedIpException $e) {
-            $response = $this->getUtils()->blockedIpPage($request);
+            $response = $this->getContainer()->call([$this->getUtils(), 'blockedIpPage']);
         } catch (NotFoundException $e) {
-            $response = $this->getUtils()->errorPage(404, $request);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404]);
         } catch (PermissionDeniedException $e) {
-            $response = $this->getUtils()->errorPage(403, $request);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403]);
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
-            $this->getUtils()->errorPage(405, $request, ['allowedMethods' => $allowedMethods])->send();
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'template_data' => ['allowedMethods' => $allowedMethods]]);
         } catch (BasicException $e) {
-            $response = $this->getUtils()->exceptionPage($e, $request);
+            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e]);
         } catch (Exception $e) {
-            $response = $this->getUtils()->exceptionPage($e, $request);
+            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e]);
         }
 
         // dispatch "before_send" event
@@ -323,7 +330,7 @@ class App extends ContainerAwareObject
             }
         }
 
-        if ($response) {
+        if ($response instanceof Response) {
             $response->send();
         }
     }
@@ -462,5 +469,25 @@ class App extends ContainerAwareObject
     public function getCurrentWebsiteId()
     {
         return $this->getSiteData()->getCurrentWebsiteId();
+    }
+
+    /**
+     * gets current request object
+     *
+     * @return Request
+     */
+    public function getRequest()
+    {
+        return $this->request;
+    }
+
+    /**
+     * sets current request object
+     *
+     * @param Request $request
+     */
+    public function setRequest(Request $request)
+    {
+        $this->request = $request;
     }
 }

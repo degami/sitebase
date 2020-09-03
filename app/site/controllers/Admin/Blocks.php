@@ -38,7 +38,7 @@ class Blocks extends AdminManageModelsPage
      * @throws PermissionDeniedException
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         AdminFormPage::__construct($container, $request);
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {

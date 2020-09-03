@@ -41,7 +41,7 @@ class Login extends FormPage
      * @throws FAPI\Exceptions\FormException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {

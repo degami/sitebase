@@ -34,7 +34,7 @@ abstract class FormPage extends FrontendPage
      * @throws FAPI\Exceptions\FormException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
 

@@ -36,7 +36,7 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * @throws PermissionDeniedException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
         $this->templateData = [

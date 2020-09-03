@@ -32,7 +32,7 @@ abstract class BaseJsonPage extends BasePage
      * @param Request|null $request
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, Request $request = null)
+    public function __construct(ContainerInterface $container, Request $request)
     {
         parent::__construct($container, $request);
         $this->response = $this->getContainer()->get(JsonResponse::class);

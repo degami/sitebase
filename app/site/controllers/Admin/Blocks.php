@@ -12,6 +12,7 @@
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Traits\AdminFormTrait;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -28,6 +29,8 @@ use \App\Site\Models\Block;
  */
 class Blocks extends AdminManageModelsPage
 {
+    use AdminFormTrait;
+
     /**
      * {@inheritdocs}
      *
@@ -176,7 +179,8 @@ class Blocks extends AdminManageModelsPage
                     ]
                 );
                 if ($type == 'new' || $block->instance_class == Block::class) {
-                    $form->addField(
+                    $form
+                    /*->addField(
                         'locale',
                         [
                         'type' => 'select',
@@ -185,7 +189,7 @@ class Blocks extends AdminManageModelsPage
                         'options' => $languages,
                         'validate' => ['required'],
                         ]
-                    )
+                    )*/
                     ->addField(
                         'content',
                         [
@@ -196,6 +200,8 @@ class Blocks extends AdminManageModelsPage
                         'rows' => 20,
                         ]
                     );
+
+                    $this->addFrontendFormElements($form, $form_state, ['website_id', 'locale']);
                 }
                 $form->addField(
                     'rewrites',
@@ -217,7 +223,7 @@ class Blocks extends AdminManageModelsPage
                 );
 
 
-                if ($block != null && method_exists($block->getRealInstance(), 'additionalConfigFieldset')) {
+            if ($block != null && method_exists($block->getRealInstance(), 'additionalConfigFieldset')) {
                     $config_fields = call_user_func_array(
                         [$block->getRealInstance(), 'additionalConfigFieldset'],
                         [
@@ -282,6 +288,7 @@ class Blocks extends AdminManageModelsPage
         $block = $this->getObject();
 
         $values = $form->values();
+
         switch ($values['action']) {
             case 'new':
                 $block->user_id = $this->getCurrentUser()->id;
@@ -292,7 +299,8 @@ class Blocks extends AdminManageModelsPage
             case 'edit':
                 $block->region = $values['region'];
                 $block->title = $values['title'];
-                $block->locale = $values['locale'];
+                $block->website_id = $values['frontend']['website_id'];
+                $block->locale = $values['frontend']['locale'];
                 $block->order = intval($values['order']);
 
                 if ($values['action'] == 'new' || $block->getInstance() == Block::class) {
@@ -379,7 +387,7 @@ class Blocks extends AdminManageModelsPage
                 'ID' => $block->id,
                 'Website' => $block->getWebsiteId() == null ? $this->getUtils()->translate('All websites', $this->getCurrentLocale()) : $block->getWebsite()->domain,
                 'Region' => $block->region,
-                'Locale' => $block->isCodeBlock() ? $block->locale : $this->getUtils()->translate('All languages', $this->getCurrentLocale()),
+                'Locale' => !$block->isCodeBlock() ? $block->locale : $this->getUtils()->translate('All languages', $this->getCurrentLocale()),
                 'Title' => $block->title,
                 'Where' => (count($block->getRewrites())== 0) ? $this->getUtils()->translate('All Pages', $this->getCurrentLocale()) : implode(
                     "<br>",

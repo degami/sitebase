@@ -30,6 +30,8 @@ $applicationDefinition->addOptions([
     new InputOption('website', 'w', InputOption::VALUE_OPTIONAL, 'Website ID'),
 ]);
 
+global $app;
+$app = new \App\App();
 
 try {
     // reading with like this as trying to bind applicationDefinition to a new ArgvInput

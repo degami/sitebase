@@ -30,7 +30,7 @@ abstract class ContainerAwareObject
     /**
      * @var array translators
      */
-    protected $translators = [];
+    public static $translators = [];
 
     /**
      * constructor
@@ -54,8 +54,8 @@ abstract class ContainerAwareObject
             $locale_code = 'en';
         }
 
-        if (isset($this->translators[$locale_code])) {
-            return $this->translators[$locale_code];
+        if (isset(static::$translators[$locale_code])) {
+            return static::$translators[$locale_code];
         }
 
         // We need to translate into $locale_code
@@ -74,7 +74,7 @@ abstract class ContainerAwareObject
             ]
         );  // Can use .CSV, .PHP, .PO and .MO files
         // Create the translator
-        $this->translators[$locale_code] = $this->getContainer()->make(
+        static::$translators[$locale_code] = $this->getContainer()->make(
             Translator::class,
             [
             'translations' => $translation->asArray(),
@@ -82,7 +82,7 @@ abstract class ContainerAwareObject
             ]
         );
         // Use the translator
-        return $this->translators[$locale_code];
+        return static::$translators[$locale_code];
     }
 
     /**

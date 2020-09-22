@@ -69,6 +69,8 @@ class PageTerms extends AdminJsonPage
         $taxonomyController = $this->getContainer()->make(Taxonomy::class);
         $form = $taxonomyController->getForm();
 
+        $form->removeField('seo');
+
         if ($this->getRequest()->get('action') == 'new') {
             foreach (['content','meta_description','meta_keywords','template_name'] as $fieldname) {
                 $newField = $form->getFieldObj(

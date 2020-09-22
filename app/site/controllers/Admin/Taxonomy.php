@@ -281,9 +281,11 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 $term->locale = $values['frontend']['locale'];
                 $term->template_name = empty($values['template_name']) ? null : $values['template_name'];
                 $term->content = $values['content'];
-                $term->meta_keywords = $values['seo']['meta_keywords'];
-                $term->meta_description = $values['seo']['meta_description'];
-                $term->html_title = $values['seo']['html_title'];
+                if (isset($values['seo'])) {
+                    $term->meta_keywords = $values['seo']['meta_keywords'];
+                    $term->meta_description = $values['seo']['meta_description'];
+                    $term->html_title = $values['seo']['html_title'];
+                }
                 $term->website_id = $values['frontend']['website_id'];
                 //$term->parent = $values['parent'];
 

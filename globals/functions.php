@@ -42,8 +42,11 @@ function dbq($query_string, $params = null)
 {
     global $app;
 
-    $stmt = $app->getContainer()->get('pdo')->prepare($query_string);
-    $stmt->execute($params);
-
-    return $stmt;
+    try {
+        $stmt = $app->getContainer()->get('pdo')->prepare($query_string);
+        $stmt->execute($params);
+        return $stmt;
+    } catch (\PDOException $e) {
+        echo $e->getMessage();
+    }
 }

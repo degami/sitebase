@@ -267,6 +267,7 @@ class Globals extends ContainerAwareObject
      * returns an exception error json
      *
      * @param Exception $exception
+     * @param Request $request
      * @return Response
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
@@ -299,6 +300,7 @@ class Globals extends ContainerAwareObject
      * returns an exception error xml
      *
      * @param Exception $exception
+     * @param Request $request
      * @return Response
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
@@ -419,7 +421,7 @@ class Globals extends ContainerAwareObject
      *
      * @param Exception $e
      * @param string|null $prefix
-     * @param bool $with_request
+     * @param Request|null $request
      * @throws BasicException
      */
     public function logException(Exception $e, $prefix = null, Request $request = null)

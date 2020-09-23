@@ -15,6 +15,7 @@ use App\Site\Controllers\Admin\Taxonomy;
 use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
+use Degami\PHPFormsApi\Abstracts\Base\FieldsContainer;
 
 /**
  * terms for page JSON
@@ -71,8 +72,20 @@ class PageTerms extends AdminJsonPage
 
         $form->removeField('seo');
 
+        // update html_ids to avoid select2 issues
+        foreach($form->getFields() as $field) {
+            if (!($field instanceof FieldsContainer)) {
+                $field->setId('sidebar-'.$field->getHtmlId());
+            }
+        }
+        foreach($form->getField('frontend')->getFields() as $field) {
+            if (!($field instanceof FieldsContainer)) {
+                $field->setId('sidebar-'.$field->getHtmlId());
+            }
+        }
+
         if ($this->getRequest()->get('action') == 'new') {
-            foreach (['content','meta_description','meta_keywords','template_name'] as $fieldname) {
+            foreach (['content','template_name'] as $fieldname) {
                 $newField = $form->getFieldObj(
                     $fieldname,
                     [

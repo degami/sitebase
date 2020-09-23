@@ -28,7 +28,7 @@
 
                 $elem.data('appAdmin', instance);
 
-                $('select', $elem).select2({'width':'100%'});
+                $('select:not(".select2-processed")', $elem).select2({'width':'100%'}).addClass('select2-processed');
                 $('a.inToolSidePanel[href]', $elem).click(function(evt){
                     if($(this).attr('href') != '#') {
                        evt.preventDefault();
@@ -111,10 +111,10 @@
                 $('.sidepanel', that).find('.card-block').html(response.html || '');
 
                 // add behaviours
-                $('.sidepanel select:not(".select2")', that).select2({
+                $('.sidepanel select:not(".select2-processed")', that).select2({
                     dropdownCssClass: "in_sidepanel",
                     'width':'100%'
-                });
+                }).addClass('select2-processed');
                 $('.sidepanel form', that).submit(function(evt){
                     evt.preventDefault();
                     var formData = new FormData(this);

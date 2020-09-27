@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -54,7 +55,7 @@ class Menus extends AdminManageModelsPage
         return Menu::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -96,37 +97,37 @@ class Menus extends AdminManageModelsPage
         if ($menuElement instanceof Menu && $menuElement->isLoaded()) {
             $parent_id = $menuElement->id;
             $thisFormElement = $parentFormElement->addField(
-                $parentFormElement->getName().'_menu_id',
+                $parentFormElement->getName() . '_menu_id',
                 [
-                'type' => 'hidden',
-                'default_value' => $menuElement->id,
-                'container_tag' => '',
+                    'type' => 'hidden',
+                    'default_value' => $menuElement->id,
+                    'container_tag' => '',
                 ]
             );
             $parentFormElement
                 ->addMarkup($menuElement->title)
-                ->addMarkup('<a class="ml-1 btn btn-danger btn-sm float-right" href="'.$this->getControllerUrl().'?action=delete&menu_id='.$menuElement->id.'">'.$this->getIcons()->get('trash', [], false).'</a>')
-                ->addMarkup('<a class="ml-1 btn btn-primary btn-sm float-right" href="'.$this->getControllerUrl().'?action=edit&menu_id='.$menuElement->id.'">'.$this->getIcons()->get('edit', [], false).'</a>')
+                ->addMarkup('<a class="ml-1 btn btn-danger btn-sm float-right" href="' . $this->getControllerUrl() . '?action=delete&menu_id=' . $menuElement->id . '">' . $this->getIcons()->get('trash', [], false) . '</a>')
+                ->addMarkup('<a class="ml-1 btn btn-primary btn-sm float-right" href="' . $this->getControllerUrl() . '?action=edit&menu_id=' . $menuElement->id . '">' . $this->getIcons()->get('edit', [], false) . '</a>')
                 ->addMarkup('<div style="clear:both;"></div>');
         } else {
             $parentFormElement->addField(
                 'menu_name',
                 [
-                'type' => 'hidden',
-                'default_value' => $menu_name,
+                    'type' => 'hidden',
+                    'default_value' => $menu_name,
                 ]
             );
             $thisFormElement = $parentFormElement
                 ->addField(
-                    'menu_item_'.$menu_name,
+                    'menu_item_' . $menu_name,
                     [
-                    'type' => 'nestable',
-                    'maxDepth' => 100,
+                        'type' => 'nestable',
+                        'maxDepth' => 100,
                     ]
                 )->addMarkup($menu_name);
         }
 
-        $menus = $this->getDb()->table('menu')->where('menu_name', $menu_name)->where('parent_id', $parent_id)->fetchAll();
+        $menus = $this->getDb()->table('menu')->where('menu_name', $menu_name)->where('parent_id', $parent_id)->orderBy('position')->fetchAll();
         foreach ($menus as $db_menu) {
             $menu = $this->getContainer()->make(Menu::class, ['dbrow' => $db_menu]);
             $this->addLevel($thisFormElement->addChild(), $menu_name, $menu);
@@ -152,8 +153,8 @@ class Menus extends AdminManageModelsPage
         $form->addField(
             'action',
             [
-            'type' => 'value',
-            'value' => $type,
+                'type' => 'value',
+                'value' => $type,
             ]
         );
 
@@ -162,11 +163,11 @@ class Menus extends AdminManageModelsPage
                 $this->addLevel($form, $this->getRequest()->get('menu_name'), null);
 
                 $form
-                ->addMarkup('<div class="clear"></div>')
-                ->addMarkup('<hr />')
-                ->addMarkup('<a class="btn btn-link btn-sm" href="'.$this->getControllerUrl().'">'.$this->getIcons()->get('chevron-left', [], false).'Back</a>');
+                    ->addMarkup('<div class="clear"></div>')
+                    ->addMarkup('<hr />')
+                    ->addMarkup('<a class="btn btn-link btn-sm" href="' . $this->getControllerUrl() . '">' . $this->getIcons()->get('chevron-left', [], false) . 'Back</a>');
                 $this->addSubmitButton($form, true);
-                $form->addMarkup(' <a class="btn btn-success btn-sm" href="'.$this->getControllerUrl().'?action=new&menu_name='.$this->getRequest()->get('menu_name').'">'.$this->getIcons()->get('plus', [], false).' Add new Element</a>');
+                $form->addMarkup(' <a class="btn btn-success btn-sm" href="' . $this->getControllerUrl() . '?action=new&menu_name=' . $this->getRequest()->get('menu_name') . '">' . $this->getIcons()->get('plus', [], false) . ' Add new Element</a>');
 
                 break;
             case 'edit':
@@ -177,11 +178,11 @@ class Menus extends AdminManageModelsPage
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $rewrites = ['' => ''];
-                foreach ((array) $this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
+                foreach ((array)$this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
                     $rewrites[$rewrite->id] = $rewrite->route;
                 }
 
-                $menu_title = $menu_locale = $menu_menuname = $menu_rewriteid = $menu_parent = $menu_href = $menu_target = $menu_breadcrumb = $menu_website = '';
+                $menu_title = $menu_locale = $menu_menuname = $menu_rewriteid = $menu_parent_id = $menu_position = $menu_href = $menu_target = $menu_breadcrumb = $menu_website = '';
                 if ($menu->isLoaded()) {
                     $menu_title = $menu->title;
                     $menu_locale = $menu->locale;
@@ -189,7 +190,8 @@ class Menus extends AdminManageModelsPage
                     $menu_rewriteid = $menu->rewrite_id;
                     $menu_href = $menu->href;
                     $menu_target = $menu->target;
-                    $menu_parent = $menu->parent;
+                    $menu_parent_id = $menu->parent_id;
+                    $menu_position = $menu->position;
                     $menu_breadcrumb = $menu->breadcrumb;
                     $menu_website = $menu->website_id;
                 } elseif ($this->getRequest()->get('menu_name')) {
@@ -199,75 +201,75 @@ class Menus extends AdminManageModelsPage
                 $form->addField(
                     'title',
                     [
-                    'type' => 'textfield',
-                    'title' => 'Title',
-                    'default_value' => $menu_title,
-                    'validate' => ['required'],
+                        'type' => 'textfield',
+                        'title' => 'Title',
+                        'default_value' => $menu_title,
+                        'validate' => ['required'],
                     ]
                 )
-                ->addField(
-                    'website_id',
-                    [
-                    'type' => 'select',
-                    'title' => 'Website',
-                    'default_value' => $menu_website,
-                    'options' => $websites,
-                    'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'locale',
-                    [
-                    'type' => 'select',
-                    'title' => 'Locale',
-                    'default_value' => $menu_locale,
-                    'options' => $languages,
-                    'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'menu_name',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Menu name',
-                    'default_value' => $menu_menuname,
-                    'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'href',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Href',
-                    'default_value' => $menu_href,
-                    ]
-                )
-                ->addField(
-                    'rewrite_id',
-                    [
-                    'type' => 'select',
-                    'title' => 'Rewrite',
-                    'options' => $rewrites,
-                    'default_value' => $menu_rewriteid,
-                    ]
-                )
-                ->addField(
-                    'target',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Target',
-                    'default_value' => $menu_target,
-                    ]
-                )
-                ->addField(
-                    'breadcrumb',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Breadcrumb',
-                    'default_value' => $menu_breadcrumb,
-                    ]
-                )
-                ->addMarkup('<div class="clear"></div>');
+                    ->addField(
+                        'website_id',
+                        [
+                            'type' => 'select',
+                            'title' => 'Website',
+                            'default_value' => $menu_website,
+                            'options' => $websites,
+                            'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'locale',
+                        [
+                            'type' => 'select',
+                            'title' => 'Locale',
+                            'default_value' => $menu_locale,
+                            'options' => $languages,
+                            'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'menu_name',
+                        [
+                            'type' => 'textfield',
+                            'title' => 'Menu name',
+                            'default_value' => $menu_menuname,
+                            'validate' => ['required'],
+                        ]
+                    )
+                    ->addField(
+                        'href',
+                        [
+                            'type' => 'textfield',
+                            'title' => 'Href',
+                            'default_value' => $menu_href,
+                        ]
+                    )
+                    ->addField(
+                        'rewrite_id',
+                        [
+                            'type' => 'select',
+                            'title' => 'Rewrite',
+                            'options' => $rewrites,
+                            'default_value' => $menu_rewriteid,
+                        ]
+                    )
+                    ->addField(
+                        'target',
+                        [
+                            'type' => 'textfield',
+                            'title' => 'Target',
+                            'default_value' => $menu_target,
+                        ]
+                    )
+                    ->addField(
+                        'breadcrumb',
+                        [
+                            'type' => 'textfield',
+                            'title' => 'Breadcrumb',
+                            'default_value' => $menu_breadcrumb,
+                        ]
+                    )
+                    ->addMarkup('<div class="clear"></div>');
                 $this->addSubmitButton($form);
                 break;
 
@@ -282,8 +284,8 @@ class Menus extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -311,7 +313,7 @@ class Menus extends AdminManageModelsPage
         switch ($values['action']) {
             case 'view-menu-name':
                 $menu_name = $values->menu_name;
-                $tree = $values->{'menu_item_'.$menu_name}->_value0->toArray();
+                $tree = $values->{'menu_item_' . $menu_name}->_value0->toArray();
 
                 $this->saveLevel($menu_name, $tree, null);
                 break;
@@ -324,7 +326,8 @@ class Menus extends AdminManageModelsPage
                 $menu->rewrite_id = is_numeric($values['rewrite_id']) ? $values['rewrite_id'] : null;
                 $menu->href = $values['href'];
                 $menu->target = $values['target'];
-                //$menu->parent = $values['parent'];
+                //$menu->parent_id = $values['parent_id'];
+                //$menu->position = $values['position'];
                 $menu->breadcrumb = $values['breadcrumb'];
 
                 $menu->persist();
@@ -340,16 +343,17 @@ class Menus extends AdminManageModelsPage
     /**
      * saves level
      *
-     * @param  string $menu_name
-     * @param  array  $level
-     * @param  array  $parent
+     * @param string $menu_name
+     * @param array $level
+     * @param array $parent
      * @return void
      */
-    protected function saveLevel($menu_name, $level, $parent)
+    protected function saveLevel($menu_name, $level, $parent, $position = 0)
     {
         if (isset($level['children'])) {
+            $child_position = 0;
             foreach ($level['children'] as $k => $child) {
-                $this->saveLevel($menu_name, $child, $level['value']);
+                $this->saveLevel($menu_name, $child, $level['value'], $child_position++);
             }
         }
         if (isset($level['value'])) {
@@ -362,6 +366,7 @@ class Menus extends AdminManageModelsPage
             $menu_elem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
             if ($id != null && $menu_elem instanceof Menu) {
                 $menu_elem->parent_id = $parent_id;
+                $menu_elem->position = $position;
                 $menu_elem->breadcrumb = $menu_elem->getParentIds();
                 $menu_elem->save();
             }
@@ -380,8 +385,8 @@ class Menus extends AdminManageModelsPage
         return array_map(
             function ($menu) {
                 return [
-                'Menu Name' => $menu->menu_name,
-                'actions' => '<a class="btn btn-primary btn-sm" href="'. $this->getControllerUrl() .'?action=view-menu-name&menu_name='. $menu->menu_name.'">'.$this->getUtils()->getIcon('zoom-in') .'</a>'
+                    'Menu Name' => $menu->menu_name,
+                    'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view-menu-name&menu_name=' . $menu->menu_name . '">' . $this->getUtils()->getIcon('zoom-in') . '</a>'
                 ];
             },
             $data

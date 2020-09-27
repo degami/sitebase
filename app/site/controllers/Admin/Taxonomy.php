@@ -108,11 +108,13 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     $templates[$key] = basename($template);
                 }
 
-                $term_title = $term_content = $term_template_name = '';
+                $term_title = $term_content = $term_parent = $term_position = $term_template_name = '';
                 if ($term->isLoaded()) {
                     $term_title = $term->title;
                     $term_content = $term->content;
                     $term_template_name = $term->template_name;
+                    $term_parent = $term->parent_id;
+                    $term_position = $term->postion;
                 }
 
                 $form
@@ -141,6 +143,16 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'title' => 'Content',
                     'default_value' => $term_content,
                     'rows' => 2,
+                    ]
+                )
+                ->addField(
+                    'position',
+                    [
+                        'type' => 'number',
+                        'title' => 'Position',
+                        'default_value' => $term_position,
+                        'min' => 0,
+                        'max' => 65536, // could be more - db field is unsigned int
                     ]
                 )
                 ->addMarkup('<div class="clear"></div>');
@@ -287,7 +299,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     $term->html_title = $values['seo']['html_title'];
                 }
                 $term->website_id = $values['frontend']['website_id'];
-                //$term->parent = $values['parent'];
+                //$term->parent_id = $values['parent_id'];
+                $term->position = $values['position'];
 
                 $this->setAdminActionLogData($term->getChangedData());
 

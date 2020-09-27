@@ -184,6 +184,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
         // preload menu items
         $menuitems = $this->getContainer()->call([Menu::class, 'loadMultipleByCondition'], ['condition' => ['menu_name' => $menu_name, 'website_id' => $website_id]]);
 
+        usort($menuitems, function($a, $b){
+            if ($a->position == $b->position) {
+                return 0;
+            }
+            return ($a->position < $b->position) ? -1 : 1;
+        });
+
         $menu = $this->getContainer()->make(
             TagElement::class,
             ['options' => [

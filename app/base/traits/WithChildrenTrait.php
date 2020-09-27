@@ -35,9 +35,9 @@ trait WithChildrenTrait
         if (!(is_array($this->children) && !empty($this->children)) || $reset == true) {
             $query = null;
             if ($locale != null) {
-                $query = $this->getDb()->table($this->tablename)->where(['parent_id' => $this->id, 'locale' => $locale]);
+                $query = $this->getDb()->table($this->tablename)->where(['parent_id' => $this->id, 'locale' => $locale])->orderBy('position');
             } else {
-                $query = $this->getDb()->table($this->tablename)->where(['parent_id' => $this->id]);
+                $query = $this->getDb()->table($this->tablename)->where(['parent_id' => $this->id])->orderBy('position');
             }
 
             $this->children = array_map(
@@ -46,7 +46,33 @@ trait WithChildrenTrait
                 },
                 $query->fetchAll()
             );
+
+            if (!empty($this->children)) {
+                $this->sortChildren();
+            }
         }
         return $this->children;
+    }
+
+    protected function sortChildren()
+    {
+        usort($this->children, [$this, 'cmpPosition']);
+    }
+
+    protected function cmpPosition($a, $b)
+    {
+        if ($a->position == $b->position) {
+            return 0;
+        }
+        return ($a->position < $b->position) ? -1 : 1;
+    }
+
+
+    public function preRemove()
+    {
+        $parent_id = $this->parent_id;
+        foreach($this->getChildren() as $child) {
+            $child->setParentId($parent_id)->persist();
+        }
     }
 }

@@ -150,19 +150,7 @@ return [
     // 'mailer'
     \App\Base\Tools\Utils\Mailer::class => DI\autowire(\App\Base\Tools\Utils\Mailer::class),
     'mailer' => DI\get(\App\Base\Tools\Utils\Mailer::class),
-
-    // 'cache_engine'
-    \Phpfastcache\CacheManager::class=> DI\factory(function () {
-        $config = new \Phpfastcache\Drivers\Files\Config([
-            'path' => \App\App::getDir(\App\App::ROOT) . DS . 'var' . DS . 'cache',
-        ]);
-        $config->setSecurityKey(str_replace(" ", "_", strtolower(getenv('APPNAME'))));
-        $cache = \Phpfastcache\CacheManager::getInstance('Files', $config);
-
-        return $cache;
-    }),
-    'cache_engine' => DI\get(\Phpfastcache\CacheManager::class),
-
+    
     // 'cache'
     \App\Base\Tools\Cache\Manager::class => DI\autowire(\App\Base\Tools\Cache\Manager::class),
     'cache' => DI\get(\App\Base\Tools\Cache\Manager::class),

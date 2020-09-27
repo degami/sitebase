@@ -366,7 +366,7 @@ class Globals extends ContainerAwareObject
                 $out['children'][] = $this->getSiteMenu($menu_name, $website_id, $locale, $child);
             }
         } else {
-            $query = $this->getDb()->table('menu')->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]]);
+            $query = $this->getDb()->table('menu')->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]])->orderBy('position');
             $out = array_map(
                 function ($el) use ($menu_name, $website_id, $locale) {
                     /**

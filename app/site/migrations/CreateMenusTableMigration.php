@@ -50,6 +50,7 @@ class CreateMenusTableMigration extends DBMigration
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('parent_id', 'INT', null, ['UNSIGNED'], 'NULL')
+            ->addColumn('position', 'INT', null, ['UNSIGNED'])
             ->addColumn('title', 'VARCHAR', [255])
             ->addColumn('locale', 'VARCHAR', [10])
             ->addColumn('menu_name', 'VARCHAR', [64])

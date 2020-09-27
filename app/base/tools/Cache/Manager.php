@@ -37,7 +37,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * @var ExtendedCacheItemPoolInterface internal cache instance
      */
-    protected $internalCacheInstance;
+    public static $internalCacheInstance;
 
     /**
      * constructor
@@ -47,7 +47,16 @@ class Manager extends ContainerAwareObject implements CacheInterface
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
-        $this->internalCacheInstance = $this->getContainer()->get('cache_engine');
+
+        if (self::$internalCacheInstance == null) {
+            $config = new \Phpfastcache\Drivers\Files\Config([
+                'path' => \App\App::getDir(\App\App::ROOT) . DS . 'var' . DS . 'cache',
+            ]);
+            $config->setSecurityKey(str_replace(" ", "_", strtolower(getenv('APPNAME'))));
+            $cache = \Phpfastcache\CacheManager::getInstance('Files', $config);
+
+            self::$internalCacheInstance = $cache;
+        }
     }
 
     /**
@@ -66,7 +75,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
         }
         
         try {
-            $cacheItem = $this->internalCacheInstance->getItem($key);
+            $cacheItem = $this->getInternalCacheInstance()->getItem($key);
             if (!$cacheItem->isExpired() && $cacheItem->get() !== null) {
                 return $cacheItem->get();
             }
@@ -108,7 +117,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
         $ttl = $this->getCacheLifetime($ttl);
 
         try {
-            $cacheItem = $this->internalCacheInstance
+            $cacheItem = $this->getInternalCacheInstance()
                 ->getItem($key)
                 ->set($value)
                 ->addTag(self::CACHE_TAG);
@@ -117,7 +126,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
             } elseif (is_int($ttl) || $ttl instanceof DateInterval) {
                 $cacheItem->expiresAfter($ttl);
             }
-            return $this->internalCacheInstance->save($cacheItem);
+            return $this->getInternalCacheInstance()->save($cacheItem);
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
@@ -134,7 +143,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     public function delete($key): bool
     {
         try {
-            return $this->internalCacheInstance->deleteItem($key);
+            return $this->getInternalCacheInstance()->deleteItem($key);
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
@@ -149,7 +158,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     public function clear(): bool
     {
         try {
-            return $this->internalCacheInstance->clear();
+            return $this->getInternalCacheInstance()->clear();
         } catch (PhpfastcacheRootException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
@@ -173,7 +182,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
                 function (ExtendedCacheItemInterface $item) {
                     return $item->get();
                 },
-                $this->internalCacheInstance->getItems($keys)
+                $this->getInternalCacheInstance()->getItems($keys)
             );
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
@@ -195,17 +204,17 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
         try {
             foreach ($values as $key => $value) {
-                $cacheItem = $this->internalCacheInstance->getItem($key)->set($value);
+                $cacheItem = $this->getInternalCacheInstance()->getItem($key)->set($value);
 
                 if (is_int($ttl) && $ttl <= 0) {
                     $cacheItem->expiresAt((new DateTime('@0')));
                 } elseif (is_int($ttl) || $ttl instanceof DateInterval) {
                     $cacheItem->expiresAfter($ttl);
                 }
-                $this->internalCacheInstance->saveDeferred($cacheItem);
+                $this->getInternalCacheInstance()->saveDeferred($cacheItem);
                 unset($cacheItem);
             }
-            return $this->internalCacheInstance->commit();
+            return $this->getInternalCacheInstance()->commit();
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
@@ -223,9 +232,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
     {
         try {
             if ($keys instanceof Traversable) {
-                return $this->internalCacheInstance->deleteItems(iterator_to_array($keys));
+                return $this->getInternalCacheInstance()->deleteItems(iterator_to_array($keys));
             } elseif (is_array($keys)) {
-                return $this->internalCacheInstance->deleteItems($keys);
+                return $this->getInternalCacheInstance()->deleteItems($keys);
             } else {
                 throw new phpFastCacheInvalidArgumentException('$keys must be an array/Traversable instance.');
             }
@@ -249,7 +258,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
         }
 
         try {
-            $cacheItem = $this->internalCacheInstance->getItem($key);
+            $cacheItem = $this->getInternalCacheInstance()->getItem($key);
             return $cacheItem->isHit() && !$cacheItem->isExpired();
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
@@ -268,7 +277,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      */
     public function getInternalCacheInstance(): ExtendedCacheItemPoolInterface
     {
-        return $this->internalCacheInstance;
+        return self::$internalCacheInstance;
     }
 
     /**

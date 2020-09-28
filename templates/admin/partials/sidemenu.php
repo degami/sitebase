@@ -97,6 +97,12 @@ $links = [
         'text' => 'Rewrites',
     ],
     [
+        'permission_name' => 'administer_rewrites',
+        'route_name' => 'admin.redirects',
+        'icon' => 'corner-up-right',
+        'text' => 'Redirects',
+    ],
+    [
         'permission_name' => 'administer_sitemaps',
         'route_name' => 'admin.sitemaps',
         'icon' => 'link',

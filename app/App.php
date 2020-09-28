@@ -11,13 +11,14 @@
  */
 namespace App;
 
-use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\Configuration;
+use App\Site\Models\RequestLog;
 use App\Site\Models\Rewrite;
+use App\Site\Models\Redirect;
 use Degami\Basics\Exceptions\BasicException;
 use DI\ContainerBuilder;
-use LessQL\Row;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
 use \FastRoute\Dispatcher;
@@ -147,10 +148,7 @@ class App extends ContainerAwareObject
                 }
             }
 
-            $this->getContainer()->set(
-                'env',
-                $env_variables
-            );
+            $this->getContainer()->set('env', $env_variables);
 
             if ($this->getEnv('DEBUG')) {
                 $debugbar = $this->getDebugbar();
@@ -163,12 +161,7 @@ class App extends ContainerAwareObject
             $this->dispatcher = $this->getRouting()->getDispatcher();
 
             // dispatch "dispatcher_ready" event
-            $this->event(
-                'dispatcher_ready',
-                [
-                'dispatcher' => $this->dispatcher
-                ]
-            );
+            $this->event('dispatcher_ready', ['dispatcher' => $this->dispatcher]);
 
             if ($this->getEnv('DEBUG')) {
                 $debugbar = $this->getContainer()->get('debugbar');
@@ -216,10 +209,12 @@ class App extends ContainerAwareObject
                 $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
             }
 
-            if ($this->getEnv('PRELOAD_REWRITES')) {
-                // preload all rewrites
-                $this->getContainer()->call([Rewrite::class, 'all']);
+            if ($this->isBlocked($this->getRequest()->getClientIp())) {
+                // if blocked stop immediately
+                throw new BlockedIpException();
             }
+
+            $current_website_id = $this->getCurrentWebsiteId();
 
             // preload configuration
             $cached_configuration = [];
@@ -231,71 +226,99 @@ class App extends ContainerAwareObject
             }
             $this->getCache()->set(SiteData::CONFIGURATION_CACHE_KEY, $cached_configuration);
 
-            $routeInfo = $this->getContainer()->call(
-                [$this->getRouting(), 'getRequestInfo'],
-                [
-                'http_method' => $_SERVER['REQUEST_METHOD'],
-                'request_uri' => $_SERVER['REQUEST_URI'],
-                'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $this->getSiteData()->currentServerName()
-                ]
-            );
-
-
-            $this->setRouteInfo($routeInfo);
-
-            if ($this->isBlocked($this->getRequest()->getClientIp())) {
-                // if blocked stop immediately
-                throw new BlockedIpException();
+            $redirects = [];
+            $redirects_key = "site.".$current_website_id.".redirects";
+            if (!$this->getCache()->has($redirects_key)) {
+                $redirect_models = $this->getContainer()->call([Redirect::class, 'where'],['condition' => ['website_id' => $current_website_id]]);
+                foreach ($redirect_models as $redirect_model) {
+                    $redirects[$redirect_model->getUrlFrom()] = [
+                        'url_to' => $redirect_model->getUrlTo(),
+                        'redirect_code' => $redirect_model->getRedirectCode(),
+                    ];
+                }
+                $this->getCache()->set($redirects_key, $redirects);
+            } else if($this->getCurrentWebsiteId()){
+                $redirects = $this->getCache()->get($redirects_key);
             }
 
-            switch ($routeInfo->getStatus()) {
-                case Dispatcher::NOT_FOUND:
-                    // ... 404 Not Found
-                    throw new NotFoundException();
-                case Dispatcher::METHOD_NOT_ALLOWED:
-                    // ... 405 Method Not Allowed
-                    throw new NotAllowedException();
-                case Dispatcher::FOUND:
-                    $handler = $this->getRouteInfo()->getHandler();
-                    $vars = $this->getRouteInfo()->getVars();
+            if (isset($redirects[$_SERVER['REQUEST_URI']])) {
+                // redirect is not needed if site is offline
+                if ($this->isSiteOffline()) {
+                    throw new OfflineException();
+                }
 
-                    // inject container into vars
-                    //$vars['container'] = $this->getContainer();
+                // redirect to new url
+                $response = RedirectResponse::create(
+                    $redirects[$_SERVER['REQUEST_URI']]['url_to'],
+                    $redirects[$_SERVER['REQUEST_URI']]['redirect_code']
+                );
+            } else {
+                // continue with execution
+                if ($this->getEnv('PRELOAD_REWRITES')) {
+                    // preload all rewrites
+                    $this->getContainer()->call([Rewrite::class, 'all']);
+                }
 
-                    // inject request object into vars
-                    //$vars['request'] = $this->getRequest();
+                $routeInfo = $this->getContainer()->call(
+                    [$this->getRouting(), 'getRequestInfo'],
+                    [
+                        'http_method' => $_SERVER['REQUEST_METHOD'],
+                        'request_uri' => $_SERVER['REQUEST_URI'],
+                        'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $this->getSiteData()->currentServerName()
+                    ]
+                );
 
-                    // inject routeInfo
-                    $vars['route_info'] = $this->getRouteInfo();
+                $this->setRouteInfo($routeInfo);
 
-                    // add route collected data
-                    $vars['route_data'] = $this->getRouteInfo()->getVars();
+                switch ($routeInfo->getStatus()) {
+                    case Dispatcher::NOT_FOUND:
+                        // ... 404 Not Found
+                        throw new NotFoundException();
+                    case Dispatcher::METHOD_NOT_ALLOWED:
+                        // ... 405 Method Not Allowed
+                        throw new NotAllowedException();
+                    case Dispatcher::FOUND:
+                        $handler = $this->getRouteInfo()->getHandler();
+                        $vars = $this->getRouteInfo()->getVars();
 
-                    if ($this->isSiteOffline() && !$routeInfo->worksOffline()) {
-                        throw new OfflineException();
-                    }
+                        // inject container into vars
+                        //$vars['container'] = $this->getContainer();
 
-                    if ($this->getEnv('DEBUG')) {
-                        $debugbar = $this->getDebugbar();
-                        $debugbar['time']->startMeasure('handler_action', implode('::', $handler));
-                    }
+                        // inject request object into vars
+                        //$vars['request'] = $this->getRequest();
 
-                    // ... call $handler with $vars
-                    $result = $this->getContainer()->call($handler, $vars);
-                    if ($result instanceof Response) {
-                        $response = $result;
-                    } else {
-                        $response = new Response((string)$result, 200);
-                    }
+                        // inject routeInfo
+                        $vars['route_info'] = $this->getRouteInfo();
 
-                    if ($this->getEnv('DEBUG')) {
-                        $debugbar = $this->getDebugbar();
-                        if ($debugbar['time']->hasStartedMeasure('handler_action')) {
-                            $debugbar['time']->stopMeasure('handler_action');
+                        // add route collected data
+                        $vars['route_data'] = $this->getRouteInfo()->getVars();
+
+                        if ($this->isSiteOffline() && !$routeInfo->worksOffline()) {
+                            throw new OfflineException();
                         }
-                    }
 
-                    break;
+                        if ($this->getEnv('DEBUG')) {
+                            $debugbar = $this->getDebugbar();
+                            $debugbar['time']->startMeasure('handler_action', implode('::', $handler));
+                        }
+
+                        // ... call $handler with $vars
+                        $result = $this->getContainer()->call($handler, $vars);
+                        if ($result instanceof Response) {
+                            $response = $result;
+                        } else {
+                            $response = new Response((string)$result, 200);
+                        }
+
+                        if ($this->getEnv('DEBUG')) {
+                            $debugbar = $this->getDebugbar();
+                            if ($debugbar['time']->hasStartedMeasure('handler_action')) {
+                                $debugbar['time']->stopMeasure('handler_action');
+                            }
+                        }
+
+                        break;
+                }
             }
         } catch (OfflineException $e) {
             $response = $this->getContainer()->call([$this->getUtils(), 'offlinePage']);

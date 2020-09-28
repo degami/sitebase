@@ -402,7 +402,7 @@ class FakeDataMigration extends BaseMigration
         $news_model = $this->getContainer()->make(NewsModel::class);
 
         $news_model->website_id =  $this->website_id;
-        $news_model->url = $this->getUtils()->slugify($title);
+        $news_model->url = $this->getUtils()->slugify($title, false);
         $news_model->title = $title;
         $news_model->locale = $locale;
         $news_model->content = $content;
@@ -430,7 +430,7 @@ class FakeDataMigration extends BaseMigration
         $page_model = $this->getContainer()->make(Page::class);
 
         $page_model->website_id =  $this->website_id;
-        $page_model->url = $this->getUtils()->slugify($title);
+        $page_model->url = $this->getUtils()->slugify($title, false);
         $page_model->title = $title;
         $page_model->locale = $locale;
         $page_model->content = $content;
@@ -464,7 +464,7 @@ class FakeDataMigration extends BaseMigration
         $term_model = $this->getContainer()->make(Taxonomy::class);
 
         $term_model->website_id =  $this->website_id;
-        $term_model->url = $this->getUtils()->slugify($title);
+        $term_model->url = $this->getUtils()->slugify($title, false);
         $term_model->title = $title;
         $term_model->locale = $locale;
         $term_model->content = $content;
@@ -523,7 +523,7 @@ class FakeDataMigration extends BaseMigration
         $contact_model = $this->getContainer()->make(Contact::class);
 
         $contact_model->website_id =  $this->website_id;
-        $contact_model->url = $this->getUtils()->slugify($title);
+        $contact_model->url = $this->getUtils()->slugify($title, false);
         $contact_model->title = $title;
         $contact_model->locale = $locale;
         $contact_model->content = $content;

@@ -57,7 +57,7 @@ abstract class FrontendModel extends BaseModel
     {
         $this->checkLoaded();
 
-        return '/'.$this->getLocale().'/'.$this->getUtils()->slugify($this->getUrl()).'.html';
+        return '/'.$this->getLocale().'/'.$this->getUtils()->slugify($this->getUrl(), false).'.html';
     }
 
     /**

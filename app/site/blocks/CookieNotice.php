@@ -52,9 +52,11 @@ class CookieNotice extends BaseCodeBlock
                 evt.preventDefault();
                 \$('.cookie-notice').fadeOut();
                 \$.cookie('cookie-accepted',1, { expires: 365, path: '/' });
+                \$('body').removeClass('cookie-notice-visible').addClass('cookie-notice-hidden');
             });
             if (\$.cookie('cookie-accepted') != 1) {
-                \$('.cookie-notice').fadeIn();            
+                \$('.cookie-notice').fadeIn();
+                \$('body').addClass('cookie-notice-visible');
             }
         ");
     }

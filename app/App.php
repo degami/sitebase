@@ -241,7 +241,9 @@ class App extends ContainerAwareObject
                 $redirects = $this->getCache()->get($redirects_key);
             }
 
-            if (isset($redirects[$_SERVER['REQUEST_URI']])) {
+            $redirect_key = urldecode($_SERVER['REQUEST_URI']);
+
+            if (isset($redirects[$redirect_key])) {
                 // redirect is not needed if site is offline
                 if ($this->isSiteOffline()) {
                     throw new OfflineException();
@@ -249,8 +251,8 @@ class App extends ContainerAwareObject
 
                 // redirect to new url
                 $response = RedirectResponse::create(
-                    $redirects[$_SERVER['REQUEST_URI']]['url_to'],
-                    $redirects[$_SERVER['REQUEST_URI']]['redirect_code']
+                    $redirects[$redirect_key]['url_to'],
+                    $redirects[$redirect_key]['redirect_code']
                 );
             } else {
                 // continue with execution

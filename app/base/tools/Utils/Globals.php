@@ -12,6 +12,7 @@
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use GuzzleHttp\Exception\GuzzleException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -148,8 +149,12 @@ class Globals extends ContainerAwareObject
     {
         if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
             $route_info = $this->getApp()->getRouteInfo();
-            $controller = $route_info->getControllerObject();
             try {
+                $controller = null;
+                if ($route_info instanceof RouteInfo) {
+                    $controller = $route_info->getControllerObject();
+                }
+                /** @var RequestLog $log */
                 $log = $this->getContainer()->make(RequestLog::class);
                 $log->fillWithRequest($request, $controller);
                 $log->setResponseCode($status_code);

@@ -121,6 +121,18 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         return $this;
     }
 
+    public static function hidrateStatementResult(ContainerInterface $container, Result $stmt)
+    {
+        $items = array_map(
+            function ($el) use ($container) {
+                return $container->make(static::class, ['dbrow' => $el]);
+            },
+            $stmt->fetchAll()
+        );
+
+        return $items;
+    }
+
     /**
      * basic select statement
      *
@@ -176,12 +188,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function all(ContainerInterface $container, $condition = [], $order = [])
     {
-        $items = array_map(
-            function ($el) use ($container) {
-                return $container->make(static::class, ['dbrow' => $el]);
-            },
-            static::getModelBasicWhere($container, $condition, $order)->fetchAll()
-        );
+        $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
         foreach($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -208,12 +215,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         $page = $request->get('page') ?? 0;
         $start = (int)$page * $page_size;
-        $items = array_map(
-            function ($el) use ($container) {
-                return $container->make(static::class, ['dbrow' => $el]);
-            },
-            static::getModelBasicWhere($container, $condition, $order)->limit($page_size, $start)->fetchAll()
-        );
+
+        $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order)->limit($page_size, $start));
 
         foreach($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -221,6 +224,11 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         $total = static::getModelBasicWhere($container, $condition, $order)->count();
         return ['items' => $items, 'page' => $page, 'total' => $total];
+    }
+
+    public function paginateByStatement(ContainerInterface $container, Request $request, Result $stmt)
+    {
+
     }
 
     /**
@@ -233,12 +241,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function where(ContainerInterface $container, $condition, $order = [])
     {
-        $items = array_map(
-            function ($el) use ($container) {
-                return $container->make(static::class, ['dbrow' => $el]);
-            },
-            static::getModelBasicWhere($container, $condition, $order)->fetchAll()
-        );
+        $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
         foreach($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -406,10 +409,25 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
+     * loads model by field - value pair
+     *
+     * @param ContainerInterface $container
+     * @param array $condition
+     * @return self
+     * @throws InvalidValueException
+     * @throws BasicException
+     */
+    public static function loadByCondition(ContainerInterface $container, $condition)
+    {
+        $dbrow = $container->get('db')->table(static::defaultTableName())->where($condition)->limit(1)->fetch();
+        return static::$loadedObjects[static::defaultTableName()][$dbrow->id] = new static($container, $dbrow);
+    }
+
+    /**
      * loads model by id
      *
      * @param ContainerInterface $container
-     * @param array $ids
+     * @param array $condition
      * @param bool $reset
      * @return array
      * @throws InvalidValueException
@@ -458,8 +476,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function loadBy(ContainerInterface $container, $field, $value)
     {
-        $dbrow = $container->get('db')->table(static::defaultTableName())->where($field, $value)->limit(1)->fetch();
-        return static::$loadedObjects[static::defaultTableName()][$dbrow->id] = new static($container, $dbrow);
+        return static::loadByCondition($container, [$field => $value]);
     }
 
     /**

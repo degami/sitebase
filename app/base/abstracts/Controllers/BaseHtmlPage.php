@@ -69,7 +69,10 @@ abstract class BaseHtmlPage extends BasePage
         }
 
         $this->template = $this->prepareTemplate();
-        $this->getApp()->setCurrentLocale($this->getCurrentLocale());
+        if (method_exists($this, 'getCurrentLocale')) {
+            $this->getApp()->setCurrentLocale($this->getCurrentLocale());
+        }
+
         if ($this->getEnv('DEBUG')) {
             /** @var DebugBar $debugbar */
             $debugbar = $this->getContainer()->get('debugbar');

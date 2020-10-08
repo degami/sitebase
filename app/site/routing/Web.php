@@ -428,7 +428,7 @@ class Web extends ContainerAwareObject
             } else {
                 // if not found, check the rewrites table
                 $website_id = $container->get('site_data')->getCurrentWebsiteId();
-                $rewrite = $container->get('db')->rewrite()->where(['url' => $uri, 'website_id' => $website_id])->fetch();
+                $rewrite = $container->get('db')->table('rewrite')->where(['url' => $uri, 'website_id' => $website_id])->fetch();
                 if ($rewrite) {
                     $route = $rewrite->route;
                     $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $rewrite->route);
@@ -457,16 +457,13 @@ class Web extends ContainerAwareObject
         }
 
         // return a RouteInfo instance
-        return $container->make(
-            RouteInfo::class,
-            [
+        return $container->make(RouteInfo::class, [
             'dispatcher_info' => $dispatcherInfo,
             'http_method' => $httpMethod,
             'uri' => $uri,
             'route' => $route,
             'route_name' => $route_name,
             'rewrite' => $rewrite_id,
-            ]
-        );
+        ]);
     }
 }

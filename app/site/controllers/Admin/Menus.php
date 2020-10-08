@@ -346,6 +346,7 @@ class Menus extends AdminManageModelsPage
      * @param string $menu_name
      * @param array $level
      * @param array $parent
+     * @param int $position
      * @return void
      */
     protected function saveLevel($menu_name, $level, $parent, $position = 0)

@@ -54,11 +54,19 @@ trait WithChildrenTrait
         return $this->children;
     }
 
+    /**
+     * sort children by position
+     */
     protected function sortChildren()
     {
         usort($this->children, [$this, 'cmpPosition']);
     }
 
+    /**
+     * @param self $a
+     * @param self $b
+     * @return int
+     */
     protected function cmpPosition($a, $b)
     {
         if ($a->position == $b->position) {
@@ -67,12 +75,16 @@ trait WithChildrenTrait
         return ($a->position < $b->position) ? -1 : 1;
     }
 
-
+    /**
+     * pre remove
+     * @return self
+     */
     public function preRemove()
     {
         $parent_id = $this->parent_id;
         foreach($this->getChildren() as $child) {
             $child->setParentId($parent_id)->persist();
         }
+        return $this;
     }
 }

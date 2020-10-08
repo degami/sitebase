@@ -13,6 +13,7 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Site\Models\Menu;
 use App\Site\Models\Rewrite;
+use App\Site\Models\Website;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use League\Plates\Template\Template;
@@ -275,7 +276,7 @@ abstract class FrontendPage extends BaseHtmlPage
             }
 
             if ($this->locale == null && $this->getRouteData('locale') != null) {
-                $this->locale = $this->getCurrentUser()->getLocale();
+                $this->locale = $this->getRouteData('locale');
             }
 
             if ($this->locale == null && $this->getCurrentUser()) {
@@ -288,6 +289,28 @@ abstract class FrontendPage extends BaseHtmlPage
         }
         $this->getApp()->setCurrentLocale($this->locale);
         return $this->locale;
+    }
+
+    /**
+     * gets current website id
+     *
+     * @return int|string|null
+     * @throws BasicException
+     */
+    public function getCurrentWebsiteId()
+    {
+        return $this->getSiteData()->getCurrentWebsiteId();
+    }
+
+    /**
+     * gets current website model
+     *
+     * @return Website|int|string|null
+     * @throws BasicException
+     */
+    public function getCurrentWebsite()
+    {
+        return $this->getSiteData()->getCurrentWebsite();
     }
 
     /**

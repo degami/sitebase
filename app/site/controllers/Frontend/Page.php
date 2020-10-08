@@ -122,7 +122,7 @@ class Page extends FrontendPageWithObject
     {
         $route_vars = $route_info->getVars();
 
-        $website_id = $this->getSiteData()->getCurrentWebsiteId();
+        $website_id = $this->getCurrentWebsiteId();
         $browser_locale = $this->getSiteData()->getBrowserPreferredLanguage();
 
         $homepage_id = null;

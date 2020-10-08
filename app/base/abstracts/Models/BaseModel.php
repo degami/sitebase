@@ -121,6 +121,13 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         return $this;
     }
 
+    /**
+     * returns an array of models, starting from a statement Result
+     *
+     * @param  ContainerInterface $container
+     * @param  Result $stmt
+     * @return array
+     */
     public static function hidrateStatementResult(ContainerInterface $container, Result $stmt)
     {
         $items = array_map(
@@ -213,22 +220,32 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             $condition = [];
         }
 
+        $stmt = static::getModelBasicWhere($container, $condition, $order);
+        return static::paginateByStatement($container, $request, $stmt, $page_size);
+    }
+
+    /**
+     * return subset of found items (useful for paginate)
+     *
+     * @param  ContainerInterface $container
+     * @param  Request            $request
+     * @param  Result            $stmt
+     * @return array
+     */
+    public function paginateByStatement(ContainerInterface $container, Request $request, Result $stmt, $page_size = self::ITEMS_PER_PAGE)
+    {
         $page = $request->get('page') ?? 0;
         $start = (int)$page * $page_size;
 
-        $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order)->limit($page_size, $start));
+        $total = (clone $stmt)->count();
+
+        $items = static::hidrateStatementResult($container, $stmt->limit($page_size, $start));
 
         foreach($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
         }
 
-        $total = static::getModelBasicWhere($container, $condition, $order)->count();
         return ['items' => $items, 'page' => $page, 'total' => $total];
-    }
-
-    public function paginateByStatement(ContainerInterface $container, Request $request, Result $stmt)
-    {
-
     }
 
     /**
@@ -378,7 +395,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * loads model by id
+     * loads multiple models by id
      *
      * @param ContainerInterface $container
      * @param array $ids
@@ -409,7 +426,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * loads model by field - value pair
+     * loads model by condition
      *
      * @param ContainerInterface $container
      * @param array $condition
@@ -424,7 +441,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * loads model by id
+     * loads multiple models by condition
      *
      * @param ContainerInterface $container
      * @param array $condition

@@ -232,14 +232,14 @@ class Globals extends ContainerAwareObject
     /**
      * returns a exception error page
      *
-     * @param Exception $exception
+     * @param Throwable $exception
      * @param Request|null $request
      * @return Response
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function exceptionPage(Exception $exception, Request $request)
+    public function exceptionPage(Throwable $exception, Request $request)
     {
         $this->logException($exception, null, $request);
 
@@ -429,7 +429,7 @@ class Globals extends ContainerAwareObject
      * @param Request|null $request
      * @throws BasicException
      */
-    public function logException(Exception $e, $prefix = null, Request $request = null)
+    public function logException(Throwable $e, $prefix = null, Request $request = null)
     {
         $this->getLog()->error($prefix . ($prefix != null ? ' - ':'') . $e->getMessage());
         $this->getLog()->debug($e->getTraceAsString());

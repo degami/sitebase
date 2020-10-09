@@ -16,6 +16,7 @@ use Exception;
 use \FastRoute\Dispatcher;
 use \FastRoute\RouteCollector;
 use \HaydenPierce\ClassFinder\ClassFinder;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Exceptions\InvalidValueException;
 use \App\Base\Abstracts\Controllers\BasePage;
@@ -62,72 +63,9 @@ class Web extends ContainerAwareObject
             $debugbar['time']->startMeasure('web_construct', 'Web construct');
         }
 
-        $this->routes = $this->getCachedControllers($container);
-        if (empty($this->routes)) {
-            // collect routes
-
-            $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
-            foreach ($controllerClasses as $controllerClass) {
-                if (is_subclass_of($controllerClass, BasePage::class)) {
-                    $group = "";
-                    $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
-                    $route_name = str_replace("/", ".", trim($path, "/"));
-
-                    $classMethod = self::CLASS_METHOD;
-                    $verbs = self::HTTP_VERBS;
-
-                    if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
-                        $tmp = array_map(
-                            function ($el) {
-                                return "/".$el;
-                            },
-                            $tmp
-                        );
-                        if (!isset($this->routes[$tmp[0]])) {
-                            $this->routes[$tmp[0]] = [];
-                        }
-
-                        $group = $tmp[0];
-                        $path = $tmp[1];
-                    }
-
-                    if (method_exists($controllerClass, 'getRouteGroup')) {
-                        $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
-                    }
-
-                    if (method_exists($controllerClass, 'getRouteVerbs')) {
-                        $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $verbs;
-                        if (!is_array($verbs)) {
-                            $verbs = [$verbs];
-                        }
-                        if (!empty($errors = $this->checkRouteVerbs($verbs))) {
-                            throw new InvalidValueException(implode(',', $errors).": Invalid route verbs", 1);
-                        }
-                    }
-
-                    if (method_exists($controllerClass, 'getRoutePath')) {
-                        $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
-                        if (!$this->checkRouteParameters($path)) {
-                            throw new InvalidValueException("'{$path}': Invalid route string", 1);
-                        }
-                    }
-
-                    // multiple paths can be specified, comma separated
-                    foreach (explode(",", $path) as $key => $path_value) {
-                        $this->addRoute($group, $route_name, "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
-                    }
-                }
-            }
-            $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');
-            $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
-
-            // cache controllers for faster access
-            $container->get('cache')->set('web.controllers', $this->routes);
-        }
-
         $this->dispatcher = simpleDispatcher(
             function (RouteCollector $r) {
-                foreach ($this->routes as $group => $paths) {
+                foreach ($this->getRoutes() as $group => $paths) {
                     if ($group != "") {
                         $r->addGroup(
                             $group,
@@ -282,9 +220,76 @@ class Web extends ContainerAwareObject
      * gets routes
      *
      * @return array
+     * @throws BasicException
+     * @throws InvalidValueException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getRoutes()
     {
+        if (empty($this->routes)) {
+            $this->routes = $this->getCachedControllers();
+            if (empty($this->routes)) {
+                // collect routes
+
+                $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
+                foreach ($controllerClasses as $controllerClass) {
+                    if (is_subclass_of($controllerClass, BasePage::class)) {
+                        $group = "";
+                        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
+                        $route_name = str_replace("/", ".", trim($path, "/"));
+
+                        $classMethod = self::CLASS_METHOD;
+                        $verbs = self::HTTP_VERBS;
+
+                        if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
+                            $tmp = array_map(
+                                function ($el) {
+                                    return "/".$el;
+                                },
+                                $tmp
+                            );
+                            if (!isset($this->routes[$tmp[0]])) {
+                                $this->routes[$tmp[0]] = [];
+                            }
+
+                            $group = $tmp[0];
+                            $path = $tmp[1];
+                        }
+
+                        if (method_exists($controllerClass, 'getRouteGroup')) {
+                            $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
+                        }
+
+                        if (method_exists($controllerClass, 'getRouteVerbs')) {
+                            $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $verbs;
+                            if (!is_array($verbs)) {
+                                $verbs = [$verbs];
+                            }
+                            if (!empty($errors = $this->checkRouteVerbs($verbs))) {
+                                throw new InvalidValueException(implode(',', $errors).": Invalid route verbs", 1);
+                            }
+                        }
+
+                        if (method_exists($controllerClass, 'getRoutePath')) {
+                            $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
+                            if (!$this->checkRouteParameters($path)) {
+                                throw new InvalidValueException("'{$path}': Invalid route string", 1);
+                            }
+                        }
+
+                        // multiple paths can be specified, comma separated
+                        foreach (explode(",", $path) as $key => $path_value) {
+                            $this->addRoute($group, $route_name, "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                        }
+                    }
+                }
+                $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');
+                $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
+
+                // cache controllers for faster access
+                $this->getCache()->set('web.controllers', $this->routes);
+            }
+        }
         return $this->routes;
     }
 
@@ -373,13 +378,12 @@ class Web extends ContainerAwareObject
     /**
      * gets cached controllers
      *
-     * @param  ContainerInterface $container
      * @return array
      */
-    protected function getCachedControllers(ContainerInterface $container)
+    protected function getCachedControllers()
     {
-        if ($container->get('cache')->has('web.controllers')) {
-            return $container->get('cache')->get('web.controllers');
+        if ($this->getCache()->has('web.controllers')) {
+            return $this->getCache()->get('web.controllers');
         }
 
         return [];

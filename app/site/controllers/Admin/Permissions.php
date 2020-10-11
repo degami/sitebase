@@ -21,7 +21,6 @@ use \App\Site\Models\RolePermission;
 
 /**
  * "Permissions" Admin Page
- * @package App\Site\Controllers\Admin
  */
 class Permissions extends AdminFormPage
 {

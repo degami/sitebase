@@ -1,4 +1,5 @@
 .idea
+.phpdoc
 composer.lock
 docs
 vendor

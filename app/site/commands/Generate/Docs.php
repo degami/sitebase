@@ -43,7 +43,7 @@ class Docs extends BaseCommand
     {
         $helper = $this->getHelper('question');
         $output->writeln("<info>Generating Documentation</info>");
-        system("phpdoc -t ".App::getDir(App::ROOT).DS."docs -d ".App::getDir(App::APP)." >/dev/null 2>&1");
+        system("phpdoc -t ".App::getDir(App::ROOT).DS."docs -d ".App::getDir(App::APP)." --ignore=vendor/* --template=clean >/dev/null 2>&1");
 
         if (!file_exists(App::getDir(App::WEBROOT).DS."docs")) {
             $question = new ConfirmationQuestion('Do you want to publish docs also on website? ', false);

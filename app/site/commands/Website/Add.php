@@ -24,7 +24,6 @@ use \Exception;
 
 /**
  * Add Website Command
- * @package App\Site\Commands\Website
  */
 class Add extends BaseCommand
 {

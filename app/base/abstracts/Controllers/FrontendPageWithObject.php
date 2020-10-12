@@ -11,6 +11,8 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Controllers\Frontend\Page;
 use \App\Site\Routing\RouteInfo;
 use \Exception;
 use \App\Base\Traits\FrontendTrait;
@@ -25,6 +27,23 @@ use Throwable;
 abstract class FrontendPageWithObject extends FrontendPage
 {
     use FrontendTrait;
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return Response|self
+     * @throws PermissionDeniedException
+     */
+    protected function beforeRender()
+    {
+        $route_data = $this->getRouteData();
+
+        if (isset($route_data['id'])) {
+            $this->setObject($this->getContainer()->call([static::getObjectClass(), 'load'], ['id' => $route_data['id']]));
+        }
+
+        return parent::beforeRender();
+    }
 
     /**
      * {@inheritdocs}

@@ -61,23 +61,6 @@ class Taxonomy extends FrontendPageWithObject
     /**
      * {@inheritdocs}
      *
-     * @return Response|self
-     * @throws PermissionDeniedException
-     */
-    protected function beforeRender()
-    {
-        $route_data = $this->getRouteData();
-
-        if (isset($route_data['id'])) {
-            $this->setObject($this->getContainer()->call([TaxonomyModel::class, 'load'], ['id' => $route_data['id']]));
-        }
-
-        return parent::beforeRender();
-    }
-
-    /**
-     * {@inheritdocs}
-     *
      * @return array
      * @throws BasicException
      */

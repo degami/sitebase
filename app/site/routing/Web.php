@@ -272,26 +272,23 @@ class Web extends ContainerAwareObject
 
                         if (method_exists($controllerClass, 'getRoutePath')) {
                             $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
-                            if (!$this->checkRouteParameters($path)) {
-                                throw new InvalidValueException("'{$path}': Invalid route string", 1);
-                            }
                         }
 
-                        // add routes
-                        if (!is_array($path)) {
-                            // multiple paths can be specified, comma separated
-                            foreach (explode(",", $path) as $key => $path_value) {
-                                $this->addRoute($group, $route_name, "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
-                            }
-                        } else {
-                            // already an array. if associative use key as route name
-                            foreach ($path as $key => $path_value) {
-                                if (!is_string($key)) {
-                                    $key = $route_name;
-                                }
-                                $this->addRoute($group, strtolower($key), "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
-                            }
+                        if (is_string($path)) {
+                            $path = explode(",", $path);
                         }
+
+                        array_walk($path, function($path_value, $key) use ($route_name, $group, $controllerClass, $classMethod, $verbs) {
+                            if (!is_string($key)) {
+                                $key = $route_name;
+                            }
+
+                            if (!$this->checkRouteParameters($path_value)) {
+                                throw new InvalidValueException("'{$path_value}': Invalid route string", 1);
+                            }
+
+                            $this->addRoute($group, strtolower($key), "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                        });
                     }
                 }
                 $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');

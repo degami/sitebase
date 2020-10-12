@@ -67,24 +67,6 @@ class Page extends FrontendPageWithObject
         return 'page';
     }
 
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return Response|self
-     * @throws PermissionDeniedException
-     */
-    protected function beforeRender()
-    {
-        $route_data = $this->getRouteData();
-
-        if (isset($route_data['id'])) {
-            $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $route_data['id']]));
-        }
-
-        return parent::beforeRender();
-    }
-
     /**
      * shows a page
      *

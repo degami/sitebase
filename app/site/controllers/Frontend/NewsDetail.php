@@ -59,23 +59,6 @@ class NewsDetail extends FrontendPageWithObject
     /**
      * {@inheritdocs}
      *
-     * @return Response|self
-     * @throws PermissionDeniedException
-     */
-    protected function beforeRender()
-    {
-        $route_data = $this->getRouteData();
-
-        if (isset($route_data['id'])) {
-            $this->setObject($this->getContainer()->call([News::class, 'load'], ['id' => $route_data['id']]));
-        }
-
-        return parent::beforeRender();
-    }
-
-    /**
-     * {@inheritdocs}
-     *
      * @param RouteInfo|null $route_info
      * @param array $route_data
      * @return Response

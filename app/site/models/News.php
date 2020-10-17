@@ -40,6 +40,16 @@ class News extends FrontendModel
     }
 
     /**
+     * {@inheritdocs}
+     *
+     * @return string[]
+     */
+    public static function exposeToIndexer()
+    {
+        return ['title', 'content', 'date'];
+    }
+
+    /**
      * gets formatted Date
      *
      * @return string

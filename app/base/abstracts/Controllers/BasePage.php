@@ -11,6 +11,7 @@
  */
 namespace App\Base\Abstracts\Controllers;
 
+use App\Site\Routing\Web;
 use Degami\Basics\Exceptions\BasicException;
 use \Exception;
 use \Psr\Container\ContainerInterface;
@@ -54,12 +55,7 @@ abstract class BasePage extends ContainerAwareObject
         $this->request = $request ?: $this->getApp()->getRequest();
 
         // dispatch "request_created" event
-        $this->getApp()->event(
-            'request_created',
-            [
-            'request' => $this->request
-            ]
-        );
+        $this->getApp()->event('request_created', ['request' => $this->request]);
         $this->response = $this->getContainer()->make(Response::class);
 
         // let App know this is the controller object
@@ -202,9 +198,18 @@ abstract class BasePage extends ContainerAwareObject
      */
     public function getControllerUrl()
     {
+        if ($this->getRouteInfo() instanceof RouteInfo) {
+            return $this->getUrl($this->getRouteInfo()->getRouteName(), $this->getRouteInfo()->getVars());
+        }
+
         $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower(get_class($this))));
         if (method_exists(static::class, 'getRoutePath')) {
             $path = call_user_func([static::class, 'getRoutePath']);
+            if (is_string($path)) {
+                $path = explode(",", $path);
+            }
+            $path = reset($path);
+
             if (method_exists(static::class, 'getRouteGroup')) {
                 $path = call_user_func([static::class, 'getRouteGroup']).'/'.$path;
             }
@@ -215,7 +220,8 @@ abstract class BasePage extends ContainerAwareObject
             }
 
             foreach ($route_vars as $varname => $value) {
-                $path = preg_replace("/\{".$varname."(:.*?)?\}/", $value, $path);
+                $regexp = "/\{".$varname.Web::REGEXP_ROUTEVAR_EXPRESSION."\}/i";
+                $path = preg_replace($regexp, $value, $path);
             }
 
             return $this->getRouting()->getBaseUrl().$path;

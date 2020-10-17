@@ -255,7 +255,7 @@ class SiteBase implements ExtensionInterface
     public function summarize($text, $max_words = 10)
     {
         $max_words = abs(intval($max_words));
-        $words = preg_split("/\s+/", $text);
+        $words = preg_split("/\s+/", strip_tags($text));
         if (count($words) < $max_words) {
             return $text;
         }

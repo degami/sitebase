@@ -12,11 +12,13 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('News
         <ul class="news-list">
             <?php foreach ($news as $key => $news_elem) :?>
                 <li>
-                    <a href="<?= $news_elem->getFrontendUrl(); ?>" class="news-detail">
-                        <span class="news-title"><?= $news_elem->getTitle(); ?></span>
-                    </a>
-                    <span class="news-date"><?= $news_elem->getDate(); ?></span>
-                    <span class="news-description"><?= $this->sitebase()->summarize($news_elem->getContent(), 20); ?></span>
+                    <div>
+                        <a href="<?= $news_elem->getFrontendUrl(); ?>" class="news-detail">
+                            <span class="news-title"><?= $news_elem->getTitle(); ?></span>
+                        </a>
+                        <span class="news-date"><?= $news_elem->getDate(); ?></span>
+                    </div>
+                    <div class="news-description"><?= $this->sitebase()->summarize($news_elem->getContent(), 20); ?></div>
                 </li>
             <?php endforeach;?>
         </ul>

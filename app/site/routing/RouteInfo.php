@@ -170,6 +170,17 @@ class RouteInfo
     }
 
     /**
+     * get router var by name
+     * @param string $varname
+     *
+     * @return mixed
+     */
+    public function getVar($varname)
+    {
+        return $this->vars[$varname] ?? null;
+    }
+
+    /**
      * set router vars
      *
      * @param  mixed $vars

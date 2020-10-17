@@ -1,0 +1,87 @@
+<?php
+/**
+ * SiteBase
+ * PHP Version 7.0
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+namespace App\Site\Blocks;
+
+use \App\Base\Abstracts\Blocks\BaseCodeBlock;
+use \App\Base\Abstracts\Controllers\BasePage;
+use App\Site\Controllers\Frontend\Search as SearchController;
+use \Degami\Basics\Html\TagElement;
+use Exception;
+
+/**
+ * Search Block
+ */
+class Search extends BaseCodeBlock
+{
+    /**
+     * {@inheritdocs}
+     *
+     * @param BasePage|null $current_page
+     * @return string
+     */
+    public function renderHTML(BasePage $current_page = null)
+    {
+        if ($current_page instanceof SearchController) {
+            return '';
+        }
+
+        if (!$this->getEnv('ELASTICSEARCH')) {
+            return '';
+        }
+
+        try {
+            $form_content = $this->getContainer()->make(TagElement::class , ['options' => [
+                'tag' => 'div',
+                'attributes' => [
+                    'class' => 'searchbar input-group',
+                ],
+            ]]);
+
+            $input = $this->getContainer()->make(TagElement::class , ['options' => [
+                'tag' => 'input',
+                'type' => 'text',
+                'name' => 'q',
+                'attributes' => [
+                    'class' => 'form-control',
+                ],
+            ]]);
+
+            $form_content->addChild($input);
+
+            $button = $this->getContainer()->make(TagElement::class , ['options' => [
+                'tag' => 'input',
+                'type' => 'submit',
+                'value' => $this->getUtils()->translate('Search'),
+                'attributes' => [
+                    'class' => 'btn searchbtn',
+                ],
+            ]]);
+
+            $div = $this->getContainer()->make(TagElement::class , ['options' => [
+                'tag' => 'div',
+                'attributes' => [
+                    'class' => 'input-group-append',
+                ],
+            ]]);
+
+            $div->addChild($button);
+
+            $form_content->addChild($div);
+
+            $action_url = $this->getRouting()->getUrl('frontend.search.withlang', ['lang' => $this->getApp()->getCurrentLocale()]);
+            return '<form class="searchform-mini" action="'.$action_url.'" method="GET">' .
+                     $form_content .
+                   '</form>' ;
+        } catch (Exception $e) {}
+        return "";
+    }
+}

@@ -150,7 +150,7 @@ return [
     // 'mailer'
     \App\Base\Tools\Utils\Mailer::class => DI\autowire(\App\Base\Tools\Utils\Mailer::class),
     'mailer' => DI\get(\App\Base\Tools\Utils\Mailer::class),
-    
+
     // 'cache'
     \App\Base\Tools\Cache\Manager::class => DI\autowire(\App\Base\Tools\Cache\Manager::class),
     'cache' => DI\get(\App\Base\Tools\Cache\Manager::class),
@@ -158,6 +158,21 @@ return [
     // 'guzzle'
     \GuzzleHttp\Client::class => DI\create(\GuzzleHttp\Client::class),
     'guzzle' => DI\get(\GuzzleHttp\Client::class),
+
+    // 'elasticsearch'
+    \Elasticsearch\Client::class => DI\factory(function() {
+        $host = getenv('ELASTICSEARCH_HOST') ?? 'localhost';
+        $port = getenv('ELASTICSEARCH_PORT') ?? '9200';
+
+        $hosts = [
+            $host.':'.$port,
+        ];
+
+        return \Elasticsearch\ClientBuilder::create()
+            ->setHosts($hosts)
+            ->build();
+    }),
+    'elasticsearch' => DI\get(\Elasticsearch\Client::class),
 
     // 'request'
     \Symfony\Component\HttpFoundation\Request::class => DI\factory(function(){

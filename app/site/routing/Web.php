@@ -22,6 +22,7 @@ use \App\Base\Exceptions\InvalidValueException;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Site\Controllers\Frontend\Page;
+use App\Site\Controllers\Frontend\Search;
 use function FastRoute\simpleDispatcher;
 
 /**
@@ -29,6 +30,7 @@ use function FastRoute\simpleDispatcher;
  */
 class Web extends ContainerAwareObject
 {
+    const REGEXP_ROUTEVAR_EXPRESSION = "(:([^{}]*|\{([^{}]*|\{[^{}]*\})*\})*)?";
     const CLASS_METHOD = 'renderPage';
     const HTTP_VERBS = ['GET', 'POST'];
 
@@ -151,10 +153,12 @@ class Web extends ContainerAwareObject
     /**
      * gets route by class
      *
-     * @param  string $class
+     * @param string $class
+     * @param string|null $uri
+     * @param string|null $httpMethod
      * @return array
      */
-    protected function getRouteByClass($class)
+    protected function getRouteByClass($class, $uri = null, $httpMethod = null)
     {
         $out = [];
         foreach (array_keys($this->routes) as $group) {
@@ -168,6 +172,32 @@ class Web extends ContainerAwareObject
                 )
             );
         }
+
+        if (count($out) > 1) {
+            // try to preg_match elements found with $uri, to find the most suitable
+            $regexp = "/\{.*?".Web::REGEXP_ROUTEVAR_EXPRESSION."\}/i";
+
+            foreach ($out as $elem) {
+                if ($httpMethod != null && !in_array($httpMethod, (array) $elem['verbs'])) {
+                    // http method is not valid. skip check
+                    continue;
+                }
+                $path_regexp = $elem['path'];
+                if (preg_match_all($regexp, $elem['path'], $matches)) {
+                    foreach($matches[0] as $k => $placeholder) {
+                        if ($matches[1][$k] != '') {
+                            $path_regexp = str_replace($placeholder, '('.substr($matches[1][$k], 1).')', $path_regexp);
+                        } else {
+                            $path_regexp = str_replace($placeholder, '(.*?)', $path_regexp);
+                        }
+                    }
+                }
+                if (preg_match('/^'.str_replace('/', '\/', $path_regexp).'$/i', $uri)) {
+                    return $elem;
+                }
+            }
+        }
+
         return reset($out);
     }
 
@@ -234,6 +264,10 @@ class Web extends ContainerAwareObject
                 $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {
+                        if ($controllerClass == Search::class && !$this->getEnv('ELASTICSEARCH')) {
+                            continue;
+                        }
+
                         $group = "";
                         $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
                         $route_name = str_replace("/", ".", trim($path, "/"));
@@ -360,7 +394,9 @@ class Web extends ContainerAwareObject
         $dispatcherInfo = $this->getRoute($route_name);
         if ($dispatcherInfo != null) {
             foreach ($route_params as $varname => $value) {
-                $dispatcherInfo['path'] = preg_replace("/\{".$varname."(:.*?)?\}/i", $value, $dispatcherInfo['path']);
+                // $regexp = "/\{".$varname."(:.*?)?\}/i"
+                $regexp = "/\{".$varname.self::REGEXP_ROUTEVAR_EXPRESSION."\}/i";
+                $dispatcherInfo['path'] = preg_replace($regexp, $value, $dispatcherInfo['path']);
             }
             return $this->getBaseUrl() . $dispatcherInfo['path'];
         }
@@ -462,7 +498,7 @@ class Web extends ContainerAwareObject
         }
 
         if ($dispatcherInfo[0] == Dispatcher::FOUND) {
-            $route_info = $this->getRouteByClass($dispatcherInfo[1][0]);
+            $route_info = $this->getRouteByClass($dispatcherInfo[1][0], $uri, $httpMethod);
             if (isset($route_info['name'])) {
                 $route_name = $route_info['name'];
             }

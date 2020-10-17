@@ -283,6 +283,17 @@ trait ContainerAwareTrait
     }
 
     /**
+     * gets elasticsearch service
+     *
+     * @return \ElasticSearch\Client
+     * @throws BasicException
+     */
+    public function getElasticsearch()
+    {
+        return $this->getService('elasticsearch');
+    }
+
+    /**
      * gets env variable
      *
      * @param string $variable

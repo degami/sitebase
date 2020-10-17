@@ -41,7 +41,8 @@
         "nadar/php-composer-reader": "^1.3",
         "spatie/db-dumper": "^2.13",
         "stidges/country-flags": "^1.0",
-        "spatie/array-to-xml": "^2.11"
+        "spatie/array-to-xml": "^2.11",
+        "elasticsearch/elasticsearch": "~7.0"
     },
   "autoload": {
     "files": [

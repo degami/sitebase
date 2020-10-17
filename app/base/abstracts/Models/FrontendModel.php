@@ -29,6 +29,16 @@ abstract class FrontendModel extends BaseModel
     protected $rewriteObj = null;
 
     /**
+     * Field names to be exposed to indexer
+     *
+     * @return string[]
+     */
+    public static function exposeToIndexer()
+    {
+        return ['title', 'content'];
+    }
+
+    /**
      * gets object rewrite model
      *
      * @return Rewrite

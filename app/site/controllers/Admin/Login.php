@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -45,7 +46,7 @@ class Login extends FormPage
     {
         parent::__construct($container, $request);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
-            $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES).DS.'admin');
+            $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');
         }
     }
 
@@ -81,7 +82,7 @@ class Login extends FormPage
      */
     public static function getRouteVerbs()
     {
-        return ['GET','POST'];
+        return ['GET', 'POST'];
     }
 
     /**
@@ -122,10 +123,10 @@ class Login extends FormPage
      */
     protected function prepareTemplate()
     {
-        $template = $this->getTemplates()->make('admin::'.$this->getTemplateName());
-        $template->data($this->getTemplateData()+$this->getBaseTemplateData());
+        $template = $this->getTemplates()->make('admin::' . $this->getTemplateName());
+        $template->data($this->getTemplateData() + $this->getBaseTemplateData());
 
-        $template->data($this->getTemplateData()+$this->getBaseTemplateData());
+        $template->data($this->getTemplateData() + $this->getBaseTemplateData());
         //$locale = $template->data()['locale'] ?? $this->getCurrentLocale();
 
         $this->getAssets()->addCss('html,body {height: 100%;}');
@@ -166,7 +167,7 @@ class Login extends FormPage
     protected function beforeRender()
     {
         if ($this->isSubmitted()) {
-            $result = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
+            $result = $this->templateData['form']->getSubmitResults(static::class . '::formSubmitted');
             $token = $this->getContainer()->get('jwt:parser')->parse($result);
 
             $goto_url = $this->getUrl("admin.dashboard");
@@ -175,17 +176,14 @@ class Login extends FormPage
                 $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
 
                 if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnv('SALT'))) {
-                    $goto_url = implode(':', array_slice($tmp, 0, count($tmp)-1));
+                    $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));
                 }
             }
 
-            return $this->doRedirect(
-                $goto_url,
-                [
+            return $this->doRedirect($goto_url, [
                 "Authorization" => $token,
-                "Set-Cookie" => "Authorization=".$token
-                ]
-            );
+                "Set-Cookie" => "Authorization=" . $token
+            ]);
         }
         return parent::beforeRender();
     }
@@ -200,33 +198,25 @@ class Login extends FormPage
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
-        return $form->setFormId('login')
-            ->addField(
-                'username',
-                [
+        return $form
+            ->setFormId('login')
+            ->addField('username', [
                 'title' => $this->getUtils()->translate('Username', $this->getCurrentLocale()),
                 'type' => 'textfield',
                 'validate' => ['required'],
                 'attributes' => ['placeholder' => $this->getUtils()->translate('Username', $this->getCurrentLocale())],
-                ]
-            )
-            ->addField(
-                'password',
-                [
+            ])
+            ->addField('password', [
                 'title' => $this->getUtils()->translate('Password', $this->getCurrentLocale()),
                 'type' => 'password',
                 'validate' => ['required'],
                 'attributes' => ['placeholder' => $this->getUtils()->translate('Password', $this->getCurrentLocale())],
-                ]
-            )
-            ->addField(
-                'button',
-                [
+            ])
+            ->addField('button', [
                 'type' => 'submit',
                 'value' => $this->getUtils()->translate('Login', $this->getCurrentLocale()),
                 'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]
-            );
+            ]);
     }
 
     /**
@@ -256,12 +246,9 @@ class Login extends FormPage
             }
 
             // dispatch "user_logged_in" event
-            $this->getApp()->event(
-                'user_logged_in',
-                [
+            $this->getApp()->event('user_logged_in', [
                 'logged_user' => $form_state['logged_user']
-                ]
-            );
+            ]);
         }
 
         return true;
@@ -270,14 +257,14 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return mixed
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         $logged_user = $form_state['logged_user'];
-        return "".$logged_user->getJWT();
+        return "" . $logged_user->getJWT();
     }
 
     /**

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Frontend\Users;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -55,7 +56,7 @@ class PasswordForgot extends FormPage
      */
     public static function getRouteGroup()
     {
-        return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/'.getenv('LOGGEDPAGES_GROUP') : null;
+        return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/' . getenv('LOGGEDPAGES_GROUP') : null;
     }
 
     /**
@@ -75,7 +76,7 @@ class PasswordForgot extends FormPage
      */
     public static function getRouteVerbs()
     {
-        return ['GET','POST'];
+        return ['GET', 'POST'];
     }
 
     /**
@@ -124,18 +125,18 @@ class PasswordForgot extends FormPage
 
         if ($this->isSubmitted()) {
             if ($this->getForm()->getFormId() == 'changepass') {
-                $user_model = $this->templateData['form']->getSubmitResults(static::class.'::formSubmitted');
+                $user_model = $this->templateData['form']->getSubmitResults(static::class . '::formSubmitted');
                 $token = $user_model->getJWT();
 
                 return $this->doRedirect(
                     $this->getUrl("frontend.users.profile"),
                     [
-                    "Authorization" => $token,
-                    "Set-Cookie" => "Authorization=".$token
+                        "Authorization" => $token,
+                        "Set-Cookie" => "Authorization=" . $token
                     ]
                 );
             } else {
-                $this->templateData['result'] = '<h2>'.$this->getUtils()->translate('Confirmation email sent', $this->getCurrentLocale()).'</h2>';
+                $this->templateData['result'] = '<h2>' . $this->getUtils()->translate('Confirmation email sent', $this->getCurrentLocale()) . '</h2>';
             }
         }
 
@@ -153,40 +154,36 @@ class PasswordForgot extends FormPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         if ($this->getRequest()->get('confirmation_code') && ($user = $this->getContainer()->call([User::class, 'loadBy'], ['field' => 'confirmation_code', 'value' => $this->getRequest()->get('confirmation_code')])) && $user->getId()) {
-            $form->setFormId('changepass')
-            ->addField('user_id', [
-                'type' => 'hidden',
-                'default_value' => $user->getId(),
-            ])
-            ->addMarkup($this->getUtils()->translate('Change your password', $this->getCurrentLocale()).' <strong>'.$user->getNickname().'</strong>')
-            ->addField('password', [
-                'title' => $this->getUtils()->translate('Password', $this->getCurrentLocale()),
-                'type' => 'password',
-                'with_confirm' => true,
-                'validate' => ['required'],
-                'attributes' => ['placeholder' => $this->getUtils()->translate('Password', $this->getCurrentLocale())],
-            ]);
+            $form
+                ->setFormId('changepass')
+                ->addField('user_id', [
+                    'type' => 'hidden',
+                    'default_value' => $user->getId(),
+                ])
+                ->addMarkup($this->getUtils()->translate('Change your password', $this->getCurrentLocale()) . ' <strong>' . $user->getNickname() . '</strong>')
+                ->addField('password', [
+                    'title' => $this->getUtils()->translate('Password', $this->getCurrentLocale()),
+                    'type' => 'password',
+                    'with_confirm' => true,
+                    'validate' => ['required'],
+                    'attributes' => ['placeholder' => $this->getUtils()->translate('Password', $this->getCurrentLocale())],
+                ]);
         } else {
-            $form->setFormId('confirmemail')
-            ->addField(
-                'email',
-                [
-                'title' => $this->getUtils()->translate('Email', $this->getCurrentLocale()),
-                'type' => 'textfield',
-                'validate' => ['required', 'email'],
-                'attributes' => ['placeholder' => $this->getUtils()->translate('Email', $this->getCurrentLocale())],
-                ]
-            );
+            $form
+                ->setFormId('confirmemail')
+                ->addField('email', [
+                    'title' => $this->getUtils()->translate('Email', $this->getCurrentLocale()),
+                    'type' => 'textfield',
+                    'validate' => ['required', 'email'],
+                    'attributes' => ['placeholder' => $this->getUtils()->translate('Email', $this->getCurrentLocale())],
+                ]);
         }
 
-        $form->addField(
-            'button',
-            [
+        $form->addField('button', [
             'type' => 'submit',
             'value' => $this->getUtils()->translate('Submit', $this->getCurrentLocale()),
             'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-            ]
-        );
+        ]);
 
         return $form;
     }
@@ -239,15 +236,15 @@ class PasswordForgot extends FormPage
                 $user_model = $form_state['found_user'];
                 $user_model->confirmation_code = $this->getUtils()->randString(20);
 
-                $url = $this->getControllerUrl().'?confirmation_code='.$user_model->confirmation_code;
+                $url = $this->getControllerUrl() . '?confirmation_code=' . $user_model->confirmation_code;
 
                 $this->getUtils()->addQueueMessage(
                     'internal_mail',
                     [
-                    'from' => $this->getSiteData()->getSiteEmail(),
-                    'to' => $user_model->getEmail(),
-                    'subject' => 'Password Forgot',
-                    'body' => 'Click this link to change your password. <br /><a href="'.$url.'">'.$url.'</a>',
+                        'from' => $this->getSiteData()->getSiteEmail(),
+                        'to' => $user_model->getEmail(),
+                        'subject' => 'Password Forgot',
+                        'body' => 'Click this link to change your password. <br /><a href="' . $url . '">' . $url . '</a>',
                     ]
                 );
             }
@@ -257,7 +254,7 @@ class PasswordForgot extends FormPage
             $user_model->confirmation_code = null;
         }
 
-        if ($user_model instanceof  User) {
+        if ($user_model instanceof User) {
             $user_model->persist();
         }
 

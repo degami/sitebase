@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Frontend;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -104,8 +105,8 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
             $this->templateData += [
                 'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
-                ->setValidate([ [$this, 'formValidate'] ])
-                ->setSubmit([ [$this, 'formSubmitted'] ]),
+                    ->setValidate([[$this, 'formValidate']])
+                    ->setSubmit([[$this, 'formSubmitted']]),
             ];
         }
 
@@ -145,7 +146,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     protected function getBaseTemplateData()
     {
         $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()).' contact-'. $this->templateData['object']->id;
+        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' contact-' . $this->templateData['object']->id;
         return $out;
     }
 
@@ -161,34 +162,25 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     {
         $contact = $this->templateData['object'] ?? null;
         if ($contact instanceof Contact && $contact->isLoaded()) {
-            $form->setFormId($this->slugify('form_'.$contact->getTitle()));
+            $form->setFormId($this->slugify('form_' . $contact->getTitle()));
             $form->setId($contact->getName());
-            $form->addField(
-                'contact_id',
-                [
+            $form->addField('contact_id', [
                 'type' => 'hidden',
                 'default_value' => $contact->getId(),
-                ]
-            );
-            $fieldset = $form->addField(
-                'form_definition',
-                [
+            ]);
+            $fieldset = $form->addField('form_definition', [
                 'type' => 'tag_container',
                 'tag' => 'div',
                 'id' => 'fieldset-contactfields',
-                ]
-            );
+            ]);
             // $fieldset =
             $contact->getFormDefinition($fieldset, $form_state);
-            $form->addField(
-                'button',
-                [
+            $form->addField('button', [
                 'type' => 'button',
                 'value' => $this->getUtils()->translate('Send', $this->getCurrentLocale()),
                 'container_class' => 'form-item mt-3',
                 'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]
-            );
+            ]);
         }
 
         return $form;
@@ -197,8 +189,8 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -274,10 +266,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         $this->getUtils()->addQueueMessage(
             'contact_form_mail',
             [
-            'from' => $this->getSiteData()->getSiteEmail(),
-            'to' => $contact->getSubmitTo(),
-            'subject' => 'New Submission - '.$contact->getTitle(),
-            'body' => var_export($values, true),
+                'from' => $this->getSiteData()->getSiteEmail(),
+                'to' => $contact->getSubmitTo(),
+                'subject' => 'New Submission - ' . $contact->getTitle(),
+                'body' => var_export($values, true),
             ]
         );
 

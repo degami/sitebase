@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use App\Site\Models\Menu;
@@ -61,15 +62,15 @@ abstract class FrontendPage extends BaseHtmlPage
     {
         parent::__construct($container, $request);
 
-        $this->getTemplates()->setDirectory(App::getDir(App::TEMPLATES).DS.'frontend');
+        $this->getTemplates()->setDirectory(App::getDir(App::TEMPLATES) . DS . 'frontend');
 
 
         if (!$this->getTemplates()->getFolders()->exists('frontend')) {
-            $this->getTemplates()->addFolder('frontend', App::getDir(App::TEMPLATES).DS.'frontend');
+            $this->getTemplates()->addFolder('frontend', App::getDir(App::TEMPLATES) . DS . 'frontend');
         }
 
         if (!$this->getTemplates()->getFolders()->exists('theme') && $this->getSiteData()->getThemeName() != null) {
-            $this->getTemplates()->addFolder('theme', App::getDir(App::TEMPLATES).DS.'frontend'.DS.$this->getSiteData()->getThemeName(), true);
+            $this->getTemplates()->addFolder('theme', App::getDir(App::TEMPLATES) . DS . 'frontend' . DS . $this->getSiteData()->getThemeName(), true);
         }
 
         foreach ($this->getUtils()->getPageRegions() as $region) {
@@ -91,15 +92,15 @@ abstract class FrontendPage extends BaseHtmlPage
         $this->getUtils()->getAllPageBlocks($this->getCurrentLocale());
 
         return parent::getBaseTemplateData() + [
-            'locale' => $this->getCurrentLocale(),
-            'body_class' => str_replace('.', '-', $this->getRouteName()),
-        ];
+                'locale' => $this->getCurrentLocale(),
+                'body_class' => str_replace('.', '-', $this->getRouteName()),
+            ];
     }
 
     /**
      * get page region tags html
      *
-     * @param  string $region
+     * @param string $region
      * @return string
      */
     protected function getRegionTags($region)
@@ -110,7 +111,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
         $output = '';
         foreach ($this->regions[$region] as $key => $tag) {
-            $output .= (string) $tag;
+            $output .= (string)$tag;
         }
 
         return $output;
@@ -151,13 +152,13 @@ abstract class FrontendPage extends BaseHtmlPage
     protected function prepareTemplate()
     {
         if ($this->getTemplates()->getFolders()->exists('theme')) {
-            $template = $this->getTemplates()->make('theme::'.$this->getTemplateName());
+            $template = $this->getTemplates()->make('theme::' . $this->getTemplateName());
         } else {
             // fallback to "frontend"
-            $template = $this->getTemplates()->make('frontend::'.$this->getTemplateName());
+            $template = $this->getTemplates()->make('frontend::' . $this->getTemplateName());
         }
 
-        $template->data($this->getTemplateData()+$this->getBaseTemplateData());
+        $template->data($this->getTemplateData() + $this->getBaseTemplateData());
         $locale = $template->data()['locale'] ?? $this->getCurrentLocale();
 
         $template->start('head_scripts');

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Abstracts\Models\BaseModel;
@@ -87,7 +88,7 @@ abstract class BaseRestPage extends BasePage
     /**
      * loads object by id
      *
-     * @param  integer $id
+     * @param integer $id
      * @return BaseModel
      */
     protected function loadObject($id)
@@ -96,7 +97,7 @@ abstract class BaseRestPage extends BasePage
             return null;
         }
 
-        return $this->getContainer()->call([$this->getObjectClass(), 'load'], [ 'id' => $id]);
+        return $this->getContainer()->call([$this->getObjectClass(), 'load'], ['id' => $id]);
     }
 
     /**

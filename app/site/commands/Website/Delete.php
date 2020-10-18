@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Website;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -34,7 +35,7 @@ class Delete extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                        new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
                     ]
                 )
             );
@@ -43,8 +44,8 @@ class Delete extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,14 +59,14 @@ class Delete extends BaseCommand
             return;
         }
 
-        $website = $this->getContainer()->call([Website::class,'load'], ['id' => $id]);
+        $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $id]);
 
         if (!$website->isLoaded()) {
             $io->error('Website does not exists');
             return;
         }
 
-        $question = new ConfirmationQuestion('Delete Website "'.$website->getSiteName().'"? ', false);
+        $question = new ConfirmationQuestion('Delete Website "' . $website->getSiteName() . '"? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not deleted</info>');
             return;

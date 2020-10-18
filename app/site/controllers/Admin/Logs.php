@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -83,7 +84,7 @@ class Logs extends AdminPage
                         if (trim($search) == '') {
                             continue;
                         }
-                        $conditions['`'.$col . '` LIKE ?'] = ['%'.$search.'%'];
+                        $conditions['`' . $col . '` LIKE ?'] = ['%' . $search . '%'];
                     }
                 }
                 if (isset($paginate_params['condition']['eq'])) {
@@ -91,7 +92,7 @@ class Logs extends AdminPage
                         if (trim($search) == '') {
                             continue;
                         }
-                        $conditions['`'.$col . '` = ?'] = [$search];
+                        $conditions['`' . $col . '` = ?'] = [$search];
                     }
                 }
 
@@ -152,13 +153,13 @@ class Logs extends AdminPage
                 ];
             } else {
                 $this->templateData += [
-                'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items'], $header), $this->getTableHeader($header), $this),
+                    'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items'], $header), $this->getTableHeader($header), $this),
 
-                'header' => $header,
-                'logs' => $data['items'],
-                'total' => $data['total'],
-                'current_page' => $data['page'],
-                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+                    'header' => $header,
+                    'logs' => $data['items'],
+                    'total' => $data['total'],
+                    'current_page' => $data['page'],
+                    'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
                 ];
             }
         }
@@ -174,7 +175,7 @@ class Logs extends AdminPage
     {
         $out = array_filter([
             'like' => $this->getRequest()->query->get('search'),
-            'eq' =>  $this->getRequest()->query->get('foreign'),
+            'eq' => $this->getRequest()->query->get('foreign'),
         ]);
         return !empty($out) ? $out : null;
     }
@@ -195,7 +196,7 @@ class Logs extends AdminPage
             foreach ($header as $element) {
                 $out[$element] = $data[$element] ?? null;
             }
-            $out['actions'] = '<a href="'. $this->getControllerUrl().'?logtype='. $this->getRequest()->query->get('logtype').'&id='. $log->id.'">'. $this->getUtils()->getIcon('zoom-in', ['style' => 'vertical-align: middle']).' '. $this->getUtils()->translate('View').'</a>';
+            $out['actions'] = '<a href="' . $this->getControllerUrl() . '?logtype=' . $this->getRequest()->query->get('logtype') . '&id=' . $log->id . '">' . $this->getUtils()->getIcon('zoom-in', ['style' => 'vertical-align: middle']) . ' ' . $this->getUtils()->translate('View') . '</a>';
             return $out;
         }, $data);
     }

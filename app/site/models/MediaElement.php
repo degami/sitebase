@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -79,13 +80,13 @@ class MediaElement extends BaseModel
 
         return (string)(new TagElement(
             [
-            'tag' => 'img',
-            'attributes' => [
-                'src' => boolval($this->lazyload) && !isset($img_attributes['for_admin']) ? static::TRANSPARENT_PIXEL : $this->getThumbUrl($size, $mode),
-                'class' => $class,
-                'style' =>  preg_match('/img-fluid/i', $class) ? '' : "max-width:{$w}px;max-height:{$h}px;",
-                'border' => 0,
-            ] + $img_attributes,
+                'tag' => 'img',
+                'attributes' => [
+                        'src' => boolval($this->lazyload) && !isset($img_attributes['for_admin']) ? static::TRANSPARENT_PIXEL : $this->getThumbUrl($size, $mode),
+                        'class' => $class,
+                        'style' => preg_match('/img-fluid/i', $class) ? '' : "max-width:{$w}px;max-height:{$h}px;",
+                        'border' => 0,
+                    ] + $img_attributes,
             ]
         ));
     }
@@ -112,10 +113,10 @@ class MediaElement extends BaseModel
         }
 
         if (is_dir($this->path)) {
-            $this->path = rtrim($this->path, DS).DS.$this->filename;
+            $this->path = rtrim($this->path, DS) . DS . $this->filename;
         }
 
-        $thumb_path = App::getDir(App::WEBROOT).DS.'thumbs'.DS.$size.DS.$this->filename;
+        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . $this->filename;
         if (!preg_match("/^image\/(.*?)/", $this->mimetype)) {
             $thumb_path .= '.svg';
         }
@@ -130,7 +131,7 @@ class MediaElement extends BaseModel
                 if ($this->mimetype == 'image/svg+xml') {
                     // copy file to destination, does not need resampling
                     if (!copy($this->path, $thumb_path)) {
-                        throw new Exception("Errors copying file ".$this->path." into ".$thumb_path);
+                        throw new Exception("Errors copying file " . $this->path . " into " . $thumb_path);
                     }
                 } else {
                     if (preg_match("/^image\/(.*?)/", $this->mimetype) && ($image = $this->getImagine()->open($this->path))) {
@@ -148,12 +149,12 @@ class MediaElement extends BaseModel
                         if (!in_array(
                             $mode,
                             [
-                            ImageInterface::THUMBNAIL_INSET,
-                            ImageInterface::THUMBNAIL_OUTBOUND
+                                ImageInterface::THUMBNAIL_INSET,
+                                ImageInterface::THUMBNAIL_OUTBOUND
                             ]
                         )
                         ) {
-                            $mode    = ImageInterface::THUMBNAIL_INSET;
+                            $mode = ImageInterface::THUMBNAIL_INSET;
                             // or
                             // $mode    = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
                         }

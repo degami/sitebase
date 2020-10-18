@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Cron;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -47,14 +48,14 @@ class Run extends BaseCommand
         $start_mtime = microtime(true);
         $start_time = new DateTime();
         $cron_executed = [];
-        foreach ($this->getContainer()->call([CronTask::class,'where'], ['condition' => 'schedule IS NOT NULL AND active = 1']) as $task) {
+        foreach ($this->getContainer()->call([CronTask::class, 'where'], ['condition' => 'schedule IS NOT NULL AND active = 1']) as $task) {
             $cron = CronExpression::factory($task->getSchedule());
             if ($cron->isDue()) {
                 try {
                     $this->getContainer()->call(json_decode($task->getCronTaskCallable()));
                     $cron_executed[] = $task->getTitle();
                 } catch (Exception $e) {
-                    $this->getLog()->critical($e->getMessage()."\n".$e->getTraceAsString());
+                    $this->getLog()->critical($e->getMessage() . "\n" . $e->getTraceAsString());
                 }
             }
         }

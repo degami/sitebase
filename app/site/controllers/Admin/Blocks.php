@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -48,7 +49,7 @@ class Blocks extends AdminManageModelsPage
             $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');
 
             foreach ($blockClasses as $blockClass) {
-                $existing_blocks = $this->getContainer()->call([Block::class, 'where'], ['condition' => ['instance_class' => $blockClass] ]);
+                $existing_blocks = $this->getContainer()->call([Block::class, 'where'], ['condition' => ['instance_class' => $blockClass]]);
                 if (count($existing_blocks) > 0) {
                     continue;
                 }
@@ -97,7 +98,7 @@ class Blocks extends AdminManageModelsPage
         return Block::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -124,8 +125,8 @@ class Blocks extends AdminManageModelsPage
         $form->addField(
             'action',
             [
-            'type' => 'value',
-            'value' => $type,
+                'type' => 'value',
+                'value' => $type,
             ]
         );
 
@@ -162,87 +163,87 @@ class Blocks extends AdminManageModelsPage
                 $form->addField(
                     'region',
                     [
-                    'type' => 'select',
-                    'title' => 'Block region',
-                    'default_value' => $block_region,
-                    'options' => $this->getUtils()->getBlockRegions(),
-                    'validate' => ['required'],
+                        'type' => 'select',
+                        'title' => 'Block region',
+                        'default_value' => $block_region,
+                        'options' => $this->getUtils()->getBlockRegions(),
+                        'validate' => ['required'],
                     ]
                 )
-                ->addField(
-                    'title',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Title',
-                    'default_value' => $block_title,
-                    'validate' => ['required'],
-                    ]
-                );
-                if ($type == 'new' || $block->instance_class == Block::class) {
-                    $form
-                    /*->addField(
-                        'locale',
-                        [
-                        'type' => 'select',
-                        'title' => 'Locale',
-                        'default_value' => $block_locale,
-                        'options' => $languages,
-                        'validate' => ['required'],
-                        ]
-                    )*/
                     ->addField(
-                        'content',
+                        'title',
                         [
-                        'type' => 'tinymce',
-                        'title' => 'Content',
-                        'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
-                        'default_value' => $block_content,
-                        'rows' => 20,
+                            'type' => 'textfield',
+                            'title' => 'Title',
+                            'default_value' => $block_title,
+                            'validate' => ['required'],
                         ]
                     );
+                if ($type == 'new' || $block->instance_class == Block::class) {
+                    $form
+                        /*->addField(
+                            'locale',
+                            [
+                            'type' => 'select',
+                            'title' => 'Locale',
+                            'default_value' => $block_locale,
+                            'options' => $languages,
+                            'validate' => ['required'],
+                            ]
+                        )*/
+                        ->addField(
+                            'content',
+                            [
+                                'type' => 'tinymce',
+                                'title' => 'Content',
+                                'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
+                                'default_value' => $block_content,
+                                'rows' => 20,
+                            ]
+                        );
 
                     $this->addFrontendFormElements($form, $form_state, ['website_id', 'locale']);
                 }
                 $form->addField(
                     'rewrites',
                     [
-                    'type' => 'select',
-                    'multiple' => true,
-                    'title' => 'Rewrites',
-                    'default_value' => $block_rewrites,
-                    'options' => $rewrite_options,
+                        'type' => 'select',
+                        'multiple' => true,
+                        'title' => 'Rewrites',
+                        'default_value' => $block_rewrites,
+                        'options' => $rewrite_options,
                     ]
                 )
-                ->addField(
-                    'order',
-                    [
-                    'type' => 'textfield',
-                    'title' => 'Order',
-                    'default_value' => $block_order,
-                    ]
-                );
+                    ->addField(
+                        'order',
+                        [
+                            'type' => 'textfield',
+                            'title' => 'Order',
+                            'default_value' => $block_order,
+                        ]
+                    );
 
 
-            if ($block != null && method_exists($block->getRealInstance(), 'additionalConfigFieldset')) {
+                if ($block != null && method_exists($block->getRealInstance(), 'additionalConfigFieldset')) {
                     $config_fields = call_user_func_array(
                         [$block->getRealInstance(), 'additionalConfigFieldset'],
                         [
-                        'form' => $form,
-                        'form_state' => &$form_state,
-                        'default_values' => json_decode($block->getConfig() ?? "{}", true),
+                            'form' => $form,
+                            'form_state' => &$form_state,
+                            'default_values' => json_decode($block->getConfig() ?? "{}", true),
                         ]
                     );
                     if (!empty($config_fields)) {
-                            $fieldset = $form->addField(
-                                'config',
-                                [
+                        $fieldset = $form->addField(
+                            'config',
+                            [
                                 'type' => 'fieldset',
                                 'title' => 'Config',
-                                    ]
-                            );
+                            ]
+                        );
 
                         foreach ($config_fields as $key => $config_field) {
-                                $fieldset->addField($config_field->getName(), $config_field);
+                            $fieldset->addField($config_field->getName(), $config_field);
                         }
                     }
                 }
@@ -262,8 +263,8 @@ class Blocks extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -294,8 +295,8 @@ class Blocks extends AdminManageModelsPage
                 $block->user_id = $this->getCurrentUser()->id;
                 $block->instance_class = Block::class;
 
-                // intentional fall trough
-                // no break
+            // intentional fall trough
+            // no break
             case 'edit':
                 $block->region = $values['region'];
                 $block->title = $values['title'];
@@ -331,21 +332,22 @@ class Blocks extends AdminManageModelsPage
                     $row->delete();
                 }
                 foreach ($to_add as $id_to_add) {
-                    $this->getDb()->createRow(
-                        'block_rewrite',
-                        [
-                        'block_id' => $block->id,
-                        'rewrite_id' => $id_to_add,
-                        ]
-                    )
-                        ->save();
+                    try {
+                        $this->getDb()->createRow(
+                            'block_rewrite',
+                            [
+                                'block_id' => $block->id,
+                                'rewrite_id' => $id_to_add,
+                            ]
+                        )->save();
+                    } catch (Exception $e) {}
                 }
 
                 break;
             case 'delete':
                 $block->delete();
 
-                $this->setAdminActionLogData('Deleted block '.$block->getId());
+                $this->setAdminActionLogData('Deleted block ' . $block->getId());
 
                 break;
         }
@@ -384,28 +386,28 @@ class Blocks extends AdminManageModelsPage
         return array_map(
             function ($block) {
                 return [
-                'ID' => $block->id,
-                'Website' => $block->getWebsiteId() == null ? $this->getUtils()->translate('All websites', $this->getCurrentLocale()) : $block->getWebsite()->domain,
-                'Region' => $block->region,
-                'Locale' => !$block->isCodeBlock() ? $block->locale : $this->getUtils()->translate('All languages', $this->getCurrentLocale()),
-                'Title' => $block->title,
-                'Where' => (count($block->getRewrites())== 0) ? $this->getUtils()->translate('All Pages', $this->getCurrentLocale()) : implode(
-                    "<br>",
-                    array_map(
-                        function ($e) {
-                            return $e->getUrl();
-                        },
-                        $block->getRewrites()
-                    )
-                ),
-                'Order' => $block->order,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($block->id),
-                    $this->getDeleteButton($block->id),
-                    ]
-                ),
+                    'ID' => $block->id,
+                    'Website' => $block->getWebsiteId() == null ? $this->getUtils()->translate('All websites', $this->getCurrentLocale()) : $block->getWebsite()->domain,
+                    'Region' => $block->region,
+                    'Locale' => !$block->isCodeBlock() ? $block->locale : $this->getUtils()->translate('All languages', $this->getCurrentLocale()),
+                    'Title' => $block->title,
+                    'Where' => (count($block->getRewrites()) == 0) ? $this->getUtils()->translate('All Pages', $this->getCurrentLocale()) : implode(
+                        "<br>",
+                        array_map(
+                            function ($e) {
+                                return $e->getUrl();
+                            },
+                            $block->getRewrites()
+                        )
+                    ),
+                    'Order' => $block->order,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($block->id),
+                            $this->getDeleteButton($block->id),
+                        ]
+                    ),
                 ];
             },
             $data

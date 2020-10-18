@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Cron\Tasks;
 
 use \Psr\Container\ContainerInterface;
@@ -20,7 +21,7 @@ use \App\Base\Abstracts\ContainerAwareObject;
 class HeartBeat extends ContainerAwareObject
 {
     const DEFAULT_SCHEDULE = '*/5 * * * *';
-    
+
     /**
      * class constructor
      *

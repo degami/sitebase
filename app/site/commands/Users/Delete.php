@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Users;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -34,7 +35,7 @@ class Delete extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                        new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
                     ]
                 )
             );
@@ -43,8 +44,8 @@ class Delete extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,7 +59,7 @@ class Delete extends BaseCommand
             return;
         }
 
-        $user = $this->getContainer()->call([User::class,'load'], ['id' => $id]);
+        $user = $this->getContainer()->call([User::class, 'load'], ['id' => $id]);
 
         if (!$user->isLoaded()) {
             $io->error('User does not exists');
@@ -66,11 +67,11 @@ class Delete extends BaseCommand
         }
 
         if ($id == 1) {
-            $io->error('User "'.$user->username.'" can\'t be deleted');
+            $io->error('User "' . $user->username . '" can\'t be deleted');
             return;
         }
 
-        $question = new ConfirmationQuestion('Delete User "'.$user->getUsername().'"? ', false);
+        $question = new ConfirmationQuestion('Delete User "' . $user->getUsername() . '"? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not deleted</info>');
             return;

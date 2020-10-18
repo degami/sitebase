@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -43,7 +44,7 @@ class Website extends BaseModel
     public function postPersist()
     {
         if ($this->isFirstSave()) {
-            $first_website = $this->getContainer()->call([Website::class,'select'], ['options' => ['expr' => 'id', 'limitCount' => 1]])->fetch();
+            $first_website = $this->getContainer()->call([Website::class, 'select'], ['options' => ['expr' => 'id', 'limitCount' => 1]])->fetch();
             $copy_from = $first_website['id'];
             $copy_configurations = $this->getContainer()->call([Configuration::class, 'where'], ['condition' => ['is_system' => 1, 'website_id' => $copy_from]]);
             $configurations = [];

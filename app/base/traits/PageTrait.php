@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Traits;
 
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -47,15 +48,15 @@ trait PageTrait
     /**
      * calculates JWT token id
      *
-     * @param  integer $uid
-     * @param  string  $username
+     * @param integer $uid
+     * @param string $username
      * @return string
      */
     public function calcTokenId($uid, $username)
     {
-        $string = $uid.$username;
+        $string = $uid . $username;
         if ($this instanceof ContainerAwareObject) {
-            $string = $this->getContainer()->get('jwt_id').$string;
+            $string = $this->getContainer()->get('jwt_id') . $string;
         }
 
         return substr(sha1($string), 0, 10);
@@ -80,7 +81,7 @@ trait PageTrait
     protected function getToken()
     {
         $auth_token = $this->getTokenHeader();
-        return $this->getContainer()->get('jwt:parser')->parse((string) $auth_token);
+        return $this->getContainer()->get('jwt:parser')->parse((string)$auth_token);
     }
 
     /**
@@ -95,8 +96,8 @@ trait PageTrait
         $data->setIssuer($this->getContainer()->get('jwt_issuer'));
         $data->setAudience($this->getContainer()->get('jwt_audience'));
 
-        $claimUID = (string) $token->getClaim('uid');
-        $claimUserName = (string) $token->getClaim('username');
+        $claimUID = (string)$token->getClaim('uid');
+        $claimUserName = (string)$token->getClaim('username');
 
         $data->setId($this->calcTokenId($claimUID, $claimUserName));
 
@@ -106,7 +107,7 @@ trait PageTrait
     /**
      * checks if token is still active
      *
-     * @param  Token $token
+     * @param Token $token
      * @return boolean
      */
     public function tokenIsActive($token)
@@ -173,7 +174,7 @@ trait PageTrait
     /**
      * checks if current user has specified permission
      *
-     * @param  string $permission_name
+     * @param string $permission_name
      * @return boolean
      */
     public function checkPermission($permission_name)

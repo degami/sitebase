@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Users;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -38,11 +39,11 @@ class Add extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('username', 'u', InputOption::VALUE_OPTIONAL),
-                    new InputOption('email', 'e', InputOption::VALUE_OPTIONAL),
-                    new InputOption('password', 'p', InputOption::VALUE_OPTIONAL),
-                    new InputOption('role', 'r', InputOption::VALUE_OPTIONAL),
-                    new InputOption('locale', 'l', InputOption::VALUE_OPTIONAL),
+                        new InputOption('username', 'u', InputOption::VALUE_OPTIONAL),
+                        new InputOption('email', 'e', InputOption::VALUE_OPTIONAL),
+                        new InputOption('password', 'p', InputOption::VALUE_OPTIONAL),
+                        new InputOption('role', 'r', InputOption::VALUE_OPTIONAL),
+                        new InputOption('locale', 'l', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -107,8 +108,8 @@ class Add extends BaseCommand
         }
 
         $output->writeln('<info>User Info</info>');
-        foreach (['username','email','role','locale','password'] as $key) {
-            $output->writeln('<info>'.$key.':</info> '.${$key});
+        foreach (['username', 'email', 'role', 'locale', 'password'] as $key) {
+            $output->writeln('<info>' . $key . ':</info> ' . ${$key});
         }
 
         $question = new ConfirmationQuestion('Save User? ', false);
@@ -118,7 +119,7 @@ class Add extends BaseCommand
         }
 
         try {
-            $user = $this->getContainer()->call([User::class,'new']);
+            $user = $this->getContainer()->call([User::class, 'new']);
             $user->username = $username;
             $user->nickname = $username;
             $user->email = $email;
@@ -129,7 +130,7 @@ class Add extends BaseCommand
 
             $output->writeln('<info>User added</info>');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n".$e->getMessage()."\n</error>");
+            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
         }
     }
 }

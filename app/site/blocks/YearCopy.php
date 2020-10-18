@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
@@ -35,17 +36,14 @@ class YearCopy extends BaseCodeBlock
 
             $class = 'block copy';
 
-            return (string)(new TagElement(
-                [
+            return (string)(new TagElement([
                 'tag' => 'div',
                 'attributes' => [
                     'class' => $class,
                 ],
-                'text' => $website->getSiteName()." &copy; - ".date('Y'),
-                ]
-            ));
-        } catch (Exception $e) {
-        }
+                'text' => $website->getSiteName() . " &copy; - " . date('Y'),
+            ]));
+        } catch (Exception $e) {}
         return "";
     }
 }

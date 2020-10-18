@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\Assets;
 
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -75,7 +76,7 @@ class Manager extends ContainerAwareObject
      * add js
      *
      * @param string|array $js javascript to add
-     * @param bool $as_is  no "minification"
+     * @param bool $as_is no "minification"
      * @param string|null $position
      * @param bool $on_ready
      * @return $this
@@ -112,7 +113,7 @@ class Manager extends ContainerAwareObject
     /**
      * generate the js string
      *
-     * @param  string|null $position
+     * @param string|null $position
      * @return string the js into a jquery sandbox
      */
     protected function generateJs($position = null)
@@ -125,18 +126,18 @@ class Manager extends ContainerAwareObject
             $position = '';
         }
 
-        if (!empty($js) && !$this->{trim($position)."js_generated"}) {
+        if (!empty($js) && !$this->{trim($position) . "js_generated"}) {
             foreach (['encapsulated', 'direct'] as $section) {
                 $js[$section] = array_filter(array_map('trim', $js[$section]));
                 foreach ($js[$section] as &$js_string) {
-                    if ($js_string[strlen($js_string)-1] == ';') {
-                        $js_string = substr($js_string, 0, strlen($js_string)-1);
+                    if ($js_string[strlen($js_string) - 1] == ';') {
+                        $js_string = substr($js_string, 0, strlen($js_string) - 1);
                     }
                 }
             }
 
-            $this->{trim($position)."js_generated"} = true;
-            return $this->encapsulateJs($js['encapsulated']).implode(";\n", array_filter(array_map("trim", $js['direct'])));
+            $this->{trim($position) . "js_generated"} = true;
+            return $this->encapsulateJs($js['encapsulated']) . implode(";\n", array_filter(array_map("trim", $js['direct'])));
         }
         return "";
     }
@@ -166,8 +167,8 @@ class Manager extends ContainerAwareObject
     /**
      * encapsulate js into jquery ready function
      *
-     * @param  array  $js_array
-     * @param  string $jquery_var_name
+     * @param array $js_array
+     * @param string $jquery_var_name
      * @return string
      */
     protected function encapsulateJs($js_array, $jquery_var_name = 'jQuery')
@@ -178,23 +179,23 @@ class Manager extends ContainerAwareObject
 
         $js_array = array_filter(array_map('trim', $js_array));
 
-        return count($js_array) ? "(function(\$){\n".
-        "\t$(document).ready(function(){\n".
-        "\t\t".implode(";\n\t\t", $js_array).";\n".
-        "\t});\n".
-        "})({$jquery_var_name});" : '';
+        return count($js_array) ? "(function(\$){\n" .
+            "\t$(document).ready(function(){\n" .
+            "\t\t" . implode(";\n\t\t", $js_array) . ";\n" .
+            "\t});\n" .
+            "})({$jquery_var_name});" : '';
     }
 
     /**
      * minify js string
      *
-     * @param  string $js javascript minify
+     * @param string $js javascript minify
      * @return string
      */
     protected function minifyJs($js)
     {
         if (is_string($js) && trim($js) != '') {
-            $js = trim(preg_replace("/\s+/", " ", str_replace("\n", "", "". $js)));
+            $js = trim(preg_replace("/\s+/", " ", str_replace("\n", "", "" . $js)));
         }
 
         return $js;

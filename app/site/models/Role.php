@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -88,7 +89,7 @@ class Role extends BaseModel
 
         $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
         if (!$permission_model->isLoaded()) {
-            throw new InvalidValueException("permission not found: ".$permission_name);
+            throw new InvalidValueException("permission not found: " . $permission_name);
         }
 
         $pivot_model->permission_id = $permission_model->id;
@@ -110,15 +111,15 @@ class Role extends BaseModel
     public function revokePermission($permission_name)
     {
         if (!$this->checkPermission($permission_name)) {
-            throw new InvalidValueException("permission not found in role: ".$permission_name);
+            throw new InvalidValueException("permission not found in role: " . $permission_name);
         }
 
         $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
         if (!$permission_model->isLoaded()) {
-            throw new InvalidValueException("permission not found: ".$permission_name);
+            throw new InvalidValueException("permission not found: " . $permission_name);
         }
 
-        $pivot_model = $this->getContainer()->call([RolePermission::class, 'where'], ['condition' => [ 'permission_id' => $permission_model->id, 'role_id' => $this->id]]);
+        $pivot_model = $this->getContainer()->call([RolePermission::class, 'where'], ['condition' => ['permission_id' => $permission_model->id, 'role_id' => $this->id]]);
         $pivot_model = reset($pivot_model);
         if (!$pivot_model->isLoaded()) {
             throw new BasicException("errors finding pivot model");

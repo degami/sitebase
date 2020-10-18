@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\ContainerAwareObject;
@@ -40,18 +41,18 @@ trait ToolsTrait
         if ($this instanceof ContainerAwareObject) {
             $parsed = parse_url($url);
             if ($parsed) {
-                $base_uri = $parsed['schema'].'://'.$parsed['host'];
+                $base_uri = $parsed['schema'] . '://' . $parsed['host'];
 
                 $request_uri = $parsed['path'];
                 if (isset($parsed['query'])) {
-                    $request_uri .= '?'.$parsed['query'];
+                    $request_uri .= '?' . $parsed['query'];
                 }
 
                 /** @var Client $client */
                 $client = $this->getContainer()->make(
                     Client::class,
                     [
-                    'base_uri' => $base_uri,
+                        'base_uri' => $base_uri,
                     ]
                 );
                 /** @var Response $request */
@@ -61,6 +62,6 @@ trait ToolsTrait
             }
             return false;
         }
-        throw new Exception("Error. '".get_class($this)."' is not a ContainerAwareObject", 1);
+        throw new Exception("Error. '" . get_class($this) . "' is not a ContainerAwareObject", 1);
     }
 }

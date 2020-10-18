@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\Utils;
 
 use App\App;
@@ -70,9 +71,9 @@ class Mailer extends ContainerAwareObject
      */
     public function sendTemplateMail($from, $to, $subject, $mail_template, $mail_variables = [])
     {
-        $this->getTemplates()->addFolder('mails', App::getDir(App::TEMPLATES).DS.'mails');
+        $this->getTemplates()->addFolder('mails', App::getDir(App::TEMPLATES) . DS . 'mails');
 
-        $template = $this->getTemplates()->make('mails::'.$mail_template);
+        $template = $this->getTemplates()->make('mails::' . $mail_template);
         $mail_variables['subject'] = $subject;
         $template->data($mail_variables);
         $body = $template->render();
@@ -153,31 +154,31 @@ class Mailer extends ContainerAwareObject
         try {
             $this->getSesMailer()->sendEmail(
                 [
-                'Destination' => [
-                    'ToAddresses' => $to,
-                ],
-                'ReplyToAddresses' => [$from],
-                'Source' => $this->getSiteData()->getConfigValue('app/mail/ses_sender'),
-                'Message' => [
-                  'Body' => [
-                      'Html' => [
-                          'Charset' => $char_set,
-                          'Data' => $body,
-                      ],
-                      'Text' => [
-                          'Charset' => $char_set,
-                          'Data' => $body,
-                      ],
-                  ],
-                  'Subject' => [
-                      'Charset' => $char_set,
-                      'Data' => $subject,
-                  ],
-                ],
-                // If you aren't using a configuration set, comment or delete the
-                // following line
+                    'Destination' => [
+                        'ToAddresses' => $to,
+                    ],
+                    'ReplyToAddresses' => [$from],
+                    'Source' => $this->getSiteData()->getConfigValue('app/mail/ses_sender'),
+                    'Message' => [
+                        'Body' => [
+                            'Html' => [
+                                'Charset' => $char_set,
+                                'Data' => $body,
+                            ],
+                            'Text' => [
+                                'Charset' => $char_set,
+                                'Data' => $body,
+                            ],
+                        ],
+                        'Subject' => [
+                            'Charset' => $char_set,
+                            'Data' => $subject,
+                        ],
+                    ],
+                    // If you aren't using a configuration set, comment or delete the
+                    // following line
 
-                // 'ConfigurationSetName' => $configuration_set,
+                    // 'ConfigurationSetName' => $configuration_set,
                 ]
             );
             //$messageId = $result['MessageId'];

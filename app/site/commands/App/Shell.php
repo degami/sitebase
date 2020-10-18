@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\App;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -34,8 +35,8 @@ class Shell extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -66,7 +67,7 @@ class Shell extends BaseCommand
                     break;
                 default:
                     try {
-                        eval($command.';');
+                        eval($command . ';');
                         $history[] = $command;
                     } catch (Exception $e) {
                         $output->writeln($e->getMessage());

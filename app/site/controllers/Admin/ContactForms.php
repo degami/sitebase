@@ -142,13 +142,10 @@ class ContactForms extends AdminManageFrontendModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $contact = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
-                'type' => 'value',
-                'value' => $type,
-            ]
-        );
+        $form->addField('action', [
+            'type' => 'value',
+            'value' => $type,
+        ]);
 
         $contact_title = $contact_template_name = $contact_content = $contact_submit_to = "";
         if ($contact->isLoaded()) {
@@ -171,54 +168,39 @@ class ContactForms extends AdminManageFrontendModelsPage
                     $templates[$key] = basename($template);
                 }
 
-                $form
-                    ->addField(
-                        'title',
-                        [
-                            'type' => 'textfield',
-                            'title' => 'Title',
-                            'default_value' => $contact_title,
-                            'validate' => ['required'],
-                        ]
-                    )
-                    ->addField(
-                        'template_name',
-                        [
-                            'type' => 'select',
-                            'title' => 'Template',
-                            'default_value' => $contact_template_name,
-                            'options' => ['' => '--'] + $templates,
-                        ]
-                    )
-                    ->addField(
-                        'content',
-                        [
-                            'type' => 'tinymce',
-                            'title' => 'Content',
-                            'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
-                            'default_value' => $contact_content,
-                            'rows' => 20,
-                        ]
-                    );
+                $form->addField('title', [
+                    'type' => 'textfield',
+                    'title' => 'Title',
+                    'default_value' => $contact_title,
+                    'validate' => ['required'],
+                ])
+                ->addField('template_name', [
+                    'type' => 'select',
+                    'title' => 'Template',
+                    'default_value' => $contact_template_name,
+                    'options' => ['' => '--'] + $templates,
+                ])
+                ->addField('content', [
+                    'type' => 'tinymce',
+                    'title' => 'Content',
+                    'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
+                    'default_value' => $contact_content,
+                    'rows' => 20,
+                ]);
 
                 if ($contact->isLoaded()) {
-                    $fieldset = $form->addField(
-                        'form_definition',
-                        [
-                            'prefix' => '<div id="fieldset-contactfields"><label class="label-tag_container">Form Components</label>',
-                            'suffix' => '</div>',
-                            'type' => 'tag_container',
-                            'tag' => 'div',
-                        ]
-                    );
+                    $fieldset = $form->addField('form_definition', [
+                        'prefix' => '<div id="fieldset-contactfields"><label class="label-tag_container">Form Components</label>',
+                        'suffix' => '</div>',
+                        'type' => 'tag_container',
+                        'tag' => 'div',
+                    ]);
 
                     $contact_definition = $contact->getContactDefinition();
                     foreach ($contact_definition as $index => $component) {
                         $component['effaceable'] = true;
                         $this->addComponent(
-                            $fieldset->addField(
-                                'form_component_' . $index . '',
-                                [
+                            $fieldset->addField('form_component_' . $index . '', [
                                     'type' => 'fieldset',
                                     'title' => $component['field_label'],
                                     'collapsible' => true,
@@ -235,9 +217,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                         for ($i = 0; $i < ($num_fields - count($contact_definition)); $i++) {
                             $index = count($contact_definition) + $i;
                             $this->addComponent(
-                                $fieldset->addField(
-                                    'form_component_' . $index . '',
-                                    [
+                                $fieldset->addField('form_component_' . $index . '', [
                                         'type' => 'fieldset',
                                         'title' => 'New Field - ' . ($index + 1),
                                         'collapsible' => true,
@@ -252,43 +232,32 @@ class ContactForms extends AdminManageFrontendModelsPage
                         $fieldset->addJs("\$('select','#" . $form->getFormId() . "').select2({'width':'100%'});");
                     }
 
-                    $form->addField(
-                        'num_components',
-                        [
-                            'type' => 'hidden',
-                            'default_value' => count($form->getField('form_definition')->getFields()),
-                        ]
-                    );
+                    $form->addField('num_components', [
+                        'type' => 'hidden',
+                        'default_value' => count($form->getField('form_definition')->getFields()),
+                    ]);
 
-                    $form
-                        ->addField(
-                            'addmore',
+                    $form->addField('addmore', [
+                        'type' => 'submit',
+                        'value' => 'Add more',
+                        'ajax_url' => $this->getUrl('admin.json.contactcallback') . '?action=' . $this->getRequest()->get('action') . '&contact_id=' . $this->getRequest()->get('contact_id'),
+                        'event' => [
                             [
-                                'type' => 'submit',
-                                'value' => 'Add more',
-                                'ajax_url' => $this->getUrl('admin.json.contactcallback') . '?action=' . $this->getRequest()->get('action') . '&contact_id=' . $this->getRequest()->get('contact_id'),
-                                'event' => [
-                                    [
-                                        'event' => 'click',
-                                        'callback' => [ContactCallback::class, 'contactFormsCallback'],
-                                        'target' => 'fieldset-contactfields',
-                                        'effect' => 'fade',
-                                        'method' => 'replace',
-                                    ],
-                                ],
-                            ]
-                        );
+                                'event' => 'click',
+                                'callback' => [ContactCallback::class, 'contactFormsCallback'],
+                                'target' => 'fieldset-contactfields',
+                                'effect' => 'fade',
+                                'method' => 'replace',
+                            ],
+                        ],
+                    ]);
                 }
 
-                $form
-                    ->addField(
-                        'submit_to',
-                        [
-                            'type' => 'textfield',
-                            'title' => 'Submit Results to',
-                            'default_value' => $contact_submit_to,
-                        ]
-                    );
+                $form->addField('submit_to', [
+                    'type' => 'textfield',
+                    'title' => 'Submit Results to',
+                    'default_value' => $contact_submit_to,
+                ]);
 
                 $this->addFrontendFormElements($form, $form_state);
                 $this->addSeoFormElements($form, $form_state);
@@ -325,71 +294,48 @@ class ContactForms extends AdminManageFrontendModelsPage
             ];
         }
 
-        $form_component
-            ->addField(
-                'form_component_' . $index . '[id]',
-                [
-                    'type' => 'hidden',
-                    'default_value' => $component['id'],
-                ]
-            )
-            ->addField(
-                'form_component_' . $index . '[field_label]',
-                [
-                    'title' => 'Field Name',
-                    'type' => 'textfield',
-                    'default_value' => $component['field_label'],
-                ]
-            )
-            ->addField(
-                'form_component_' . $index . '[field_type]',
-                [
-                    'title' => 'Field Type',
-                    'type' => 'select',
-                    'options' => ['' => ''] + array_combine($this->available_form_field_types, array_map('ucfirst', $this->available_form_field_types)),
-                    'default_value' => $component['field_type'],
-                    'validate' => ['required'],
-                ]
-            )
-            ->addField(
-                'form_component_' . $index . '[field_required]',
-                [
-                    'title' => 'Required Field',
-                    'type' => 'select',
-                    'options' => [0 => 'No', 1 => 'Yes'],
-                    'default_value' => intval($component['field_required']),
-                ]
-            )
-            ->addField(
-                'form_component_' . $index . '[field_data]',
-                [
-                    'title' => 'Field Data',
-                    'type' => 'textarea',
-                    'default_value' => $component['field_data'],
-                ]
-            );
+        $form_component->addField('form_component_' . $index . '[id]', [
+            'type' => 'hidden',
+            'default_value' => $component['id'],
+        ])->addField('form_component_' . $index . '[field_label]', [
+            'title' => 'Field Name',
+            'type' => 'textfield',
+            'default_value' => $component['field_label'],
+        ])->addField('form_component_' . $index . '[field_type]', [
+            'title' => 'Field Type',
+            'type' => 'select',
+            'options' => ['' => ''] + array_combine($this->available_form_field_types, array_map('ucfirst', $this->available_form_field_types)),
+            'default_value' => $component['field_type'],
+            'validate' => ['required'],
+        ])->addField('form_component_' . $index . '[field_required]', [
+            'title' => 'Required Field',
+            'type' => 'select',
+            'options' => [0 => 'No', 1 => 'Yes'],
+            'default_value' => intval($component['field_required']),
+        ])
+        ->addField('form_component_' . $index . '[field_data]', [
+            'title' => 'Field Data',
+            'type' => 'textarea',
+            'default_value' => $component['field_data'],
+        ]);
 
         if (isset($component['effaceable']) && $component['effaceable'] == true) {
-            $form_component
-                ->addField(
-                    'form_component_' . $index . '[delete]',
-                    [
-                        /*'title' => 'Delete Field',
-                        'type' => 'checkbox',
-                        'default_value' => 1,
-                        'value' => 0,*/
+            $form_component->addField('form_component_' . $index . '[delete]', [
+                /*'title' => 'Delete Field',
+                'type' => 'checkbox',
+                'default_value' => 1,
+                'value' => 0,*/
 
-                        'type' => 'switchbox',
-                        'title' => 'Delete',
-                        'default_value' => 0,
-                        'yes_value' => 1,
-                        'yes_label' => 'Yes',
-                        'no_value' => 0,
-                        'no_label' => 'No',
-                        'field_class' => 'switchbox',
-                        'container_class' => 'col-2 p-0 small',
-                    ]
-                );
+                'type' => 'switchbox',
+                'title' => 'Delete',
+                'default_value' => 0,
+                'yes_value' => 1,
+                'yes_label' => 'Yes',
+                'no_value' => 0,
+                'no_label' => 'No',
+                'field_class' => 'switchbox',
+                'container_class' => 'col-2 p-0 small',
+            ]);
         }
 
         return $form_component;

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
@@ -34,7 +35,7 @@ class CreateRedirectsTableMigration extends DBMigration
      */
     public function getName()
     {
-        return '04_'.parent::getName();
+        return '04_' . parent::getName();
     }
 
     /**
@@ -58,7 +59,7 @@ class CreateRedirectsTableMigration extends DBMigration
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)
             ->addForeignKey('fk_redirect_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_redirect_owner_id', ['user_id'], 'user', ['id'])
-            ->addIndex('url_from_unique', ['website_id','url_from'], Index::TYPE_UNIQUE)
+            ->addIndex('url_from_unique', ['website_id', 'url_from'], Index::TYPE_UNIQUE)
             ->setAutoIncrementColumn('id');
 
         return $table;

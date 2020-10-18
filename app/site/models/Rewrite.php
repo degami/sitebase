@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -59,8 +60,8 @@ class Rewrite extends BaseModel
                             return null;
                         }
                         return [
-                        'locale' => $el->destination_locale,
-                        'rewrite' => $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $el->destination])
+                            'locale' => $el->destination_locale,
+                            'rewrite' => $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $el->destination])
                         ];
                     },
                     [] + $this->getDb()->table('rewrite_translation')->where('source', $this->getId())->fetchAll()

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
@@ -34,7 +35,7 @@ class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
      */
     public function getName()
     {
-        return '05_'.parent::getName();
+        return '05_' . parent::getName();
     }
 
     /**
@@ -51,7 +52,7 @@ class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
             ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('link_exchange_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('taxonomy_id', 'INT', null, ['UNSIGNED'])
-            ->addIndex('link_exchange_taxonomy', ['link_exchange_id','taxonomy_id'], Index::TYPE_UNIQUE)
+            ->addIndex('link_exchange_taxonomy', ['link_exchange_id', 'taxonomy_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_link_exchange_taxonomy_page_id', ['link_exchange_id'], 'link_exchange', ['id'])
             ->addForeignKey('fk_link_exchange_taxonomy_taxonomy_id', ['taxonomy_id'], 'taxonomy', ['id'])
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)

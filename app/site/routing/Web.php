@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Routing;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -91,12 +92,12 @@ class Web extends ContainerAwareObject
     /**
      * checks route parameters
      *
-     * @param  string $route
+     * @param string $route
      * @return boolean
      */
     protected function checkRouteParameters($route)
     {
-        if (preg_match("/\{(".implode("|", $this->avoid_parameter_names).")(:.*?)?\}/i", $route)) {
+        if (preg_match("/\{(" . implode("|", $this->avoid_parameter_names) . ")(:.*?)?\}/i", $route)) {
             return false;
         }
         return true;
@@ -105,7 +106,7 @@ class Web extends ContainerAwareObject
     /**
      * checks route http verbs
      *
-     * @param  array $verbs
+     * @param array $verbs
      * @return array
      */
     protected function checkRouteVerbs($verbs)
@@ -123,8 +124,8 @@ class Web extends ContainerAwareObject
     /**
      * adds routes
      *
-     * @param  RouteCollector $r
-     * @param  array          $paths
+     * @param RouteCollector $r
+     * @param array $paths
      * @return self
      */
     private function _insertRoutes(RouteCollector $r, array $paths)
@@ -139,8 +140,8 @@ class Web extends ContainerAwareObject
     /**
      * adds a route
      *
-     * @param  RouteCollector $r
-     * @param  array          $p
+     * @param RouteCollector $r
+     * @param array $p
      * @return self
      */
     private function _insertRoute(RouteCollector $r, array $p)
@@ -175,24 +176,24 @@ class Web extends ContainerAwareObject
 
         if (count($out) > 1) {
             // try to preg_match elements found with $uri, to find the most suitable
-            $regexp = "/\{.*?".Web::REGEXP_ROUTEVAR_EXPRESSION."\}/i";
+            $regexp = "/\{.*?" . Web::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
 
             foreach ($out as $elem) {
-                if ($httpMethod != null && !in_array($httpMethod, (array) $elem['verbs'])) {
+                if ($httpMethod != null && !in_array($httpMethod, (array)$elem['verbs'])) {
                     // http method is not valid. skip check
                     continue;
                 }
                 $path_regexp = $elem['path'];
                 if (preg_match_all($regexp, $elem['path'], $matches)) {
-                    foreach($matches[0] as $k => $placeholder) {
+                    foreach ($matches[0] as $k => $placeholder) {
                         if ($matches[1][$k] != '') {
-                            $path_regexp = str_replace($placeholder, '('.substr($matches[1][$k], 1).')', $path_regexp);
+                            $path_regexp = str_replace($placeholder, '(' . substr($matches[1][$k], 1) . ')', $path_regexp);
                         } else {
                             $path_regexp = str_replace($placeholder, '(.*?)', $path_regexp);
                         }
                     }
                 }
-                if (preg_match('/^'.str_replace('/', '\/', $path_regexp).'$/i', $uri)) {
+                if (preg_match('/^' . str_replace('/', '\/', $path_regexp) . '$/i', $uri)) {
                     return $elem;
                 }
             }
@@ -227,8 +228,8 @@ class Web extends ContainerAwareObject
     /**
      * checks a route
      *
-     * @param  ContainerInterface $container
-     * @param  string             $route
+     * @param ContainerInterface $container
+     * @param string $route
      * @return boolean
      */
     public function checkRoute(ContainerInterface $container, $route)
@@ -278,7 +279,7 @@ class Web extends ContainerAwareObject
                         if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
                             $tmp = array_map(
                                 function ($el) {
-                                    return "/".$el;
+                                    return "/" . $el;
                                 },
                                 $tmp
                             );
@@ -300,7 +301,7 @@ class Web extends ContainerAwareObject
                                 $verbs = [$verbs];
                             }
                             if (!empty($errors = $this->checkRouteVerbs($verbs))) {
-                                throw new InvalidValueException(implode(',', $errors).": Invalid route verbs", 1);
+                                throw new InvalidValueException(implode(',', $errors) . ": Invalid route verbs", 1);
                             }
                         }
 
@@ -312,7 +313,7 @@ class Web extends ContainerAwareObject
                             $path = explode(",", $path);
                         }
 
-                        array_walk($path, function($path_value, $key) use ($route_name, $group, $controllerClass, $classMethod, $verbs) {
+                        array_walk($path, function ($path_value, $key) use ($route_name, $group, $controllerClass, $classMethod, $verbs) {
                             if (!is_string($key)) {
                                 $key = $route_name;
                             }
@@ -321,7 +322,7 @@ class Web extends ContainerAwareObject
                                 throw new InvalidValueException("'{$path_value}': Invalid route string", 1);
                             }
 
-                            $this->addRoute($group, strtolower($key), "/".ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
                         });
                     }
                 }
@@ -338,7 +339,7 @@ class Web extends ContainerAwareObject
     /**
      * gets a single route
      *
-     * @param  string $name
+     * @param string $name
      * @return array
      */
     public function getRoute($name)
@@ -370,13 +371,13 @@ class Web extends ContainerAwareObject
             sprintf(
                 "%s://%s%s%s",
                 (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https' : 'http',
-                (is_numeric($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) ? ':'.$_SERVER['SERVER_PORT'] : '',
+                (is_numeric($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) ? ':' . $_SERVER['SERVER_PORT'] : '',
                 $this->getSiteData()->currentServerName(),
                 $_SERVER['REQUEST_URI']
             )
         );
         if ($parsed) {
-            return $parsed['scheme'].'://'.$parsed['host'];
+            return $parsed['scheme'] . '://' . $parsed['host'];
         }
         return null;
     }
@@ -395,7 +396,7 @@ class Web extends ContainerAwareObject
         if ($dispatcherInfo != null) {
             foreach ($route_params as $varname => $value) {
                 // $regexp = "/\{".$varname."(:.*?)?\}/i"
-                $regexp = "/\{".$varname.self::REGEXP_ROUTEVAR_EXPRESSION."\}/i";
+                $regexp = "/\{" . $varname . self::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
                 $dispatcherInfo['path'] = preg_replace($regexp, $value, $dispatcherInfo['path']);
             }
             return $this->getBaseUrl() . $dispatcherInfo['path'];
@@ -407,7 +408,7 @@ class Web extends ContainerAwareObject
     /**
      * gets cached routes
      *
-     * @param  ContainerInterface $container
+     * @param ContainerInterface $container
      * @return array
      */
     protected function getCachedRoutes(ContainerInterface $container)
@@ -437,10 +438,10 @@ class Web extends ContainerAwareObject
     /**
      * returns a RouteInfo instance for current request
      *
-     * @param  ContainerInterface $container
-     * @param  string|null        $http_method
-     * @param  string|null        $request_uri
-     * @param  string|null        $domain
+     * @param ContainerInterface $container
+     * @param string|null $http_method
+     * @param string|null $request_uri
+     * @param string|null $domain
      * @return RouteInfo
      */
     public function getRequestInfo(ContainerInterface $container, $http_method = null, $request_uri = null, $domain = null)
@@ -491,7 +492,7 @@ class Web extends ContainerAwareObject
         if ($dispatcherInfo[0] == Dispatcher::NOT_FOUND) {
             // Add index controller if needed
             if (preg_match("#/$#", $uri)) {
-                $uri.='index';
+                $uri .= 'index';
             }
             $route = $uri;
             $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $uri);

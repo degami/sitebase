@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Search;
 
 use App\Base\Abstracts\Commands\BaseCommand;
@@ -48,10 +49,10 @@ class Indexer extends BaseCommand
         $client = $this->getElasticsearch();
 
         $classes = ClassFinder::getClassesInNamespace('App\Site\Models', ClassFinder::RECURSIVE_MODE);
-        foreach($classes as $modelClass) {
+        foreach ($classes as $modelClass) {
             if (is_subclass_of($modelClass, FrontendModel::class)) {
                 /** @var FrontendModel $object */
-                $type = basename(str_replace("\\","/", strtolower($modelClass)));
+                $type = basename(str_replace("\\", "/", strtolower($modelClass)));
 
                 $fields_to_index = ['title', 'content'];
                 if (method_exists($modelClass, 'exposeToIndexer')) {
@@ -61,7 +62,7 @@ class Indexer extends BaseCommand
                 foreach ($this->getContainer()->call([$modelClass, 'all']) as $object) {
                     $body = [];
 
-                    foreach(array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
+                    foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
                         $body[$field_name] = $object->getData($field_name);
                     }
 
@@ -76,8 +77,8 @@ class Indexer extends BaseCommand
 
                     $params = [
                         'index' => Search::INDEX_NAME,
-                        'id'    => $type.'_'.$object->getId(),
-                        'body'  => array_merge($body, $body_additional),
+                        'id' => $type . '_' . $object->getId(),
+                        'body' => array_merge($body, $body_additional),
                     ];
 
                     $response = $client->index($params);

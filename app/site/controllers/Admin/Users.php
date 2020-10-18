@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Site\Models\Role;
@@ -81,13 +82,10 @@ class Users extends AdminManageModelsPage
             $role = $user->getRole();
         }
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -113,64 +111,41 @@ class Users extends AdminManageModelsPage
                     $user_locale = $user->getLocale();
                 }
 
-                $form->addField(
-                    'username',
-                    [
+                $form->addField('username', [
                     'type' => 'textfield',
                     'title' => 'Username',
                     'default_value' => $user_username,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'password',
-                    [
+                ])->addField('password', [
                     'type' => 'password',
                     'with_confirm' => true,
                     'with_strength_check' => true,
                     'title' => 'Change Password',
                     'default_value' => '',
                     'validate' => [],
-                    ]
-                )
-                ->addField(
-                    'role_id',
-                    [
+                ])->addField('role_id', [
                     'type' => 'select',
                     'title' => 'Role',
                     'options' => $roles,
                     'default_value' => $user_roleid,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'email',
-                    [
+                ])->addField('email', [
                     'type' => 'email',
                     'title' => 'Email',
                     'default_value' => $user_email,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'nickname',
-                    [
+                ])->addField('nickname', [
                     'type' => 'textfield',
                     'title' => 'Nickname',
                     'default_value' => $user_nickname,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'locale',
-                    [
+                ])->addField('locale', [
                     'type' => 'select',
                     'title' => 'Locale',
                     'default_value' => $user_locale,
                     'options' => $languages,
                     'validate' => ['required'],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -186,8 +161,8 @@ class Users extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -229,7 +204,7 @@ class Users extends AdminManageModelsPage
             case 'delete':
                 $user->delete();
 
-                $this->setAdminActionLogData('Deleted user '.$user->getId());
+                $this->setAdminActionLogData('Deleted user ' . $user->getId());
 
                 break;
         }
@@ -266,19 +241,19 @@ class Users extends AdminManageModelsPage
         return array_map(
             function ($user) {
                 return [
-                'ID' => $user->id,
-                'Username' => $user->username,
-                'Email' => $user->email,
-                'Role' => $user->getRole()->name,
-                'Nickname' => $user->nickname,
-                'Created at' => $user->created_at,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($user->id),
-                    $this->getDeleteButton($user->id),
-                    ]
-                ),
+                    'ID' => $user->id,
+                    'Username' => $user->username,
+                    'Email' => $user->email,
+                    'Role' => $user->getRole()->name,
+                    'Nickname' => $user->nickname,
+                    'Created at' => $user->created_at,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($user->id),
+                            $this->getDeleteButton($user->id),
+                        ]
+                    ),
                 ];
             },
             $data

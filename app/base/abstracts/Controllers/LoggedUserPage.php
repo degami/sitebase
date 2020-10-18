@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -63,7 +64,7 @@ abstract class LoggedUserPage extends FrontendPage
      */
     public static function getRouteVerbs()
     {
-        return ['GET','POST'];
+        return ['GET', 'POST'];
     }
 
     /**
@@ -113,7 +114,7 @@ abstract class LoggedUserPage extends FrontendPage
      */
     public static function getRouteGroup()
     {
-        return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/'.getenv('LOGGEDPAGES_GROUP') : null;
+        return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/' . getenv('LOGGEDPAGES_GROUP') : null;
     }
 
     /**

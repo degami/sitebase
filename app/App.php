@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App;
 
 use App\Base\Tools\Utils\SiteData;
@@ -101,7 +102,7 @@ class App extends ContainerAwareObject
             $builder->addDefinitions($this->getDir(self::CONFIG) . DS . 'di.php');
 
             /**
-             * @var ContainerInterface $this->container
+             * @var ContainerInterface $this ->container
              */
             parent::__construct($builder->build());
 
@@ -156,7 +157,7 @@ class App extends ContainerAwareObject
             }
 
             $this->getTemplates()->addFolder('base', static::getDir(static::TEMPLATES));
-            $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES).DS.'errors');
+            $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES) . DS . 'errors');
 
             $this->dispatcher = $this->getRouting()->getDispatcher();
 
@@ -179,7 +180,7 @@ class App extends ContainerAwareObject
             }
         } catch (Exception $e) {
             $response = new Response(
-                'Critical: '.$e->getMessage(),
+                'Critical: ' . $e->getMessage(),
                 500
             );
             $response->send();
@@ -227,9 +228,9 @@ class App extends ContainerAwareObject
             $this->getCache()->set(SiteData::CONFIGURATION_CACHE_KEY, $cached_configuration);
 
             $redirects = [];
-            $redirects_key = "site.".$current_website_id.".redirects";
+            $redirects_key = "site." . $current_website_id . ".redirects";
             if (!$this->getCache()->has($redirects_key)) {
-                $redirect_models = $this->getContainer()->call([Redirect::class, 'where'],['condition' => ['website_id' => $current_website_id]]);
+                $redirect_models = $this->getContainer()->call([Redirect::class, 'where'], ['condition' => ['website_id' => $current_website_id]]);
                 foreach ($redirect_models as $redirect_model) {
                     $redirects[$redirect_model->getUrlFrom()] = [
                         'url_to' => $redirect_model->getUrlTo(),
@@ -237,7 +238,7 @@ class App extends ContainerAwareObject
                     ];
                 }
                 $this->getCache()->set($redirects_key, $redirects);
-            } else if($this->getCurrentWebsiteId()){
+            } else if ($this->getCurrentWebsiteId()) {
                 $redirects = $this->getCache()->get($redirects_key);
             }
 
@@ -340,13 +341,10 @@ class App extends ContainerAwareObject
         }
 
         // dispatch "before_send" event
-        $this->event(
-            'before_send',
-            [
+        $this->event('before_send', [
             'app' => $this,
             'response' => $response
-            ]
-        );
+        ]);
 
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
@@ -367,7 +365,7 @@ class App extends ContainerAwareObject
      */
     protected function isSiteOffline()
     {
-        return is_file(static::getDir(static::APP).DS.'offline.flag');
+        return is_file(static::getDir(static::APP) . DS . 'offline.flag');
     }
 
     /**
@@ -427,7 +425,7 @@ class App extends ContainerAwareObject
     /**
      * gets application directory by type
      *
-     * @param  string $type
+     * @param string $type
      * @return string
      */
     public static function getDir($type)

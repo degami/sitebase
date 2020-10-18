@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Db;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -41,7 +42,7 @@ class GetSql extends BaseCommand
     {
         foreach ($this->getSchema()->preload()->getTables() as $key => $table) {
             $output->writeln("");
-            $output->writeln("-- Table ".$table->getName());
+            $output->writeln("-- Table " . $table->getName());
             $output->writeln("");
 
             $output->writeln($table->showCreate());

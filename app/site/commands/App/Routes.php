@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\App;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -46,7 +47,7 @@ class Routes extends BaseCommand
 
         foreach ($this->getRouting()->getRoutes() as $group => $routes) {
             foreach ($routes as $route) {
-                $table->addRow([$route['name'], $group, $route['path'], $route['class'].'::'.$route['method']]);
+                $table->addRow([$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']]);
             }
         }
 

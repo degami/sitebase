@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Roles;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -36,8 +37,8 @@ class Grant extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
-                    new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
+                        new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                        new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
                     ]
                 )
             );
@@ -62,7 +63,7 @@ class Grant extends BaseCommand
             return;
         }
 
-        $role = $this->getContainer()->call([Role::class,'load'], ['id' => $id]);
+        $role = $this->getContainer()->call([Role::class, 'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
             $io->error('Role does not exists');
@@ -96,7 +97,7 @@ class Grant extends BaseCommand
             $question->setErrorMessage('Permission %s is invalid.');
             $permission = $helper->ask($input, $output, $question);
         }
-        $question = new ConfirmationQuestion('Add permission "'.$permission.'" to role "'.$role->getName().'"? ', false);
+        $question = new ConfirmationQuestion('Add permission "' . $permission . '" to role "' . $role->getName() . '"? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not saved</info>');
             return;

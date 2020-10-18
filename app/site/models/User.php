@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\AccountModel;
@@ -100,7 +101,7 @@ class User extends AccountModel
 
             $interval = date_diff($date, $now);
             $differenceFormat = '%y years %m months %d days';
-            return $date->format('Y-m-d').' ('.$interval->format($differenceFormat).')';
+            return $date->format('Y-m-d') . ' (' . $interval->format($differenceFormat) . ')';
         }
 
         return "";
@@ -113,8 +114,8 @@ class User extends AccountModel
      */
     protected function calcTokenId()
     {
-        $string = $this->getId().$this->getUsername();
-        $string = $this->getContainer()->get('jwt_id').$string;
+        $string = $this->getId() . $this->getUsername();
+        $string = $this->getContainer()->get('jwt_id') . $string;
         return substr(sha1($string), 0, 10);
     }
 
@@ -129,32 +130,32 @@ class User extends AccountModel
         $this->checkLoaded();
 
         $token = $this->getContainer()->get('jwt:builder')
-        ->setIssuer($this->getContainer()->get('jwt_issuer'))
-        ->setAudience($this->getContainer()->get('jwt_audience'))
-        ->setId($this->calcTokenId(), true)
+            ->setIssuer($this->getContainer()->get('jwt_issuer'))
+            ->setAudience($this->getContainer()->get('jwt_audience'))
+            ->setId($this->calcTokenId(), true)
             // Configures the id (jti claim), replicating as a header item
-        ->setIssuedAt(time())
+            ->setIssuedAt(time())
             // Configures the time that the token was issue (iat claim)
-        ->setNotBefore(time())
+            ->setNotBefore(time())
             // Configures the time that the token can be used (nbf claim)
-        ->setExpiration(time() + 3600)
+            ->setExpiration(time() + 3600)
             // Configures the expiration time of the token (exp claim)
-        ->set('uid', $this->getId())
+            ->set('uid', $this->getId())
             // Configures a new claim, called "uid"
-        ->set('username', $this->getUsername())
-        ->set('userdata', (object)[
-            'id' => $this->getId(),
-            'username'=>$this->getUsername(),
-            'email'=>$this->getEmail(),
-            'nickname'=>$this->getNickname(),
-            'permissions'=>array_map(
-                function ($el) {
-                    return $el->name;
-                },
-                $this->getRole()->getPermissionsArray()
-            )
-        ])
-        ->getToken(); // Retrieves the generated token
+            ->set('username', $this->getUsername())
+            ->set('userdata', (object)[
+                'id' => $this->getId(),
+                'username' => $this->getUsername(),
+                'email' => $this->getEmail(),
+                'nickname' => $this->getNickname(),
+                'permissions' => array_map(
+                    function ($el) {
+                        return $el->name;
+                    },
+                    $this->getRole()->getPermissionsArray()
+                )
+            ])
+            ->getToken(); // Retrieves the generated token
 
         return $token;
     }

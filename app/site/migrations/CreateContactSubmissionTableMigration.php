@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
@@ -34,7 +35,7 @@ class CreateContactSubmissionTableMigration extends DBMigration
      */
     public function getName()
     {
-        return '07.2_'.parent::getName();
+        return '07.2_' . parent::getName();
     }
 
     /**

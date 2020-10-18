@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -82,13 +83,10 @@ class Pages extends AdminManageFrontendModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $page = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -96,35 +94,35 @@ class Pages extends AdminManageFrontendModelsPage
                     'media-btn',
                     'media-btn',
                     '&#9776; Media',
-                    $this->getUrl('admin.json.pagemedia', ['id' => $this->getRequest()->get('page_id')]).'?page_id='.$this->getRequest()->get('page_id').'&action=new',
+                    $this->getUrl('admin.json.pagemedia', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
                 $this->addActionLink(
                     'taxonomy-btn',
                     'taxonomy-btn',
                     '&#9776; Terms',
-                    $this->getUrl('admin.json.pageterms', ['id' => $this->getRequest()->get('page_id')]).'?page_id='.$this->getRequest()->get('page_id').'&action=new',
+                    $this->getUrl('admin.json.pageterms', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
-                // intentional fall-trough
-                // no break
+            // intentional fall-trough
+            // no break
             case 'new':
                 $this->addBackButton();
 
                 $templates = [];
-                $initial_dir = App::getDir(App::TEMPLATES).DS.'frontend'.DS;
-                foreach (glob($initial_dir.'pages'.DS.'*.php') as $template) {
+                $initial_dir = App::getDir(App::TEMPLATES) . DS . 'frontend' . DS;
+                foreach (glob($initial_dir . 'pages' . DS . '*.php') as $template) {
                     $key = str_replace($initial_dir, "", $template);
                     $key = preg_replace("/\.php$/i", "", $key);
                     $templates[$key] = basename($template);
                 }
 
                 if (($theme_name = $this->getSiteData()->getThemeName($page->getWebsiteId())) != null) {
-                    $theme_dir = App::getDir(App::TEMPLATES).DS.'frontend'.DS.$theme_name.DS;
-                    foreach (glob($theme_dir.'pages'.DS.'*.php') as $template) {
+                    $theme_dir = App::getDir(App::TEMPLATES) . DS . 'frontend' . DS . $theme_name . DS;
+                    foreach (glob($theme_dir . 'pages' . DS . '*.php') as $template) {
                         $key = str_replace($theme_dir, "", $template);
                         $key = preg_replace("/\.php$/i", "", $key);
-                        $templates[$key] = basename($template)." (".$theme_name.")";
+                        $templates[$key] = basename($template) . " (" . $theme_name . ")";
                     }
                 }
 
@@ -134,35 +132,23 @@ class Pages extends AdminManageFrontendModelsPage
                     $page_content = $page->content;
                     $page_template_name = $page->template_name;
                 }
-                $form
-                ->addField(
-                    'title',
-                    [
+                $form->addField('title', [
                     'type' => 'textfield',
                     'title' => 'Title',
                     'default_value' => $page_title,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'template_name',
-                    [
+                ])->addField('template_name', [
                     'type' => 'select',
                     'title' => 'Template',
                     'default_value' => $page_template_name,
-                    'options' => ['' => '--' ] + $templates,
-                    ]
-                )
-                ->addField(
-                    'content',
-                    [
+                    'options' => ['' => '--'] + $templates,
+                ])->addField('content', [
                     'type' => 'tinymce',
                     'title' => 'Content',
                     'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
                     'default_value' => $page_content,
                     'rows' => 20,
-                    ]
-                );
+                ]);
 
                 $this->addFrontendFormElements($form, $form_state);
                 $this->addSeoFormElements($form, $form_state);
@@ -176,58 +162,34 @@ class Pages extends AdminManageFrontendModelsPage
 
             case 'media_deassoc':
                 $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
-                $form->addField(
-                    'page_id',
-                    [
+                $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
-                    ]
-                )
-                ->addField(
-                    'media_id',
-                    [
+                ])->addField('media_id', [
                     'type' => 'hidden',
                     'default_value' => $media->id,
-                    ]
-                )
-                ->addField(
-                    'confirm',
-                    [
+                ])->addField('confirm', [
                     'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the "'.$page->title.'" page from the media ID: '.$media->id.'?',
+                    'value' => 'Do you confirm the disassociation of the "' . $page->title . '" page from the media ID: ' . $media->id . '?',
                     'suffix' => '<br /><br />',
-                    ]
-                )
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.mediapages', ['id' => $media->id]).'?media_id='.$media->id.'&action=page_assoc">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.mediapages', ['id' => $media->id]) . '?media_id=' . $media->id . '&action=page_assoc">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
                 break;
 
             case 'term_deassoc':
                 $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
-                $form->addField(
-                    'page_id',
-                    [
+                $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
-                    ]
-                )
-                ->addField(
-                    'taxonomy_id',
-                    [
+                ])->addField('taxonomy_id', [
                     'type' => 'hidden',
                     'default_value' => $term->id,
-                    ]
-                )
-                ->addField(
-                    'confirm',
-                    [
+                ])->addField('confirm', [
                     'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the "'.$page->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
+                    'value' => 'Do you confirm the disassociation of the "' . $page->title . '"  from the "' . $term->title . '" term (ID: ' . $term->id . ') ?',
                     'suffix' => '<br /><br />',
-                    ]
-                )
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termpages', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.termpages', ['id' => $term->id]) . '?term_id=' . $term->id . '&action=page_assoc">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
 
@@ -240,8 +202,8 @@ class Pages extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -271,8 +233,8 @@ class Pages extends AdminManageFrontendModelsPage
         switch ($values['action']) {
             case 'new':
                 $page->user_id = $this->getCurrentUser()->id;
-                // intentional fall trough
-                // no break
+            // intentional fall trough
+            // no break
             case 'edit':
                 $page->url = $values['frontend']['url'];
                 $page->title = $values['title'];
@@ -291,7 +253,7 @@ class Pages extends AdminManageFrontendModelsPage
             case 'delete':
                 $page->delete();
 
-                $this->setAdminActionLogData('Deleted page '.$page->getId());
+                $this->setAdminActionLogData('Deleted page ' . $page->getId());
 
                 break;
             case 'media_deassoc':
@@ -308,7 +270,7 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
         }
         if ($this->getRequest()->request->get('media_id') != null || $this->getRequest()->request->get('term_id') != null) {
-            return JsonResponse::create(['success'=>true]);
+            return JsonResponse::create(['success' => true]);
         }
         return $this->doRedirect($this->getControllerUrl());
     }
@@ -343,20 +305,20 @@ class Pages extends AdminManageFrontendModelsPage
         return array_map(
             function ($page) {
                 return [
-                'ID' => $page->id,
-                'Website' => $page->getWebsiteId() == null ? 'All websites' : $page->getWebsite()->domain,
-                'URL' => $page->url,
-                'Locale' => $page->locale,
-                'Title' => $page->title,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getFrontendModelButton($page),
-                    $this->getTranslationsButton($page),
-                    $this->getEditButton($page->id),
-                    $this->getDeleteButton($page->id),
-                    ]
-                ),
+                    'ID' => $page->id,
+                    'Website' => $page->getWebsiteId() == null ? 'All websites' : $page->getWebsite()->domain,
+                    'URL' => $page->url,
+                    'Locale' => $page->locale,
+                    'Title' => $page->title,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getFrontendModelButton($page),
+                            $this->getTranslationsButton($page),
+                            $this->getEditButton($page->id),
+                            $this->getDeleteButton($page->id),
+                        ]
+                    ),
                 ];
             },
             $data

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
@@ -59,7 +60,7 @@ class Sitemap extends FrontendModel
                             'rewrite' => $rewrite->id,
                             'changefreq' => $el->change_freq,
                             'priority' => $el->priority,
-                            'loc' => $this->getRouting()->getUrl('frontend.root').ltrim($rewrite->getUrl(), '/'),
+                            'loc' => $this->getRouting()->getUrl('frontend.root') . ltrim($rewrite->getUrl(), '/'),
                             'lastmod' => (new DateTime($rewrite->getUpdatedAt()))->format('Y-m-d'),
                         ];
                     },
@@ -125,6 +126,6 @@ class Sitemap extends FrontendModel
     {
         $this->checkLoaded();
 
-        return '/'.$this->getLocale().'/sitemap-'.$this->getUtils()->slugify($this->getTitle()).'-'.$this->getWebsite()->getDomain().'.xml';
+        return '/' . $this->getLocale() . '/sitemap-' . $this->getUtils()->slugify($this->getTitle()) . '-' . $this->getWebsite()->getDomain() . '.xml';
     }
 }

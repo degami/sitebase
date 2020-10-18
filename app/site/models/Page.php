@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
@@ -79,8 +80,8 @@ class Page extends FrontendModel
         $new_page_media_row = $this->getDb()->table('page_media_element')->createRow();
         $new_page_media_row->update(
             [
-            'page_id' => $this->id,
-            'media_element_id' => $media_element->id,
+                'page_id' => $this->id,
+                'media_element_id' => $media_element->id,
             ]
         );
         return $this;
@@ -97,8 +98,8 @@ class Page extends FrontendModel
     {
         $this->getDb()->table('page_media_element')->where(
             [
-            'page_id' => $this->id,
-            'media_element_id' => $media_element->id,
+                'page_id' => $this->id,
+                'media_element_id' => $media_element->id,
             ]
         )->delete();
         return $this;
@@ -138,8 +139,8 @@ class Page extends FrontendModel
         $new_page_taxonomy_row = $this->getDb()->table('page_taxonomy')->createRow();
         $new_page_taxonomy_row->update(
             [
-            'page_id' => $this->id,
-            'taxonomy_id' => $term->id,
+                'page_id' => $this->id,
+                'taxonomy_id' => $term->id,
             ]
         );
         return $this;
@@ -156,8 +157,8 @@ class Page extends FrontendModel
     {
         $this->getDb()->table('page_taxonomy')->where(
             [
-            'page_id' => $this->id,
-            'taxonomy_id' => $term->id,
+                'page_id' => $this->id,
+                'taxonomy_id' => $term->id,
             ]
         )->delete();
         return $this;

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Commands;
 
 use Exception;
@@ -42,7 +43,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
     public function __construct($name = null, ContainerInterface $container = null)
     {
         parent::__construct($name, $container);
-        $this->composer_reader = $this->getContainer()->make(ComposerReader::class, ['file' => App::getDir('root').DS.'composer.json']);
+        $this->composer_reader = $this->getContainer()->make(ComposerReader::class, ['file' => App::getDir('root') . DS . 'composer.json']);
 
         if (!$this->composer_reader->canRead()) {
             throw new Exception("Unable to read json.");
@@ -60,7 +61,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
     {
         $arr = explode("\\", ltrim($fullClassName, "\\"));
         $className = array_pop($arr);
-        $nameSpace = implode("\\", array_slice(explode("\\", ltrim($fullClassName, "\\")), 0, -1))."\\";
+        $nameSpace = implode("\\", array_slice(explode("\\", ltrim($fullClassName, "\\")), 0, -1)) . "\\";
 
         $section = new AutoloadSection($this->composer_reader, AutoloadSection::TYPE_PSR4);
 
@@ -75,14 +76,14 @@ abstract class CodeGeneratorCommand extends BaseCommand
         arsort($psr4);
 
         foreach ($psr4 as $ns => $dir) {
-            if (preg_match("/^".addslashes($ns)."/i", $nameSpace)) {
-                $directory = $dir .DS. str_replace("\\", DS, str_replace($ns, "", $nameSpace));
+            if (preg_match("/^" . addslashes($ns) . "/i", $nameSpace)) {
+                $directory = $dir . DS . str_replace("\\", DS, str_replace($ns, "", $nameSpace));
                 break;
             }
         }
 
         if (!empty($directory)) {
-            $filepath = $directory . (($directory[strlen($directory)-1] == DS) ? '' : DS) . $className.'.php';
+            $filepath = $directory . (($directory[strlen($directory) - 1] == DS) ? '' : DS) . $className . '.php';
             $this->queueFile($filepath, $filecontents);
         }
 
@@ -92,8 +93,8 @@ abstract class CodeGeneratorCommand extends BaseCommand
     /**
      * queue file to dump
      *
-     * @param  string $filename
-     * @param  string $filecontents
+     * @param string $filename
+     * @param string $filecontents
      * @return self
      */
     protected function queueFile($filename, $filecontents)
@@ -114,7 +115,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
             $directory = dirname($path);
             if (!is_dir($directory)) {
                 if (!mkdir($directory, 755, true)) {
-                    $message = 'Can\'t create directory '.$directory;
+                    $message = 'Can\'t create directory ' . $directory;
                     if (!in_array($message, $errors)) {
                         $errors[] = $message;
                     }
@@ -124,7 +125,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
             if (is_dir($directory) && file_put_contents($path, (string)$filecontents, LOCK_EX)) {
                 $files_written[] = $path;
             } else {
-                $message = 'Can\'t write file '.$path;
+                $message = 'Can\'t write file ' . $path;
                 if (!in_array($message, $errors)) {
                     $errors[] = $message;
                 }

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Generate;
 
 use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
@@ -43,8 +44,8 @@ class Model extends CodeGeneratorCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
-                    new InputOption('migration_order', 'm', InputOption::VALUE_OPTIONAL),
+                        new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
+                        new InputOption('migration_order', 'm', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -64,7 +65,7 @@ class Model extends CodeGeneratorCommand
 
         $modelClassName = $input->getOption('classname');
         while (trim($modelClassName) == '') {
-            $question = new Question('Class Name (starting from '.static::BASE_MODEL_NAMESPACE.')? ');
+            $question = new Question('Class Name (starting from ' . static::BASE_MODEL_NAMESPACE . ')? ');
             $modelClassName = $helper->ask($input, $output, $question);
         }
 
@@ -87,12 +88,12 @@ class Model extends CodeGeneratorCommand
             $question = new ConfirmationQuestion('Add another field? ', false);
         } while ($helper->ask($input, $output, $question) == true);
 
-        $migrationClassName = 'Create'.$modelClassName.'TableMigration';
+        $migrationClassName = 'Create' . $modelClassName . 'TableMigration';
 
-        $this->addClass(static::BASE_MODEL_NAMESPACE.$modelClassName, $this->getModelFileContents($modelClassName));
-        $this->addClass(static::BASE_MIGRATION_NAMESPACE.$migrationClassName, $this->getMigrationFileContents($migrationClassName, $modelClassName, $migration_order));
+        $this->addClass(static::BASE_MODEL_NAMESPACE . $modelClassName, $this->getModelFileContents($modelClassName));
+        $this->addClass(static::BASE_MIGRATION_NAMESPACE . $migrationClassName, $this->getMigrationFileContents($migrationClassName, $modelClassName, $migration_order));
 
-        $question = new ConfirmationQuestion('Save File(s) in '.implode(", ", array_keys($this->filesToDump)).'? ', false);
+        $question = new ConfirmationQuestion('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not Saving</info>');
             return;
@@ -101,18 +102,18 @@ class Model extends CodeGeneratorCommand
         list($files_written, $errors) = array_values($this->doWrite());
         if (!empty($errors)) {
             foreach ($errors as $error) {
-                $output->writeln("<error>\n\n ".$error."\n</error>");
+                $output->writeln("<error>\n\n " . $error . "\n</error>");
             }
         } else {
-            $output->writeln('<info>'.count($files_written).' File(s) saved</info>');
+            $output->writeln('<info>' . count($files_written) . ' File(s) saved</info>');
         }
     }
 
     /**
      * ask colum informations
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return array
      */
     protected function askColumnInfo(InputInterface $input, OutputInterface $output)
@@ -170,7 +171,7 @@ class Model extends CodeGeneratorCommand
                     $question = new Question('Column parameters: ');
                     $parameters = $helper->ask($input, $output, $question);
                     if (!is_numeric($parameters) && !empty($paramenters)) {
-                        $parameters = "'".$parameters."'";
+                        $parameters = "'" . $parameters . "'";
                     }
                 }
                 $column_info['col_parameters'] = [$parameters];
@@ -182,7 +183,7 @@ class Model extends CodeGeneratorCommand
         $options = array_map("strtoupper", array_filter(array_map("trim", explode(",", $helper->ask($input, $output, $question)))));
         foreach ($options as $k => $option) {
             if (!is_numeric($option) && !empty($option) && $option != 'NULL') {
-                $options[$k] = "'".$option."'";
+                $options[$k] = "'" . $option . "'";
             }
         }
         $column_info['col_options'] = $options;
@@ -207,7 +208,7 @@ class Model extends CodeGeneratorCommand
     {
         $comment = '';
         foreach ($this->columns as $name => $column_info) {
-            $comment .= " * @method ".$column_info['php_type']. " get".$this->getUtils()->snakeCaseToPascalCase($name)."()\n";
+            $comment .= " * @method " . $column_info['php_type'] . " get" . $this->getUtils()->snakeCaseToPascalCase($name) . "()\n";
         }
         $comment .= " * @method \\DateTime getCreatedAt()\n";
         $comment .= " * @method \\DateTime getUpdatedAt()\n";
@@ -218,8 +219,8 @@ namespace App\\Site\\Models;
 
 use \\App\\Base\\Abstracts\\Model;
 
-/**\n".$comment." */
-class ".$className." extends BaseModel
+/**\n" . $comment . " */
+class " . $className . " extends BaseModel
 {
 }
 ";
@@ -238,14 +239,14 @@ class ".$className." extends BaseModel
     {
         $colums = '';
         foreach ($this->columns as $name => $column_info) {
-            $colums .= "             ->addColumn(".
-                        "'".$name."', ".
-                        "'".$column_info['mysql_type']. "', ".
-                        ((!empty($column_info['col_parameters'])) ? '['.implode(',', $column_info['col_parameters']).']':'null').", ".
-                        "[".implode(',', $column_info['col_options'])."], ".
-                        ((boolval($column_info['nullable'])) ? 'true':'false').", ".
-                        (!empty($column_info['default_value']) ? "'".$column_info['default_value']."'": "null").
-                        ")\n";
+            $colums .= "             ->addColumn(" .
+                "'" . $name . "', " .
+                "'" . $column_info['mysql_type'] . "', " .
+                ((!empty($column_info['col_parameters'])) ? '[' . implode(',', $column_info['col_parameters']) . ']' : 'null') . ", " .
+                "[" . implode(',', $column_info['col_options']) . "], " .
+                ((boolval($column_info['nullable'])) ? 'true' : 'false') . ", " .
+                (!empty($column_info['default_value']) ? "'" . $column_info['default_value'] . "'" : "null") .
+                ")\n";
         }
 
         $migration_table = $this->getUtils()->pascalCaseToSnakeCase($modelClassName);
@@ -259,19 +260,19 @@ use \\Psr\\Container\\ContainerInterface;
 use \\Degami\\SqlSchema\\Index;
 use \\Degami\\SqlSchema\\Table;
 
-class ".$className." extends DBMigration
+class " . $className . " extends DBMigration
 {
-    protected \$tableName = '".$migration_table."';
+    protected \$tableName = '" . $migration_table . "';
 
     public function getName()
     {
-        return '".$migration_order."_'.parent::getName();
+        return '" . $migration_order . "_'.parent::getName();
     }
 
     public function addDBTableDefinition(Table \$table)
     {
         \$table->addColumn('id', 'INT', null, ['UNSIGNED'])
-            ".trim($colums)."
+            " . trim($colums) . "
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)

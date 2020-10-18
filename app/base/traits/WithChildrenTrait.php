@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Traits;
 
 /**
@@ -24,8 +25,8 @@ trait WithChildrenTrait
     /**
      * gets children
      *
-     * @param  string|null  $locale
-     * @param  boolean $reset
+     * @param string|null $locale
+     * @param boolean $reset
      * @return array
      */
     public function getChildren($locale = null, $reset = false)
@@ -82,7 +83,7 @@ trait WithChildrenTrait
     public function preRemove()
     {
         $parent_id = $this->parent_id;
-        foreach($this->getChildren() as $child) {
+        foreach ($this->getChildren() as $child) {
             $child->setParentId($parent_id)->persist();
         }
         return $this;

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
@@ -26,8 +27,8 @@ class ChangeLanguage extends BaseCodeBlock
     /**
      * {@inheritdocs}
      *
-     * @param  BasePage|null $current_page
-     * @param  array         $data
+     * @param BasePage|null $current_page
+     * @param array $data
      * @return string
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
@@ -43,48 +44,47 @@ class ChangeLanguage extends BaseCodeBlock
 
             if (is_callable([$current_page, 'getTranslations'])) {
                 if (($translations = $current_page->getTranslations()) && !empty($translations)) {
-                    $changelanguage_links = $this->getContainer()->make(TagElement::class, ['options' =>  [
+                    $changelanguage_links = $this->getContainer()->make(TagElement::class, ['options' => [
                         'tag' => 'ul',
                         'attributes' => [
                             'class' => 'choose-lang',
                         ],
                     ]]);
 
-                    foreach (array_map(
-                        function ($el, $key) use ($config) {
-                            $text = '';
+                    foreach (array_map(function ($el, $key) use ($config) {
+                                 $text = '';
 
-                            if (isset($config['show-language']) && $config['show-language'] == 'code') {
-                                $text = $key;
-                            }
-                            if (isset($config['show-language']) && $config['show-language'] == 'full') {
-                                $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
-                                $text = $language->native;
-                            }
-                            if (isset($config['show-flags']) && boolval($config['show-flags'])) {
-                                $text .= ' '.$this->getHtmlRenderer()->renderFlag($key);
-                            }
+                                 if (isset($config['show-language']) && $config['show-language'] == 'code') {
+                                     $text = $key;
+                                 }
+                                 if (isset($config['show-language']) && $config['show-language'] == 'full') {
+                                     $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
+                                     $text = $language->native;
+                                 }
+                                 if (isset($config['show-flags']) && boolval($config['show-flags'])) {
+                                     $text .= ' ' . $this->getHtmlRenderer()->renderFlag($key);
+                                 }
 
-                            $link_options = [
-                                'tag' => 'a',
-                                'attributes' => [
-                                    'class' => '',
-                                    'href' => $el,
-                                    'title' => strip_tags($text),
-                                ],
-                                'text' => $text,
-                            ];
+                                 $link_options = [
+                                     'tag' => 'a',
+                                     'attributes' => [
+                                         'class' => '',
+                                         'href' => $el,
+                                         'title' => strip_tags($text),
+                                     ],
+                                     'text' => $text,
+                                 ];
 
-                            return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
-                        },
-                        $translations,
-                        array_keys($translations)
-                    ) as $atag) {
+                                 return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
+                             },
+                             $translations,
+                             array_keys($translations)
+                         ) as $atag) {
                         $li = $this->getContainer()->make(
                             TagElement::class,
                             ['options' => [
-                            'tag' => 'li',
-                            'attributes' => ['class' => ''],
+                                'tag' => 'li',
+                                'attributes' => ['class' => ''],
                             ]]
                         );
 
@@ -113,9 +113,7 @@ class ChangeLanguage extends BaseCodeBlock
     {
         $config_fields = [];
 
-        $config_fields[] = $form->getFieldObj(
-            'show-language',
-            [
+        $config_fields[] = $form->getFieldObj('show-language', [
             'type' => 'select',
             'title' => 'Show Language',
             'options' => [
@@ -124,12 +122,9 @@ class ChangeLanguage extends BaseCodeBlock
                 'none' => 'None'
             ],
             'default_value' => $default_values['show-language'] ?? '',
-            ]
-        );
+        ]);
 
-        $config_fields[] = $form->getFieldObj(
-            'show-flags',
-            [
+        $config_fields[] = $form->getFieldObj('show-flags', [
             'type' => 'switchbox',
             'title' => 'Show Flag',
             'default_value' => boolval($default_values['show-flags'] ?? '') ? 1 : 0,
@@ -138,8 +133,7 @@ class ChangeLanguage extends BaseCodeBlock
             'no_value' => 0,
             'no_label' => 'No',
             'field_class' => 'switchbox',
-            ]
-        );
+        ]);
 
         return $config_fields;
     }

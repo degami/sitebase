@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -79,13 +80,10 @@ class Redirects extends AdminManageModelsPage
         $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
         $websites = $this->getUtils()->getWebsitesSelectOptions();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -100,36 +98,22 @@ class Redirects extends AdminManageModelsPage
                     $redirect_code = $redirect->redirect_code;
                 }
 
-                $form->addField(
-                    'url_from',
-                    [
+                $form->addField('url_from', [
                     'type' => 'textfield',
                     'title' => 'Url From',
                     'default_value' => $redirect_url_from,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'url_to',
-                    [
+                ])->addField('url_to', [
                     'type' => 'textfield',
                     'title' => 'Url To',
                     'default_value' => $redirect_url_to,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'website_id',
-                    [
+                ])->addField('website_id', [
                     'type' => 'select',
                     'title' => 'Website',
                     'default_value' => $redirect_website,
                     'options' => $websites,
-                    ]
-                )
-                ->addField(
-                    'locale',
-                    [
+                ])->addField('locale', [
                     'type' => 'select',
                     'title' => 'Locale',
                     'default_value' => $redirect_code,
@@ -142,8 +126,7 @@ class Redirects extends AdminManageModelsPage
                         '308' => '308 - permanent redirect',
                     ],
                     'validate' => ['required'],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -159,8 +142,8 @@ class Redirects extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -200,7 +183,7 @@ class Redirects extends AdminManageModelsPage
             case 'delete':
                 $redirect->delete();
 
-                $this->setAdminActionLogData('Deleted rewrite '.$redirect->getId());
+                $this->setAdminActionLogData('Deleted rewrite ' . $redirect->getId());
 
                 break;
         }
@@ -236,18 +219,18 @@ class Redirects extends AdminManageModelsPage
         return array_map(
             function ($redirect) {
                 return [
-                'ID' => $redirect->id,
-                'Website' => $redirect->getWebsiteId() == null ? 'All websites' : $redirect->getWebsite()->domain,
-                'URL From' => $redirect->url_from,
-                'URL To' => $redirect->url_to,
-                'Redirect code' => $redirect->redirect_code,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($redirect->id),
-                    $this->getDeleteButton($redirect->id),
-                    ]
-                ),
+                    'ID' => $redirect->id,
+                    'Website' => $redirect->getWebsiteId() == null ? 'All websites' : $redirect->getWebsite()->domain,
+                    'URL From' => $redirect->url_from,
+                    'URL To' => $redirect->url_to,
+                    'Redirect code' => $redirect->redirect_code,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($redirect->id),
+                            $this->getDeleteButton($redirect->id),
+                        ]
+                    ),
                 ];
             },
             $data

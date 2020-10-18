@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -70,7 +71,7 @@ class RequestLog extends BaseModel
     private function matchWebsite($host)
     {
         foreach ($this->getDb()->table('website') as $website_row) {
-            if (preg_match("/".$website_row->domain."/", $host)) {
+            if (preg_match("/" . $website_row->domain . "/", $host)) {
                 return $website_row->id;
             }
         }

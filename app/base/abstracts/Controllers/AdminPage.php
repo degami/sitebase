@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -60,7 +61,7 @@ abstract class AdminPage extends BaseHtmlPage
 
         parent::__construct($container, $request);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
-            $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES).DS.'admin');
+            $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');
         }
     }
 
@@ -71,7 +72,7 @@ abstract class AdminPage extends BaseHtmlPage
      */
     public static function getRouteVerbs()
     {
-        return ['GET','POST'];
+        return ['GET', 'POST'];
     }
 
     /**
@@ -128,16 +129,16 @@ abstract class AdminPage extends BaseHtmlPage
      */
     protected function prepareTemplate()
     {
-        $template = $this->getTemplates()->make('admin::'.$this->getTemplateName());
-        $template->data($this->getTemplateData()+$this->getBaseTemplateData());
+        $template = $this->getTemplates()->make('admin::' . $this->getTemplateName());
+        $template->data($this->getTemplateData() + $this->getBaseTemplateData());
 
         $this->getAssets()->addJs(
-            "\$('#admin').appAdmin(".json_encode(
+            "\$('#admin').appAdmin(" . json_encode(
                 [
-                'checkLoggedUrl' => $this->getUrl('admin.json.checksession'),
-                'logoutUrl' => $this->getUrl('admin.logout'),
+                    'checkLoggedUrl' => $this->getUrl('admin.json.checksession'),
+                    'logoutUrl' => $this->getUrl('admin.logout'),
                 ]
-            ).");"
+            ) . ");"
         );
 
         $template->start('scripts');
@@ -160,7 +161,7 @@ abstract class AdminPage extends BaseHtmlPage
     {
         $out = parent::getBaseTemplateData();
         $out['current_user'] = $this->getCurrentUser();
-        $out['body_class'] = 'admin-page '.str_replace('.', '-', $this->getRouteName());
+        $out['body_class'] = 'admin-page ' . str_replace('.', '-', $this->getRouteName());
         return $out;
     }
 
@@ -204,12 +205,12 @@ abstract class AdminPage extends BaseHtmlPage
 
         if ($queryparams != null) {
             $queryparams = trim($queryparams);
-            if (strlen($queryparams)>0) {
+            if (strlen($queryparams) > 0) {
                 $queryparams = ($queryparams[0] != '?' ? '?' : '') . $queryparams;
             }
         }
 
-        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind').' '.$this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl().$queryparams);
+        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl() . $queryparams);
     }
 
     /**

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Website;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -36,8 +37,8 @@ class Add extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('name', null, InputOption::VALUE_OPTIONAL),
-                    new InputOption('domain', null, InputOption::VALUE_OPTIONAL),
+                        new InputOption('name', null, InputOption::VALUE_OPTIONAL),
+                        new InputOption('domain', null, InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -46,8 +47,8 @@ class Add extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -73,7 +74,7 @@ class Add extends BaseCommand
         }
 
         try {
-            $website = $this->getContainer()->call([Website::class,'new']);
+            $website = $this->getContainer()->call([Website::class, 'new']);
             $website->site_name = $name;
             $website->domain = $domain;
             $website->persist();
@@ -90,7 +91,7 @@ class Add extends BaseCommand
 
             $output->writeln('<info>Website added</info>');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n".$e->getMessage()."\n</error>");
+            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
         }
     }
 }

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts;
 
 use App\Base\Exceptions\InvalidValueException;
@@ -70,15 +71,15 @@ abstract class ContainerAwareObject
         $translation = $this->getContainer()->make(
             Translation::class,
             [
-            'filename' => App::getDir(App::TRANSLATIONS) . DS . $locale->language()->code() . '.php',
+                'filename' => App::getDir(App::TRANSLATIONS) . DS . $locale->language()->code() . '.php',
             ]
         );  // Can use .CSV, .PHP, .PO and .MO files
         // Create the translator
         static::$translators[$locale_code] = $this->getContainer()->make(
             Translator::class,
             [
-            'translations' => $translation->asArray(),
-            'plural_rule' => $locale->pluralRule(),
+                'translations' => $translation->asArray(),
+                'plural_rule' => $locale->pluralRule(),
             ]
         );
         // Use the translator
@@ -101,6 +102,6 @@ abstract class ContainerAwareObject
             return $this->getContainer()->get($prop);
         }
 
-        throw new InvalidValueException("Method \"{$name}\" not found in class\"".get_class($this)."\"!", 1);
+        throw new InvalidValueException("Method \"{$name}\" not found in class\"" . get_class($this) . "\"!", 1);
     }
 }

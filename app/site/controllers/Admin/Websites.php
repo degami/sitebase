@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -76,13 +77,10 @@ class Websites extends AdminManageModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $website = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -103,42 +101,27 @@ class Websites extends AdminManageModelsPage
                     $website_aliases = $website->aliases;
                     $website_default_locale = $website->default_locale;
                 }
-                $form->addField(
-                    'site_name',
-                    [
+                $form->addField('site_name', [
                     'type' => 'textfield',
                     'title' => 'Site Name',
                     'default_value' => $website_site_name,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'domain',
-                    [
+                ])->addField('domain', [
                     'type' => 'textfield',
                     'title' => 'Domain',
                     'default_value' => $website_domain,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'aliases',
-                    [
+                ])->addField('aliases', [
                     'type' => 'textfield',
                     'title' => 'Aliases',
                     'default_value' => $website_aliases,
-                    ]
-                )
-                ->addField(
-                    'default_locale',
-                    [
+                ])->addField('default_locale', [
                     'type' => 'select',
                     'title' => 'Default Locale',
                     'default_value' => $website_default_locale,
                     'options' => $languages,
                     'validate' => ['required'],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -154,8 +137,8 @@ class Websites extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -197,7 +180,7 @@ class Websites extends AdminManageModelsPage
             case 'delete':
                 $website->delete();
 
-                $this->setAdminActionLogData('Deleted website '.$website->getId());
+                $this->setAdminActionLogData('Deleted website ' . $website->getId());
 
                 break;
         }
@@ -232,18 +215,18 @@ class Websites extends AdminManageModelsPage
         return array_map(
             function ($website) {
                 return [
-                'ID' => $website->id,
-                'Site Name' => $website->site_name,
-                'Domain' => $website->domain,
-                'Aliases' => $website->aliases,
-                'Default Locale' => $website->default_locale,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($website->id),
-                    $this->getDeleteButton($website->id),
-                    ]
-                ),
+                    'ID' => $website->id,
+                    'Site Name' => $website->site_name,
+                    'Domain' => $website->domain,
+                    'Aliases' => $website->aliases,
+                    'Default Locale' => $website->default_locale,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($website->id),
+                            $this->getDeleteButton($website->id),
+                        ]
+                    ),
                 ];
             },
             $data

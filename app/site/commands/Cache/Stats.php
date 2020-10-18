@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Cache;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -50,9 +51,9 @@ class Stats extends BaseCommand
         $table
             ->addRow(
                 [new TableCell(
-                    $this->getCache()->getStats()->getInfo()."\n".
-                    "Cache size: " . $this->getCache()->getStats()->getSize()."\n".
-                    "Cache Lifetime: ".$this->getCache()->getCacheLifetime(),
+                    $this->getCache()->getStats()->getInfo() . "\n" .
+                    "Cache size: " . $this->getCache()->getStats()->getSize() . "\n" .
+                    "Cache Lifetime: " . $this->getCache()->getCacheLifetime(),
                     ['colspan' => 3]
                 )]
             );
@@ -65,7 +66,7 @@ class Stats extends BaseCommand
             if ($item->getLength() > 0) {
                 $table
                     ->addRow(new TableSeparator())
-                    ->addRow([$key, $item->getLength(), $item->isExpired() ? 'true':'false']);
+                    ->addRow([$key, $item->getLength(), $item->isExpired() ? 'true' : 'false']);
             }
         }
 

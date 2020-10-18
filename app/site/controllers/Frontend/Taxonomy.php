@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Frontend;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -67,7 +68,7 @@ class Taxonomy extends FrontendPageWithObject
     protected function getBaseTemplateData()
     {
         $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()).' taxonomy-'. $this->getObject()->id;
+        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' taxonomy-' . $this->getObject()->id;
         return $out;
     }
 

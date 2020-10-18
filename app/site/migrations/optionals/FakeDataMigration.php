@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use App\App;
@@ -60,7 +61,7 @@ class FakeDataMigration extends BaseMigration
     /**
      * @var array links
      */
-    protected $linkexchange_urls = ["https://www.google.com","https://www.wikipedia.org","https://stackoverflow.com","https://linux.org/","https://www.php.net"];
+    protected $linkexchange_urls = ["https://www.google.com", "https://www.wikipedia.org", "https://stackoverflow.com", "https://linux.org/", "https://www.php.net"];
 
     /**
      * @var integer website id
@@ -74,7 +75,7 @@ class FakeDataMigration extends BaseMigration
      */
     public function getName()
     {
-        return '200_'.parent::getName();
+        return '200_' . parent::getName();
     }
 
     /**
@@ -97,13 +98,13 @@ class FakeDataMigration extends BaseMigration
         $news_list_rewrites = [];
 
         foreach ($this->locales as $locale) {
-            $this->menu_names[$locale] = 'primary-menu_'.$locale;
+            $this->menu_names[$locale] = 'primary-menu_' . $locale;
         }
 
-        for ($i=1; $i<=3; $i++) {
+        for ($i = 1; $i <= 3; $i++) {
             foreach ($this->locales as $locale) {
                 $terms[$locale][] = $this->addTerm(
-                    "Term".$i,
+                    "Term" . $i,
                     str_repeat($this->lipsum_p, rand(1, 3)),
                     $locale,
                     $adminUser
@@ -111,39 +112,39 @@ class FakeDataMigration extends BaseMigration
             }
         }
 
-        for ($i=1; $i<=10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $images[] = $this->createImage();
         }
 
-        for ($i=1; $i<=5; $i++) {
+        for ($i = 1; $i <= 5; $i++) {
             foreach ($this->locales as $locale) {
                 $pages[$locale][] = $this->addPage(
-                    'Page '.$i,
+                    'Page ' . $i,
                     str_repeat($this->lipsum_p, rand(2, 6)),
                     $locale,
-                    array_intersect_key($terms[$locale], array_flip(array_rand($terms[$locale], rand(2, count($terms[$locale])-1)))),
+                    array_intersect_key($terms[$locale], array_flip(array_rand($terms[$locale], rand(2, count($terms[$locale]) - 1)))),
                     $adminUser,
-                    array_intersect_key($images, array_flip(array_rand($images, rand(2, count($images)-1))))
+                    array_intersect_key($images, array_flip(array_rand($images, rand(2, count($images) - 1))))
                 );
             }
         }
 
-        for ($i=1; $i<=15; $i++) {
+        for ($i = 1; $i <= 15; $i++) {
             $now = new DateTime();
 
             $interval_spec = 'P';
             foreach ([
-                'y' => rand(1, 3),
-                'm' => rand(1, 12),
-                'd' => rand(1, 31),
-            ] as $key => $value) {
-                $interval_spec.= $value.strtoupper($key);
+                         'y' => rand(1, 3),
+                         'm' => rand(1, 12),
+                         'd' => rand(1, 31),
+                     ] as $key => $value) {
+                $interval_spec .= $value . strtoupper($key);
             }
 
             $date = $now->add(new DateInterval($interval_spec));
             foreach ($this->locales as $locale) {
                 $news[$locale][] = $this->addNews(
-                    'News '.$i,
+                    'News ' . $i,
                     str_repeat($this->lipsum_p, rand(2, 6)),
                     $date,
                     $locale,
@@ -159,7 +160,7 @@ class FakeDataMigration extends BaseMigration
                     $link_exchange,
                     $this->site_email,
                     $locale,
-                    array_intersect_key($terms[$locale], array_flip(array_rand($terms[$locale], rand(2, count($terms[$locale])-1)))),
+                    array_intersect_key($terms[$locale], array_flip(array_rand($terms[$locale], rand(2, count($terms[$locale]) - 1)))),
                     $adminUser
                 );
             }
@@ -201,7 +202,7 @@ class FakeDataMigration extends BaseMigration
 
         foreach ($this->locales as $locale) {
             $rewrite_model = $this->getContainer()->make(Rewrite::class);
-            $rewrite_model->url = '/'.$locale.'/links.html';
+            $rewrite_model->url = '/' . $locale . '/links.html';
             $rewrite_model->route = '/links';
             $rewrite_model->locale = $locale;
             $rewrite_model->website_id = $this->website_id;
@@ -212,7 +213,7 @@ class FakeDataMigration extends BaseMigration
 
         foreach ($this->locales as $locale) {
             $rewrite_model = $this->getContainer()->make(Rewrite::class);
-            $rewrite_model->url = '/'.$locale.'/news.html';
+            $rewrite_model->url = '/' . $locale . '/news.html';
             $rewrite_model->route = '/news';
             $rewrite_model->locale = $locale;
             $rewrite_model->website_id = $this->website_id;
@@ -223,17 +224,17 @@ class FakeDataMigration extends BaseMigration
 
         foreach ($this->locales as $locale) {
             foreach (array_diff($this->locales, [$locale]) as $other_locale) {
-                foreach (['pages', 'terms','contacts'] as $arrayname) {
+                foreach (['pages', 'terms', 'contacts'] as $arrayname) {
                     foreach (${$arrayname}[$locale] as $index => $element_from) {
                         $element_to = ${$arrayname}[$other_locale][$index];
 
                         $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
                         $rewrite_translation_row->update(
                             [
-                            'source' => $element_from->getRewrite()->getId(),
-                            'source_locale' => $element_from->getRewrite()->getLocale(),
-                            'destination' => $element_to->getRewrite()->getId(),
-                            'destination_locale' => $element_to->getRewrite()->getLocale()
+                                'source' => $element_from->getRewrite()->getId(),
+                                'source_locale' => $element_from->getRewrite()->getLocale(),
+                                'destination' => $element_to->getRewrite()->getId(),
+                                'destination_locale' => $element_to->getRewrite()->getLocale()
                             ]
                         );
                     }
@@ -247,10 +248,10 @@ class FakeDataMigration extends BaseMigration
                 $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
                 $rewrite_translation_row->update(
                     [
-                    'source' => $element_from->getId(),
-                    'source_locale' => $element_from->getLocale(),
-                    'destination' => $element_to->getId(),
-                    'destination_locale' => $element_to->getLocale()
+                        'source' => $element_from->getId(),
+                        'source_locale' => $element_from->getLocale(),
+                        'destination' => $element_to->getId(),
+                        'destination_locale' => $element_to->getLocale()
                     ]
                 );
             }
@@ -258,14 +259,14 @@ class FakeDataMigration extends BaseMigration
 
         $lastMenuItem = null;
         foreach ($this->locales as $locale) {
-            foreach (['pages', 'terms','contacts'] as $arrayname) {
+            foreach (['pages', 'terms', 'contacts'] as $arrayname) {
                 foreach (${$arrayname}[$locale] as $index => $element) {
                     $lastMenuItem = $this->addMenuItem(
                         $element->getTitle(),
                         $this->menu_names[$locale],
                         $element->getRewrite(),
                         $element->getLocale(),
-                        ($index %3 == 2) ? $lastMenuItem : null
+                        ($index % 3 == 2) ? $lastMenuItem : null
                     );
                 }
             }
@@ -287,59 +288,59 @@ class FakeDataMigration extends BaseMigration
 
         foreach ($this->locales as $locale) {
             // menus
-            $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'locale' => $locale, 'path'=> 'app/frontend/main_menu'])->fetch();
+            $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => 'app/frontend/main_menu'])->fetch();
             if (!$config) {
                 $config = $this->getDb()->createRow('configuration');
             }
 
             $config->update(
                 [
-                'website_id' => $this->website_id,
-                'locale' => $locale,
-                'path' => 'app/frontend/main_menu',
-                'value' => $this->menu_names[$locale],
-                'is_system' => 1,
+                    'website_id' => $this->website_id,
+                    'locale' => $locale,
+                    'path' => 'app/frontend/main_menu',
+                    'value' => $this->menu_names[$locale],
+                    'is_system' => 1,
                 ]
             );
 
             // ses
-            $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'locale' => $locale, 'path'=> 'app/mail/ses_sender'])->fetch();
+            $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => 'app/mail/ses_sender'])->fetch();
             if (!$config) {
                 $config = $this->getDb()->createRow('configuration');
             }
 
             $config->update(
                 [
-                'website_id' => $this->website_id,
-                'locale' => $locale,
-                'path' => 'app/mail/ses_sender',
-                'value' => '',
-                'is_system' => 1,
+                    'website_id' => $this->website_id,
+                    'locale' => $locale,
+                    'path' => 'app/mail/ses_sender',
+                    'value' => '',
+                    'is_system' => 1,
                 ]
             );
         }
 
         // email
-        $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path'=> 'app/global/site_mail_address'])->fetch();
+        $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path' => 'app/global/site_mail_address'])->fetch();
         $config->update(
             [
-            'website_id' => $this->website_id,
-            'locale' => null,
-            'path' => 'app/global/site_mail_address',
-            'value' => $this->site_email,
-            'is_system' => 1,
+                'website_id' => $this->website_id,
+                'locale' => null,
+                'path' => 'app/global/site_mail_address',
+                'value' => $this->site_email,
+                'is_system' => 1,
             ]
         );
 
         // languages
-        $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path'=> 'app/frontend/langs'])->fetch();
+        $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path' => 'app/frontend/langs'])->fetch();
         $config->update(
             [
-            'website_id' => $this->website_id,
-            'locale' => null,
-            'path' => 'app/frontend/langs',
-            'value' => implode(',', $this->locales),
-            'is_system' => 1,
+                'website_id' => $this->website_id,
+                'locale' => null,
+                'path' => 'app/frontend/langs',
+                'value' => implode(',', $this->locales),
+                'is_system' => 1,
             ]
         );
 
@@ -350,7 +351,7 @@ class FakeDataMigration extends BaseMigration
             $rewrites[] = $home_page->getRewrite();
             $rewrites[] = $contacts[$locale][0]->getRewrite();
 
-            foreach (array_rand($pages[$locale], rand(2, count($pages[$locale])-1)) as $k) {
+            foreach (array_rand($pages[$locale], rand(2, count($pages[$locale]) - 1)) as $k) {
                 $rewrites[] = $pages[$locale][$k]->getRewrite();
             }
 
@@ -366,12 +367,12 @@ class FakeDataMigration extends BaseMigration
             }
         }
 
-        for ($i=1; $i<=10; $i++) {
+        for ($i = 1; $i <= 10; $i++) {
             $backgrounds[] = $this->createImage(1920, 350);
         }
 
-        foreach (array_rand($rewrites, rand(ceil(count($rewrites)/2), count($rewrites)-1)) as $r) {
-            foreach (array_rand($backgrounds, rand(ceil(count($backgrounds)/2), count($backgrounds)-1)) as $i) {
+        foreach (array_rand($rewrites, rand(ceil(count($rewrites) / 2), count($rewrites) - 1)) as $r) {
+            foreach (array_rand($backgrounds, rand(ceil(count($backgrounds) / 2), count($backgrounds) - 1)) as $i) {
                 $rewrite = $rewrites[$r];
                 $media = $backgrounds[$i];
 
@@ -401,7 +402,7 @@ class FakeDataMigration extends BaseMigration
     {
         $news_model = $this->getContainer()->make(NewsModel::class);
 
-        $news_model->website_id =  $this->website_id;
+        $news_model->website_id = $this->website_id;
         $news_model->url = $this->getUtils()->slugify($title, false);
         $news_model->title = $title;
         $news_model->locale = $locale;
@@ -429,7 +430,7 @@ class FakeDataMigration extends BaseMigration
     {
         $page_model = $this->getContainer()->make(Page::class);
 
-        $page_model->website_id =  $this->website_id;
+        $page_model->website_id = $this->website_id;
         $page_model->url = $this->getUtils()->slugify($title, false);
         $page_model->title = $title;
         $page_model->locale = $locale;
@@ -463,7 +464,7 @@ class FakeDataMigration extends BaseMigration
     {
         $term_model = $this->getContainer()->make(Taxonomy::class);
 
-        $term_model->website_id =  $this->website_id;
+        $term_model->website_id = $this->website_id;
         $term_model->url = $this->getUtils()->slugify($title, false);
         $term_model->title = $title;
         $term_model->locale = $locale;
@@ -489,10 +490,10 @@ class FakeDataMigration extends BaseMigration
     {
         $link_exchange_model = $this->getContainer()->make(LinkExchange::class);
 
-        $link_exchange_model->website_id =  $this->website_id;
+        $link_exchange_model->website_id = $this->website_id;
         $link_exchange_model->url = $url;
         $link_exchange_model->title = $url;
-        $link_exchange_model->description = $url . ' description<br />'.$this->lipsum_p;
+        $link_exchange_model->description = $url . ' description<br />' . $this->lipsum_p;
         $link_exchange_model->email = $email;
         $link_exchange_model->locale = $locale;
         $link_exchange_model->active = 1;
@@ -522,7 +523,7 @@ class FakeDataMigration extends BaseMigration
     {
         $contact_model = $this->getContainer()->make(Contact::class);
 
-        $contact_model->website_id =  $this->website_id;
+        $contact_model->website_id = $this->website_id;
         $contact_model->url = $this->getUtils()->slugify($title, false);
         $contact_model->title = $title;
         $contact_model->locale = $locale;
@@ -535,11 +536,11 @@ class FakeDataMigration extends BaseMigration
         foreach ($fields as $key => $field) {
             $this->getDb()->createRow('contact_definition')->update(
                 [
-                'contact_id' => $contact_model->id,
-                'field_label' => $field['label'],
-                'field_type' => $field['type'],
-                'field_required' => intval($field['required']),
-                'field_data' => $field['data'],
+                    'contact_id' => $contact_model->id,
+                    'field_label' => $field['label'],
+                    'field_type' => $field['type'],
+                    'field_required' => intval($field['required']),
+                    'field_data' => $field['data'],
                 ]
             );
         }
@@ -562,7 +563,7 @@ class FakeDataMigration extends BaseMigration
         $menu_item_model = $this->getContainer()->make(Menu::class);
 
         $menu_item_model->menu_name = $menu_name;
-        $menu_item_model->website_id =  $this->website_id;
+        $menu_item_model->website_id = $this->website_id;
         $menu_item_model->title = $title;
         $menu_item_model->locale = $locale;
         $menu_item_model->rewrite_id = $rewrite->getId();
@@ -591,7 +592,7 @@ class FakeDataMigration extends BaseMigration
     {
         $block_model = $this->getContainer()->make(Block::class);
 
-        $block_model->website_id =  $this->website_id;
+        $block_model->website_id = $this->website_id;
         $block_model->title = $title;
         $block_model->locale = $locale;
         $block_model->instance_class = Block::class;
@@ -605,8 +606,8 @@ class FakeDataMigration extends BaseMigration
                 $this->getDb()->createRow(
                     'block_rewrite',
                     [
-                    'block_id' => $block_model->getId(),
-                    'rewrite_id' => $rewrite->getId(),
+                        'block_id' => $block_model->getId(),
+                        'rewrite_id' => $rewrite->getId(),
                     ]
                 )
                     ->save();
@@ -627,7 +628,7 @@ class FakeDataMigration extends BaseMigration
     private function createImage($w = 400, $h = 400)
     {
         $palette = new RGB();
-        $size  = new Box($w, $h);
+        $size = new Box($w, $h);
 
         $white = $palette->color('#ffffff', 100);
         $black = $palette->color('#000000', 100);
@@ -640,14 +641,14 @@ class FakeDataMigration extends BaseMigration
         $image = $this->getImagine()->create($size, $white);
         $image
             ->draw()
-            ->rectangle(new Point(1, 1), new Point(($w/2)-1, ($h/2)-1), $color1, true)
-            ->rectangle(new Point(($w/2)+1, 1), new Point($w-1, ($h/4)-1), $color2, true)
-            ->rectangle(new Point(1, ($h/2)+1), new Point(($w/4)-1, $h-1), $color3, true)
-            ->rectangle(new Point(($w/2)+1, ($h/2)+1), new Point($w-1, $h-1), $color4, true)
-            ->circle(new Point($w/2, $h/2), $h/2, $black, false, 1);
+            ->rectangle(new Point(1, 1), new Point(($w / 2) - 1, ($h / 2) - 1), $color1, true)
+            ->rectangle(new Point(($w / 2) + 1, 1), new Point($w - 1, ($h / 4) - 1), $color2, true)
+            ->rectangle(new Point(1, ($h / 2) + 1), new Point(($w / 4) - 1, $h - 1), $color3, true)
+            ->rectangle(new Point(($w / 2) + 1, ($h / 2) + 1), new Point($w - 1, $h - 1), $color4, true)
+            ->circle(new Point($w / 2, $h / 2), $h / 2, $black, false, 1);
 
 
-        $filename = App::getDir(App::MEDIA).DS.'image-'.rand().'-'.date("YmdHis").'.png';
+        $filename = App::getDir(App::MEDIA) . DS . 'image-' . rand() . '-' . date("YmdHis") . '.png';
         $image->save($filename);
 
         $media = $this->getContainer()->make(MediaElement::class);

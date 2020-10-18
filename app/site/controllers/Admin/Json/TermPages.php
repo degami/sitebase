@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin\Json;
 
 use App\Site\Controllers\Admin\Pages;
@@ -56,8 +57,8 @@ class TermPages extends AdminJsonPage
         $pages = array_map(
             function ($el) use ($term) {
                 $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-                return $page->getTitle().
-                ' <a class="deassoc_lnk" data-page_id="'.$page->id.'" data-term_id="'.$el->id.'" href="'.$this->getUrl('admin.json.termpages', ['id' => $term->id]).'?page_id='.$page->id.'&term_id='.$el->id.'&action=term_deassoc">&times;</a>';
+                return $page->getTitle() .
+                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('admin.json.termpages', ['id' => $term->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=term_deassoc">&times;</a>';
             },
             $this->getDb()->page_taxonomyList()->where('taxonomy_id', $term->getId())->page()->fetchAll()
         );
@@ -75,24 +76,24 @@ class TermPages extends AdminJsonPage
             $pagesController = $this->getContainer()->make(Pages::class);
             $form = $pagesController->getForm();
 
-            $form->setAction($this->getUrl('admin.pages').'?action='.$this->getRequest()->get('action'));
+            $form->setAction($this->getUrl('admin.pages') . '?action=' . $this->getRequest()->get('action'));
             $form->addField(
                 'term_id',
                 [
-                'type' => 'hidden',
-                'default_value' => $term->getId(),
+                    'type' => 'hidden',
+                    'default_value' => $term->getId(),
                 ]
             );
         } else {
             $taxonomyController = $this->getContainer()->make(\App\Site\Controllers\Admin\Taxonomy::class);
             $form = $taxonomyController->getForm();
 
-            $form->setAction($this->getUrl('admin.taxonomy').'?action='.$this->getRequest()->get('action'));
+            $form->setAction($this->getUrl('admin.taxonomy') . '?action=' . $this->getRequest()->get('action'));
             $form->addField(
                 'term_id',
                 [
-                'type' => 'hidden',
-                'default_value' => $term->getId(),
+                    'type' => 'hidden',
+                    'default_value' => $term->getId(),
                 ]
             );
         }
@@ -101,7 +102,7 @@ class TermPages extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'pages' => $pagesData,
-            'html' => ($this->getRequest()->get('action') == 'page_assoc' ? "<ul class=\"elements_list\"><li>".implode("</li><li>", $pages) . "</li></ul><hr />" : '').$form->render(),
+            'html' => ($this->getRequest()->get('action') == 'page_assoc' ? "<ul class=\"elements_list\"><li>" . implode("</li><li>", $pages) . "</li></ul><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

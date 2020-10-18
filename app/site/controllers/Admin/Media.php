@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -51,7 +52,7 @@ class Media extends AdminManageModelsPage
             unset($elem_data['user_id']);
 
             array_walk($elem_data, function (&$el, $key) {
-                $el = '<strong>'.$key.'</strong>: '.$el;
+                $el = '<strong>' . $key . '</strong>: ' . $el;
             });
 
             $this->templateData += [
@@ -60,7 +61,7 @@ class Media extends AdminManageModelsPage
                 'pages' => array_map(
                     function ($el) {
                         $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-                        return ['url' => $page->getRewrite()->getUrl(), 'title' => $page->getTitle(). ' - '.$page->getRewrite()->getUrl(), 'id' => $page->getId()];
+                        return ['url' => $page->getRewrite()->getUrl(), 'title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                     },
                     $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->get('media_id'))->page()->fetchAll()
                 ),
@@ -98,7 +99,7 @@ class Media extends AdminManageModelsPage
         return MediaElement::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -121,13 +122,10 @@ class Media extends AdminManageModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $media = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
         //        $form->addMarkup('<pre>'.var_export($type, true)."\n".var_export($_POST, true)."\n".var_export($_FILES, true).'</pre>');
         switch ($type) {
             case 'edit':
@@ -140,7 +138,7 @@ class Media extends AdminManageModelsPage
                 array_walk(
                     $elem_data,
                     function (&$el, $key) {
-                        $el = '<strong>'.$key.'</strong>: '.$el;
+                        $el = '<strong>' . $key . '</strong>: ' . $el;
                     }
                 );
 
@@ -148,34 +146,26 @@ class Media extends AdminManageModelsPage
                     'pages-btn',
                     'pages-btn',
                     '&#9776; Pages',
-                    $this->getUrl('admin.json.mediapages', ['id' => $this->getRequest()->get('media_id')]).'?media_id='.$this->getRequest()->get('media_id').'&action=page_assoc',
+                    $this->getUrl('admin.json.mediapages', ['id' => $this->getRequest()->get('media_id')]) . '?media_id=' . $this->getRequest()->get('media_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
 
-                $form->addField(
-                    'pre',
-                    [
+                $form->addField('pre', [
                     'type' => 'markup',
-                    'value' => '<ul><li>'.implode('</li><li>', $elem_data).'</li></ul>',
-                    ]
-                );
+                    'value' => '<ul><li>' . implode('</li><li>', $elem_data) . '</li></ul>',
+                ]);
 
-                // intentional fall trough
-                // no break
+            // intentional fall trough
+            // no break
             case 'new':
                 $this->addBackButton();
 
-                $form->addField(
-                    'upload_file',
-                    [
+                $form->addField('upload_file', [
                     'type' => 'file',
                     'destination' => App::getDir(App::MEDIA),
                     'title' => 'Upload new file',
-                        ]
-                )
-                ->addField(
-                    'lazyload',
-                    [
+                ])
+                ->addField('lazyload', [
                     'type' => 'switchbox',
                     'title' => 'Lazyload',
                     'default_value' => boolval($media->lazyload) ? 1 : 0,
@@ -184,47 +174,31 @@ class Media extends AdminManageModelsPage
                     'no_value' => 0,
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
 
                 if ($this->getRequest()->get('page_id')) {
                     $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
-                    $form->addField(
-                        'page_id',
-                        [
+                    $form->addField('page_id', [
                         'type' => 'hidden',
                         'default_value' => $page->id,
-                        ]
-                    );
+                    ]);
                 }
                 break;
             case 'deassoc':
                 $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
-                $form->addField(
-                    'page_id',
-                    [
+                $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
-                    ]
-                )
-                ->addField(
-                    'media_id',
-                    [
+                ])->addField('media_id', [
                     'type' => 'hidden',
                     'default_value' => $media->id,
-                    ]
-                )
-                ->addField(
-                    'confirm',
-                    [
+                ])->addField('confirm', [
                     'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the selected element from the "'.$page->title.'" page (ID: '.$page->id.') ?',
+                    'value' => 'Do you confirm the disassociation of the selected element from the "' . $page->title . '" page (ID: ' . $page->id . ') ?',
                     'suffix' => '<br /><br />',
-                    ]
-                )
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.pagemedia', ['id' => $page->id]).'?page_id='.$page->id.'&action=new">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.pagemedia', ['id' => $page->id]) . '?page_id=' . $page->id . '&action=new">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
                 break;
@@ -243,7 +217,7 @@ class Media extends AdminManageModelsPage
                                 return null;
                             }
                             $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
-                            return ['title' => $page->getTitle(). ' - '.$page->getRewrite()->getUrl(), 'id' => $page->getId()];
+                            return ['title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                         },
                         $this->getDb()->page()->fetchAll()
                     )
@@ -251,24 +225,16 @@ class Media extends AdminManageModelsPage
 
                 $pages = array_combine(array_column($pages, 'id'), array_column($pages, 'title'));
 
-                $form
-                    ->addField(
-                        'page_id',
-                        [
-                        'type' => 'select',
-                        'options' => ['' => ''] + $pages,
-                        'default_value' => '',
-                        ]
-                    )
-                    ->addField(
-                        'media_id',
-                        [
-                        'type' => 'hidden',
-                        'default_value' => $media->id,
-                        ]
-                    );
+                $form->addField('page_id', [
+                    'type' => 'select',
+                    'options' => ['' => ''] + $pages,
+                    'default_value' => '',
+                ])->addField('media_id', [
+                    'type' => 'hidden',
+                    'default_value' => $media->id,
+                ]);
 
-                    $this->addSubmitButton($form, true);
+                $this->addSubmitButton($form, true);
                 break;
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
@@ -281,8 +247,8 @@ class Media extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -310,8 +276,8 @@ class Media extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
                 $media->user_id = $this->getCurrentUser()->id;
-                // intentional fall trough
-                // no break
+            // intentional fall trough
+            // no break
             case 'edit':
                 if ($values->upload_file->filepath) {
                     $media->path = $values->upload_file->filepath;
@@ -333,9 +299,9 @@ class Media extends AdminManageModelsPage
 
                 if ($values['page_id'] != null) {
                     $this
-                    ->getContainer()
-                    ->call([Page::class, 'load'], ['id' => $values['page_id']])
-                    ->addMedia($media);
+                        ->getContainer()
+                        ->call([Page::class, 'load'], ['id' => $values['page_id']])
+                        ->addMedia($media);
                 }
                 break;
             case 'deassoc':
@@ -353,12 +319,12 @@ class Media extends AdminManageModelsPage
             case 'delete':
                 $media->delete();
 
-                $this->setAdminActionLogData('Deleted meida '.$media->getId());
+                $this->setAdminActionLogData('Deleted meida ' . $media->getId());
 
                 break;
         }
         if ($this->getRequest()->request->get('page_id') != null) {
-            return JsonResponse::create(['success'=>true]);
+            return JsonResponse::create(['success' => true]);
         }
         return $this->doRedirect($this->getControllerUrl());
     }
@@ -394,21 +360,21 @@ class Media extends AdminManageModelsPage
         return array_map(
             function ($elem) {
                 return [
-                'ID' => $elem->getId(),
-                'Preview' => $elem->getThumb('100x100', null, null, ['for_admin' => '']),
-                'Filename - Path' => $elem->getFilename() .'<br /><abbr style="font-size: 0.6rem;">'. $elem->getPath() .'</abbr>',
-                'Mimetype' => $elem->getMimetype(),
-                'Filesize' => $this->formatBytes($elem->getFilesize()),
-                'Owner' => $elem->getOwner()->username,
-                'Lazyload' => $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
-                    $this->getEditButton($elem->id),
-                    $this->getDeleteButton($elem->id),
-                    ]
-                ),
+                    'ID' => $elem->getId(),
+                    'Preview' => $elem->getThumb('100x100', null, null, ['for_admin' => '']),
+                    'Filename - Path' => $elem->getFilename() . '<br /><abbr style="font-size: 0.6rem;">' . $elem->getPath() . '</abbr>',
+                    'Mimetype' => $elem->getMimetype(),
+                    'Filesize' => $this->formatBytes($elem->getFilesize()),
+                    'Owner' => $elem->getOwner()->username,
+                    'Lazyload' => $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', $this->getCurrentLocale()),
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
+                            $this->getEditButton($elem->id),
+                            $this->getDeleteButton($elem->id),
+                        ]
+                    ),
                 ];
             },
             $data

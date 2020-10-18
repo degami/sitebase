@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin\Json;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -49,8 +50,8 @@ class ContactCallback extends AdminJsonPage
     /**
      * returns an empty form
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
      */
     public function emptyForm(FAPI\Form $form, &$form_state)
@@ -75,7 +76,7 @@ class ContactCallback extends AdminJsonPage
             $out = json_decode($this->form->render());
 
             if ($out == null) {
-                $out = ['html'=>'', 'js'=>'', 'is_submitted'=> false];
+                $out = ['html' => '', 'js' => '', 'is_submitted' => false];
             }
 
             return $this
@@ -99,6 +100,7 @@ class ContactCallback extends AdminJsonPage
     }
 
     //not used on this class
+
     /**
      * {@inheritdocs}
      *

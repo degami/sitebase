@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -74,13 +75,10 @@ class Roles extends AdminManageModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $role = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -91,15 +89,12 @@ class Roles extends AdminManageModelsPage
                 if ($role->isLoaded()) {
                     $role_name = $role->name;
                 }
-                $form->addField(
-                    'name',
-                    [
+                $form->addField('name', [
                     'type' => 'textfield',
                     'title' => 'Role Name',
                     'default_value' => $role_name,
                     'validate' => ['required'],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -115,8 +110,8 @@ class Roles extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -153,7 +148,7 @@ class Roles extends AdminManageModelsPage
             case 'delete':
                 $role->delete();
 
-                $this->setAdminActionLogData('Deleted role '.$role->getId());
+                $this->setAdminActionLogData('Deleted role ' . $role->getId());
 
                 break;
         }
@@ -186,15 +181,15 @@ class Roles extends AdminManageModelsPage
         return array_map(
             function ($role) {
                 return [
-                'ID' => $role->id,
-                'Name' => $role->name,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($role->id),
-                    $this->getDeleteButton($role->id),
-                    ]
-                ),
+                    'ID' => $role->id,
+                    'Name' => $role->name,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($role->id),
+                            $this->getDeleteButton($role->id),
+                        ]
+                    ),
                 ];
             },
             $data

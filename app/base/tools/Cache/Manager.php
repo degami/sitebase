@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\Cache;
 
 use DateInterval;
@@ -73,7 +74,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
         if ($this->getEnv('DISABLE_CACHE')) {
             return $default;
         }
-        
+
         try {
             $cacheItem = $this->getInternalCacheInstance()->getItem($key);
             if (!$cacheItem->isExpired() && $cacheItem->get() !== null) {
@@ -167,8 +168,8 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * get multiple elements from cache
      *
-     * @param  string[] $keys
-     * @param  null     $default
+     * @param string[] $keys
+     * @param null $default
      * @return iterable
      * @throws PhpfastcacheSimpleCacheException
      */
@@ -293,8 +294,8 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * {@inheritdocs}
      *
-     * @param  string $name
-     * @param  mixed  $arguments
+     * @param string $name
+     * @param mixed $arguments
      * @return mixed
      */
     public function __call($name, $arguments)
@@ -305,7 +306,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * get items by tag
      *
-     * @param      string $tagName
+     * @param string $tagName
      * @return     array
      */
     public function getAllItemsByTag($tagName): array

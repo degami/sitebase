@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Cron\Tasks;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -52,7 +53,7 @@ class DbManager extends ContainerAwareObject
                 //            ->useSingleTransaction()
                 //            ->skipLockTables()
                 ->useCompressor(new GzipCompressor())
-                ->dumpToFile(App::getDir(App::DUMPS).DS.'dump.'.date("Ymd_His").'.sql.gz');
+                ->dumpToFile(App::getDir(App::DUMPS) . DS . 'dump.' . date("Ymd_His") . '.sql.gz');
 
             return true;
         } catch (Exception $e) {
@@ -83,7 +84,7 @@ class DbManager extends ContainerAwareObject
      */
     public function dropOldQueueMessages()
     {
-        $statement = $this->getDb()->query('DELETE FROM queue_message WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR) AND status = '.$this->getDb()->quote(QueueMessage::STATUS_PROCESSED));
+        $statement = $this->getDb()->query('DELETE FROM queue_message WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR) AND status = ' . $this->getDb()->quote(QueueMessage::STATUS_PROCESSED));
         $statement->execute();
 
         return true;

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\Plates;
 
 use App\Base\Tools\Assets\Manager as AssetsManager;
@@ -51,7 +52,7 @@ class SiteBase implements ExtensionInterface
     /**
      * {@inheritdocs}
      *
-     * @param  Engine $engine [description]
+     * @param Engine $engine [description]
      * @return void
      */
     public function register(Engine $engine)
@@ -112,7 +113,7 @@ class SiteBase implements ExtensionInterface
     /**
      * gets string translations
      *
-     * @param  string $string
+     * @param string $string
      * @return string
      */
     public function translate($string)
@@ -146,8 +147,8 @@ class SiteBase implements ExtensionInterface
     /**
      * gets route url by name and params
      *
-     * @param  string $route_name
-     * @param  array  $route_params
+     * @param string $route_name
+     * @param array $route_params
      * @return string
      */
     public function getUrl($route_name, $route_params = [])
@@ -188,11 +189,11 @@ class SiteBase implements ExtensionInterface
     /**
      * gets gravatar html
      *
-     * @param  string  $email
-     * @param  integer $s
-     * @param  string  $d
-     * @param  string  $r
-     * @param  string  $class
+     * @param string $email
+     * @param integer $s
+     * @param string $d
+     * @param string $r
+     * @param string $class
      * @return string
      */
     public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle')
@@ -203,7 +204,7 @@ class SiteBase implements ExtensionInterface
     /**
      * draws icon
      *
-     * @param  string $icon_name
+     * @param string $icon_name
      * @return void
      */
     public function drawIcon($icon_name)
@@ -230,14 +231,14 @@ class SiteBase implements ExtensionInterface
      */
     public function version()
     {
-        $arr = file(App::getDir(App::ROOT).DS.'VERSION');
+        $arr = file(App::getDir(App::ROOT) . DS . 'VERSION');
         return trim(array_pop($arr));
     }
 
     /**
      * draws flash messages
      *
-     * @param  BasePage $controller
+     * @param BasePage $controller
      * @return void
      */
     public function renderFlashMessages(BasePage $controller)
@@ -248,8 +249,8 @@ class SiteBase implements ExtensionInterface
     /**
      * summarize text
      *
-     * @param  string  $text
-     * @param  integer $max_words
+     * @param string $text
+     * @param integer $max_words
      * @return string
      */
     public function summarize($text, $max_words = 10)
@@ -259,7 +260,7 @@ class SiteBase implements ExtensionInterface
         if (count($words) < $max_words) {
             return $text;
         }
-        return implode(" ", array_slice($words, 0, $max_words)).' ...';
+        return implode(" ", array_slice($words, 0, $max_words)) . ' ...';
     }
 
     /**

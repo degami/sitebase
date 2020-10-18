@@ -23,6 +23,7 @@ final class Psysh extends Command
         parent::__construct($name);
         $this->shell = new Shell();
     }
+
     /**
      * {@inheritdoc}
      */
@@ -30,6 +31,7 @@ final class Psysh extends Command
     {
         $this->setDescription('Start PsySH');
     }
+
     /**
      * {@inheritdoc}
      */

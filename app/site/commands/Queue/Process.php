@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Queue;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -49,7 +50,7 @@ class Process extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('queue', null, InputOption::VALUE_OPTIONAL),
+                        new InputOption('queue', null, InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -67,18 +68,18 @@ class Process extends BaseCommand
     {
         $io = new SymfonyStyle($input, $output);
         $queue = $input->getOption('queue') ?? null;
-        $lock_path = App::getDir(App::TMP).DS.self::LOCKFILE_NAME;
+        $lock_path = App::getDir(App::TMP) . DS . self::LOCKFILE_NAME;
         if (!file_exists($lock_path)) {
             @touch($lock_path);
         }
         if ($fp = fopen($lock_path, "r+")) {
             if (flock($fp, LOCK_EX | LOCK_NB)) {  // acquire an exclusive, non blocking lock
-                if (file_exists(App::getDir(App::TMP).DS.self::KILLFILE_NAME)) {
-                    @unlink(App::getDir(App::TMP).DS.self::KILLFILE_NAME);
+                if (file_exists(App::getDir(App::TMP) . DS . self::KILLFILE_NAME)) {
+                    @unlink(App::getDir(App::TMP) . DS . self::KILLFILE_NAME);
                 }
 
                 while (self::MAX_EXECUTIONS_NUMBER > $this->executions++) {
-                    if (file_exists(App::getDir(App::TMP).DS.self::KILLFILE_NAME)) {
+                    if (file_exists(App::getDir(App::TMP) . DS . self::KILLFILE_NAME)) {
                         $this->getLog()->log("KILLFILE_NAME found.", Logger::INFO);
                         $this->executions = self::MAX_EXECUTIONS_NUMBER + 1;
                     }
@@ -89,7 +90,7 @@ class Process extends BaseCommand
                             $worker_class = $message->getWorkerClass();
 
                             if (!is_subclass_of($worker_class, BaseQueueWorker::class)) {
-                                throw new InvalidValueException($worker_class." is not a QueueWorker", 1);
+                                throw new InvalidValueException($worker_class . " is not a QueueWorker", 1);
                             }
                             //$result =
                             $this->getContainer()->call([$worker_class, 'process'], ['message' => $message]);

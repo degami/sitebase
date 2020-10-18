@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Overrides\Migrations;
 
 use Closure;
@@ -46,7 +47,7 @@ class Factory extends GenkgoMigrationFactory
     /**
      * gets a new collection
      *
-     * @param  string $namespace
+     * @param string $namespace
      * @return Collection
      */
     public function newList($namespace = '\\')

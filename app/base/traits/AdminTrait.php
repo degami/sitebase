@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Traits;
 
 use \App\Site\Models\User;
@@ -39,7 +40,7 @@ trait AdminTrait
      */
     public static function getRouteGroup()
     {
-        return (trim(getenv('ADMINPAGES_GROUP')) != null) ? '/'.getenv('ADMINPAGES_GROUP') : null;
+        return (trim(getenv('ADMINPAGES_GROUP')) != null) ? '/' . getenv('ADMINPAGES_GROUP') : null;
     }
 
     /**
@@ -64,7 +65,7 @@ trait AdminTrait
     /**
      * checks if current user has permission
      *
-     * @param  string $permission_name
+     * @param string $permission_name
      * @return boolean
      */
     public function checkPermission($permission_name)
@@ -94,8 +95,8 @@ trait AdminTrait
         $ul = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'ul',
-            'attributes' => ['class' => 'navbar-nav mr-auto'],
+                'tag' => 'ul',
+                'attributes' => ['class' => 'navbar-nav mr-auto'],
             ]]
         );
 
@@ -105,15 +106,15 @@ trait AdminTrait
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'li',
-                    'attributes' => ['class' => 'nav-item ml-1'],
-                    'text' => $button_html
+                        'tag' => 'li',
+                        'attributes' => ['class' => 'nav-item ml-1'],
+                        'text' => $button_html
                     ]]
                 )
             );
         }
 
-        return (string) $ul;
+        return (string)$ul;
     }
 
     /**
@@ -129,13 +130,13 @@ trait AdminTrait
     {
         $button = (string)(new TagElement(
             [
-            'tag' => 'button',
-            'id' => $button_id,
-            'attributes' => [
-                'class' => $button_class,
-                'title' => $button_text,
-            ],
-            'text' => $button_text,
+                'tag' => 'button',
+                'id' => $button_id,
+                'attributes' => [
+                    'class' => $button_class,
+                    'title' => $button_text,
+                ],
+                'text' => $button_text,
             ]
         ));
         $this->action_buttons[$key] = $button;
@@ -161,14 +162,14 @@ trait AdminTrait
         }
         $button = (string)(new TagElement(
             [
-            'tag' => 'a',
-            'id' => $link_id,
-            'attributes' => [
-                'class' => $link_class,
-                'href' => $link_href,
-                'title' => strip_tags($link_text),
-            ] + $attributes,
-            'text' => $link_text,
+                'tag' => 'a',
+                'id' => $link_id,
+                'attributes' => [
+                        'class' => $link_class,
+                        'href' => $link_href,
+                        'title' => strip_tags($link_text),
+                    ] + $attributes,
+                'text' => $link_text,
             ]
         ));
 

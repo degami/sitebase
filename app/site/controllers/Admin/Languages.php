@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -52,7 +53,7 @@ class Languages extends AdminManageModelsPage
         return Language::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -75,13 +76,10 @@ class Languages extends AdminManageModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $language = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -98,59 +96,38 @@ class Languages extends AdminManageModelsPage
                     $language_family = $language->family;
                 }
 
-                $form->addField(
-                    'locale',
-                    [
+                $form->addField('locale', [
                     'type' => 'textfield',
                     'title' => 'Locale',
                     'default_value' => $language_locale,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    '639-1',
-                    [
+                ])->addField('639-1', [
                     'type' => 'textfield',
                     'title' => '639-1',
                     'default_value' => $language_639_1,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    '639-2',
-                    [
+                ])->addField('639-2', [
                     'type' => 'textfield',
                     'title' => '639-2',
                     'default_value' => $language_639_2,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'name',
-                    [
+                ])->addField('name', [
                     'type' => 'textfield',
                     'title' => 'Name',
                     'default_value' => $language_name,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'native',
-                    [
+                ])
+                ->addField('native', [
                     'type' => 'textfield',
                     'title' => 'Native',
                     'default_value' => $language_native,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'family',
-                    [
+                ])
+                ->addField('family', [
                     'type' => 'textfield',
                     'title' => 'Family',
                     'default_value' => $language_family,
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -166,8 +143,8 @@ class Languages extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -209,7 +186,7 @@ class Languages extends AdminManageModelsPage
             case 'delete':
                 $language->delete();
 
-                $this->setAdminActionLogData('Deleted language '.$language->getId());
+                $this->setAdminActionLogData('Deleted language ' . $language->getId());
 
                 break;
         }
@@ -250,21 +227,21 @@ class Languages extends AdminManageModelsPage
         return array_map(
             function ($language) {
                 return [
-                'ID' => $language->id,
-                'Locale' => $language->locale,
-                'Flag' => $this->getHtmlRenderer()->renderFlag($language->locale),
-                '639-1' => $language->{"639-1"},
-                '639-2' => $language->{"639-2"},
-                'Name' => $language->name,
-                'Native' => $language->native,
-                'Family' => $language->family,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($language->id),
-                    $this->getDeleteButton($language->id),
-                    ]
-                ),
+                    'ID' => $language->id,
+                    'Locale' => $language->locale,
+                    'Flag' => $this->getHtmlRenderer()->renderFlag($language->locale),
+                    '639-1' => $language->{"639-1"},
+                    '639-2' => $language->{"639-2"},
+                    'Name' => $language->name,
+                    'Native' => $language->native,
+                    'Family' => $language->family,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($language->id),
+                            $this->getDeleteButton($language->id),
+                        ]
+                    ),
                 ];
             },
             $data

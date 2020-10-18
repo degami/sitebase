@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\DataCollector;
 
 use \DebugBar\DataCollector\DataCollector;
@@ -84,8 +85,8 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
     public function getAssets()
     {
         return [
-        //            'css' => '',
-        //            'js' => ''
+            //            'css' => '',
+            //            'js' => ''
         ];
     }
 }

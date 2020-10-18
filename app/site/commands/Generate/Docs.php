@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Generate;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -35,24 +36,24 @@ class Docs extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
         $output->writeln("<info>Generating Documentation</info>");
-        system("phpdoc -t ".App::getDir(App::ROOT).DS."docs -d ".App::getDir(App::APP)." --ignore=vendor/* --template=clean >/dev/null 2>&1");
+        system("phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --ignore=vendor/* --template=clean >/dev/null 2>&1");
 
-        if (!file_exists(App::getDir(App::WEBROOT).DS."docs")) {
+        if (!file_exists(App::getDir(App::WEBROOT) . DS . "docs")) {
             $question = new ConfirmationQuestion('Do you want to publish docs also on website? ', false);
             if (!$helper->ask($input, $output, $question)) {
                 $output->writeln('<info>Not Publishing</info>');
                 return;
             }
 
-            symlink(App::getDir(App::ROOT).DS."docs", App::getDir(App::WEBROOT).DS."docs");
+            symlink(App::getDir(App::ROOT) . DS . "docs", App::getDir(App::WEBROOT) . DS . "docs");
         }
 
         $output->writeln("<info>Task completed</info>");

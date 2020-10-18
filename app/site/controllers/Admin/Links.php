@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -54,7 +55,7 @@ class Links extends AdminManageFrontendModelsPage
         return LinkExchange::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -78,13 +79,10 @@ class Links extends AdminManageFrontendModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $link = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -92,11 +90,11 @@ class Links extends AdminManageFrontendModelsPage
                     'taxonomy-btn',
                     'taxonomy-btn',
                     '&#9776; Terms',
-                    $this->getUrl('admin.json.linkterms', ['id' => $this->getRequest()->get('link_id')]).'?link_id='.$this->getRequest()->get('link_id').'&action=new',
+                    $this->getUrl('admin.json.linkterms', ['id' => $this->getRequest()->get('link_id')]) . '?link_id=' . $this->getRequest()->get('link_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
-                // intentional fall-trough
-                // no break
+            // intentional fall-trough
+            // no break
             case 'new':
                 $this->addBackButton();
 
@@ -119,45 +117,29 @@ class Links extends AdminManageFrontendModelsPage
                     $link_website = $link->website_id;
                     $link_active = $link->active;
                 }
-                $form->addField(
-                    'url',
-                    [
+                $form->addField('url', [
                     'type' => 'textfield',
                     'title' => 'Link url',
                     'default_value' => $link_url,
                     'validate' => ['required'],
-                        ]
-                )
-                ->addField(
-                    'title',
-                    [
+                ])->addField('title', [
                     'type' => 'textfield',
                     'title' => 'Title',
                     'default_value' => $link_title,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'email',
-                    [
+                ])
+                ->addField('email', [
                     'type' => 'textfield',
                     'title' => 'Email',
                     'default_value' => $link_email,
-                    ]
-                )
-                ->addField(
-                    'description',
-                    [
+                ])
+                ->addField('description', [
                     'type' => 'tinymce',
                     'title' => 'Description',
                     'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
                     'default_value' => $link_description,
                     'rows' => 20,
-                    ]
-                )
-                ->addField(
-                    'active',
-                    [
+                ])->addField('active', [
                     'type' => 'switchbox',
                     'title' => 'Active',
                     'default_value' => boolval($link_active) ? 1 : 0,
@@ -166,11 +148,9 @@ class Links extends AdminManageFrontendModelsPage
                     'no_value' => 0,
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
-                    ]
-                );
+                ]);
 
-
-                $this->addFrontendFormElements($form, $form_state, ['website_id','locale']);
+                $this->addFrontendFormElements($form, $form_state, ['website_id', 'locale']);
                 $this->addSubmitButton($form);
 
                 break;
@@ -181,29 +161,18 @@ class Links extends AdminManageFrontendModelsPage
 
             case 'term_deassoc':
                 $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
-                $form->addField(
-                    'link_id',
-                    [
+                $form->addField('link_id', [
                     'type' => 'hidden',
                     'default_value' => $link->id,
-                    ]
-                )
-                ->addField(
-                    'taxonomy_id',
-                    [
+                ])->addField('taxonomy_id', [
                     'type' => 'hidden',
                     'default_value' => $term->id,
-                    ]
-                )
-                ->addField(
-                    'confirm',
-                    [
+                ])->addField('confirm', [
                     'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the "'.$link->title.'"  from the "'.$term->title.'" term (ID: '.$term->id.') ?',
+                    'value' => 'Do you confirm the disassociation of the "' . $link->title . '"  from the "' . $term->title . '" term (ID: ' . $term->id . ') ?',
                     'suffix' => '<br /><br />',
-                    ]
-                )
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="'. $this->getUrl('admin.json.termlinks', ['id' => $term->id]).'?term_id='.$term->id.'&action=page_assoc">Cancel</a>');
+                ])
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.termlinks', ['id' => $term->id]) . '?term_id=' . $term->id . '&action=page_assoc">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
 
@@ -216,8 +185,8 @@ class Links extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -246,8 +215,8 @@ class Links extends AdminManageFrontendModelsPage
         switch ($values['action']) {
             case 'new':
                 $link->user_id = $this->getCurrentUser()->id;
-                // intentional fall trough
-                // no break
+            // intentional fall trough
+            // no break
             case 'edit':
                 $link->url = $values['url'];
                 $link->title = $values['title'];
@@ -264,7 +233,7 @@ class Links extends AdminManageFrontendModelsPage
             case 'delete':
                 $link->delete();
 
-                $this->setAdminActionLogData('Deleted link '.$link->getId());
+                $this->setAdminActionLogData('Deleted link ' . $link->getId());
 
                 break;
             case 'term_deassoc':
@@ -275,7 +244,7 @@ class Links extends AdminManageFrontendModelsPage
                 break;
         }
         if ($this->getRequest()->request->get('term_id') != null) {
-            return JsonResponse::create(['success'=>true]);
+            return JsonResponse::create(['success' => true]);
         }
         return $this->doRedirect($this->getControllerUrl());
     }
@@ -310,19 +279,19 @@ class Links extends AdminManageFrontendModelsPage
         return array_map(
             function ($link) {
                 return [
-                'ID' => $link->id,
-                'Website' => $link->getWebsiteId() == null ? 'All websites' : $link->getWebsite()->domain,
-                'URL' => $link->url,
-                'Locale' => $link->locale,
-                'Title' => $link->title,
-                'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($link->id),
-                    $this->getDeleteButton($link->id),
-                    ]
-                ),
+                    'ID' => $link->id,
+                    'Website' => $link->getWebsiteId() == null ? 'All websites' : $link->getWebsite()->domain,
+                    'URL' => $link->url,
+                    'Locale' => $link->locale,
+                    'Title' => $link->title,
+                    'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', $this->getCurrentLocale()),
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($link->id),
+                            $this->getDeleteButton($link->id),
+                        ]
+                    ),
                 ];
             },
             $data

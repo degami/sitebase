@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Info;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -61,16 +62,16 @@ class Stats extends BaseCommand
 
         foreach ($tables as $tablename => $label) {
             $table
-                ->addRow(['<info>'.$label.'</info>', count($this->getDb()->table($tablename)->fetchAll())])
+                ->addRow(['<info>' . $label . '</info>', count($this->getDb()->table($tablename)->fetchAll())])
                 ->addRow(new TableSeparator());
         }
 
         $table
             ->addRow(
                 [new TableCell(
-                    $this->getCache()->getStats()->getInfo()."\n".
-                    "Cache size: " . $this->getCache()->getStats()->getSize()."\n".
-                    "Cache Lifetime: ".$this->getCache()->getCacheLifetime(),
+                    $this->getCache()->getStats()->getInfo() . "\n" .
+                    "Cache size: " . $this->getCache()->getStats()->getSize() . "\n" .
+                    "Cache Lifetime: " . $this->getCache()->getCacheLifetime(),
                     ['colspan' => 2]
                 )]
             );

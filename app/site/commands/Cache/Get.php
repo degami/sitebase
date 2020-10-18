@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Cache;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -34,8 +35,8 @@ class Get extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('key', 'k', InputOption::VALUE_OPTIONAL),
-                    new InputOption('format', 'f', InputOption::VALUE_OPTIONAL),
+                        new InputOption('key', 'k', InputOption::VALUE_OPTIONAL),
+                        new InputOption('format', 'f', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );

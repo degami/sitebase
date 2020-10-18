@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use DateTime;
@@ -55,7 +56,7 @@ class QueueMessage extends BaseModel
      */
     public function getWorkerClass()
     {
-        return "App\\Site\\Queues\\".$this->snakeCaseToPascalCase($this->getQueueName())."\\Worker";
+        return "App\\Site\\Queues\\" . $this->snakeCaseToPascalCase($this->getQueueName()) . "\\Worker";
     }
 
     /**

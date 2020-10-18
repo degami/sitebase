@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Roles;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -35,7 +36,7 @@ class Add extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('name', '', InputOption::VALUE_OPTIONAL),
+                        new InputOption('name', '', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -44,8 +45,8 @@ class Add extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -65,13 +66,13 @@ class Add extends BaseCommand
         }
 
         try {
-            $role = $this->getContainer()->call([Role::class,'new']);
+            $role = $this->getContainer()->call([Role::class, 'new']);
             $role->name = $name;
             $role->persist();
 
             $output->writeln('<info>Role added</info>');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n".$e->getMessage()."\n</error>");
+            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
         }
     }
 }

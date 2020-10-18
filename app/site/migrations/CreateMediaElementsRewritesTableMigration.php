@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
@@ -34,7 +35,7 @@ class CreateMediaElementsRewritesTableMigration extends DBMigration
      */
     public function getName()
     {
-        return '05_'.parent::getName();
+        return '05_' . parent::getName();
     }
 
     /**
@@ -52,7 +53,7 @@ class CreateMediaElementsRewritesTableMigration extends DBMigration
             ->addColumn('media_element_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('rewrite_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
-            ->addIndex('media_element_rewrite', ['media_element_id','rewrite_id'], Index::TYPE_UNIQUE)
+            ->addIndex('media_element_rewrite', ['media_element_id', 'rewrite_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_media_element_rewrite_media_element_id', ['media_element_id'], 'media_element', ['id'])
             ->addForeignKey('fk_media_element_rewrite_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_media_element_rewrite_rewrite_id', ['rewrite_id'], 'rewrite', ['id'])

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
@@ -61,15 +62,15 @@ class Block extends BaseModel
     {
         $this->checkLoaded();
 
-        $class = 'block block-'.$this->getId();
+        $class = 'block block-' . $this->getId();
 
         return (string)(new TagElement(
             [
-            'tag' => 'div',
-            'attributes' => [
-                'class' => $class,
-            ],
-            'text' => $this->content,
+                'tag' => 'div',
+                'attributes' => [
+                    'class' => $class,
+                ],
+                'text' => $this->content,
             ]
         ));
     }
@@ -142,14 +143,14 @@ class Block extends BaseModel
         $this->checkLoaded();
 
         if (!(is_array($this->rewrites) && !empty($this->rewrites)) || $reset == true) {
-/*
-            $this->rewrites = array_map(
-                function ($el) {
-                    return $this->getContainer()->make(Rewrite::class, ['dbrow' => $el]);
-                },
-                $this->block_rewriteList()->rewrite()->fetchAll()
-            );
-*/
+            /*
+                        $this->rewrites = array_map(
+                            function ($el) {
+                                return $this->getContainer()->make(Rewrite::class, ['dbrow' => $el]);
+                            },
+                            $this->block_rewriteList()->rewrite()->fetchAll()
+                        );
+            */
             $query = $this->getDb()->prepare("SELECT rewrite_id FROM block_rewrite WHERE block_id = :id");
             $query->execute(['id' => $this->id]);
             $ids = $query->fetchAll(\PDO::FETCH_COLUMN, 0);
@@ -171,12 +172,12 @@ class Block extends BaseModel
         $this->checkLoaded();
 
         return (count($this->getRewrites()) == 0 || count(
-            array_filter(
-                $this->getRewrites(),
-                function ($el) use ($rewrite) {
-                    return $el->getId() == $rewrite->getId();
-                }
-            )
-        ) > 0);
+                array_filter(
+                    $this->getRewrites(),
+                    function ($el) use ($rewrite) {
+                        return $el->getId() == $rewrite->getId();
+                    }
+                )
+            ) > 0);
     }
 }

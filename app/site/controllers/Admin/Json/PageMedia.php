@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin\Json;
 
 use App\Site\Controllers\Admin\Media;
@@ -54,10 +55,10 @@ class PageMedia extends AdminJsonPage
 
         $gallery = array_map(
             function ($el) use ($page) {
-                return '<div class="gallery-elem">'.
-                $el->getThumb("150x100", null, 'img-fluid img-thumbnail').
-                ' <a class="deassoc_lnk" data-page_id="'.$page->id.'" data-media_id="'.$el->id.'" href="'.$this->getUrl('admin.json.pagemedia', ['id' => $page->id]).'?page_id='.$page->id.'&media_id='.$el->id.'&action=deassoc">&times;</a>'.
-                '</div>';
+                return '<div class="gallery-elem">' .
+                    $el->getThumb("150x100", null, 'img-fluid img-thumbnail') .
+                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('admin.json.pagemedia', ['id' => $page->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=deassoc">&times;</a>' .
+                    '</div>';
             },
             $page->getGallery()
         );
@@ -72,12 +73,12 @@ class PageMedia extends AdminJsonPage
         $mediaController = $this->getContainer()->make(Media::class);
         $form = $mediaController->getForm();
 
-        $form->setAction($this->getUrl('admin.media').'?action='.$this->getRequest()->get('action'));
+        $form->setAction($this->getUrl('admin.media') . '?action=' . $this->getRequest()->get('action'));
         $form->addField(
             'page_id',
             [
-            'type' => 'hidden',
-            'default_value' => $page->getId(),
+                'type' => 'hidden',
+                'default_value' => $page->getId(),
             ]
         );
 
@@ -85,7 +86,7 @@ class PageMedia extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'gallery' => $galleryData,
-            'html' => ($this->getRequest()->get('action') == 'new' ? "<div class=\"page-gallery\">".implode("", $gallery) . "</div><hr />" : '').$form->render(),
+            'html' => ($this->getRequest()->get('action') == 'new' ? "<div class=\"page-gallery\">" . implode("", $gallery) . "</div><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

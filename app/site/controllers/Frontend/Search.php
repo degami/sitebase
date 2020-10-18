@@ -77,7 +77,7 @@ class Search extends FrontendPage
 
         return [
             'search_query' => $this->getSearchQuery(),
-            'search_result' => array_map(function($el){
+            'search_result' => array_map(function ($el) {
                 return $el['_source'];
             }, $hits),
             'total' => $total,
@@ -109,7 +109,7 @@ class Search extends FrontendPage
 
         $params = [
             'index' => self::INDEX_NAME,
-            'body'  => [
+            'body' => [
                 'from' => $page * self::RESULTS_PER_PAGE,
                 'size' => self::RESULTS_PER_PAGE,
                 'query' => [

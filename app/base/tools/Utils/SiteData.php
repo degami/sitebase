@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -62,7 +63,7 @@ class SiteData extends ContainerAwareObject
             $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
         } else {
             //$website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
-            $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = '.$this->getDb()->quote($this->currentServerName()).' OR (FIND_IN_SET('.$this->getDb()->quote($this->currentServerName()).', aliases) > 0)']]])->fetch();
+            $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)']]])->fetch();
             $dbrow = $this->getContainer()->make(Row::class, ['db' => $this->getDb(), 'name' => 'website', 'properties' => $result]);
             $website = $this->getContainer()->make(Website::class, ['dbrow' => $dbrow]);
         }
@@ -220,7 +221,7 @@ class SiteData extends ContainerAwareObject
             return $cached_configuration[$website_id][$config_path]['default'];
         }
 
-        $result = $this->getDb()->table('configuration')->where(['path'=> $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])])->fetch();
+        $result = $this->getDb()->table('configuration')->where(['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])])->fetch();
         if ($result instanceof Row) {
             $cached_configuration[$website_id][$config_path][$result->locale ?? 'default'] = $result->value;
             $this->getCache()->set(self::CONFIGURATION_CACHE_KEY, $cached_configuration);
@@ -245,7 +246,7 @@ class SiteData extends ContainerAwareObject
             $locale = static::DEFAULT_LOCALE;
         }
 
-        return  $this->getConfigValue(self::HOMEPAGE_ID_PATH, $website_id, $locale);
+        return $this->getConfigValue(self::HOMEPAGE_ID_PATH, $website_id, $locale);
     }
 
     /**
@@ -258,7 +259,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getHomePageRedirectsToLanguage($website_id = null)
     {
-        return  boolval($this->getConfigValue(self::HOMEPAGE_REDIRECTS_TO_LANGUAGE_PATH, $website_id));
+        return boolval($this->getConfigValue(self::HOMEPAGE_REDIRECTS_TO_LANGUAGE_PATH, $website_id));
     }
 
     /**
@@ -271,7 +272,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getShowLogoOnMenu($website_id = null)
     {
-        return  boolval($this->getConfigValue(self::MENU_LOGO_PATH, $website_id));
+        return boolval($this->getConfigValue(self::MENU_LOGO_PATH, $website_id));
     }
 
     /**
@@ -284,7 +285,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getSiteEmail($website_id = null)
     {
-        return  $this->getConfigValue(self::SITE_EMAIL_PATH, $website_id, null);
+        return $this->getConfigValue(self::SITE_EMAIL_PATH, $website_id, null);
     }
 
     /**

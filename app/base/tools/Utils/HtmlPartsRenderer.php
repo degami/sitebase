@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\Utils;
 
 use App\Site\Models\Menu;
@@ -32,7 +33,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * returns flash message html
      *
-     * @param  BasePage $controller
+     * @param BasePage $controller
      * @return TagList
      */
     public function renderFlashMessages(BasePage $controller)
@@ -42,7 +43,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $messages_container = $this->getContainer()->make(TagList::class);
 
-        foreach ((array) $flash_messages as $type => $messages) {
+        foreach ((array)$flash_messages as $type => $messages) {
             $messages_list = $this->getContainer()->make(TagList::class);
 
             foreach ($messages as $message) {
@@ -50,8 +51,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
-                        'tag' => 'div',
-                        'text' => $message,
+                            'tag' => 'div',
+                            'text' => $message,
                         ]]
                     )
                 );
@@ -61,9 +62,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'div',
-                    'attributes' => ['class' => "alert alert-".$type],
-                    'text' => (string) $messages_list,
+                        'tag' => 'div',
+                        'attributes' => ['class' => "alert alert-" . $type],
+                        'text' => (string)$messages_list,
                     ]]
                 )
             );
@@ -75,8 +76,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * internally renders menu link
      *
-     * @param  array  $leaf
-     * @param  string $link_class
+     * @param array $leaf
+     * @param string $link_class
      * @return TagElement
      */
     protected function _renderMenuLink($leaf, $link_class = 'nav-link')
@@ -93,7 +94,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $link_options['attributes']['target'] = $leaf['target'];
         }
         if (!empty($leaf['children'])) {
-            $link_options['id'] = 'navbarDropdown-'.$leaf['menu_id'];
+            $link_options['id'] = 'navbarDropdown-' . $leaf['menu_id'];
             $link_options['attributes']['role'] = 'button';
             $link_options['attributes']['data-toggle'] = 'dropdown';
             $link_options['attributes']['aria-haspopup'] = 'true';
@@ -106,8 +107,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * internally renders site menu
      *
-     * @param  array      $menu_tree
-     * @param  array|null $parent
+     * @param array $menu_tree
+     * @param array|null $parent
      * @return TagElement
      */
     protected function _renderSiteMenu($menu_tree, $parent = null)
@@ -120,7 +121,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         ];
 
         if ($parent != null) {
-            $tag_options['attributes']['aria-labelledby'] = 'navbarDropdown-'.$parent['menu_id'];
+            $tag_options['attributes']['aria-labelledby'] = 'navbarDropdown-' . $parent['menu_id'];
         }
 
         $out = $this->getContainer()->make(TagElement::class, ['options' => $tag_options]);
@@ -134,8 +135,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'li',
-                    'attributes' => ['class' => 'nav-item'],
+                        'tag' => 'li',
+                        'attributes' => ['class' => 'nav-item'],
                     ]]
                 ) :
                 $this->getContainer()->make(TagList::class);
@@ -176,7 +177,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             return null;
         }
 
-        $cache_key = strtolower('site.'.$website_id.'.menu.html.'.$locale);
+        $cache_key = strtolower('site.' . $website_id . '.menu.html.' . $locale);
         if ($this->getCache()->has($cache_key)) {
             return $this->getCache()->get($cache_key);
         }
@@ -184,7 +185,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         // preload menu items
         $menuitems = $this->getContainer()->call([Menu::class, 'loadMultipleByCondition'], ['condition' => ['menu_name' => $menu_name, 'website_id' => $website_id]]);
 
-        usort($menuitems, function($a, $b){
+        usort($menuitems, function ($a, $b) {
             if ($a->position == $b->position) {
                 return 0;
             }
@@ -194,8 +195,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $menu = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'nav',
-            'attributes' => ['class' => 'navbar navbar-expand-lg navbar-light bg-light'],
+                'tag' => 'nav',
+                'attributes' => ['class' => 'navbar navbar-expand-lg navbar-light bg-light'],
             ]]
         );
 
@@ -234,26 +235,26 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $button = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'button',
-            'type' => 'button',
-            'attributes' => [
-                'class' => 'navbar-toggler',
-                'data-toggle' => 'collapse',
-                'data-target' => '#navbarSupportedContent',
-                'aria-controls' => 'navbarSupportedContent',
-                'aria-expanded' => 'false',
-                'aria-label' => 'Toggle navigation'
-            ],
+                'tag' => 'button',
+                'type' => 'button',
+                'attributes' => [
+                    'class' => 'navbar-toggler',
+                    'data-toggle' => 'collapse',
+                    'data-target' => '#navbarSupportedContent',
+                    'aria-controls' => 'navbarSupportedContent',
+                    'aria-expanded' => 'false',
+                    'aria-label' => 'Toggle navigation'
+                ],
             ]]
         );
         $button->addChild(
             $this->getContainer()->make(
                 TagElement::class,
                 ['options' => [
-                'tag' => 'span',
-                'attributes' => [
-                'class' => 'navbar-toggler-icon',
-                ],
+                    'tag' => 'span',
+                    'attributes' => [
+                        'class' => 'navbar-toggler-icon',
+                    ],
                 ]]
             )
         );
@@ -263,11 +264,11 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $menu_content = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'div',
-            'attributes' => [
-                'class' => 'collapse navbar-collapse',
-            ],
-            'id' => 'navbarSupportedContent',
+                'tag' => 'div',
+                'attributes' => [
+                    'class' => 'collapse navbar-collapse',
+                ],
+                'id' => 'navbarSupportedContent',
             ]]
         );
 
@@ -276,8 +277,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $menu->addChild($menu_content);
 
         // store into cache
-        $this->getCache()->set($cache_key, (string) $menu);
-        return (string) $menu;
+        $this->getCache()->set($cache_key, (string)$menu);
+        return (string)$menu;
     }
 
     /**
@@ -298,7 +299,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
         $route_info = null;
-        $cache_key = strtolower('site.'.$website_id.'.blocks.'.$region.'.html.'.$locale);
+        $cache_key = strtolower('site.' . $website_id . '.blocks.' . $region . '.html.' . $locale);
         if ($current_page) {
             if (method_exists($current_page, 'showBlocks') && $current_page->showBlocks() === false) {
                 return '';
@@ -306,7 +307,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
             $route_info = $current_page->getRouteInfo();
             if ($route_info instanceof RouteInfo) {
-                $cache_key = strtolower('site.'.$website_id.'.'.trim(str_replace("/", ".", $route_info->getRoute()), '.').'.blocks.'.$region.'.html.'.$locale);
+                $cache_key = strtolower('site.' . $website_id . '.' . trim(str_replace("/", ".", $route_info->getRoute()), '.') . '.blocks.' . $region . '.html.' . $locale);
 
                 if ($route_info->isAdminRoute()) {
                     $cache_key = null;
@@ -343,9 +344,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * gets paginator li html tag
      *
-     * @param  string      $li_class
-     * @param  string|null $href
-     * @param  string      $text
+     * @param string $li_class
+     * @param string|null $href
+     * @param string $text
      * @return TagElement
      */
     private function getPaginatorLi($li_class, $href, $text)
@@ -364,12 +365,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'a',
-                    'attributes' => [
-                    'class' => 'page-link',
-                    'href' => $href,
-                    ],
-                    'text' => $text,
+                        'tag' => 'a',
+                        'attributes' => [
+                            'class' => 'page-link',
+                            'href' => $href,
+                        ],
+                        'text' => $text,
                     ]]
                 )
             );
@@ -403,16 +404,16 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $out = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'nav',
-            'attributes' => ['class' => 'd-flex justify-content-end', 'aria-label' => 'Paginator'],
+                'tag' => 'nav',
+                'attributes' => ['class' => 'd-flex justify-content-end', 'aria-label' => 'Paginator'],
             ]]
         );
 
         $ul = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'ul',
-            'attributes' => ['class' => 'pagination'],
+                'tag' => 'ul',
+                'attributes' => ['class' => 'pagination'],
             ]]
         );
 
@@ -421,8 +422,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
         // add "first" link
         $ul->addChild(
             $this->getPaginatorLi(
-                'page-item'.(($current_page == 0) ? ' disabled':''),
-                $current_base.'?'.http_build_query($query_params + ['page' => 0]),
+                'page-item' . (($current_page == 0) ? ' disabled' : ''),
+                $current_base . '?' . http_build_query($query_params + ['page' => 0]),
                 $this->getUtils()->translate('First', $controller->getCurrentLocale())
             )
         );
@@ -432,7 +433,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $ul->addChild(
                 $this->getPaginatorLi(
                     'page-item',
-                    $current_base.'?'.http_build_query($query_params + ['page' =>($current_page-1)]),
+                    $current_base . '?' . http_build_query($query_params + ['page' => ($current_page - 1)]),
                     $this->getContainer()->make(
                         TagList::class
                     )->addChild(
@@ -442,7 +443,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                                 'tag' => 'span',
                                 'attributes' => [
                                     'class' => '',
-                                     'aria-hidden'=>"true",
+                                    'aria-hidden' => "true",
                                 ],
                                 'text' => '&laquo;',
                             ]]
@@ -485,9 +486,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
         for ($i = max(0, $current_page - $visible_links); $i <= min($current_page + $visible_links, $total_pages); $i++) {
             $ul->addChild(
                 $this->getPaginatorLi(
-                    'page-item'.(($current_page == $i) ? ' active':''),
-                    $current_base.'?'.http_build_query($query_params + ['page' => $i]),
-                    ($i+1)
+                    'page-item' . (($current_page == $i) ? ' active' : ''),
+                    $current_base . '?' . http_build_query($query_params + ['page' => $i]),
+                    ($i + 1)
                 )
             );
         }
@@ -516,7 +517,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $ul->addChild(
                 $this->getPaginatorLi(
                     'page-item',
-                    $current_base.'?'.http_build_query($query_params + ['page' =>($current_page + 1)]),
+                    $current_base . '?' . http_build_query($query_params + ['page' => ($current_page + 1)]),
                     $this->getContainer()->make(
                         TagList::class
                     )->addChild(
@@ -526,7 +527,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                                 'tag' => 'span',
                                 'attributes' => [
                                     'class' => '',
-                                     'aria-hidden'=>"true",
+                                    'aria-hidden' => "true",
                                 ],
                                 'text' => '&raquo;',
                             ]]
@@ -550,13 +551,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
         // add "last" link
         $ul->addChild(
             $this->getPaginatorLi(
-                'page-item'.(($current_page == $total_pages) ? ' disabled':''),
-                $current_base.'?'.http_build_query($query_params + ['page' => $total_pages]),
+                'page-item' . (($current_page == $total_pages) ? ' disabled' : ''),
+                $current_base . '?' . http_build_query($query_params + ['page' => $total_pages]),
                 $this->getUtils()->translate('Last', $controller->getCurrentLocale())
             )
         );
 
-        return (string) $out;
+        return (string)$out;
     }
 
     /**
@@ -578,32 +579,32 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $table = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'table',
-            'width' => '100%',
-            'id' => $table_id,
-            'cellspacing' => '0',
-            'cellpadding' => '0',
-            'border' => '0',
-            'attributes' => ['class' => "table table-striped"],
+                'tag' => 'table',
+                'width' => '100%',
+                'id' => $table_id,
+                'cellspacing' => '0',
+                'cellpadding' => '0',
+                'border' => '0',
+                'attributes' => ['class' => "table table-striped"],
             ]]
         );
 
         $thead = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'thead',
+                'tag' => 'thead',
             ]]
         );
         $tbody = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'tbody',
+                'tag' => 'tbody',
             ]]
         );
         $tfoot = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'tfoot',
+                'tag' => 'tfoot',
             ]]
         );
 
@@ -624,7 +625,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $search_row = $this->getContainer()->make(
                 TagElement::class,
                 ['options' => [
-                'tag' => 'tr',
+                    'tag' => 'tr',
                 ]]
             );
             //$style="max-width:100%;font-size: 9px;line-height: 11px;min-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
@@ -635,9 +636,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $td = $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
-                        'tag' => 'td',
-                        'attributes' => ['class' => 'small'],
-                        'text' => '<input class="form-control" name="search['.$v['search'].']" value="'.$searchqueryparam.'"/>',
+                            'tag' => 'td',
+                            'attributes' => ['class' => 'small'],
+                            'text' => '<input class="form-control" name="search[' . $v['search'] . ']" value="' . $searchqueryparam . '"/>',
                         ]]
                     );
                     $add_searchrow = true;
@@ -658,15 +659,15 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     }
 
                     $select_options = array_map(function ($val, $key) {
-                        return '<option value="'.$key.'">'.$val.'</option>';
+                        return '<option value="' . $key . '">' . $val . '</option>';
                     }, $select_options, array_keys($select_options));
 
                     $td = $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
-                        'tag' => 'td',
-                        'attributes' => ['class' => 'small'],
-                        'text' => '<select name="foreign['.$v['foreign'].']">'.implode("", $select_options).'</select>',
+                            'tag' => 'td',
+                            'attributes' => ['class' => 'small'],
+                            'text' => '<select name="foreign[' . $v['foreign'] . ']">' . implode("", $select_options) . '</select>',
                         ]]
                     );
 
@@ -675,9 +676,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $td = $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
-                        'tag' => 'td',
-                        'attributes' => ['class' => 'small'],
-                        'text' => '&nbsp;',
+                            'tag' => 'td',
+                            'attributes' => ['class' => 'small'],
+                            'text' => '&nbsp;',
                         ]]
                     );
                 }
@@ -698,8 +699,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $row = $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'tr',
-                    'attributes' => ['class' => $key % 2 == 0 ? 'odd' : 'even'],
+                        'tag' => 'tr',
+                        'attributes' => ['class' => $key % 2 == 0 ? 'odd' : 'even'],
                     ]]
                 );
 
@@ -709,13 +710,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     }
                     $row->addChild(
                         ($td instanceof TagElement && $td->getTag() == 'td') ? $td :
-                        $this->getContainer()->make(
-                            TagElement::class,
-                            ['options' => [
-                            'tag' => 'td',
-                            'text' => (string) $td
-                            ]]
-                        )
+                            $this->getContainer()->make(
+                                TagElement::class,
+                                ['options' => [
+                                    'tag' => 'td',
+                                    'text' => (string)$td
+                                ]]
+                            )
                     );
                 }
 
@@ -723,9 +724,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
-                        'tag' => 'td',
-                        'text' => $elem['actions'] ?? '',
-                        'attributes' => ['class' => 'text-right nowrap'],
+                            'tag' => 'td',
+                            'text' => $elem['actions'] ?? '',
+                            'attributes' => ['class' => 'text-right nowrap'],
                         ]]
                     )
                 );
@@ -742,8 +743,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $row = $this->getContainer()->make(
                 TagElement::class,
                 ['options' => [
-                'tag' => 'tr',
-                'attributes' => ['class' => 'odd'],
+                    'tag' => 'tr',
+                    'attributes' => ['class' => 'odd'],
                 ]]
             );
 
@@ -751,9 +752,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'td',
-                    'text' => $text,
-                    'attributes' => ['class' => 'text-center nowrap', 'colspan' => count($header)],
+                        'tag' => 'td',
+                        'text' => $text,
+                        'attributes' => ['class' => 'text-center nowrap', 'colspan' => count($header)],
                     ]]
                 )
             );
@@ -766,8 +767,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $row = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'tr',
-            'attributes' => ['class' => "thead-dark"],
+                'tag' => 'tr',
+                'attributes' => ['class' => "thead-dark"],
             ]]
         );
 
@@ -791,7 +792,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             $val = ($request_params['order'][$orderby] == 'ASC') ? 'DESC' : 'ASC';
                         }
                         $request_params['order'][$orderby] = $val;
-                        $th = '<a class="ordering" href="'.($current_page->getControllerUrl().'?'.http_build_query($request_params)).'">'.$th.$this->getUtils()->getIcon($val == 'DESC' ? 'arrow-down' : 'arrow-up').'</a>';
+                        $th = '<a class="ordering" href="' . ($current_page->getControllerUrl() . '?' . http_build_query($request_params)) . '">' . $th . $this->getUtils()->getIcon($val == 'DESC' ? 'arrow-down' : 'arrow-up') . '</a>';
                     }
                 }
             }
@@ -803,10 +804,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'th',
-                    'text' => $th,
-                    'scope' => 'col',
-                    'attributes' => ['class' => 'nowrap'],
+                        'tag' => 'th',
+                        'text' => $th,
+                        'scope' => 'col',
+                        'attributes' => ['class' => 'nowrap'],
                     ]]
                 )
             );
@@ -820,18 +821,18 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 unset($request_params_nosearch['search']);
                 $add_query_parameters = http_build_query($request_params_nosearch);
                 if (strlen($add_query_parameters)) {
-                    $add_query_parameters = '?'.$add_query_parameters;
+                    $add_query_parameters = '?' . $add_query_parameters;
                 }
-                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', $current_page->getCurrentLocale()), $current_page->getControllerUrl().$add_query_parameters, 'btn btn-sm btn-warning');
+                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . $add_query_parameters, 'btn btn-sm btn-warning');
             }
             if ($add_searchrow) {
                 $query_params = '';
                 if (!empty($request_params)) {
-                    $query_params = (array) $request_params;
+                    $query_params = (array)$request_params;
                     unset($query_params['search']);
                     $query_params = http_build_query($query_params);
                 }
-                $current_page->addActionLink('search-btn', 'search-btn', $this->getUtils()->getIcon('zoom-in').$this->getUtils()->translate('Search', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?':'') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#'.$table_id]);
+                $current_page->addActionLink('search-btn', 'search-btn', $this->getUtils()->getIcon('zoom-in') . $this->getUtils()->translate('Search', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#' . $table_id]);
             }
         }
 
@@ -851,32 +852,32 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $table = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'table',
-            'width' => '100%',
-            'id' => 'log_table',
-            'cellspacing' => '0',
-            'cellpadding' => '0',
-            'border' => '0',
-            'attributes' => ['class' => "table table-striped"],
+                'tag' => 'table',
+                'width' => '100%',
+                'id' => 'log_table',
+                'cellspacing' => '0',
+                'cellpadding' => '0',
+                'border' => '0',
+                'attributes' => ['class' => "table table-striped"],
             ]]
         );
 
         $thead = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'thead',
+                'tag' => 'thead',
             ]]
         );
         $tbody = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'tbody',
+                'tag' => 'tbody',
             ]]
         );
         $tfoot = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'tfoot',
+                'tag' => 'tfoot',
             ]]
         );
 
@@ -885,8 +886,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $row = $this->getContainer()->make(
             TagElement::class,
             ['options' => [
-            'tag' => 'tr',
-            'attributes' => ['class' => "thead-dark"],
+                'tag' => 'tr',
+                'attributes' => ['class' => "thead-dark"],
             ]]
         );
 
@@ -896,10 +897,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'th',
-                    'text' => $th,
-                    'scope' => 'col',
-                    'attributes' => ['class' => 'nowrap'],
+                        'tag' => 'th',
+                        'text' => $th,
+                        'scope' => 'col',
+                        'attributes' => ['class' => 'nowrap'],
                     ]]
                 )
             );
@@ -910,14 +911,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $counter = 0;
         foreach (array_keys($log->getData()) as $property) {
-            $handler = [$log, 'get'.$this->getUtils()->snakeCaseToPascalCase($property)];
+            $handler = [$log, 'get' . $this->getUtils()->snakeCaseToPascalCase($property)];
             $value = call_user_func($handler);
 
             $row = $this->getContainer()->make(
                 TagElement::class,
                 ['options' => [
-                'tag' => 'tr',
-                'attributes' => ['class' => $counter++ % 2 == 0 ? 'odd' : 'even'],
+                    'tag' => 'tr',
+                    'attributes' => ['class' => $counter++ % 2 == 0 ? 'odd' : 'even'],
                 ]]
             );
 
@@ -925,10 +926,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
-                    'tag' => 'td',
-                    'text' => $property,
-                    'scope' => 'col',
-                    'attributes' => ['class' => 'nowrap'],
+                        'tag' => 'td',
+                        'text' => $property,
+                        'scope' => 'col',
+                        'attributes' => ['class' => 'nowrap'],
                     ]]
                 )
             );
@@ -938,10 +939,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
-                        'tag' => 'td',
-                        'text' => $value,
-                        'scope' => 'col',
-                        'attributes' => ['class' => 'nowrap'],
+                            'tag' => 'td',
+                            'text' => $value,
+                            'scope' => 'col',
+                            'attributes' => ['class' => 'nowrap'],
                         ]]
                     )
                 );
@@ -950,10 +951,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $this->getContainer()->make(
                         TagElement::class,
                         ['options' => [
-                        'tag' => 'td',
-                        'text' => "<pre>".var_export($value, true)."</pre>",
-                        'scope' => 'col',
-                        'attributes' => ['class' => 'nowrap'],
+                            'tag' => 'td',
+                            'text' => "<pre>" . var_export($value, true) . "</pre>",
+                            'scope' => 'col',
+                            'attributes' => ['class' => 'nowrap'],
                         ]]
                     )
                 );
@@ -970,11 +971,11 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * Get either a Gravatar image tag for a specified email address.
      *
-     * @param  string  $email The email address
-     * @param  integer $s     Size in pixels, defaults to 80px [ 1 - 2048 ]
-     * @param  string  $d     Default imageset to use \[ 404 | mp | identicon | monsterid | wavatar ]
-     * @param  string  $r     Maximum rating (inclusive) [ g | pg | r | x ]
-     * @param  string  $class html class
+     * @param string $email The email address
+     * @param integer $s Size in pixels, defaults to 80px [ 1 - 2048 ]
+     * @param string $d Default imageset to use \[ 404 | mp | identicon | monsterid | wavatar ]
+     * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
+     * @param string $class html class
      * @return String containing a complete image tag
      */
     public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle')
@@ -985,12 +986,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         return (string)(new TagElement(
             [
-            'tag' => 'img',
-            'attributes' => [
-                'src' => $url,
-                'class' => $class,
-                'border' => 0,
-            ],
+                'tag' => 'img',
+                'attributes' => [
+                    'src' => $url,
+                    'class' => $class,
+                    'border' => 0,
+                ],
             ]
         ));
     }
@@ -1007,10 +1008,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      */
     public function renderFlag($country_code, $class = 'flag-icon', $width = 20)
     {
-        $filepath = App::getDir(App::FLAGS).DS.$country_code.'.svg';
+        $filepath = App::getDir(App::FLAGS) . DS . $country_code . '.svg';
         $src = null;
         if (file_exists($filepath)) {
-            $src = $this->getAssets()->assetUrl('/flags/'.$country_code.'.svg');
+            $src = $this->getAssets()->assetUrl('/flags/' . $country_code . '.svg');
         }
 
         if (!$src) {
@@ -1019,13 +1020,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         return (string)(new TagElement(
             [
-            'tag' => 'img',
-            'attributes' => [
-                'width' => $width,
-                'src' => $src,
-                'class' => $class,
-                'border' => 0,
-            ],
+                'tag' => 'img',
+                'attributes' => [
+                    'width' => $width,
+                    'src' => $src,
+                    'class' => $class,
+                    'border' => 0,
+                ],
             ]
         ));
     }

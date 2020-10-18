@@ -1,14 +1,15 @@
 <?php
 /**
-* SiteBase
-* PHP Version 7.0
-*
-* @category CMS / Framework
-* @package  Degami\Sitebase
-* @author   Mirko De Grandis <degami@github.com>
-* @license  MIT https://opensource.org/licenses/mit-license.php
-* @link     https://github.com/degami/sitebase
-*/
+ * SiteBase
+ * PHP Version 7.0
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -18,56 +19,56 @@ use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Configuration;
 
 /**
-* "Config" Admin Page
-*/
+ * "Config" Admin Page
+ */
 class Config extends AdminManageModelsPage
 {
     /**
-    * {@inheritdocs}
-    *
-    * @return string
-    */
+     * {@inheritdocs}
+     *
+     * @return string
+     */
     protected function getTemplateName()
     {
         return 'base_admin_page';
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @return string
-    */
+     * {@inheritdocs}
+     *
+     * @return string
+     */
     protected function getAccessPermission()
     {
         return 'administer_site';
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @return string
-    */
+     * {@inheritdocs}
+     *
+     * @return string
+     */
     public function getObjectClass()
     {
         return Configuration::class;
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @return string
-    */
+     * {@inheritdocs}
+     *
+     * @return string
+     */
     protected function getObjectIdQueryParam()
     {
         return 'config_id';
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @return array
-    * @throws BasicException
-    */
+     * {@inheritdocs}
+     *
+     * @return array
+     * @throws BasicException
+     */
     protected function getTemplateData()
     {
         if ($this->templateData['action'] == 'list') {
@@ -83,104 +84,89 @@ class Config extends AdminManageModelsPage
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @param FAPI\Form $form
-    * @param array     &$form_state
-    * @return FAPI\Form
-    * @throws BasicException
-    * @throws PhpfastcacheSimpleCacheException
-    */
+     * {@inheritdocs}
+     *
+     * @param FAPI\Form $form
+     * @param array     &$form_state
+     * @return FAPI\Form
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $configuration = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
-                'type' => 'value',
-                'value' => $type,
-            ]
-        );
+        $form->addField('action', [
+            'type' => 'value',
+            'value' => $type,
+        ]);
 
         if ($type == 'new') {
             $configuration->setWebsiteId($this->getSiteData()->getCurrentWebsite()->getId());
         }
 
         switch ($type) {
-        case 'edit':
-        case 'new':
-            $this->addBackButton();
+            case 'edit':
+            case 'new':
+                $this->addBackButton();
 
-            $languages = [null => $this->getUtils()->translate('All languages')] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
-            $websites = $this->getUtils()->getWebsitesSelectOptions();
+                $languages = [null => $this->getUtils()->translate('All languages')] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
+                $websites = $this->getUtils()->getWebsitesSelectOptions();
 
-            $configuration_path = $configuration_value = $configuration_website = $configuration_locale = '';
-            if ($configuration->isLoaded()) {
-                $configuration_path = $configuration->path;
-                $configuration_value = $configuration->value;
-                $configuration_website = $configuration->website_id;
-                $configuration_locale = $configuration->locale;
-            }
-            $form->addField(
-                'path',
-                [
+                $configuration_path = $configuration_value = $configuration_website = $configuration_locale = '';
+                if ($configuration->isLoaded()) {
+                    $configuration_path = $configuration->path;
+                    $configuration_value = $configuration->value;
+                    $configuration_website = $configuration->website_id;
+                    $configuration_locale = $configuration->locale;
+                }
+                $form->addField('path', [
                     'type' => 'textfield',
                     'title' => 'Configuration Path',
                     'default_value' => $configuration_path,
                     'validate' => ['required'],
-                ]
-            )
-            ->addField(
-                'website_id',
-                [
+                ])
+                ->addField('website_id', [
                     'type' => 'select',
                     'title' => 'Website',
                     'default_value' => $configuration_website,
                     'options' => $websites,
                     'validate' => ['required'],
-                ]
-            )
-            ->addField(
-                'locale',
-                [
+                ])
+                ->addField('locale', [
                     'type' => 'select',
                     'title' => 'Locale',
                     'default_value' => $configuration_locale,
                     'options' => $languages,
                     // 'validate' => ['required'],
-                ]
-            )
-            ->addField(
-                'value',
-                [
+                ])
+                ->addField('value', [
                     'type' => 'textarea',
                     'title' => 'Configuration Value',
                     'default_value' => $configuration_value,
                     'rows' => 3,
                     // 'validate' => ['required'],
-                ]
-            );
+                ]);
 
-            $this->addSubmitButton($form);
-        break;
+                $this->addSubmitButton($form);
+                break;
 
-        case 'delete':
-            $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
-            break;
+            case 'delete':
+                $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
+                break;
         }
 
         return $form;
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @param  FAPI\Form $form
-    * @param  array     &$form_state
-    * @return boolean|string
-    */
+     * {@inheritdocs}
+     *
+     * @param FAPI\Form $form
+     * @param array     &$form_state
+     * @return boolean|string
+     */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
         // $values = $form->values()
@@ -188,20 +174,20 @@ class Config extends AdminManageModelsPage
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @param FAPI\Form $form
-    * @param array     &$form_state
-    * @return mixed
-    * @throws PhpfastcacheSimpleCacheException|BasicException
-    */
+     * {@inheritdocs}
+     *
+     * @param FAPI\Form $form
+     * @param array     &$form_state
+     * @return mixed
+     * @throws PhpfastcacheSimpleCacheException|BasicException
+     */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         $values = $form->values();
 
         /**
-        * @var Configuration $configuration
-        */
+         * @var Configuration $configuration
+         */
         $configuration = $this->getObject();
 
         if ($this->getRequest()->get('config_id')) {
@@ -226,23 +212,23 @@ class Config extends AdminManageModelsPage
 
                 $configuration->persist();
 
-            break;
+                break;
             case 'delete':
                 $configuration->delete();
 
-                $this->setAdminActionLogData('Deleted config '.$configuration->getId());
+                $this->setAdminActionLogData('Deleted config ' . $configuration->getId());
 
-            break;
+                break;
         }
 
         return $this->doRedirect($this->getControllerUrl());
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @return array
-    */
+     * {@inheritdocs}
+     *
+     * @return array
+     */
     protected function getTableHeader()
     {
         return [
@@ -257,12 +243,12 @@ class Config extends AdminManageModelsPage
     }
 
     /**
-    * {@inheritdocs}
-    *
-    * @param array $data
-    * @return array
-    * @throws BasicException
-    */
+     * {@inheritdocs}
+     *
+     * @param array $data
+     * @return array
+     * @throws BasicException
+     */
     protected function getTableElements($data)
     {
         return array_map(

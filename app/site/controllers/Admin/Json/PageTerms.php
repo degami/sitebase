@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin\Json;
 
 use App\Site\Controllers\Admin\Taxonomy;
@@ -55,7 +56,7 @@ class PageTerms extends AdminJsonPage
 
         $terms = array_map(
             function ($el) use ($page) {
-                return $el->getTitle().' <a class="deassoc_lnk" data-page_id="'.$page->id.'" data-term_id="'.$el->id.'" href="'.$this->getUrl('admin.json.pageterms', ['id' => $page->id]).'?page_id='.$page->id.'&term_id='.$el->id.'&action=deassoc">&times;</a>';
+                return $el->getTitle() . ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=deassoc">&times;</a>';
             },
             $page->getTerms()
         );
@@ -73,24 +74,24 @@ class PageTerms extends AdminJsonPage
         $form->removeField('seo');
 
         // update html_ids to avoid select2 issues
-        foreach($form->getFields() as $field) {
+        foreach ($form->getFields() as $field) {
             if (!($field instanceof FieldsContainer)) {
-                $field->setId('sidebar-'.$field->getHtmlId());
+                $field->setId('sidebar-' . $field->getHtmlId());
             }
         }
-        foreach($form->getField('frontend')->getFields() as $field) {
+        foreach ($form->getField('frontend')->getFields() as $field) {
             if (!($field instanceof FieldsContainer)) {
-                $field->setId('sidebar-'.$field->getHtmlId());
+                $field->setId('sidebar-' . $field->getHtmlId());
             }
         }
 
         if ($this->getRequest()->get('action') == 'new') {
-            foreach (['content','template_name'] as $fieldname) {
+            foreach (['content', 'template_name'] as $fieldname) {
                 $newField = $form->getFieldObj(
                     $fieldname,
                     [
-                    'type' => 'hidden',
-                    'default_value' => '',
+                        'type' => 'hidden',
+                        'default_value' => '',
                     ]
                 );
                 $form->setField($fieldname, $newField);
@@ -99,19 +100,19 @@ class PageTerms extends AdminJsonPage
             $newLocaleField = $form->getFieldObj(
                 'locale',
                 [
-                'type' => 'hidden',
-                'default_value' => $page->getLocale(),
+                    'type' => 'hidden',
+                    'default_value' => $page->getLocale(),
                 ]
             );
             $form->setField('locale', $newLocaleField);
         }
 
-        $form->setAction($this->getUrl('admin.taxonomy').'?action='.$this->getRequest()->get('action'));
+        $form->setAction($this->getUrl('admin.taxonomy') . '?action=' . $this->getRequest()->get('action'));
         $form->addField(
             'page_id',
             [
-            'type' => 'hidden',
-            'default_value' => $page->getId(),
+                'type' => 'hidden',
+                'default_value' => $page->getId(),
             ]
         );
 
@@ -119,7 +120,7 @@ class PageTerms extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'gallery' => $termsData,
-            'html' => ($this->getRequest()->get('action') == 'new' ? "<ul class=\"elements_list\"><li>" . implode("</li><li>", $terms) . "</li></ul><hr />": ''). $form->render(),
+            'html' => ($this->getRequest()->get('action') == 'new' ? "<ul class=\"elements_list\"><li>" . implode("</li><li>", $terms) . "</li></ul><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

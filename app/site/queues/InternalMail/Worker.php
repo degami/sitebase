@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Queues\InternalMail;
 
 use Degami\Basics\Exceptions\BasicException;

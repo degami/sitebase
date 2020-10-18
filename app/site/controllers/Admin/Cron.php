@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -66,7 +67,7 @@ class Cron extends AdminManageModelsPage
                         continue;
                     }
 
-                    $existing_tasks = $this->getContainer()->call([CronTask::class, 'where'], ['condition' => 'title = "'.$cron_task_name.'"']);
+                    $existing_tasks = $this->getContainer()->call([CronTask::class, 'where'], ['condition' => 'title = "' . $cron_task_name . '"']);
                     if (count($existing_tasks) > 0) {
                         continue;
                     }
@@ -75,7 +76,7 @@ class Cron extends AdminManageModelsPage
                     $cron_task->title = $cron_task_name;
                     $cron_task->cron_task_callable = $cron_task_callable;
                     $cron_task->schedule = null;
-                    if (defined($taskClass.'::DEFAULT_SCHEDULE')) {
+                    if (defined($taskClass . '::DEFAULT_SCHEDULE')) {
                         $cron_task->schedule = $taskClass::DEFAULT_SCHEDULE;
                     }
                     $cron_task->active = 0;
@@ -120,7 +121,7 @@ class Cron extends AdminManageModelsPage
         return CronTask::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -143,13 +144,10 @@ class Cron extends AdminManageModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $task = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -165,37 +163,22 @@ class Cron extends AdminManageModelsPage
                     $task_schedule = $task->schedule;
                     $task_active = $task->active;
                 }
-                $form
-                ->addField(
-                    'title',
-                    [
+                $form->addField('title', [
                     'type' => 'textfield',
                     'title' => 'Title',
                     'default_value' => $task_title,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'cron_task_callable',
-                    [
+                ])->addField('cron_task_callable', [
                     'type' => 'textfield',
                     'title' => 'Callable',
                     'default_value' => $task_callable,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'schedule',
-                    [
+                ])->addField('schedule', [
                     'type' => 'textfield',
                     'title' => 'Schedule',
                     'default_value' => $task_schedule,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'active',
-                    [
+                ])->addField('active', [
                     'type' => 'switchbox',
                     'title' => 'Active',
                     //                    'value' => boolval($task_active) ? 1 : 0,
@@ -206,8 +189,7 @@ class Cron extends AdminManageModelsPage
                     'no_value' => 0,
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -223,8 +205,8 @@ class Cron extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -253,8 +235,8 @@ class Cron extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
                 $task->user_id = $this->getCurrentUser()->id;
-                // intentional fall trough
-                // no break
+            // intentional fall trough
+            // no break
             case 'edit':
                 $task->title = $values['title'];
                 $task->cron_task_callable = $values['cron_task_callable'];
@@ -268,7 +250,7 @@ class Cron extends AdminManageModelsPage
             case 'delete':
                 $task->delete();
 
-                $this->setAdminActionLogData('Deleted cron task '.$task->getId());
+                $this->setAdminActionLogData('Deleted cron task ' . $task->getId());
 
                 break;
         }
@@ -300,7 +282,7 @@ class Cron extends AdminManageModelsPage
 
             $interval = date_diff($lasbeat_date, $now);
             $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
-            $out = '<div class="alert alert-'.(abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN ? 'success':'warning').'" role="alert">Last Beat on '.$last_beat['run_time'].' ('.$interval->format($differenceFormat).' ago)</div>';
+            $out = '<div class="alert alert-' . (abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN ? 'success' : 'warning') . '" role="alert">Last Beat on ' . $last_beat['run_time'] . ' (' . $interval->format($differenceFormat) . ' ago)</div>';
         }
         return $out;
     }
@@ -334,18 +316,18 @@ class Cron extends AdminManageModelsPage
         return array_map(
             function ($task) {
                 return [
-                'ID' => $task->id,
-                'Title' => $task->title,
-                'Callable' => $task->cron_task_callable,
-                'Schedule' => '<a href="'. $task->getInfoUrl() .'" target="_blank">'. $task->schedule .'</a>',
-                'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', $this->getCurrentLocale()),
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($task->id),
-                    $this->getDeleteButton($task->id),
-                    ]
-                ),
+                    'ID' => $task->id,
+                    'Title' => $task->title,
+                    'Callable' => $task->cron_task_callable,
+                    'Schedule' => '<a href="' . $task->getInfoUrl() . '" target="_blank">' . $task->schedule . '</a>',
+                    'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', $this->getCurrentLocale()),
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($task->id),
+                            $this->getDeleteButton($task->id),
+                        ]
+                    ),
                 ];
             },
             $data

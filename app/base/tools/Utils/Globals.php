@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -59,8 +60,8 @@ class Globals extends ContainerAwareObject
         ];
 
         foreach ($this->getPageRegions() as $region) {
-            $out['pre_'.$region] = 'Pre-'.ucfirst(strtolower($region));
-            $out['post_'.$region] = 'Post-'.ucfirst(strtolower($region));
+            $out['pre_' . $region] = 'Pre-' . ucfirst(strtolower($region));
+            $out['post_' . $region] = 'Post-' . ucfirst(strtolower($region));
         }
 
         return $out;
@@ -81,7 +82,7 @@ class Globals extends ContainerAwareObject
             $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
             $pageBlocks = [];
-            foreach ($this->getDb()->table('block')->where(['locale' => [$locale, null], 'website_id' =>[$website_id, null]])->orderBy('order')->fetchAll() as $row) {
+            foreach ($this->getDb()->table('block')->where(['locale' => [$locale, null], 'website_id' => [$website_id, null]])->orderBy('order')->fetchAll() as $row) {
                 $block = $this->getContainer()->make(Block::class, ['dbrow' => $row]);
                 if (!isset($pageBlocks[$block->region])) {
                     $pageBlocks[$block->region] = [];
@@ -104,7 +105,7 @@ class Globals extends ContainerAwareObject
     {
         $websitesDB = [];
         foreach ($this->getDb()->table('website')->fetchAll() as $w) {
-            $websitesDB[$w->id] = $w->site_name . " (".$w->domain.")";
+            $websitesDB[$w->id] = $w->site_name . " (" . $w->domain . ")";
         }
         return $websitesDB;
     }
@@ -121,7 +122,7 @@ class Globals extends ContainerAwareObject
     {
         $languages = $this->getSiteData()->getSiteLocales($website_id);
         $langsDB = [];
-        foreach ($this->getDb()->table('language')->where(['locale'=>$languages])->fetchAll() as $l) {
+        foreach ($this->getDb()->table('language')->where(['locale' => $languages])->fetchAll() as $l) {
             $langsDB[$l->locale] = $l;
         }
 
@@ -195,7 +196,7 @@ class Globals extends ContainerAwareObject
             case 403:
             case 404:
             case 405:
-                $template = $this->getTemplates()->make($template_name ?: 'errors::'.$error_code);
+                $template = $this->getTemplates()->make($template_name ?: 'errors::' . $error_code);
                 $template->data($template_data);
 
                 return (new Response(
@@ -431,7 +432,7 @@ class Globals extends ContainerAwareObject
      */
     public function logException(Throwable $e, $prefix = null, Request $request = null)
     {
-        $this->getLog()->error($prefix . ($prefix != null ? ' - ':'') . $e->getMessage());
+        $this->getLog()->error($prefix . ($prefix != null ? ' - ' : '') . $e->getMessage());
         $this->getLog()->debug($e->getTraceAsString());
         if ($request != null && !empty($request->request->all())) {
             $this->getLog()->debug(serialize($request->request->all()));
@@ -464,7 +465,7 @@ class Globals extends ContainerAwareObject
     {
         $res = $this->getGuzzle()->request($method, $url, $options);
         if ($res->getStatusCode() == 200) {
-            $body = (string) $res->getBody();
+            $body = (string)$res->getBody();
             if (preg_match("/application\/json/i", $res->getHeader('content-type')[0])) {
                 return json_decode($body);
             }
@@ -477,7 +478,7 @@ class Globals extends ContainerAwareObject
     /**
      * translates a string
      *
-     * @param string$string
+     * @param string $string
      * @param string|null $locale
      * @return string
      * @throws BasicException
@@ -493,14 +494,14 @@ class Globals extends ContainerAwareObject
     /**
      * checks password
      *
-     * @param  string $pass
-     * @param  string $encoded_pass
+     * @param string $pass
+     * @param string $encoded_pass
      * @return boolean
      */
     public function checkPass($pass, $encoded_pass)
     {
-        $salt = substr($encoded_pass, strrpos($encoded_pass, ':')+1);
-        return (sha1($salt.$pass).':'.$salt) == $encoded_pass;
+        $salt = substr($encoded_pass, strrpos($encoded_pass, ':') + 1);
+        return (sha1($salt . $pass) . ':' . $salt) == $encoded_pass;
     }
 
     /**
@@ -512,7 +513,7 @@ class Globals extends ContainerAwareObject
      */
     public function getEncodedPass($pass)
     {
-        return sha1($this->getEnv('SALT').$pass).':'.$this->getEnv('SALT');
+        return sha1($this->getEnv('SALT') . $pass) . ':' . $this->getEnv('SALT');
     }
 
     /**

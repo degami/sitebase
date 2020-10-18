@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -38,6 +39,6 @@ class CronTask extends BaseModel
      */
     public function getInfoUrl()
     {
-        return 'https://crontab.guru/#'. str_replace(" ", "_", $this->schedule);
+        return 'https://crontab.guru/#' . str_replace(" ", "_", $this->schedule);
     }
 }

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
@@ -40,7 +41,7 @@ trait AdminFormTrait
             $languages = $this->getUtils()->getSiteLanguagesSelectOptions($object->getWebsiteId());
 
             foreach ($form_elements as $key => $element) {
-                ${"object_".$element} = $object->{$element};
+                ${"object_" . $element} = $object->{$element};
             }
         } else {
             $languages = $this->getUtils()->getSiteLanguagesSelectOptions($form_state['input_values']['website_id'] ?? null);
@@ -62,10 +63,10 @@ trait AdminFormTrait
             $fieldset->addField(
                 'url',
                 [
-                'type' => 'textfield',
-                'title' => 'Url key',
-                'default_value' => $object_url,
-                'validate' => ['required'],
+                    'type' => 'textfield',
+                    'title' => 'Url key',
+                    'default_value' => $object_url,
+                    'validate' => ['required'],
                 ]
             );
         }
@@ -74,22 +75,22 @@ trait AdminFormTrait
             $fieldset->addField(
                 'website_id',
                 [
-                'type' => 'select',
-                'title' => 'Website',
-                'default_value' => $object_website,
-                'options' => $websites,
-                'validate' => ['required'],
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'default_value' => $object_website,
+                    'options' => $websites,
+                    'validate' => ['required'],
 
-                'ajax_url' =>  $this->getUrl('admin.json.websitelanguagescallback').'?'.$_SERVER['QUERY_STRING'].'&object_class='.urlencode($this->getObjectClass()),
-                'event' => [
-                  [
-                    'event' => 'change',
-                    'callback' => [static::class, 'changedWebsiteCallback'],
-                    'target' => 'website-locales-container',
-                    'effect' => 'fade',
-                    'method' => 'replace',
-                  ],
-                ],
+                    'ajax_url' => $this->getUrl('admin.json.websitelanguagescallback') . '?' . $_SERVER['QUERY_STRING'] . '&object_class=' . urlencode($this->getObjectClass()),
+                    'event' => [
+                        [
+                            'event' => 'change',
+                            'callback' => [static::class, 'changedWebsiteCallback'],
+                            'target' => 'website-locales-container',
+                            'effect' => 'fade',
+                            'method' => 'replace',
+                        ],
+                    ],
 
                 ]
             );
@@ -106,13 +107,13 @@ trait AdminFormTrait
             $fieldset->addField(
                 'locale',
                 [
-                'prefix' => '<div id="website-locales-container">',
-                'suffix' => '</div>',
-                'type' => 'select',
-                'title' => 'Locale',
-                'default_value' => $object_locale,
-                'options' => $languages,
-                'validate' => ['required'],
+                    'prefix' => '<div id="website-locales-container">',
+                    'suffix' => '</div>',
+                    'type' => 'select',
+                    'title' => 'Locale',
+                    'default_value' => $object_locale,
+                    'options' => $languages,
+                    'validate' => ['required'],
                 ]
             );
         }
@@ -162,27 +163,27 @@ trait AdminFormTrait
         $fieldset->addField(
             'meta_description',
             [
-            'type' => 'textfield',
-            'title' => 'Meta Description',
-            'default_value' => $object_meta_description,
+                'type' => 'textfield',
+                'title' => 'Meta Description',
+                'default_value' => $object_meta_description,
             ]
         )
-        ->addField(
-            'meta_keywords',
-            [
-            'type' => 'textfield',
-            'title' => 'Meta Keywords',
-            'default_value' => $object_meta_keywords,
-            ]
-        )
-        ->addField(
-            'html_title',
-            [
-            'type' => 'textfield',
-            'title' => 'Html Title',
-            'default_value' => $object_html_title,
-            ]
-        );
+            ->addField(
+                'meta_keywords',
+                [
+                    'type' => 'textfield',
+                    'title' => 'Meta Keywords',
+                    'default_value' => $object_meta_keywords,
+                ]
+            )
+            ->addField(
+                'html_title',
+                [
+                    'type' => 'textfield',
+                    'title' => 'Html Title',
+                    'default_value' => $object_html_title,
+                ]
+            );
 
 
         return $form;

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\App;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -34,8 +35,8 @@ class Serve extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('port', 'p', InputOption::VALUE_OPTIONAL),
-                    //new InputOption('website', 'w', InputOption::VALUE_OPTIONAL),
+                        new InputOption('port', 'p', InputOption::VALUE_OPTIONAL),
+                        //new InputOption('website', 'w', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -44,8 +45,8 @@ class Serve extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -57,16 +58,16 @@ class Serve extends BaseCommand
 
         $website_id = $input->getOption('website');
         $website = null;
-        if (!is_numeric($website_id) || ($website = $this->getContainer()->call([Website::class,'load'], ['id' => $website_id]))->id != $website_id) {
+        if (!is_numeric($website_id) || ($website = $this->getContainer()->call([Website::class, 'load'], ['id' => $website_id]))->id != $website_id) {
             $website = null;
             $website_id = 1;
         }
 
         if (!$website instanceof Website) {
-            $website = $this->getContainer()->call([Website::class,'load'], ['id' => $website_id]);
+            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $website_id]);
         }
 
-        echo "Serving [".$website->domain."] pages on http://localhost:".$port."\n";
-        system("website_id=".$website_id." php -S localhost:".$port." ".App::getDir('root').DS.'php_server'.DS.'router.php');
+        echo "Serving [" . $website->domain . "] pages on http://localhost:" . $port . "\n";
+        system("website_id=" . $website_id . " php -S localhost:" . $port . " " . App::getDir('root') . DS . 'php_server' . DS . 'router.php');
     }
 }

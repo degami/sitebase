@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -41,8 +42,8 @@ abstract class LoggedUserFormPage extends LoggedUserPage
         parent::__construct($container, $request);
         $this->templateData = [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
-            ->setValidate([ [$this, 'formValidate'] ])
-            ->setSubmit([ [$this, 'formSubmitted'] ]),
+                ->setValidate([[$this, 'formValidate']])
+                ->setSubmit([[$this, 'formSubmitted']]),
         ];
 
         $this->processFormSubmit();

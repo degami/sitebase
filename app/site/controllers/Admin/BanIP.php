@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -107,7 +108,7 @@ class BanIP extends AdminFormPage
             'default_value' => 1,
         ]);
 
-        $this->fillConfirmationForm("Do you really want to ban IP: ".$this->getRequest()->get('ip'), $form, $this->getUrl('admin.dashboard'));
+        $this->fillConfirmationForm("Do you really want to ban IP: " . $this->getRequest()->get('ip'), $form, $this->getUrl('admin.dashboard'));
 
         return $form;
     }
@@ -115,8 +116,8 @@ class BanIP extends AdminFormPage
     /**
      * validates form submission
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -156,7 +157,7 @@ class BanIP extends AdminFormPage
         $this->blocked_ips = array_unique($this->blocked_ips);
         file_put_contents($this->getBanFileName(), $this->getBanFileContents());
 
-        $this->addFlashMessage('info', 'IP: '.$values->ip.' has been banned!');
+        $this->addFlashMessage('info', 'IP: ' . $values->ip . ' has been banned!');
         return $this->doRedirect($this->getUrl('admin.dashboard'));
     }
 
@@ -177,8 +178,8 @@ class BanIP extends AdminFormPage
      */
     protected function getBanFileContents()
     {
-        return "<?php\n\nreturn \$blocked_ips = [\n".implode("", array_map(function ($el) {
-            return "  '$el',\n";
-        }, $this->blocked_ips))."];\n";
+        return "<?php\n\nreturn \$blocked_ips = [\n" . implode("", array_map(function ($el) {
+                return "  '$el',\n";
+            }, $this->blocked_ips)) . "];\n";
     }
 }

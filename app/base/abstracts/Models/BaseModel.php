@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Models;
 
 use ArrayAccess;
@@ -124,8 +125,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * returns an array of models, starting from a statement Result
      *
-     * @param  ContainerInterface $container
-     * @param  Result $stmt
+     * @param ContainerInterface $container
+     * @param Result $stmt
      * @return array
      */
     public static function hidrateStatementResult(ContainerInterface $container, Result $stmt)
@@ -143,8 +144,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * basic select statement
      *
-     * @param  ContainerInterface $container
-     * @param  array              $options
+     * @param ContainerInterface $container
+     * @param array $options
      * @return PDOStatement
      */
     public static function select(ContainerInterface $container, $options = [])
@@ -155,9 +156,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * gets basic where statement for model
      *
-     * @param  ContainerInterface $container
-     * @param  array              $condition
-     * @param  array              $order
+     * @param ContainerInterface $container
+     * @param array $condition
+     * @param array $order
      * @return Result
      */
     protected static function getModelBasicWhere(ContainerInterface $container, $condition = [], $order = [])
@@ -171,7 +172,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         if (!empty($order) && is_array($order)) {
             foreach ($order as $column => $direction) {
-                if (!in_array(strtoupper(trim($direction)), ['ASC','DESC'])) {
+                if (!in_array(strtoupper(trim($direction)), ['ASC', 'DESC'])) {
                     // not a direction, maybe not in form <columnaname> => <direction>, use direction as column
                     $stmt = $stmt->orderBy($direction);
                 } else {
@@ -188,16 +189,16 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * returns all found items
      *
-     * @param  ContainerInterface $container
-     * @param  array              $condition
-     * @param  array              $order
+     * @param ContainerInterface $container
+     * @param array $condition
+     * @param array $order
      * @return array
      */
     public static function all(ContainerInterface $container, $condition = [], $order = [])
     {
         $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
         }
 
@@ -207,11 +208,11 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * return subset of found items (useful for paginate)
      *
-     * @param  ContainerInterface $container
-     * @param  Request            $request
-     * @param  integer            $page_size
-     * @param  array              $condition
-     * @param  array              $order
+     * @param ContainerInterface $container
+     * @param Request $request
+     * @param integer $page_size
+     * @param array $condition
+     * @param array $order
      * @return array
      */
     public static function paginate(ContainerInterface $container, Request $request, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = [])
@@ -227,9 +228,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * return subset of found items (useful for paginate)
      *
-     * @param  ContainerInterface $container
-     * @param  Request            $request
-     * @param  Result            $stmt
+     * @param ContainerInterface $container
+     * @param Request $request
+     * @param Result $stmt
      * @return array
      */
     public function paginateByStatement(ContainerInterface $container, Request $request, Result $stmt, $page_size = self::ITEMS_PER_PAGE)
@@ -241,7 +242,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         $items = static::hidrateStatementResult($container, $stmt->limit($page_size, $start));
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
         }
 
@@ -251,16 +252,16 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * finds elements
      *
-     * @param  ContainerInterface $container
-     * @param  array|string       $condition
-     * @param  array              $order
+     * @param ContainerInterface $container
+     * @param array|string $condition
+     * @param array $order
      * @return array
      */
     public static function where(ContainerInterface $container, $condition, $order = [])
     {
         $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
-        foreach($items as $item) {
+        foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
         }
 
@@ -331,7 +332,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     public function checkLoaded()
     {
         if (!$this->isLoaded()) {
-            throw new Exception($this->getModelName()." is not loaded", 1);
+            throw new Exception($this->getModelName() . " is not loaded", 1);
         }
 
         return $this;
@@ -372,7 +373,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
-        $measure_key = 'load model: '.static::defaultTableName();
+        $measure_key = 'load model: ' . static::defaultTableName();
 
         if (getenv('DEBUG')) {
             $debugbar['time']->startMeasure($measure_key);
@@ -407,22 +408,22 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     public static function loadMultiple(ContainerInterface $container, $ids, $reset = false)
     {
         $already_loaded = [];
-        if(!$reset && isset(static::$loadedObjects[static::defaultTableName()])) {
-            $new_ids = array_diff(array_filter($ids, function($el){
+        if (!$reset && isset(static::$loadedObjects[static::defaultTableName()])) {
+            $new_ids = array_diff(array_filter($ids, function ($el) {
                 return is_numeric($el) && $el > 0;
             }), array_keys(static::$loadedObjects[static::defaultTableName()]));
 
             $already_loaded = array_diff($ids, $new_ids);
             $ids = $new_ids;
         } else {
-            $ids = array_filter($ids, function($el){
+            $ids = array_filter($ids, function ($el) {
                 return is_numeric($el) && $el > 0;
             });
         }
 
         return
-            (!empty($ids) ? static::loadMultipleByCondition($container,  ['id' => $ids], $reset) : []) +
-            (!empty($already_loaded) ?  array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($already_loaded)) : []);
+            (!empty($ids) ? static::loadMultipleByCondition($container, ['id' => $ids], $reset) : []) +
+            (!empty($already_loaded) ? array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($already_loaded)) : []);
     }
 
     /**
@@ -453,7 +454,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     public static function loadMultipleByCondition(ContainerInterface $container, $condition, $reset = false)
     {
         $ids = [];
-        foreach($container->get('db')->table(static::defaultTableName())->where($condition)->fetchAll() as $dbrow) {
+        foreach ($container->get('db')->table(static::defaultTableName())->where($condition)->fetchAll() as $dbrow) {
             $ids[] = intval($dbrow->id);
             /** @var Result $dbrow */
             if (!isset($loadedObjects[static::defaultTableName()][$dbrow->id]) || $reset) {
@@ -552,7 +553,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         if ($name != 'getData') {
             $method_name = static::pascalCaseToSnakeCase($name);
-            if (in_array($method = strtolower(substr($method_name, 0, 4)), ['get_','has_','set_'])) {
+            if (in_array($method = strtolower(substr($method_name, 0, 4)), ['get_', 'has_', 'set_'])) {
                 $prop = substr($method_name, 4);
                 switch (substr($method, 0, 3)) {
                     case 'get':

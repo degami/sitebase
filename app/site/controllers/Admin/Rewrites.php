@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -79,13 +80,10 @@ class Rewrites extends AdminManageModelsPage
         $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
         $websites = ['' => 'All Websites'] + $this->getUtils()->getWebsitesSelectOptions();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -100,43 +98,28 @@ class Rewrites extends AdminManageModelsPage
                     $rewrite_locale = $rewrite->locale;
                 }
 
-                $form->addField(
-                    'url',
-                    [
+                $form->addField('url', [
                     'type' => 'textfield',
                     'title' => 'Url',
                     'default_value' => $rewrite_url,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'route',
-                    [
+                ])->addField('route', [
                     'type' => 'textfield',
                     'title' => 'Route',
                     'default_value' => $rewrite_route,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'website_id',
-                    [
+                ])->addField('website_id', [
                     'type' => 'select',
                     'title' => 'Website',
                     'default_value' => $rewrite_website,
                     'options' => $websites,
-                    ]
-                )
-                ->addField(
-                    'locale',
-                    [
+                ])->addField('locale', [
                     'type' => 'select',
                     'title' => 'Locale',
                     'default_value' => $rewrite_locale,
                     'options' => $languages,
                     'validate' => ['required'],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -145,12 +128,12 @@ class Rewrites extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $form->addMarkup(
-                    '<h4>'.sprintf($this->getUtils()->translate('Translations for <strong>%s</strong>'), $rewrite->getUrl()).'</h4>'
+                    '<h4>' . sprintf($this->getUtils()->translate('Translations for <strong>%s</strong>'), $rewrite->getUrl()) . '</h4>'
                 );
 
                 $other_rewrites = [];
                 foreach ($this->getDb()->table('rewrite')->where('id != ?', $rewrite->getId())->fetchAll() as $item) {
-                    $other_rewrites[$item->id] = $item->route.' - '.$item->locale . " (".$item->url.")";
+                    $other_rewrites[$item->id] = $item->route . ' - ' . $item->locale . " (" . $item->url . ")";
                 }
                 $translations = $rewrite->getTranslations();
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
@@ -160,15 +143,12 @@ class Rewrites extends AdminManageModelsPage
                     $form->addMarkup('<h3 class="text-center">No translation needed!</h3>');
                 } else {
                     foreach ($languages as $locale => $language_name) {
-                        $form->addField(
-                            'translation_'.$locale,
-                            [
+                        $form->addField('translation_' . $locale, [
                             'type' => 'select',
                             'title' => $language_name,
                             'options' => ['' => ''] + $other_rewrites,
                             'default_value' => isset($translations[$locale]) ? $translations[$locale]->id : '',
-                            ]
-                        );
+                        ]);
                     }
 
                     $this->addSubmitButton($form, true);
@@ -186,8 +166,8 @@ class Rewrites extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -230,8 +210,8 @@ class Rewrites extends AdminManageModelsPage
                         $locale = $matches[1];
                         $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->where(
                             [
-                            'source' => $rewrite->getId(),
-                            'destination_locale' => $locale,
+                                'source' => $rewrite->getId(),
+                                'destination_locale' => $locale,
                             ]
                         )->fetch();
                         if (!$rewrite_translation_row) {
@@ -240,10 +220,10 @@ class Rewrites extends AdminManageModelsPage
 
                         $rewrite_translation_row->update(
                             [
-                            'source' => $rewrite->getId(),
-                            'source_locale' => $rewrite->getLocale(),
-                            'destination' => !empty($value) ? $value : null,
-                            'destination_locale' => $locale
+                                'source' => $rewrite->getId(),
+                                'source_locale' => $rewrite->getLocale(),
+                                'destination' => !empty($value) ? $value : null,
+                                'destination_locale' => $locale
                             ]
                         );
                     }
@@ -252,7 +232,7 @@ class Rewrites extends AdminManageModelsPage
             case 'delete':
                 $rewrite->delete();
 
-                $this->setAdminActionLogData('Deleted rewrite '.$rewrite->getId());
+                $this->setAdminActionLogData('Deleted rewrite ' . $rewrite->getId());
 
                 break;
         }
@@ -288,19 +268,19 @@ class Rewrites extends AdminManageModelsPage
         return array_map(
             function ($rewrite) {
                 return [
-                'ID' => $rewrite->id,
-                'Website' => $rewrite->getWebsiteId() == null ? 'All websites' : $rewrite->getWebsite()->domain,
-                'URL' => $rewrite->url,
-                'Route' => $rewrite->route,
-                'Locale' => $rewrite->getLocale(),
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getActionButton('translations', $rewrite->id, 'success', 'tag', 'Translations'),
-                    $this->getEditButton($rewrite->id),
-                    $this->getDeleteButton($rewrite->id),
-                    ]
-                ),
+                    'ID' => $rewrite->id,
+                    'Website' => $rewrite->getWebsiteId() == null ? 'All websites' : $rewrite->getWebsite()->domain,
+                    'URL' => $rewrite->url,
+                    'Route' => $rewrite->route,
+                    'Locale' => $rewrite->getLocale(),
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getActionButton('translations', $rewrite->id, 'success', 'tag', 'Translations'),
+                            $this->getEditButton($rewrite->id),
+                            $this->getDeleteButton($rewrite->id),
+                        ]
+                    ),
                 ];
             },
             $data

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Frontend;
 
 use App\Base\Abstracts\Controllers\BaseHtmlPage;
@@ -140,7 +141,7 @@ class Page extends FrontendPageWithObject
         }
 
         // if page was not found, try to redirect to language
-        return $this->doRedirect("/".$browser_locale);
+        return $this->doRedirect("/" . $browser_locale);
     }
 
     /**
@@ -162,7 +163,7 @@ class Page extends FrontendPageWithObject
     protected function getBaseTemplateData()
     {
         $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()).' page-'. $this->getObject()->id;
+        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' page-' . $this->getObject()->id;
         return $out;
     }
 

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\App;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -27,13 +28,13 @@ class ModEnv extends BaseCommand
      * @var array dotenv file sections
      */
     protected $dotenv_sections = [
-        'Basic Info' => ['APPNAME','APPDOMAIN','SALT'],
-        'Database Info' => ['DATABASE_HOST','DATABASE_NAME','DATABASE_USER','DATABASE_PASS'],
-        'Admin Info' => ['ADMINPAGES_GROUP','ADMIN_USER','ADMIN_PASS','ADMIN_EMAIL'],
-        'Cache Info' => ['CACHE_LIFETIME','DISABLE_CACHE','ENABLE_FPC', 'PRELOAD_REWRITES'],
-        'Other Info' => ['ENABLE_LOGGEDPAGES','LOGGEDPAGES_GROUP','DEBUG','GTMID','ELASTICSEARCH','ELASTICSEARCH_HOST', 'ELASTICSEARCH_PORT'],
-        'Smtp Info' => ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASS'],
-        'SES Info' => ['SES_REGION','SES_PROFILE'],
+        'Basic Info' => ['APPNAME', 'APPDOMAIN', 'SALT'],
+        'Database Info' => ['DATABASE_HOST', 'DATABASE_NAME', 'DATABASE_USER', 'DATABASE_PASS'],
+        'Admin Info' => ['ADMINPAGES_GROUP', 'ADMIN_USER', 'ADMIN_PASS', 'ADMIN_EMAIL'],
+        'Cache Info' => ['CACHE_LIFETIME', 'DISABLE_CACHE', 'ENABLE_FPC', 'PRELOAD_REWRITES'],
+        'Other Info' => ['ENABLE_LOGGEDPAGES', 'LOGGEDPAGES_GROUP', 'DEBUG', 'GTMID', 'ELASTICSEARCH', 'ELASTICSEARCH_HOST', 'ELASTICSEARCH_PORT'],
+        'Smtp Info' => ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS'],
+        'SES Info' => ['SES_REGION', 'SES_PROFILE'],
     ];
 
     /**
@@ -47,8 +48,8 @@ class ModEnv extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -65,7 +66,7 @@ class ModEnv extends BaseCommand
 
         foreach ($this->dotenv_sections as $label => $keys) {
             foreach ($keys as $key) {
-                if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL','ADMIN_PASS','ADMIN_USER'])) {
+                if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL', 'ADMIN_PASS', 'ADMIN_USER'])) {
                     continue;
                 }
 
@@ -74,7 +75,7 @@ class ModEnv extends BaseCommand
                 }
                 $old_value = $dotenv[$key] ?? '';
 
-                $question = new Question($key.' value? defaults to ['.$old_value.']');
+                $question = new Question($key . ' value? defaults to [' . $old_value . ']');
                 $value = $helper->ask($input, $output, $question);
                 if (trim($value) == '') {
                     $value = $old_value;
@@ -87,13 +88,13 @@ class ModEnv extends BaseCommand
         foreach ($this->dotenv_sections as $label => $keys) {
             $dotenv .= "\n# -- {$label} --\n";
             foreach ($keys as $key) {
-                if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL','ADMIN_PASS','ADMIN_USER'])) {
+                if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL', 'ADMIN_PASS', 'ADMIN_USER'])) {
                     continue;
                 }
 
                 $value = $values[$key];
                 if (preg_match("/\s/i", $value)) {
-                    $value = '"'.$value.'"';
+                    $value = '"' . $value . '"';
                 }
                 $dotenv .= "{$key}={$value}\n";
             }
@@ -109,7 +110,7 @@ class ModEnv extends BaseCommand
             return;
         }
 
-        file_put_contents('.env', trim($dotenv)."\n", LOCK_EX);
+        file_put_contents('.env', trim($dotenv) . "\n", LOCK_EX);
         $output->writeln('<info>Config saved</info>');
     }
 }

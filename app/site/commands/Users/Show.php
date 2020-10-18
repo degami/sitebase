@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Users;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -44,7 +45,7 @@ class Show extends BaseCommand
     {
         $table = new Table($output);
         $table
-            ->setHeaders(['ID', 'Username','Email','Roles']);
+            ->setHeaders(['ID', 'Username', 'Email', 'Roles']);
 
         foreach ($this->getDb()->table('user')->fetchAll() as $k => $user_dbrow) {
             $user = $this->getContainer()->make(User::class, ['dbrow' => $user_dbrow]);
@@ -56,10 +57,10 @@ class Show extends BaseCommand
             $table
                 ->addRow(
                     [
-                    '<info>'.$user->getId().'</info>',
-                    $user->getUsername(),
-                    $user->getEmail(),
-                    $user->getRole()->getName(),
+                        '<info>' . $user->getId() . '</info>',
+                        $user->getUsername(),
+                        $user->getEmail(),
+                        $user->getRole()->getName(),
                     ]
                 );
         }

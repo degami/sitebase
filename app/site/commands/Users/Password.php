@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Users;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -36,8 +37,8 @@ class Password extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
-                    new InputOption('password', 'p', InputOption::VALUE_OPTIONAL),
+                        new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                        new InputOption('password', 'p', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -61,7 +62,7 @@ class Password extends BaseCommand
             return;
         }
 
-        $user = $this->getContainer()->call([User::class,'load'], ['id' => $id]);
+        $user = $this->getContainer()->call([User::class, 'load'], ['id' => $id]);
 
         if (!$user->isLoaded()) {
             $io->error('User does not exists');

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
@@ -87,14 +88,14 @@ class CookieNotice extends BaseCodeBlock
 
             $locale = $current_page->getCurrentLocale();
             /** @var Rewrite $rewrite */
-            $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $config['rewrite_'.$locale]]);
+            $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $config['rewrite_' . $locale]]);
 
             return (string)(new TagElement(
                 [
                     'tag' => 'div',
                     'attributes' => [
                         'class' => $class,
-                        'style' => "display:none;{$config['sticky']}: 0;background-color: {$config['background-color']};color: {$config['color']};border-".(($config['sticky'] == 'top' ? 'bottom':'top')).": solid 1px {$config['color']};",
+                        'style' => "display:none;{$config['sticky']}: 0;background-color: {$config['background-color']};color: {$config['color']};border-" . (($config['sticky'] == 'top' ? 'bottom' : 'top')) . ": solid 1px {$config['color']};",
                     ],
                     'text' =>
                         sprintf(
@@ -112,8 +113,7 @@ class CookieNotice extends BaseCodeBlock
                     ]
                 ]
             ));
-        } catch (Exception $e) {
-        }
+        } catch (Exception $e) {}
         return "";
     }
 
@@ -132,52 +132,40 @@ class CookieNotice extends BaseCodeBlock
 
         $rewrites = ['none' => ''];
         foreach ($this->getDb()->rewrite()->fetchAll() as $rewrite) {
-            $rewrites[$rewrite->id] = $rewrite->url." ({$rewrite->route})";
+            $rewrites[$rewrite->id] = $rewrite->url . " ({$rewrite->route})";
         }
 
         $current_website = $this->getSiteData()->getCurrentWebsiteId();
         foreach ($this->getSiteData()->getSiteLocales($current_website) as $locale) {
-            $config_fields[] = $form->getFieldObj(
-                'rewrite_'.$locale,
-                [
-                    'type' => 'select',
-                    'title' => 'Privacy page '.$locale,
-                    'options' => $rewrites,
-                    'default_value' => $default_values['rewrite_'.$locale] ?? '',
-                ]
-            );
+            $config_fields[] = $form->getFieldObj('rewrite_' . $locale, [
+                'type' => 'select',
+                'title' => 'Privacy page ' . $locale,
+                'options' => $rewrites,
+                'default_value' => $default_values['rewrite_' . $locale] ?? '',
+            ]);
         }
 
-        $config_fields[] = $form->getFieldObj(
-            'background-color',
-            [
-                'type' => 'colorpicker',
-                'title' => 'Background color',
-                'default_value' => $default_values['background-color'] ?? 'cecece',
-            ]
-        );
+        $config_fields[] = $form->getFieldObj('background-color', [
+            'type' => 'colorpicker',
+            'title' => 'Background color',
+            'default_value' => $default_values['background-color'] ?? 'cecece',
+        ]);
 
-        $config_fields[] = $form->getFieldObj(
-            'color',
-            [
-                'type' => 'colorpicker',
-                'title' => 'Color',
-                'default_value' => $default_values['color'] ?? '000000',
-            ]
-        );
+        $config_fields[] = $form->getFieldObj('color', [
+            'type' => 'colorpicker',
+            'title' => 'Color',
+            'default_value' => $default_values['color'] ?? '000000',
+        ]);
 
-        $config_fields[] = $form->getFieldObj(
-            'sticky',
-            [
-                'type' => 'select',
-                'title' => 'Position',
-                'options' => [
-                    'top' => 'Top',
-                    'bottom' => 'Bottom',
-                ],
-                'default_value' => $default_values['sticky'] ?? 'bottom',
-            ]
-        );
+        $config_fields[] = $form->getFieldObj('sticky', [
+            'type' => 'select',
+            'title' => 'Position',
+            'options' => [
+                'top' => 'Top',
+                'bottom' => 'Bottom',
+            ],
+            'default_value' => $default_values['sticky'] ?? 'bottom',
+        ]);
 
         return $config_fields;
     }

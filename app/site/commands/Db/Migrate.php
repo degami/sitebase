@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Db;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -58,10 +59,10 @@ class Migrate extends BaseCommand
         $this->factory = $this->getContainer()->make(
             Factory::class,
             [
-            'adapter' => $this->adapter,
-            'classLoader' => function ($classname) use ($container) {
-                return new $classname($container);
-            },
+                'adapter' => $this->adapter,
+                'classLoader' => function ($classname) use ($container) {
+                    return new $classname($container);
+                },
             ]
         );
         $this->directory = App::getDir(App::MIGRATIONS);
@@ -76,7 +77,7 @@ class Migrate extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('direction', 'd', InputOption::VALUE_OPTIONAL),
+                        new InputOption('direction', 'd', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -85,8 +86,8 @@ class Migrate extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)

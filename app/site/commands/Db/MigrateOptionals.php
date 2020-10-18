@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Db;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -30,7 +31,7 @@ class MigrateOptionals extends Migrate
     public function __construct($name = null, ContainerInterface $container = null)
     {
         parent::__construct($name, $container);
-        $this->directory = App::getDir(App::MIGRATIONS).DS.'optionals';
+        $this->directory = App::getDir(App::MIGRATIONS) . DS . 'optionals';
     }
 
     /**

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
@@ -34,7 +35,7 @@ class CreateRewriteTranslationsTableMigration extends DBMigration
      */
     public function getName()
     {
-        return '05_'.parent::getName();
+        return '05_' . parent::getName();
     }
 
     /**
@@ -57,7 +58,7 @@ class CreateRewriteTranslationsTableMigration extends DBMigration
             ->addForeignKey('fk_rewrite_translation_destination_language_locale', ['destination_locale'], 'language', ['locale'])
             ->addForeignKey('fk_rewrite_source_id', ['source'], 'rewrite', ['id'])
             ->addForeignKey('fk_rewrite_destination_id', ['destination'], 'rewrite', ['id'])
-            ->addIndex('rewrite_translation_unique', ['source','destination','destination_locale'], Index::TYPE_UNIQUE)
+            ->addIndex('rewrite_translation_unique', ['source', 'destination', 'destination_locale'], Index::TYPE_UNIQUE)
             ->setAutoIncrementColumn('id');
 
         return $table;

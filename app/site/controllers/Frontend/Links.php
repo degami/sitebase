@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Frontend;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -44,7 +45,7 @@ class Links extends FormPage
      */
     public static function getRouteVerbs()
     {
-        return ['GET','POST'];
+        return ['GET', 'POST'];
     }
 
     /**
@@ -88,54 +89,35 @@ class Links extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
-        $form->addField(
-            'url',
-            [
+        $form->addField('url', [
             'type' => 'textfield',
             'title' => 'Insert your URL',
             'validate' => ['required'],
-            ]
-        )
-            ->addField(
-                'email',
-                [
-                'type' => 'email',
-                'title' => 'Your Email',
-                'validate' => ['required'],
-                ]
-            )
-            ->addField(
-                'title',
-                [
-                'type' => 'textfield',
-                'title' => 'Your Site Name',
-                'validate' => ['required'],
-                ]
-            )
-            ->addField(
-                'description',
-                [
-                'type' => 'textarea',
-                'title' => 'Your Site Description',
-                'validate' => ['required'],
-                'rows' => 5,
-                ]
-            )
-            ->addField(
-                'button',
-                [
-                'type' => 'button',
-                'value' => 'Send',
-                'container_class' => 'form-item mt-3',
-                'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                ]
-            );
+        ])->addField('email', [
+            'type' => 'email',
+            'title' => 'Your Email',
+            'validate' => ['required'],
+        ])->addField('title', [
+            'type' => 'textfield',
+            'title' => 'Your Site Name',
+            'validate' => ['required'],
+        ])->addField('description', [
+            'type' => 'textarea',
+            'title' => 'Your Site Description',
+            'validate' => ['required'],
+            'rows' => 5,
+        ])->addField('button', [
+            'type' => 'button',
+            'value' => 'Send',
+            'container_class' => 'form-item mt-3',
+            'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
+        ]);
 
         return $form;
     }
@@ -143,8 +125,8 @@ class Links extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -181,10 +163,10 @@ class Links extends FormPage
         $this->getUtils()->addQueueMessage(
             'link_form_mail',
             [
-            'from' => $values->email,
-            'to' => $this->getSiteData()->getSiteEmail(),
-            'subject' => 'New Link exchange',
-            'body' => var_export($values->getData(), true),
+                'from' => $values->email,
+                'to' => $this->getSiteData()->getSiteEmail(),
+                'subject' => 'New Link exchange',
+                'body' => var_export($values->getData(), true),
             ]
         );
 

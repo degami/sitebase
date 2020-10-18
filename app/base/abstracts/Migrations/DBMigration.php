@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Migrations;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -43,14 +44,14 @@ abstract class DBMigration extends BaseMigration
             }
 
             if ($table == null) {
-                throw new Exception("Errors with table ". $this->tableName, 1);
+                throw new Exception("Errors with table " . $this->tableName, 1);
             }
 
             $table = $this->addDBTableDefinition($table);
 
             $sql = $table->migrate();
             if ($this->getPdo()->exec($sql) === false) {
-                throw new Exception("SQL Error: ".$this->getPdo()->errorInfo()[2], 1);
+                throw new Exception("SQL Error: " . $this->getPdo()->errorInfo()[2], 1);
             }
         } catch (Exception $e) {
             if (isset($sql) && ($table instanceof Table)) {
@@ -72,7 +73,7 @@ abstract class DBMigration extends BaseMigration
     /**
      * add db table definition
      *
-     * @param  Table $table
+     * @param Table $table
      * @return Table
      */
     abstract public function addDBTableDefinition(Table $table);

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -70,7 +71,7 @@ class MediaRewrites extends AdminManageModelsPage
         return MediaElementRewrite::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -93,13 +94,10 @@ class MediaRewrites extends AdminManageModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $media_rewrite = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -108,7 +106,7 @@ class MediaRewrites extends AdminManageModelsPage
 
                 $rewrites = ['none' => ''];
                 foreach ($this->getDb()->rewrite()->fetchAll() as $rewrite) {
-                    $rewrites[$rewrite->id] = $rewrite->url." ({$rewrite->route})";
+                    $rewrites[$rewrite->id] = $rewrite->url . " ({$rewrite->route})";
                 }
 
                 $medias = ['' => ''];
@@ -122,27 +120,19 @@ class MediaRewrites extends AdminManageModelsPage
                     $media_rewrite_media_id = $media_rewrite->media_element_id;
                 }
 
-                $form
-                ->addField(
-                    'rewrite_id',
-                    [
+                $form->addField('rewrite_id', [
                     'type' => 'select',
                     'title' => 'Rewrite',
                     'default_value' => $media_rewrite_rewrite_id,
                     'options' => $rewrites,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'media_id',
-                    [
+                ])->addField('media_id', [
                     'type' => 'select',
                     'title' => 'Media',
                     'default_value' => $media_rewrite_media_id,
                     'options' => $medias,
                     'validate' => ['required'],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
@@ -158,8 +148,8 @@ class MediaRewrites extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -229,20 +219,20 @@ class MediaRewrites extends AdminManageModelsPage
         return array_map(
             function ($elem) {
                 return [
-                'ID' => $elem->getId(),
-                'Preview' => $elem->getMediaElement()->getThumb('100x100'),
-                'Filename - Path' => $elem->getMediaElement()->getFilename(),
-                'Website' => $elem->getRewriteId() != null ? $elem->getRewrite()->getWebsite()->getDomain() : 'All',
-                'Rewrite - Url' => $elem->getRewriteId() != null ? $elem->getRewrite()->getUrl() : 'Everywhere',
-                'Locale' => $elem->getRewriteId() != null ? $elem->getRewrite()->getLocale() : 'Any',
-                'Owner' => $elem->getOwner()->username,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getEditButton($elem->id),
-                    $this->getDeleteButton($elem->id),
-                    ]
-                ),
+                    'ID' => $elem->getId(),
+                    'Preview' => $elem->getMediaElement()->getThumb('100x100'),
+                    'Filename - Path' => $elem->getMediaElement()->getFilename(),
+                    'Website' => $elem->getRewriteId() != null ? $elem->getRewrite()->getWebsite()->getDomain() : 'All',
+                    'Rewrite - Url' => $elem->getRewriteId() != null ? $elem->getRewrite()->getUrl() : 'Everywhere',
+                    'Locale' => $elem->getRewriteId() != null ? $elem->getRewrite()->getLocale() : 'Any',
+                    'Owner' => $elem->getOwner()->username,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getEditButton($elem->id),
+                            $this->getDeleteButton($elem->id),
+                        ]
+                    ),
                 ];
             },
             $data

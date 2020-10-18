@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
@@ -36,14 +37,14 @@ class SecondaryMenu extends BaseCodeBlock
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $locale = $current_page->getCurrentLocale();
         $config = array_filter(json_decode($data['config'] ?? '{}', true));
-        $menu_name = $config['menu_name_'.$locale] ?? '';
+        $menu_name = $config['menu_name_' . $locale] ?? '';
         if (empty($menu_name)) {
             return "";
         }
 
         $tree = $this->getUtils()->getSiteMenu($menu_name, $website_id, $locale);
 
-        $menu_container = $this->getContainer()->make(TagElement::class, ['options' =>  [
+        $menu_container = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'div',
             'attributes' => [
                 'class' => 'menu',
@@ -52,7 +53,7 @@ class SecondaryMenu extends BaseCodeBlock
 
         $menu_container->addChild($this->_renderSiteMenu($tree));
 
-        $out = $this->getContainer()->make(TagElement::class, ['options' =>  [
+        $out = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'nav',
             'attributes' => [
                 'class' => 'secondary-menu',
@@ -73,7 +74,7 @@ class SecondaryMenu extends BaseCodeBlock
      */
     protected function _renderSiteMenu($menu_tree, $parent = null)
     {
-        $menu_list = $this->getContainer()->make(TagElement::class, ['options' =>  [
+        $menu_list = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'ul',
             'attributes' => [
                 'class' => 'navbar-nav mr-auto',
@@ -81,13 +82,10 @@ class SecondaryMenu extends BaseCodeBlock
         ]]);
 
         foreach ($menu_tree as $leaf) {
-            $li = $this->getContainer()->make(
-                TagElement::class,
-                ['options' => [
+            $li = $this->getContainer()->make(TagElement::class, ['options' => [
                 'tag' => 'li',
                 'attributes' => ['class' => 'menu-item'],
-                ]]
-            );
+            ]]);
             $menu_list->addChild($li);
 
             $li->addChild($this->_renderMenuLink($leaf));
@@ -106,8 +104,8 @@ class SecondaryMenu extends BaseCodeBlock
     /**
      * internally renders menu link
      *
-     * @param  array  $leaf
-     * @param  string $link_class
+     * @param array $leaf
+     * @param string $link_class
      * @return string
      */
     protected function _renderMenuLink($leaf, $link_class = 'menu-elem')
@@ -148,14 +146,11 @@ class SecondaryMenu extends BaseCodeBlock
 
         $current_website = $this->getSiteData()->getCurrentWebsiteId();
         foreach ($this->getSiteData()->getSiteLocales($current_website) as $locale) {
-            $config_fields[] = $form->getFieldObj(
-                'menu_name_'.$locale,
-                [
+            $config_fields[] = $form->getFieldObj('menu_name_' . $locale, [
                 'type' => 'textfield',
-                'title' => $locale.' menu name',
-                'default_value' => $default_values['menu_name_'.$locale] ?? '',
-                ]
-            );
+                'title' => $locale . ' menu name',
+                'default_value' => $default_values['menu_name_' . $locale] ?? '',
+            ]);
         }
 
         return $config_fields;

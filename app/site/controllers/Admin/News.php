@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -52,7 +53,7 @@ class News extends AdminManageFrontendModelsPage
         return NewsModel::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -75,13 +76,10 @@ class News extends AdminManageFrontendModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         $news = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'edit':
@@ -94,35 +92,23 @@ class News extends AdminManageFrontendModelsPage
                     $news_content = $news->content;
                     $news_date = $news->date;
                 }
-                $form
-                ->addField(
-                    'title',
-                    [
+                $form->addField('title', [
                     'type' => 'textfield',
                     'title' => 'Title',
                     'default_value' => $news_title,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'date',
-                    [
+                ])->addField('date', [
                     'type' => 'datepicker',
                     'title' => 'Date',
                     'default_value' => $news_date,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'content',
-                    [
+                ])->addField('content', [
                     'type' => 'tinymce',
                     'title' => 'Content',
                     'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
                     'default_value' => $news_content,
                     'rows' => 20,
-                    ]
-                );
+                ]);
 
                 $this->addFrontendFormElements($form, $form_state);
                 $this->addSubmitButton($form);
@@ -140,8 +126,8 @@ class News extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -171,8 +157,8 @@ class News extends AdminManageFrontendModelsPage
         switch ($values['action']) {
             case 'new':
                 $news->user_id = $this->getCurrentUser()->id;
-                // intentional fall trough
-                // no break
+            // intentional fall trough
+            // no break
             case 'edit':
                 $news->url = $values['frontend']['url'];
                 $news->title = $values['title'];
@@ -188,7 +174,7 @@ class News extends AdminManageFrontendModelsPage
             case 'delete':
                 $news->delete();
 
-                $this->setAdminActionLogData('Deleted news '.$news->getId());
+                $this->setAdminActionLogData('Deleted news ' . $news->getId());
 
                 break;
         }
@@ -226,21 +212,21 @@ class News extends AdminManageFrontendModelsPage
         return array_map(
             function ($news) {
                 return [
-                'ID' => $news->id,
-                'Website' => $news->getWebsiteId() == null ? 'All websites' : $news->getWebsite()->domain,
-                'URL' => $news->url,
-                'Locale' => $news->locale,
-                'Title' => $news->title,
-                'Date' => $news->date,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getFrontendModelButton($news),
-                    $this->getTranslationsButton($news),
-                    $this->getEditButton($news->id),
-                    $this->getDeleteButton($news->id),
-                    ]
-                ),
+                    'ID' => $news->id,
+                    'Website' => $news->getWebsiteId() == null ? 'All websites' : $news->getWebsite()->domain,
+                    'URL' => $news->url,
+                    'Locale' => $news->locale,
+                    'Title' => $news->title,
+                    'Date' => $news->date,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getFrontendModelButton($news),
+                            $this->getTranslationsButton($news),
+                            $this->getEditButton($news->id),
+                            $this->getDeleteButton($news->id),
+                        ]
+                    ),
                 ];
             },
             $data

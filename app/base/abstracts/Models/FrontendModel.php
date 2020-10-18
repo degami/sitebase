@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Models;
 
 use \App\Site\Models\Rewrite;
@@ -51,7 +52,7 @@ abstract class FrontendModel extends BaseModel
         if (!($this->rewriteObj instanceof Rewrite)) {
             $this->rewriteObj = $this->getContainer()->make(
                 Rewrite::class,
-                ['dbrow' => $this->getDb()->table('rewrite')->where('route', '/'.$this->getRewritePrefix().'/'.$this->getId())->fetch()]
+                ['dbrow' => $this->getDb()->table('rewrite')->where('route', '/' . $this->getRewritePrefix() . '/' . $this->getId())->fetch()]
             );
         }
         return $this->rewriteObj;
@@ -67,7 +68,7 @@ abstract class FrontendModel extends BaseModel
     {
         $this->checkLoaded();
 
-        return '/'.$this->getLocale().'/'.$this->getUtils()->slugify($this->getUrl(), false).'.html';
+        return '/' . $this->getLocale() . '/' . $this->getUtils()->slugify($this->getUrl(), false) . '.html';
     }
 
     /**
@@ -81,7 +82,7 @@ abstract class FrontendModel extends BaseModel
         $rewrite = $this->getRewrite();
         $rewrite->website_id = $this->getWebsiteId();
         $rewrite->url = $this->getFrontendUrl();
-        $rewrite->route = '/'.$this->getRewritePrefix().'/'.$this->getId();
+        $rewrite->route = '/' . $this->getRewritePrefix() . '/' . $this->getId();
         $rewrite->user_id = $this->getUserId();
         $rewrite->locale = $this->getLocale();
         $rewrite->persist();
@@ -114,7 +115,7 @@ abstract class FrontendModel extends BaseModel
             function ($el) {
                 $routeInfo = $el->getRouteInfo();
                 $modelClass = $this->getContainer()->call([$routeInfo->getHandler()[0], 'getObjectClass']);
-                $model = $this->getContainer()->call([$modelClass,'load'], $routeInfo->getVars());
+                $model = $this->getContainer()->call([$modelClass, 'load'], $routeInfo->getVars());
                 return $model->getRewrite()->getUrl();
             },
             $this->getRewrite()->getTranslations()

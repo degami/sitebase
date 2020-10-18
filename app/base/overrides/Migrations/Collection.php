@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Overrides\Migrations;
 
 use \Genkgo\Migrations\Collection as GenkgoMigrationCollection;
@@ -28,17 +29,17 @@ class Collection extends GenkgoMigrationCollection
      * @var AdapterInterface adapter
      */
     private $adapter;
-    
+
     /**
      * @var array migrations collection
      */
     private $list = [];
-    
+
     /**
      * @var string namespace
      */
     private $namespace;
-    
+
     /**
      * constructor
      *
@@ -58,7 +59,7 @@ class Collection extends GenkgoMigrationCollection
     {
         $this->list[] = $migration;
     }
-    
+
     /**
      * detach miggration
      *
@@ -98,13 +99,13 @@ class Collection extends GenkgoMigrationCollection
     /**
      * do the migration
      *
-     * @param  int $direction
+     * @param int $direction
      * @return Log
      */
     public function migrate($direction = MigrationInterface::DIRECTION_UP)
     {
         $result = new Log();
-        
+
         usort(
             $this->list,
             function ($item1, $item2) {
@@ -132,7 +133,7 @@ class Collection extends GenkgoMigrationCollection
                  */
             }
         }
-        
+
         return $result;
     }
 

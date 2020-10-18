@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use App\Site\Routing\Web;
@@ -162,7 +163,7 @@ abstract class BasePage extends ContainerAwareObject
         try {
             return get_class($this);
         } catch (Exception $e) {
-            return $e->getMessage()."\n".$e->getTraceAsString();
+            return $e->getMessage() . "\n" . $e->getTraceAsString();
         }
     }
 
@@ -211,7 +212,7 @@ abstract class BasePage extends ContainerAwareObject
             $path = reset($path);
 
             if (method_exists(static::class, 'getRouteGroup')) {
-                $path = call_user_func([static::class, 'getRouteGroup']).'/'.$path;
+                $path = call_user_func([static::class, 'getRouteGroup']) . '/' . $path;
             }
 
             $route_vars = [];
@@ -220,11 +221,11 @@ abstract class BasePage extends ContainerAwareObject
             }
 
             foreach ($route_vars as $varname => $value) {
-                $regexp = "/\{".$varname.Web::REGEXP_ROUTEVAR_EXPRESSION."\}/i";
+                $regexp = "/\{" . $varname . Web::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
                 $path = preg_replace($regexp, $value, $path);
             }
 
-            return $this->getRouting()->getBaseUrl().$path;
+            return $this->getRouting()->getBaseUrl() . $path;
         }
 
         $routename = str_replace("/", ".", trim($path, "/"));
@@ -243,7 +244,7 @@ abstract class BasePage extends ContainerAwareObject
         if (empty($destination_url)) {
             $destination_url = $this->getControllerUrl();
         }
-        return urlencode(base64_encode($destination_url.':'.sha1($this->getEnv('SALT'))));
+        return urlencode(base64_encode($destination_url . ':' . sha1($this->getEnv('SALT'))));
     }
 
     /**
@@ -278,8 +279,8 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * controller action
      *
-     * @param  RouteInfo|null $route_info
-     * @param  array          $route_data
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
      * @return Response|self
      */
     abstract public function process(RouteInfo $route_info = null, $route_data = []);

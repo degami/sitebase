@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Config;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -36,8 +37,8 @@ class Edit extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_OPTIONAL),
-                    new InputOption('value', null, InputOption::VALUE_OPTIONAL),
+                        new InputOption('id', 'i', InputOption::VALUE_OPTIONAL),
+                        new InputOption('value', null, InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -46,8 +47,8 @@ class Edit extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -61,7 +62,7 @@ class Edit extends BaseCommand
             return;
         }
 
-        $configuration = $this->getContainer()->call([Configuration::class,'load'], ['id' => $id]);
+        $configuration = $this->getContainer()->call([Configuration::class, 'load'], ['id' => $id]);
 
         if (!$configuration->isLoaded()) {
             $io->error('Config does not exists');
@@ -86,7 +87,7 @@ class Edit extends BaseCommand
 
             $output->writeln('<info>Config added</info>');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n".$e->getMessage()."\n</error>");
+            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
         }
     }
 }

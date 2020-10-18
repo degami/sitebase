@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Roles;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -35,8 +36,8 @@ class Revoke extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
-                    new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
+                        new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                        new InputOption('permission', 'p', InputOption::VALUE_REQUIRED),
                     ]
                 )
             );
@@ -45,8 +46,8 @@ class Revoke extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -60,7 +61,7 @@ class Revoke extends BaseCommand
             return;
         }
 
-        $role = $this->getContainer()->call([Role::class,'load'], ['id' => $id]);
+        $role = $this->getContainer()->call([Role::class, 'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
             $io->error('Role does not exists');
@@ -89,7 +90,7 @@ class Revoke extends BaseCommand
             $question->setErrorMessage('Permission %s is invalid.');
             $permission = $helper->ask($input, $output, $question);
         }
-        $question = new ConfirmationQuestion('Revoke permission "'.$permission.'" to role "'.$role->getName().'"? ', false);
+        $question = new ConfirmationQuestion('Revoke permission "' . $permission . '" to role "' . $role->getName() . '"? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not saved</info>');
             return;

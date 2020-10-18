@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
@@ -79,7 +80,7 @@ class Contact extends FrontendModel
             function ($el) {
                 return $el['id'];
             },
-            $this->getDb()->query('SELECT * FROM contact_submission WHERE contact_id = '.$this->id.'')->fetchAll()
+            $this->getDb()->query('SELECT * FROM contact_submission WHERE contact_id = ' . $this->id . '')->fetchAll()
         );
     }
 

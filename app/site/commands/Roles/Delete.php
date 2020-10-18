@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Roles;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -34,7 +35,7 @@ class Delete extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                        new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
                     ]
                 )
             );
@@ -43,8 +44,8 @@ class Delete extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,7 +59,7 @@ class Delete extends BaseCommand
             return;
         }
 
-        $role = $this->getContainer()->call([Role::class,'load'], ['id' => $id]);
+        $role = $this->getContainer()->call([Role::class, 'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
             $io->error('Role does not exists');
@@ -66,11 +67,11 @@ class Delete extends BaseCommand
         }
 
         if ($role->getName() == 'admin') {
-            $io->error('Role "'.$role->getName().'" can\'t be deleted');
+            $io->error('Role "' . $role->getName() . '" can\'t be deleted');
             return;
         }
 
-        $question = new ConfirmationQuestion('Delete Role "'.$role->getName().'"? ', false);
+        $question = new ConfirmationQuestion('Delete Role "' . $role->getName() . '"? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not deleted</info>');
             return;

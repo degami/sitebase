@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Config;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -34,7 +35,7 @@ class Delete extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
+                        new InputOption('id', 'i', InputOption::VALUE_REQUIRED),
                     ]
                 )
             );
@@ -43,8 +44,8 @@ class Delete extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -58,7 +59,7 @@ class Delete extends BaseCommand
             return;
         }
 
-        $configuration = $this->getContainer()->call([Configuration::class,'load'], ['id' => $id]);
+        $configuration = $this->getContainer()->call([Configuration::class, 'load'], ['id' => $id]);
 
         if (!$configuration->isLoaded()) {
             $io->error('Config does not exists');
@@ -66,11 +67,11 @@ class Delete extends BaseCommand
         }
 
         if ($configuration->is_system == true) {
-            $io->error('User "'.$configuration->getPath().'" can\'t be deleted');
+            $io->error('User "' . $configuration->getPath() . '" can\'t be deleted');
             return;
         }
 
-        $question = new ConfirmationQuestion('Delete Config "'.$configuration->getPath().'"? ', false);
+        $question = new ConfirmationQuestion('Delete Config "' . $configuration->getPath() . '"? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not deleted</info>');
             return;

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Queue;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -23,6 +24,7 @@ class Restart extends BaseCommand
 {
     const KILLFILE_NAME = "kill.queue";
     const POLL_TIMEOUT = 500000; // 1/2 sec
+
     /**
      * {@inheritdoc}
      */
@@ -34,14 +36,14 @@ class Restart extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         //$io = new SymfonyStyle($input, $output);
-        $kill_flag = App::getDir(App::TMP).DS.self::KILLFILE_NAME;
+        $kill_flag = App::getDir(App::TMP) . DS . self::KILLFILE_NAME;
         if (!file_exists($kill_flag)) {
             @touch($kill_flag);
         }

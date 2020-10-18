@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Exceptions\PermissionDeniedException;
@@ -44,7 +45,7 @@ abstract class BaseHtmlPage extends BasePage
     protected function prepareTemplate()
     {
         $template = $this->getTemplates()->make($this->getTemplateName());
-        $template->data($this->getTemplateData()+$this->getBaseTemplateData());
+        $template->data($this->getTemplateData() + $this->getBaseTemplateData());
 
         return $template;
     }
@@ -96,7 +97,7 @@ abstract class BaseHtmlPage extends BasePage
     {
         try {
             $template_html = '';
-            $page_cache_key = 'site.fpc.'.trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
+            $page_cache_key = 'site.fpc.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
 
             if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnv('DEBUG') && $this->getEnv('ENABLE_FPC')) {
                 if ($this->canBeFPC() && $this->getCache()->has($page_cache_key)) {
@@ -160,15 +161,15 @@ abstract class BaseHtmlPage extends BasePage
         }
 
         foreach ($templateData as $index => $elem) {
-            $variablesInfo[] =  "{$index}[". ((is_object($elem)) ? get_class($elem) : gettype($elem))."]";
+            $variablesInfo[] = "{$index}[" . ((is_object($elem)) ? get_class($elem) : gettype($elem)) . "]";
         }
 
         $out = [
             'route_info' => ($this->getRouteInfo() instanceof RouteInfo) ?
-                                $this->getRouteInfo()->toString() : $this->getRouteInfo(),
+                $this->getRouteInfo()->toString() : $this->getRouteInfo(),
             'locale' => is_callable([$this, 'getCurrentLocale']) ?
-                                $this->getCurrentLocale() :
-                                ($templateData['locale'] ?? null),
+                $this->getCurrentLocale() :
+                ($templateData['locale'] ?? null),
             'template_name' => $templateName,
         ];
 
@@ -192,7 +193,7 @@ abstract class BaseHtmlPage extends BasePage
         $flash_messages = $this->getFlashMessages();
         $flash_messages[$type][] = $message;
 
-        $this->getResponse()->headers->setCookie(new Cookie('flash_messages', json_encode($flash_messages), time()+3600, "/"));
+        $this->getResponse()->headers->setCookie(new Cookie('flash_messages', json_encode($flash_messages), time() + 3600, "/"));
 
         return $this;
     }

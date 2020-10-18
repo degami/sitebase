@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Frontend\Users;
 
 use App\Site\Models\Role;
@@ -107,59 +108,42 @@ class Profile extends LoggedUserFormPage
             $user_locale = $user->getLocale();
         }
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $this->getRequest()->get('action'),
-            ]
-        );
+        ]);
 
         switch ($this->getRequest()->get('action')) {
             case 'edit':
-                $form->addField(
-                    'email',
-                    [
+                $form->addField('email', [
                     'type' => 'email',
                     'title' => 'Email',
                     'default_value' => $user_email,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'nickname',
-                    [
+                ])->addField('nickname', [
                     'type' => 'textfield',
                     'title' => 'Nickname',
                     'default_value' => $user_nickname,
                     'validate' => ['required'],
-                    ]
-                )
-                ->addField(
-                    'locale',
-                    [
+                ])->addField('locale', [
                     'type' => 'select',
                     'title' => 'Locale',
                     'default_value' => $user_locale,
                     'options' => $languages,
                     'validate' => ['required'],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;
             case 'change_pass':
-                $form->addField(
-                    'password',
-                    [
+                $form->addField('password', [
                     'type' => 'password',
                     'with_confirm' => true,
                     'with_strength_check' => true,
                     'title' => 'Change Password',
                     'default_value' => '',
                     'validate' => [],
-                    ]
-                );
+                ]);
 
                 $this->addSubmitButton($form);
                 break;

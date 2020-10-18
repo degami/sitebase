@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Generate;
 
 use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
@@ -35,7 +36,7 @@ class Block extends CodeGeneratorCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
+                        new InputOption('classname', 'c', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -44,8 +45,8 @@ class Block extends CodeGeneratorCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -53,13 +54,13 @@ class Block extends CodeGeneratorCommand
         $helper = $this->getHelper('question');
         $classname = $input->getOption('classname');
         while (trim($classname) == '') {
-            $question = new Question('Class Name (starting from '.static::BASE_NAMESPACE.')? ');
+            $question = new Question('Class Name (starting from ' . static::BASE_NAMESPACE . ')? ');
             $classname = $helper->ask($input, $output, $question);
         }
 
-        $this->addClass(static::BASE_NAMESPACE.$classname, $this->getFileContents($classname));
+        $this->addClass(static::BASE_NAMESPACE . $classname, $this->getFileContents($classname));
 
-        $question = new ConfirmationQuestion('Save File(s) in '.implode(", ", array_keys($this->filesToDump)).'? ', false);
+        $question = new ConfirmationQuestion('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ', false);
         if (!$helper->ask($input, $output, $question)) {
             $output->writeln('<info>Not Saving</info>');
             return;
@@ -68,17 +69,17 @@ class Block extends CodeGeneratorCommand
         list($files_written, $errors) = array_values($this->doWrite());
         if (!empty($errors)) {
             foreach ($errors as $error) {
-                $output->writeln("<error>\n\n ".$error."\n</error>");
+                $output->writeln("<error>\n\n " . $error . "\n</error>");
             }
         } else {
-            $output->writeln('<info>'.count($files_written).' File(s) saved</info>');
+            $output->writeln('<info>' . count($files_written) . ' File(s) saved</info>');
         }
     }
 
     /**
      * gets file contents
      *
-     * @param  string $className
+     * @param string $className
      * @return string
      */
     protected function getFileContents($className)
@@ -90,7 +91,7 @@ namespace App\\Site\\Blocks;
 use \\App\\Base\\Abstracts\\BaseCodeBlock;
 use \\App\\Base\\Abstracts\\BasePage;
 
-class ".$className." extends BaseCodeBlock
+class " . $className . " extends BaseCodeBlock
 {
     public function renderHTML(BasePage \$current_page)
     {

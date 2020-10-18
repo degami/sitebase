@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -51,7 +52,7 @@ class Queue extends AdminManageModelsPage
         return QueueMessage::class;
     }
 
-   /**
+    /**
      * {@inheritdocs}
      *
      * @return string
@@ -64,8 +65,8 @@ class Queue extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return FAPI\Form
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -73,13 +74,10 @@ class Queue extends AdminManageModelsPage
         $type = $this->getRequest()->get('action') ?? 'list';
         //$message = $this->getObject();
 
-        $form->addField(
-            'action',
-            [
+        $form->addField('action', [
             'type' => 'value',
             'value' => $type,
-            ]
-        );
+        ]);
 
         switch ($type) {
             case 'requeue':
@@ -96,8 +94,8 @@ class Queue extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -124,14 +122,14 @@ class Queue extends AdminManageModelsPage
                 $queue->status = QueueMessage::STATUS_PENDING;
                 $queue->persist();
 
-                $this->setAdminActionLogData('Requeued queue '.$queue->getId());
+                $this->setAdminActionLogData('Requeued queue ' . $queue->getId());
 
                 $this->addFlashMessage('success', $this->getUtils()->translate('Message has been set for re-queue'));
                 break;
             case 'delete':
                 $queue->delete();
 
-                $this->setAdminActionLogData('Deleted queue '.$queue->getId());
+                $this->setAdminActionLogData('Deleted queue ' . $queue->getId());
 
                 break;
         }
@@ -167,18 +165,18 @@ class Queue extends AdminManageModelsPage
         return array_map(
             function ($message) {
                 return [
-                'ID' => $message->id,
-                'Queue' => $message->queue_name,
-                'Status' => $message->status,
-                'Result' => $message->result,
-                'Created At' => $message->created_at,
-                'actions' => implode(
-                    " ",
-                    [
-                    $this->getActionButton('requeue', $message->id, 'primary', 'rotate-cw', 'ReQueue'),
-                    $this->getDeleteButton($message->id),
-                    ]
-                ),
+                    'ID' => $message->id,
+                    'Queue' => $message->queue_name,
+                    'Status' => $message->status,
+                    'Result' => $message->result,
+                    'Created At' => $message->created_at,
+                    'actions' => implode(
+                        " ",
+                        [
+                            $this->getActionButton('requeue', $message->id, 'primary', 'rotate-cw', 'ReQueue'),
+                            $this->getDeleteButton($message->id),
+                        ]
+                    ),
                 ];
             },
             $data

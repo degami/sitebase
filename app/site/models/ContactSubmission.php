@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -47,8 +48,8 @@ class ContactSubmission extends BaseModel
     /**
      * submit data
      *
-     * @param  ContainerInterface $container
-     * @param  array              $submission_data
+     * @param ContainerInterface $container
+     * @param array $submission_data
      * @return self
      */
     public static function submit(ContainerInterface $container, $submission_data = [])

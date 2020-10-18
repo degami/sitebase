@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Abstracts\Models\BaseModel;
@@ -63,7 +64,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                         if (trim($search) == '') {
                             continue;
                         }
-                        $conditions['`'.$col . '` LIKE ?'] = ['%'.$search.'%'];
+                        $conditions['`' . $col . '` LIKE ?'] = ['%' . $search . '%'];
                     }
                 }
                 if (isset($paginate_params['condition']['eq'])) {
@@ -71,7 +72,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                         if (trim($search) == '') {
                             continue;
                         }
-                        $conditions['`'.$col . '` = ?'] = [$search];
+                        $conditions['`' . $col . '` = ?'] = [$search];
                     }
                 }
 
@@ -97,7 +98,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     {
         $out = array_filter([
             'like' => $this->getRequest()->query->get('search'),
-            'eq' =>  $this->getRequest()->query->get('foreign'),
+            'eq' => $this->getRequest()->query->get('foreign'),
         ]);
         return !empty($out) ? $out : null;
     }
@@ -164,7 +165,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * defines table rows
      *
-     * @param  array $data
+     * @param array $data
      * @return array
      */
     abstract protected function getTableElements($data);
@@ -172,7 +173,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * loads object by id
      *
-     * @param  integer $id
+     * @param integer $id
      * @return BaseModel
      */
     protected function loadObject($id)
@@ -181,7 +182,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             return null;
         }
 
-        return $this->getContainer()->call([$this->getObjectClass(), 'load'], [ 'id' => $id]);
+        return $this->getContainer()->call([$this->getObjectClass(), 'load'], ['id' => $id]);
     }
 
     /**
@@ -204,7 +205,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addNewButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getUtils()->getIcon('plus').' '.$this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl().'?action=new', 'btn btn-sm btn-success');
+        $this->addActionLink('new-btn', 'new-btn', $this->getUtils()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
     }
 
 
@@ -233,7 +234,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 ]
             );
 
-            return (string) $button;
+            return (string)$button;
         } catch (BasicException $e) {
         }
 
@@ -276,18 +277,18 @@ abstract class AdminManageModelsPage extends AdminFormPage
     {
         $button = (string)(new TagElement(
             [
-            'tag' => 'a',
-            'attributes' => [
-                'class' => 'btn btn-sm btn-'.$class,
-                'href' => $object->getFrontendUrl(),
-                'target' => '_blank',
-                'title' => $this->getUtils()->translate('View', $this->getCurrentLocale()),
-            ],
-            'text' => $this->getUtils()->getIcon($icon),
+                'tag' => 'a',
+                'attributes' => [
+                    'class' => 'btn btn-sm btn-' . $class,
+                    'href' => $object->getFrontendUrl(),
+                    'target' => '_blank',
+                    'title' => $this->getUtils()->translate('View', $this->getCurrentLocale()),
+                ],
+                'text' => $this->getUtils()->getIcon($icon),
             ]
         ));
 
-        return (string) $button;
+        return (string)$button;
     }
 
     /**

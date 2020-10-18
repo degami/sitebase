@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
@@ -39,14 +40,14 @@ class Search extends BaseCodeBlock
         }
 
         try {
-            $form_content = $this->getContainer()->make(TagElement::class , ['options' => [
+            $form_content = $this->getContainer()->make(TagElement::class, ['options' => [
                 'tag' => 'div',
                 'attributes' => [
                     'class' => 'searchbar input-group',
                 ],
             ]]);
 
-            $input = $this->getContainer()->make(TagElement::class , ['options' => [
+            $input = $this->getContainer()->make(TagElement::class, ['options' => [
                 'tag' => 'input',
                 'type' => 'text',
                 'name' => 'q',
@@ -57,7 +58,7 @@ class Search extends BaseCodeBlock
 
             $form_content->addChild($input);
 
-            $button = $this->getContainer()->make(TagElement::class , ['options' => [
+            $button = $this->getContainer()->make(TagElement::class, ['options' => [
                 'tag' => 'input',
                 'type' => 'submit',
                 'value' => $this->getUtils()->translate('Search'),
@@ -66,7 +67,7 @@ class Search extends BaseCodeBlock
                 ],
             ]]);
 
-            $div = $this->getContainer()->make(TagElement::class , ['options' => [
+            $div = $this->getContainer()->make(TagElement::class, ['options' => [
                 'tag' => 'div',
                 'attributes' => [
                     'class' => 'input-group-append',
@@ -78,10 +79,11 @@ class Search extends BaseCodeBlock
             $form_content->addChild($div);
 
             $action_url = $this->getRouting()->getUrl('frontend.search.withlang', ['lang' => $this->getApp()->getCurrentLocale()]);
-            return '<form class="searchform-mini" action="'.$action_url.'" method="GET">' .
-                     $form_content .
-                   '</form>' ;
-        } catch (Exception $e) {}
+            return '<form class="searchform-mini" action="' . $action_url . '" method="GET">' .
+                $form_content .
+                '</form>';
+        } catch (Exception $e) {
+        }
         return "";
     }
 }

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Website;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -36,9 +37,9 @@ class Edit extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    new InputOption('id', 'i', InputOption::VALUE_OPTIONAL),
-                    new InputOption('name', 'n', InputOption::VALUE_OPTIONAL),
-                    new InputOption('domain', 'd', InputOption::VALUE_OPTIONAL),
+                        new InputOption('id', 'i', InputOption::VALUE_OPTIONAL),
+                        new InputOption('name', 'n', InputOption::VALUE_OPTIONAL),
+                        new InputOption('domain', 'd', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -47,8 +48,8 @@ class Edit extends BaseCommand
     /**
      * {@inheritdocs}
      *
-     * @param  InputInterface  $input
-     * @param  OutputInterface $output
+     * @param InputInterface $input
+     * @param OutputInterface $output
      * @return void
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -62,7 +63,7 @@ class Edit extends BaseCommand
             return;
         }
 
-        $website = $this->getContainer()->call([Website::class,'load'], ['id' => $id]);
+        $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $id]);
 
         if (!$website->isLoaded()) {
             $io->error('Website does not exists');
@@ -97,7 +98,7 @@ class Edit extends BaseCommand
 
             $output->writeln('<info>Website saved</info>');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n".$e->getMessage()."\n</error>");
+            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
         }
     }
 }

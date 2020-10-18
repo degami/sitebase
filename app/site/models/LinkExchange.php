@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\BaseModel;
@@ -73,8 +74,8 @@ class LinkExchange extends BaseModel
         $new_link_echange_taxonomy_row = $this->getDb()->table('link_echange_taxonomy')->createRow();
         $new_link_echange_taxonomy_row->update(
             [
-            'link_exchange_id' => $this->id,
-            'taxonomy_id' => $term->id,
+                'link_exchange_id' => $this->id,
+                'taxonomy_id' => $term->id,
             ]
         );
         return $this;
@@ -91,8 +92,8 @@ class LinkExchange extends BaseModel
     {
         $this->getDb()->table('link_echange_taxonomy')->where(
             [
-            'link_exchange_id' => $this->id,
-            'taxonomy_id' => $term->id,
+                'link_exchange_id' => $this->id,
+                'taxonomy_id' => $term->id,
             ]
         )->delete();
         return $this;

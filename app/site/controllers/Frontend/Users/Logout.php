@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Frontend\Users;
 
 use Degami\Basics\Exceptions\BasicException;
@@ -70,19 +71,13 @@ class Logout extends LoggedUserPage
     public function beforeRender()
     {
         // dispatch "user_logged_out" event
-        $this->getApp()->event(
-            'user_logged_out',
-            [
+        $this->getApp()->event('user_logged_out', [
             'logged_user' => $this->getCurrentUser(),
-            ]
-        );
+        ]);
 
-        return$this->doRedirect(
-            $this->getUrl("frontend.user.login"),
-            [
+        return $this->doRedirect($this->getUrl("frontend.user.login"), [
             "Authorization" => null,
-            "Set-Cookie" => "Authorization=;expires=".date("r", time()-3600)
-            ]
-        );
+            "Set-Cookie" => "Authorization=;expires=" . date("r", time() - 3600)
+        ]);
     }
 }

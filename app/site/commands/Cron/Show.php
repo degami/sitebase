@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Cron;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -50,7 +51,7 @@ class Show extends BaseCommand
         $output->writeln("");
 
         $table = new Table($output);
-        $table->setHeaders(['ID', 'Title','Callable','Schedule', 'Active']);
+        $table->setHeaders(['ID', 'Title', 'Callable', 'Schedule', 'Active']);
 
         foreach ($this->getDb()->table('cron_task')->fetchAll() as $k => $cron_dbrow) {
             $cron = $this->getContainer()->make(CronTask::class, ['dbrow' => $cron_dbrow]);
@@ -62,11 +63,11 @@ class Show extends BaseCommand
             $table
                 ->addRow(
                     [
-                    '<info>'.$cron->getId().'</info>',
-                    $cron->getTitle(),
-                    $cron->getCronTaskCallable(),
-                    $cron->getSchedule(),
-                    $cron->getActive(),
+                        '<info>' . $cron->getId() . '</info>',
+                        $cron->getTitle(),
+                        $cron->getCronTaskCallable(),
+                        $cron->getSchedule(),
+                        $cron->getActive(),
                     ]
                 );
         }
@@ -94,7 +95,7 @@ class Show extends BaseCommand
             $last_beat->getData();
             $interval = date_diff(new DateTime($last_beat['run_time']), new DateTime());
             $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
-            $out = '<info>Last Beat on '.$last_beat['run_time'].' ('.$interval->format($differenceFormat).' ago)</info>';
+            $out = '<info>Last Beat on ' . $last_beat['run_time'] . ' (' . $interval->format($differenceFormat) . ' ago)</info>';
         }
         return $out;
     }

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\InvalidValueException;
@@ -69,9 +70,7 @@ class Permissions extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
-        $table = $form->addField(
-            'table',
-            [
+        $table = $form->addField('table', [
             'type' => 'table_container',
             'attributes' => [
                 'class' => 'table table-striped',
@@ -80,8 +79,7 @@ class Permissions extends AdminFormPage
             'thead_attributes' => [
                 'class' => 'thead-dark',
             ],
-            ]
-        );
+        ]);
 
         $table->setTableHeader(
             array_merge(
@@ -109,21 +107,21 @@ class Permissions extends AdminFormPage
             $table
                 ->addRow()
                 ->addField(
-                    $permission->name.'_desc',
+                    $permission->name . '_desc',
                     [
-                    'type' => 'markup',
-                    'value' => $permission->name,
+                        'type' => 'markup',
+                        'value' => $permission->name,
                     ],
                     $permnum
                 );
 
             foreach ($rolesArray as $role_model) {
                 $table->addField(
-                    $permission->name.'|'.$role_model->name.'|enabled',
+                    $permission->name . '|' . $role_model->name . '|enabled',
                     [
-                    'type' => 'checkbox',
-                    'default_value' => 1,
-                    'value' => $role_model->checkPermission($permission->name),
+                        'type' => 'checkbox',
+                        'default_value' => 1,
+                        'value' => $role_model->checkPermission($permission->name),
                     ],
                     $permnum
                 );
@@ -138,8 +136,8 @@ class Permissions extends AdminFormPage
     /**
      * {@inheritdocs}
      *
-     * @param  FAPI\Form $form
-     * @param  array     &$form_state
+     * @param FAPI\Form $form
+     * @param array     &$form_state
      * @return boolean|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
@@ -166,8 +164,8 @@ class Permissions extends AdminFormPage
             if (count($tmp) == 3) {
                 $permission_name = $tmp[0];
                 $role_name = $tmp[1];
-                $permission_model = $this->getContainer()->call([Permission::class,'loadBy'], ['field' => 'name', 'value' => $permission_name]);
-                $role_model = $this->getContainer()->call([Role::class,'loadBy'], ['field' => 'name', 'value' => $role_name]);
+                $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+                $role_model = $this->getContainer()->call([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role_name]);
                 $role_permission_model = $this->loadRolePermission($role_model, $permission_model);
 
                 if ($value == true && $role_permission_model == null) {

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Config;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -32,7 +33,7 @@ class Show extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                    //new InputOption('website', null, InputOption::VALUE_OPTIONAL),
+                        //new InputOption('website', null, InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -50,7 +51,7 @@ class Show extends BaseCommand
     {
         $table = new Table($output);
         $table
-            ->setHeaders(['Id', 'Website', 'Path', 'Value','System']);
+            ->setHeaders(['Id', 'Website', 'Path', 'Value', 'System']);
 
         $website = $input->getOption('website');
         $query = $this->getDb()->table('configuration');

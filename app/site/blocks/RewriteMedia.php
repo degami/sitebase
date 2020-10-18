@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
@@ -25,8 +26,8 @@ class RewriteMedia extends BaseCodeBlock
     /**
      * {@inheritdocs}
      *
-     * @param  BasePage|null $current_page
-     * @param  array         $data
+     * @param BasePage|null $current_page
+     * @param array $data
      * @return string
      */
     public function renderHTML(BasePage $current_page = null, $data = [])
@@ -46,7 +47,7 @@ class RewriteMedia extends BaseCodeBlock
                 return $media_rewrite->getMediaElement()->getImage();
             },
             $this->getDb()->table('media_element_rewrite')->where(['rewrite_id' => $rewrite_id])->fetchAll()
-            //$current_page->getRewrite()->media_element_rewriteList()->fetchAll()
+        //$current_page->getRewrite()->media_element_rewriteList()->fetchAll()
         );
 
 
@@ -54,17 +55,15 @@ class RewriteMedia extends BaseCodeBlock
         $config = array_filter(json_decode($data['config'] ?? '{}', true));
         if (!empty($config)) {
             foreach ($config as $k => $v) {
-                $tag_attributes['data-cycle-'.$k] = $v;
+                $tag_attributes['data-cycle-' . $k] = $v;
             }
         }
 
-        return (string)(new TagElement(
-            [
+        return (string)(new TagElement([
             'tag' => 'div',
             'attributes' => $tag_attributes,
             'children' => $images,
-            ]
-        ));
+        ]));
     }
 
     /**
@@ -80,9 +79,7 @@ class RewriteMedia extends BaseCodeBlock
     {
         $config_fields = [];
 
-        $config_fields[] = $form->getFieldObj(
-            'fx',
-            [
+        $config_fields[] = $form->getFieldObj('fx', [
             'type' => 'select',
             'title' => 'data-cycle-fx',
             'options' => [
@@ -93,27 +90,20 @@ class RewriteMedia extends BaseCodeBlock
                 'none' => 'none'
             ],
             'default_value' => $default_values['fx'] ?? '',
-            ]
-        );
+        ]);
 
-        $config_fields[] = $form->getFieldObj(
-            'speed',
-            [
+        $config_fields[] = $form->getFieldObj('speed', [
             'type' => 'textfield',
             'title' => 'data-cycle-speed',
             'default_value' => $default_values['speed'] ?? '',
-            ]
-        );
+        ]);
 
 
-        $config_fields[] = $form->getFieldObj(
-            'timeout',
-            [
+        $config_fields[] = $form->getFieldObj('timeout', [
             'type' => 'textfield',
             'title' => 'data-cycle-timeout',
             'default_value' => $default_values['timeout'] ?? '',
-            ]
-        );
+        ]);
 
         return $config_fields;
     }

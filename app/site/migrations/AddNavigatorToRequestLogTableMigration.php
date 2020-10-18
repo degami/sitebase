@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use \App\Base\Abstracts\Migrations\DBMigration;
@@ -32,7 +33,7 @@ class AddNavigatorToRequestLogTableMigration extends DBMigration
      */
     public function getName()
     {
-        return '06_'.parent::getName();
+        return '06_' . parent::getName();
     }
 
     /**

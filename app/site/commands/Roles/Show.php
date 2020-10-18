@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Commands\Roles;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
@@ -44,7 +45,7 @@ class Show extends BaseCommand
     {
         $table = new Table($output);
         $table
-            ->setHeaders(['ID', 'Name','Permissions']);
+            ->setHeaders(['ID', 'Name', 'Permissions']);
 
         foreach ($this->getDb()->table('role')->fetchAll() as $k => $role_dbrow) {
             $role = $this->getContainer()->make(Role::class, ['dbrow' => $role_dbrow]);
@@ -56,17 +57,17 @@ class Show extends BaseCommand
             $table
                 ->addRow(
                     [
-                    '<info>'.$role->getId().'</info>',
-                    $role->getName(),
-                    implode(
-                        "\n",
-                        array_map(
-                            function ($el) {
-                                return $el->getName();
-                            },
-                            $role->getPermissionsArray()
-                        )
-                    ),
+                        '<info>' . $role->getId() . '</info>',
+                        $role->getName(),
+                        implode(
+                            "\n",
+                            array_map(
+                                function ($el) {
+                                    return $el->getName();
+                                },
+                                $role->getPermissionsArray()
+                            )
+                        ),
                     ]
                 );
         }

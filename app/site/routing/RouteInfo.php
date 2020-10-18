@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Routing;
 
 use \FastRoute\Dispatcher;
@@ -77,11 +78,11 @@ class RouteInfo
     /**
      * class constructor
      *
-     * @param array        $dispatcher_info
-     * @param string       $http_method
-     * @param string       $uri
-     * @param string       $route
-     * @param string|null  $route_name
+     * @param array $dispatcher_info
+     * @param string $http_method
+     * @param string $uri
+     * @param string $route
+     * @param string|null $route_name
      * @param integer|null $rewrite
      */
     public function __construct(array $dispatcher_info, string $http_method, string $uri, string $route, string $route_name = null, $rewrite = null)
@@ -126,7 +127,7 @@ class RouteInfo
     /**
      * sets dispatcher info
      *
-     * @param  array $dispatcher_info
+     * @param array $dispatcher_info
      * @return self
      */
     public function setDispatcherInfo($dispatcher_info)
@@ -149,7 +150,7 @@ class RouteInfo
     /**
      * sets handler to call
      *
-     * @param  mixed $handler
+     * @param mixed $handler
      * @return self
      */
     public function setHandler($handler)
@@ -183,7 +184,7 @@ class RouteInfo
     /**
      * set router vars
      *
-     * @param  mixed $vars
+     * @param mixed $vars
      * @return self
      */
     public function setVars($vars)
@@ -350,7 +351,7 @@ class RouteInfo
     /**
      * sets rewrite
      *
-     * @param  integer $rewrite
+     * @param integer $rewrite
      * @return self
      */
     public function setRewrite($rewrite)
@@ -387,7 +388,7 @@ class RouteInfo
      */
     public function toString()
     {
-        return implode("::", $this->handler)."(".serialize($this->vars).")";
+        return implode("::", $this->handler) . "(" . serialize($this->vars) . ")";
     }
 
     /**

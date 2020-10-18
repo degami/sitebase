@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Base\Abstracts\Queues;
 
 use \App\Site\Models\QueueMessage;
@@ -27,7 +28,7 @@ abstract class BaseQueueWorker extends ContainerAwareObject
     /**
      * process message
      *
-     * @param  QueueMessage $message
+     * @param QueueMessage $message
      * @return mixed
      */
     public function process(QueueMessage $message)
@@ -51,7 +52,7 @@ abstract class BaseQueueWorker extends ContainerAwareObject
     /**
      * set message
      *
-     * @param  QueueMessage $message
+     * @param QueueMessage $message
      * @return self
      */
     public function setMessage(QueueMessage $message)
@@ -64,7 +65,7 @@ abstract class BaseQueueWorker extends ContainerAwareObject
     /**
      * do message work phase
      *
-     * @param  QueueMessage $message_data
+     * @param QueueMessage $message_data
      * @return mixed
      */
     abstract protected function processMessage($message_data);

@@ -9,6 +9,7 @@
  * @license  MIT https://opensource.org/licenses/mit-license.php
  * @link     https://github.com/degami/sitebase
  */
+
 namespace App\Site\Migrations;
 
 use App\App;
@@ -38,7 +39,7 @@ class InitialDataMigration extends BaseMigration
      */
     public function getName()
     {
-        return '100_'.parent::getName();
+        return '100_' . parent::getName();
     }
 
     /**
@@ -72,7 +73,7 @@ class InitialDataMigration extends BaseMigration
 
         $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim($this->getEnv('APPDOMAIN')))), 'www.');
         $website_model->domain = $site_domain;
-        $website_model->aliases = 'www.'.$site_domain;
+        $website_model->aliases = 'www.' . $site_domain;
         $website_model->default_locale = 'en';
 
         $website_model->persist();
@@ -99,10 +100,10 @@ class InitialDataMigration extends BaseMigration
         $admin_model->setRole('admin');
         $admin_model->persist();
 
-        if (file_exists(App::getDir(App::ROOT).DS.".env")) {
-            if ($contents = file(App::getDir(App::ROOT).DS.".env")) {
-                if ($fp = fopen(App::getDir(App::ROOT).DS.".env", "w")) {
-                    foreach($contents as $line) {
+        if (file_exists(App::getDir(App::ROOT) . DS . ".env")) {
+            if ($contents = file(App::getDir(App::ROOT) . DS . ".env")) {
+                if ($fp = fopen(App::getDir(App::ROOT) . DS . ".env", "w")) {
+                    foreach ($contents as $line) {
                         if (preg_match("/ADMIN_(EMAIL|USER|PASS)=/", $line)) {
                             continue;
                         }
@@ -212,7 +213,7 @@ class InitialDataMigration extends BaseMigration
     {
         $fd = fopen("app/base/tools/iso_639-1.csv", "r");
         $header = null;
-        while ($row=fgetcsv($fd)) {
+        while ($row = fgetcsv($fd)) {
             if ($header == null) {
                 $header = $row;
             } else {
@@ -266,18 +267,18 @@ class InitialDataMigration extends BaseMigration
     private function addVariables($website_model, $homePage)
     {
         foreach ([
-            'app/frontend/homepage' => ['locale' => $website_model->default_locale, 'value' => $homePage->id],
-            'app/frontend/homepage_redirects_to_language' => ['locale' => null, 'value' => 0],
-            'app/frontend/langs' => ['locale' => null, 'value' => $website_model->default_locale],
-            'app/frontend/main_menu' => ['locale' => $website_model->default_locale, 'value' => ''],
-            'app/global/site_mail_address' => ['locale' => null, 'value' => ''],
-            'app/mail/ses_sender' => ['locale' => $website_model->default_locale, 'value' => ''],
-            'app/frontend/menu_with_logo' => ['locale' => null, 'value' => 1],
-            'app/backend/log_requests' => ['locale' => null, 'value' => 1],
-            'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
-            'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
-            'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://'.$website_model->domain]
-        ] as $path => $info) {
+                     'app/frontend/homepage' => ['locale' => $website_model->default_locale, 'value' => $homePage->id],
+                     'app/frontend/homepage_redirects_to_language' => ['locale' => null, 'value' => 0],
+                     'app/frontend/langs' => ['locale' => null, 'value' => $website_model->default_locale],
+                     'app/frontend/main_menu' => ['locale' => $website_model->default_locale, 'value' => ''],
+                     'app/global/site_mail_address' => ['locale' => null, 'value' => ''],
+                     'app/mail/ses_sender' => ['locale' => $website_model->default_locale, 'value' => ''],
+                     'app/frontend/menu_with_logo' => ['locale' => null, 'value' => 1],
+                     'app/backend/log_requests' => ['locale' => null, 'value' => 1],
+                     'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
+                     'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
+                     'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://' . $website_model->domain]
+                 ] as $path => $info) {
             $configuration_model = Configuration::new($this->getContainer());
             $configuration_model->website_id = $website_model->id;
             $configuration_model->locale = $info['locale'];

@@ -29,7 +29,7 @@ class Queue extends AdminManageModelsPage
      */
     protected function getTemplateName()
     {
-        return 'base_admin_page';
+        return 'queue';
     }
 
     /**
@@ -61,6 +61,23 @@ class Queue extends AdminManageModelsPage
     {
         return 'message_id';
     }
+
+    protected function getTemplateData()
+    {
+        $out = parent::getTemplateData();
+
+        if ($this->getRequest()->get('action') == 'details' && $this->getRequest()->get('message_id')) {
+            $this->addBackButton();
+            $message = $this->getContainer()->call([QueueMessage::class, 'load'], ['id' => $this->getRequest()->get('message_id')]);
+            $out += [
+                'message' => $message,
+                'messageHtml' => $this->getHtmlRenderer()->renderQueueMessage($message),
+            ];
+        }
+
+        return $out;
+    }
+
 
     /**
      * {@inheritdocs}
@@ -173,6 +190,7 @@ class Queue extends AdminManageModelsPage
                     'actions' => implode(
                         " ",
                         [
+                            $this->getActionButton('details', $message->id, 'primary', 'zoom-in', 'Details'),
                             $this->getActionButton('requeue', $message->id, 'primary', 'rotate-cw', 'ReQueue'),
                             $this->getDeleteButton($message->id),
                         ]

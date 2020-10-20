@@ -13,6 +13,7 @@
 namespace App\Base\Tools\Utils;
 
 use App\Site\Models\Menu;
+use App\Site\Models\QueueMessage;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -841,13 +842,11 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
 
     /**
-     * renders log
-     *
-     * @param $log
+     * Renders array as table field name - field value
+     * @param array $data
      * @return mixed
-     * @throws BasicException
      */
-    public function renderLog($log)
+    public function renderArrayOnTable($data)
     {
         $table = $this->getContainer()->make(
             TagElement::class,
@@ -910,10 +909,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $table->addChild($tbody);
 
         $counter = 0;
-        foreach (array_keys($log->getData()) as $property) {
-            $handler = [$log, 'get' . $this->getUtils()->snakeCaseToPascalCase($property)];
-            $value = call_user_func($handler);
-
+        foreach ($data as $property => $value) {
             $row = $this->getContainer()->make(
                 TagElement::class,
                 ['options' => [
@@ -964,8 +960,41 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $table->addChild($tfoot);
 
-
         return $table;
+    }
+
+    /**
+     * renders log
+     *
+     * @param $log
+     * @return mixed
+     * @throws BasicException
+     */
+    public function renderLog($log)
+    {
+        $data = [];
+        foreach (array_keys($log->getData()) as $property) {
+            $handler = [$log, 'get' . $this->getUtils()->snakeCaseToPascalCase($property)];
+            $value = call_user_func($handler);
+
+            $data[$property] = $value;
+        }
+
+        return $this->renderArrayOnTable($data);
+    }
+
+    /**
+     * renders queue message
+     *
+     * @param QueueMessage $message
+     * @return mixed
+     * @throws BasicException
+     */
+    public function renderQueueMessage($message)
+    {
+        $data = $message->getMessageData();
+
+        return $this->renderArrayOnTable($data);
     }
 
     /**

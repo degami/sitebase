@@ -401,24 +401,27 @@ class App extends ContainerAwareObject
      */
     public static function getDirs()
     {
+        $appPath = dirname(__FILE__);
+        $rootPath = dirname($appPath);
+
         return [
-            self::ROOT => dirname(dirname(__FILE__)),
-            self::APP => dirname(__FILE__),
-            self::CONFIG => dirname(dirname(__FILE__)) . DS . 'config',
-            self::COMMANDS => dirname(__FILE__) . DS . 'site' . DS . 'commands',
-            self::CONTROLLERS => dirname(__FILE__) . DS . 'site' . DS . 'controllers',
-            self::MIGRATIONS => dirname(__FILE__) . DS . 'site' . DS . 'migrations',
-            self::MODELS => dirname(__FILE__) . DS . 'site' . DS . 'models',
-            self::ROUTING => dirname(__FILE__) . DS . 'site' . DS . 'routing',
-            self::LOGS => dirname(dirname(__FILE__)) . DS . 'var' . DS . 'log',
-            self::DUMPS => dirname(dirname(__FILE__)) . DS . 'var' . DS . 'dumps',
-            self::TMP => dirname(dirname(__FILE__)) . DS . 'var' . DS . 'tmp',
-            self::WEBROOT => dirname(dirname(__FILE__)) . DS . 'pub',
-            self::MEDIA => dirname(dirname(__FILE__)) . DS . 'media',
-            self::ASSETS => dirname(dirname(__FILE__)) . DS . 'assets',
-            self::FLAGS => dirname(dirname(__FILE__)) . DS . 'assets' . DS . 'flags',
-            self::TEMPLATES => dirname(dirname(__FILE__)) . DS . 'templates',
-            self::TRANSLATIONS => dirname(dirname(__FILE__)) . DS . 'translations',
+            self::ROOT => $rootPath,
+            self::APP => $appPath,
+            self::CONFIG => $rootPath . DS . 'config',
+            self::COMMANDS => $appPath . DS . 'site' . DS . 'commands',
+            self::CONTROLLERS => $appPath . DS . 'site' . DS . 'controllers',
+            self::MIGRATIONS => $appPath . DS . 'site' . DS . 'migrations',
+            self::MODELS => $appPath . DS . 'site' . DS . 'models',
+            self::ROUTING => $appPath . DS . 'site' . DS . 'routing',
+            self::LOGS => $rootPath . DS . 'var' . DS . 'log',
+            self::DUMPS => $rootPath . DS . 'var' . DS . 'dumps',
+            self::TMP => $rootPath . DS . 'var' . DS . 'tmp',
+            self::WEBROOT => $rootPath . DS . 'pub',
+            self::MEDIA => $rootPath . DS . 'media',
+            self::ASSETS => $rootPath . DS . 'assets',
+            self::FLAGS => $rootPath . DS . 'assets' . DS . 'flags',
+            self::TEMPLATES => $rootPath . DS . 'templates',
+            self::TRANSLATIONS => $rootPath . DS . 'translations',
         ];
     }
 

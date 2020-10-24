@@ -55,11 +55,11 @@ abstract class AdminPage extends BaseHtmlPage
      * @param Request|null $request
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         $this->page_title = ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
 
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
             $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');
         }

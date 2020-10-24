@@ -12,6 +12,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
@@ -37,9 +38,9 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * @throws PermissionDeniedException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
         $this->templateData = [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
                 ->setValidate([[$this, 'formValidate']])

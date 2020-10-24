@@ -13,6 +13,7 @@
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use \Psr\Container\ContainerInterface;
@@ -42,9 +43,9 @@ class Cron extends AdminManageModelsPage
      * @throws PermissionDeniedException
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        AdminFormPage::__construct($container, $request);
+        AdminFormPage::__construct($container, $request, $route_info);
         $this->page_title = 'Cron Tasks';
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
             $taskClasses = ClassFinder::getClassesInNamespace('App\Site\Cron\Tasks');
@@ -85,7 +86,7 @@ class Cron extends AdminManageModelsPage
                 }
             }
         }
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
         $this->templateData += [
             'last_beat' => $this->getLastHeartBeat(),
         ];

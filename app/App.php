@@ -14,7 +14,6 @@ namespace App;
 
 use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\Configuration;
-use App\Site\Models\RequestLog;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Redirect;
 use Degami\Basics\Exceptions\BasicException;
@@ -74,11 +73,6 @@ class App extends ContainerAwareObject
      * @var RouteInfo route info
      */
     protected $route_info = null;
-
-    /**
-     * @var Request request
-     */
-    protected $request = null;
 
     /**
      * @var array blocked ips list
@@ -203,8 +197,6 @@ class App extends ContainerAwareObject
 
         $response = null;
         try {
-            $this->setRequest($this->getContainer()->get(Request::class));
-
             $website = null;
             if (php_sapi_name() == 'cli-server') {
                 $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
@@ -271,7 +263,7 @@ class App extends ContainerAwareObject
                     ]
                 );
 
-                $this->setRouteInfo($routeInfo);
+                $this->getContainer()->set(RouteInfo::class, $routeInfo);
 
                 switch ($routeInfo->getStatus()) {
                     case Dispatcher::NOT_FOUND:
@@ -465,25 +457,13 @@ class App extends ContainerAwareObject
     }
 
     /**
-     * sets route info
-     *
-     * @param RouteInfo $route_info
-     * @return App
-     */
-    public function setRouteInfo(RouteInfo $route_info)
-    {
-        $this->route_info = $route_info;
-        return $this;
-    }
-
-    /**
      * gets route info
      *
      * @return RouteInfo|null
      */
     public function getRouteInfo()
     {
-        return $this->route_info;
+        return $this->getContainer()->get(RouteInfo::class);
     }
 
     /**
@@ -504,16 +484,6 @@ class App extends ContainerAwareObject
      */
     public function getRequest()
     {
-        return $this->request;
-    }
-
-    /**
-     * sets current request object
-     *
-     * @param Request $request
-     */
-    public function setRequest(Request $request)
-    {
-        $this->request = $request;
+        return $this->getContainer()->get(Request::class);
     }
 }

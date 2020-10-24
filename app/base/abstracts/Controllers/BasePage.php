@@ -50,10 +50,11 @@ abstract class BasePage extends ContainerAwareObject
      * @param Request|null $request
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         parent::__construct($container);
         $this->request = $request ?: $this->getApp()->getRequest();
+        $this->route_info = $route_info ?: $this->getApp()->getRouteInfo();
 
         // dispatch "request_created" event
         $this->getApp()->event('request_created', ['request' => $this->request]);

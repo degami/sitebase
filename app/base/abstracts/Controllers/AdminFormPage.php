@@ -12,6 +12,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
@@ -35,9 +36,9 @@ abstract class AdminFormPage extends AdminPage
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
         $this->templateData = [
             'action' => $this->getRequest()->get('action') ?? 'list',
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())

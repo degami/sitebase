@@ -33,9 +33,9 @@ abstract class BaseXMLPage extends BasePage
      * @param Request|null $request
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
         $this->response = $this->getContainer()->get(Response::class);
     }
 

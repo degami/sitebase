@@ -13,6 +13,7 @@
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Element;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
@@ -53,9 +54,9 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @throws OutOfRangeException
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        AdminFormPage::__construct($container, $request);
+        AdminFormPage::__construct($container, $request, $route_info);
         $this->page_title = 'Contact Forms';
         if ($this->templateData['action'] == 'list' || $this->templateData['action'] == 'submissions') {
             if ($this->templateData['action'] == 'list') {

@@ -14,6 +14,7 @@ namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Traits\AdminFormTrait;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -42,9 +43,9 @@ class Blocks extends AdminManageModelsPage
      * @throws PermissionDeniedException
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        AdminFormPage::__construct($container, $request);
+        AdminFormPage::__construct($container, $request, $route_info);
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
             $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');
 
@@ -65,7 +66,7 @@ class Blocks extends AdminManageModelsPage
             }
         }
 
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
     }
 
     /**

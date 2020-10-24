@@ -58,9 +58,9 @@ abstract class FrontendPage extends BaseHtmlPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
 
         $this->getTemplates()->setDirectory(App::getDir(App::TEMPLATES) . DS . 'frontend');
 

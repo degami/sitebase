@@ -45,12 +45,12 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         // construct must be override in order to skip
         // form construction
 
-        FrontendPage::__construct($container, $request);
+        FrontendPage::__construct($container, $request, $route_info);
     }
 
 

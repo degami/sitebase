@@ -12,6 +12,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Request;
@@ -50,11 +51,11 @@ abstract class LoggedUserPage extends FrontendPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         $this->page_title = ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
 
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
     }
 
     /**

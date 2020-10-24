@@ -13,6 +13,7 @@
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
@@ -38,11 +39,11 @@ class Media extends AdminManageModelsPage
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        AdminFormPage::__construct($container, $request);
+        AdminFormPage::__construct($container, $request, $route_info);
         if ($this->templateData['action'] == 'list') {
-            parent::__construct($container, $request);
+            parent::__construct($container, $request, $route_info);
         } elseif ($this->templateData['action'] == 'usage') {
             $media = $this->getContainer()->call([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
             $elem_data = $media->getData();

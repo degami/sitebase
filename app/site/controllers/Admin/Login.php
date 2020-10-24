@@ -13,6 +13,7 @@
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -42,9 +43,9 @@ class Login extends FormPage
      * @throws FAPI\Exceptions\FormException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
             $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');
         }

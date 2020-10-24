@@ -14,6 +14,7 @@ namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Models\Rewrite;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
@@ -35,9 +36,9 @@ class MediaRewrites extends AdminManageModelsPage
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
      */
-    public function __construct(ContainerInterface $container, Request $request)
+    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
-        parent::__construct($container, $request);
+        parent::__construct($container, $request, $route_info);
         $this->page_title = 'Rewrite / Media';
     }
 

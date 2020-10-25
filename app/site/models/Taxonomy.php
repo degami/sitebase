@@ -13,6 +13,7 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModelWithChildren;
+use App\Base\Traits\WithParentTrait;
 use DateTime;
 use Exception;
 
@@ -33,6 +34,8 @@ use Exception;
  */
 class Taxonomy extends FrontendModelWithChildren
 {
+    use WithParentTrait;
+
     /**
      * @var array taxonomy pages
      */
@@ -68,5 +71,12 @@ class Taxonomy extends FrontendModelWithChildren
             );
         }
         return $this->pages;
+    }
+
+    public function prePersist()
+    {
+        $this->path = $this->getParentIds();
+        $this->level = max(count(explode("/", $this->path))-1, 0);
+        return parent::prePersist();
     }
 }

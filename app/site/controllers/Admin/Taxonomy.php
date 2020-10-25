@@ -112,7 +112,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     $term_content = $term->content;
                     $term_template_name = $term->template_name;
                     $term_parent = $term->parent_id;
-                    $term_position = $term->postion;
+                    $term_position = $term->position;
                 }
 
                 $form->addField('title', [

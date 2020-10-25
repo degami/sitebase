@@ -13,6 +13,7 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\ModelWithChildren;
+use App\Base\Traits\WithParentTrait;
 use \App\Base\Traits\WithWebsiteTrait;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -36,7 +37,7 @@ use \Psr\Container\ContainerInterface;
  */
 class Menu extends ModelWithChildren
 {
-    use WithWebsiteTrait;
+    use WithWebsiteTrait, WithParentTrait;
 
     /**
      * gets link URL
@@ -79,31 +80,10 @@ class Menu extends ModelWithChildren
         );
     }
 
-    /**
-     * gets parent object if any
-     *
-     * @return self|null
-     */
-    public function getParentObj()
+    public function prePersist()
     {
-        if ($this->parent_id == null) {
-            return null;
-        }
-
-        return $this->getContainer()->call([Menu::class, 'load'], ['id' => $this->parent_id]);
-    }
-
-    /**
-     * gets parent ids tree
-     *
-     * @return string
-     */
-    public function getParentIds()
-    {
-        if ($this->parent_id == null) {
-            return $this->id;
-        }
-
-        return $this->getParentObj()->getParentIds() . '/' . $this->id;
+        $this->breadcrumb = $this->getParentIds();
+        $this->level = max(count(explode("/", $this->breadcrumb))-1, 0);
+        return parent::prePersist();
     }
 }

@@ -19,6 +19,9 @@ use \App\Site\Models\Website;
  */
 trait WithWebsiteTrait
 {
+    /** @var Website  */
+    protected $websiteModel = null;
+
     /**
      * gets website
      *
@@ -28,6 +31,12 @@ trait WithWebsiteTrait
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(Website::class, ['dbrow' => $this->website()->fetch()]);
+        if ($this->websiteModel == null) {
+            $this->websiteModel = $this->getContainer()->make(Website::class, ['dbrow' => $this->website()->fetch()]);
+        }
+
+        return $this->websiteModel;
     }
+
+
 }

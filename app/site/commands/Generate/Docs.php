@@ -13,6 +13,7 @@
 namespace App\Site\Commands\Generate;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Exceptions\NotFoundException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
@@ -44,7 +45,13 @@ class Docs extends BaseCommand
     {
         $helper = $this->getHelper('question');
         $output->writeln("<info>Generating Documentation</info>");
-        system("phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --ignore=vendor/* --template=clean >/dev/null 2>&1");
+
+        if(!$this->command_exist('phpdoc')) {
+            throw new NotFoundException('phpdoc command is missing!');
+        }
+
+        $commandline = "phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --ignore=vendor/* --template=clean --setting=\"graphs.enabled=true\" >/dev/null 2>&1";
+        system($commandline);
 
         if (!file_exists(App::getDir(App::WEBROOT) . DS . "docs")) {
             $question = new ConfirmationQuestion('Do you want to publish docs also on website? ', false);
@@ -57,5 +64,17 @@ class Docs extends BaseCommand
         }
 
         $output->writeln("<info>Task completed</info>");
+    }
+
+    /**
+     * Checks if command exists
+     *
+     * @param $cmd
+     *
+     * @return bool
+     */
+    protected function command_exist($cmd) {
+        $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
+        return !empty($return);
     }
 }

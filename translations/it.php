@@ -22,7 +22,6 @@ return [
     'Logs' => 'Registri',
     'Config' => 'Configurazione',
     'Websites' => 'Siti',
-    'Cron Tasks' => 'Cron Tasks',
     'Back' => 'Indietro',
     'Submission ID' => 'ID invio',
     'Submitted on' => 'Inviato il',
@@ -106,4 +105,6 @@ return [
     'Change password' => 'Cambia password',
     'We use cookies to ensure that we give you the best experience on our website. <a href="%s" target="_blank">Click here</a> for more information.' => 'Utilizziamo i cookie per assicurarci di darti la migliore esperienza sul nostro sito web. <a href="%s" target="_blank">Fare clic qui</a> per ulteriori informazioni.',
     'Got it!' => 'Ricevuto!',
+    'show more' => 'leggi di più',
+    '%y years %m months %d days' => '%y anni %m mesi %d giorni',
 ];

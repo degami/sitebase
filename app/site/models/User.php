@@ -100,8 +100,9 @@ class User extends AccountModel
             $now = new DateTime();
 
             $interval = date_diff($date, $now);
-            $differenceFormat = '%y years %m months %d days';
-            return $date->format('Y-m-d') . ' (' . $interval->format($differenceFormat) . ')';
+            $differenceFormat = $this->getUtils()->translate('%y years %m months %d days');
+            $date_format = $this->getSiteData()->getDateFormat();
+            return $date->format($date_format) . ' (' . $interval->format($differenceFormat) . ')';
         }
 
         return "";

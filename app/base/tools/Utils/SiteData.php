@@ -32,6 +32,7 @@ class SiteData extends ContainerAwareObject
     const MENU_LOGO_PATH = 'app/frontend/menu_with_logo';
     const THEMENAME_PATH = 'app/frontend/themename';
     const DEFAULT_LOCALE = 'en';
+    const DATE_FORMAT_PATH = 'app/frontend/date_format';
 
 
     /**
@@ -328,5 +329,11 @@ class SiteData extends ContainerAwareObject
     public function getThemeName($website_id = null, $locale = null)
     {
         return $this->getConfigValue(self::THEMENAME_PATH, $website_id, $locale);
+    }
+
+    public function getDateFormat($website_id = null, $locale = null)
+    {
+        $date_format = $this->getSiteData()->getConfigValue(self::DATE_FORMAT_PATH, $website_id, $locale);
+        return $date_format ?: 'Y-m-d';
     }
 }

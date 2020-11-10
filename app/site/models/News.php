@@ -58,6 +58,7 @@ class News extends FrontendModel
      */
     public function getDate()
     {
-        return (new DateTime($this->date))->format('Y-m-d');
+        $date_format = $this->getSiteData()->getDateFormat();
+        return (new DateTime($this->date))->format($date_format);
     }
 }

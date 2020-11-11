@@ -145,7 +145,7 @@ class BreadCrumbs extends BaseCodeBlock
 
         if (
             ($config['add-current'] == true) &&
-            ($current_page instanceof FrontendPageWithObject)
+            ($current_page instanceof FrontendPage)
         ) {
             $li = $this->getContainer()->make(
                 TagElement::class,
@@ -155,18 +155,47 @@ class BreadCrumbs extends BaseCodeBlock
                 ]]
             );
 
-            $atag = $this->getContainer()->make(
-                TagElement::class,
-                ['options' => [
-                    'tag' => 'a',
-                    'attributes' => [
-                        'class' => 'breadcrumb-link',
-                        'href' => $current_page->getRewrite()->getUrl(),
-                        'title' => $current_page->getObjectTitle(),
-                    ],
-                    'text' => $current_page->getObjectTitle(),
-                ]]
-            );
+            $atag = null;
+            if ($current_page instanceof FrontendPageWithObject) {
+                $atag = $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'a',
+                        'attributes' => [
+                            'class' => 'breadcrumb-link',
+                            'href' => $current_page->getRewrite()->getUrl(),
+                            'title' => $current_page->getObjectTitle(),
+                        ],
+                        'text' => $current_page->getObjectTitle(),
+                    ]]
+                );
+            } else if ($menu_item instanceof Menu){
+                $atag = $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'a',
+                        'attributes' => [
+                            'class' => 'breadcrumb-link',
+                            'href' => $menu_item->getLinkUrl(),
+                            'title' => $menu_item->getTitle(),
+                        ],
+                        'text' => $menu_item->getTitle(),
+                    ]]
+                );
+            } else {
+                $atag = $this->getContainer()->make(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'a',
+                        'attributes' => [
+                            'class' => 'breadcrumb-link',
+                            'href' => $current_page->getControllerUrl(),
+                            'title' => $current_page->getRouteName(),
+                        ],
+                        'text' => $current_page->getRouteName(),
+                    ]]
+                );
+            }
 
             $li->addChild($atag);
 

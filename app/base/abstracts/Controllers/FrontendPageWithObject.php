@@ -75,6 +75,16 @@ abstract class FrontendPageWithObject extends FrontendPage
     }
 
     /**
+     * gets object title
+     *
+     * @return string
+     */
+    public function getObjectTitle()
+    {
+        return $this->getObject()->getTitle() ?: '';
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @return boolean

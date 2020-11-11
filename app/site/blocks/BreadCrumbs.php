@@ -14,6 +14,9 @@ namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\FrontendPage;
+use \Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use Degami\Basics\Exceptions\BasicException;
 use LessQL\Row;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -35,8 +38,15 @@ class BreadCrumbs extends BaseCodeBlock
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function renderHTML(BasePage $current_page = null)
+    public function renderHTML(BasePage $current_page = null, $data = [])
     {
+        $config = array_filter(json_decode($data['config'] ?? '{}', true));
+        if (empty($config)) {
+            $config = [
+                'add-current' => false,
+            ];
+        }
+
         $locale = $current_page->getCurrentLocale();
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $route_info = $current_page->getRouteInfo();
@@ -90,8 +100,11 @@ class BreadCrumbs extends BaseCodeBlock
 
         if ($menu_item instanceof Menu) {
             $breadcrumbs = explode('/', $menu_item->getBreadcrumb());
-            if (count($breadcrumbs) == 0 || $breadcrumbs[count($breadcrumbs) - 1] != $menu_item->getId()) {
-                $breadcrumbs[] = $menu_item->getId();
+            if (in_array($menu_item->getId(), $breadcrumbs)) {
+                // remove it as it will be added (if needed)
+                if (($key = array_search($menu_item->getId(), $breadcrumbs)) !== false) {
+                    unset($breadcrumbs[$key]);
+                }
             }
 
             foreach (array_map(
@@ -130,6 +143,36 @@ class BreadCrumbs extends BaseCodeBlock
             }
         }
 
+        if (
+            ($config['add-current'] == true) &&
+            ($current_page instanceof FrontendPageWithObject)
+        ) {
+            $li = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'li',
+                    'attributes' => ['class' => 'breadcrumb-item'],
+                ]]
+            );
+
+            $atag = $this->getContainer()->make(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'a',
+                    'attributes' => [
+                        'class' => 'breadcrumb-link',
+                        'href' => $current_page->getRewrite()->getUrl(),
+                        'title' => $current_page->getObjectTitle(),
+                    ],
+                    'text' => $current_page->getObjectTitle(),
+                ]]
+            );
+
+            $li->addChild($atag);
+
+            $breadcrumbs_links->addChild($li);
+        }
+
         $breadcrumbs_container = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'nav',
             'attributes' => [
@@ -165,5 +208,33 @@ class BreadCrumbs extends BaseCodeBlock
         }
 
         return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
+    }
+
+
+    /**
+     * additional configuration fieldset
+     *
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @param $default_values
+     * @return array
+     * @throws FAPI\Exceptions\FormException
+     */
+    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
+    {
+        $config_fields = [];
+
+        $config_fields[] = $form->getFieldObj('add-current', [
+            'type' => 'switchbox',
+            'title' => 'Add current page to breadcrumb',
+            'default_value' => boolval($default_values['add-current'] ?? '') ? 1 : 0,
+            'yes_value' => 1,
+            'yes_label' => 'Yes',
+            'no_value' => 0,
+            'no_label' => 'No',
+            'field_class' => 'switchbox',
+        ]);
+
+        return $config_fields;
     }
 }

@@ -301,8 +301,10 @@ class Blocks extends AdminManageModelsPage
             case 'edit':
                 $block->region = $values['region'];
                 $block->title = $values['title'];
-                $block->website_id = $values['frontend']['website_id'];
-                $block->locale = $values['frontend']['locale'];
+                if ($values['frontend'] != null) {
+                    $block->website_id = $values['frontend']['website_id'];
+                    $block->locale = $values['frontend']['locale'];
+                }
                 $block->order = intval($values['order']);
 
                 if ($values['action'] == 'new' || $block->getInstance() == Block::class) {

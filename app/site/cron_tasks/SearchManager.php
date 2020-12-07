@@ -14,6 +14,7 @@ namespace App\Site\Cron\Tasks;
 
 use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Tools\Plates\SiteBase;
+use App\Site\Commands\Search\Indexer;
 use App\Site\Controllers\Frontend\Search;
 use HaydenPierce\ClassFinder\ClassFinder;
 use \Psr\Container\ContainerInterface;
@@ -69,7 +70,7 @@ class SearchManager extends ContainerAwareObject
                     ];
 
                     if (in_array('content', $fields_to_index)) {
-                        $body_additional['excerpt'] = $this->getContainer()->make(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
+                        $body_additional['excerpt'] = $this->getContainer()->make(SiteBase::class)->summarize($object->getContent(), Indexer::SUMMARIZE_MAX_WORDS);
                     }
 
                     $params = [

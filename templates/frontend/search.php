@@ -10,7 +10,7 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Sear
 <?= $this->section('head'); ?>
 <?php $this->stop() ?>
 
-<h1 class="page-title">Search</h1>
+<h1 class="page-title"><?= $this->sitebase()->translate('Search');?></h1>
 <?php if($search_query) :?>
 <h2><?= sprintf($this->sitebase()->translate("Results for: <em>%s</em>"), $search_query); ?></h2>
 <?php endif;?>

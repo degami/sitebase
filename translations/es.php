@@ -107,4 +107,5 @@ return [
     'Got it!' => '¡Entendido!',
     'show more' => 'mostrar más',
     '%y years %m months %d days' => '%y años %m meses %d días',
+    'Results for: <em>%s</em>' => 'Resultados para: <em>%s</em>',
 ];

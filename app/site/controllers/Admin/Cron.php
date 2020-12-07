@@ -195,6 +195,10 @@ class Cron extends AdminManageModelsPage
                 $this->addSubmitButton($form);
                 break;
 
+            case 'run':
+                $this->fillConfirmationForm('Do you confirm the execution of the selected element? Can take a while, do not close this page after submission', $form);
+                break;
+
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
                 break;
@@ -247,6 +251,18 @@ class Cron extends AdminManageModelsPage
                 $this->setAdminActionLogData($task->getChangedData());
 
                 $task->persist();
+                break;
+            case 'run':
+
+                try {
+                    $this->getContainer()->call(json_decode($task->getCronTaskCallable()));
+                    $cron_executed[] = $task->getTitle();
+                } catch (Exception $e) {
+                    $this->getLog()->critical($e->getMessage() . "\n" . $e->getTraceAsString());
+                }
+
+                $this->addFlashMessage('success', "Task executed: ".$task->getTitle());
+
                 break;
             case 'delete':
                 $task->delete();
@@ -327,11 +343,23 @@ class Cron extends AdminManageModelsPage
                         [
                             $this->getEditButton($task->id),
                             $this->getDeleteButton($task->id),
+                            $this->getRunButton($task->id),
                         ]
                     ),
                 ];
             },
             $data
         );
+    }
+
+    /**
+     * gets run button html
+     *
+     * @param integer $object_id
+     * @return string
+     */
+    public function getRunButton($object_id)
+    {
+        return $this->getActionButton('run', $object_id, 'success', 'play', 'Run');
     }
 }

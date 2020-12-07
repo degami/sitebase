@@ -133,4 +133,9 @@ class Search extends FrontendPage
 
         return $result;
     }
+
+    public function getRouteName()
+    {
+        return $this->getUtils()->translate('Search');
+    }
 }

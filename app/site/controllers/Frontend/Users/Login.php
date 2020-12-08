@@ -216,4 +216,15 @@ class Login extends FormPage
         $logged_user = $form_state['logged_user'];
         return "" . $logged_user->getJWT();
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     * @throws BasicException
+     */
+    public function getRouteName()
+    {
+        return $this->getUtils()->translate('Login');
+    }
 }

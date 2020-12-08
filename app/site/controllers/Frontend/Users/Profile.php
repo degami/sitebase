@@ -198,4 +198,15 @@ class Profile extends LoggedUserFormPage
 
         return $this->doRedirect($this->getControllerUrl());
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     * @throws BasicException
+     */
+    public function getRouteName()
+    {
+        return $this->getUtils()->translate('User profile');
+    }
 }

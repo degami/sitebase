@@ -21,7 +21,7 @@ use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
 
 /**
- * Cron HeartBeat
+ * Cron Search Related
  */
 class SearchManager extends ContainerAwareObject
 {

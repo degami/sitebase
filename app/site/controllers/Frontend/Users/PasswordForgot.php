@@ -260,4 +260,15 @@ class PasswordForgot extends FormPage
 
         return $user_model;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     * @throws BasicException
+     */
+    public function getRouteName()
+    {
+        return $this->getUtils()->translate('Forgot Password?');
+    }
 }

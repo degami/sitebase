@@ -14,6 +14,7 @@ namespace App\Site\Controllers\Frontend;
 
 
 use App\Base\Abstracts\Controllers\FrontendPage;
+use Degami\Basics\Exceptions\BasicException;
 
 /**
  * Search page
@@ -134,6 +135,12 @@ class Search extends FrontendPage
         return $result;
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     * @throws BasicException
+     */
     public function getRouteName()
     {
         return $this->getUtils()->translate('Search');

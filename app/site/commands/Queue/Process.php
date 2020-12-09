@@ -80,7 +80,7 @@ class Process extends BaseCommand
 
                 while (self::MAX_EXECUTIONS_NUMBER > $this->executions++) {
                     if (file_exists(App::getDir(App::TMP) . DS . self::KILLFILE_NAME)) {
-                        $this->getLog()->log("KILLFILE_NAME found.", Logger::INFO);
+                        $this->getLog()->log(Logger::INFO, "KILLFILE_NAME found.");
                         $this->executions = self::MAX_EXECUTIONS_NUMBER + 1;
                     }
 
@@ -103,7 +103,7 @@ class Process extends BaseCommand
                     usleep(self::SLEEP_TIMEOUT);
                 }
 
-                $this->getLog()->log("MAX_EXECUTIONS_NUMBER reached. Exiting", Logger::INFO);
+                $this->getLog()->log(Logger::INFO, "MAX_EXECUTIONS_NUMBER reached. Exiting");
                 flock($fp, LOCK_UN);    // release the lock
             } else {
                 $io->error("Couldn't get the lock!");

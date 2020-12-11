@@ -6,9 +6,9 @@ require dirname(__DIR__).'/vendor/autoload.php';
 
 error_reporting(E_ALL & ~E_NOTICE);
 
+use Psr\Container\ContainerInterface;
 use \Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputOption;
-use Symfony\Component\Console\Input\ArgvInput;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use \Symfony\Component\Console\Command\Command;
 use \App\App;
@@ -22,18 +22,19 @@ $dotenv->load();
 $builder = new \DI\ContainerBuilder();
 $builder->addDefinitions(App::getDir(App::CONFIG).DS.'di.php');
 
-/** @var ContainerInterface $container */
-$container = $builder->build();
-
-$applicationDefinition = $application->getDefinition();
-$applicationDefinition->addOptions([
-    new InputOption('website', 'w', InputOption::VALUE_OPTIONAL, 'Website ID'),
-]);
-
-global $app;
-$app = new \App\App();
-
 try {
+    /** @var ContainerInterface $container */
+    $container = $builder->build();
+
+    $applicationDefinition = $application->getDefinition();
+    $applicationDefinition->addOptions([
+        new InputOption('website', 'w', InputOption::VALUE_OPTIONAL, 'Website ID'),
+    ]);
+
+    global $app;
+    $app = new \App\App();
+    $website = null;
+
     // reading with like this as trying to bind applicationDefinition to a new ArgvInput
     // leads to no options during "run"
     foreach (array_slice($argv, 1) as $console_token) {
@@ -50,25 +51,25 @@ try {
     }
     // put website into environment variables
     putenv('website_id='.$website->id);
-} catch(\Exception $e){}
 
 // ... register commands
+    $commandsClasses = ClassFinder::getClassesInNamespace('App\Site\Commands', ClassFinder::RECURSIVE_MODE);
+    foreach($commandsClasses as $commandClass){
+            $array = explode("\\", $commandClass);
+            $classname = array_pop($array);
+            $commandname = str_replace("App\\Site\\Commands\\", "", $commandClass);
+            $commandname = preg_replace("/".$classname."$/", "", $commandname) . $container->get('utils')->pascalCaseToSnakeCase($classname);
+            $commandname = strtolower(str_replace("\\", ":", $commandname));
+            $commandObj = $container->make($commandClass, ['name' => $commandname, 'container' => $container]);
+            if ($commandObj instanceof Command) {
+                $application->add($commandObj);
+            }
+    }
 
-$commandsClasses = ClassFinder::getClassesInNamespace('App\Site\Commands', ClassFinder::RECURSIVE_MODE);
-foreach($commandsClasses as $commandClass){
-    try{
-        $array = explode("\\", $commandClass);
-        $classname = array_pop($array);
-        $commandname = str_replace("App\\Site\\Commands\\", "", $commandClass);
-        $commandname = preg_replace("/".$classname."$/", "", $commandname) . $container->get('utils')->pascalCaseToSnakeCase($classname);
-        $commandname = strtolower(str_replace("\\", ":", $commandname));
-        $commandObj = $container->make($commandClass, ['name' => $commandname, 'container' => $container]);
-        if ($commandObj instanceof Command){
-            $application->add($commandObj);
-        }
-    } catch (\Exception $e){
+    $application->run();
+} catch (\Exception $e) {
+    if ($container instanceof ContainerInterface) {
         $container->get('utils')->logException($e);
     }
+    echo "Exception: {$e->getMessage()}\n";
 }
-
-$application->run();

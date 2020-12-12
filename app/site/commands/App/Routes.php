@@ -45,11 +45,18 @@ class Routes extends BaseCommand
         $table
             ->setHeaders(['Name', 'Group', 'Path', 'Callable']);
 
-        foreach ($this->getRouting()->getRoutes() as $group => $routes) {
+        foreach ($this->getWebRouter()->getRoutes() as $group => $routes) {
             foreach ($routes as $route) {
                 $table->addRow([$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']]);
             }
         }
+
+        foreach ($this->getCrudRouter()->getRoutes() as $group => $routes) {
+            foreach ($routes as $route) {
+                $table->addRow([$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']]);
+            }
+        }
+
 
         $table->render();
     }

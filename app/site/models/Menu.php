@@ -56,7 +56,7 @@ class Menu extends ModelWithChildren
              * @var Rewrite $rewrite
              */
             $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
-            return $this->getRouting()->getUrl('/') . '/' . ltrim($rewrite->getUrl(), '/');
+            return $this->getWebRouter()->getUrl('/') . '/' . ltrim($rewrite->getUrl(), '/');
         }
 
         return "#";

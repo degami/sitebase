@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Rewrite as RewriteModel;
+use \App\Site\Models\Website as WebsiteModel;
 
 /**
- * Rewrites REST endpoint
+ * Websites REST endpoint
  */
-class Rewrites extends AdminRestPage
+class Websites extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Rewrites extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/rewrites[/{id:\d+}]';
+        return 'websites[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Rewrites extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_rewrites';
+        return 'administer_site';
     }
 
 
@@ -48,6 +48,6 @@ class Rewrites extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return RewriteModel::class;
+        return WebsiteModel::class;
     }
 }

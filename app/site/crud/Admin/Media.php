@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\User as UserModel;
+use \App\Site\Models\MediaElement as MediaElementModel;
 
 /**
- * Users REST endpoint
+ * Media REST endpoint
  */
-class Users extends AdminRestPage
+class Media extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Users extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/users[/{id:\d+}]';
+        return 'media[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Users extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_users';
+        return 'administer_media';
     }
 
 
@@ -48,6 +48,6 @@ class Users extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return UserModel::class;
+        return MediaElementModel::class;
     }
 }

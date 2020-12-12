@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Taxonomy as TaxonomyModel;
+use \App\Site\Models\Block as BlockModel;
 
 /**
- * Taxonomy REST endpoint
+ * Blocks REST endpoint
  */
-class Taxonomy extends AdminRestPage
+class Blocks extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Taxonomy extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/taxonomy[/{id:\d+}]';
+        return 'blocks[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Taxonomy extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_taxonomy';
+        return 'administer_blocks';
     }
 
 
@@ -48,6 +48,6 @@ class Taxonomy extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return TaxonomyModel::class;
+        return BlockModel::class;
     }
 }

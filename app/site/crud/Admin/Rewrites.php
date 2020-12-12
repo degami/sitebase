@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\MediaElementRewrite as MediaElementRewriteModel;
+use \App\Site\Models\Rewrite as RewriteModel;
 
 /**
- * MediaRewrites REST endpoint
+ * Rewrites REST endpoint
  */
-class MediaRewrites extends AdminRestPage
+class Rewrites extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class MediaRewrites extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/mediarewrites[/{id:\d+}]';
+        return 'rewrites[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class MediaRewrites extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_medias';
+        return 'administer_rewrites';
     }
 
 
@@ -48,6 +48,6 @@ class MediaRewrites extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return MediaElementRewriteModel::class;
+        return RewriteModel::class;
     }
 }

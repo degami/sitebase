@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Configuration as ConfigurationModel;
+use \App\Site\Models\News as NewsModel;
 
 /**
- * Configs REST endpoint
+ * News REST endpoint
  */
-class Configs extends AdminRestPage
+class News extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Configs extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/configs[/{id:\d+}]';
+        return 'news[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Configs extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_site';
+        return 'administer_news';
     }
 
 
@@ -48,6 +48,6 @@ class Configs extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return ConfigurationModel::class;
+        return NewsModel::class;
     }
 }

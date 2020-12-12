@@ -178,7 +178,7 @@ abstract class BasePage extends ContainerAwareObject
      */
     public function getUrl($route_name, $route_params = [])
     {
-        return $this->getRouting()->getUrl($route_name, $route_params);
+        return $this->getWebRouter()->getUrl($route_name, $route_params);
     }
 
     /**
@@ -226,7 +226,7 @@ abstract class BasePage extends ContainerAwareObject
                 $path = preg_replace($regexp, $value, $path);
             }
 
-            return $this->getRouting()->getBaseUrl() . $path;
+            return $this->getWebRouter()->getBaseUrl() . $path;
         }
 
         $routename = str_replace("/", ".", trim($path, "/"));

@@ -78,7 +78,7 @@ class Search extends BaseCodeBlock
 
             $form_content->addChild($div);
 
-            $action_url = $this->getRouting()->getUrl('frontend.search.withlang', ['lang' => $this->getApp()->getCurrentLocale()]);
+            $action_url = $this->getWebRouter()->getUrl('frontend.search.withlang', ['lang' => $this->getApp()->getCurrentLocale()]);
             return '<form class="searchform-mini" action="' . $action_url . '" method="GET">' .
                 $form_content .
                 '</form>';

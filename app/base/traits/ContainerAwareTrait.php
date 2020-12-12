@@ -157,9 +157,25 @@ trait ContainerAwareTrait
      * @return Web
      * @throws BasicException
      */
-    public function getRouting()
+    public function getWebRouter()
     {
-        return $this->getService('routing');
+        return $this->getService('web_router');
+    }
+
+    /**
+     * gets crud service
+     *
+     * @return Crud
+     * @throws BasicException
+     */
+    public function getCrudRouter()
+    {
+        return $this->getService('crud_router');
+    }
+
+    public function getRouters()
+    {
+        return $this->getService('routers');
     }
 
     /**

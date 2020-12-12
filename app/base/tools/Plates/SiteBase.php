@@ -153,7 +153,7 @@ class SiteBase implements ExtensionInterface
      */
     public function getUrl($route_name, $route_params = [])
     {
-        return $this->container->get('routing')->getUrl($route_name, $route_params);
+        return $this->container->get('web_router')->getUrl($route_name, $route_params);
     }
 
     /**

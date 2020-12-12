@@ -60,7 +60,7 @@ class Sitemap extends FrontendModel
                             'rewrite' => $rewrite->id,
                             'changefreq' => $el->change_freq,
                             'priority' => $el->priority,
-                            'loc' => $this->getRouting()->getUrl('frontend.root') . ltrim($rewrite->getUrl(), '/'),
+                            'loc' => $this->getWebRouter()->getUrl('frontend.root') . ltrim($rewrite->getUrl(), '/'),
                             'lastmod' => (new DateTime($rewrite->getUpdatedAt()))->format('Y-m-d'),
                         ];
                     },

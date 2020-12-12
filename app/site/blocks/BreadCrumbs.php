@@ -61,7 +61,7 @@ class BreadCrumbs extends BaseCodeBlock
         if ($menu_item instanceof Row) {
             $menu_item = $this->getContainer()->make(Menu::class, ['dbrow' => $menu_item]);
         }
-        $home_url = $this->getRouting()->getUrl('frontend.root');
+        $home_url = $this->getWebRouter()->getUrl('frontend.root');
 
         $breadcrumbs_links = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'ol',

@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Page as PageModel;
+use \App\Site\Models\Permission as PermissionModel;
 
 /**
- * Pages REST endpoint
+ * Permissions REST endpoint
  */
-class Pages extends AdminRestPage
+class Permissions extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Pages extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/pages[/{id:\d+}]';
+        return 'permissions[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Pages extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_pages';
+        return 'administer_permissions';
     }
 
 
@@ -48,6 +48,6 @@ class Pages extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return PageModel::class;
+        return PermissionModel::class;
     }
 }

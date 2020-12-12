@@ -54,7 +54,7 @@ class Stats extends AdminPage
      */
     protected function getTemplateData()
     {
-        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getRouting()->getUrl('admin.dashboard'));
+        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getWebRouter()->getUrl('admin.dashboard'));
 
         $queries = [
             'top_visitors' => 'SELECT ip_address, COUNT(id) AS cnt FROM request_log GROUP BY ip_address ORDER BY cnt DESC LIMIT 10',

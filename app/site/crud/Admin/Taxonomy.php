@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\News as NewsModel;
+use \App\Site\Models\Taxonomy as TaxonomyModel;
 
 /**
- * News REST endpoint
+ * Taxonomy REST endpoint
  */
-class News extends AdminRestPage
+class Taxonomy extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class News extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/news[/{id:\d+}]';
+        return 'taxonomy[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class News extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_news';
+        return 'administer_taxonomy';
     }
 
 
@@ -48,6 +48,6 @@ class News extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return NewsModel::class;
+        return TaxonomyModel::class;
     }
 }

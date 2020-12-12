@@ -83,6 +83,6 @@ class Rewrite extends BaseModel
      */
     public function getRouteInfo()
     {
-        return $this->getRouting()->getRequestInfo($this->getContainer(), 'GET', $this->getRoute());
+        return $this->getWebRouter()->getRequestInfo($this->getContainer(), 'GET', $this->getRoute());
     }
 }

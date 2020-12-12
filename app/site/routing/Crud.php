@@ -12,20 +12,18 @@
 
 namespace App\Site\Routing;
 
+use App\Base\Abstracts\Controllers\BaseRestPage;
 use App\Base\Abstracts\Routing\BaseRouter;
+use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Exceptions\InvalidValueException;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\Site\Controllers\Frontend\Page;
-use App\Site\Controllers\Frontend\Search;
 
 /**
- * Web Router Class
+ * Crud Router Class
  */
-class Web extends BaseRouter
+class Crud extends BaseRouter
 {
     /**
      * {@inheritdoc}
@@ -34,7 +32,7 @@ class Web extends BaseRouter
      */
     protected function getHttpVerbs() : array
     {
-        return ['GET', 'POST'];
+        return ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
     }
 
     /**
@@ -53,38 +51,15 @@ class Web extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
+                $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Crud', ClassFinder::RECURSIVE_MODE);
                 foreach ($controllerClasses as $controllerClass) {
-                    if (is_subclass_of($controllerClass, BasePage::class)) {
-                        if ($controllerClass == Search::class && !$this->getEnv('ELASTICSEARCH')) {
-                            continue;
-                        }
-
-                        $group = "";
-                        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
-                        $route_name = str_replace("/", ".", trim($path, "/"));
+                    if (is_subclass_of($controllerClass, BaseRestPage::class)) {
+                        $group = "/crud";
+                        $path = str_replace("app/site/crud/", "", str_replace("\\", "/", strtolower($controllerClass)));
+                        $route_name = 'crud.'.str_replace("/", ".", trim($path, "/"));
 
                         $classMethod = self::CLASS_METHOD;
                         $verbs = $this->getClassHttpVerbs($controllerClass);
-
-                        if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
-                            $tmp = array_map(
-                                function ($el) {
-                                    return "/" . $el;
-                                },
-                                $tmp
-                            );
-                            if (!isset($this->routes[$tmp[0]])) {
-                                $this->routes[$tmp[0]] = [];
-                            }
-
-                            $group = $tmp[0];
-                            $path = $tmp[1];
-                        }
-
-                        if (method_exists($controllerClass, 'getRouteGroup')) {
-                            $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
-                        }
 
                         if (method_exists($controllerClass, 'getRoutePath')) {
                             $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
@@ -95,6 +70,11 @@ class Web extends BaseRouter
                         }
 
                         array_walk($path, function ($path_value, $key) use ($route_name, $group, $controllerClass, $classMethod, $verbs) {
+                            $path_prefix = "";
+                            if (method_exists($controllerClass, 'getRouteGroup')) {
+                                $path_prefix = rtrim($this->getContainer()->call([$controllerClass, 'getRouteGroup']), '/').'/' ?? "";
+                            }
+
                             if (!is_string($key)) {
                                 $key = $route_name;
                             }
@@ -103,15 +83,13 @@ class Web extends BaseRouter
                                 throw new InvalidValueException("'{$path_value}': Invalid route string", 1);
                             }
 
-                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_prefix, '/') . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
                         });
                     }
                 }
-                $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');
-                $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
 
                 // cache controllers for faster access
-                $this->getCache()->set('web.controllers', $this->routes);
+                $this->getCache()->set('crud.controllers', $this->routes);
             }
         }
         return $this->routes;
@@ -126,8 +104,8 @@ class Web extends BaseRouter
      */
     protected function getCachedControllers(): array
     {
-        if ($this->getCache()->has('web.controllers')) {
-            return $this->getCache()->get('web.controllers');
+        if ($this->getCache()->has('crud.controllers')) {
+            return $this->getCache()->get('crud.controllers');
         }
 
         return [];

@@ -87,7 +87,7 @@ trait FrontendTrait
     {
         return array_map(
             function ($el) {
-                return $this->getRouting()->getBaseUrl() . $el;
+                return $this->getWebRouter()->getBaseUrl() . $el;
             },
             $this->getContainer()->call([$this->getObject(), 'getTranslations'])
         );

@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Block as BlockModel;
+use \App\Site\Models\Language as LanguageModel;
 
 /**
- * Blocks REST endpoint
+ * Languages REST endpoint
  */
-class Blocks extends AdminRestPage
+class Languages extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Blocks extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/blocks[/{id:\d+}]';
+        return 'languages[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Blocks extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_blocks';
+        return 'administer_languages';
     }
 
 
@@ -48,6 +48,6 @@ class Blocks extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return BlockModel::class;
+        return LanguageModel::class;
     }
 }

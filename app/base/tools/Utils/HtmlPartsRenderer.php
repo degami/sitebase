@@ -222,7 +222,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     'tag' => 'a',
                     'attributes' => [
                         'class' => 'navbar-brand',
-                        'href' => $this->getRouting()->getUrl('frontend.root'),
+                        'href' => $this->getWebRouter()->getUrl('frontend.root'),
                         'title' => $this->getEnv('APPNAME'),
                     ],
                 ]]

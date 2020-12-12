@@ -96,9 +96,16 @@ return [
     \Gplanchat\EventManager\SharedEventEmitter::class => DI\create(\Gplanchat\EventManager\SharedEventEmitter::class),
     'event_manager' => DI\get(\Gplanchat\EventManager\SharedEventEmitter::class),
 
-    // 'routing'
+    // 'web_router'
     \App\Site\Routing\Web::class => DI\autowire(\App\Site\Routing\Web::class),
-    'routing' => DI\get(\App\Site\Routing\Web::class),
+    'web_router' => DI\get(\App\Site\Routing\Web::class),
+
+    // 'crud_router'
+    \App\Site\Routing\Crud::class => DI\autowire(\App\Site\Routing\Crud::class),
+    'crud_router' => DI\get(\App\Site\Routing\Crud::class),
+
+    // 'routers'
+    'routers' => ['web_router','crud_router'],
 
     // 'site_data'
     \App\Base\Tools\Utils\SiteData::class => DI\autowire(\App\Base\Tools\Utils\SiteData::class),

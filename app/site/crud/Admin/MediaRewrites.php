@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Role as RoleModel;
+use \App\Site\Models\MediaElementRewrite as MediaElementRewriteModel;
 
 /**
- * Roles REST endpoint
+ * MediaRewrites REST endpoint
  */
-class Roles extends AdminRestPage
+class MediaRewrites extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Roles extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/roles[/{id:\d+}]';
+        return 'mediarewrites[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Roles extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_permissions';
+        return 'administer_medias';
     }
 
 
@@ -48,6 +48,6 @@ class Roles extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return RoleModel::class;
+        return MediaElementRewriteModel::class;
     }
 }

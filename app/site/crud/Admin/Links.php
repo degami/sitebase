@@ -10,15 +10,15 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Crud;
+namespace App\Site\Crud\Admin;
 
 use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Website as WebsiteModel;
+use \App\Site\Models\LinkExchange as LinkModel;
 
 /**
- * Websites REST endpoint
+ * Links REST endpoint
  */
-class Websites extends AdminRestPage
+class Links extends AdminRestPage
 {
     /**
      * return route path
@@ -27,7 +27,7 @@ class Websites extends AdminRestPage
      */
     public static function getRoutePath()
     {
-        return 'crud/websites[/{id:\d+}]';
+        return 'links[/{id:\d+}]';
     }
 
     /**
@@ -37,7 +37,7 @@ class Websites extends AdminRestPage
      */
     protected function getAccessPermission()
     {
-        return 'administer_site';
+        return 'administer_links';
     }
 
 
@@ -48,6 +48,6 @@ class Websites extends AdminRestPage
      */
     public static function getObjectClass()
     {
-        return WebsiteModel::class;
+        return LinkModel::class;
     }
 }

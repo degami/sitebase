@@ -60,6 +60,7 @@
       "App\\Site\\": "app/site",
       "App\\Site\\Routing\\": "app/site/routing",
       "App\\Site\\Controllers\\": "app/site/controllers",
+      "App\\Site\\Crud\\":  "app/site/crud",
       "App\\Site\\Blocks\\": "app/site/blocks",
       "App\\Site\\Models\\": "app/site/models",
       "App\\Site\\Commands\\": "app/site/commands",

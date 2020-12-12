@@ -153,7 +153,7 @@ class App extends ContainerAwareObject
             $this->getTemplates()->addFolder('base', static::getDir(static::TEMPLATES));
             $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES) . DS . 'errors');
 
-            $this->dispatcher = $this->getRouting()->getDispatcher();
+            $this->dispatcher = $this->getWebRouter()->getDispatcher();
 
             // dispatch "dispatcher_ready" event
             $this->event('dispatcher_ready', ['dispatcher' => $this->dispatcher]);
@@ -254,14 +254,20 @@ class App extends ContainerAwareObject
                     $this->getContainer()->call([Rewrite::class, 'all']);
                 }
 
-                $routeInfo = $this->getContainer()->call(
-                    [$this->getRouting(), 'getRequestInfo'],
-                    [
-                        'http_method' => $_SERVER['REQUEST_METHOD'],
-                        'request_uri' => $_SERVER['REQUEST_URI'],
-                        'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $this->getSiteData()->currentServerName()
-                    ]
-                );
+                foreach($this->getRouters() as $router) {
+                    $routeInfo = $this->getContainer()->call(
+                        [$this->getService($router), 'getRequestInfo'],
+                        [
+                            'http_method' => $_SERVER['REQUEST_METHOD'],
+                            'request_uri' => $_SERVER['REQUEST_URI'],
+                            'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $this->getSiteData()->currentServerName()
+                        ]
+                    );
+
+                    if ($routeInfo->getStatus() != Dispatcher::NOT_FOUND) {
+                        break;
+                    }
+                }
 
                 $this->getContainer()->set(RouteInfo::class, $routeInfo);
 
@@ -326,9 +332,7 @@ class App extends ContainerAwareObject
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
             $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'template_data' => ['allowedMethods' => $allowedMethods]]);
-        } catch (BasicException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e]);
-        } catch (Exception $e) {
+        } catch (BasicException | Exception $e) {
             $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e]);
         }
 

@@ -6,9 +6,7 @@ namespace App\Base\Abstracts\Routing;
 
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
-use App\Site\Routing\Crud;
 use App\Site\Routing\RouteInfo;
-use App\Site\Routing\Web;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -85,10 +83,10 @@ abstract class BaseRouter extends ContainerAwareObject
      */
     protected function getRouterName(): string
     {
-        $routername = explode("\\", strtolower(get_class($this)));
-        $routername = array_pop($routername);
+        $router_name = explode("\\", strtolower(get_class($this)));
+        $router_name = array_pop($router_name);
 
-        return $routername;
+        return $router_name;
     }
 
     /**
@@ -178,7 +176,7 @@ abstract class BaseRouter extends ContainerAwareObject
 
         if (count($out) > 1) {
             // try to preg_match elements found with $uri, to find the most suitable
-            $regexp = "/\{.*?" . Web::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
+            $regexp = "/\{.*?" . self::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
 
             foreach ($out as $elem) {
                 if ($httpMethod != null && !in_array($httpMethod, (array)$elem['verbs'])) {
@@ -236,7 +234,12 @@ abstract class BaseRouter extends ContainerAwareObject
      */
     public function checkRoute(ContainerInterface $container, $route): bool
     {
-        return !in_array($this->getRequestInfo($container, 'GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
+        try {
+            return !in_array($this->getRequestInfo($container, 'GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
+        } catch (DependencyException | NotFoundException $e) {
+        }
+
+        return false;
     }
 
     /**
@@ -308,7 +311,6 @@ abstract class BaseRouter extends ContainerAwareObject
         $dispatcherInfo = $this->getRoute($route_name);
         if ($dispatcherInfo != null) {
             foreach ($route_params as $varname => $value) {
-                // $regexp = "/\{".$varname."(:.*?)?\}/i"
                 $regexp = "/\{" . $varname . self::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
                 $dispatcherInfo['path'] = preg_replace($regexp, $value, $dispatcherInfo['path']);
             }
@@ -426,7 +428,7 @@ abstract class BaseRouter extends ContainerAwareObject
     protected function getClassHttpVerbs($controllerClass): array
     {
         if (method_exists($controllerClass, 'getRouteVerbs')) {
-            $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $verbs;
+            $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $this->getHttpVerbs();
             if (!is_array($verbs)) {
                 $verbs = [$verbs];
             }

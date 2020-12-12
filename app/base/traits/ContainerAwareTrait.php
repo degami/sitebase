@@ -19,12 +19,12 @@ use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
+use App\Site\Routing\Crud;
 use App\Site\Routing\Web;
 use Aws\Ses\SesClient;
 use Degami\SqlSchema\Schema;
 use Feather\Icons;
 use Gplanchat\EventManager\SharedEventEmitter;
-use GuzzleHttp\Client;
 use Imagine\Gd\Imagine;
 use League\Plates\Engine;
 use LessQL\Database;
@@ -49,7 +49,7 @@ trait ContainerAwareTrait
      *
      * @return ContainerInterface
      */
-    public function getContainer()
+    public function getContainer(): ContainerInterface
     {
         return $this->container;
     }
@@ -61,7 +61,7 @@ trait ContainerAwareTrait
      * @return mixed
      * @throws BasicException
      */
-    protected function getService($service_key)
+    protected function getService(string $service_key)
     {
         if ($this->getContainer() instanceof ContainerInterface) {
             if ($this->getContainer()->has($service_key)) {
@@ -80,7 +80,7 @@ trait ContainerAwareTrait
      * @return App
      * @throws BasicException
      */
-    public function getApp()
+    public function getApp(): App
     {
         return $this->getService('app');
     }
@@ -91,7 +91,7 @@ trait ContainerAwareTrait
      * @return Logger
      * @throws BasicException
      */
-    public function getLog()
+    public function getLog(): Logger
     {
         return $this->getService('log');
     }
@@ -102,7 +102,7 @@ trait ContainerAwareTrait
      * @return Engine
      * @throws BasicException
      */
-    public function getTemplates()
+    public function getTemplates(): Engine
     {
         return $this->getService('templates');
     }
@@ -113,7 +113,7 @@ trait ContainerAwareTrait
      * @return Database
      * @throws BasicException
      */
-    public function getDb()
+    public function getDb(): Database
     {
         return $this->getService('db');
     }
@@ -124,7 +124,7 @@ trait ContainerAwareTrait
      * @return PDO
      * @throws BasicException
      */
-    public function getPdo()
+    public function getPdo(): PDO
     {
         return $this->getService('pdo');
     }
@@ -135,7 +135,7 @@ trait ContainerAwareTrait
      * @return Schema
      * @throws BasicException
      */
-    public function getSchema()
+    public function getSchema(): Schema
     {
         return $this->getService('schema');
     }
@@ -146,7 +146,7 @@ trait ContainerAwareTrait
      * @return SharedEventEmitter
      * @throws BasicException
      */
-    public function getEventManager()
+    public function getEventManager(): SharedEventEmitter
     {
         return $this->getService('event_manager');
     }
@@ -157,7 +157,7 @@ trait ContainerAwareTrait
      * @return Web
      * @throws BasicException
      */
-    public function getWebRouter()
+    public function getWebRouter(): Web
     {
         return $this->getService('web_router');
     }
@@ -168,12 +168,18 @@ trait ContainerAwareTrait
      * @return Crud
      * @throws BasicException
      */
-    public function getCrudRouter()
+    public function getCrudRouter(): Crud
     {
         return $this->getService('crud_router');
     }
 
-    public function getRouters()
+    /**
+     * gets routers
+     *
+     * @return array
+     * @throws BasicException
+     */
+    public function getRouters(): array
     {
         return $this->getService('routers');
     }
@@ -184,7 +190,7 @@ trait ContainerAwareTrait
      * @return Globals
      * @throws BasicException
      */
-    public function getUtils()
+    public function getUtils(): Globals
     {
         return $this->getService('utils');
     }
@@ -195,7 +201,7 @@ trait ContainerAwareTrait
      * @return SiteData
      * @throws BasicException
      */
-    public function getSiteData()
+    public function getSiteData(): SiteData
     {
         return $this->getService('site_data');
     }
@@ -206,7 +212,7 @@ trait ContainerAwareTrait
      * @return AssetsManager
      * @throws BasicException
      */
-    public function getAssets()
+    public function getAssets(): AssetsManager
     {
         return $this->getService('assets');
     }
@@ -214,10 +220,10 @@ trait ContainerAwareTrait
     /**
      * gets guzzle service
      *
-     * @return Client
+     * @return \GuzzleHttp\Client
      * @throws BasicException
      */
-    public function getGuzzle()
+    public function getGuzzle(): \GuzzleHttp\Client
     {
         return $this->getService('guzzle');
     }
@@ -228,7 +234,7 @@ trait ContainerAwareTrait
      * @return Imagine
      * @throws BasicException
      */
-    public function getImagine()
+    public function getImagine(): Imagine
     {
         return $this->getService('imagine');
     }
@@ -239,7 +245,7 @@ trait ContainerAwareTrait
      * @return Mailer
      * @throws BasicException
      */
-    public function getMailer()
+    public function getMailer(): Mailer
     {
         return $this->getService('mailer');
     }
@@ -250,7 +256,7 @@ trait ContainerAwareTrait
      * @return SesClient
      * @throws BasicException
      */
-    public function getSesMailer()
+    public function getSesMailer(): SesClient
     {
         return $this->getService('ses_mailer');
     }
@@ -261,7 +267,7 @@ trait ContainerAwareTrait
      * @return Swift_Mailer
      * @throws BasicException
      */
-    public function getSmtpMailer()
+    public function getSmtpMailer(): Swift_Mailer
     {
         return $this->getService('smtp_mailer');
     }
@@ -272,7 +278,7 @@ trait ContainerAwareTrait
      * @return CacheManager
      * @throws BasicException
      */
-    public function getCache()
+    public function getCache(): CacheManager
     {
         return $this->getService('cache');
     }
@@ -283,7 +289,7 @@ trait ContainerAwareTrait
      * @return HtmlPartsRenderer
      * @throws BasicException
      */
-    public function getHtmlRenderer()
+    public function getHtmlRenderer(): HtmlPartsRenderer
     {
         return $this->getService('html_renderer');
     }
@@ -294,7 +300,7 @@ trait ContainerAwareTrait
      * @return Icons
      * @throws BasicException
      */
-    public function getIcons()
+    public function getIcons(): Icons
     {
         return $this->getService('icons');
     }
@@ -305,7 +311,7 @@ trait ContainerAwareTrait
      * @return \ElasticSearch\Client
      * @throws BasicException
      */
-    public function getElasticsearch()
+    public function getElasticsearch(): \ElasticSearch\Client
     {
         return $this->getService('elasticsearch');
     }

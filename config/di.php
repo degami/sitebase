@@ -105,7 +105,10 @@ return [
     'crud_router' => DI\get(\App\Site\Routing\Crud::class),
 
     // 'routers'
-    'routers' => ['web_router','crud_router'],
+    'routers' => [
+        'web_router',
+        'crud_router',
+    ],
 
     // 'site_data'
     \App\Base\Tools\Utils\SiteData::class => DI\autowire(\App\Base\Tools\Utils\SiteData::class),

@@ -48,7 +48,10 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {

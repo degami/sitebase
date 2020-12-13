@@ -31,9 +31,21 @@ use \Psr\Container\ContainerInterface;
  * @method string getHref()
  * @method string getTarget()
  * @method int getParentId()
- * @method string getBreadcumb()
+ * @method string getBreadcrumb()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setTitle(string $title)
+ * @method self setLocale(string $locale)
+ * @method self setMenuName(string $menu_name)
+ * @method self setRewriteId(int $rewrite_id)
+ * @method self setHref(string $href)
+ * @method self setTarget(string $target)
+ * @method self setParentId(int $parent_id)
+ * @method self setBreadcrumb(string $breadcrumb)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Menu extends ModelWithChildren
 {
@@ -45,7 +57,7 @@ class Menu extends ModelWithChildren
      * @return string
      * @throws BasicException
      */
-    public function getLinkUrl()
+    public function getLinkUrl(): string
     {
         if (trim($this->getHref()) != '') {
             return $this->getHref();
@@ -68,7 +80,7 @@ class Menu extends ModelWithChildren
      * @param ContainerInterface $container
      * @return array
      */
-    public static function allMenusNames(ContainerInterface $container)
+    public static function allMenusNames(ContainerInterface $container): array
     {
         return array_map(
             function ($el) use ($container) {
@@ -80,7 +92,7 @@ class Menu extends ModelWithChildren
         );
     }
 
-    public function prePersist()
+    public function prePersist(): Menu
     {
         $this->breadcrumb = $this->getParentIds();
         $this->level = max(count(explode("/", $this->breadcrumb))-1, 0);

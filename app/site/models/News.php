@@ -19,6 +19,7 @@ use Exception;
 /**
  * News Model
  *
+ * @method int getId()
  * @method int getWebsiteId()
  * @method string getUrl()
  * @method string getLocale()
@@ -27,6 +28,15 @@ use Exception;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setUrl(string $url)
+ * @method self setLocale(string $locale)
+ * @method self setTitle(string $title)
+ * @method self setContent(string $content)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class News extends FrontendModel
 {
@@ -35,7 +45,7 @@ class News extends FrontendModel
      *
      * @return string
      */
-    public function getRewritePrefix()
+    public function getRewritePrefix(): string
     {
         return 'news';
     }
@@ -45,7 +55,7 @@ class News extends FrontendModel
      *
      * @return string[]
      */
-    public static function exposeToIndexer()
+    public static function exposeToIndexer(): array
     {
         return ['title', 'content', 'date'];
     }
@@ -56,7 +66,7 @@ class News extends FrontendModel
      * @return string
      * @throws Exception
      */
-    public function getDate()
+    public function getDate(): string
     {
         $date_format = $this->getSiteData()->getDateFormat();
         return (new DateTime($this->date))->format($date_format);

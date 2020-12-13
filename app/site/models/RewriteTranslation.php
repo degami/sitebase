@@ -25,6 +25,13 @@ use DateTime;
  * @method string getDestinationLocale()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setSource(int $source)
+ * @method self setSourceLocale(string $source_locale)
+ * @method self setDestination(int $destination)
+ * @method self setDestinationLocale(string $destination_locale)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class RewriteTranslation extends BaseModel
 {

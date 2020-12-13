@@ -119,7 +119,7 @@ class RouteInfo
      *
      * @return array
      */
-    public function getDispatcherInfo()
+    public function getDispatcherInfo(): array
     {
         return $this->dispatcher_info;
     }
@@ -130,7 +130,7 @@ class RouteInfo
      * @param array $dispatcher_info
      * @return self
      */
-    public function setDispatcherInfo($dispatcher_info)
+    public function setDispatcherInfo($dispatcher_info): RouteInfo
     {
         $this->dispatcher_info = $dispatcher_info;
 
@@ -153,7 +153,7 @@ class RouteInfo
      * @param mixed $handler
      * @return self
      */
-    public function setHandler($handler)
+    public function setHandler($handler): RouteInfo
     {
         $this->handler = $handler;
 
@@ -187,7 +187,7 @@ class RouteInfo
      * @param mixed $vars
      * @return self
      */
-    public function setVars($vars)
+    public function setVars($vars): RouteInfo
     {
         $this->vars = $vars;
 
@@ -211,7 +211,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setAllowedMethods($allowed_methods)
+    public function setAllowedMethods($allowed_methods): RouteInfo
     {
         $this->allowed_methods = $allowed_methods;
 
@@ -223,7 +223,7 @@ class RouteInfo
      *
      * @return mixed
      */
-    public function getStatus()
+    public function getStatus(): int
     {
         return $this->status;
     }
@@ -235,7 +235,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setStatus($status)
+    public function setStatus($status): RouteInfo
     {
         $this->status = $status;
 
@@ -247,7 +247,7 @@ class RouteInfo
      *
      * @return string
      */
-    public function getHttpMethod()
+    public function getHttpMethod(): string
     {
         return $this->http_method;
     }
@@ -259,7 +259,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setHttpMethod(string $http_method)
+    public function setHttpMethod(string $http_method): RouteInfo
     {
         $this->http_method = $http_method;
 
@@ -271,7 +271,7 @@ class RouteInfo
      *
      * @return string
      */
-    public function getUri()
+    public function getUri(): string
     {
         return $this->uri;
     }
@@ -283,7 +283,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setUri(string $uri)
+    public function setUri(string $uri): RouteInfo
     {
         $this->uri = $uri;
 
@@ -295,7 +295,7 @@ class RouteInfo
      *
      * @return string
      */
-    public function getRoute()
+    public function getRoute(): string
     {
         return $this->route;
     }
@@ -307,7 +307,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setRoute($route)
+    public function setRoute($route): RouteInfo
     {
         $this->route = $route;
 
@@ -319,7 +319,7 @@ class RouteInfo
      *
      * @return string
      */
-    public function getRouteName()
+    public function getRouteName(): ?string
     {
         return $this->route_name;
     }
@@ -331,7 +331,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setRouteName($route_name)
+    public function setRouteName($route_name): RouteInfo
     {
         $this->route_name = $route_name;
 
@@ -343,7 +343,7 @@ class RouteInfo
      *
      * @return integer|null
      */
-    public function getRewrite()
+    public function getRewrite(): ?int
     {
         return $this->rewrite;
     }
@@ -354,7 +354,7 @@ class RouteInfo
      * @param integer $rewrite
      * @return self
      */
-    public function setRewrite($rewrite)
+    public function setRewrite($rewrite): RouteInfo
     {
         $this->rewrite = $rewrite;
 
@@ -366,7 +366,7 @@ class RouteInfo
      *
      * @return boolean
      */
-    public function worksOffline()
+    public function worksOffline(): bool
     {
         return $this->isAdminRoute();
     }
@@ -376,7 +376,7 @@ class RouteInfo
      *
      * @return boolean
      */
-    public function isAdminRoute()
+    public function isAdminRoute(): bool
     {
         return $this->getRouteName() == 'admin.login' || preg_match("/^admin/", $this->getRouteName());
     }
@@ -386,7 +386,7 @@ class RouteInfo
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return implode("::", $this->handler) . "(" . serialize($this->vars) . ")";
     }
@@ -396,7 +396,7 @@ class RouteInfo
      *
      * @return BasePage|null controller object instance
      */
-    public function getControllerObject()
+    public function getControllerObject(): ?BasePage
     {
         return $this->controller_object;
     }
@@ -407,7 +407,7 @@ class RouteInfo
      * @param BasePage|null controller object instance $controller_object
      * @return self
      */
-    public function setControllerObject(BasePage $controller_object)
+    public function setControllerObject(BasePage $controller_object): RouteInfo
     {
         $this->controller_object = $controller_object;
 
@@ -415,11 +415,11 @@ class RouteInfo
     }
 
     /**
-     * gets routeinfo data
+     * gets RouteInfo data
      *
      * @return array
      */
-    public function getData()
+    public function getData(): array
     {
         return [
             'dispatcher_info' => $this->dispatcher_info,

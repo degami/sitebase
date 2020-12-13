@@ -35,6 +35,20 @@ use Exception;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setTitle(string $title)
+ * @method self setContent(string $content)
+ * @method self setTemplateName(string $template_name)
+ * @method self setMetaDescription(string $meta_description)
+ * @method self setMetaKeywords(string $meta_keywords)
+ * @method self setHtmlTitle(string $html_title)
+ * @method self setLocale(string $locale)
+ * @method self setUrl(string $url)
+ * @method self setSubmitTo(string $submit_to)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Contact extends FrontendModel
 {
@@ -43,7 +57,7 @@ class Contact extends FrontendModel
      *
      * @return string
      */
-    public function getRewritePrefix()
+    public function getRewritePrefix(): string
     {
         return 'contact';
     }
@@ -54,7 +68,7 @@ class Contact extends FrontendModel
      * @return array
      * @throws Exception
      */
-    public function getContactDefinition()
+    public function getContactDefinition(): array
     {
         $this->checkLoaded();
 
@@ -72,7 +86,7 @@ class Contact extends FrontendModel
      * @return array
      * @throws Exception
      */
-    public function getContactSubmissions()
+    public function getContactSubmissions(): array
     {
         $this->checkLoaded();
 
@@ -91,7 +105,7 @@ class Contact extends FrontendModel
      * @return array
      * @throws Exception
      */
-    public function getContactSubmission($submission_id)
+    public function getContactSubmission($submission_id): array
     {
         $this->checkLoaded();
 
@@ -112,7 +126,7 @@ class Contact extends FrontendModel
      * @throws Exception
      * @throws BasicException
      */
-    public function getFormDefinition($container, &$form_state)
+    public function getFormDefinition($container, &$form_state): FAPI\Abstracts\Base\Element
     {
         foreach ($this->getContactDefinition() as $field) {
             $field_data = (array)json_decode($field['field_data']);
@@ -134,7 +148,7 @@ class Contact extends FrontendModel
      * @return FrontendModel
      * @throws Exception
      */
-    public function preRemove()
+    public function preRemove(): FrontendModel
     {
         foreach ($this->contact_definitionList() as $contact_definition) {
             $contact_definition->delete();

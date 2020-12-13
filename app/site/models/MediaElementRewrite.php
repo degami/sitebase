@@ -26,6 +26,12 @@ use \Exception;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setMediaElementId(int $media_element_id)
+ * @method self setRewriteId(int $rewrite_id)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class MediaElementRewrite extends BaseModel
 {
@@ -37,7 +43,7 @@ class MediaElementRewrite extends BaseModel
      * @return MediaElement
      * @throws Exception
      */
-    public function getMediaElement()
+    public function getMediaElement(): MediaElement
     {
         $this->checkLoaded();
 
@@ -50,7 +56,7 @@ class MediaElementRewrite extends BaseModel
      * @return Rewrite
      * @throws Exception
      */
-    public function getRewrite()
+    public function getRewrite(): Rewrite
     {
         $this->checkLoaded();
 

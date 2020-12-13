@@ -17,7 +17,7 @@ use \App\Base\Traits\WithOwnerTrait;
 use DateTime;
 
 /**
- * Cront Task Model
+ * Cron Task Model
  *
  * @method int getId()
  * @method string getTitle()
@@ -27,6 +27,14 @@ use DateTime;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setTitle(string $title)
+ * @method self setCronTaskCallable(string $cron_task_callable)
+ * @method self setSchedule(string $schedule)
+ * @method self setActive(boolean $active)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class CronTask extends BaseModel
 {
@@ -37,7 +45,7 @@ class CronTask extends BaseModel
      *
      * @return string
      */
-    public function getInfoUrl()
+    public function getInfoUrl(): string
     {
         return 'https://crontab.guru/#' . str_replace(" ", "_", $this->schedule);
     }

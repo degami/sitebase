@@ -31,6 +31,17 @@ use Exception;
  * @method string getAdditionalData()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setUsername(string $username)
+ * @method self setPassword(string $password)
+ * @method self setRoleId(int $role_id)
+ * @method self setEmail(string $email)
+ * @method self setNickname(string $nickname)
+ * @method self setLocale(string $locale)
+ * @method self setConfirmationCode(string $confirmation_code)
+ * @method self setAdditionalData(string $additional_data)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class User extends AccountModel
 {
@@ -43,8 +54,10 @@ class User extends AccountModel
      * gets user role
      *
      * @return Role
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getRole()
+    public function getRole(): Role
     {
         if ($this->roleObj instanceof Role) {
             return $this->roleObj;
@@ -80,7 +93,7 @@ class User extends AccountModel
      * @return boolean
      * @throws Exception
      */
-    public function checkPermission($permission_name)
+    public function checkPermission($permission_name): bool
     {
         $this->checkLoaded();
 
@@ -93,7 +106,7 @@ class User extends AccountModel
      * @return string
      * @throws Exception
      */
-    public function getRegisteredSince()
+    public function getRegisteredSince(): string
     {
         if ($this->isLoaded()) {
             $date = new DateTime($this->getCreatedAt());
@@ -113,7 +126,7 @@ class User extends AccountModel
      *
      * @return string
      */
-    protected function calcTokenId()
+    protected function calcTokenId(): string
     {
         $string = $this->getId() . $this->getUsername();
         $string = $this->getContainer()->get('jwt_id') . $string;
@@ -126,7 +139,7 @@ class User extends AccountModel
      * @return string
      * @throws Exception
      */
-    public function getJWT()
+    public function getJWT(): string
     {
         $this->checkLoaded();
 

@@ -27,6 +27,14 @@ use DateTime;
  * @method boolean getIsSystem()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setPath(string $path)
+ * @method self setValue(string $value)
+ * @method self setLocale(string $locale)
+ * @method self setIsSystem(boolean $is_system)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Configuration extends BaseModel
 {

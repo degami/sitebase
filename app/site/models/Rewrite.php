@@ -30,6 +30,13 @@ use Exception;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setUrl(string $url)
+ * @method self setRoute(string $route)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Rewrite extends BaseModel
 {
@@ -48,7 +55,7 @@ class Rewrite extends BaseModel
      * @throws BasicException
      * @throws Exception
      */
-    public function getTranslations($reset = false)
+    public function getTranslations($reset = false): array
     {
         $this->checkLoaded();
 
@@ -80,8 +87,10 @@ class Rewrite extends BaseModel
      *
      * @return RouteInfo
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getRouteInfo()
+    public function getRouteInfo(): RouteInfo
     {
         return $this->getWebRouter()->getRequestInfo($this->getContainer(), 'GET', $this->getRoute());
     }

@@ -22,6 +22,10 @@ use DateTime;
  * @method string getName()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setName(string $name)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Permission extends BaseModel
 {

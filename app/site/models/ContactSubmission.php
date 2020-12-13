@@ -27,6 +27,11 @@ use \App\Base\Traits\WithOwnerTrait;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setContactId(int $contact_id)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class ContactSubmission extends BaseModel
 {
@@ -38,7 +43,7 @@ class ContactSubmission extends BaseModel
      * @return Contact
      * @throws Exception
      */
-    public function getContact()
+    public function getContact(): Contact
     {
         $this->checkLoaded();
 
@@ -52,7 +57,7 @@ class ContactSubmission extends BaseModel
      * @param array $submission_data
      * @return self
      */
-    public static function submit(ContainerInterface $container, $submission_data = [])
+    public static function submit(ContainerInterface $container, $submission_data = []): ContactSubmission
     {
         $contact_submission = $container->get(ContactSubmission::class);
         $contact_submission->contact_id = $submission_data['contact_id'];
@@ -75,7 +80,7 @@ class ContactSubmission extends BaseModel
      * @return array
      * @throws BasicException
      */
-    public function getFullData()
+    public function getFullData(): array
     {
         $data = $this->getData();
         $data['user'] = $this->getContainer()->call([User::class, 'load'], ['id' => $data['user_id']])->getData();

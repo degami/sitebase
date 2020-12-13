@@ -159,7 +159,7 @@ class App extends ContainerAwareObject
             $this->event('dispatcher_ready', ['dispatcher' => $this->dispatcher]);
 
             if ($this->getEnv('DEBUG')) {
-                $debugbar = $this->getContainer()->get('debugbar');
+                $debugbar = $this->getDebugbar();
                 $debugbar->addCollector($this->getContainer()->get('db_collector'));
                 $debugbar->addCollector($this->getContainer()->get('monolog_collector'));
             }

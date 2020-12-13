@@ -33,11 +33,24 @@ use Exception;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setUrl(string $url)
+ * @method self setLocale(string $locale)
+ * @method self setTitle(string $title)
+ * @method self setTemplateName(string $template_name)
+ * @method self setContent(string $content)
+ * @method self setMetaDescription(string $meta_description)
+ * @method self setMetaKeywords(string $meta_keywords)
+ * @method self setHtmlTitle(string $html_title)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Page extends FrontendModel
 {
     /**
-     * @var array page gallyer
+     * @var array page gallery
      */
     protected $gallery = [];
 
@@ -53,7 +66,7 @@ class Page extends FrontendModel
      * @return array
      * @throws Exception
      */
-    public function getGallery($reset = false)
+    public function getGallery($reset = false): array
     {
         $this->checkLoaded();
 
@@ -75,7 +88,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function addMedia($media_element)
+    public function addMedia($media_element): Page
     {
         $new_page_media_row = $this->getDb()->table('page_media_element')->createRow();
         $new_page_media_row->update(
@@ -94,7 +107,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function removeMedia($media_element)
+    public function removeMedia($media_element): Page
     {
         $this->getDb()->table('page_media_element')->where(
             [
@@ -112,7 +125,7 @@ class Page extends FrontendModel
      * @return array
      * @throws Exception
      */
-    public function getTerms($reset = false)
+    public function getTerms($reset = false): array
     {
         $this->checkLoaded();
 
@@ -134,7 +147,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function addTerm($term)
+    public function addTerm($term): Page
     {
         $new_page_taxonomy_row = $this->getDb()->table('page_taxonomy')->createRow();
         $new_page_taxonomy_row->update(
@@ -153,7 +166,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function removeTerm($term)
+    public function removeTerm($term): Page
     {
         $this->getDb()->table('page_taxonomy')->where(
             [
@@ -169,7 +182,7 @@ class Page extends FrontendModel
      *
      * @return string
      */
-    public function getRewritePrefix()
+    public function getRewritePrefix(): string
     {
         return 'page';
     }

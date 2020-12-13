@@ -22,7 +22,7 @@ use Exception;
  * Link Exchange Model
  *
  * @method int getId()
- * @method integer getWebsiteId()
+ * @method int getWebsiteId()
  * @method string getLocale()
  * @method string getUrl()
  * @method string getEmail()
@@ -30,6 +30,15 @@ use Exception;
  * @method string getDescription()
  * @method int getUserId()
  * @method boolean getActive()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setLocale(string $locale)
+ * @method self setUrl(string $url)
+ * @method self setEmail(string $email)
+ * @method self setTitle(string $title)
+ * @method self setDescription(string $description)
+ * @method self setUserId(int $user_id)
+ * @method self setActive(boolean $active)
  */
 class LinkExchange extends BaseModel
 {
@@ -47,7 +56,7 @@ class LinkExchange extends BaseModel
      * @return array
      * @throws Exception
      */
-    public function getTerms($reset = false)
+    public function getTerms($reset = false): array
     {
         $this->checkLoaded();
 
@@ -69,7 +78,7 @@ class LinkExchange extends BaseModel
      * @return self
      * @throws BasicException
      */
-    public function addTerm($term)
+    public function addTerm($term): LinkExchange
     {
         $new_link_echange_taxonomy_row = $this->getDb()->table('link_echange_taxonomy')->createRow();
         $new_link_echange_taxonomy_row->update(
@@ -88,7 +97,7 @@ class LinkExchange extends BaseModel
      * @return self
      * @throws BasicException
      */
-    public function removeTerm($term)
+    public function removeTerm($term): LinkExchange
     {
         $this->getDb()->table('link_echange_taxonomy')->where(
             [

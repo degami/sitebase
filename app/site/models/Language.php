@@ -24,6 +24,12 @@ use DateTime;
  * @method string getFamily()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setName(string $name)
+ * @method self setNative(string $native)
+ * @method self setFamily(string $family)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Language extends BaseModel
 {

@@ -26,12 +26,22 @@ use \App\Base\Traits\WithWebsiteTrait;
  * @method int getWebsiteId()
  * @method string getUrl()
  * @method string getMethod()
- * @method string getUserId()
+ * @method int getUserId()
  * @method string getIpAddress()
  * @method string getUserAgent()
  * @method int getResponseCode()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setUrl(string $url)
+ * @method self setMethod(string $method)
+ * @method self setUserId(int $user_id)
+ * @method self setIpAddress(string $ip_address)
+ * @method self setUserAgent(string $user_agent)
+ * @method self setResponseCode(int $response_code)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class RequestLog extends BaseModel
 {
@@ -45,7 +55,7 @@ class RequestLog extends BaseModel
      * @return $this
      * @throws BasicException
      */
-    public function fillWithRequest(Request $request, BasePage $controller = null)
+    public function fillWithRequest(Request $request, BasePage $controller = null): RequestLog
     {
         $this->setUrl($request->getUri());
         $this->setMethod($request->getMethod());
@@ -68,7 +78,7 @@ class RequestLog extends BaseModel
      * @return integer|null
      * @throws BasicException
      */
-    private function matchWebsite($host)
+    private function matchWebsite($host): ?int
     {
         foreach ($this->getDb()->table('website') as $website_row) {
             if (preg_match("/" . $website_row->domain . "/", $host)) {

@@ -81,7 +81,7 @@ class GuestUser extends AccountModel
      * @return boolean
      * @throws Exception
      */
-    public function checkPermission($permission_name)
+    public function checkPermission($permission_name): bool
     {
         return $this->getRole()->checkPermission($permission_name);
     }
@@ -91,7 +91,7 @@ class GuestUser extends AccountModel
      *
      * @return Role
      */
-    public function getRole()
+    public function getRole(): Role
     {
         if ($this->roleObj instanceof Role) {
             return $this->roleObj;
@@ -105,7 +105,7 @@ class GuestUser extends AccountModel
      *
      * @return integer
      */
-    public function getId()
+    public function getId(): int
     {
         return 0;
     }
@@ -135,7 +135,7 @@ class GuestUser extends AccountModel
      *
      * @return integer
      */
-    public function getRoleId()
+    public function getRoleId(): int
     {
         return self::ROLE_ID;
     }
@@ -165,7 +165,7 @@ class GuestUser extends AccountModel
      *
      * @return DateTime
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTime
     {
         return new DateTime();
     }
@@ -175,7 +175,7 @@ class GuestUser extends AccountModel
      *
      * @return DateTime
      */
-    public function getUpdatedAt()
+    public function getUpdatedAt(): DateTime
     {
         return new DateTime();
     }
@@ -186,7 +186,7 @@ class GuestUser extends AccountModel
      * @return string
      * @throws BasicException
      */
-    public function getLocale()
+    public function getLocale(): string
     {
         return $this->getSiteData()->getDefaultLocale();
     }
@@ -194,7 +194,7 @@ class GuestUser extends AccountModel
     /**
      * no save for this model
      */
-    public function persist()
+    public function persist(): GuestUser
     {
         return $this;
     }
@@ -202,7 +202,7 @@ class GuestUser extends AccountModel
     /**
      * no delete for this model
      */
-    public function remove()
+    public function remove(): GuestUser
     {
         return $this;
     }

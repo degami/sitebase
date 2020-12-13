@@ -30,6 +30,15 @@ use \DateTime;
  * @method string getContent()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setLocale(string $locale)
+ * @method self setTitle(string $content)
+ * @method self setUserId(int $user_id)
+ * @method self setPublishedOn(DateTime $published_on)
+ * @method self setContent(string $content)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Sitemap extends FrontendModel
 {
@@ -46,7 +55,7 @@ class Sitemap extends FrontendModel
      * @throws BasicException
      * @throws Exception
      */
-    public function getUrlset($reset = false)
+    public function getUrlset($reset = false): array
     {
         $this->checkLoaded();
 
@@ -77,7 +86,7 @@ class Sitemap extends FrontendModel
      * @return $this
      * @throws BasicException
      */
-    public function generate()
+    public function generate(): Sitemap
     {
         $urlset = $this->getUrlset();
         foreach ($urlset['url'] as &$url) {
@@ -110,7 +119,7 @@ class Sitemap extends FrontendModel
      *
      * @return string
      */
-    public function getRewritePrefix()
+    public function getRewritePrefix(): string
     {
         return 'sitemap';
     }
@@ -122,7 +131,7 @@ class Sitemap extends FrontendModel
      * @throws BasicException
      * @throws Exception
      */
-    public function getFrontendUrl()
+    public function getFrontendUrl(): string
     {
         $this->checkLoaded();
 

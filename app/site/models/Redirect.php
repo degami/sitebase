@@ -28,6 +28,14 @@ use DateTime;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setUrlFrom(string $url_from)
+ * @method self setUrlTo(string $url_to)
+ * @method self setRedirectCode(string $redirect_code)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Redirect extends BaseModel
 {

@@ -26,6 +26,14 @@ use DateTime;
  * @method int getResult()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setFrom(string $from)
+ * @method self setTo(string $to)
+ * @method self setSubject(string $subject)
+ * @method self setTemplateName(string $template_name)
+ * @method self setResult(int $result)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class MailLog extends BaseModel
 {

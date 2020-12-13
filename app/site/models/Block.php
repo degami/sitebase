@@ -36,6 +36,17 @@ use Exception;
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setRegion(string $region)
+ * @method self setLocale(string $locale)
+ * @method self setInstanceClass(string $instance_class)
+ * @method self setTitle(string $title)
+ * @method self setContent(string $content)
+ * @method self setConfig(string $config)
+ * @method self setUserId(int $user_id)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Block extends BaseModel
 {
@@ -58,7 +69,7 @@ class Block extends BaseModel
      * @return string
      * @throws Exception
      */
-    public function renderHTML(BasePage $current_page)
+    public function renderHTML(BasePage $current_page): string
     {
         $this->checkLoaded();
 
@@ -80,7 +91,7 @@ class Block extends BaseModel
      *
      * @return string
      */
-    public function getInstance()
+    public function getInstance(): string
     {
         return $this->getInstanceClass() ?? Block::class;
     }
@@ -90,7 +101,7 @@ class Block extends BaseModel
      *
      * @return BaseCodeBlock
      */
-    public function loadInstance()
+    public function loadInstance(): ?BaseCodeBlock
     {
         if ($this->isCodeBlock() && is_null($this->codeBlockInstance)) {
             $this->codeBlockInstance = $this->getContainer()->make($this->getInstance());
@@ -116,7 +127,7 @@ class Block extends BaseModel
      * @return string
      * @throws Exception
      */
-    public function render(BasePage $current_page = null)
+    public function render(BasePage $current_page = null): string
     {
         return $this->getRealInstance()->renderHTML($current_page, $this->getData());
     }
@@ -126,7 +137,7 @@ class Block extends BaseModel
      *
      * @return boolean
      */
-    public function isCodeBlock()
+    public function isCodeBlock(): bool
     {
         return $this->getInstance() != Block::class;
     }
@@ -138,7 +149,7 @@ class Block extends BaseModel
      * @return array
      * @throws Exception
      */
-    public function getRewrites($reset = false)
+    public function getRewrites($reset = false): array
     {
         $this->checkLoaded();
 
@@ -167,7 +178,7 @@ class Block extends BaseModel
      * @return boolean
      * @throws Exception
      */
-    public function checkValidRewrite($rewrite)
+    public function checkValidRewrite($rewrite): bool
     {
         $this->checkLoaded();
 

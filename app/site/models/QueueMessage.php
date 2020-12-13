@@ -29,6 +29,14 @@ use \Psr\Container\ContainerInterface;
  * @method string getResult()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setQueueName(string $queue_name)
+ * @method self setMessage(string $message)
+ * @method self setStatus(string $status)
+ * @method self setResult(string $result)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class QueueMessage extends BaseModel
 {
@@ -44,7 +52,7 @@ class QueueMessage extends BaseModel
      *
      * @return array
      */
-    public function getMessageData()
+    public function getMessageData(): array
     {
         return json_decode($this->getMessage(), true);
     }
@@ -54,7 +62,7 @@ class QueueMessage extends BaseModel
      *
      * @return string
      */
-    public function getWorkerClass()
+    public function getWorkerClass(): string
     {
         return "App\\Site\\Queues\\" . $this->snakeCaseToPascalCase($this->getQueueName()) . "\\Worker";
     }
@@ -66,7 +74,7 @@ class QueueMessage extends BaseModel
      * @param string|null $queue_name
      * @return self|null
      */
-    public static function nextMessage(ContainerInterface $container, $queue_name = null)
+    public static function nextMessage(ContainerInterface $container, $queue_name = null): ?QueueMessage
     {
         try {
             $messageDBRow = static::getModelBasicWhere(

@@ -22,6 +22,7 @@ use App\Base\Tools\Utils\SiteData;
 use App\Site\Routing\Crud;
 use App\Site\Routing\Web;
 use Aws\Ses\SesClient;
+use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
 use Feather\Icons;
 use Gplanchat\EventManager\SharedEventEmitter;
@@ -105,6 +106,17 @@ trait ContainerAwareTrait
     public function getTemplates(): Engine
     {
         return $this->getService('templates');
+    }
+
+    /**
+     * gets debugbar object
+     *
+     * @return StandardDebugBar
+     * @throws BasicException
+     */
+    public function getDebugbar(): StandardDebugBar
+    {
+        return $this->getService('debugbar');
     }
 
     /**

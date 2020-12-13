@@ -18,8 +18,11 @@ use \App\Base\Abstracts\Models\BaseModel;
  * Role Permission Pivot Model
  *
  * @method int getId()
- * @method string gerRoleId()
- * @method string getPermissionId()
+ * @method int getRoleId()
+ * @method int getPermissionId()
+ * @method self setId(int $id)
+ * @method self setRoleId(int $role_id)
+ * @method self setPermissionId(int $permission_id)
  */
 class RolePermission extends BaseModel
 {

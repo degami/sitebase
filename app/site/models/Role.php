@@ -25,6 +25,10 @@ use Exception;
  * @method string getName()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setName(string $name)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Role extends BaseModel
 {
@@ -40,7 +44,7 @@ class Role extends BaseModel
      * @return array
      * @throws Exception
      */
-    public function getPermissionsArray($reset = false)
+    public function getPermissionsArray($reset = false): array
     {
         $this->checkLoaded();
 
@@ -63,7 +67,7 @@ class Role extends BaseModel
      * @return boolean
      * @throws Exception
      */
-    public function checkPermission($permission_name, $reset = false)
+    public function checkPermission($permission_name, $reset = false): bool
     {
         $this->checkLoaded();
 
@@ -83,7 +87,7 @@ class Role extends BaseModel
      * @return self
      * @throws InvalidValueException
      */
-    public function grantPermission($permission_name)
+    public function grantPermission($permission_name): Role
     {
         $pivot_model = $this->getContainer()->call([RolePermission::class, 'new']);
 
@@ -108,7 +112,7 @@ class Role extends BaseModel
      * @throws InvalidValueException
      * @throws Exception
      */
-    public function revokePermission($permission_name)
+    public function revokePermission($permission_name): Role
     {
         if (!$this->checkPermission($permission_name)) {
             throw new InvalidValueException("permission not found in role: " . $permission_name);

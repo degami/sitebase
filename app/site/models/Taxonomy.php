@@ -31,6 +31,17 @@ use Exception;
  * @method int getParent()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setTitle(string $title)
+ * @method self setLocale(string $locale)
+ * @method self setContent(string $content)
+ * @method self setMetaDescription(string $meta_description)
+ * @method self setMetaKeywords(string $met_keywords)
+ * @method self setHtmlTitle(string $html_title)
+ * @method self setUserId(int $user_id)
+ * @method self setParent(int $parent)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class Taxonomy extends FrontendModelWithChildren
 {
@@ -46,7 +57,7 @@ class Taxonomy extends FrontendModelWithChildren
      *
      * @return string
      */
-    public function getRewritePrefix()
+    public function getRewritePrefix(): string
     {
         return 'taxonomy';
     }
@@ -58,7 +69,7 @@ class Taxonomy extends FrontendModelWithChildren
      * @return array
      * @throws Exception
      */
-    public function getPages($reset = false)
+    public function getPages($reset = false): array
     {
         $this->checkLoaded();
 
@@ -73,7 +84,7 @@ class Taxonomy extends FrontendModelWithChildren
         return $this->pages;
     }
 
-    public function prePersist()
+    public function prePersist(): Taxonomy
     {
         $this->path = $this->getParentIds();
         $this->level = max(count(explode("/", $this->path))-1, 0);

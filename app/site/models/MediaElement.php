@@ -35,6 +35,15 @@ use Imagine\Image\ImageInterface;
  * @method boolean getLazyload()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setPath(string $path)
+ * @method self setFilename(string $filename)
+ * @method self setMimetype(string $mimetype)
+ * @method self setFilesize(int $filesize)
+ * @method self setUserId(int $user_id)
+ * @method self setLazyload(boolean $lazyload)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class MediaElement extends BaseModel
 {
@@ -48,7 +57,7 @@ class MediaElement extends BaseModel
      * @return string
      * @throws Exception
      */
-    public function getRelativePath()
+    public function getRelativePath(): string
     {
         $this->checkLoaded();
 
@@ -66,7 +75,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    public function getThumb($size, $mode = null, $class = null, $img_attributes = [])
+    public function getThumb($size, $mode = null, $class = null, $img_attributes = []): string
     {
         $w = $h = null;
         if (preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
@@ -101,7 +110,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws Exception
      */
-    public function getThumbUrl($size, $mode = null)
+    public function getThumbUrl($size, $mode = null): string
     {
         $this->checkLoaded();
 
@@ -187,7 +196,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    public function getImage($class = 'img-fluid')
+    public function getImage($class = 'img-fluid'): string
     {
         return $this->getThumb('originals', null, $class);
     }
@@ -199,7 +208,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    public function getImageUrl()
+    public function getImageUrl(): string
     {
         return $this->getThumbUrl('originals');
     }

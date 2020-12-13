@@ -26,8 +26,22 @@ use \Symfony\Component\HttpFoundation\Request;
  * @method string getMethod()
  * @method string getUserId()
  * @method string getIpAddress()
+ * @method string getAction()
+ * @method string getUserAgent()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method self setId(int $id)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setUrl(string $url)
+ * @method self setMethod(string $method)
+ * @method self setUserId(string $user_id)
+ * @method self setIpAddress(string $ip_address)
+ * @method self setAction(string $action)
+ * @method self setRouteInfo(string $route_info)
+ * @method self setLogData(string $log_data)
+ * @method self setUserAgent(string $user_agent)
+ * @method self setCreatedAt(DateTime $created_at)
+ * @method self setUpdatedAt(DateTime $updated_at)
  */
 class AdminActionLog extends RequestLog
 {
@@ -39,7 +53,7 @@ class AdminActionLog extends RequestLog
      * @return $this|AdminActionLog
      * @throws BasicException
      */
-    public function fillWithRequest(Request $request, BasePage $controller = null)
+    public function fillWithRequest(Request $request, BasePage $controller = null): RequestLog
     {
         parent::fillWithRequest($request, $controller);
         if ($controller instanceof BasePage) {

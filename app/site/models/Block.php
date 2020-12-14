@@ -100,6 +100,8 @@ class Block extends BaseModel
      * loads code block instance
      *
      * @return BaseCodeBlock
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function loadInstance(): ?BaseCodeBlock
     {
@@ -114,6 +116,8 @@ class Block extends BaseModel
      * gets real block instance
      *
      * @return self|BaseCodeBlock
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getRealInstance()
     {

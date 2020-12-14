@@ -12,6 +12,7 @@
 
 namespace App\Site\Models;
 
+use App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Abstracts\Models\ModelWithChildren;
 use App\Base\Traits\WithParentTrait;
 use \App\Base\Traits\WithWebsiteTrait;
@@ -92,7 +93,7 @@ class Menu extends ModelWithChildren
         );
     }
 
-    public function prePersist(): Menu
+    public function prePersist(): BaseModel
     {
         $this->breadcrumb = $this->getParentIds();
         $this->level = max(count(explode("/", $this->breadcrumb))-1, 0);

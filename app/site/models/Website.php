@@ -38,7 +38,7 @@ class Website extends BaseModel
      *
      * @return self
      */
-    public function prePersist(): Website
+    public function prePersist(): BaseModel
     {
         $this->aliases = implode(",", array_filter(array_map('trim', explode(",", $this->aliases))));
 
@@ -50,7 +50,7 @@ class Website extends BaseModel
      *
      * @return self
      */
-    public function postPersist(): Website
+    public function postPersist(): BaseModel
     {
         if ($this->isFirstSave()) {
             $first_website = $this->getContainer()->call([Website::class, 'select'], ['options' => ['expr' => 'id', 'limitCount' => 1]])->fetch();

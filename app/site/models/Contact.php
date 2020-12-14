@@ -12,6 +12,7 @@
 
 namespace App\Site\Models;
 
+use App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -126,7 +127,7 @@ class Contact extends FrontendModel
      * @throws Exception
      * @throws BasicException
      */
-    public function getFormDefinition($container, &$form_state): FAPI\Abstracts\Base\Element
+    public function getFormDefinition($container, &$form_state)
     {
         foreach ($this->getContactDefinition() as $field) {
             $field_data = (array)json_decode($field['field_data']);
@@ -148,7 +149,7 @@ class Contact extends FrontendModel
      * @return FrontendModel
      * @throws Exception
      */
-    public function preRemove(): FrontendModel
+    public function preRemove(): BaseModel
     {
         foreach ($this->contact_definitionList() as $contact_definition) {
             $contact_definition->delete();

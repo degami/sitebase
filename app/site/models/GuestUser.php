@@ -13,6 +13,7 @@
 namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\AccountModel;
+use App\Base\Abstracts\Models\BaseModel;
 use Degami\Basics\Exceptions\BasicException;
 use \Psr\Container\ContainerInterface;
 use \DateTime;
@@ -194,7 +195,7 @@ class GuestUser extends AccountModel
     /**
      * no save for this model
      */
-    public function persist(): GuestUser
+    public function persist(): BaseModel
     {
         return $this;
     }
@@ -202,7 +203,7 @@ class GuestUser extends AccountModel
     /**
      * no delete for this model
      */
-    public function remove(): GuestUser
+    public function remove(): BaseModel
     {
         return $this;
     }

@@ -359,7 +359,7 @@ class App extends ContainerAwareObject
      *
      * @return boolean
      */
-    protected function isSiteOffline()
+    protected function isSiteOffline(): bool
     {
         return is_file(static::getDir(static::APP) . DS . 'offline.flag');
     }
@@ -370,7 +370,7 @@ class App extends ContainerAwareObject
      * @param $ip_address
      * @return bool
      */
-    public function isBlocked($ip_address)
+    public function isBlocked($ip_address): bool
     {
         return in_array($ip_address, $this->blocked_ips);
     }
@@ -383,7 +383,7 @@ class App extends ContainerAwareObject
      * @return self
      * @throws BasicException
      */
-    public function event($event_name, $event_data)
+    public function event($event_name, $event_data): App
     {
         $this->getEventManager()->emit(new Event($event_name, $event_data));
 
@@ -395,7 +395,7 @@ class App extends ContainerAwareObject
      *
      * @return array
      */
-    public static function getDirs()
+    public static function getDirs(): array
     {
         $appPath = dirname(__FILE__);
         $rootPath = dirname($appPath);
@@ -427,7 +427,7 @@ class App extends ContainerAwareObject
      * @param string $type
      * @return string
      */
-    public static function getDir($type)
+    public static function getDir($type): ?string
     {
         $dirs = static::getDirs();
         if (!isset($dirs[$type])) {
@@ -441,9 +441,9 @@ class App extends ContainerAwareObject
      * sets current locale
      *
      * @param string|null $locale
-     * @return App
+     * @return self
      */
-    public function setCurrentLocale(string $locale = null)
+    public function setCurrentLocale(string $locale = null): App
     {
         $this->current_locale = $locale;
 
@@ -455,7 +455,7 @@ class App extends ContainerAwareObject
      *
      * @return string|null
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): ?string
     {
         return $this->current_locale;
     }
@@ -465,7 +465,7 @@ class App extends ContainerAwareObject
      *
      * @return RouteInfo|null
      */
-    public function getRouteInfo()
+    public function getRouteInfo(): ?RouteInfo
     {
         return $this->getContainer()->get(RouteInfo::class);
     }
@@ -473,8 +473,10 @@ class App extends ContainerAwareObject
     /**
      * gets current website id
      *
-     * @return integer
+     * @return int|string|null
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getCurrentWebsiteId()
     {
@@ -486,7 +488,7 @@ class App extends ContainerAwareObject
      *
      * @return Request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->getContainer()->get(Request::class);
     }

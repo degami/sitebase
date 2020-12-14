@@ -78,6 +78,8 @@ class SiteBase implements ExtensionInterface
      *
      * @return Website
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getCurrentWebsite(): Website
     {
@@ -89,7 +91,7 @@ class SiteBase implements ExtensionInterface
      *
      * @return string
      */
-    public function getCurrentLocale(): string
+    public function getCurrentLocale(): ?string
     {
         return $this->getApp()->getCurrentLocale();
     }
@@ -102,6 +104,8 @@ class SiteBase implements ExtensionInterface
      * @return string
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function renderBlocks($region, BasePage $controller): string
     {
@@ -114,6 +118,8 @@ class SiteBase implements ExtensionInterface
      * @param string $string
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function translate($string): string
     {
@@ -261,6 +267,8 @@ class SiteBase implements ExtensionInterface
      *
      * @param BasePage $controller
      * @return void
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function renderFlashMessages(BasePage $controller)
     {

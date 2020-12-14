@@ -31,7 +31,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -41,7 +41,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_taxonomy';
     }
@@ -51,7 +51,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return TaxonomyModel::class;
     }
@@ -61,7 +61,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'term_id';
     }
@@ -73,6 +73,9 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -182,7 +185,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                             if (in_array($el->id, $not_in)) {
                                 return null;
                             }
-                            $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                            $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                             return ['title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                         },
                         $this->getDb()->page()->fetchAll()
@@ -231,6 +234,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -300,7 +305,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -320,7 +325,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($term) {

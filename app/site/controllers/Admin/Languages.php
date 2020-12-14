@@ -28,7 +28,7 @@ class Languages extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -38,7 +38,7 @@ class Languages extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_languages';
     }
@@ -48,7 +48,7 @@ class Languages extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return Language::class;
     }
@@ -58,7 +58,7 @@ class Languages extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'language_id';
     }
@@ -199,7 +199,7 @@ class Languages extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -222,7 +222,7 @@ class Languages extends AdminManageModelsPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($language) {

@@ -65,7 +65,7 @@ class Website extends BaseModel
                     'is_system' => 1,
                     'website_id' => $this->getId(),
                 ];
-                $configuration = $this->getContainer()->call([Configuration::class, 'new'], ['initialdata' => $data]);
+                $configuration = $this->getContainer()->call([Configuration::class, 'new'], ['initial_data' => $data]);
                 $configurations[$data['path']] = $configuration;
             }
 

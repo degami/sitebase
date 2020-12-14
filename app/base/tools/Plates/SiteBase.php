@@ -13,7 +13,9 @@
 namespace App\Base\Tools\Plates;
 
 use App\Base\Tools\Assets\Manager as AssetsManager;
+use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
+use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\Website;
 use DebugBar\StandardDebugBar;
 use Degami\Basics\Exceptions\BasicException;
@@ -58,11 +60,6 @@ class SiteBase implements ExtensionInterface
     public function register(Engine $engine)
     {
         $this->engine = $engine;
-
-        //        foreach (get_class_methods(static::class) as $methodName) {
-        //            $engine->registerFunction($methodName, [$this, $methodName]);
-        //        }
-
         $engine->registerFunction('sitebase', [$this, 'getObject']);
     }
 
@@ -71,7 +68,7 @@ class SiteBase implements ExtensionInterface
      *
      * @return self
      */
-    public function getObject()
+    public function getObject(): SiteBase
     {
         return $this;
     }
@@ -80,10 +77,11 @@ class SiteBase implements ExtensionInterface
      * gets current website
      *
      * @return Website
+     * @throws BasicException
      */
-    public function getCurrentWebsite()
+    public function getCurrentWebsite(): Website
     {
-        return $this->container->get('site_data')->getCurrentWebsite();
+        return $this->getSiteData()->getCurrentWebsite();
     }
 
     /**
@@ -91,9 +89,9 @@ class SiteBase implements ExtensionInterface
      *
      * @return string
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
-        return $this->container->get('app')->getCurrentLocale();
+        return $this->getApp()->getCurrentLocale();
     }
 
     /**
@@ -105,7 +103,7 @@ class SiteBase implements ExtensionInterface
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function renderBlocks($region, BasePage $controller)
+    public function renderBlocks($region, BasePage $controller): string
     {
         return $this->getHtmlRenderer()->renderBlocks($region, $this->getCurrentLocale(), $controller);
     }
@@ -115,10 +113,11 @@ class SiteBase implements ExtensionInterface
      *
      * @param string $string
      * @return string
+     * @throws BasicException
      */
-    public function translate($string)
+    public function translate($string): string
     {
-        return $this->container->get('utils')->translate($string, $this->getCurrentLocale());
+        return $this->getUtils()->translate($string, $this->getCurrentLocale());
     }
 
     /**
@@ -126,7 +125,7 @@ class SiteBase implements ExtensionInterface
      *
      * @return StandardDebugBar
      */
-    public function getDebugbar()
+    public function getDebugbar(): StandardDebugBar
     {
         return $this->container->get('debugbar');
     }
@@ -139,7 +138,7 @@ class SiteBase implements ExtensionInterface
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function assetUrl($asset_path)
+    public function assetUrl($asset_path): string
     {
         return $this->getAssets()->assetUrl($asset_path);
     }
@@ -151,7 +150,7 @@ class SiteBase implements ExtensionInterface
      * @param array $route_params
      * @return string
      */
-    public function getUrl($route_name, $route_params = [])
+    public function getUrl($route_name, $route_params = []): string
     {
         return $this->container->get('web_router')->getUrl($route_name, $route_params);
     }
@@ -161,7 +160,7 @@ class SiteBase implements ExtensionInterface
      *
      * @return AssetsManager
      */
-    protected function getAssets()
+    protected function getAssets(): AssetsManager
     {
         return $this->container->get('assets');
     }
@@ -171,17 +170,38 @@ class SiteBase implements ExtensionInterface
      *
      * @return HtmlPartsRenderer
      */
-    protected function getHtmlRenderer()
+    protected function getHtmlRenderer(): HtmlPartsRenderer
     {
         return $this->container->get('html_renderer');
     }
+
+    /**
+     * gets utils
+     *
+     * @return Globals
+     */
+    protected function getUtils(): Globals
+    {
+        return $this->container->get('utils');
+    }
+
+    /**
+     * gets site_data
+     *
+     * @return SiteData
+     */
+    protected function getSiteData(): SiteData
+    {
+        return $this->container->get('site_data');
+    }
+
 
     /**
      * gets app object
      *
      * @return App
      */
-    protected function getApp()
+    protected function getApp(): App
     {
         return $this->container->get('app');
     }
@@ -196,7 +216,7 @@ class SiteBase implements ExtensionInterface
      * @param string $class
      * @return string
      */
-    public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle')
+    public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle'): string
     {
         return $this->getHtmlRenderer()->getGravatar($email, $s, $d, $r, $class);
     }
@@ -209,7 +229,7 @@ class SiteBase implements ExtensionInterface
      */
     public function drawIcon($icon_name)
     {
-        echo $this->container->get('utils')->getIcon($icon_name);
+        echo $this->getUtils()->getIcon($icon_name);
     }
 
     /**
@@ -218,10 +238,11 @@ class SiteBase implements ExtensionInterface
      * @param string $variable
      * @param null $default
      * @return mixed
+     * @throws BasicException
      */
     public function env($variable, $default = null)
     {
-        return $this->container->get('utils')->getEnv($variable, $default);
+        return $this->getUtils()->getEnv($variable, $default);
     }
 
     /**
@@ -229,7 +250,7 @@ class SiteBase implements ExtensionInterface
      *
      * @return string
      */
-    public function version()
+    public function version(): string
     {
         $arr = file(App::getDir(App::ROOT) . DS . 'VERSION');
         return trim(array_pop($arr));
@@ -243,7 +264,7 @@ class SiteBase implements ExtensionInterface
      */
     public function renderFlashMessages(BasePage $controller)
     {
-        echo $this->container->get('html_renderer')->renderFlashMessages($controller);
+        echo $this->getHtmlRenderer()->renderFlashMessages($controller);
     }
 
     /**
@@ -253,7 +274,7 @@ class SiteBase implements ExtensionInterface
      * @param integer $max_words
      * @return string
      */
-    public function summarize($text, $max_words = 10)
+    public function summarize($text, $max_words = 10): string
     {
         $max_words = abs(intval($max_words));
         $words = preg_split("/\s+/", strip_tags($text));
@@ -267,9 +288,10 @@ class SiteBase implements ExtensionInterface
      * returns page regions
      *
      * @return array
+     * @throws BasicException
      */
-    public function getPageRegions()
+    public function getPageRegions(): array
     {
-        return $this->container->get('utils')->getPageRegions();
+        return $this->getUtils()->getPageRegions();
     }
 }

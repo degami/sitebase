@@ -132,7 +132,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return Request
      */
-    public function getRequest()
+    public function getRequest(): Request
     {
         return $this->request;
     }
@@ -142,7 +142,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return Response
      */
-    protected function getResponse()
+    protected function getResponse(): Response
     {
         return $this->response;
     }
@@ -152,7 +152,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return RouteInfo
      */
-    public function getRouteInfo()
+    public function getRouteInfo(): ?RouteInfo
     {
         return $this->route_info;
     }
@@ -162,7 +162,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return string the form html
      */
-    public function __toString()
+    public function __toString(): string
     {
         try {
             return get_class($this);
@@ -179,7 +179,7 @@ abstract class BasePage extends ContainerAwareObject
      * @return string
      * @throws BasicException
      */
-    public function getUrl($route_name, $route_params = [])
+    public function getUrl($route_name, $route_params = []): string
     {
         return $this->getWebRouter()->getUrl($route_name, $route_params);
     }
@@ -189,7 +189,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return string
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower(get_class($this))));
         return str_replace("/", ".", trim($path, "/"));
@@ -201,7 +201,7 @@ abstract class BasePage extends ContainerAwareObject
      * @return string
      * @throws BasicException
      */
-    public function getControllerUrl()
+    public function getControllerUrl(): string
     {
         if ($this->getRouteInfo() instanceof RouteInfo) {
             return $this->getUrl($this->getRouteInfo()->getRouteName(), $this->getRouteInfo()->getVars());
@@ -243,7 +243,7 @@ abstract class BasePage extends ContainerAwareObject
      * @return string
      * @throws BasicException
      */
-    public function getDestParam($destination_url = null)
+    public function getDestParam($destination_url = null): string
     {
         if (empty($destination_url)) {
             $destination_url = $this->getControllerUrl();
@@ -256,7 +256,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return boolean
      */
-    public function canBeFPC()
+    public function canBeFPC(): bool
     {
         return false;
     }
@@ -268,7 +268,7 @@ abstract class BasePage extends ContainerAwareObject
      * @param array $additional_headers
      * @return RedirectResponse
      */
-    protected function doRedirect($url, $additional_headers = [])
+    protected function doRedirect($url, $additional_headers = []): RedirectResponse
     {
         return RedirectResponse::create(
             $url,
@@ -287,5 +287,5 @@ abstract class BasePage extends ContainerAwareObject
      * @param array $route_data
      * @return Response|self
      */
-    abstract public function process(RouteInfo $route_info = null, $route_data = []);
+    abstract public function process(RouteInfo $route_info = null, $route_data = []): Response;
 }

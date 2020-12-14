@@ -33,7 +33,7 @@ class Links extends FormPage
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): string
     {
         return '';
     }
@@ -43,7 +43,7 @@ class Links extends FormPage
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -53,7 +53,7 @@ class Links extends FormPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'links';
     }
@@ -63,7 +63,7 @@ class Links extends FormPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'links';
     }
@@ -74,10 +74,10 @@ class Links extends FormPage
      * @return array
      * @throws BasicException
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         $data = $this->getContainer()->call([LinkExchange::class, 'paginate'], ['condition' => ['active' => 1, 'locale' => $this->getCurrentLocale()]]);
-        return $this->templateData += [
+        return $this->template_data += [
             'page_title' => $this->getUtils()->translate('Links exchange', $this->getCurrentLocale()),
             'links' => $data['items'],
             'total' => $data['total'],
@@ -179,8 +179,10 @@ class Links extends FormPage
      *
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
         if (!$this->locale) {
             $this->locale = parent::getCurrentLocale();

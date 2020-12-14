@@ -35,16 +35,19 @@ class Media extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         AdminFormPage::__construct($container, $request, $route_info);
-        if ($this->templateData['action'] == 'list') {
+        if ($this->template_data['action'] == 'list') {
             parent::__construct($container, $request, $route_info);
-        } elseif ($this->templateData['action'] == 'usage') {
+        } elseif ($this->template_data['action'] == 'usage') {
             $media = $this->getContainer()->call([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
             $elem_data = $media->getData();
             $elem_data['owner'] = $media->getOwner()->username;
@@ -56,12 +59,12 @@ class Media extends AdminManageModelsPage
                 $el = '<strong>' . $key . '</strong>: ' . $el;
             });
 
-            $this->templateData += [
+            $this->template_data += [
                 'media_elem' => $media,
                 'elem_data' => $elem_data,
                 'pages' => array_map(
                     function ($el) {
-                        $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                        $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                         return ['url' => $page->getRewrite()->getUrl(), 'title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                     },
                     $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->get('media_id'))->page()->fetchAll()
@@ -75,7 +78,7 @@ class Media extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'media';
     }
@@ -85,7 +88,7 @@ class Media extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_medias';
     }
@@ -95,7 +98,7 @@ class Media extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return MediaElement::class;
     }
@@ -105,7 +108,7 @@ class Media extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'media_id';
     }
@@ -117,6 +120,8 @@ class Media extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -217,7 +222,7 @@ class Media extends AdminManageModelsPage
                             if (in_array($el->id, $not_in)) {
                                 return null;
                             }
-                            $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                            $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                             return ['title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                         },
                         $this->getDb()->page()->fetchAll()
@@ -265,6 +270,8 @@ class Media extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -335,7 +342,7 @@ class Media extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -356,7 +363,7 @@ class Media extends AdminManageModelsPage
      * @return array
      * @throws BasicException
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($elem) {

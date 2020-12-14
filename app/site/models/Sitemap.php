@@ -63,7 +63,7 @@ class Sitemap extends FrontendModel
             $this->urlset = [
                 'url' => array_map(
                     function ($el) {
-                        $rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $el->rewrite()->fetch()]);
+                        $rewrite = $this->getContainer()->make(Rewrite::class, ['db_row' => $el->rewrite()->fetch()]);
                         return [
                             'id' => $el->id,
                             'rewrite' => $rewrite->id,

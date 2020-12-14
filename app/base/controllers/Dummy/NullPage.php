@@ -22,7 +22,7 @@ class NullPage extends BaseHtmlPage
     /**
      * {@inheritdocs}
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return '';
     }
@@ -30,7 +30,7 @@ class NullPage extends BaseHtmlPage
     /**
      * {@inheritdocs}
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         return [];
     }

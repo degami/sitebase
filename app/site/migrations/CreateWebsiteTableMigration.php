@@ -33,7 +33,7 @@ class CreateWebsiteTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '00.1_' . parent::getName();
     }
@@ -46,7 +46,7 @@ class CreateWebsiteTableMigration extends DBMigration
      * @throws EmptyException
      * @throws DuplicateException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('site_name', 'VARCHAR', [255], [], false, null)

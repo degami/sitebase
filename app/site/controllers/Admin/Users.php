@@ -29,7 +29,7 @@ class Users extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -39,7 +39,7 @@ class Users extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_users';
     }
@@ -49,7 +49,7 @@ class Users extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return User::class;
     }
@@ -59,7 +59,7 @@ class Users extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'user_id';
     }
@@ -217,7 +217,7 @@ class Users extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -236,7 +236,7 @@ class Users extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($user) {

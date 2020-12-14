@@ -42,7 +42,7 @@ class ContactCallback extends AdminJsonPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_contact';
     }
@@ -54,7 +54,7 @@ class ContactCallback extends AdminJsonPage
      * @param array     &$form_state
      * @return FAPI\Form
      */
-    public function emptyForm(FAPI\Form $form, &$form_state)
+    public function emptyForm(FAPI\Form $form, &$form_state): FAPI\Form
     {
         return $form;
     }
@@ -68,7 +68,7 @@ class ContactCallback extends AdminJsonPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         try {
             $contact_form_controller = $this->getContainer()->make(ContactFormsController::class);
@@ -94,7 +94,7 @@ class ContactCallback extends AdminJsonPage
      * @param FAPI\Form $form
      * @return FAPI\Abstracts\Base\Element|null
      */
-    public static function contactFormsCallback(FAPI\Form $form)
+    public static function contactFormsCallback(FAPI\Form $form): ?FAPI\Abstracts\Base\Element
     {
         return $form->getField('form_definition');
     }
@@ -106,7 +106,7 @@ class ContactCallback extends AdminJsonPage
      *
      * @return array
      */
-    protected function getJsonData()
+    protected function getJsonData(): array
     {
         return [];
     }

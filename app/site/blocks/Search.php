@@ -29,7 +29,7 @@ class Search extends BaseCodeBlock
      * @param BasePage|null $current_page
      * @return string
      */
-    public function renderHTML(BasePage $current_page = null)
+    public function renderHTML(BasePage $current_page = null): string
     {
         if ($current_page instanceof SearchController) {
             return '';

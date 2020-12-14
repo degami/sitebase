@@ -28,7 +28,7 @@ class Taxonomy extends FrontendPageWithObject
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'taxonomy/{id:\d+}';
     }
@@ -38,7 +38,7 @@ class Taxonomy extends FrontendPageWithObject
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET'];
     }
@@ -48,7 +48,7 @@ class Taxonomy extends FrontendPageWithObject
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         if ($this->getObject() instanceof TaxonomyModel && $this->getObject()->isLoaded()) {
             if (!empty($this->getObject()->getTemplateName())) {
@@ -65,7 +65,7 @@ class Taxonomy extends FrontendPageWithObject
      * @return array
      * @throws BasicException
      */
-    protected function getBaseTemplateData()
+    protected function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' taxonomy-' . $this->getObject()->id;
@@ -77,7 +77,7 @@ class Taxonomy extends FrontendPageWithObject
      *
      * @return string
      */
-    public static function getObjectClass()
+    public static function getObjectClass(): string
     {
         return TaxonomyModel::class;
     }

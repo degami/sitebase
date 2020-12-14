@@ -27,7 +27,7 @@ class Roles extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -37,7 +37,7 @@ class Roles extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_permissions';
     }
@@ -47,7 +47,7 @@ class Roles extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return Role::class;
     }
@@ -57,7 +57,7 @@ class Roles extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'role_id';
     }
@@ -161,7 +161,7 @@ class Roles extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -176,7 +176,7 @@ class Roles extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($role) {

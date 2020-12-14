@@ -33,7 +33,7 @@ class Pages extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -43,7 +43,7 @@ class Pages extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_pages';
     }
@@ -53,7 +53,7 @@ class Pages extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return Page::class;
     }
@@ -64,7 +64,7 @@ class Pages extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'page_id';
     }
@@ -280,7 +280,7 @@ class Pages extends AdminManageFrontendModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -300,7 +300,7 @@ class Pages extends AdminManageFrontendModelsPage
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($page) {

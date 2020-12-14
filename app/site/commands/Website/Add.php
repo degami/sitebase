@@ -53,23 +53,10 @@ class Add extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
+        $name = $this->keepAskingForOption('name', 'Name? ');
+        $domain = $this->keepAskingForOption('domain', 'Domain? ');
 
-        $name = $input->getOption('name');
-        while (trim($name) == '') {
-            $question = new Question('Name? ');
-            $name = $helper->ask($input, $output, $question);
-        }
-
-        $domain = $input->getOption('domain');
-        while (trim($domain) == '') {
-            $question = new Question('Domain? ');
-            $domain = $helper->ask($input, $output, $question);
-        }
-
-        $question = new ConfirmationQuestion('Save Website? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save Website? ')) {
             return;
         }
 

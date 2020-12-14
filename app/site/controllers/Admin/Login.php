@@ -54,14 +54,14 @@ class Login extends FormPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * {@inheritdocs}
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'login';
     }
@@ -71,7 +71,7 @@ class Login extends FormPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'login';
     }
@@ -81,7 +81,7 @@ class Login extends FormPage
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -91,9 +91,9 @@ class Login extends FormPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
@@ -101,7 +101,7 @@ class Login extends FormPage
      *
      * @return boolean
      */
-    public function showMenu()
+    public function showMenu(): bool
     {
         return false;
     }
@@ -111,7 +111,7 @@ class Login extends FormPage
      *
      * @return boolean
      */
-    public function showBlocks()
+    public function showBlocks(): bool
     {
         return false;
     }
@@ -122,7 +122,7 @@ class Login extends FormPage
      * @return Template
      * @throws BasicException
      */
-    protected function prepareTemplate()
+    protected function prepareTemplate(): Template
     {
         $template = $this->getTemplates()->make('admin::' . $this->getTemplateName());
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());
@@ -168,7 +168,7 @@ class Login extends FormPage
     protected function beforeRender()
     {
         if ($this->isSubmitted()) {
-            $result = $this->templateData['form']->getSubmitResults(static::class . '::formSubmitted');
+            $result = $this->template_data['form']->getSubmitResults(static::class . '::formSubmitted');
             $token = $this->getContainer()->get('jwt:parser')->parse($result);
 
             $goto_url = $this->getUrl("admin.dashboard");
@@ -240,7 +240,7 @@ class Login extends FormPage
         if (!$user) {
             return $this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale());
         } else {
-            $form_state['logged_user'] = $this->getContainer()->make(User::class, ['dbrow' => $user]);
+            $form_state['logged_user'] = $this->getContainer()->make(User::class, ['db_row' => $user]);
 
             if (!$form_state['logged_user']->checkPermission('administer_site')) {
                 return $this->getUtils()->translate("Your account is not allowed to access", $this->getCurrentLocale());
@@ -274,7 +274,7 @@ class Login extends FormPage
      * @return string
      * @throws BasicException
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
         return $this->getSiteData()->getDefaultLocale();
     }

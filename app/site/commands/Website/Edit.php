@@ -55,7 +55,6 @@ class Edit extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
 
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
@@ -70,23 +69,10 @@ class Edit extends BaseCommand
             return;
         }
 
-        $name = $input->getOption('name');
-        $value = null;
-        while (trim($value) == '') {
-            $question = new Question('Name? ', $website->name);
-            $value = $helper->ask($input, $output, $question);
-        }
+        $name = $this->keepAskingForOption('name', 'Name? ');
+        $domain = $this->keepAskingForOption('domain', 'Domain? ');
 
-        $domain = $input->getOption('domain');
-        $value = null;
-        while (trim($value) == '') {
-            $question = new Question('Domain? ', $website->domain);
-            $value = $helper->ask($input, $output, $question);
-        }
-
-        $question = new ConfirmationQuestion('Save Website? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save Website? ')) {
             return;
         }
 

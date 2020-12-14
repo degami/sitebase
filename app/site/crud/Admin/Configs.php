@@ -25,7 +25,7 @@ class Configs extends AdminRestPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'configs[/{id:\d+}]';
     }
@@ -35,7 +35,7 @@ class Configs extends AdminRestPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -46,7 +46,7 @@ class Configs extends AdminRestPage
      *
      * @return string
      */
-    public static function getObjectClass()
+    public static function getObjectClass(): string
     {
         return ConfigurationModel::class;
     }

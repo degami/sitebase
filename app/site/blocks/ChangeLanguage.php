@@ -31,7 +31,7 @@ class ChangeLanguage extends BaseCodeBlock
      * @param array $data
      * @return string
      */
-    public function renderHTML(BasePage $current_page = null, $data = [])
+    public function renderHTML(BasePage $current_page = null, $data = []): string
     {
         try {
             $config = array_filter(json_decode($data['config'] ?? '{}', true));
@@ -109,7 +109,7 @@ class ChangeLanguage extends BaseCodeBlock
      * @return array
      * @throws FAPI\Exceptions\FormException
      */
-    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
+    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array
     {
         $config_fields = [];
 

@@ -35,7 +35,10 @@ abstract class BaseRestPage extends BasePage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -48,7 +51,7 @@ abstract class BaseRestPage extends BasePage
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
     }
@@ -80,7 +83,7 @@ abstract class BaseRestPage extends BasePage
      *
      * @return string
      */
-    protected function getVerb()
+    protected function getVerb(): string
     {
         return $this->getRequest()->getMethod();
     }
@@ -91,7 +94,7 @@ abstract class BaseRestPage extends BasePage
      * @param integer $id
      * @return BaseModel
      */
-    protected function loadObject($id)
+    protected function loadObject($id): ?BaseModel
     {
         if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
             return null;
@@ -109,7 +112,7 @@ abstract class BaseRestPage extends BasePage
      * @throws BasicException
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         if (!empty($data = json_decode($this->getRequest()->getContent(), true))) {
             if (isset($data['id'])) {
@@ -183,5 +186,5 @@ abstract class BaseRestPage extends BasePage
      *
      * @return string
      */
-    abstract public static function getObjectClass();
+    abstract public static function getObjectClass(): string;
 }

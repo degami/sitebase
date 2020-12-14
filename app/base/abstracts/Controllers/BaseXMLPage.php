@@ -31,7 +31,10 @@ abstract class BaseXMLPage extends BasePage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -48,7 +51,7 @@ abstract class BaseXMLPage extends BasePage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         try {
             $this

@@ -38,7 +38,7 @@ class BreadCrumbs extends BaseCodeBlock
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function renderHTML(BasePage $current_page = null, $data = [])
+    public function renderHTML(BasePage $current_page = null, $data = []): string
     {
         $config = array_filter(json_decode($data['config'] ?? '{}', true));
         if (empty($config)) {
@@ -59,7 +59,7 @@ class BreadCrumbs extends BaseCodeBlock
         $menuitems = $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['rewrite_id' => $route_info->getRewrite()]]);
         $menu_item = reset($menuitems);
         if ($menu_item instanceof Row) {
-            $menu_item = $this->getContainer()->make(Menu::class, ['dbrow' => $menu_item]);
+            $menu_item = $this->getContainer()->make(Menu::class, ['db_row' => $menu_item]);
         }
         $home_url = $this->getWebRouter()->getUrl('frontend.root');
 
@@ -219,8 +219,10 @@ class BreadCrumbs extends BaseCodeBlock
      * @param array $leaf
      * @param string $link_class
      * @return string
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function _renderLink($leaf, $link_class = 'breadcrumb-link')
+    protected function _renderLink($leaf, $link_class = 'breadcrumb-link'): string
     {
         $link_options = [
             'tag' => 'a',
@@ -249,7 +251,7 @@ class BreadCrumbs extends BaseCodeBlock
      * @return array
      * @throws FAPI\Exceptions\FormException
      */
-    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
+    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array
     {
         $config_fields = [];
 

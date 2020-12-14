@@ -33,7 +33,7 @@ class CreateBlocksRewritesTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '05_' . parent::getName();
     }
@@ -45,7 +45,7 @@ class CreateBlocksRewritesTableMigration extends DBMigration
      * @return Table
      * @throws DuplicateException|EmptyException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table
             ->addColumn('id', 'INT', null, ['UNSIGNED'], false)

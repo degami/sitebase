@@ -53,13 +53,7 @@ class Get extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-
-        $key = $input->getOption('key');
-        while (trim($key) == '') {
-            $question = new Question('Cache item key? ');
-            $key = $helper->ask($input, $output, $question);
-        }
+        $key = $this->keepAskingForOption('key', 'Cache item key? ');
 
         $format = $input->getOption('format');
         $callback = null;

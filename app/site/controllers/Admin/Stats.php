@@ -24,14 +24,14 @@ class Stats extends AdminPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * {@inheritdocs}
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'stats';
     }
@@ -41,7 +41,7 @@ class Stats extends AdminPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -52,7 +52,7 @@ class Stats extends AdminPage
      * @return array
      * @throws BasicException
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getWebRouter()->getUrl('admin.dashboard'));
 
@@ -66,9 +66,9 @@ class Stats extends AdminPage
         foreach ($queries as $key => $query) {
             $stmt = $this->getDb()->prepare($query);
             $stmt->execute();
-            $this->templateData[$key] = $stmt->fetchAll(PDO::FETCH_ASSOC);
+            $this->template_data[$key] = $stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
-        return $this->templateData;
+        return $this->template_data;
     }
 }

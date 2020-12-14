@@ -45,7 +45,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
      *
      * @return array
      */
-    public function collect()
+    public function collect(): array
     {
         return [
             'user_id' => $this->subject->getId(),
@@ -60,7 +60,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::NAME;
     }
@@ -70,7 +70,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
      *
      * @return array
      */
-    public function getWidgets()
+    public function getWidgets(): array
     {
         return [
             self::NAME => [
@@ -88,7 +88,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
      *
      * @return array
      */
-    public function getAssets()
+    public function getAssets(): array
     {
         return [
             //            'css' => '',

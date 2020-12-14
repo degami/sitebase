@@ -28,6 +28,6 @@ trait WithOwnerTrait
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(User::class, ['dbrow' => $this->user()->fetch()]);
+        return $this->getContainer()->make(User::class, ['db_row' => $this->user()->fetch()]);
     }
 }

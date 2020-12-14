@@ -31,7 +31,7 @@ class AddNavigatorToRequestLogTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '06_' . parent::getName();
     }
@@ -43,7 +43,7 @@ class AddNavigatorToRequestLogTableMigration extends DBMigration
      * @return Table
      * @throws DuplicateException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table
             ->addColumn('user_agent', 'VARCHAR', [1024]);

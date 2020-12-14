@@ -33,6 +33,7 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
@@ -41,7 +42,7 @@ abstract class LoggedUserFormPage extends LoggedUserPage
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         parent::__construct($container, $request, $route_info);
-        $this->templateData = [
+        $this->template_data = [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
                 ->setValidate([[$this, 'formValidate']])
                 ->setSubmit([[$this, 'formSubmitted']]),
@@ -62,8 +63,8 @@ abstract class LoggedUserFormPage extends LoggedUserPage
         if (!$this->checkCredentials()) {
             throw new PermissionDeniedException();
         } else {
-            $this->getApp()->event('before_form_process', ['form' => $this->templateData['form']]);
-            $this->templateData['form']->process();
+            $this->getApp()->event('before_form_process', ['form' => $this->template_data['form']]);
+            $this->template_data['form']->process();
         }
     }
 }

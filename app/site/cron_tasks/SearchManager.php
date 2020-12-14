@@ -41,8 +41,11 @@ class SearchManager extends ContainerAwareObject
      * pulse method
      *
      * @return string
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Degami\Basics\Exceptions\BasicException
      */
-    public function updateSearchDB()
+    public function updateSearchDB(): string
     {
         $client = $this->getElasticsearch();
 

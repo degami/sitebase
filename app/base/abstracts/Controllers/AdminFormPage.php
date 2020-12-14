@@ -32,14 +32,17 @@ abstract class AdminFormPage extends AdminPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         parent::__construct($container, $request, $route_info);
-        $this->templateData = [
+        $this->template_data = [
             'action' => $this->getRequest()->get('action') ?? 'list',
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
                 ->setValidate([[$this, 'formValidate']])
@@ -61,8 +64,8 @@ abstract class AdminFormPage extends AdminPage
         if (!$this->checkCredentials()) {
             throw new PermissionDeniedException();
         } else {
-            $this->getApp()->event('before_form_process', ['form' => $this->templateData['form']]);
-            $this->templateData['form']->process();
+            $this->getApp()->event('before_form_process', ['form' => $this->template_data['form']]);
+            $this->template_data['form']->process();
         }
     }
 }

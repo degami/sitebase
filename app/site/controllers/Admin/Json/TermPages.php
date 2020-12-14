@@ -28,7 +28,7 @@ class TermPages extends AdminJsonPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'json/term/{id:\d+}/pages';
     }
@@ -38,7 +38,7 @@ class TermPages extends AdminJsonPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_taxonomy';
     }
@@ -48,15 +48,17 @@ class TermPages extends AdminJsonPage
      *
      * @return array
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getJsonData()
+    protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
         $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $route_data['id']]);
 
         $pages = array_map(
             function ($el) use ($term) {
-                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                 return $page->getTitle() .
                     ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('admin.json.termpages', ['id' => $term->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=term_deassoc">&times;</a>';
             },
@@ -65,7 +67,7 @@ class TermPages extends AdminJsonPage
 
         $pagesData = array_map(
             function ($el) {
-                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                 return $page->getData();
             },
             $this->getDb()->page_taxonomyList()->where('taxonomy_id', $term->getId())->page()->fetchAll()

@@ -60,9 +60,9 @@ class Stats extends BaseCommand
             'news' => 'News',
         ];
 
-        foreach ($tables as $tablename => $label) {
+        foreach ($tables as $table_name => $label) {
             $table
-                ->addRow(['<info>' . $label . '</info>', count($this->getDb()->table($tablename)->fetchAll())])
+                ->addRow(['<info>' . $label . '</info>', count($this->getDb()->table($table_name)->fetchAll())])
                 ->addRow(new TableSeparator());
         }
 

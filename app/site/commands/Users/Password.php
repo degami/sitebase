@@ -54,8 +54,8 @@ class Password extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
+        $io = $this->getIo();
+
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $io->error('Invalid user id');
@@ -69,15 +69,9 @@ class Password extends BaseCommand
             return;
         }
 
-        $password = $input->getOption('password');
-        while (trim($password) == '') {
-            $question = new Question('Password? ');
-            $password = $helper->ask($input, $output, $question);
-        }
+        $password = $this->keepAskingForOption('password', 'Password? ');
 
-        $question = new ConfirmationQuestion('Save password? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not saved</info>');
+        if (!$this->confirmSave('Save password? ')) {
             return;
         }
 

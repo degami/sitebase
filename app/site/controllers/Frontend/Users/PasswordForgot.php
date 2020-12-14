@@ -32,7 +32,7 @@ class PasswordForgot extends FormPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * @var string locale
@@ -44,7 +44,7 @@ class PasswordForgot extends FormPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'password_forgot';
     }
@@ -54,7 +54,7 @@ class PasswordForgot extends FormPage
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): ?string
     {
         return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/' . getenv('LOGGEDPAGES_GROUP') : null;
     }
@@ -64,7 +64,7 @@ class PasswordForgot extends FormPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'password_forgot';
     }
@@ -74,7 +74,7 @@ class PasswordForgot extends FormPage
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -84,9 +84,9 @@ class PasswordForgot extends FormPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
@@ -94,7 +94,7 @@ class PasswordForgot extends FormPage
      *
      * @return boolean
      */
-    public function showMenu()
+    public function showMenu(): bool
     {
         return true;
     }
@@ -104,7 +104,7 @@ class PasswordForgot extends FormPage
      *
      * @return boolean
      */
-    public function showBlocks()
+    public function showBlocks(): bool
     {
         return true;
     }
@@ -116,6 +116,8 @@ class PasswordForgot extends FormPage
      * @return PasswordForgot|RedirectResponse|Response
      * @throws BasicException
      * @throws PermissionDeniedException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     protected function beforeRender()
     {
@@ -125,7 +127,7 @@ class PasswordForgot extends FormPage
 
         if ($this->isSubmitted()) {
             if ($this->getForm()->getFormId() == 'changepass') {
-                $user_model = $this->templateData['form']->getSubmitResults(static::class . '::formSubmitted');
+                $user_model = $this->template_data['form']->getSubmitResults(static::class . '::formSubmitted');
                 $token = $user_model->getJWT();
 
                 return $this->doRedirect(
@@ -136,7 +138,7 @@ class PasswordForgot extends FormPage
                     ]
                 );
             } else {
-                $this->templateData['result'] = '<h2>' . $this->getUtils()->translate('Confirmation email sent', $this->getCurrentLocale()) . '</h2>';
+                $this->template_data['result'] = '<h2>' . $this->getUtils()->translate('Confirmation email sent', $this->getCurrentLocale()) . '</h2>';
             }
         }
 
@@ -150,6 +152,8 @@ class PasswordForgot extends FormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -195,6 +199,8 @@ class PasswordForgot extends FormPage
      * @param array     &$form_state
      * @return boolean|string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -209,7 +215,7 @@ class PasswordForgot extends FormPage
             if (!$user) {
                 return $this->getUtils()->translate("Invalid email", $this->getCurrentLocale());
             } else {
-                $form_state['found_user'] = $this->getContainer()->make(User::class, ['dbrow' => $user]);
+                $form_state['found_user'] = $this->getContainer()->make(User::class, ['db_row' => $user]);
             }
         }
 
@@ -267,7 +273,7 @@ class PasswordForgot extends FormPage
      * @return string
      * @throws BasicException
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return $this->getUtils()->translate('Forgot Password?');
     }

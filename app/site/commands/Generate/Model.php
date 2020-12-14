@@ -61,13 +61,7 @@ class Model extends CodeGeneratorCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-
-        $modelClassName = $input->getOption('classname');
-        while (trim($modelClassName) == '') {
-            $question = new Question('Class Name (starting from ' . static::BASE_MODEL_NAMESPACE . ')? ');
-            $modelClassName = $helper->ask($input, $output, $question);
-        }
+        $modelClassName = $this->keepAskingForOption('classname', 'Class Name (starting from ' . static::BASE_MODEL_NAMESPACE . ')? ');
 
         $migration_order = $input->getOption('migration_order');
         if (empty($migration_order)) {
@@ -82,20 +76,18 @@ class Model extends CodeGeneratorCommand
         }
 
         do {
-            $column_info = $this->askColumnInfo($input, $output);
+            $column_info = $this->askColumnInfo();
             $this->columns[$column_info['col_name']] = $column_info;
 
             $question = new ConfirmationQuestion('Add another field? ', false);
-        } while ($helper->ask($input, $output, $question) == true);
+        } while ($this->getQuestionHelper()->ask($input, $output, $question) == true);
 
         $migrationClassName = 'Create' . $modelClassName . 'TableMigration';
 
         $this->addClass(static::BASE_MODEL_NAMESPACE . $modelClassName, $this->getModelFileContents($modelClassName));
         $this->addClass(static::BASE_MIGRATION_NAMESPACE . $migrationClassName, $this->getMigrationFileContents($migrationClassName, $modelClassName, $migration_order));
 
-        $question = new ConfirmationQuestion('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ')) {
             return;
         }
 
@@ -110,13 +102,11 @@ class Model extends CodeGeneratorCommand
     }
 
     /**
-     * ask colum informations
+     * ask column information
      *
-     * @param InputInterface $input
-     * @param OutputInterface $output
      * @return array
      */
-    protected function askColumnInfo(InputInterface $input, OutputInterface $output)
+    protected function askColumnInfo(): array
     {
         $helper = $this->getHelper('question');
 
@@ -130,11 +120,11 @@ class Model extends CodeGeneratorCommand
             'default_value' => null,
         ];
 
-        $output->writeln('<info>Add a new column</info>');
+        $this->output->writeln('<info>Add a new column</info>');
 
         while (trim($column_info['col_name']) == '') {
             $question = new Question('Column name: ');
-            $column_info['col_name'] = trim($helper->ask($input, $output, $question));
+            $column_info['col_name'] = trim($helper->ask($this->input, $this->output, $question));
         }
 
         $types = [
@@ -158,7 +148,7 @@ class Model extends CodeGeneratorCommand
             0
         );
         $question->setErrorMessage('Invalid type %s.');
-        $column_type = $helper->ask($input, $output, $question);
+        $column_type = $helper->ask($this->input, $this->output, $question);
 
         $column_info['mysql_type'] = $column_type;
         $column_info['php_type'] = $types[$column_type];
@@ -169,7 +159,7 @@ class Model extends CodeGeneratorCommand
                 $parameters = '';
                 while (trim($parameters) == '') {
                     $question = new Question('Column parameters: ');
-                    $parameters = $helper->ask($input, $output, $question);
+                    $parameters = $helper->ask($this->input, $this->output, $question);
                     if (!is_numeric($parameters) && !empty($paramenters)) {
                         $parameters = "'" . $parameters . "'";
                     }
@@ -180,7 +170,7 @@ class Model extends CodeGeneratorCommand
         }
 
         $question = new Question('Column options (comma separated): ');
-        $options = array_map("strtoupper", array_filter(array_map("trim", explode(",", $helper->ask($input, $output, $question)))));
+        $options = array_map("strtoupper", array_filter(array_map("trim", explode(",", $helper->ask($this->input, $this->output, $question)))));
         foreach ($options as $k => $option) {
             if (!is_numeric($option) && !empty($option) && $option != 'NULL') {
                 $options[$k] = "'" . $option . "'";
@@ -189,10 +179,10 @@ class Model extends CodeGeneratorCommand
         $column_info['col_options'] = $options;
 
         $question = new ConfirmationQuestion('Column is nullable? ', true);
-        $column_info['nullable'] = $helper->ask($input, $output, $question);
+        $column_info['nullable'] = $helper->ask($this->input, $this->output, $question);
 
         $question = new Question('Default value (defaults to null)? ', null);
-        $column_info['default_value'] = $helper->ask($input, $output, $question);
+        $column_info['default_value'] = $helper->ask($this->input, $this->output, $question);
 
         return $column_info;
     }
@@ -204,7 +194,7 @@ class Model extends CodeGeneratorCommand
      * @return string
      * @throws BasicException
      */
-    protected function getModelFileContents($className)
+    protected function getModelFileContents($className): string
     {
         $comment = '';
         foreach ($this->columns as $name => $column_info) {
@@ -213,11 +203,18 @@ class Model extends CodeGeneratorCommand
         $comment .= " * @method \\DateTime getCreatedAt()\n";
         $comment .= " * @method \\DateTime getUpdatedAt()\n";
 
+        foreach ($this->columns as $name => $column_info) {
+            $comment .= " * @method self set" . $this->getUtils()->snakeCaseToPascalCase($name) . "(".$column_info['php_type']." \${$name})\n";
+        }
+        $comment .= " * @method self setCreatedAt(\\DateTime \$created_at)\n";
+        $comment .= " * @method self setUpdatedAt(\\DateTime \$updated_at)\n";
+
         return "<?php
 
 namespace App\\Site\\Models;
 
-use \\App\\Base\\Abstracts\\Model;
+use \\App\\Base\\Abstracts\\Models\\BaseModel;
+
 
 /**\n" . $comment . " */
 class " . $className . " extends BaseModel
@@ -235,7 +232,7 @@ class " . $className . " extends BaseModel
      * @return string
      * @throws BasicException
      */
-    protected function getMigrationFileContents($className, $modelClassName, $migration_order = 100)
+    protected function getMigrationFileContents($className, $modelClassName, $migration_order = 100): string
     {
         $colums = '';
         foreach ($this->columns as $name => $column_info) {
@@ -255,7 +252,7 @@ class " . $className . " extends BaseModel
 
 namespace App\\Site\\Migrations;
 
-use \\App\\Base\Abstracts\\DBMigration;
+use \\App\\Base\\Abstracts\\Migrations\\DBMigration;
 use \\Psr\\Container\\ContainerInterface;
 use \\Degami\\SqlSchema\\Index;
 use \\Degami\\SqlSchema\\Table;
@@ -264,12 +261,12 @@ class " . $className . " extends DBMigration
 {
     protected \$tableName = '" . $migration_table . "';
 
-    public function getName()
+    public function getName(): string
     {
         return '" . $migration_order . "_'.parent::getName();
     }
 
-    public function addDBTableDefinition(Table \$table)
+    public function addDBTableDefinition(Table \$table): Table
     {
         \$table->addColumn('id', 'INT', null, ['UNSIGNED'])
             " . trim($colums) . "

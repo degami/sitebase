@@ -27,7 +27,7 @@ class Online extends BaseCommand
      */
     protected function configure()
     {
-        $this->setDescription('Removes site\'s Manteinance mode');
+        $this->setDescription('Removes site\'s Maintenance mode');
     }
 
     /**
@@ -40,6 +40,6 @@ class Online extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         @unlink(App::getDir(App::APP) . DS . 'offline.flag');
-        $output->writeln('<info>Manteinance mode OFF</info>');
+        $output->writeln('<info>Maintenance mode OFF</info>');
     }
 }

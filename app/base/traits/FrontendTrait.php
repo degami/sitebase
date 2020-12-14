@@ -27,7 +27,7 @@ trait FrontendTrait
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
 
     /**
@@ -40,7 +40,7 @@ trait FrontendTrait
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): ?string
     {
         return '';
     }
@@ -50,20 +50,20 @@ trait FrontendTrait
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
      * sets object to show
      *
      * @param BaseModel $object
-     * @return FrontendTrait
+     * @return self
      */
     protected function setObject(BaseModel $object)
     {
-        $this->templateData['object'] = $object;
+        $this->template_data['object'] = $object;
         return $this;
     }
 
@@ -72,9 +72,9 @@ trait FrontendTrait
      *
      * @return BaseModel|null
      */
-    protected function getObject()
+    protected function getObject(): ?BaseModel
     {
-        return $this->templateData['object'] ?? null;
+        return $this->template_data['object'] ?? null;
     }
 
 
@@ -82,8 +82,9 @@ trait FrontendTrait
      * {@inheritdocs}
      *
      * @return array
+     * @throws BasicException
      */
-    public function getTranslations()
+    public function getTranslations(): array
     {
         return array_map(
             function ($el) {
@@ -99,12 +100,14 @@ trait FrontendTrait
      *
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
-        if (isset($this->templateData['object']) && ($this->templateData['object'] instanceof BaseModel) && $this->templateData['object']->isLoaded()) {
-            if ($this->templateData['object']->getLocale()) {
-                return $this->getApp()->setCurrentLocale($this->templateData['object']->getLocale())->getCurrentLocale();
+        if (isset($this->template_data['object']) && ($this->template_data['object'] instanceof BaseModel) && $this->template_data['object']->isLoaded()) {
+            if ($this->template_data['object']->getLocale()) {
+                return $this->getApp()->setCurrentLocale($this->template_data['object']->getLocale())->getCurrentLocale();
             }
         }
 
@@ -116,8 +119,9 @@ trait FrontendTrait
      * checks user credentials
      *
      * @return boolean
+     * @throws BasicException
      */
-    protected function checkCredentials()
+    protected function checkCredentials(): bool
     {
         try {
             if ($this->getTokenData()) {

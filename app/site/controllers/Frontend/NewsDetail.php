@@ -32,7 +32,7 @@ class NewsDetail extends FrontendPageWithObject
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'news/{id:\d+}';
     }
@@ -42,7 +42,7 @@ class NewsDetail extends FrontendPageWithObject
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET'];
     }
@@ -52,7 +52,7 @@ class NewsDetail extends FrontendPageWithObject
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'news_detail';
     }
@@ -67,7 +67,7 @@ class NewsDetail extends FrontendPageWithObject
      * @throws NotFoundException
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         if (!($this->getObject() instanceof News && $this->getObject()->isLoaded())) {
             throw new NotFoundException();
@@ -82,7 +82,7 @@ class NewsDetail extends FrontendPageWithObject
      * @return array
      * @throws BasicException
      */
-    protected function getBaseTemplateData()
+    protected function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' news-' . $this->getObject()->id;
@@ -94,7 +94,7 @@ class NewsDetail extends FrontendPageWithObject
      *
      * @return string
      */
-    public static function getObjectClass()
+    public static function getObjectClass(): string
     {
         return News::class;
     }

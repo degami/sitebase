@@ -25,7 +25,7 @@ class Rewrites extends AdminRestPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'rewrites[/{id:\d+}]';
     }
@@ -35,7 +35,7 @@ class Rewrites extends AdminRestPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_rewrites';
     }
@@ -46,7 +46,7 @@ class Rewrites extends AdminRestPage
      *
      * @return string
      */
-    public static function getObjectClass()
+    public static function getObjectClass(): string
     {
         return RewriteModel::class;
     }

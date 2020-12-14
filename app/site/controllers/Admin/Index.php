@@ -30,7 +30,7 @@ class Index extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'index';
     }
@@ -40,7 +40,7 @@ class Index extends AdminPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -50,7 +50,7 @@ class Index extends AdminPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         return [];
     }
@@ -79,7 +79,7 @@ class Index extends AdminPage
      * @return BasePage|RedirectResponse|Response
      * @throws BasicException
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         return $this->doRedirect($this->getUrl('admin.dashboard'));
     }

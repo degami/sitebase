@@ -32,6 +32,7 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
@@ -47,7 +48,7 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -57,7 +58,7 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_medias';
     }
@@ -67,7 +68,7 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return MediaElementRewrite::class;
     }
@@ -77,7 +78,7 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'media_rewrite_id';
     }
@@ -195,7 +196,7 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -215,7 +216,7 @@ class MediaRewrites extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($elem) {

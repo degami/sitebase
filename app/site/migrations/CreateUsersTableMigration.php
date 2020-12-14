@@ -33,7 +33,7 @@ class CreateUsersTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '03_' . parent::getName();
     }
@@ -46,7 +46,7 @@ class CreateUsersTableMigration extends DBMigration
      * @throws EmptyException
      * @throws DuplicateException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('username', 'VARCHAR', [50])

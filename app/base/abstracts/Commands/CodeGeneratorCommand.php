@@ -55,9 +55,9 @@ abstract class CodeGeneratorCommand extends BaseCommand
      *
      * @param string $fullClassName
      * @param string $filecontents
-     * @return CodeGeneratorCommand
+     * @return self
      */
-    protected function addClass($fullClassName, $filecontents)
+    protected function addClass($fullClassName, $filecontents): CodeGeneratorCommand
     {
         $arr = explode("\\", ltrim($fullClassName, "\\"));
         $className = array_pop($arr);
@@ -97,7 +97,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
      * @param string $filecontents
      * @return self
      */
-    protected function queueFile($filename, $filecontents)
+    protected function queueFile($filename, $filecontents): CodeGeneratorCommand
     {
         $this->filesToDump[$filename] = $filecontents;
         return $this;
@@ -108,7 +108,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
      *
      * @return array
      */
-    protected function doWrite()
+    protected function doWrite(): array
     {
         $files_written = $errors = [];
         foreach ($this->filesToDump as $path => $filecontents) {

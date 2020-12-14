@@ -47,7 +47,7 @@ class ContactSubmission extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(Contact::class, ['dbrow' => $this->contact()->fetch()]);
+        return $this->getContainer()->make(Contact::class, ['db_row' => $this->contact()->fetch()]);
     }
 
     /**

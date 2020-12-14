@@ -76,5 +76,5 @@ abstract class DBMigration extends BaseMigration
      * @param Table $table
      * @return Table
      */
-    abstract public function addDBTableDefinition(Table $table);
+    abstract public function addDBTableDefinition(Table $table): Table;
 }

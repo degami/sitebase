@@ -50,8 +50,7 @@ class Show extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
-        $table
-            ->setHeaders(['Id', 'Website', 'Path', 'Value', 'System']);
+        $table->setHeaders(['Id', 'Website', 'Path', 'Value', 'System']);
 
         $website = $input->getOption('website');
         $query = $this->getDb()->table('configuration');

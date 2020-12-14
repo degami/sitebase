@@ -24,7 +24,7 @@ class CheckSession extends AdminJsonPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -33,8 +33,10 @@ class CheckSession extends AdminJsonPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getJsonData()
+    protected function getJsonData(): array
     {
         return [
             'user' => $this->getCurrentUser()->getData(),

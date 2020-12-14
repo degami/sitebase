@@ -23,14 +23,14 @@ class Dashboard extends AdminPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * {@inheritdocs}
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'dashboard';
     }
@@ -40,7 +40,7 @@ class Dashboard extends AdminPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -51,9 +51,9 @@ class Dashboard extends AdminPage
      * @return array
      * @throws BasicException
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        $this->templateData = [
+        $this->template_data = [
             'websites' => count($this->getDb()->table('website')->fetchAll()),
             'users' => count($this->getDb()->table('user')->fetchAll()),
             'pages' => count($this->getDb()->table('page')->fetchAll()),
@@ -67,6 +67,6 @@ class Dashboard extends AdminPage
             'links' => count($this->getDb()->table('link_exchange')->fetchAll()),
             'news' => count($this->getDb()->table('news')->fetchAll()),
         ];
-        return $this->templateData;
+        return $this->template_data;
     }
 }

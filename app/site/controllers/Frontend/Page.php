@@ -33,7 +33,7 @@ class Page extends FrontendPageWithObject
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'page/{id:\d+}';
     }
@@ -43,7 +43,7 @@ class Page extends FrontendPageWithObject
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET'];
     }
@@ -55,7 +55,7 @@ class Page extends FrontendPageWithObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         if ($this->isHomePage()) {
             return 'homepage';
@@ -149,7 +149,7 @@ class Page extends FrontendPageWithObject
      *
      * @return integer
      */
-    public function getPageId()
+    public function getPageId(): int
     {
         return $this->getObject()->getId();
     }
@@ -160,7 +160,7 @@ class Page extends FrontendPageWithObject
      * @return array
      * @throws BasicException
      */
-    protected function getBaseTemplateData()
+    protected function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' page-' . $this->getObject()->id;
@@ -172,7 +172,7 @@ class Page extends FrontendPageWithObject
      *
      * @return string
      */
-    public static function getObjectClass()
+    public static function getObjectClass(): string
     {
         return PageModel::class;
     }

@@ -33,7 +33,7 @@ class CreateMediaElementsTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '04_' . parent::getName();
     }
@@ -46,7 +46,7 @@ class CreateMediaElementsTableMigration extends DBMigration
      * @throws EmptyException
      * @throws DuplicateException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('path', 'VARCHAR', [1024])

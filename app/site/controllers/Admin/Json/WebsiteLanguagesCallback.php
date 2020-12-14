@@ -48,6 +48,8 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      * gets an object class instance
      *
      * @return mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getObject()
     {
@@ -59,7 +61,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -70,8 +72,10 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function emptyForm(FAPI\Form $form, &$form_state)
+    public function emptyForm(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $this->addFrontendFormElements($form, $form_state);
 
@@ -87,7 +91,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         try {
             $this->form = FAPI\FormBuilder::getForm([$this, 'emptyForm'], 'emptyForm', json_decode($this->getRequest()->request->get('jsondata'), true));
@@ -114,7 +118,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      *
      * @return array
      */
-    protected function getJsonData()
+    protected function getJsonData(): array
     {
         return [];
     }

@@ -29,7 +29,7 @@ class YearCopy extends BaseCodeBlock
      * @param BasePage|null $current_page
      * @return string
      */
-    public function renderHTML(BasePage $current_page = null)
+    public function renderHTML(BasePage $current_page = null): string
     {
         try {
             $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);

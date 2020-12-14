@@ -53,8 +53,7 @@ class Edit extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
+        $io = $this->getIo();
 
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
@@ -63,21 +62,14 @@ class Edit extends BaseCommand
         }
 
         $configuration = $this->getContainer()->call([Configuration::class, 'load'], ['id' => $id]);
-
         if (!$configuration->isLoaded()) {
             $io->error('Config does not exists');
             return;
         }
 
-        $value = $input->getOption('value');
-        while (trim($value) == '') {
-            $question = new Question('Value? ');
-            $value = $helper->ask($input, $output, $question);
-        }
+        $value = $this->keepAskingForOption('value', 'Value? ');
 
-        $question = new ConfirmationQuestion('Save Config? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save Config? ')) {
             return;
         }
 

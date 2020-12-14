@@ -42,7 +42,6 @@ class Restart extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        //$io = new SymfonyStyle($input, $output);
         $kill_flag = App::getDir(App::TMP) . DS . self::KILLFILE_NAME;
         if (!file_exists($kill_flag)) {
             @touch($kill_flag);

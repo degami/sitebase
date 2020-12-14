@@ -44,6 +44,12 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * constructor
      *
      * @param ContainerInterface $container
+     * @throws PhpfastcacheInvalidArgumentException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverCheckException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
+     * @throws \ReflectionException
      */
     public function __construct(ContainerInterface $container)
     {
@@ -173,7 +179,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @return iterable
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getMultiple($keys, $default = null)
+    public function getMultiple($keys, $default = null): iterable
     {
         if ($keys instanceof Traversable) {
             $keys = iterator_to_array($keys);

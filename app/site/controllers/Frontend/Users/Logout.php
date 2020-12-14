@@ -27,9 +27,9 @@ class Logout extends LoggedUserPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
-        return null;
+        return '';
     }
 
     /**
@@ -37,7 +37,7 @@ class Logout extends LoggedUserPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'logout';
     }
@@ -47,7 +47,7 @@ class Logout extends LoggedUserPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'view_logged_site';
     }
@@ -57,7 +57,7 @@ class Logout extends LoggedUserPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         return [];
     }
@@ -67,6 +67,8 @@ class Logout extends LoggedUserPage
      *
      * @return LoggedUserPage|RedirectResponse|Response
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function beforeRender()
     {

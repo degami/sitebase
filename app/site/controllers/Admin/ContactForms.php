@@ -48,18 +48,18 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
      * @throws OutOfRangeException
-     * @throws Exception
+     * @throws PermissionDeniedException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         AdminFormPage::__construct($container, $request, $route_info);
         $this->page_title = 'Contact Forms';
-        if ($this->templateData['action'] == 'list' || $this->templateData['action'] == 'submissions') {
-            if ($this->templateData['action'] == 'list') {
+        if ($this->template_data['action'] == 'list' || $this->template_data['action'] == 'submissions') {
+            if ($this->template_data['action'] == 'list') {
                 $this->addNewButton();
             } else {
                 $this->addBackButton();
@@ -67,18 +67,18 @@ class ContactForms extends AdminManageFrontendModelsPage
             $data = $this->getContainer()->call(
                 [$this->getObjectClass(), 'paginate'],
                 ['order' => $this->getRequest()->query->get('order')] +
-                (($this->templateData['action'] == 'submissions') ? ['condition' => ['contact_id' => $this->getRequest()->get('contact_id')]] : [])
+                (($this->template_data['action'] == 'submissions') ? ['condition' => ['contact_id' => $this->getRequest()->get('contact_id')]] : [])
             );
 
-            $this->templateData += [
+            $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
             ];
-        } elseif ($this->templateData['action'] == 'view_submission') {
+        } elseif ($this->template_data['action'] == 'view_submission') {
             $this->addBackButton();
-            $this->templateData += [
+            $this->template_data += [
                 'submission' => $this->getContainer()->call([ContactSubmission::class, 'load'], ['id' => $this->getRequest()->get('submission_id')]),
             ];
         }
@@ -89,7 +89,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'contact_forms';
     }
@@ -99,7 +99,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_contact';
     }
@@ -109,7 +109,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         if (($this->getRequest()->get('action') ?? 'list') == 'submissions') {
             return ContactSubmission::class;
@@ -122,7 +122,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         if (($this->getRequest()->get('action') ?? 'list') == 'submissions') {
             return 'submission_id';
@@ -137,6 +137,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -282,7 +283,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array|null $component
      * @return Element
      */
-    private function addComponent($form_component, $index, $component = null)
+    private function addComponent($form_component, $index, $component = null): Element
     {
         if (is_null($component)) {
             $component = [
@@ -432,9 +433,9 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
-        if ($this->templateData['action'] == 'submissions') {
+        if ($this->template_data['action'] == 'submissions') {
             return [
                 'ID' => 'id',
                 'User' => 'user_id',
@@ -461,9 +462,9 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @return array
      * @throws Exception
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
-        if ($this->templateData['action'] == 'submissions') {
+        if ($this->template_data['action'] == 'submissions') {
             return array_map(
                 function ($submission) {
                     return [

@@ -25,14 +25,14 @@ trait FormPageTrait
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * gets form id
      *
      * @return string
      */
-    protected function getFormId()
+    protected function getFormId(): string
     {
         $arr = explode("\\", strtolower(get_class($this)));
         return array_pop($arr);
@@ -43,19 +43,19 @@ trait FormPageTrait
      *
      * @return FAPI\Form
      */
-    public function getForm()
+    public function getForm(): ?FAPI\Form
     {
         if (!is_null($this->getTemplate())) {
             return $this->getTemplate()->data()['form'] ?? null;
         }
 
-        return $this->templateData['form'] ?? null;
+        return $this->template_data['form'] ?? null;
     }
 
     /**
      * check if form is submitted
      */
-    protected function isSubmitted()
+    protected function isSubmitted(): bool
     {
         return ($this->getForm() && $this->getForm()->isSubmitted());
     }
@@ -67,7 +67,7 @@ trait FormPageTrait
      * @param boolean $inline_button
      * @return FAPI\Form
      */
-    protected function addSubmitButton(FAPI\Form $form, $inline_button = false)
+    protected function addSubmitButton(FAPI\Form $form, $inline_button = false): FAPI\Form
     {
         if ($inline_button) {
             $form
@@ -106,8 +106,9 @@ trait FormPageTrait
      * @param FAPI\Form $form
      * @param string|null $cancel_url
      * @return FAPI\Form
+     * @throws BasicException
      */
-    protected function fillConfirmationForm($confirm_message, $form, $cancel_url = null)
+    protected function fillConfirmationForm($confirm_message, $form, $cancel_url = null): FAPI\Form
     {
         $form->addField(
             'confirm',

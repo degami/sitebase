@@ -54,7 +54,7 @@ class Show extends BaseCommand
         $table->setHeaders(['ID', 'Title', 'Callable', 'Schedule', 'Active']);
 
         foreach ($this->getDb()->table('cron_task')->fetchAll() as $k => $cron_dbrow) {
-            $cron = $this->getContainer()->make(CronTask::class, ['dbrow' => $cron_dbrow]);
+            $cron = $this->getContainer()->make(CronTask::class, ['db_row' => $cron_dbrow]);
 
             if ($k > 0) {
                 $table->addRow(new TableSeparator());
@@ -80,7 +80,7 @@ class Show extends BaseCommand
      * @return string
      * @throws Exception
      */
-    protected function getLastHeartBeat()
+    protected function getLastHeartBeat(): string
     {
         $out = '<info>No heart beat run yet</info>';
         // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1

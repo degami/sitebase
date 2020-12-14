@@ -31,7 +31,7 @@ class Sitemap extends BaseXMLPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'sitemap/{id:\d+}';
     }
@@ -41,7 +41,7 @@ class Sitemap extends BaseXMLPage
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): string
     {
         return '';
     }
@@ -56,7 +56,7 @@ class Sitemap extends BaseXMLPage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         $sitemap = null;
 
@@ -89,7 +89,7 @@ class Sitemap extends BaseXMLPage
      *
      * @return array
      */
-    protected function getXMLData()
+    protected function getXMLData(): array
     {
         return [];
     }

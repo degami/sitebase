@@ -40,15 +40,16 @@ class Show extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
-        $table
-            ->setHeaders(['ID', 'Name', 'Permissions']);
+        $table->setHeaders(['ID', 'Name', 'Permissions']);
 
         foreach ($this->getDb()->table('role')->fetchAll() as $k => $role_dbrow) {
-            $role = $this->getContainer()->make(Role::class, ['dbrow' => $role_dbrow]);
+            $role = $this->getContainer()->make(Role::class, ['db_row' => $role_dbrow]);
 
             if ($k > 0) {
                 $table->addRow(new TableSeparator());

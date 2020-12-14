@@ -37,7 +37,7 @@ class HeartBeat extends ContainerAwareObject
      *
      * @return string
      */
-    public function pulse()
+    public function pulse(): string
     {
         return 'beat';
     }

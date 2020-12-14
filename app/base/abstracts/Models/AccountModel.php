@@ -24,5 +24,5 @@ abstract class AccountModel extends BaseModel
      *
      * @return Role
      */
-    abstract public function getRole();
+    abstract public function getRole(): Role;
 }

@@ -40,9 +40,10 @@ class BanIP extends AdminFormPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
+     * @throws BasicException
      * @throws FormException
      * @throws PermissionDeniedException
-     * @throws BasicException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -72,7 +73,7 @@ class BanIP extends AdminFormPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'form_admin_page';
     }
@@ -82,7 +83,7 @@ class BanIP extends AdminFormPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -167,7 +168,7 @@ class BanIP extends AdminFormPage
      *
      * @return string
      */
-    protected function getBanFileName()
+    protected function getBanFileName(): string
     {
         return App::getDir(App::CONFIG) . DS . 'blocked_ips.php';
     }
@@ -177,7 +178,7 @@ class BanIP extends AdminFormPage
      *
      * @return string
      */
-    protected function getBanFileContents()
+    protected function getBanFileContents(): string
     {
         return "<?php\n\nreturn \$blocked_ips = [\n" . implode("", array_map(function ($el) {
                 return "  '$el',\n";

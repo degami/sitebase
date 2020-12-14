@@ -48,8 +48,10 @@ abstract class ContainerAwareObject
      *
      * @param string|null $locale_code
      * @return Translator
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getTranslator($locale_code = null)
+    public function getTranslator($locale_code = null): Translator
     {
         if ($locale_code == null) {
             $locale_code = 'en';

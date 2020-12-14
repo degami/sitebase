@@ -29,7 +29,7 @@ class Search extends FrontendPage
      *
      * @return array
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): array
     {
         return ['frontend.search' => 'search', 'frontend.search.withlang' => '{lang:[a-z]{2}}/search'];
     }
@@ -39,7 +39,7 @@ class Search extends FrontendPage
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): string
     {
         return '';
     }
@@ -49,7 +49,7 @@ class Search extends FrontendPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'search';
     }
@@ -68,7 +68,7 @@ class Search extends FrontendPage
     /**
      * {@inheritdoc }
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         $page = $this->getRequest()->get('page') ?? 0;
         $search_result = $this->getSearchResult($this->getSearchQuery(), $page);
@@ -103,8 +103,11 @@ class Search extends FrontendPage
      * @param string|null $search_query
      * @param int $page
      * @return array
+     * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getSearchResult($search_query = null, $page = 0)
+    protected function getSearchResult($search_query = null, $page = 0): array
     {
         $client = $this->getElasticsearch();
 
@@ -141,7 +144,7 @@ class Search extends FrontendPage
      * @return string
      * @throws BasicException
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return $this->getUtils()->translate('Search');
     }

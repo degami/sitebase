@@ -29,8 +29,11 @@ class RewriteMedia extends BaseCodeBlock
      * @param BasePage|null $current_page
      * @param array $data
      * @return string
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Degami\Basics\Exceptions\BasicException
      */
-    public function renderHTML(BasePage $current_page = null, $data = [])
+    public function renderHTML(BasePage $current_page = null, $data = []): string
     {
 
         $rewrite_id = [];
@@ -43,7 +46,7 @@ class RewriteMedia extends BaseCodeBlock
 
         $images = array_map(
             function ($el) {
-                $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class, ['dbrow' => $el]);
+                $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class, ['db_row' => $el]);
                 return $media_rewrite->getMediaElement()->getImage();
             },
             $this->getDb()->table('media_element_rewrite')->where(['rewrite_id' => $rewrite_id])->fetchAll()
@@ -75,7 +78,7 @@ class RewriteMedia extends BaseCodeBlock
      * @return array
      * @throws FAPI\Exceptions\FormException
      */
-    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
+    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array
     {
         $config_fields = [];
 

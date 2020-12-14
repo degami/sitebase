@@ -85,7 +85,7 @@ class QueueMessage extends BaseModel
                 ->limit(1)
                 ->fetch();
             if ($messageDBRow && $messageDBRow->id) {
-                $message = $container->make(static::class, ['dbrow' => $messageDBRow]);
+                $message = $container->make(static::class, ['db_row' => $messageDBRow]);
                 $message->setStatus(self::STATUS_PROCESSED)->persist();
                 return $message;
             }

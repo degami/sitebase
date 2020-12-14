@@ -41,15 +41,18 @@ abstract class LoggedUserPage extends FrontendPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -63,7 +66,7 @@ abstract class LoggedUserPage extends FrontendPage
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -93,7 +96,7 @@ abstract class LoggedUserPage extends FrontendPage
      *
      * @return string
      */
-    public function getPageTitle()
+    public function getPageTitle(): string
     {
         return $this->page_title;
     }
@@ -103,9 +106,9 @@ abstract class LoggedUserPage extends FrontendPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
@@ -113,7 +116,7 @@ abstract class LoggedUserPage extends FrontendPage
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): ?string
     {
         return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/' . getenv('LOGGEDPAGES_GROUP') : null;
     }
@@ -123,5 +126,5 @@ abstract class LoggedUserPage extends FrontendPage
      *
      * @return string
      */
-    abstract protected function getAccessPermission();
+    abstract protected function getAccessPermission(): string;
 }

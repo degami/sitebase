@@ -46,14 +46,17 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -70,7 +73,7 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -101,7 +104,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = [])
+    public function renderPage(RouteInfo $route_info = null, $route_data = []): Response
     {
         $return = parent::renderPage($route_info, $route_data);
 
@@ -127,7 +130,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @return Template
      * @throws BasicException
      */
-    protected function prepareTemplate()
+    protected function prepareTemplate(): Template
     {
         $template = $this->getTemplates()->make('admin::' . $this->getTemplateName());
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());
@@ -157,7 +160,7 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return array
      */
-    protected function getBaseTemplateData()
+    protected function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out['current_user'] = $this->getCurrentUser();
@@ -170,7 +173,7 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return string
      */
-    public function getPageTitle()
+    public function getPageTitle(): string
     {
         return $this->page_title;
     }
@@ -181,7 +184,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @return string
      * @throws BasicException
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): ?string
     {
         if ($this->locale == null) {
             $this->locale = $this->getCurrentUser()->getLocale() ?? 'en';
@@ -194,23 +197,23 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * adds a back button to page
      *
-     * @param array|null $queryparams
+     * @param array|null $query_params
      * @throws BasicException
      */
-    public function addBackButton($queryparams = null)
+    public function addBackButton($query_params = null)
     {
-        if (is_array($queryparams)) {
-            $queryparams = http_build_query($queryparams);
+        if (is_array($query_params)) {
+            $query_params = http_build_query($query_params);
         }
 
-        if ($queryparams != null) {
-            $queryparams = trim($queryparams);
-            if (strlen($queryparams) > 0) {
-                $queryparams = ($queryparams[0] != '?' ? '?' : '') . $queryparams;
+        if ($query_params != null) {
+            $query_params = trim($query_params);
+            if (strlen($query_params) > 0) {
+                $query_params = ($query_params[0] != '?' ? '?' : '') . $query_params;
             }
         }
 
-        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl() . $queryparams);
+        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl() . $query_params);
     }
 
     /**
@@ -218,9 +221,9 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
@@ -228,5 +231,5 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return string
      */
-    abstract protected function getAccessPermission();
+    abstract protected function getAccessPermission(): string;
 }

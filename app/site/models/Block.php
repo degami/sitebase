@@ -157,7 +157,7 @@ class Block extends BaseModel
             /*
                         $this->rewrites = array_map(
                             function ($el) {
-                                return $this->getContainer()->make(Rewrite::class, ['dbrow' => $el]);
+                                return $this->getContainer()->make(Rewrite::class, ['db_row' => $el]);
                             },
                             $this->block_rewriteList()->rewrite()->fetchAll()
                         );

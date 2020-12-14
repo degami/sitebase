@@ -29,7 +29,7 @@ abstract class AdminManageFrontendModelsPage extends AdminManageModelsPage
      * @param $object
      * @return string
      */
-    protected function getTranslationsButton($object)
+    protected function getTranslationsButton($object): string
     {
         if (!$object->getRewrite()) {
             return '';

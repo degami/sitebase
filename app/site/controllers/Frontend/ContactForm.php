@@ -14,7 +14,7 @@ namespace App\Site\Controllers\Frontend;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
-use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException as PhpfastcacheSimpleCacheExceptionAlias;
 use \Psr\Container\ContainerInterface;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
@@ -42,8 +42,11 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheExceptionAlias
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -59,10 +62,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
-        if ($this->templateData['object']->getTemplateName()) {
-            return $this->templateData['object']->getTemplateName();
+        if ($this->template_data['object']->getTemplateName()) {
+            return $this->template_data['object']->getTemplateName();
         }
 
         return 'contact_form';
@@ -73,7 +76,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'contact/{id:\d+}';
     }
@@ -83,7 +86,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -103,7 +106,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         if (isset($route_data['id'])) {
             $this->setObject($this->getContainer()->call([Contact::class, 'load'], ['id' => $route_data['id']]));
 
-            $this->templateData += [
+            $this->template_data += [
                 'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
                     ->setValidate([[$this, 'formValidate']])
                     ->setSubmit([[$this, 'formSubmitted']]),
@@ -123,11 +126,11 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @throws BasicException
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         if (!($this->getObject() instanceof BaseModel &&
             is_a($this->getObject(), $this->getObjectClass()) &&
-            $this->templateData['object']->isLoaded())
+            $this->template_data['object']->isLoaded())
         ) {
             throw new NotFoundException();
         }
@@ -143,10 +146,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @return array
      * @throws BasicException
      */
-    protected function getBaseTemplateData()
+    protected function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' contact-' . $this->templateData['object']->id;
+        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' contact-' . $this->template_data['object']->id;
         return $out;
     }
 
@@ -157,10 +160,12 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
-        $contact = $this->templateData['object'] ?? null;
+        $contact = $this->template_data['object'] ?? null;
         if ($contact instanceof Contact && $contact->isLoaded()) {
             $form->setFormId($this->slugify('form_' . $contact->getTitle()));
             $form->setId($contact->getName());
@@ -203,7 +208,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @param Contact $contact
      * @param string $name
-     * @return array
+     * @return mixed
      * @throws Exception
      */
     protected function searchComponentByName($contact, $name)
@@ -237,7 +242,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         //    id  contact_id  contact_submission_id   user_id     contact_definition_id   field_value     created_at  updated_at
 
         $values = $form->getValues()->form_definition->getData();
-        $contact = $this->templateData['object'];
+        $contact = $this->template_data['object'];
         $user_id = null;
         if ($this->getCurrentUser() && $this->getCurrentUser()->id) {
             $user_id = $this->getCurrentUser()->id;
@@ -282,7 +287,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @return string
      */
-    public static function getObjectClass()
+    public static function getObjectClass(): string
     {
         return Contact::class;
     }

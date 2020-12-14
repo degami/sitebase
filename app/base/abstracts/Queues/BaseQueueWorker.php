@@ -44,7 +44,7 @@ abstract class BaseQueueWorker extends ContainerAwareObject
      *
      * @return QueueMessage
      */
-    public function getMessage()
+    public function getMessage(): QueueMessage
     {
         return $this->message;
     }
@@ -55,7 +55,7 @@ abstract class BaseQueueWorker extends ContainerAwareObject
      * @param QueueMessage $message
      * @return self
      */
-    public function setMessage(QueueMessage $message)
+    public function setMessage(QueueMessage $message): BaseQueueWorker
     {
         $this->message = $message;
 

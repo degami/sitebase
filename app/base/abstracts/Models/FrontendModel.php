@@ -34,7 +34,7 @@ abstract class FrontendModel extends BaseModel
      *
      * @return string[]
      */
-    public static function exposeToIndexer()
+    public static function exposeToIndexer(): array
     {
         return ['title', 'content'];
     }
@@ -45,14 +45,14 @@ abstract class FrontendModel extends BaseModel
      * @return Rewrite
      * @throws Exception
      */
-    public function getRewrite()
+    public function getRewrite(): ?Rewrite
     {
         $this->checkLoaded();
 
         if (!($this->rewriteObj instanceof Rewrite)) {
             $this->rewriteObj = $this->getContainer()->make(
                 Rewrite::class,
-                ['dbrow' => $this->getDb()->table('rewrite')->where('route', '/' . $this->getRewritePrefix() . '/' . $this->getId())->fetch()]
+                ['db_row' => $this->getDb()->table('rewrite')->where('route', '/' . $this->getRewritePrefix() . '/' . $this->getId())->fetch()]
             );
         }
         return $this->rewriteObj;
@@ -64,7 +64,7 @@ abstract class FrontendModel extends BaseModel
      * @return string
      * @throws Exception
      */
-    public function getFrontendUrl()
+    public function getFrontendUrl(): string
     {
         $this->checkLoaded();
 
@@ -77,7 +77,7 @@ abstract class FrontendModel extends BaseModel
      * @return self
      * @throws Exception
      */
-    public function postPersist()
+    public function postPersist(): BaseModel
     {
         $rewrite = $this->getRewrite();
         $rewrite->website_id = $this->getWebsiteId();
@@ -96,7 +96,7 @@ abstract class FrontendModel extends BaseModel
      * @return self
      * @throws Exception
      */
-    public function preRemove()
+    public function preRemove(): BaseModel
     {
         $this->getRewrite()->remove();
 
@@ -109,7 +109,7 @@ abstract class FrontendModel extends BaseModel
      * @return array
      * @throws Exception
      */
-    public function getTranslations()
+    public function getTranslations(): array
     {
         return array_map(
             function ($el) {
@@ -127,7 +127,7 @@ abstract class FrontendModel extends BaseModel
      *
      * @return string
      */
-    public function getPageTitle()
+    public function getPageTitle(): string
     {
         return $this->html_title ?: $this->title;
     }
@@ -137,5 +137,5 @@ abstract class FrontendModel extends BaseModel
      *
      * @return string
      */
-    abstract public function getRewritePrefix();
+    abstract public function getRewritePrefix(): string;
 }

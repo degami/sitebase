@@ -50,8 +50,7 @@ class Delete extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
+        $io = $this->getIo();
 
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
@@ -71,9 +70,7 @@ class Delete extends BaseCommand
             return;
         }
 
-        $question = new ConfirmationQuestion('Delete Role "' . $role->getName() . '"? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not deleted</info>');
+        if (!$this->confirmDelete('Delete Role "' . $role->getName() . '"? ')) {
             return;
         }
 

@@ -42,8 +42,7 @@ class Show extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $table = new Table($output);
-        $table
-            ->setHeaders(['Id', 'Name', 'Domain']);
+        $table->setHeaders(['Id', 'Name', 'Domain']);
 
         foreach ($this->getDb()->table('website') as $row) {
             $table->addRow([$row['id'], $row['site_name'], $row['domain']]);

@@ -60,19 +60,10 @@ class Add extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
+        $helper = $this->getQuestionHelper();
 
-        $username = $input->getOption('username');
-        while (trim($username) == '') {
-            $question = new Question('Username? ');
-            $username = $helper->ask($input, $output, $question);
-        }
-
-        $email = $input->getOption('email');
-        while (trim($email) == '') {
-            $question = new Question('Email? ');
-            $email = $helper->ask($input, $output, $question);
-        }
+        $username = $this->keepAskingForOption('username', 'Username? ');
+        $email = $this->keepAskingForOption('email', 'Email? ');
 
         $role = $input->getOption('role');
         if (empty($role)) {
@@ -101,20 +92,14 @@ class Add extends BaseCommand
             $locale = $helper->ask($input, $output, $question);
         }
 
-        $password = $input->getOption('password');
-        while (trim($password) == '') {
-            $question = new Question('Password? ');
-            $password = $helper->ask($input, $output, $question);
-        }
+        $password = $this->keepAskingForOption('password', 'Password? ');
 
         $output->writeln('<info>User Info</info>');
         foreach (['username', 'email', 'role', 'locale', 'password'] as $key) {
             $output->writeln('<info>' . $key . ':</info> ' . ${$key});
         }
 
-        $question = new ConfirmationQuestion('Save User? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save User? ')) {
             return;
         }
 

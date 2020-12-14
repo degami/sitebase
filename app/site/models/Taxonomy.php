@@ -76,7 +76,7 @@ class Taxonomy extends FrontendModelWithChildren
         if (!(is_array($this->pages) && !empty($this->pages)) || $reset == true) {
             $this->pages = array_map(
                 function ($el) {
-                    return $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                    return $this->getContainer()->make(Page::class, ['db_row' => $el]);
                 },
                 $this->page_taxonomyList()->page()->fetchAll()
             );

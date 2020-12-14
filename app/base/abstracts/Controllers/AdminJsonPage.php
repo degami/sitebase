@@ -43,5 +43,5 @@ abstract class AdminJsonPage extends BaseJsonPage
      *
      * @return string
      */
-    abstract protected function getAccessPermission();
+    abstract protected function getAccessPermission(): string;
 }

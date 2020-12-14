@@ -55,8 +55,11 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -87,7 +90,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @return array
      * @throws BasicException
      */
-    protected function getBaseTemplateData()
+    protected function getBaseTemplateData(): array
     {
         $this->getUtils()->getAllPageBlocks($this->getCurrentLocale());
 
@@ -149,7 +152,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function prepareTemplate()
+    protected function prepareTemplate(): Template
     {
         if ($this->getTemplates()->getFolders()->exists('theme')) {
             $template = $this->getTemplates()->make('theme::' . $this->getTemplateName());
@@ -239,7 +242,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @return Rewrite|null
      * @throws BasicException
      */
-    public function getRewrite($reset = false)
+    public function getRewrite($reset = false): ?Rewrite
     {
         if ($this->rewrite != null && !$reset) {
             return $this->rewrite;
@@ -252,7 +255,7 @@ abstract class FrontendPage extends BaseHtmlPage
             } else {
                 // no data into RouteInfo, try by route
                 $rewrite_db = $this->getDb()->table('rewrite')->where(['route' => $this->getRouteInfo()->getRoute()]);
-                $this->rewrite = $this->getContainer()->make(Rewrite::class, ['dbrow' => $rewrite_db]);
+                $this->rewrite = $this->getContainer()->make(Rewrite::class, ['db_row' => $rewrite_db]);
             }
         }
         return $this->rewrite;
@@ -263,14 +266,16 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): ?string
     {
         if ($this->locale == null) {
             // try by menu
             $rewrite = $this->getRewrite();
             if ($rewrite != null && (($menu_obj = $rewrite->menuList()->fetch()) != null)) {
-                $menu_obj = $this->getContainer()->make(Menu::class, ['dbrow' => $menu_obj]);
+                $menu_obj = $this->getContainer()->make(Menu::class, ['db_row' => $menu_obj]);
                 $this->locale = $menu_obj->locale;
             } elseif ($rewrite != null) {
                 $this->locale = $rewrite->locale;
@@ -320,7 +325,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @return array
      * @throws BasicException
      */
-    public function getTranslations()
+    public function getTranslations(): array
     {
         return array_map(
             function ($el) {
@@ -337,7 +342,7 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return boolean
      */
-    public function showMenu()
+    public function showMenu(): bool
     {
         return true;
     }
@@ -348,7 +353,7 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return boolean
      */
-    public function showBlocks()
+    public function showBlocks(): bool
     {
         return true;
     }

@@ -38,6 +38,8 @@ class Routes extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
+     * @throws \App\Base\Exceptions\InvalidValueException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

@@ -66,7 +66,6 @@ class Process extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
         $queue = $input->getOption('queue') ?? null;
         $lock_path = App::getDir(App::TMP) . DS . self::LOCKFILE_NAME;
         if (!file_exists($lock_path)) {
@@ -106,7 +105,7 @@ class Process extends BaseCommand
                 $this->getLog()->log(Logger::INFO, "MAX_EXECUTIONS_NUMBER reached. Exiting");
                 flock($fp, LOCK_UN);    // release the lock
             } else {
-                $io->error("Couldn't get the lock!");
+                $this->getIo()->error("Couldn't get the lock!");
             }
 
             fclose($fp);

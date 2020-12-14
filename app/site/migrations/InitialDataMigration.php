@@ -37,7 +37,7 @@ class InitialDataMigration extends BaseMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '100_' . parent::getName();
     }
@@ -66,7 +66,7 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addWebsite()
+    private function addWebsite(): Website
     {
         $website_model = Website::new($this->getContainer());
         $website_model->site_name = $this->getEnv('APPNAME');
@@ -88,7 +88,7 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addAdmin()
+    private function addAdmin(): BaseModel
     {
         $admin_model = User::new($this->getContainer());
         $admin_model->username = $this->getEnv('ADMIN_USER');
@@ -124,13 +124,15 @@ class InitialDataMigration extends BaseMigration
      * @param string $permission_name
      * @throws BasicException
      * @throws InvalidValueException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     private function addPermission($role_model, $permission_name)
     {
         $permission_dbrow = $this->getDb()->table('permission')->where(['name' => $permission_name])->fetch();
         $permission_model = Permission::new($this->getContainer());
         if ($permission_dbrow) {
-            $permission_model = $this->getContainer()->make(Permission::class, ['dbrow' => $permission_dbrow]);
+            $permission_model = $this->getContainer()->make(Permission::class, ['db_row' => $permission_dbrow]);
         } else {
             $permission_model->name = $permission_name;
             $permission_model->persist();
@@ -147,7 +149,8 @@ class InitialDataMigration extends BaseMigration
      *
      * @throws BasicException
      * @throws InvalidValueException
-     * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     private function addRolesPermissions()
     {
@@ -241,7 +244,7 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addHomePage($website_model, $owner_model)
+    private function addHomePage($website_model, $owner_model): Page
     {
         $page_model = Page::new($this->getContainer());
 

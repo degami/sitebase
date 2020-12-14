@@ -51,7 +51,6 @@ class Delete extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
 
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
@@ -66,9 +65,7 @@ class Delete extends BaseCommand
             return;
         }
 
-        $question = new ConfirmationQuestion('Delete Website "' . $website->getSiteName() . '"? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not deleted</info>');
+        if (!$this->confirmDelete('Delete Website "' . $website->getSiteName() . '"? ')) {
             return;
         }
 

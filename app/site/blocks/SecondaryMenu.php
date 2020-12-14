@@ -31,8 +31,10 @@ class SecondaryMenu extends BaseCodeBlock
      * @param array $data
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function renderHTML(BasePage $current_page = null, $data = [])
+    public function renderHTML(BasePage $current_page = null, $data = []): string
     {
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $locale = $current_page->getCurrentLocale();
@@ -71,8 +73,10 @@ class SecondaryMenu extends BaseCodeBlock
      * @param array $menu_tree
      * @param array|null $parent
      * @return string|mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function _renderSiteMenu($menu_tree, $parent = null)
+    protected function _renderSiteMenu($menu_tree, $parent = null): string
     {
         $menu_list = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'ul',
@@ -107,8 +111,10 @@ class SecondaryMenu extends BaseCodeBlock
      * @param array $leaf
      * @param string $link_class
      * @return string
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function _renderMenuLink($leaf, $link_class = 'menu-elem')
+    protected function _renderMenuLink($leaf, $link_class = 'menu-elem'): string
     {
         $link_options = [
             'tag' => 'a',
@@ -138,7 +144,7 @@ class SecondaryMenu extends BaseCodeBlock
      * @throws FAPI\Exceptions\FormException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
+    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array
     {
         $config_fields = [];
 

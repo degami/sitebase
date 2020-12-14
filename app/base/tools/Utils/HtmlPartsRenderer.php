@@ -36,8 +36,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      *
      * @param BasePage $controller
      * @return TagList
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function renderFlashMessages(BasePage $controller)
+    public function renderFlashMessages(BasePage $controller): TagList
     {
         $flash_messages = $controller->getFlashMessages();
         $controller->dropFlashMessages();
@@ -80,8 +82,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param array $leaf
      * @param string $link_class
      * @return TagElement
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function _renderMenuLink($leaf, $link_class = 'nav-link')
+    protected function _renderMenuLink($leaf, $link_class = 'nav-link'): TagElement
     {
         $link_options = [
             'tag' => 'a',
@@ -111,8 +115,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param array $menu_tree
      * @param array|null $parent
      * @return TagElement
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function _renderSiteMenu($menu_tree, $parent = null)
+    protected function _renderSiteMenu($menu_tree, $parent = null): TagElement
     {
         $tag_options = [
             'tag' => ($parent == null) ? 'ul' : 'div',
@@ -162,10 +168,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
      *
      * @param string $locale
      * @return string
-     * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function renderSiteMenu($locale)
+    public function renderSiteMenu($locale): ?string
     {
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
@@ -291,8 +299,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @return mixed|string|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function renderBlocks($region, $locale = null, BasePage $current_page = null)
+    public function renderBlocks($region, $locale = null, BasePage $current_page = null): ?string
     {
         static $pageBlocks = null;
         static $current_rewrite = null;
@@ -349,8 +359,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param string|null $href
      * @param string $text
      * @return TagElement
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function getPaginatorLi($li_class, $href, $text)
+    private function getPaginatorLi($li_class, $href, $text): TagElement
     {
         $li_options = [
             'tag' => 'li',
@@ -390,8 +402,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param integer $visible_links
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function renderPaginator($current_page, $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2)
+    public function renderPaginator($current_page, $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2): string
     {
         $total_pages = ceil($total / $page_size) - 1;
         if ($total_pages < 1) {
@@ -570,9 +584,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @return string
      * @throws BasicException
      * @throws OutOfRangeException
-     * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function renderAdminTable($elements, $header = null, BasePage $current_page = null)
+    public function renderAdminTable($elements, $header = null, BasePage $current_page = null): string
     {
         $table_id = 'listing-table';
 
@@ -845,6 +860,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * Renders array as table field name - field value
      * @param array $data
      * @return mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function renderArrayOnTable($data)
     {
@@ -969,6 +986,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param $log
      * @return mixed
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function renderLog($log)
     {
@@ -988,7 +1007,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      *
      * @param QueueMessage $message
      * @return mixed
-     * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function renderQueueMessage($message)
     {
@@ -1007,7 +1027,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param string $class html class
      * @return String containing a complete image tag
      */
-    public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle')
+    public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle'): string
     {
         $url = 'https://www.gravatar.com/avatar/';
         $url .= md5(strtolower(trim($email)));
@@ -1035,7 +1055,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function renderFlag($country_code, $class = 'flag-icon', $width = 20)
+    public function renderFlag($country_code, $class = 'flag-icon', $width = 20): string
     {
         $filepath = App::getDir(App::FLAGS) . DS . $country_code . '.svg';
         $src = null;

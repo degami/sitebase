@@ -73,7 +73,7 @@ class FakeDataMigration extends BaseMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '200_' . parent::getName();
     }
@@ -397,8 +397,10 @@ class FakeDataMigration extends BaseMigration
      * @param User|null $owner_model
      * @return NewsModel
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addNews($title, $content, $date, $locale = 'en', $owner_model = null)
+    private function addNews($title, $content, $date, $locale = 'en', $owner_model = null): NewsModel
     {
         $news_model = $this->getContainer()->make(NewsModel::class);
 
@@ -425,8 +427,10 @@ class FakeDataMigration extends BaseMigration
      * @param array $images
      * @return Page
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addPage($title, $content, $locale = 'en', $terms = [], $owner_model = null, $images = [])
+    private function addPage($title, $content, $locale = 'en', $terms = [], $owner_model = null, $images = []): Page
     {
         $page_model = $this->getContainer()->make(Page::class);
 
@@ -459,8 +463,10 @@ class FakeDataMigration extends BaseMigration
      * @param User|null $owner_model
      * @return Taxonomy
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addTerm($title, $content, $locale = 'en', $owner_model = null)
+    private function addTerm($title, $content, $locale = 'en', $owner_model = null): Taxonomy
     {
         $term_model = $this->getContainer()->make(Taxonomy::class);
 
@@ -485,8 +491,10 @@ class FakeDataMigration extends BaseMigration
      * @param array $terms
      * @param User|null $owner_model
      * @return LinkExchange
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addLinkExchange($url, $email, $locale = 'en', $terms = [], $owner_model = null)
+    private function addLinkExchange($url, $email, $locale = 'en', $terms = [], $owner_model = null): LinkExchange
     {
         $link_exchange_model = $this->getContainer()->make(LinkExchange::class);
 
@@ -518,8 +526,10 @@ class FakeDataMigration extends BaseMigration
      * @param User|null $owner_model
      * @return Contact
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addContactForm($title, $content, $locale = 'en', $fields = [], $owner_model = null)
+    private function addContactForm($title, $content, $locale = 'en', $fields = [], $owner_model = null): Contact
     {
         $contact_model = $this->getContainer()->make(Contact::class);
 
@@ -557,8 +567,10 @@ class FakeDataMigration extends BaseMigration
      * @param string $locale
      * @param Menu|null $parent
      * @return Menu
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addMenuItem($title, $menu_name, $rewrite, $locale = 'en', $parent = null)
+    private function addMenuItem($title, $menu_name, $rewrite, $locale = 'en', $parent = null): Menu
     {
         $menu_item_model = $this->getContainer()->make(Menu::class);
 
@@ -587,8 +599,10 @@ class FakeDataMigration extends BaseMigration
      * @param array $rewrites
      * @return Block
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addBlock($title, $content, $region, $locale = 'en', $rewrites = [])
+    private function addBlock($title, $content, $region, $locale = 'en', $rewrites = []): Block
     {
         $block_model = $this->getContainer()->make(Block::class);
 
@@ -624,8 +638,10 @@ class FakeDataMigration extends BaseMigration
      * @param integer $h
      * @return MediaElement
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function createImage($w = 400, $h = 400)
+    private function createImage($w = 400, $h = 400): MediaElement
     {
         $palette = new RGB();
         $size = new Box($w, $h);

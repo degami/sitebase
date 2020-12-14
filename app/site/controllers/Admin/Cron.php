@@ -38,10 +38,12 @@ class Cron extends AdminManageModelsPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
-     * @throws Exception
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -87,7 +89,7 @@ class Cron extends AdminManageModelsPage
             }
         }
         parent::__construct($container, $request, $route_info);
-        $this->templateData += [
+        $this->template_data += [
             'last_beat' => $this->getLastHeartBeat(),
         ];
     }
@@ -97,7 +99,7 @@ class Cron extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'cron';
     }
@@ -107,7 +109,7 @@ class Cron extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_cron';
     }
@@ -117,7 +119,7 @@ class Cron extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return CronTask::class;
     }
@@ -127,7 +129,7 @@ class Cron extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'task_id';
     }
@@ -282,7 +284,7 @@ class Cron extends AdminManageModelsPage
      * @throws Exception
      * @throws BasicException
      */
-    protected function getLastHeartBeat()
+    protected function getLastHeartBeat(): string
     {
         $out = '<div class="alert alert-danger" role="alert">No heart beat run yet</div>';
         // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1
@@ -309,7 +311,7 @@ class Cron extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -328,7 +330,7 @@ class Cron extends AdminManageModelsPage
      * @return array
      * @throws BasicException
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($task) {
@@ -358,7 +360,7 @@ class Cron extends AdminManageModelsPage
      * @param integer $object_id
      * @return string
      */
-    public function getRunButton($object_id)
+    public function getRunButton($object_id): string
     {
         return $this->getActionButton('run', $object_id, 'success', 'play', 'Run');
     }

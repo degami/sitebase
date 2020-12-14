@@ -27,14 +27,14 @@ class Logs extends AdminPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * {@inheritdocs}
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'logs';
     }
@@ -44,7 +44,7 @@ class Logs extends AdminPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_logs';
     }
@@ -55,9 +55,9 @@ class Logs extends AdminPage
      * @return array
      * @throws BasicException
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        $this->templateData = [
+        $this->template_data = [
             'logtype' => $this->getRequest()->get('logtype') ?? null,
             'action' => $this->getRequest()->get('logtype') ? 'logs' : 'buttons',
         ];
@@ -147,12 +147,12 @@ class Logs extends AdminPage
             }
 
             if (is_numeric($this->getRequest()->query->get('id'))) {
-                $this->templateData += [
+                $this->template_data += [
                     'log' => $log,
                     'logHtml' => $this->getHtmlRenderer()->renderLog($log),
                 ];
             } else {
-                $this->templateData += [
+                $this->template_data += [
                     'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items'], $header), $this->getTableHeader($header), $this),
 
                     'header' => $header,
@@ -164,14 +164,15 @@ class Logs extends AdminPage
             }
         }
 
-        return $this->templateData;
+        return $this->template_data;
     }
-
 
     /**
      * gets search parameters
+     *
+     * @return array|null
      */
-    protected function getSearchParameters()
+    protected function getSearchParameters(): ?array
     {
         $out = array_filter([
             'like' => $this->getRequest()->query->get('search'),
@@ -188,7 +189,7 @@ class Logs extends AdminPage
      * @return array[]
      * @throws BasicException
      */
-    protected function getTableElements($data, $header)
+    protected function getTableElements($data, $header): array
     {
         return array_map(function ($log) use ($header) {
             $data = $log->getData();
@@ -207,7 +208,7 @@ class Logs extends AdminPage
      * @param array $header
      * @return array
      */
-    protected function getTableHeader($header)
+    protected function getTableHeader($header): array
     {
         $out = [];
         foreach ($header as $element) {

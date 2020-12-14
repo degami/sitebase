@@ -30,7 +30,7 @@ class Permissions extends AdminFormPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'permissions';
     }
@@ -40,7 +40,7 @@ class Permissions extends AdminFormPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_permissions';
     }
@@ -51,13 +51,13 @@ class Permissions extends AdminFormPage
      * @return array
      * @throws BasicException
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        $this->templateData += [
+        $this->template_data += [
             'roles' => $this->getDb()->role()->fetchAll(),
             'permissions' => $this->getDb()->permission()->fetchAll(),
         ];
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
@@ -67,6 +67,8 @@ class Permissions extends AdminFormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -97,7 +99,7 @@ class Permissions extends AdminFormPage
 
         $rolesArray = array_map(
             function ($el) {
-                return $this->getContainer()->make(Role::class, ['dbrow' => $el]);
+                return $this->getContainer()->make(Role::class, ['db_row' => $el]);
             },
             $this->getDb()->role()->fetchAll()
         );
@@ -186,19 +188,21 @@ class Permissions extends AdminFormPage
      * @param Permission $permission_model
      * @return RolePermission|null
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function loadRolePermission($role_model, $permission_model)
+    private function loadRolePermission($role_model, $permission_model): ?RolePermission
     {
         $role_permission_dbrow = $this->getDb()->table('role_permission')->where(['role_id' => $role_model->id, 'permission_id' => $permission_model->id])->fetch();
         if ($role_permission_dbrow) {
-            return $this->getContainer()->make(RolePermission::class, ['dbrow' => $role_permission_dbrow]);
+            return $this->getContainer()->make(RolePermission::class, ['db_row' => $role_permission_dbrow]);
         }
 
         return null;
     }
 
     /**
-     * adds permissione to role
+     * adds permission to role
      *
      * @param Role $role_model
      * @param Permission $permission_model

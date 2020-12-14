@@ -41,7 +41,7 @@ class Mailer extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function sendMail($from, $to, $subject, $body, $content_type = 'text/html', $log = true)
+    public function sendMail($from, $to, $subject, $body, $content_type = 'text/html', $log = true): bool
     {
         $use_ses = (trim($this->getEnv('SES_REGION')) != '' && trim($this->getSiteData()->getConfigValue('app/mail/ses_sender')) != '');
         if (!$use_ses || ($result = $this->sendSesMail($from, $to, $subject, $body, $content_type)) != true) {
@@ -69,7 +69,7 @@ class Mailer extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function sendTemplateMail($from, $to, $subject, $mail_template, $mail_variables = [])
+    public function sendTemplateMail($from, $to, $subject, $mail_template, $mail_variables = []): bool
     {
         $this->getTemplates()->addFolder('mails', App::getDir(App::TEMPLATES) . DS . 'mails');
 
@@ -94,8 +94,10 @@ class Mailer extends ContainerAwareObject
      * @param string $content_type
      * @return boolean
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function sendSmtpMail($from, $to, $subject, $body, $content_type = 'text/html')
+    protected function sendSmtpMail($from, $to, $subject, $body, $content_type = 'text/html'): bool
     {
         try {
             if (!is_array($from)) {
@@ -134,7 +136,7 @@ class Mailer extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function sendSesMail($from, $to, $subject, $body, $content_type = 'text/html')
+    protected function sendSesMail($from, $to, $subject, $body, $content_type = 'text/html'): bool
     {
         // Specify a configuration set. If you do not want to use a configuration
         // set, comment the following variable, and the

@@ -54,9 +54,6 @@ class ModEnv extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-        $io = new SymfonyStyle($input, $output);
-
         $dotenv = parse_ini_file('.env.sample');
         if (file_exists('.env')) {
             $dotenv = parse_ini_file('.env');
@@ -76,7 +73,7 @@ class ModEnv extends BaseCommand
                 $old_value = $dotenv[$key] ?? '';
 
                 $question = new Question($key . ' value? defaults to [' . $old_value . ']');
-                $value = $helper->ask($input, $output, $question);
+                $value = $this->getQuestionHelper()->ask($input, $output, $question);
                 if (trim($value) == '') {
                     $value = $old_value;
                 }
@@ -101,12 +98,10 @@ class ModEnv extends BaseCommand
         }
 
 
-        $io->title("new .env file");
+        $this->getIo()->title("new .env file");
         $output->writeln($dotenv);
 
-        $question = new ConfirmationQuestion('Save Config? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save Config? ')) {
             return;
         }
 

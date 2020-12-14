@@ -30,7 +30,7 @@ class NewsList extends FrontendPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * @var RouteInfo route info object
@@ -42,7 +42,7 @@ class NewsList extends FrontendPage
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): string
     {
         return '';
     }
@@ -52,7 +52,7 @@ class NewsList extends FrontendPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'news';
     }
@@ -62,7 +62,7 @@ class NewsList extends FrontendPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'news_list';
     }
@@ -72,11 +72,13 @@ class NewsList extends FrontendPage
      *
      * @return array
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         $data = $this->getContainer()->call([News::class, 'paginate'], ['condition' => ['locale' => $this->getCurrentLocale()], 'order' => ['date' => 'DESC']]);
-        return $this->templateData += [
+        return $this->template_data += [
             'page_title' => $this->getUtils()->translate('News', $this->getCurrentLocale()),
             'news' => $data['items'],
             'total' => $data['total'],
@@ -90,8 +92,10 @@ class NewsList extends FrontendPage
      *
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getCurrentLocale()
+    public function getCurrentLocale(): string
     {
         if (!$this->locale) {
             $this->locale = parent::getCurrentLocale();

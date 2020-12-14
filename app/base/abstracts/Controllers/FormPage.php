@@ -32,6 +32,7 @@ abstract class FormPage extends FrontendPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PhpfastcacheSimpleCacheException
@@ -40,7 +41,7 @@ abstract class FormPage extends FrontendPage
     {
         parent::__construct($container, $request, $route_info);
 
-        $this->templateData += [
+        $this->template_data += [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
                 ->setValidate([[$this, 'formValidate']])
                 ->setSubmit([[$this, 'formSubmitted']]),

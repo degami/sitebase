@@ -40,7 +40,7 @@ class CacheManager extends ContainerAwareObject
      * @return boolean
      * @throws PhpfastcacheSimpleCacheException|BasicException
      */
-    public function flush()
+    public function flush(): bool
     {
         return $this->getCache()->clear();
     }

@@ -45,5 +45,5 @@ abstract class AdminRestPage extends BaseRestPage
      *
      * @return string
      */
-    abstract protected function getAccessPermission();
+    abstract protected function getAccessPermission(): string;
 }

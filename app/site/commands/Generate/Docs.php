@@ -40,22 +40,22 @@ class Docs extends BaseCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
+     * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
         $output->writeln("<info>Generating Documentation</info>");
 
         if(!$this->command_exist('phpdoc')) {
             throw new NotFoundException('phpdoc command is missing!');
         }
 
-        $commandline = "phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --ignore=vendor/* --template=clean --setting=\"graphs.enabled=true\" >/dev/null 2>&1";
+        $commandline = "phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --sourcecode --ignore=vendor/* --template=clean --setting=\"graphs.enabled=true\" >/dev/null 2>&1";
         system($commandline);
 
         if (!file_exists(App::getDir(App::WEBROOT) . DS . "docs")) {
             $question = new ConfirmationQuestion('Do you want to publish docs also on website? ', false);
-            if (!$helper->ask($input, $output, $question)) {
+            if (!$this->getQuestionHelper()->ask($input, $output, $question)) {
                 $output->writeln('<info>Not Publishing</info>');
                 return;
             }

@@ -29,7 +29,7 @@ class Worker extends BaseQueueWorker
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function processMessage($message_data)
+    protected function processMessage($message_data): bool
     {
         return $this->getMailer()->sendMail(
             $message_data['from'],

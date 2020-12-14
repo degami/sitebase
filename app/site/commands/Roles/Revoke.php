@@ -52,8 +52,7 @@ class Revoke extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
+        $io = $this->getIo();
 
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
@@ -88,11 +87,10 @@ class Revoke extends BaseCommand
                 0
             );
             $question->setErrorMessage('Permission %s is invalid.');
-            $permission = $helper->ask($input, $output, $question);
+            $permission = $this->getQuestionHelper()->ask($input, $output, $question);
         }
-        $question = new ConfirmationQuestion('Revoke permission "' . $permission . '" to role "' . $role->getName() . '"? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not saved</info>');
+
+        if (!$this->confirmSave('Revoke permission "' . $permission . '" to role "' . $role->getName() . '"? ')) {
             return;
         }
 

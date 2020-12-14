@@ -38,7 +38,7 @@ trait AdminTrait
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): ?string
     {
         return (trim(getenv('ADMINPAGES_GROUP')) != null) ? '/' . getenv('ADMINPAGES_GROUP') : null;
     }
@@ -47,8 +47,9 @@ trait AdminTrait
      * checks user credentials
      *
      * @return boolean
+     * @throws \Degami\Basics\Exceptions\BasicException
      */
-    protected function checkCredentials()
+    protected function checkCredentials(): bool
     {
         try {
             if ($this->getTokenData()) {
@@ -67,8 +68,9 @@ trait AdminTrait
      *
      * @param string $permission_name
      * @return boolean
+     * @throws \Degami\Basics\Exceptions\BasicException
      */
-    public function checkPermission($permission_name)
+    public function checkPermission($permission_name): bool
     {
         try {
             $this->current_user_model = $this->getCurrentUser();
@@ -84,8 +86,10 @@ trait AdminTrait
      * renders action buttons
      *
      * @return string
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function renderActionButtons()
+    protected function renderActionButtons(): string
     {
         if (empty($this->action_buttons)) {
             return '';
@@ -124,7 +128,7 @@ trait AdminTrait
      * @param string $button_id
      * @param string $button_text
      * @param string $button_class
-     * @return AdminTrait
+     * @return self
      */
     protected function addActionButton($key, $button_id, $button_text, $button_class = 'btn btn-sm btn-light')
     {
@@ -153,7 +157,7 @@ trait AdminTrait
      * @param string $link_href
      * @param string $link_class
      * @param array $attributes
-     * @return $this
+     * @return self
      */
     public function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light', $attributes = [])
     {

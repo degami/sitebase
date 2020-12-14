@@ -33,7 +33,7 @@ class CreateContactDefinitionTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '07.1_' . parent::getName();
     }
@@ -46,7 +46,7 @@ class CreateContactDefinitionTableMigration extends DBMigration
      * @throws DuplicateException
      * @throws EmptyException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('contact_id', 'INT', null, ['UNSIGNED'])

@@ -27,7 +27,7 @@ class Queue extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'queue';
     }
@@ -37,7 +37,7 @@ class Queue extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_queue';
     }
@@ -47,7 +47,7 @@ class Queue extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return QueueMessage::class;
     }
@@ -57,12 +57,12 @@ class Queue extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'message_id';
     }
 
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         $out = parent::getTemplateData();
 
@@ -85,6 +85,7 @@ class Queue extends AdminManageModelsPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form
+     * @throws BasicException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -159,7 +160,7 @@ class Queue extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -177,7 +178,7 @@ class Queue extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($message) {

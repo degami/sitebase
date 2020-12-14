@@ -73,7 +73,7 @@ class Page extends FrontendModel
         if (!(is_array($this->gallery) && !empty($this->gallery)) || $reset == true) {
             $this->gallery = array_map(
                 function ($el) {
-                    return $this->getContainer()->make(MediaElement::class, ['dbrow' => $el]);
+                    return $this->getContainer()->make(MediaElement::class, ['db_row' => $el]);
                 },
                 $this->page_media_elementList()->media_element()->fetchAll()
             );
@@ -132,7 +132,7 @@ class Page extends FrontendModel
         if (!(is_array($this->terms) && !empty($this->terms)) || $reset == true) {
             $this->terms = array_map(
                 function ($el) {
-                    return $this->getContainer()->make(Taxonomy::class, ['dbrow' => $el]);
+                    return $this->getContainer()->make(Taxonomy::class, ['db_row' => $el]);
                 },
                 $this->page_taxonomyList()->taxonomy()->fetchAll()
             );

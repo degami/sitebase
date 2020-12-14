@@ -43,7 +43,7 @@ class DbManager extends ContainerAwareObject
      *
      * @return boolean
      */
-    public function dumpDB()
+    public function dumpDB(): bool
     {
         try {
             MySql::create()
@@ -69,7 +69,7 @@ class DbManager extends ContainerAwareObject
      * @return boolean
      * @throws BasicException
      */
-    public function dropOldCronLogs()
+    public function dropOldCronLogs(): bool
     {
         $statement = $this->getDb()->query('DELETE FROM cron_log WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR)');
         $statement->execute();
@@ -82,7 +82,7 @@ class DbManager extends ContainerAwareObject
      * @return boolean
      * @throws BasicException
      */
-    public function dropOldQueueMessages()
+    public function dropOldQueueMessages(): bool
     {
         $statement = $this->getDb()->query('DELETE FROM queue_message WHERE created_at < DATE_SUB(NOW(), INTERVAL 12 HOUR) AND status = ' . $this->getDb()->quote(QueueMessage::STATUS_PROCESSED));
         $statement->execute();

@@ -33,7 +33,7 @@ class CreateConfigurationTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '01_' . parent::getName();
     }
@@ -46,7 +46,7 @@ class CreateConfigurationTableMigration extends DBMigration
      * @throws DuplicateException
      * @throws EmptyException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])

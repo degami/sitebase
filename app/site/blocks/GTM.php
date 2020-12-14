@@ -50,8 +50,10 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      * @param BasePage|null $current_page
      * @return string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function renderHTML(BasePage $current_page = null)
+    public function renderHTML(BasePage $current_page = null): string
     {
         /*
         <!-- Google Tag Manager -->

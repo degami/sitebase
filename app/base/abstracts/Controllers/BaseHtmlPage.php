@@ -42,7 +42,7 @@ abstract class BaseHtmlPage extends BasePage
      * @return Template
      * @throws BasicException
      */
-    protected function prepareTemplate()
+    protected function prepareTemplate(): Template
     {
         $template = $this->getTemplates()->make($this->getTemplateName());
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());
@@ -93,7 +93,7 @@ abstract class BaseHtmlPage extends BasePage
      * @throws BasicException
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         try {
             $template_html = '';
@@ -126,7 +126,7 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @return Template
      */
-    public function getTemplate()
+    public function getTemplate(): ?Template
     {
         return $this->template;
     }
@@ -136,7 +136,7 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @return array
      */
-    protected function getBaseTemplateData()
+    protected function getBaseTemplateData(): array
     {
         return [
             'controller' => $this,
@@ -150,17 +150,17 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @return array
      */
-    public function getInfo()
+    public function getInfo(): array
     {
         $templateName = $this->getTemplateName();
         $variablesInfo = [];
         if ($this->getTemplate() instanceof Template) {
-            $templateData = $this->getTemplate()->data();
+            $template_data = $this->getTemplate()->data();
         } else {
-            $templateData = $this->getTemplateData();
+            $template_data = $this->getTemplateData();
         }
 
-        foreach ($templateData as $index => $elem) {
+        foreach ($template_data as $index => $elem) {
             $variablesInfo[] = "{$index}[" . ((is_object($elem)) ? get_class($elem) : gettype($elem)) . "]";
         }
 
@@ -169,7 +169,7 @@ abstract class BaseHtmlPage extends BasePage
                 $this->getRouteInfo()->toString() : $this->getRouteInfo(),
             'locale' => is_callable([$this, 'getCurrentLocale']) ?
                 $this->getCurrentLocale() :
-                ($templateData['locale'] ?? null),
+                ($template_data['locale'] ?? null),
             'template_name' => $templateName,
         ];
 
@@ -186,9 +186,9 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @param string $type
      * @param string $message
-     * @return BaseHtmlPage
+     * @return self
      */
-    public function addFlashMessage($type, $message)
+    public function addFlashMessage($type, $message): BaseHtmlPage
     {
         $flash_messages = $this->getFlashMessages();
         $flash_messages[$type][] = $message;
@@ -203,7 +203,7 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @return self
      */
-    public function dropFlashMessages()
+    public function dropFlashMessages(): BaseHtmlPage
     {
         $this->getResponse()->headers->clearCookie('flash_messages');
 
@@ -215,7 +215,7 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @return array
      */
-    public function getFlashMessages()
+    public function getFlashMessages(): ?array
     {
         return json_decode($this->getRequest()->cookies->get('flash_messages'), true);
     }
@@ -225,12 +225,12 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @return string
      */
-    abstract protected function getTemplateName();
+    abstract protected function getTemplateName(): string;
 
     /**
      * gets current page template data
      *
      * @return array
      */
-    abstract protected function getTemplateData();
+    abstract protected function getTemplateData(): array;
 }

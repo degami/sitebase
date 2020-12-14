@@ -55,7 +55,7 @@ abstract class FrontendPageWithObject extends FrontendPage
      * @throws Exception
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = [])
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
         $return = parent::process($route_info, $route_data);
 
@@ -79,7 +79,7 @@ abstract class FrontendPageWithObject extends FrontendPage
      *
      * @return string
      */
-    public function getObjectTitle()
+    public function getObjectTitle(): string
     {
         return $this->getObject()->getTitle() ?: '';
     }
@@ -89,7 +89,7 @@ abstract class FrontendPageWithObject extends FrontendPage
      *
      * @return boolean
      */
-    public function canBeFPC()
+    public function canBeFPC(): bool
     {
         return true;
     }
@@ -99,5 +99,5 @@ abstract class FrontendPageWithObject extends FrontendPage
      *
      * @return string
      */
-    abstract public static function getObjectClass();
+    abstract public static function getObjectClass(): string;
 }

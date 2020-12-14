@@ -32,7 +32,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -42,7 +42,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_sitemaps';
     }
@@ -52,7 +52,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return Sitemap::class;
     }
@@ -62,7 +62,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'sitemap_id';
     }
@@ -225,7 +225,7 @@ class Sitemaps extends AdminManageModelsPage
      * @param array|null $component
      * @return Element
      */
-    private function addComponent($form_component, $index, $sitemap, $component = null)
+    private function addComponent($form_component, $index, $sitemap, $component = null): Element
     {
         if (is_null($component)) {
             $component = [
@@ -301,6 +301,8 @@ class Sitemaps extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -366,7 +368,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -386,7 +388,7 @@ class Sitemaps extends AdminManageModelsPage
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($sitemap) {

@@ -12,6 +12,8 @@
 
 namespace App\Base\Traits;
 
+use App\Base\Abstracts\Models\BaseModel;
+
 /**
  * Trait for elements with children
  */
@@ -29,21 +31,21 @@ trait WithChildrenTrait
      * @param boolean $reset
      * @return array
      */
-    public function getChildren($locale = null, $reset = false)
+    public function getChildren($locale = null, $reset = false): array
     {
         $this->checkLoaded();
 
         if (!(is_array($this->children) && !empty($this->children)) || $reset == true) {
             $query = null;
             if ($locale != null) {
-                $query = $this->getDb()->table($this->tablename)->where(['parent_id' => $this->id, 'locale' => $locale])->orderBy('position');
+                $query = $this->getDb()->table($this->table_name)->where(['parent_id' => $this->id, 'locale' => $locale])->orderBy('position');
             } else {
-                $query = $this->getDb()->table($this->tablename)->where(['parent_id' => $this->id])->orderBy('position');
+                $query = $this->getDb()->table($this->table_name)->where(['parent_id' => $this->id])->orderBy('position');
             }
 
             $this->children = array_map(
                 function ($el) {
-                    return $this->container->make(static::class, ['dbrow' => $el]);
+                    return $this->container->make(static::class, ['db_row' => $el]);
                 },
                 $query->fetchAll()
             );
@@ -68,7 +70,7 @@ trait WithChildrenTrait
      * @param self $b
      * @return int
      */
-    protected function cmpPosition($a, $b)
+    protected function cmpPosition($a, $b): int
     {
         if ($a->position == $b->position) {
             return 0;
@@ -77,10 +79,11 @@ trait WithChildrenTrait
     }
 
     /**
-     * pre remove
+     * pre remove hook
+     *
      * @return self
      */
-    public function preRemove()
+    public function preRemove(): BaseModel
     {
         $parent_id = $this->parent_id;
         foreach ($this->getChildren() as $child) {

@@ -54,8 +54,7 @@ class Grant extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-        $helper = $this->getHelper('question');
+        $io = $this->getIo();
 
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
@@ -95,11 +94,10 @@ class Grant extends BaseCommand
                 0
             );
             $question->setErrorMessage('Permission %s is invalid.');
-            $permission = $helper->ask($input, $output, $question);
+            $permission = $this->getQuestionHelper()->ask($input, $output, $question);
         }
-        $question = new ConfirmationQuestion('Add permission "' . $permission . '" to role "' . $role->getName() . '"? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not saved</info>');
+
+        if (!$this->confirmSave('Add permission "' . $permission . '" to role "' . $role->getName() . '"? ')) {
             return;
         }
 

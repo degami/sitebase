@@ -27,9 +27,9 @@ class Logout extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
-        return null;
+        return '';
     }
 
     /**
@@ -37,7 +37,7 @@ class Logout extends AdminPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -47,7 +47,7 @@ class Logout extends AdminPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
         return [];
     }
@@ -57,6 +57,8 @@ class Logout extends AdminPage
      *
      * @return AdminPage|RedirectResponse|Response
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function beforeRender()
     {

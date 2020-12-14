@@ -51,7 +51,7 @@ class Role extends BaseModel
         if (!(is_array($this->permissionsArray) && !empty($this->permissionsArray)) || $reset == true) {
             $this->permissionsArray = array_map(
                 function ($el) {
-                    return $this->getContainer()->make(Permission::class, ['dbrow' => $el]);
+                    return $this->getContainer()->make(Permission::class, ['db_row' => $el]);
                 },
                 $this->role_permissionList()->permission()->fetchAll()
             );

@@ -43,6 +43,8 @@ class Indexer extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

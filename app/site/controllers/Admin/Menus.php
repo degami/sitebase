@@ -30,7 +30,7 @@ class Menus extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'menus';
     }
@@ -40,7 +40,7 @@ class Menus extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_menu';
     }
@@ -50,7 +50,7 @@ class Menus extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return Menu::class;
     }
@@ -60,7 +60,7 @@ class Menus extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'menu_id';
     }
@@ -70,14 +70,14 @@ class Menus extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        if ($this->templateData['action'] == 'list') {
-            $this->templateData += [
+        if ($this->template_data['action'] == 'list') {
+            $this->template_data += [
                 'menus' => (array)Menu::allMenusNames($this->getContainer()),
             ];
         }
-        return $this->templateData;
+        return $this->template_data;
     }
 
 
@@ -89,8 +89,10 @@ class Menus extends AdminManageModelsPage
      * @param Menu|null $menuElement
      * @return Element
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    private function addLevel($parentFormElement, $menu_name, $menuElement = null)
+    private function addLevel($parentFormElement, $menu_name, $menuElement = null): Element
     {
         $parent_id = null;
         $thisFormElement = null;
@@ -122,7 +124,7 @@ class Menus extends AdminManageModelsPage
 
         $menus = $this->getDb()->table('menu')->where('menu_name', $menu_name)->where('parent_id', $parent_id)->orderBy('position')->fetchAll();
         foreach ($menus as $db_menu) {
-            $menu = $this->getContainer()->make(Menu::class, ['dbrow' => $db_menu]);
+            $menu = $this->getContainer()->make(Menu::class, ['db_row' => $db_menu]);
             $this->addLevel($thisFormElement->addChild(), $menu_name, $menu);
         }
 
@@ -137,6 +139,8 @@ class Menus extends AdminManageModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -339,7 +343,7 @@ class Menus extends AdminManageModelsPage
      * @return array
      * @throws BasicException
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($menu) {

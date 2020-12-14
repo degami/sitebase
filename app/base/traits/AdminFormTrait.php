@@ -28,8 +28,10 @@ trait AdminFormTrait
      * @param $form_state
      * @param string[] $form_elements
      * @return FAPI\Form
+     * @throws \Degami\Basics\Exceptions\BasicException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    protected function addFrontendFormElements(FAPI\Form $form, &$form_state, $form_elements = ['url', 'website_id', 'locale'])
+    protected function addFrontendFormElements(FAPI\Form $form, &$form_state, $form_elements = ['url', 'website_id', 'locale']): FAPI\Form
     {
         /** @var BaseModel $object */
         $object = $this->getObject();
@@ -139,7 +141,7 @@ trait AdminFormTrait
      * @param $form_state
      * @return FAPI\Form
      */
-    protected function addSeoFormElements(FAPI\Form $form, &$form_state)
+    protected function addSeoFormElements(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $object = $this->getObject();
 

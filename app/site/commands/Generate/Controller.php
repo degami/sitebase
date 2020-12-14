@@ -51,18 +51,10 @@ class Controller extends CodeGeneratorCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-        $classname = $input->getOption('classname');
-        while (trim($classname) == '') {
-            $question = new Question('Class Name (starting from ' . static::BASE_NAMESPACE . ')? ');
-            $classname = $helper->ask($input, $output, $question);
-        }
-
+        $classname = $this->keepAskingForOption('classname', 'Class Name (starting from ' . static::BASE_NAMESPACE . ')? ');
         $this->addClass(static::BASE_NAMESPACE . $classname, $this->getFileContents($classname));
 
-        $question = new ConfirmationQuestion('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ')) {
             return;
         }
 
@@ -82,40 +74,40 @@ class Controller extends CodeGeneratorCommand
      * @param string $className
      * @return string
      */
-    protected function getFileContents($className)
+    protected function getFileContents($className): string
     {
         return "<?php
 
-namespace App\Site\Controllers;
+namespace App\\Site\\Controllers;
 
-use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\FrontendPage;
-use \App\App;
+use \\Psr\\Container\\ContainerInterface;
+use \\App\\Base\\Abstracts\\Controllers\\FrontendPage;
+use \\App\\App;
 
 class " . $className . " extends FrontendPage
 {
-    protected \$templateData = [];
+    protected \$template_data = [];
 
     /*
-    public static function getRouteGroup()
+    public static function getRouteGroup(): string
     {
         return '';
     }
 
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return '';
     }
     */
 
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return '';
     }
 
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        return \$this->templateData;
+        return \$this->template_data;
     }
 }
 ";

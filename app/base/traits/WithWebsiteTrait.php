@@ -26,17 +26,17 @@ trait WithWebsiteTrait
      * gets website
      *
      * @return Website
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getWebsite()
+    public function getWebsite(): Website
     {
         $this->checkLoaded();
 
         if ($this->websiteModel == null) {
-            $this->websiteModel = $this->getContainer()->make(Website::class, ['dbrow' => $this->website()->fetch()]);
+            $this->websiteModel = $this->getContainer()->make(Website::class, ['db_row' => $this->website()->fetch()]);
         }
 
         return $this->websiteModel;
     }
-
-
 }

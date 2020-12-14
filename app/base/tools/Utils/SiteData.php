@@ -40,7 +40,7 @@ class SiteData extends ContainerAwareObject
      *
      * @return string
      */
-    public function currentServerName()
+    public function currentServerName(): string
     {
         return $_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME'];
     }
@@ -50,6 +50,8 @@ class SiteData extends ContainerAwareObject
      *
      * @return Website|int|string|null
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getCurrentWebsite()
     {
@@ -66,7 +68,7 @@ class SiteData extends ContainerAwareObject
             //$website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
             $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)']]])->fetch();
             $dbrow = $this->getContainer()->make(Row::class, ['db' => $this->getDb(), 'name' => 'website', 'properties' => $result]);
-            $website = $this->getContainer()->make(Website::class, ['dbrow' => $dbrow]);
+            $website = $this->getContainer()->make(Website::class, ['db_row' => $dbrow]);
         }
 
         if ($website instanceof Website) {
@@ -81,6 +83,8 @@ class SiteData extends ContainerAwareObject
      *
      * @return integer|null
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getCurrentWebsiteId()
     {
@@ -104,8 +108,10 @@ class SiteData extends ContainerAwareObject
      *
      * @return string|null
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getDefaultLocale()
+    public function getDefaultLocale(): ?string
     {
         static $website_default_locale = null;
 
@@ -128,8 +134,10 @@ class SiteData extends ContainerAwareObject
      * @return string
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getBrowserPreferredLanguage()
+    public function getBrowserPreferredLanguage(): ?string
     {
         $langs = [];
         $lang = null;
@@ -181,7 +189,7 @@ class SiteData extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    public function getCachedConfig()
+    public function getCachedConfig(): array
     {
         if ($this->getCache()->has(self::CONFIGURATION_CACHE_KEY)) {
             return (array)$this->getCache()->get(self::CONFIGURATION_CACHE_KEY);
@@ -197,8 +205,10 @@ class SiteData extends ContainerAwareObject
      * @param integer|null $website_id
      * @param string|null $locale
      * @return mixed
-     * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getConfigValue($config_path, $website_id = null, $locale = null)
     {
@@ -240,6 +250,8 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getHomePageId($website_id = null, $locale = null)
     {
@@ -257,8 +269,10 @@ class SiteData extends ContainerAwareObject
      * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getHomePageRedirectsToLanguage($website_id = null)
+    public function getHomePageRedirectsToLanguage($website_id = null): bool
     {
         return boolval($this->getConfigValue(self::HOMEPAGE_REDIRECTS_TO_LANGUAGE_PATH, $website_id));
     }
@@ -270,8 +284,10 @@ class SiteData extends ContainerAwareObject
      * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getShowLogoOnMenu($website_id = null)
+    public function getShowLogoOnMenu($website_id = null): bool
     {
         return boolval($this->getConfigValue(self::MENU_LOGO_PATH, $website_id));
     }
@@ -283,6 +299,8 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getSiteEmail($website_id = null)
     {
@@ -296,6 +314,8 @@ class SiteData extends ContainerAwareObject
      * @return false|string[]
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getSiteLocales($website_id = null)
     {
@@ -310,12 +330,13 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getMainMenuName($website_id = null, $locale = null)
     {
         return $this->getConfigValue(self::MAINMENU_PATH, $website_id, $locale);
     }
-
 
     /**
      * gets main menu name
@@ -325,13 +346,26 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getThemeName($website_id = null, $locale = null)
     {
         return $this->getConfigValue(self::THEMENAME_PATH, $website_id, $locale);
     }
 
-    public function getDateFormat($website_id = null, $locale = null)
+    /**
+     * gets date format string
+     *
+     * @param null $website_id
+     * @param null $locale
+     * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    public function getDateFormat($website_id = null, $locale = null): string
     {
         $date_format = $this->getSiteData()->getConfigValue(self::DATE_FORMAT_PATH, $website_id, $locale);
         return $date_format ?: 'Y-m-d';

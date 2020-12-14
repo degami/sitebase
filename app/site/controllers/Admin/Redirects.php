@@ -28,7 +28,7 @@ class Redirects extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -38,7 +38,7 @@ class Redirects extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_rewrites';
     }
@@ -48,7 +48,7 @@ class Redirects extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return Redirect::class;
     }
@@ -58,7 +58,7 @@ class Redirects extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'redirect_id';
     }
@@ -196,7 +196,7 @@ class Redirects extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -214,7 +214,7 @@ class Redirects extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($redirect) {

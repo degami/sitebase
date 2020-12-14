@@ -68,9 +68,8 @@ class CookieNotice extends BaseCodeBlock
      * @param BasePage|null $current_page
      * @param array $data
      * @return string
-     * @throws BasicException
      */
-    public function renderHTML(BasePage $current_page = null, $data = [])
+    public function renderHTML(BasePage $current_page = null, $data = []): string
     {
         if (
             $current_page instanceof BasePage &&
@@ -124,9 +123,11 @@ class CookieNotice extends BaseCodeBlock
      * @param $form_state
      * @param $default_values
      * @return array
+     * @throws BasicException
      * @throws FAPI\Exceptions\FormException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
      */
-    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values)
+    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array
     {
         $config_fields = [];
 

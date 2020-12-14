@@ -51,18 +51,10 @@ class Block extends CodeGeneratorCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-        $classname = $input->getOption('classname');
-        while (trim($classname) == '') {
-            $question = new Question('Class Name (starting from ' . static::BASE_NAMESPACE . ')? ');
-            $classname = $helper->ask($input, $output, $question);
-        }
-
+        $classname = $this->keepAskingForOption('classname', 'Class Name (starting from ' . static::BASE_NAMESPACE . ')? ');
         $this->addClass(static::BASE_NAMESPACE . $classname, $this->getFileContents($classname));
 
-        $question = new ConfirmationQuestion('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ', false);
-        if (!$helper->ask($input, $output, $question)) {
-            $output->writeln('<info>Not Saving</info>');
+        if (!$this->confirmSave('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ')) {
             return;
         }
 
@@ -82,18 +74,18 @@ class Block extends CodeGeneratorCommand
      * @param string $className
      * @return string
      */
-    protected function getFileContents($className)
+    protected function getFileContents($className): string
     {
         return "<?php
 
 namespace App\\Site\\Blocks;
 
-use \\App\\Base\\Abstracts\\BaseCodeBlock;
-use \\App\\Base\\Abstracts\\BasePage;
+use \\App\\Base\\Abstracts\\Blocks\\BaseCodeBlock;
+use \\App\\Base\\Abstracts\\Controllers\\BasePage;
 
 class " . $className . " extends BaseCodeBlock
 {
-    public function renderHTML(BasePage \$current_page)
+    public function renderHTML(BasePage \$current_page): string
     {
         return \"\";
     }

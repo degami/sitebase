@@ -27,7 +27,7 @@ class PageMedia extends AdminJsonPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'json/page/{id:\d+}/media';
     }
@@ -37,7 +37,7 @@ class PageMedia extends AdminJsonPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_pages';
     }
@@ -47,8 +47,10 @@ class PageMedia extends AdminJsonPage
      *
      * @return array
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getJsonData()
+    protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
         $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $route_data['id']]);

@@ -27,6 +27,8 @@ class MigrateOptionals extends Migrate
      * @param string|null $name
      * @param ContainerInterface|null $container
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {

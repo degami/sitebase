@@ -28,7 +28,7 @@ class MediaPages extends AdminJsonPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'json/media/{id:\d+}/pages';
     }
@@ -38,7 +38,7 @@ class MediaPages extends AdminJsonPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_medias';
     }
@@ -48,15 +48,17 @@ class MediaPages extends AdminJsonPage
      *
      * @return array
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getJsonData()
+    protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
         $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $route_data['id']]);
 
         $pages = array_map(
             function ($el) use ($media) {
-                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                 return $page->getTitle() .
                     ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('admin.json.mediapages', ['id' => $media->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=media_deassoc">&times;</a>';
             },
@@ -65,7 +67,7 @@ class MediaPages extends AdminJsonPage
 
         $pagesData = array_map(
             function ($el) {
-                $page = $this->getContainer()->make(Page::class, ['dbrow' => $el]);
+                $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                 return $page->getData();
             },
             $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll()

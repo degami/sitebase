@@ -30,14 +30,14 @@ class Profile extends LoggedUserFormPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * {@inheritdocs}
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'users/profile';
     }
@@ -47,7 +47,7 @@ class Profile extends LoggedUserFormPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'profile';
     }
@@ -57,7 +57,7 @@ class Profile extends LoggedUserFormPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'view_logged_site';
     }
@@ -66,13 +66,15 @@ class Profile extends LoggedUserFormPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        $this->templateData += [
+        $this->template_data += [
             'current_user' => $this->getCurrentUser(),
         ];
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
@@ -83,6 +85,8 @@ class Profile extends LoggedUserFormPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -172,6 +176,8 @@ class Profile extends LoggedUserFormPage
      * @param array $form_state
      * @return mixed|RedirectResponse|Response
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -205,7 +211,7 @@ class Profile extends LoggedUserFormPage
      * @return string
      * @throws BasicException
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return $this->getUtils()->translate('User profile');
     }

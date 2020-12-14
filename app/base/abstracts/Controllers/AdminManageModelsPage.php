@@ -43,14 +43,18 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
+     * @throws BasicException
      * @throws FormException
      * @throws PermissionDeniedException
-     * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Degami\SqlSchema\Exceptions\OutOfRangeException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         parent::__construct($container, $request, $route_info);
-        if ($this->templateData['action'] == 'list') {
+        if ($this->template_data['action'] == 'list') {
             $this->addNewButton();
 
             $paginate_params = [
@@ -81,7 +85,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             }
 
             $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], $paginate_params);
-            $this->templateData += [
+            $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
                 'current_page' => $data['page'],
@@ -95,7 +99,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @return array|null
      */
-    protected function getSearchParameters()
+    protected function getSearchParameters(): ?array
     {
         $out = array_filter([
             'like' => $this->getRequest()->query->get('search'),
@@ -109,8 +113,10 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * gets model object (loaded or new)
      *
      * @return mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function getObject()
+    public function getObject(): ?BaseModel
     {
         if (($this->objectInstance != null) && (is_subclass_of($this->objectInstance, $this->getObjectClass()))) {
             return $this->objectInstance;
@@ -130,7 +136,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @return string
      */
-    public function getTable()
+    public function getTable(): ?string
     {
         if (!is_null($this->getTemplate())) {
             return $this->getTemplate()->data()['table'] ?? null;
@@ -144,7 +150,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @return string
      */
-    public function getPaginator()
+    public function getPaginator(): ?string
     {
         if (!is_null($this->getTemplate())) {
             return $this->getTemplate()->data()['paginator'] ?? null;
@@ -158,7 +164,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @return array|null
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return null;
     }
@@ -169,7 +175,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param array $data
      * @return array
      */
-    abstract protected function getTableElements($data);
+    abstract protected function getTableElements($data): array;
 
     /**
      * loads object by id
@@ -177,7 +183,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param integer $id
      * @return BaseModel
      */
-    protected function loadObject($id)
+    protected function loadObject($id): ?BaseModel
     {
         if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
             return null;
@@ -190,8 +196,10 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * gets new empty model
      *
      * @return BaseModel
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function newEmptyObject()
+    protected function newEmptyObject(): ?BaseModel
     {
         if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
             return null;
@@ -202,6 +210,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
     /**
      * adds a "new" button
+     *
      * @throws BasicException
      */
     public function addNewButton()
@@ -220,7 +229,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param string $title
      * @return string
      */
-    public function getActionButton($action, $object_id, $class, $icon, $title = '')
+    public function getActionButton($action, $object_id, $class, $icon, $title = ''): string
     {
         try {
             $button = new TagElement(
@@ -248,7 +257,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param integer $object_id
      * @return string
      */
-    public function getDeleteButton($object_id)
+    public function getDeleteButton($object_id): string
     {
         return $this->getActionButton('delete', $object_id, 'danger', 'trash', 'Delete');
     }
@@ -259,7 +268,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param integer $object_id
      * @return string
      */
-    public function getEditButton($object_id)
+    public function getEditButton($object_id): string
     {
         return $this->getActionButton('edit', $object_id, 'primary', 'edit', 'Edit');
     }
@@ -274,7 +283,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @throws BasicException
      * @throws Exception
      */
-    public function getFrontendModelButton(FrontendModel $object, $class = 'light', $icon = 'zoom-in')
+    public function getFrontendModelButton(FrontendModel $object, $class = 'light', $icon = 'zoom-in'): string
     {
         $button = (string)(new TagElement(
             [
@@ -298,7 +307,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param $admin_action_log_data
      * @return $this
      */
-    public function setAdminActionLogData($admin_action_log_data)
+    public function setAdminActionLogData($admin_action_log_data): AdminManageModelsPage
     {
         $this->admin_action_log_data = $admin_action_log_data;
 
@@ -310,7 +319,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @return array|null
      */
-    public function getAdminActionLogData()
+    public function getAdminActionLogData(): ?array
     {
         return $this->admin_action_log_data;
     }
@@ -330,12 +339,12 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @return string
      */
-    abstract public function getObjectClass();
+    abstract public function getObjectClass(): string;
 
     /**
      * defines object id query param name
      *
      * @return string
      */
-    abstract protected function getObjectIdQueryParam();
+    abstract protected function getObjectIdQueryParam(): string;
 }

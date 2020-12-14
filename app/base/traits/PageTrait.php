@@ -52,7 +52,7 @@ trait PageTrait
      * @param string $username
      * @return string
      */
-    public function calcTokenId($uid, $username)
+    public function calcTokenId($uid, $username): string
     {
         $string = $uid . $username;
         if ($this instanceof ContainerAwareObject) {
@@ -67,7 +67,7 @@ trait PageTrait
      *
      * @return string
      */
-    protected function getTokenHeader()
+    protected function getTokenHeader(): ?string
     {
         $token = $this->getRequest()->headers->get('Authorization');
         return $token ?: $this->getRequest()->cookies->get('Authorization');
@@ -78,7 +78,7 @@ trait PageTrait
      *
      * @return Token
      */
-    protected function getToken()
+    protected function getToken(): Token
     {
         $auth_token = $this->getTokenHeader();
         return $this->getContainer()->get('jwt:parser')->parse((string)$auth_token);
@@ -89,8 +89,10 @@ trait PageTrait
      *
      * @param $token
      * @return ValidationData
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    protected function getTokenValidationData($token)
+    protected function getTokenValidationData($token): ValidationData
     {
         $data = $this->getContainer()->make(ValidationData::class);
         $data->setIssuer($this->getContainer()->get('jwt_issuer'));
@@ -109,8 +111,10 @@ trait PageTrait
      *
      * @param Token $token
      * @return boolean
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function tokenIsActive($token)
+    public function tokenIsActive($token): bool
     {
         $data = $this->getTokenValidationData($token);
         if ($token->validate($data) && !$token->isExpired()) {
@@ -146,6 +150,8 @@ trait PageTrait
      *
      * @param false $reset
      * @return User|GuestUser|null
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getCurrentUser($reset = false)
     {
@@ -176,8 +182,9 @@ trait PageTrait
      *
      * @param string $permission_name
      * @return boolean
+     * @throws BasicException
      */
-    public function checkPermission($permission_name)
+    public function checkPermission($permission_name): bool
     {
         try {
             return ($this->getCurrentUser() instanceof AccountModel) && $this->getCurrentUser()->checkPermission($permission_name);
@@ -192,8 +199,10 @@ trait PageTrait
      * checks if user is logged in
      *
      * @return boolean
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function hasLoggedUser()
+    public function hasLoggedUser(): bool
     {
         return is_object($this->getCurrentUser()) && isset($this->getCurrentUser()->id) && $this->getCurrentUser()->id > 0;
     }
@@ -205,7 +214,7 @@ trait PageTrait
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function isHomePage()
+    public function isHomePage(): bool
     {
         if ($this instanceof Page) {
             if ($this->getObject() instanceof PageModel && $this->getObject()->isLoaded()) {

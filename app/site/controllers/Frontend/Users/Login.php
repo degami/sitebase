@@ -31,7 +31,7 @@ class Login extends FormPage
     /**
      * @var array template data
      */
-    protected $templateData = [];
+    protected $template_data = [];
 
     /**
      * @var string locale
@@ -43,7 +43,7 @@ class Login extends FormPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'login';
     }
@@ -53,7 +53,7 @@ class Login extends FormPage
      *
      * @return string
      */
-    public static function getRouteGroup()
+    public static function getRouteGroup(): ?string
     {
         return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/' . getenv('LOGGEDPAGES_GROUP') : null;
     }
@@ -63,7 +63,7 @@ class Login extends FormPage
      *
      * @return string
      */
-    public static function getRoutePath()
+    public static function getRoutePath(): string
     {
         return 'login';
     }
@@ -73,7 +73,7 @@ class Login extends FormPage
      *
      * @return array
      */
-    public static function getRouteVerbs()
+    public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -83,9 +83,9 @@ class Login extends FormPage
      *
      * @return array
      */
-    protected function getTemplateData()
+    protected function getTemplateData(): array
     {
-        return $this->templateData;
+        return $this->template_data;
     }
 
     /**
@@ -93,7 +93,7 @@ class Login extends FormPage
      *
      * @return boolean
      */
-    public function showMenu()
+    public function showMenu(): bool
     {
         return true;
     }
@@ -103,7 +103,7 @@ class Login extends FormPage
      *
      * @return boolean
      */
-    public function showBlocks()
+    public function showBlocks(): bool
     {
         return true;
     }
@@ -123,7 +123,7 @@ class Login extends FormPage
         }
 
         if ($this->isSubmitted()) {
-            $result = $this->templateData['form']->getSubmitResults(static::class . '::formSubmitted');
+            $result = $this->template_data['form']->getSubmitResults(static::class . '::formSubmitted');
             $token = $this->getContainer()->get('jwt:parser')->parse($result);
 
             $goto_url = $this->getUrl("frontend.users.profile");
@@ -151,6 +151,8 @@ class Login extends FormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -180,6 +182,8 @@ class Login extends FormPage
      * @param array     &$form_state
      * @return boolean|string
      * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -193,7 +197,7 @@ class Login extends FormPage
         if (!$user) {
             return $this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale());
         } else {
-            $form_state['logged_user'] = $this->getContainer()->make(User::class, ['dbrow' => $user]);
+            $form_state['logged_user'] = $this->getContainer()->make(User::class, ['db_row' => $user]);
 
             // dispatch "user_logged_in" event
             $this->getApp()->event('user_logged_in', [
@@ -223,7 +227,7 @@ class Login extends FormPage
      * @return string
      * @throws BasicException
      */
-    public function getRouteName()
+    public function getRouteName(): string
     {
         return $this->getUtils()->translate('Login');
     }

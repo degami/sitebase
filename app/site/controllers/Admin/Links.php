@@ -30,7 +30,7 @@ class Links extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getTemplateName()
+    protected function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -40,7 +40,7 @@ class Links extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission()
+    protected function getAccessPermission(): string
     {
         return 'administer_links';
     }
@@ -50,7 +50,7 @@ class Links extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass()
+    public function getObjectClass(): string
     {
         return LinkExchange::class;
     }
@@ -60,7 +60,7 @@ class Links extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getObjectIdQueryParam()
+    protected function getObjectIdQueryParam(): string
     {
         return 'link_id';
     }
@@ -254,7 +254,7 @@ class Links extends AdminManageFrontendModelsPage
      *
      * @return array
      */
-    protected function getTableHeader()
+    protected function getTableHeader(): ?array
     {
         return [
             'ID' => 'id',
@@ -274,7 +274,7 @@ class Links extends AdminManageFrontendModelsPage
      * @return array
      * @throws BasicException
      */
-    protected function getTableElements($data)
+    protected function getTableElements($data): array
     {
         return array_map(
             function ($link) {

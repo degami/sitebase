@@ -33,7 +33,7 @@ class CreateSitemapsTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '04_' . parent::getName();
     }
@@ -46,7 +46,7 @@ class CreateSitemapsTableMigration extends DBMigration
      * @throws EmptyException
      * @throws DuplicateException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])

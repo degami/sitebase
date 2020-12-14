@@ -40,7 +40,7 @@ abstract class BaseMigration extends ContainerAwareObject implements MigrationIn
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return ClassFunctions::short($this);
     }

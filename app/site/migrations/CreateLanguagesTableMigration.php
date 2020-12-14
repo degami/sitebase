@@ -33,7 +33,7 @@ class CreateLanguagesTableMigration extends DBMigration
      *
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return '00.0_' . parent::getName();
     }
@@ -46,7 +46,7 @@ class CreateLanguagesTableMigration extends DBMigration
      * @throws EmptyException
      * @throws DuplicateException
      */
-    public function addDBTableDefinition(Table $table)
+    public function addDBTableDefinition(Table $table): Table
     {
         $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('locale', 'VARCHAR', [10])

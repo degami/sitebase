@@ -178,7 +178,7 @@ abstract class BaseRestPage extends BasePage
                     ->setData($old_data);
         }
 
-        return $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 500]);
+        return $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 500, 'route_info' => $route_info]);
     }
 
     /**

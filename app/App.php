@@ -326,14 +326,14 @@ class App extends ContainerAwareObject
         } catch (BlockedIpException $e) {
             $response = $this->getContainer()->call([$this->getUtils(), 'blockedIpPage']);
         } catch (NotFoundException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $routeInfo]);
         } catch (PermissionDeniedException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $routeInfo]);
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'template_data' => ['allowedMethods' => $allowedMethods]]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $routeInfo, 'template_data' => ['allowedMethods' => $allowedMethods]]);
         } catch (BasicException | Exception $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $routeInfo]);
         }
 
         // dispatch "before_send" event

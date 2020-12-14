@@ -47,7 +47,6 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <tr>
         <th>Url</th>
         <th>Visits</th>
-        <th>Whois</th>
         </tr>
     </thead>
     <tbody>
@@ -55,7 +54,6 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         <tr>
             <td><a href="<?= $this->sitebase()->getUrl('admin.logs').'?'.http_build_query(['logtype' => 'request', 'search' => ['url' => $row['url']]]) ?>"><?= $row['url'];?></a></td>
             <td><?= $row['cnt'];?></td>
-            <td><a class="btn btn-info btn-sm" href="https://www.whois.com/whois/<?= $row['ip_address'];?>" target="_blank"><?php $this->sitebase()->drawIcon('help-circle');?></a></td>
         </tr>
     <?php endforeach;?>
     </tbody>

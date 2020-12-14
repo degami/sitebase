@@ -15,6 +15,7 @@ namespace App\Base\Tools\Utils;
 use \App\Base\Abstracts\ContainerAwareObject;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use FastRoute\Dispatcher;
 use GuzzleHttp\Exception\GuzzleException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Response;
@@ -173,6 +174,7 @@ class Globals extends ContainerAwareObject
      *
      * @param integer $error_code
      * @param Request|null $request
+     * @param RouteInfo|null $route_info
      * @param array $template_data
      * @param string|null $template_name
      * @return Response
@@ -180,15 +182,18 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function errorPage($error_code, Request $request, $template_data = [], $template_name = null): Response
+    public function errorPage($error_code, Request $request, RouteInfo $route_info = null, $template_data = [], $template_name = null): Response
     {
         $this->logRequestIfNeeded($error_code, $request);
 
+        if ($route_info == null) {
+            $route_info = $this->getEmptyRouteInfo();
+        }
         if (!is_array($template_data)) {
             $template_data = [$template_data];
         }
         if (!isset($template_data['controller'])) {
-            $template_data['controller'] = $this->getContainer()->make(NullPage::class);
+            $template_data['controller'] = $this->getContainer()->make(NullPage::class, ['request' => $request,'route_info' => $route_info]);
         }
         if (!isset($template_data['body_class'])) {
             $template_data['body_class'] = 'error';
@@ -207,7 +212,7 @@ class Globals extends ContainerAwareObject
                 ));
             case 503:
                 $template = $this->getTemplates()->make($template_name ?: 'errors::offline');
-                $template_data['body_class'] = 'manteinance';
+                $template_data['body_class'] = 'maintenance';
                 $template->data($template_data);
 
                 return (new Response(
@@ -237,37 +242,50 @@ class Globals extends ContainerAwareObject
      *
      * @param Throwable $exception
      * @param Request|null $request
+     * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function exceptionPage(Throwable $exception, Request $request): Response
+    public function exceptionPage(Throwable $exception, Request $request, RouteInfo $route_info = null): Response
     {
         $this->logException($exception, null, $request);
+
+        if ($route_info == null) {
+            $route_info = $this->getEmptyRouteInfo();
+        }
 
         $template_data = [
             'e' => $exception,
         ];
 
-        return $this->errorPage(500, $request, $template_data, 'errors::exception');
+        return $this->errorPage(500, $request, $route_info, $template_data, 'errors::exception');
     }
 
     /**
      * returns a blocked ip exception error page
      *
      * @param Request $request
+     * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function blockedIpPage(Request $request): Response
+    public function blockedIpPage(Request $request, RouteInfo $route_info = null): Response
     {
         $template_data = [
             'ip_addr' => $request->getClientIp(),
         ];
 
-        return $this->errorPage(503, $request, $template_data, 'errors::blocked');
+        if ($route_info == null) {
+            $route_info = $this->getEmptyRouteInfo();
+        }
+
+        return $this->errorPage(503, $request, $route_info, $template_data, 'errors::blocked');
     }
 
     /**
@@ -337,16 +355,55 @@ class Globals extends ContainerAwareObject
     }
 
     /**
+     * gets an empty RouteInfo object
+     *
+     * @return mixed
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     */
+    protected function getEmptyRouteInfo()
+    {
+        $http_method = $_SERVER['REQUEST_METHOD'];
+        $request_uri = $_SERVER['REQUEST_URI'];
+
+        // Fetch method and URI from somewhere
+        $parsed = parse_url($request_uri);
+
+        // Strip query string (?foo=bar) and decode URI
+        $uri = rawurldecode($parsed['path']);
+        $route = $uri;
+        $route_name = null;
+        $rewrite_id = null;
+
+        // return a RouteInfo instance
+        return $this->getContainer()->make(RouteInfo::class, [
+            'dispatcher_info' => [Dispatcher::NOT_FOUND],
+            'http_method' => $http_method,
+            'uri' => $uri,
+            'route' => $route,
+            'route_name' => $route_name,
+            'rewrite' => $rewrite_id,
+        ]);
+    }
+
+    /**
      * returns a "site is offline" error page
      *
      * @param Request|null $request
+     * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
      */
-    public function offlinePage(Request $request): Response
+    public function offlinePage(Request $request, RouteInfo $route_info = null): Response
     {
-        return $this->errorPage(503, $request);
+        if ($route_info == null) {
+            $route_info = $this->getEmptyRouteInfo();
+        }
+        return $this->errorPage(503, $request, $route_info);
     }
 
     /**

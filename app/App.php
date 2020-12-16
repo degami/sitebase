@@ -196,6 +196,7 @@ class App extends ContainerAwareObject
         }
 
         $response = null;
+        $routeInfo = null;
         try {
             $website = null;
             if (php_sapi_name() == 'cli-server') {
@@ -211,31 +212,14 @@ class App extends ContainerAwareObject
 
             // preload configuration
             $cached_configuration = [];
-            // $results = $this->getDb()->table('configuration')->fetchAll();
-
             $results = $this->getContainer()->call([Configuration::class, 'all']);
             foreach ($results as $result) {
                 $cached_configuration[$result->website_id][$result->path][$result->locale ?? 'default'] = $result->value;
             }
             $this->getCache()->set(SiteData::CONFIGURATION_CACHE_KEY, $cached_configuration);
 
-            $redirects = [];
-            $redirects_key = "site." . $current_website_id . ".redirects";
-            if (!$this->getCache()->has($redirects_key)) {
-                $redirect_models = $this->getContainer()->call([Redirect::class, 'where'], ['condition' => ['website_id' => $current_website_id]]);
-                foreach ($redirect_models as $redirect_model) {
-                    $redirects[$redirect_model->getUrlFrom()] = [
-                        'url_to' => $redirect_model->getUrlTo(),
-                        'redirect_code' => $redirect_model->getRedirectCode(),
-                    ];
-                }
-                $this->getCache()->set($redirects_key, $redirects);
-            } else if ($this->getCurrentWebsiteId()) {
-                $redirects = $this->getCache()->get($redirects_key);
-            }
-
+            $redirects = $this->getRedirects($current_website_id);
             $redirect_key = urldecode($_SERVER['REQUEST_URI']);
-
             if (isset($redirects[$redirect_key])) {
                 // redirect is not needed if site is offline
                 if ($this->isSiteOffline()) {
@@ -326,14 +310,14 @@ class App extends ContainerAwareObject
         } catch (BlockedIpException $e) {
             $response = $this->getContainer()->call([$this->getUtils(), 'blockedIpPage']);
         } catch (NotFoundException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $routeInfo]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getRouteInfo()]);
         } catch (PermissionDeniedException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $routeInfo]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $this->getRouteInfo()]);
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $routeInfo, 'template_data' => ['allowedMethods' => $allowedMethods]]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
         } catch (BasicException | Exception $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $routeInfo]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getRouteInfo()]);
         }
 
         // dispatch "before_send" event
@@ -352,6 +336,36 @@ class App extends ContainerAwareObject
         if ($response instanceof Response) {
             $response->send();
         }
+    }
+
+    /**
+     * gets defined redirects
+     *
+     * @param $current_website_id
+     * @return array|mixed
+     * @throws BasicException
+     * @throws \DI\DependencyException
+     * @throws \DI\NotFoundException
+     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     */
+    protected function getRedirects($current_website_id): array
+    {
+        $redirects = [];
+        $redirects_key = "site." . $current_website_id . ".redirects";
+        if (!$this->getCache()->has($redirects_key)) {
+            $redirect_models = $this->getContainer()->call([Redirect::class, 'where'], ['condition' => ['website_id' => $current_website_id]]);
+            foreach ($redirect_models as $redirect_model) {
+                $redirects[$redirect_model->getUrlFrom()] = [
+                    'url_to' => $redirect_model->getUrlTo(),
+                    'redirect_code' => $redirect_model->getRedirectCode(),
+                ];
+            }
+            $this->getCache()->set($redirects_key, $redirects);
+        } else if ($this->getCurrentWebsiteId()) {
+            $redirects = $this->getCache()->get($redirects_key);
+        }
+
+        return $redirects;
     }
 
     /**

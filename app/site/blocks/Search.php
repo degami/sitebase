@@ -59,12 +59,13 @@ class Search extends BaseCodeBlock
             $form_content->addChild($input);
 
             $button = $this->getContainer()->make(TagElement::class, ['options' => [
-                'tag' => 'input',
+                'tag' => 'button',
                 'type' => 'submit',
                 'value' => $this->getUtils()->translate('Search'),
                 'attributes' => [
                     'class' => 'btn searchbtn',
                 ],
+                'text' => $this->getUtils()->getIcon('search'),
             ]]);
 
             $div = $this->getContainer()->make(TagElement::class, ['options' => [

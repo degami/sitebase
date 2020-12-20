@@ -205,7 +205,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             TagElement::class,
             ['options' => [
                 'tag' => 'nav',
-                'attributes' => ['class' => 'navbar navbar-expand-lg navbar-light bg-light'],
+                'attributes' => ['class' => 'navbar navbar-expand-lg navbar-light'],
             ]]
         );
 

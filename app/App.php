@@ -335,6 +335,10 @@ class App extends ContainerAwareObject
 
         if ($response instanceof Response) {
             $response->send();
+        } else {
+            // fallback to 404
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getRouteInfo()]);
+            $response->send();
         }
     }
 
@@ -361,7 +365,7 @@ class App extends ContainerAwareObject
                 ];
             }
             $this->getCache()->set($redirects_key, $redirects);
-        } else if ($this->getCurrentWebsiteId()) {
+        } else if ($current_website_id) {
             $redirects = $this->getCache()->get($redirects_key);
         }
 

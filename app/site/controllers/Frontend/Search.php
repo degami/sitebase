@@ -109,6 +109,10 @@ class Search extends FrontendPage
      */
     protected function getSearchResult($search_query = null, $page = 0): array
     {
+        if ($search_query == null) {
+            return [];
+        }
+
         $client = $this->getElasticsearch();
 
         $params = [

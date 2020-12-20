@@ -4,7 +4,6 @@ $lightgrey: #eaeaea;
 
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:100,300,400,600");
-
 @import "../node_modules/select2/src/scss/core";
 @import '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
@@ -79,6 +78,29 @@ ul.breadcrumbs {
         }
     }
 }
+
+
+.menu {
+    display: flex;
+    justify-content: space-around;
+    background-color: #f8f9fa !important;
+
+    @media all and (max-width: 991px) {
+        flex-direction: column;
+    }
+
+
+    .searchform-mini {
+        align-self: center;
+
+        @media all and (max-width: 991px) {
+            align-self: flex-start;
+            width: 100%;
+        }
+    }
+}
+
+
 
 .footer {
     margin-top: 20px;

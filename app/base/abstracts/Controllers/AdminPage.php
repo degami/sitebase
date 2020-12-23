@@ -13,6 +13,8 @@
 namespace App\Base\Abstracts\Controllers;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -55,8 +57,8 @@ abstract class AdminPage extends BaseHtmlPage
      * @param Request|null $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -82,6 +84,7 @@ abstract class AdminPage extends BaseHtmlPage
      * before render hook
      *
      * @return Response|self
+     * @throws BasicException
      * @throws PermissionDeniedException
      */
     protected function beforeRender()
@@ -129,6 +132,8 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return Template
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function prepareTemplate(): Template
     {
@@ -159,6 +164,8 @@ abstract class AdminPage extends BaseHtmlPage
      * {@inheritdocs}
      *
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getBaseTemplateData(): array
     {
@@ -183,6 +190,8 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentLocale(): ?string
     {
@@ -199,6 +208,8 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @param array|null $query_params
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function addBackButton($query_params = null)
     {

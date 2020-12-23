@@ -16,6 +16,8 @@ use App\Site\Controllers\Admin\Media;
 use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * media for page JSON
@@ -47,8 +49,8 @@ class PageMedia extends AdminJsonPage
      *
      * @return array
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getJsonData(): array
     {

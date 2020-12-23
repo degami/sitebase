@@ -13,7 +13,9 @@
 namespace App\Site\Commands\App;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -38,8 +40,8 @@ class Routes extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
-     * @throws \App\Base\Exceptions\InvalidValueException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws InvalidValueException
+     * @throws PhpfastcacheSimpleCacheException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

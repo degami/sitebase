@@ -14,6 +14,8 @@ namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Element;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
@@ -75,6 +77,8 @@ class Sitemaps extends AdminManageModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -225,7 +229,7 @@ class Sitemaps extends AdminManageModelsPage
      * @param array|null $component
      * @return Element
      */
-    private function addComponent($form_component, $index, $sitemap, $component = null): Element
+    private function addComponent(Element $form_component, int $index, Sitemap $sitemap, $component = null): Element
     {
         if (is_null($component)) {
             $component = [
@@ -301,8 +305,8 @@ class Sitemaps extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -314,13 +318,13 @@ class Sitemaps extends AdminManageModelsPage
         $values = $form->values();
         switch ($values['action']) {
             case 'new':
-                $sitemap->user_id = $this->getCurrentUser()->id;
+                $sitemap->setUserId($this->getCurrentUser()->getId());
             // intentional fall trough
             // no break
             case 'edit':
-                $sitemap->title = $values['title'];
-                $sitemap->website_id = $values['website_id'];
-                $sitemap->locale = $values['locale'];
+                $sitemap->setTitle($values['title']);
+                $sitemap->setWebsiteId($values['website_id']);
+                $sitemap->setLocale($values['locale']);
 
                 $sitemap->persist();
 
@@ -388,7 +392,7 @@ class Sitemaps extends AdminManageModelsPage
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($sitemap) {

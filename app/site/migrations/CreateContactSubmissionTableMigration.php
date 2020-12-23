@@ -48,7 +48,8 @@ class CreateContactSubmissionTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
+        $table
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('contact_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')

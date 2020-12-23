@@ -48,7 +48,8 @@ class CreateCronLogTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
+        $table
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('run_time', 'TIMESTAMP')
             ->addColumn('duration', 'FLOAT', null, ['UNSIGNED'])
             ->addColumn('tasks', 'VARCHAR', [1024])

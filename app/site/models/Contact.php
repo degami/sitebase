@@ -102,11 +102,11 @@ class Contact extends FrontendModel
     /**
      * gets contact form specific submission
      *
-     * @param integer $submission_id
+     * @param int $submission_id
      * @return array
      * @throws Exception
      */
-    public function getContactSubmission($submission_id): array
+    public function getContactSubmission(int $submission_id): array
     {
         $this->checkLoaded();
 

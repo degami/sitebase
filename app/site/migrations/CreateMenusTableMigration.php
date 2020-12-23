@@ -48,7 +48,8 @@ class CreateMenusTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
+        $table
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('parent_id', 'INT', null, ['UNSIGNED'], 'NULL')
             ->addColumn('position', 'INT', null, ['UNSIGNED'])

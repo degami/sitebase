@@ -61,7 +61,7 @@ class Collection extends GenkgoMigrationCollection
     }
 
     /**
-     * detach miggration
+     * detach migration
      *
      * @param MigrationInterface $migration
      */
@@ -80,7 +80,7 @@ class Collection extends GenkgoMigrationCollection
      * @param  $namespace
      * @return $this
      */
-    public function setNamespace($namespace)
+    public function setNamespace($namespace): Collection
     {
         $this->namespace = $namespace;
         return $this;
@@ -91,7 +91,7 @@ class Collection extends GenkgoMigrationCollection
      *
      * @return string
      */
-    public function getNamespace()
+    public function getNamespace(): string
     {
         return $this->namespace;
     }
@@ -102,7 +102,7 @@ class Collection extends GenkgoMigrationCollection
      * @param int $direction
      * @return Log
      */
-    public function migrate($direction = MigrationInterface::DIRECTION_UP)
+    public function migrate($direction = MigrationInterface::DIRECTION_UP): Log
     {
         $result = new Log();
 
@@ -163,7 +163,7 @@ class Collection extends GenkgoMigrationCollection
      *
      * @return int
      */
-    public function count()
+    public function count(): int
     {
         return count($this->list);
     }

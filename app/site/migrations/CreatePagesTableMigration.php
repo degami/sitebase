@@ -48,7 +48,8 @@ class CreatePagesTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
+        $table
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('url', 'VARCHAR', [64])
             ->addColumn('locale', 'VARCHAR', [10])

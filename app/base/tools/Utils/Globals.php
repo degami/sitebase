@@ -13,11 +13,13 @@
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
-use App\Site\Routing\RouteInfo;
-use Degami\Basics\Exceptions\BasicException;
-use FastRoute\Dispatcher;
-use GuzzleHttp\Exception\GuzzleException;
-use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use \App\Site\Routing\RouteInfo;
+use \Degami\Basics\Exceptions\BasicException;
+use \DI\DependencyException;
+use \DI\NotFoundException;
+use \FastRoute\Dispatcher;
+use \GuzzleHttp\Exception\GuzzleException;
+use \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Site\Models\Menu;
@@ -27,14 +29,13 @@ use \App\Site\Models\QueueMessage;
 use \App\Base\Controllers\Dummy\NullPage;
 use \Exception;
 use \Spatie\ArrayToXml\ArrayToXml;
-use Throwable;
+use \Throwable;
 
 /**
  * Global utils functions Helper Class
  */
 class Globals extends ContainerAwareObject
 {
-
     /**
      * get page regions list
      *
@@ -74,8 +75,8 @@ class Globals extends ContainerAwareObject
      * @param string|null $locale
      * @return array
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getAllPageBlocks($locale = null): array
     {
@@ -119,6 +120,8 @@ class Globals extends ContainerAwareObject
      * @param integer|null $website_id
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function getSiteLanguagesSelectOptions($website_id = null): array
@@ -147,6 +150,8 @@ class Globals extends ContainerAwareObject
      * @param $status_code
      * @param Request $request
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     protected function logRequestIfNeeded($status_code, Request $request)
@@ -182,7 +187,7 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function errorPage($error_code, Request $request, RouteInfo $route_info = null, $template_data = [], $template_name = null): Response
+    public function errorPage(int $error_code, Request $request, RouteInfo $route_info = null, $template_data = [], $template_name = null): Response
     {
         $this->logRequestIfNeeded($error_code, $request);
 
@@ -272,8 +277,8 @@ class Globals extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function blockedIpPage(Request $request, RouteInfo $route_info = null): Response
     {
@@ -295,6 +300,8 @@ class Globals extends ContainerAwareObject
      * @param Request $request
      * @return Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function exceptionJson(Exception $exception, Request $request): Response
@@ -328,6 +335,8 @@ class Globals extends ContainerAwareObject
      * @param Request $request
      * @return Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function exceptionXML(Exception $exception, Request $request): Response
@@ -358,8 +367,8 @@ class Globals extends ContainerAwareObject
      * gets an empty RouteInfo object
      *
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getEmptyRouteInfo()
     {
@@ -395,8 +404,8 @@ class Globals extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function offlinePage(Request $request, RouteInfo $route_info = null): Response
     {
@@ -415,10 +424,10 @@ class Globals extends ContainerAwareObject
      * @param Menu|null $menu_element
      * @return array
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getSiteMenu($menu_name, $website_id, $locale, $menu_element = null): array
+    public function getSiteMenu(string $menu_name, int $website_id, string $locale, $menu_element = null): array
     {
         $out = [];
         if ($menu_element instanceof Menu) {
@@ -450,12 +459,12 @@ class Globals extends ContainerAwareObject
     /**
      * returns site menu
      *
-     * @param $menu_items
+     * @param array $menu_items
      * @param Menu|null $menu_element
      * @return array
      * @throws BasicException
      */
-    public function buildSiteMenu($menu_items, $menu_element = null): array
+    public function buildSiteMenu(array $menu_items, $menu_element = null): array
     {
         $out = [];
         if ($menu_element instanceof Menu) {
@@ -463,7 +472,7 @@ class Globals extends ContainerAwareObject
             $out['title'] = $menu_element->getTitle();
             $out['href'] = $menu_element->getLinkUrl();
             $out['target'] = $menu_element->getTarget();
-            $out['breadcrumb'] = $menu_element->getBreadcumb();
+            $out['breadcrumb'] = $menu_element->getBreadcrumb();
             $out['children'] = [];
             foreach ($menu_items as $child) {
                 /** @var Menu $child */
@@ -506,7 +515,7 @@ class Globals extends ContainerAwareObject
      * @param array $attributes
      * @return string
      */
-    public function getIcon($icon_name, $attributes = []): string
+    public function getIcon(string $icon_name, $attributes = []): string
     {
         return $this->getContainer()->get('icons')->get($icon_name, $attributes, false);
     }
@@ -521,7 +530,7 @@ class Globals extends ContainerAwareObject
      * @throws GuzzleException
      * @throws BasicException
      */
-    public function httpRequest($url, $method = 'GET', array $options = [])
+    public function httpRequest(string $url, $method = 'GET', array $options = [])
     {
         $res = $this->getGuzzle()->request($method, $url, $options);
         if ($res->getStatusCode() == 200) {
@@ -542,10 +551,10 @@ class Globals extends ContainerAwareObject
      * @param string|null $locale
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function translate($string, $locale = null): string
+    public function translate(string $string, $locale = null): string
     {
         if ($locale == null) {
             $locale = $this->getApp()->getCurrentLocale();
@@ -560,7 +569,7 @@ class Globals extends ContainerAwareObject
      * @param string $encoded_pass
      * @return boolean
      */
-    public function checkPass($pass, $encoded_pass): bool
+    public function checkPass(string $pass, string $encoded_pass): bool
     {
         $salt = substr($encoded_pass, strrpos($encoded_pass, ':') + 1);
         return (sha1($salt . $pass) . ':' . $salt) == $encoded_pass;
@@ -573,7 +582,7 @@ class Globals extends ContainerAwareObject
      * @return string
      * @throws BasicException
      */
-    public function getEncodedPass($pass): string
+    public function getEncodedPass(string $pass): string
     {
         return sha1($this->getEnv('SALT') . $pass) . ':' . $this->getEnv('SALT');
     }
@@ -585,8 +594,10 @@ class Globals extends ContainerAwareObject
      * @param mixed $data
      * @return QueueMessage
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function addQueueMessage($queue_name, $data): QueueMessage
+    public function addQueueMessage(string $queue_name, $data): QueueMessage
     {
         $message = $this->getContainer()->call([QueueMessage::class, 'new']);
         $message->setQueueName($queue_name);

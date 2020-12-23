@@ -53,17 +53,16 @@ class Edit extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = $this->getIo();
-
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
-            $io->error('Invalid config id');
+            $this->getIo()->error('Invalid config id');
             return;
         }
 
+        /** @var Configuration $configuration */
         $configuration = $this->getContainer()->call([Configuration::class, 'load'], ['id' => $id]);
         if (!$configuration->isLoaded()) {
-            $io->error('Config does not exists');
+            $this->getIo()->error('Config does not exists');
             return;
         }
 
@@ -74,7 +73,7 @@ class Edit extends BaseCommand
         }
 
         try {
-            $configuration->value = $value;
+            $configuration->setValue($value);
             $configuration->persist();
 
             $output->writeln('<info>Config added</info>');

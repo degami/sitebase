@@ -188,7 +188,7 @@ abstract class BaseHtmlPage extends BasePage
      * @param string $message
      * @return self
      */
-    public function addFlashMessage($type, $message): BaseHtmlPage
+    public function addFlashMessage(string $type, string $message): BaseHtmlPage
     {
         $flash_messages = $this->getFlashMessages();
         $flash_messages[$type][] = $message;

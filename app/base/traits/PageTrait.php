@@ -20,6 +20,8 @@ use \App\Site\Models\GuestUser;
 use \App\Site\Models\User;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\ValidationData;
@@ -52,7 +54,7 @@ trait PageTrait
      * @param string $username
      * @return string
      */
-    public function calcTokenId($uid, $username): string
+    public function calcTokenId(int $uid, string $username): string
     {
         $string = $uid . $username;
         if ($this instanceof ContainerAwareObject) {
@@ -89,8 +91,8 @@ trait PageTrait
      *
      * @param $token
      * @return ValidationData
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTokenValidationData($token): ValidationData
     {
@@ -111,10 +113,10 @@ trait PageTrait
      *
      * @param Token $token
      * @return boolean
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function tokenIsActive($token): bool
+    public function tokenIsActive(Token $token): bool
     {
         $data = $this->getTokenValidationData($token);
         if ($token->validate($data) && !$token->isExpired()) {
@@ -148,12 +150,12 @@ trait PageTrait
     /**
      * gets current user
      *
-     * @param false $reset
+     * @param bool $reset
      * @return User|GuestUser|null
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getCurrentUser($reset = false)
+    public function getCurrentUser(bool $reset = false)
     {
         if (($this->current_user_model instanceof AccountModel) && $reset != true) {
             return $this->current_user_model;
@@ -184,7 +186,7 @@ trait PageTrait
      * @return boolean
      * @throws BasicException
      */
-    public function checkPermission($permission_name): bool
+    public function checkPermission(string $permission_name): bool
     {
         try {
             return ($this->getCurrentUser() instanceof AccountModel) && $this->getCurrentUser()->checkPermission($permission_name);
@@ -199,8 +201,8 @@ trait PageTrait
      * checks if user is logged in
      *
      * @return boolean
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function hasLoggedUser(): bool
     {
@@ -212,6 +214,8 @@ trait PageTrait
      *
      * @return boolean
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function isHomePage(): bool

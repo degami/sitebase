@@ -14,6 +14,8 @@ namespace App\Site\Commands\Db;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Genkgo\Migrations\Adapters\AbstractPdoAdapter;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
@@ -51,8 +53,8 @@ class Migrate extends BaseCommand
      * @param string|null $name
      * @param ContainerInterface|null $container
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {

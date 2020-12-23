@@ -20,6 +20,8 @@ use \App\Base\Traits\WithOwnerTrait;
 use \App\Base\Abstracts\Controllers\BasePage;
 use DateTime;
 use \Degami\Basics\Html\TagElement;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 
 /**
@@ -34,6 +36,7 @@ use Exception;
  * @method string getContent()
  * @method string getConfig()
  * @method int getUserId()
+ * @method int getOrder()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -45,6 +48,7 @@ use Exception;
  * @method self setContent(string $content)
  * @method self setConfig(string $config)
  * @method self setUserId(int $user_id)
+ * @method self setOrder(int $order)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
@@ -81,7 +85,7 @@ class Block extends BaseModel
                 'attributes' => [
                     'class' => $class,
                 ],
-                'text' => $this->content,
+                'text' => $this->getContent(),
             ]
         ));
     }
@@ -100,8 +104,8 @@ class Block extends BaseModel
      * loads code block instance
      *
      * @return BaseCodeBlock
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function loadInstance(): ?BaseCodeBlock
     {
@@ -116,8 +120,8 @@ class Block extends BaseModel
      * gets real block instance
      *
      * @return self|BaseCodeBlock
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRealInstance()
     {
@@ -139,7 +143,7 @@ class Block extends BaseModel
     /**
      * checks if is code block
      *
-     * @return boolean
+     * @return bool
      */
     public function isCodeBlock(): bool
     {
@@ -149,11 +153,11 @@ class Block extends BaseModel
     /**
      * gets block rewrite objects
      *
-     * @param false $reset
+     * @param bool $reset
      * @return array
      * @throws Exception
      */
-    public function getRewrites($reset = false): array
+    public function getRewrites(bool $reset = false): array
     {
         $this->checkLoaded();
 
@@ -167,7 +171,7 @@ class Block extends BaseModel
                         );
             */
             $query = $this->getDb()->prepare("SELECT rewrite_id FROM block_rewrite WHERE block_id = :id");
-            $query->execute(['id' => $this->id]);
+            $query->execute(['id' => $this->getId()]);
             $ids = $query->fetchAll(\PDO::FETCH_COLUMN, 0);
 
             $this->rewrites = $this->getContainer()->call([Rewrite::class, 'loadMultiple'], ['ids' => $ids]);
@@ -182,7 +186,7 @@ class Block extends BaseModel
      * @return boolean
      * @throws Exception
      */
-    public function checkValidRewrite($rewrite): bool
+    public function checkValidRewrite(Rewrite $rewrite): bool
     {
         $this->checkLoaded();
 

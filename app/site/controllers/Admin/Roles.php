@@ -16,6 +16,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \App\Site\Models\Role;
 use \Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * "Roles" Admin Page
@@ -69,6 +71,8 @@ class Roles extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -127,6 +131,8 @@ class Roles extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -139,7 +145,7 @@ class Roles extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $role->name = $values['name'];
+                $role->setName($values['name']);
 
                 $this->setAdminActionLogData($role->getChangedData());
 
@@ -176,7 +182,7 @@ class Roles extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($role) {

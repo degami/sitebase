@@ -18,6 +18,7 @@ use App\Site\Models\Rewrite;
 use App\Site\Models\Redirect;
 use Degami\Basics\Exceptions\BasicException;
 use DI\ContainerBuilder;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
@@ -345,14 +346,12 @@ class App extends ContainerAwareObject
     /**
      * gets defined redirects
      *
-     * @param $current_website_id
+     * @param int $current_website_id
      * @return array|mixed
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getRedirects($current_website_id): array
+    protected function getRedirects(int $current_website_id): array
     {
         $redirects = [];
         $redirects_key = "site." . $current_website_id . ".redirects";
@@ -385,10 +384,10 @@ class App extends ContainerAwareObject
     /**
      * checks if ip address is blocked
      *
-     * @param $ip_address
+     * @param string $ip_address
      * @return bool
      */
-    public function isBlocked($ip_address): bool
+    public function isBlocked(string $ip_address): bool
     {
         return in_array($ip_address, $this->blocked_ips);
     }
@@ -401,7 +400,7 @@ class App extends ContainerAwareObject
      * @return self
      * @throws BasicException
      */
-    public function event($event_name, $event_data): App
+    public function event(string $event_name, $event_data): App
     {
         $this->getEventManager()->emit(new Event($event_name, $event_data));
 
@@ -445,7 +444,7 @@ class App extends ContainerAwareObject
      * @param string $type
      * @return string
      */
-    public static function getDir($type): ?string
+    public static function getDir(string $type): ?string
     {
         $dirs = static::getDirs();
         if (!isset($dirs[$type])) {

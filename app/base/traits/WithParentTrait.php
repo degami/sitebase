@@ -36,9 +36,9 @@ trait WithParentTrait
     /**
      * gets parent ids tree
      *
-     * @return string
+     * @return string|null
      */
-    public function getParentIds(): string
+    public function getParentIds(): ?string
     {
         if ($this->parent_id == null) {
             return $this->id;

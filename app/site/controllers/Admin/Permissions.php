@@ -19,6 +19,8 @@ use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Role;
 use \App\Site\Models\Permission;
 use \App\Site\Models\RolePermission;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * "Permissions" Admin Page
@@ -67,8 +69,8 @@ class Permissions extends AdminFormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -155,6 +157,9 @@ class Permissions extends AdminFormPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws InvalidValueException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -188,12 +193,12 @@ class Permissions extends AdminFormPage
      * @param Permission $permission_model
      * @return RolePermission|null
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    private function loadRolePermission($role_model, $permission_model): ?RolePermission
+    private function loadRolePermission(Role $role_model, Permission $permission_model): ?RolePermission
     {
-        $role_permission_dbrow = $this->getDb()->table('role_permission')->where(['role_id' => $role_model->id, 'permission_id' => $permission_model->id])->fetch();
+        $role_permission_dbrow = $this->getDb()->table('role_permission')->where(['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()])->fetch();
         if ($role_permission_dbrow) {
             return $this->getContainer()->make(RolePermission::class, ['db_row' => $role_permission_dbrow]);
         }
@@ -209,11 +214,11 @@ class Permissions extends AdminFormPage
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addPermission($role_model, $permission_model)
+    private function addPermission(Role $role_model, Permission $permission_model)
     {
         $pivot_model = RolePermission::new($this->getContainer());
-        $pivot_model->permission_id = $permission_model->id;
-        $pivot_model->role_id = $role_model->id;
+        $pivot_model->setPermissionId($permission_model->getId());
+        $pivot_model->setRoleId($role_model->getId());
         $pivot_model->persist();
     }
 }

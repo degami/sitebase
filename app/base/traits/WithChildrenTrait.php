@@ -13,6 +13,7 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Abstracts\Models\ModelWithChildren;
 
 /**
  * Trait for elements with children
@@ -66,22 +67,22 @@ trait WithChildrenTrait
     }
 
     /**
-     * @param self $a
-     * @param self $b
+     * @param ModelWithChildren $a
+     * @param ModelWithChildren $b
      * @return int
      */
     protected function cmpPosition($a, $b): int
     {
-        if ($a->position == $b->position) {
+        if ($a->getPosition() == $b->getPosition()) {
             return 0;
         }
-        return ($a->position < $b->position) ? -1 : 1;
+        return ($a->getPosition() < $b->getPosition()) ? -1 : 1;
     }
 
     /**
      * pre remove hook
      *
-     * @return self
+     * @return BaseModel|self
      */
     public function preRemove(): BaseModel
     {

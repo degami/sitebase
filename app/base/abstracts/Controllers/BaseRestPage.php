@@ -15,6 +15,8 @@ namespace App\Base\Abstracts\Controllers;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Tools\Utils\Globals;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \App\Site\Routing\RouteInfo;
 use \App\Site\Models\RequestLog;
@@ -37,8 +39,8 @@ abstract class BaseRestPage extends BasePage
      * @param Request|null $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {

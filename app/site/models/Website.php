@@ -17,10 +17,12 @@ use \App\Base\Abstracts\Models\BaseModel;
 /**
  * Website Model
  *
+ * @method int getId()
  * @method string getSiteName()
  * @method string getDomain()
  * @method string getAliases()
  * @method integer getDefaultLocale()
+ * @method self setId(int $id)
  * @method self setSiteName(string $site_name)
  * @method self setDomain(string $domain)
  * @method self setAliases(string $aliases)

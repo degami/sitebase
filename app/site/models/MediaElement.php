@@ -75,7 +75,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    public function getThumb($size, $mode = null, $class = null, $img_attributes = []): string
+    public function getThumb(string $size, $mode = null, $class = null, $img_attributes = []): string
     {
         $w = $h = null;
         if (preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
@@ -83,7 +83,7 @@ class MediaElement extends BaseModel
             $h = $thumb_sizes[2];
         }
 
-        if (boolval($this->lazyload) && !isset($img_attributes['for_admin'])) {
+        if (boolval($this->getLazyload()) && !isset($img_attributes['for_admin'])) {
             $img_attributes['data-src'] = $this->getThumbUrl($size, $mode);
         }
 
@@ -91,7 +91,7 @@ class MediaElement extends BaseModel
             [
                 'tag' => 'img',
                 'attributes' => [
-                        'src' => boolval($this->lazyload) && !isset($img_attributes['for_admin']) ? static::TRANSPARENT_PIXEL : $this->getThumbUrl($size, $mode),
+                        'src' => boolval($this->getLazyload()) && !isset($img_attributes['for_admin']) ? static::TRANSPARENT_PIXEL : $this->getThumbUrl($size, $mode),
                         'class' => $class,
                         'style' => preg_match('/img-fluid/i', $class) ? '' : "max-width:{$w}px;max-height:{$h}px;",
                         'border' => 0,
@@ -110,23 +110,23 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws Exception
      */
-    public function getThumbUrl($size, $mode = null): string
+    public function getThumbUrl(string $size, $mode = null): string
     {
         $this->checkLoaded();
 
         $thumb_sizes = null;
         if ($size != 'originals') {
             if (!preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
-                return $this->path;
+                return $this->getPath();
             }
         }
 
-        if (is_dir($this->path)) {
-            $this->path = rtrim($this->path, DS) . DS . $this->filename;
+        if (is_dir($this->getPath())) {
+            $this->setPath(rtrim($this->getPath(), DS) . DS . $this->getFilename());
         }
 
-        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . $this->filename;
-        if (!preg_match("/^image\/(.*?)/", $this->mimetype)) {
+        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . $this->getFilename();
+        if (!preg_match("/^image\/(.*?)/", $this->getMimetype())) {
             $thumb_path .= '.svg';
         }
         if (!file_exists($thumb_path)) {
@@ -137,13 +137,13 @@ class MediaElement extends BaseModel
             }
 
             try {
-                if ($this->mimetype == 'image/svg+xml') {
+                if ($this->getMimetype() == 'image/svg+xml') {
                     // copy file to destination, does not need resampling
-                    if (!copy($this->path, $thumb_path)) {
-                        throw new Exception("Errors copying file " . $this->path . " into " . $thumb_path);
+                    if (!copy($this->getPath(), $thumb_path)) {
+                        throw new Exception("Errors copying file " . $this->getPath() . " into " . $thumb_path);
                     }
                 } else {
-                    if (preg_match("/^image\/(.*?)/", $this->mimetype) && ($image = $this->getImagine()->open($this->path))) {
+                    if (preg_match("/^image\/(.*?)/", $this->getMimetype()) && ($image = $this->getImagine()->open($this->getPath()))) {
                         if ($thumb_sizes) {
                             $w = $thumb_sizes[1];
                             $h = $thumb_sizes[2];
@@ -155,14 +155,7 @@ class MediaElement extends BaseModel
 
                         $size = new Box($w, $h);
 
-                        if (!in_array(
-                            $mode,
-                            [
-                                ImageInterface::THUMBNAIL_INSET,
-                                ImageInterface::THUMBNAIL_OUTBOUND
-                            ]
-                        )
-                        ) {
+                        if (!in_array($mode, [ImageInterface::THUMBNAIL_INSET, ImageInterface::THUMBNAIL_OUTBOUND])) {
                             $mode = ImageInterface::THUMBNAIL_INSET;
                             // or
                             // $mode    = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
@@ -174,7 +167,7 @@ class MediaElement extends BaseModel
                             ->save($thumb_path);
                     } else {
                         // @todo thumb in base a mimetype
-                        $type = explode('/', $this->mimetype);
+                        $type = explode('/', $this->getMimetype());
                         if (is_array($type)) {
                             return $this->getUtils()->getIcon(array_pop($type));
                         }
@@ -196,7 +189,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    public function getImage($class = 'img-fluid'): string
+    public function getImage(string $class = 'img-fluid'): string
     {
         return $this->getThumb('originals', null, $class);
     }

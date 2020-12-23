@@ -16,6 +16,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\FrontendPage;
 use \App\Site\Models\News;
 use \App\Site\Routing\RouteInfo;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * News List Page
@@ -72,8 +74,8 @@ class NewsList extends FrontendPage
      *
      * @return array
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTemplateData(): array
     {
@@ -92,8 +94,8 @@ class NewsList extends FrontendPage
      *
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentLocale(): string
     {

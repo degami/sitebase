@@ -13,6 +13,8 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
@@ -68,6 +70,8 @@ class Config extends AdminManageModelsPage
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTemplateData(): array
     {
@@ -90,6 +94,8 @@ class Config extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -179,7 +185,10 @@ class Config extends AdminManageModelsPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return mixed
-     * @throws PhpfastcacheSimpleCacheException|BasicException
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -203,10 +212,10 @@ class Config extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $configuration->path = $values['path'];
-                $configuration->value = $values['value'];
-                $configuration->website_id = $values['website_id'];
-                $configuration->locale = !empty($values['locale']) ? $values['locale'] : null;
+                $configuration->setPath($values['path']);
+                $configuration->setValue($values['value']);
+                $configuration->setWebsiteId($values['website_id']);
+                $configuration->setLocale(!empty($values['locale']) ? $values['locale'] : null);
 
                 $this->setAdminActionLogData($configuration->getChangedData());
 
@@ -248,8 +257,10 @@ class Config extends AdminManageModelsPage
      * @param array $data
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($config) {

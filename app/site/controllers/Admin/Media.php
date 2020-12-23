@@ -15,6 +15,8 @@ namespace App\Site\Controllers\Admin;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,8 +41,8 @@ class Media extends AdminManageModelsPage
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -120,8 +122,8 @@ class Media extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -270,8 +272,8 @@ class Media extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -283,23 +285,23 @@ class Media extends AdminManageModelsPage
         $values = $form->values();
         switch ($values['action']) {
             case 'new':
-                $media->user_id = $this->getCurrentUser()->id;
+                $media->setUserId($this->getCurrentUser()->getId());
             // intentional fall trough
             // no break
             case 'edit':
                 if ($values->upload_file->filepath) {
-                    $media->path = $values->upload_file->filepath;
+                    $media->setPath($values->upload_file->filepath);
                 }
                 if ($values->upload_file->filename) {
-                    $media->filename = $values->upload_file->filename;
+                    $media->setFilename($values->upload_file->filename);
                 }
                 if ($values->upload_file->mimetype) {
-                    $media->mimetype = $values->upload_file->mimetype;
+                    $media->setMimetype($values->upload_file->mimetype);
                 }
                 if ($values->upload_file->filesize) {
-                    $media->filesize = $values->upload_file->filesize;
+                    $media->setFilesize($values->upload_file->filesize);
                 }
-                $media->lazyload = $values->lazyload;
+                $media->setLazyload($values->lazyload);
 
                 $this->setAdminActionLogData($media->getChangedData());
 
@@ -362,8 +364,10 @@ class Media extends AdminManageModelsPage
      * @param array $data
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($elem) {

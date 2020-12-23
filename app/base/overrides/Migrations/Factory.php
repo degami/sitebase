@@ -50,7 +50,7 @@ class Factory extends GenkgoMigrationFactory
      * @param string $namespace
      * @return Collection
      */
-    public function newList($namespace = '\\')
+    public function newList($namespace = '\\'): Collection
     {
         if (substr($namespace, -1) !== '\\') {
             throw new InvalidArgumentException('Namespace incorrect, follow psr-4 namespace rules. Do not forget trailing slashes');

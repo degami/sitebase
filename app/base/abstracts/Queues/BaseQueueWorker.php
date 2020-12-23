@@ -65,8 +65,8 @@ abstract class BaseQueueWorker extends ContainerAwareObject
     /**
      * do message work phase
      *
-     * @param QueueMessage $message_data
+     * @param array $message_data
      * @return mixed
      */
-    abstract protected function processMessage($message_data);
+    abstract protected function processMessage(array $message_data);
 }

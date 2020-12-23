@@ -17,6 +17,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
 use Degami\PHPFormsApi\Abstracts\Base\FieldsContainer;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * terms for page JSON
@@ -48,8 +50,8 @@ class PageTerms extends AdminJsonPage
      *
      * @return array
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getJsonData(): array
     {

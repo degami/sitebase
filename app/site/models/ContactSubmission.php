@@ -57,7 +57,7 @@ class ContactSubmission extends BaseModel
      * @param array $submission_data
      * @return self
      */
-    public static function submit(ContainerInterface $container, $submission_data = []): ContactSubmission
+    public static function submit(ContainerInterface $container, array $submission_data = []): ContactSubmission
     {
         $contact_submission = $container->get(ContactSubmission::class);
         $contact_submission->contact_id = $submission_data['contact_id'];

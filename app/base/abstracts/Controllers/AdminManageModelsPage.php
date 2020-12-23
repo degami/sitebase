@@ -17,6 +17,9 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Exceptions\FormException;
+use Degami\SqlSchema\Exceptions\OutOfRangeException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
@@ -47,9 +50,9 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @throws BasicException
      * @throws FormException
      * @throws PermissionDeniedException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \Degami\SqlSchema\Exceptions\OutOfRangeException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws OutOfRangeException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -113,8 +116,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * gets model object (loaded or new)
      *
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getObject(): ?BaseModel
     {
@@ -175,7 +178,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param array $data
      * @return array
      */
-    abstract protected function getTableElements($data): array;
+    abstract protected function getTableElements(array $data): array;
 
     /**
      * loads object by id
@@ -196,8 +199,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * gets new empty model
      *
      * @return BaseModel
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function newEmptyObject(): ?BaseModel
     {
@@ -212,6 +215,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * adds a "new" button
      *
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function addNewButton()
     {
@@ -228,8 +233,10 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @param string $icon
      * @param string $title
      * @return string
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getActionButton($action, $object_id, $class, $icon, $title = ''): string
+    public function getActionButton(string $action, int $object_id, string $class, string $icon, string $title = ''): string
     {
         try {
             $button = new TagElement(
@@ -256,8 +263,10 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @param integer $object_id
      * @return string
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getDeleteButton($object_id): string
+    public function getDeleteButton(int $object_id): string
     {
         return $this->getActionButton('delete', $object_id, 'danger', 'trash', 'Delete');
     }
@@ -267,8 +276,10 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @param integer $object_id
      * @return string
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getEditButton($object_id): string
+    public function getEditButton(int $object_id): string
     {
         return $this->getActionButton('edit', $object_id, 'primary', 'edit', 'Edit');
     }

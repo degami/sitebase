@@ -15,6 +15,10 @@ namespace App\Base\Tools\Cache;
 use DateInterval;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverException;
+use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Psr\Cache\InvalidArgumentException;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -24,6 +28,7 @@ use \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
 use \Phpfastcache\Exceptions\PhpfastcacheRootException;
 use \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\SimpleCache\CacheInterface;
+use ReflectionException;
 use Traversable;
 use function is_int;
 use function iterator_to_array;
@@ -45,11 +50,11 @@ class Manager extends ContainerAwareObject implements CacheInterface
      *
      * @param ContainerInterface $container
      * @throws PhpfastcacheInvalidArgumentException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverCheckException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException
-     * @throws \ReflectionException
+     * @throws PhpfastcacheDriverCheckException
+     * @throws PhpfastcacheDriverException
+     * @throws PhpfastcacheDriverNotFoundException
+     * @throws PhpfastcacheInvalidConfigurationException
+     * @throws ReflectionException
      */
     public function __construct(ContainerInterface $container)
     {
@@ -69,7 +74,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * retrieves element from cache
      *
-     * @param string $key
+     * @param mixed $key
      * @param null $default
      * @return mixed|null
      * @throws PhpfastcacheSimpleCacheException
@@ -108,7 +113,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * saves element in cache
      *
-     * @param string $key
+     * @param mixed $key
      * @param mixed $value
      * @param null $ttl
      * @return bool
@@ -144,8 +149,8 @@ class Manager extends ContainerAwareObject implements CacheInterface
      *
      * @param string $key
      * @return bool
-     * @throws PhpfastcacheSimpleCacheException
      * @throws InvalidArgumentException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function delete($key): bool
     {
@@ -199,7 +204,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * sets multiple elements into cache
      *
-     * @param string[] $values
+     * @param mixed $values
      * @param null|int|DateInterval $ttl
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
@@ -253,7 +258,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * checks if element is present
      *
-     * @param string $key
+     * @param mixed $key
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
@@ -304,7 +309,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @param mixed $arguments
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, $arguments)
     {
         return call_user_func_array([$this->getInternalCacheInstance(), $name], $arguments);
     }

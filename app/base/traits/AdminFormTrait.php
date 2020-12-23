@@ -14,7 +14,9 @@ namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
 use \App\Base\Abstracts\Models\FrontendModel;
+use Degami\Basics\Exceptions\BasicException;
 use \Degami\PHPFormsApi as FAPI;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
  * Administration Forms Trait
@@ -28,8 +30,8 @@ trait AdminFormTrait
      * @param $form_state
      * @param string[] $form_elements
      * @return FAPI\Form
-     * @throws \Degami\Basics\Exceptions\BasicException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     protected function addFrontendFormElements(FAPI\Form $form, &$form_state, $form_elements = ['url', 'website_id', 'locale']): FAPI\Form
     {

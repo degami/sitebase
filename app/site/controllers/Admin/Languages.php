@@ -13,6 +13,8 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
@@ -70,6 +72,8 @@ class Languages extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -160,6 +164,8 @@ class Languages extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -172,12 +178,12 @@ class Languages extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $language->locale = $values['locale'];
+                $language->setLocale($values['locale']);
                 $language->{'639-1'} = $values['639-1'];
                 $language->{'639-2'} = $values['639-2'];
-                $language->name = $values['name'];
-                $language->native = $values['native'];
-                $language->family = $values['family'];
+                $language->setName($values['name']);
+                $language->setNative($values['native']);
+                $language->setFamily($values['family']);
 
                 $this->setAdminActionLogData($language->getChangedData());
 
@@ -222,7 +228,7 @@ class Languages extends AdminManageModelsPage
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($language) {

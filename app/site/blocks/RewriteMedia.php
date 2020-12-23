@@ -15,8 +15,11 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use \App\Site\Models\MediaElementRewrite;
+use Degami\Basics\Exceptions\BasicException;
 use \Degami\Basics\Html\TagElement;
 use \Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * Rewrite Media Block
@@ -29,9 +32,9 @@ class RewriteMedia extends BaseCodeBlock
      * @param BasePage|null $current_page
      * @param array $data
      * @return string
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \Degami\Basics\Exceptions\BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws BasicException
      */
     public function renderHTML(BasePage $current_page = null, $data = []): string
     {

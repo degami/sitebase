@@ -14,6 +14,8 @@ namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminPage;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -57,8 +59,8 @@ class Logout extends AdminPage
      *
      * @return AdminPage|RedirectResponse|Response
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function beforeRender()
     {

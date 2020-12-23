@@ -16,6 +16,9 @@ use \App\Base\Traits\WithChildrenTrait;
 
 /**
  * A model with children
+ *
+ * @method int getPosition();
+ * @method self setPosition(int $position);
  */
 abstract class ModelWithChildren extends BaseModel
 {

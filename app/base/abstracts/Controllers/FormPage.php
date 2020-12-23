@@ -14,6 +14,8 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
@@ -36,6 +38,8 @@ abstract class FormPage extends FrontendPage
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {

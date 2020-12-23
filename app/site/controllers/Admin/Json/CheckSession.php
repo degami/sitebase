@@ -13,6 +13,8 @@
 namespace App\Site\Controllers\Admin\Json;
 
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * Check Admin Session
@@ -33,8 +35,8 @@ class CheckSession extends AdminJsonPage
      * {@inheritdocs}
      *
      * @return array
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getJsonData(): array
     {

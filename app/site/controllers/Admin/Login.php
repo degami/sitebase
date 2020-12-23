@@ -15,6 +15,8 @@ namespace App\Site\Controllers\Admin;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
@@ -121,6 +123,8 @@ class Login extends FormPage
      *
      * @return Template
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function prepareTemplate(): Template
     {
@@ -196,6 +200,8 @@ class Login extends FormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -227,6 +233,8 @@ class Login extends FormPage
      * @param array     &$form_state
      * @return boolean|string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -273,6 +281,8 @@ class Login extends FormPage
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentLocale(): string
     {

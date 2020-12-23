@@ -16,6 +16,9 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use Degami\SqlSchema\Exceptions\OutOfRangeException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
@@ -36,6 +39,9 @@ class MediaRewrites extends AdminManageModelsPage
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws OutOfRangeException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -90,6 +96,8 @@ class MediaRewrites extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -167,6 +175,8 @@ class MediaRewrites extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -216,7 +226,7 @@ class MediaRewrites extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($elem) {

@@ -46,7 +46,7 @@ try {
         }
     }
 
-    if ($website == null) {
+    if ($website == null && is_file(App::getDir(APP::ROOT) . DS . '.install_done')) {
         $website = $container->get('db')->table('website')->limit(1)->fetch();
     }
     // put website into environment variables

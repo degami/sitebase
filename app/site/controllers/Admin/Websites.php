@@ -16,6 +16,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Website;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -71,6 +73,8 @@ class Websites extends AdminManageModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -154,6 +158,8 @@ class Websites extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -168,10 +174,10 @@ class Websites extends AdminManageModelsPage
                 // intentional fall trough
                 // no break
             case 'edit':
-                $website->site_name = $values['site_name'];
-                $website->domain = $values['domain'];
-                $website->aliases = $values['aliases'];
-                $website->default_locale = $values['default_locale'];
+                $website->setSiteName($values['site_name']);
+                $website->setDomain($values['domain']);
+                $website->setAliases($values['aliases']);
+                $website->setDefaultLocale($values['default_locale']);
 
                 $this->setAdminActionLogData($website->getChangedData());
 
@@ -210,7 +216,7 @@ class Websites extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($website) {

@@ -16,6 +16,9 @@ use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Tools\Plates\SiteBase;
 use App\Site\Commands\Search\Indexer;
 use App\Site\Controllers\Frontend\Search;
+use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use HaydenPierce\ClassFinder\ClassFinder;
 use \Psr\Container\ContainerInterface;
 use \App\Base\Abstracts\ContainerAwareObject;
@@ -38,14 +41,15 @@ class SearchManager extends ContainerAwareObject
     }
 
     /**
-     * pulse method
+     * update search DB method
      *
-     * @return string
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \Degami\Basics\Exceptions\BasicException
+     * @return string|null
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws \Exception
      */
-    public function updateSearchDB(): string
+    public function updateSearchDB(): ?string
     {
         $client = $this->getElasticsearch();
 
@@ -82,9 +86,10 @@ class SearchManager extends ContainerAwareObject
                         'body' => array_merge($body, $body_additional),
                     ];
 
-                    $response = $client->index($params);
+                    return $client->index($params);
                 }
             }
         }
+        return null;
     }
 }

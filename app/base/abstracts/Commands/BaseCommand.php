@@ -113,7 +113,7 @@ class BaseCommand extends SymfonyCommand
      * @param string $question_message
      * @return bool|mixed|string|string[]|null
      */
-    protected function keepAskingForOption($option_name, $question_message)
+    protected function keepAskingForOption(string $option_name, string $question_message)
     {
         if ($this->input == null || $this->output == null) {
             return null;
@@ -130,9 +130,10 @@ class BaseCommand extends SymfonyCommand
 
     /**
      * @param string $confirmation_message
+     * @param $not_confirm_message
      * @return bool
      */
-    protected function confirmMessage($confirmation_message, $not_confirm_message): bool
+    protected function confirmMessage(string $confirmation_message, $not_confirm_message): bool
     {
         $question = new ConfirmationQuestion($confirmation_message, false);
         if (!$this->getQuestionHelper()->ask($this->input, $this->output, $question)) {
@@ -147,7 +148,7 @@ class BaseCommand extends SymfonyCommand
      * @param string $confirmation_message
      * @return bool
      */
-    protected function confirmSave($confirmation_message): bool
+    protected function confirmSave(string $confirmation_message): bool
     {
         return $this->confirmMessage($confirmation_message, 'Not Saving');
     }
@@ -156,7 +157,7 @@ class BaseCommand extends SymfonyCommand
      * @param string $confirmation_message
      * @return bool
      */
-    protected function confirmDelete($confirmation_message): bool
+    protected function confirmDelete(string $confirmation_message): bool
     {
         return $this->confirmMessage($confirmation_message, 'Not deleted');
     }

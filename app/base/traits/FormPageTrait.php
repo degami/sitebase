@@ -15,6 +15,8 @@ namespace App\Base\Traits;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use \Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -107,6 +109,8 @@ trait FormPageTrait
      * @param string|null $cancel_url
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function fillConfirmationForm($confirm_message, $form, $cancel_url = null): FAPI\Form
     {

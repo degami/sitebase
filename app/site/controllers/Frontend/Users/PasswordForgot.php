@@ -13,6 +13,8 @@
 namespace App\Site\Controllers\Frontend\Users;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
@@ -109,15 +111,14 @@ class PasswordForgot extends FormPage
         return true;
     }
 
-
     /**
      * {@inheritdocs}
      *
      * @return PasswordForgot|RedirectResponse|Response
      * @throws BasicException
      * @throws PermissionDeniedException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function beforeRender()
     {
@@ -152,8 +153,8 @@ class PasswordForgot extends FormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -199,8 +200,8 @@ class PasswordForgot extends FormPage
      * @param array     &$form_state
      * @return boolean|string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -229,6 +230,8 @@ class PasswordForgot extends FormPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
@@ -272,6 +275,8 @@ class PasswordForgot extends FormPage
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRouteName(): string
     {

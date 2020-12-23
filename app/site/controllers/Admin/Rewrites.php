@@ -16,6 +16,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Rewrite;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -71,6 +73,8 @@ class Rewrites extends AdminManageModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -183,6 +187,8 @@ class Rewrites extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -195,10 +201,10 @@ class Rewrites extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $rewrite->url = $values['url'];
-                $rewrite->route = $values['route'];
-                $rewrite->website_id = empty($values['website_id']) ? null : $values['website_id'];
-                $rewrite->locale = $values['locale'];
+                $rewrite->setUrl($values['url']);
+                $rewrite->setRoute($values['route']);
+                $rewrite->setWebsiteId(empty($values['website_id']) ? null : $values['website_id']);
+                $rewrite->setLocale($values['locale']);
 
                 $this->setAdminActionLogData($rewrite->getChangedData());
 
@@ -263,7 +269,7 @@ class Rewrites extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($rewrite) {

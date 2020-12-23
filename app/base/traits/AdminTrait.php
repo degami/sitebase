@@ -13,7 +13,10 @@
 namespace App\Base\Traits;
 
 use \App\Site\Models\User;
+use Degami\Basics\Exceptions\BasicException;
 use \Degami\Basics\Html\TagElement;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 
 /**
@@ -47,7 +50,7 @@ trait AdminTrait
      * checks user credentials
      *
      * @return boolean
-     * @throws \Degami\Basics\Exceptions\BasicException
+     * @throws BasicException
      */
     protected function checkCredentials(): bool
     {
@@ -68,9 +71,9 @@ trait AdminTrait
      *
      * @param string $permission_name
      * @return boolean
-     * @throws \Degami\Basics\Exceptions\BasicException
+     * @throws BasicException
      */
-    public function checkPermission($permission_name): bool
+    public function checkPermission(string $permission_name): bool
     {
         try {
             $this->current_user_model = $this->getCurrentUser();
@@ -86,8 +89,8 @@ trait AdminTrait
      * renders action buttons
      *
      * @return string
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function renderActionButtons(): string
     {

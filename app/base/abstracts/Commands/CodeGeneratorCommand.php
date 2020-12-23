@@ -53,15 +53,15 @@ abstract class CodeGeneratorCommand extends BaseCommand
     /**
      * add class
      *
-     * @param string $fullClassName
-     * @param string $filecontents
+     * @param string $full_class_name
+     * @param string $file_contents
      * @return self
      */
-    protected function addClass($fullClassName, $filecontents): CodeGeneratorCommand
+    protected function addClass(string $full_class_name, string $file_contents): CodeGeneratorCommand
     {
-        $arr = explode("\\", ltrim($fullClassName, "\\"));
+        $arr = explode("\\", ltrim($full_class_name, "\\"));
         $className = array_pop($arr);
-        $nameSpace = implode("\\", array_slice(explode("\\", ltrim($fullClassName, "\\")), 0, -1)) . "\\";
+        $nameSpace = implode("\\", array_slice(explode("\\", ltrim($full_class_name, "\\")), 0, -1)) . "\\";
 
         $section = new AutoloadSection($this->composer_reader, AutoloadSection::TYPE_PSR4);
 
@@ -84,7 +84,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
 
         if (!empty($directory)) {
             $filepath = $directory . (($directory[strlen($directory) - 1] == DS) ? '' : DS) . $className . '.php';
-            $this->queueFile($filepath, $filecontents);
+            $this->queueFile($filepath, $file_contents);
         }
 
         return $this;
@@ -93,13 +93,13 @@ abstract class CodeGeneratorCommand extends BaseCommand
     /**
      * queue file to dump
      *
-     * @param string $filename
-     * @param string $filecontents
+     * @param string $file_name
+     * @param string $file_contents
      * @return self
      */
-    protected function queueFile($filename, $filecontents): CodeGeneratorCommand
+    protected function queueFile(string $file_name, string $file_contents): CodeGeneratorCommand
     {
-        $this->filesToDump[$filename] = $filecontents;
+        $this->filesToDump[$file_name] = $file_contents;
         return $this;
     }
 
@@ -111,7 +111,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
     protected function doWrite(): array
     {
         $files_written = $errors = [];
-        foreach ($this->filesToDump as $path => $filecontents) {
+        foreach ($this->filesToDump as $path => $file_contents) {
             $directory = dirname($path);
             if (!is_dir($directory)) {
                 if (!mkdir($directory, 755, true)) {
@@ -122,7 +122,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
                     continue;
                 }
             }
-            if (is_dir($directory) && file_put_contents($path, (string)$filecontents, LOCK_EX)) {
+            if (is_dir($directory) && file_put_contents($path, (string)$file_contents, LOCK_EX)) {
                 $files_written[] = $path;
             } else {
                 $message = 'Can\'t write file ' . $path;

@@ -47,6 +47,6 @@ class CronTask extends BaseModel
      */
     public function getInfoUrl(): string
     {
-        return 'https://crontab.guru/#' . str_replace(" ", "_", $this->schedule);
+        return 'https://crontab.guru/#' . str_replace(" ", "_", $this->getSchedule());
     }
 }

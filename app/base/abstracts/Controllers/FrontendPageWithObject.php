@@ -15,6 +15,7 @@ namespace App\Base\Abstracts\Controllers;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Controllers\Frontend\Page;
 use \App\Site\Routing\RouteInfo;
+use Degami\Basics\Exceptions\BasicException;
 use \Exception;
 use \App\Base\Traits\FrontendTrait;
 use \App\Base\Abstracts\Models\BaseModel;
@@ -34,6 +35,7 @@ abstract class FrontendPageWithObject extends FrontendPage
      *
      * @return Response|self
      * @throws PermissionDeniedException
+     * @throws BasicException
      */
     protected function beforeRender()
     {

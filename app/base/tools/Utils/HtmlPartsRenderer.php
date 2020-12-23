@@ -16,6 +16,8 @@ use App\Site\Models\Menu;
 use App\Site\Models\QueueMessage;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\ContainerAwareObject;
 use \App\Base\Abstracts\Controllers\BasePage;
@@ -36,8 +38,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      *
      * @param BasePage $controller
      * @return TagList
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderFlashMessages(BasePage $controller): TagList
     {
@@ -82,8 +84,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param array $leaf
      * @param string $link_class
      * @return TagElement
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function _renderMenuLink($leaf, $link_class = 'nav-link'): TagElement
     {
@@ -115,10 +117,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param array $menu_tree
      * @param array|null $parent
      * @return TagElement
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function _renderSiteMenu($menu_tree, $parent = null): TagElement
+    protected function _renderSiteMenu(array $menu_tree, $parent = null): TagElement
     {
         $tag_options = [
             'tag' => ($parent == null) ? 'ul' : 'div',
@@ -170,8 +172,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @return string
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderSiteMenu($locale): ?string
     {
@@ -299,8 +301,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @return mixed|string|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderBlocks($region, $locale = null, BasePage $current_page = null): ?string
     {
@@ -359,8 +361,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param string|null $href
      * @param string $text
      * @return TagElement
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     private function getPaginatorLi($li_class, $href, $text): TagElement
     {
@@ -402,8 +404,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param integer $visible_links
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderPaginator($current_page, $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2): string
     {
@@ -584,8 +586,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @return string
      * @throws BasicException
      * @throws OutOfRangeException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderAdminTable($elements, $header = null, BasePage $current_page = null): string
     {
@@ -860,8 +862,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * Renders array as table field name - field value
      * @param array $data
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderArrayOnTable($data)
     {
@@ -986,8 +988,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param $log
      * @return mixed
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderLog($log)
     {
@@ -1007,8 +1009,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      *
      * @param QueueMessage $message
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderQueueMessage($message)
     {

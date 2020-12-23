@@ -18,6 +18,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Models\AccountModel;
 use \App\Base\Abstracts\Controllers\LoggedUserFormPage;
 use \Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,8 +68,8 @@ class Profile extends LoggedUserFormPage
      * {@inheritdocs}
      *
      * @return array
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTemplateData(): array
     {
@@ -85,8 +87,8 @@ class Profile extends LoggedUserFormPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -176,8 +178,8 @@ class Profile extends LoggedUserFormPage
      * @param array $form_state
      * @return mixed|RedirectResponse|Response
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -210,6 +212,8 @@ class Profile extends LoggedUserFormPage
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRouteName(): string
     {

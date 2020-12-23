@@ -62,11 +62,11 @@ class Page extends FrontendModel
     /**
      * gets page gallery
      *
-     * @param false $reset
+     * @param bool $reset
      * @return array
      * @throws Exception
      */
-    public function getGallery($reset = false): array
+    public function getGallery(bool $reset = false): array
     {
         $this->checkLoaded();
 
@@ -88,7 +88,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function addMedia($media_element): Page
+    public function addMedia(MediaElement $media_element): Page
     {
         $new_page_media_row = $this->getDb()->table('page_media_element')->createRow();
         $new_page_media_row->update(
@@ -107,7 +107,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function removeMedia($media_element): Page
+    public function removeMedia(MediaElement $media_element): Page
     {
         $this->getDb()->table('page_media_element')->where(
             [
@@ -121,11 +121,11 @@ class Page extends FrontendModel
     /**
      * get page terms
      *
-     * @param false $reset
+     * @param bool $reset
      * @return array
      * @throws Exception
      */
-    public function getTerms($reset = false): array
+    public function getTerms(bool $reset = false): array
     {
         $this->checkLoaded();
 
@@ -147,7 +147,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function addTerm($term): Page
+    public function addTerm(Taxonomy $term): Page
     {
         $new_page_taxonomy_row = $this->getDb()->table('page_taxonomy')->createRow();
         $new_page_taxonomy_row->update(
@@ -166,7 +166,7 @@ class Page extends FrontendModel
      * @return self
      * @throws BasicException
      */
-    public function removeTerm($term): Page
+    public function removeTerm(Taxonomy $term): Page
     {
         $this->getDb()->table('page_taxonomy')->where(
             [

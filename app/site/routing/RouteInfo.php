@@ -26,7 +26,7 @@ class RouteInfo
     protected $dispatcher_info;
 
     /**
-     * @var integer dispatcher status
+     * @var int dispatcher status
      */
     protected $status;
 
@@ -130,7 +130,7 @@ class RouteInfo
      * @param array $dispatcher_info
      * @return self
      */
-    public function setDispatcherInfo($dispatcher_info): RouteInfo
+    public function setDispatcherInfo(array $dispatcher_info): RouteInfo
     {
         $this->dispatcher_info = $dispatcher_info;
 
@@ -150,10 +150,10 @@ class RouteInfo
     /**
      * sets handler to call
      *
-     * @param mixed $handler
+     * @param callback $handler
      * @return self
      */
-    public function setHandler($handler): RouteInfo
+    public function setHandler(callable $handler): RouteInfo
     {
         $this->handler = $handler;
 
@@ -172,13 +172,13 @@ class RouteInfo
 
     /**
      * get router var by name
-     * @param string $varname
+     * @param string $name
      *
      * @return mixed
      */
-    public function getVar($varname)
+    public function getVar(string $name)
     {
-        return $this->vars[$varname] ?? null;
+        return $this->vars[$name] ?? null;
     }
 
     /**
@@ -221,7 +221,7 @@ class RouteInfo
     /**
      * gets status
      *
-     * @return mixed
+     * @return int
      */
     public function getStatus(): int
     {
@@ -231,11 +231,11 @@ class RouteInfo
     /**
      * sets status
      *
-     * @param mixed $status
+     * @param int $status
      *
      * @return self
      */
-    public function setStatus($status): RouteInfo
+    public function setStatus(int $status): RouteInfo
     {
         $this->status = $status;
 
@@ -307,7 +307,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setRoute($route): RouteInfo
+    public function setRoute(string $route): RouteInfo
     {
         $this->route = $route;
 
@@ -331,7 +331,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setRouteName($route_name): RouteInfo
+    public function setRouteName(string $route_name): RouteInfo
     {
         $this->route_name = $route_name;
 
@@ -351,10 +351,10 @@ class RouteInfo
     /**
      * sets rewrite
      *
-     * @param integer $rewrite
+     * @param int $rewrite
      * @return self
      */
-    public function setRewrite($rewrite): RouteInfo
+    public function setRewrite(int $rewrite): RouteInfo
     {
         $this->rewrite = $rewrite;
 
@@ -364,7 +364,7 @@ class RouteInfo
     /**
      * checks if route works also if site is offline
      *
-     * @return boolean
+     * @return bool
      */
     public function worksOffline(): bool
     {

@@ -16,6 +16,8 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Traits\AdminFormTrait;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
@@ -42,8 +44,9 @@ class Blocks extends AdminManageModelsPage
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -57,12 +60,13 @@ class Blocks extends AdminManageModelsPage
                     continue;
                 }
 
+                /** @var Block $new_block */
                 $new_block = $this->getContainer()->make(Block::class);
-                $new_block->region = null;
-                $new_block->title = str_replace("App\\Site\\Blocks\\", "", $blockClass);
-                $new_block->locale = null;
-                $new_block->instance_class = $blockClass;
-                $new_block->content = null;
+                $new_block->setRegion(null);
+                $new_block->setTitle(str_replace("App\\Site\\Blocks\\", "", $blockClass));
+                $new_block->setLocale(null);
+                $new_block->setInstanceClass($blockClass);
+                $new_block->setContent(null);
 
                 $new_block->persist();
             }
@@ -118,6 +122,8 @@ class Blocks extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
@@ -295,26 +301,26 @@ class Blocks extends AdminManageModelsPage
 
         switch ($values['action']) {
             case 'new':
-                $block->user_id = $this->getCurrentUser()->id;
-                $block->instance_class = Block::class;
+                $block->setUserId($this->getCurrentUser()->getId());
+                $block->setInstanceClass(Block::class);
 
             // intentional fall trough
             // no break
             case 'edit':
-                $block->region = $values['region'];
-                $block->title = $values['title'];
+                $block->setRegion($values['region']);
+                $block->setTitle($values['title']);
                 if ($values['frontend'] != null) {
-                    $block->website_id = $values['frontend']['website_id'];
-                    $block->locale = $values['frontend']['locale'];
+                    $block->setWebsiteId($values['frontend']['website_id']);
+                    $block->setLocale($values['frontend']['locale']);
                 }
-                $block->order = intval($values['order']);
+                $block->setOrder(intval($values['order']));
 
                 if ($values['action'] == 'new' || $block->getInstance() == Block::class) {
-                    $block->content = $values['content'];
+                    $block->setContent($values['content']);
                 }
 
                 if ($values['config'] && !empty($values['config']->getData())) {
-                    $block->config = json_encode($values['config']->getData());
+                    $block->setConfig(json_encode($values['config']->getData()));
                 }
 
                 $this->setAdminActionLogData($block->getChangedData());
@@ -341,7 +347,7 @@ class Blocks extends AdminManageModelsPage
                         $this->getDb()->createRow(
                             'block_rewrite',
                             [
-                                'block_id' => $block->id,
+                                'block_id' => $block->getId(),
                                 'rewrite_id' => $id_to_add,
                             ]
                         )->save();
@@ -385,8 +391,10 @@ class Blocks extends AdminManageModelsPage
      * @param array $data
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($block) {

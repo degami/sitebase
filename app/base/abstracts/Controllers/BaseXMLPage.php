@@ -13,6 +13,8 @@
 namespace App\Base\Abstracts\Controllers;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \App\Site\Routing\RouteInfo;
@@ -33,8 +35,8 @@ abstract class BaseXMLPage extends BasePage
      * @param Request|null $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {

@@ -13,6 +13,8 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use PDO;
 use \App\Base\Abstracts\Controllers\AdminPage;
 
@@ -51,6 +53,8 @@ class Stats extends AdminPage
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTemplateData(): array
     {

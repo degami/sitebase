@@ -14,7 +14,10 @@ namespace App\Site\Controllers\Frontend;
 
 
 use App\Base\Abstracts\Controllers\FrontendPage;
+use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * Search page
@@ -25,7 +28,7 @@ class Search extends FrontendPage
     const RESULTS_PER_PAGE = 10;
 
     /**
-     * {@inheritdoc }
+     * {@inheritdocs}
      *
      * @return array
      */
@@ -35,7 +38,7 @@ class Search extends FrontendPage
     }
 
     /**
-     * {@inheritdoc }
+     * {@inheritdocs}
      *
      * @return string
      */
@@ -45,7 +48,7 @@ class Search extends FrontendPage
     }
 
     /**
-     * {@inheritdoc }
+     * {@inheritdocs}
      *
      * @return string
      */
@@ -55,18 +58,25 @@ class Search extends FrontendPage
     }
 
     /**
-     * {@inheritdoc }
+     * {@inheritdocs}
      */
     protected function beforeRender()
     {
         if ($this->getRouteInfo()->getVar('lang') != null) {
             $this->locale = $this->getRouteInfo()->getVar('lang');
         }
-        return parent::beforeRender();
+        try {
+            return parent::beforeRender();
+        } catch (PermissionDeniedException | BasicException $e) {
+        }
     }
 
     /**
      * {@inheritdoc }
+     * @return array
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTemplateData(): array
     {
@@ -104,8 +114,8 @@ class Search extends FrontendPage
      * @param int $page
      * @return array
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getSearchResult($search_query = null, $page = 0): array
     {
@@ -137,9 +147,7 @@ class Search extends FrontendPage
             ]
         ];
 
-        $result = $client->search($params);
-
-        return $result;
+        return $client->search($params);
     }
 
     /**
@@ -147,6 +155,8 @@ class Search extends FrontendPage
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRouteName(): string
     {

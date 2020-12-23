@@ -15,6 +15,8 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\PHPFormsApi as FAPI;
 use \Degami\Basics\Html\TagElement;
@@ -31,8 +33,8 @@ class SecondaryMenu extends BaseCodeBlock
      * @param array $data
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderHTML(BasePage $current_page = null, $data = []): string
     {
@@ -73,10 +75,10 @@ class SecondaryMenu extends BaseCodeBlock
      * @param array $menu_tree
      * @param array|null $parent
      * @return string|mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function _renderSiteMenu($menu_tree, $parent = null): string
+    protected function _renderSiteMenu(array $menu_tree, $parent = null): string
     {
         $menu_list = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'ul',
@@ -111,8 +113,8 @@ class SecondaryMenu extends BaseCodeBlock
      * @param array $leaf
      * @param string $link_class
      * @return string
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function _renderMenuLink($leaf, $link_class = 'menu-elem'): string
     {
@@ -141,7 +143,9 @@ class SecondaryMenu extends BaseCodeBlock
      * @param $default_values
      * @return array
      * @throws BasicException
+     * @throws DependencyException
      * @throws FAPI\Exceptions\FormException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array

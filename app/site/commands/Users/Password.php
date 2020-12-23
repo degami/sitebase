@@ -54,18 +54,17 @@ class Password extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = $this->getIo();
-
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
-            $io->error('Invalid user id');
+            $this->getIo()->error('Invalid user id');
             return;
         }
 
+        /** @var User $user */
         $user = $this->getContainer()->call([User::class, 'load'], ['id' => $id]);
 
         if (!$user->isLoaded()) {
-            $io->error('User does not exists');
+            $this->getIo()->error('User does not exists');
             return;
         }
 
@@ -75,7 +74,7 @@ class Password extends BaseCommand
             return;
         }
 
-        $user->password = $this->getUtils()->getEncodedPass($password);
+        $user->setPassword($this->getUtils()->getEncodedPass($password));
         $user->persist();
 
         $output->writeln('<info>Password changed</info>');

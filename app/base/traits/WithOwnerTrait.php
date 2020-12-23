@@ -13,6 +13,8 @@
 namespace App\Base\Traits;
 
 use \App\Site\Models\User;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * Trait for elements with getOwner
@@ -23,8 +25,10 @@ trait WithOwnerTrait
      * gets owner
      *
      * @return User
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getOwner()
+    public function getOwner(): User
     {
         $this->checkLoaded();
 

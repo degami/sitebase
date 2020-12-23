@@ -13,6 +13,8 @@
 namespace App\Base\Abstracts;
 
 use App\Base\Exceptions\InvalidValueException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \Fisharebest\Localization\Locale;
 use \Fisharebest\Localization\Translation;
@@ -48,8 +50,8 @@ abstract class ContainerAwareObject
      *
      * @param string|null $locale_code
      * @return Translator
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getTranslator($locale_code = null): Translator
     {
@@ -96,7 +98,7 @@ abstract class ContainerAwareObject
      * @return mixed
      * @throws InvalidValueException
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, $arguments)
     {
         $method = strtolower(substr(trim($name), 0, 3));
         $prop = self::pascalCaseToSnakeCase(substr(trim($name), 3));

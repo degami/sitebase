@@ -15,6 +15,8 @@ namespace App\Site\Models;
 use \App\Base\Abstracts\Models\AccountModel;
 use App\Base\Abstracts\Models\BaseModel;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \DateTime;
 use \Exception;
@@ -82,7 +84,7 @@ class GuestUser extends AccountModel
      * @return boolean
      * @throws Exception
      */
-    public function checkPermission($permission_name): bool
+    public function checkPermission(string $permission_name): bool
     {
         return $this->getRole()->checkPermission($permission_name);
     }
@@ -186,6 +188,8 @@ class GuestUser extends AccountModel
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getLocale(): string
     {

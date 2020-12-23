@@ -14,6 +14,8 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \Degami\PHPFormsApi as FAPI;
@@ -36,8 +38,8 @@ abstract class AdminFormPage extends AdminPage
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {

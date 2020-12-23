@@ -50,23 +50,21 @@ class Delete extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = $this->getIo();
-
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
-            $io->error('Invalid user id');
+            $this->getIo()->error('Invalid user id');
             return;
         }
 
         $user = $this->getContainer()->call([User::class, 'load'], ['id' => $id]);
 
         if (!$user->isLoaded()) {
-            $io->error('User does not exists');
+            $this->getIo()->error('User does not exists');
             return;
         }
 
         if ($id == 1) {
-            $io->error('User "' . $user->username . '" can\'t be deleted');
+            $this->getIo()->error('User "' . $user->username . '" can\'t be deleted');
             return;
         }
 

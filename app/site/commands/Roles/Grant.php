@@ -54,18 +54,17 @@ class Grant extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = $this->getIo();
-
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
-            $io->error('Invalid role id');
+            $this->getIo()->error('Invalid role id');
             return;
         }
 
+        /** @var Role $role */
         $role = $this->getContainer()->call([Role::class, 'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
-            $io->error('Role does not exists');
+            $this->getIo()->error('Role does not exists');
             return;
         }
 
@@ -82,7 +81,7 @@ class Grant extends BaseCommand
         );
 
         if (empty($permissions_available)) {
-            $io->error('No permission available to add');
+            $this->getIo()->error('No permission available to add');
             return;
         }
 

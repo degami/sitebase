@@ -14,6 +14,8 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
@@ -51,8 +53,8 @@ abstract class LoggedUserPage extends FrontendPage
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {

@@ -15,6 +15,8 @@ namespace App\Base\Abstracts\Models;
 use ArrayAccess;
 use DebugBar\DebugBar;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use IteratorAggregate;
 use LessQL\Result;
 use \LessQL\Row;
@@ -128,17 +130,17 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param ContainerInterface $container
      * @param Result $stmt
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public static function hidrateStatementResult(ContainerInterface $container, Result $stmt): array
+    public static function hydrateStatementResult(ContainerInterface $container, Result $stmt): array
     {
-        $items = array_map(
+        return array_map(
             function ($el) use ($container) {
                 return $container->make(static::class, ['db_row' => $el]);
             },
             $stmt->fetchAll()
         );
-
-        return $items;
     }
 
     /**
@@ -193,10 +195,12 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param array $condition
      * @param array $order
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public static function all(ContainerInterface $container, $condition = [], $order = []): array
     {
-        $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
+        $items = static::hydrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -240,7 +244,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         $total = (clone $stmt)->count();
 
-        $items = static::hidrateStatementResult($container, $stmt->limit($page_size, $start));
+        $items = static::hydrateStatementResult($container, $stmt->limit($page_size, $start));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -259,7 +263,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function where(ContainerInterface $container, $condition, $order = []): array
     {
-        $items = static::hidrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
+        $items = static::hydrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -405,7 +409,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public static function loadMultiple(ContainerInterface $container, $ids, $reset = false): array
+    public static function loadMultiple(ContainerInterface $container, array $ids, bool $reset = false): array
     {
         $already_loaded = [];
         if (!$reset && isset(static::$loadedObjects[static::defaultTableName()])) {
@@ -435,7 +439,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public static function loadByCondition(ContainerInterface $container, $condition): BaseModel
+    public static function loadByCondition(ContainerInterface $container, array $condition): BaseModel
     {
         $db_row = $container->get('db')->table(static::defaultTableName())->where($condition)->limit(1)->fetch();
         return static::$loadedObjects[static::defaultTableName()][$db_row->id] = new static($container, $db_row);
@@ -451,7 +455,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public static function loadMultipleByCondition(ContainerInterface $container, $condition, $reset = false): array
+    public static function loadMultipleByCondition(ContainerInterface $container, array $condition, bool $reset = false): array
     {
         $ids = [];
         foreach ($container->get('db')->table(static::defaultTableName())->where($condition)->fetchAll() as $db_row) {
@@ -540,12 +544,12 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
     /**
      * {@inheritdocs}
-     * @param $name
+     * @param string $name
      * @param $arguments
      * @return BaseModel|bool|mixed
      * @throws Exception
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, $arguments)
     {
         if (!($this->db_row instanceof Row)) {
             throw new Exception("No row loaded", 1);
@@ -798,10 +802,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * sets model's original data
      *
-     * @param $original_data
+     * @param array|null $original_data
      * @return $this
      */
-    protected function setOriginalData($original_data): BaseModel
+    protected function setOriginalData(?array $original_data): BaseModel
     {
         $this->original_data = $original_data;
         return $this;
@@ -811,9 +815,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * gets model's original data
      *
      * @param null $key
-     * @return array|null
+     * @return array|null|mixed
      */
-    protected function getOriginalData($key = null): ?array
+    protected function getOriginalData($key = null)
     {
         if ($key != null && array_key_exists($key, $this->original_data)) {
             return $this->original_data[$key];

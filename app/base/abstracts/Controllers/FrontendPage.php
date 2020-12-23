@@ -16,6 +16,8 @@ use App\Site\Models\Menu;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Website;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use League\Plates\Template\Template;
 use LessQL\Result;
@@ -58,8 +60,8 @@ abstract class FrontendPage extends BaseHtmlPage
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -89,6 +91,8 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getBaseTemplateData(): array
     {
@@ -106,7 +110,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @param string $region
      * @return string
      */
-    protected function getRegionTags($region)
+    protected function getRegionTags(string $region)
     {
         if (!isset($this->regions[$region])) {
             return false;
@@ -150,6 +154,8 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return Template
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     protected function prepareTemplate(): Template
@@ -192,6 +198,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * {@inheritdocs}
      *
      * @return Response|self
+     * @throws BasicException
      * @throws PermissionDeniedException
      */
     protected function beforeRender()
@@ -241,6 +248,8 @@ abstract class FrontendPage extends BaseHtmlPage
      * @param bool $reset
      * @return Rewrite|null
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRewrite($reset = false): ?Rewrite
     {
@@ -266,8 +275,8 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentLocale(): ?string
     {
@@ -275,10 +284,11 @@ abstract class FrontendPage extends BaseHtmlPage
             // try by menu
             $rewrite = $this->getRewrite();
             if ($rewrite != null && (($menu_obj = $rewrite->menuList()->fetch()) != null)) {
+                /** @var Menu $menu_obj */
                 $menu_obj = $this->getContainer()->make(Menu::class, ['db_row' => $menu_obj]);
-                $this->locale = $menu_obj->locale;
+                $this->locale = $menu_obj->getLocale();
             } elseif ($rewrite != null) {
-                $this->locale = $rewrite->locale;
+                $this->locale = $rewrite->getLocale();
             }
 
             if ($this->locale == null && $this->getRouteData('locale') != null) {
@@ -302,6 +312,8 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return int|string|null
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentWebsiteId()
     {
@@ -313,6 +325,8 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return Website|int|string|null
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentWebsite()
     {
@@ -324,6 +338,8 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getTranslations(): array
     {

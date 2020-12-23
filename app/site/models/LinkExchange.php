@@ -52,11 +52,11 @@ class LinkExchange extends BaseModel
     /**
      * gets Link Taxonomy Terms
      *
-     * @param false $reset
+     * @param bool $reset
      * @return array
      * @throws Exception
      */
-    public function getTerms($reset = false): array
+    public function getTerms(bool $reset = false): array
     {
         $this->checkLoaded();
 
@@ -78,10 +78,10 @@ class LinkExchange extends BaseModel
      * @return self
      * @throws BasicException
      */
-    public function addTerm($term): LinkExchange
+    public function addTerm(Taxonomy $term): LinkExchange
     {
-        $new_link_echange_taxonomy_row = $this->getDb()->table('link_echange_taxonomy')->createRow();
-        $new_link_echange_taxonomy_row->update(
+        $new_link_exchange_taxonomy_row = $this->getDb()->table('link_exchange_taxonomy')->createRow();
+        $new_link_exchange_taxonomy_row->update(
             [
                 'link_exchange_id' => $this->id,
                 'taxonomy_id' => $term->id,
@@ -97,7 +97,7 @@ class LinkExchange extends BaseModel
      * @return self
      * @throws BasicException
      */
-    public function removeTerm($term): LinkExchange
+    public function removeTerm(Taxonomy $term): LinkExchange
     {
         $this->getDb()->table('link_echange_taxonomy')->where(
             [

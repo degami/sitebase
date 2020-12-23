@@ -17,6 +17,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \App\Site\Models\User;
 use \Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -72,6 +74,8 @@ class Users extends AdminManageModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -178,6 +182,8 @@ class Users extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -190,12 +196,12 @@ class Users extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $user->username = $values['username'];
-                $user->password = $this->getUtils()->getEncodedPass($values['password']);
-                $user->role_id = $values['role_id'];
-                $user->email = $values['email'];
-                $user->nickname = $values['nickname'];
-                $user->locale = $values['locale'];
+                $user->setUsername($values['username']);
+                $user->setPassword($this->getUtils()->getEncodedPass($values['password']));
+                $user->setRoleId($values['role_id']);
+                $user->setEmail($values['email']);
+                $user->setNickname($values['nickname']);
+                $user->setLocale($values['locale']);
 
                 $this->setAdminActionLogData($user->getChangedData());
 
@@ -236,7 +242,7 @@ class Users extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($user) {

@@ -13,6 +13,8 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\JsonResponse;
@@ -77,6 +79,8 @@ class Pages extends AdminManageFrontendModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -220,6 +224,8 @@ class Pages extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -232,19 +238,19 @@ class Pages extends AdminManageFrontendModelsPage
 
         switch ($values['action']) {
             case 'new':
-                $page->user_id = $this->getCurrentUser()->id;
+                $page->setUserId($this->getCurrentUser()->getId());
             // intentional fall trough
             // no break
             case 'edit':
-                $page->url = $values['frontend']['url'];
-                $page->title = $values['title'];
-                $page->locale = $values['frontend']['locale'];
-                $page->template_name = empty($values['template_name']) ? null : $values['template_name'];
-                $page->content = $values['content'];
-                $page->meta_keywords = $values['seo']['meta_keywords'];
-                $page->meta_description = $values['seo']['meta_description'];
-                $page->html_title = $values['seo']['html_title'];
-                $page->website_id = $values['frontend']['website_id'];
+                $page->setUrl($values['frontend']['url']);
+                $page->setTitle($values['title']);
+                $page->setLocale($values['frontend']['locale']);
+                $page->setTemplateName(empty($values['template_name']) ? null : $values['template_name']);
+                $page->setContent($values['content']);
+                $page->setMetaKeywords($values['seo']['meta_keywords']);
+                $page->setMetaDescription($values['seo']['meta_description']);
+                $page->setHtmlTitle($values['seo']['html_title']);
+                $page->setWebsiteId($values['frontend']['website_id']);
 
                 $this->setAdminActionLogData($page->getChangedData());
 
@@ -300,7 +306,7 @@ class Pages extends AdminManageFrontendModelsPage
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($page) {

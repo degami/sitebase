@@ -75,13 +75,14 @@ class User extends AccountModel
     public function setRole($role)
     {
         if ($role instanceof Role) {
-            $this->role_id = $role->id;
+            $this->setRoleId($role->getId());
         } elseif (is_int($role)) {
-            $this->role_id = $role;
+            $this->setRoleId($role);
         } elseif (is_string($role)) {
+            /** @var Role $role */
             $role = $this->getDb()->table('role')->where(['name' => $role])->fetch();
             if ($role) {
-                $this->role_id = $role->id;
+                $this->setRoleId($role->getId());
             }
         }
     }
@@ -93,7 +94,7 @@ class User extends AccountModel
      * @return boolean
      * @throws Exception
      */
-    public function checkPermission($permission_name): bool
+    public function checkPermission(string $permission_name): bool
     {
         $this->checkLoaded();
 

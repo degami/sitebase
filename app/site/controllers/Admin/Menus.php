@@ -18,6 +18,8 @@ use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Menu;
 use \App\Site\Models\Rewrite;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -89,8 +91,8 @@ class Menus extends AdminManageModelsPage
      * @param Menu|null $menuElement
      * @return Element
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     private function addLevel($parentFormElement, $menu_name, $menuElement = null): Element
     {
@@ -139,8 +141,8 @@ class Menus extends AdminManageModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -263,6 +265,8 @@ class Menus extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -281,16 +285,16 @@ class Menus extends AdminManageModelsPage
                 break;
             case 'new':
             case 'edit':
-                $menu->title = $values['title'];
-                $menu->website_id = $values['website_id'];
-                $menu->locale = $values['locale'];
-                $menu->menu_name = $values['menu_name'];
-                $menu->rewrite_id = is_numeric($values['rewrite_id']) ? $values['rewrite_id'] : null;
-                $menu->href = $values['href'];
-                $menu->target = $values['target'];
+                $menu->setTitle($values['title']);
+                $menu->setWebsiteId($values['website_id']);
+                $menu->setLocale($values['locale']);
+                $menu->setMenuName($values['menu_name']);
+                $menu->setRewriteId(is_numeric($values['rewrite_id']) ? $values['rewrite_id'] : null);
+                $menu->setHref($values['href']);
+                $menu->setTarget($values['target']);
                 //$menu->parent_id = $values['parent_id'];
                 //$menu->position = $values['position'];
-                $menu->breadcrumb = $values['breadcrumb'];
+                $menu->setBreadcrumb($values['breadcrumb']);
 
                 $menu->persist();
                 break;
@@ -311,7 +315,7 @@ class Menus extends AdminManageModelsPage
      * @param int $position
      * @return void
      */
-    protected function saveLevel($menu_name, $level, $parent, $position = 0)
+    protected function saveLevel(string $menu_name, array $level, array $parent, int $position = 0)
     {
         if (isset($level['children'])) {
             $child_position = 0;
@@ -343,7 +347,7 @@ class Menus extends AdminManageModelsPage
      * @return array
      * @throws BasicException
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($menu) {

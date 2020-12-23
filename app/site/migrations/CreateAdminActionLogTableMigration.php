@@ -47,7 +47,8 @@ class CreateAdminActionLogTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
+        $table
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('url', 'VARCHAR', [1024])
             ->addColumn('method', 'VARCHAR', [10])

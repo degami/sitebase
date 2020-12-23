@@ -13,6 +13,8 @@
 namespace App\Site\Commands\Db;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \App\App;
 
@@ -27,8 +29,8 @@ class MigrateOptionals extends Migrate
      * @param string|null $name
      * @param ContainerInterface|null $container
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {

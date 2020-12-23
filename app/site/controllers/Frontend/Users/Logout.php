@@ -14,6 +14,8 @@ namespace App\Site\Controllers\Frontend\Users;
 
 use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\LoggedUserPage;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -67,8 +69,8 @@ class Logout extends LoggedUserPage
      *
      * @return LoggedUserPage|RedirectResponse|Response
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function beforeRender()
     {

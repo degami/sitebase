@@ -15,6 +15,8 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \Degami\Basics\Html\TagElement;
 
@@ -50,8 +52,8 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      * @param BasePage|null $current_page
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderHTML(BasePage $current_page = null): string
     {

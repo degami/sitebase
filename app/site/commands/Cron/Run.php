@@ -14,6 +14,8 @@ namespace App\Site\Commands\Cron;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Cron\CronExpression;
@@ -42,6 +44,8 @@ class Run extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

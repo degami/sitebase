@@ -80,11 +80,11 @@ abstract class FrontendModel extends BaseModel
     public function postPersist(): BaseModel
     {
         $rewrite = $this->getRewrite();
-        $rewrite->website_id = $this->getWebsiteId();
-        $rewrite->url = $this->getFrontendUrl();
-        $rewrite->route = '/' . $this->getRewritePrefix() . '/' . $this->getId();
-        $rewrite->user_id = $this->getUserId();
-        $rewrite->locale = $this->getLocale();
+        $rewrite->setWebsiteId($this->getWebsiteId());
+        $rewrite->setUrl($this->getFrontendUrl());
+        $rewrite->setRoute('/' . $this->getRewritePrefix() . '/' . $this->getId());
+        $rewrite->setUserId($this->getUserId());
+        $rewrite->setLocale($this->getLocale());
         $rewrite->persist();
 
         return parent::postPersist();

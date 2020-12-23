@@ -15,6 +15,7 @@ namespace App\Site\Blocks;
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Controllers\Frontend\Search as SearchController;
+use Degami\Basics\Exceptions\BasicException;
 use \Degami\Basics\Html\TagElement;
 use Exception;
 
@@ -28,6 +29,7 @@ class Search extends BaseCodeBlock
      *
      * @param BasePage|null $current_page
      * @return string
+     * @throws BasicException
      */
     public function renderHTML(BasePage $current_page = null): string
     {

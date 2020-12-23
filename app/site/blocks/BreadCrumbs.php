@@ -18,6 +18,8 @@ use App\Base\Abstracts\Controllers\FrontendPage;
 use \Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use LessQL\Row;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Site\Models\Menu;
@@ -34,9 +36,12 @@ class BreadCrumbs extends BaseCodeBlock
      * {@inheritdocs}
      *
      * @param BasePage|null $current_page
+     * @param array $data
      * @return string
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderHTML(BasePage $current_page = null, $data = []): string
     {
@@ -219,8 +224,8 @@ class BreadCrumbs extends BaseCodeBlock
      * @param array $leaf
      * @param string $link_class
      * @return string
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function _renderLink($leaf, $link_class = 'breadcrumb-link'): string
     {

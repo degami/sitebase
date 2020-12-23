@@ -17,6 +17,8 @@ use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Field;
 use Degami\PHPFormsApi\Abstracts\Base\FieldsContainer;
 use Degami\PHPFormsApi\Form;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\Basics\Html\TagElement;
 
@@ -81,7 +83,7 @@ class Manager extends ContainerAwareObject
      * @param bool $on_ready
      * @return self
      */
-    public function addJs($js, $as_is = false, $position = null, $on_ready = true): Manager
+    public function addJs($js, bool $as_is = false, ?string $position = null, bool $on_ready = true): Manager
     {
         if (!$as_is) {
             if (is_array($js)) {
@@ -116,7 +118,7 @@ class Manager extends ContainerAwareObject
      * @param string|null $position
      * @return string the js into a jquery sandbox
      */
-    protected function generateJs($position = null): string
+    protected function generateJs(?string $position = null): string
     {
         if ($position == 'head') {
             $position = 'head_';
@@ -171,7 +173,7 @@ class Manager extends ContainerAwareObject
      * @param string $jquery_var_name
      * @return string
      */
-    protected function encapsulateJs($js_array, $jquery_var_name = 'jQuery'): string
+    protected function encapsulateJs(array $js_array, $jquery_var_name = 'jQuery'): string
     {
         if (!is_array($js_array)) {
             $js_array = [$js_array];
@@ -192,7 +194,7 @@ class Manager extends ContainerAwareObject
      * @param string $js javascript minify
      * @return string
      */
-    protected function minifyJs($js): string
+    protected function minifyJs(string $js): string
     {
         if (is_string($js) && trim($js) != '') {
             $js = trim(preg_replace("/\s+/", " ", str_replace("\n", "", "" . $js)));
@@ -205,6 +207,8 @@ class Manager extends ContainerAwareObject
      * gets inline js
      *
      * @return string
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderPageInlineJS(): string
     {
@@ -229,8 +233,8 @@ class Manager extends ContainerAwareObject
      * gets inline js for head
      *
      * @return string
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderHeadInlineJS(): string
     {
@@ -293,8 +297,8 @@ class Manager extends ContainerAwareObject
      * gets inline css
      *
      * @return string
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderPageInlineCSS(): string
     {
@@ -318,9 +322,11 @@ class Manager extends ContainerAwareObject
      * @param string|null $locale
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function assetUrl($asset_path, $website_id = null, $locale = null): string
+    public function assetUrl(string $asset_path, $website_id = null, $locale = null): string
     {
         static $domain_prefix = null;
 

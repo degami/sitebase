@@ -13,7 +13,10 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\JsonResponse;
 use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
@@ -73,9 +76,9 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -234,8 +237,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -247,23 +250,23 @@ class Taxonomy extends AdminManageFrontendModelsPage
         $values = $form->values();
         switch ($values['action']) {
             case 'new':
-                $term->user_id = $this->getCurrentUser()->id;
+                $term->setUserId($this->getCurrentUser()->getId());
             // intentional fall trough
             // no break
             case 'edit':
-                $term->url = $values['frontend']['url'];
-                $term->title = $values['title'];
-                $term->locale = $values['frontend']['locale'];
-                $term->template_name = empty($values['template_name']) ? null : $values['template_name'];
-                $term->content = $values['content'];
+                $term->setUrl($values['frontend']['url']);
+                $term->setTitle($values['title']);
+                $term->setLocale($values['frontend']['locale']);
+                $term->setTemplateName(empty($values['template_name']) ? null : $values['template_name']);
+                $term->setContent($values['content']);
                 if (isset($values['seo'])) {
-                    $term->meta_keywords = $values['seo']['meta_keywords'];
-                    $term->meta_description = $values['seo']['meta_description'];
-                    $term->html_title = $values['seo']['html_title'];
+                    $term->setMetaKeywords($values['seo']['meta_keywords']);
+                    $term->setMetaDescription($values['seo']['meta_description']);
+                    $term->setHtmlTitle($values['seo']['html_title']);
                 }
-                $term->website_id = $values['frontend']['website_id'];
+                $term->setWebsiteId($values['frontend']['website_id']);
                 //$term->parent_id = $values['parent_id'];
-                $term->position = $values['position'];
+                $term->setPosition($values['position']);
 
                 $this->setAdminActionLogData($term->getChangedData());
 
@@ -325,7 +328,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($term) {

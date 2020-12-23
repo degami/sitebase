@@ -15,6 +15,8 @@ namespace App\Base\Abstracts\Controllers;
 use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Traits\AdminFormTrait;
 use \Degami\Basics\Html\TagElement;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * Base for admin page that manages a Frontend Model
@@ -28,6 +30,8 @@ abstract class AdminManageFrontendModelsPage extends AdminManageModelsPage
      *
      * @param $object
      * @return string
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTranslationsButton($object): string
     {

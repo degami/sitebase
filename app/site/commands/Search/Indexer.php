@@ -17,6 +17,8 @@ use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Tools\Plates\SiteBase;
 use App\Site\Controllers\Frontend\Search;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -43,8 +45,9 @@ class Indexer extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws \Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

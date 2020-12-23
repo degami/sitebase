@@ -48,7 +48,8 @@ class CreateLanguagesTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
+        $table
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('locale', 'VARCHAR', [10])
             ->addColumn('639-1', 'VARCHAR', [10])
             ->addColumn('639-2', 'VARCHAR', [10])

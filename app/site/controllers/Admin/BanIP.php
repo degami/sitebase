@@ -16,6 +16,8 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Exceptions\FormException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \Symfony\Component\HttpFoundation\Response;
@@ -44,6 +46,8 @@ class BanIP extends AdminFormPage
      * @throws BasicException
      * @throws FormException
      * @throws PermissionDeniedException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {

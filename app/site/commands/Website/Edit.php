@@ -54,18 +54,17 @@ class Edit extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
-            $io->error('Invalid website id');
+            $this->getIo()->error('Invalid website id');
             return;
         }
 
+        /** @var Website $website */
         $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $id]);
 
         if (!$website->isLoaded()) {
-            $io->error('Website does not exists');
+            $this->getIo()->error('Website does not exists');
             return;
         }
 
@@ -77,8 +76,8 @@ class Edit extends BaseCommand
         }
 
         try {
-            $website->site_name = $name;
-            $website->domain = $domain;
+            $website->setSiteName($name);
+            $website->setDomain($domain);
 
             $website->persist();
 

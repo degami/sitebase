@@ -19,6 +19,8 @@ use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\Website;
 use DebugBar\StandardDebugBar;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \League\Plates\Engine;
 use \League\Plates\Extension\ExtensionInterface;
 use \App\Base\Abstracts\Controllers\BasePage;
@@ -78,8 +80,8 @@ class SiteBase implements ExtensionInterface
      *
      * @return Website
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentWebsite(): Website
     {
@@ -104,8 +106,8 @@ class SiteBase implements ExtensionInterface
      * @return string
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderBlocks($region, BasePage $controller): string
     {
@@ -118,10 +120,10 @@ class SiteBase implements ExtensionInterface
      * @param string $string
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function translate($string): string
+    public function translate(string $string): string
     {
         return $this->getUtils()->translate($string, $this->getCurrentLocale());
     }
@@ -139,12 +141,14 @@ class SiteBase implements ExtensionInterface
     /**
      * gets asset url
      *
-     * @param $asset_path
+     * @param string $asset_path
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function assetUrl($asset_path): string
+    public function assetUrl(string $asset_path): string
     {
         return $this->getAssets()->assetUrl($asset_path);
     }
@@ -156,7 +160,7 @@ class SiteBase implements ExtensionInterface
      * @param array $route_params
      * @return string
      */
-    public function getUrl($route_name, $route_params = []): string
+    public function getUrl(string $route_name, $route_params = []): string
     {
         return $this->container->get('web_router')->getUrl($route_name, $route_params);
     }
@@ -222,7 +226,7 @@ class SiteBase implements ExtensionInterface
      * @param string $class
      * @return string
      */
-    public function getGravatar($email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle'): string
+    public function getGravatar(string $email, $s = 80, $d = 'mp', $r = 'g', $class = 'rounded-circle'): string
     {
         return $this->getHtmlRenderer()->getGravatar($email, $s, $d, $r, $class);
     }
@@ -233,7 +237,7 @@ class SiteBase implements ExtensionInterface
      * @param string $icon_name
      * @return void
      */
-    public function drawIcon($icon_name)
+    public function drawIcon(string $icon_name)
     {
         echo $this->getUtils()->getIcon($icon_name);
     }
@@ -246,7 +250,7 @@ class SiteBase implements ExtensionInterface
      * @return mixed
      * @throws BasicException
      */
-    public function env($variable, $default = null)
+    public function env(string $variable, $default = null)
     {
         return $this->getUtils()->getEnv($variable, $default);
     }
@@ -267,8 +271,8 @@ class SiteBase implements ExtensionInterface
      *
      * @param BasePage $controller
      * @return void
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function renderFlashMessages(BasePage $controller)
     {
@@ -279,10 +283,10 @@ class SiteBase implements ExtensionInterface
      * summarize text
      *
      * @param string $text
-     * @param integer $max_words
+     * @param int $max_words
      * @return string
      */
-    public function summarize($text, $max_words = 10): string
+    public function summarize(string $text, int $max_words = 10): string
     {
         $max_words = abs(intval($max_words));
         $words = preg_split("/\s+/", strip_tags($text));

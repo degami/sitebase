@@ -19,14 +19,14 @@ use \Degami\SqlSchema\Index;
 use \Degami\SqlSchema\Table;
 
 /**
- * "link_echange_taxonomy" table migration
+ * "link_exchange_taxonomy" table migration
  */
 class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
 {
     /**
      * @var string table name
      */
-    protected $tableName = 'link_echange_taxonomy';
+    protected $tableName = 'link_exchange_taxonomy';
 
     /**
      * {@inheritdocs}

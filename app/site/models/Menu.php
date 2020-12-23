@@ -33,6 +33,7 @@ use \Psr\Container\ContainerInterface;
  * @method string getTarget()
  * @method int getParentId()
  * @method string getBreadcrumb()
+ * @method int getLevel()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -45,6 +46,7 @@ use \Psr\Container\ContainerInterface;
  * @method self setTarget(string $target)
  * @method self setParentId(int $parent_id)
  * @method self setBreadcrumb(string $breadcrumb)
+ * @method self setLevel(int $level)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
@@ -95,8 +97,8 @@ class Menu extends ModelWithChildren
 
     public function prePersist(): BaseModel
     {
-        $this->breadcrumb = $this->getParentIds();
-        $this->level = max(count(explode("/", $this->breadcrumb))-1, 0);
+        $this->setBreadcrumb($this->getParentIds());
+        $this->setLevel(max(count(explode("/", $this->breadcrumb))-1, 0));
         return parent::prePersist();
     }
 }

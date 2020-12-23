@@ -13,6 +13,8 @@
 namespace App\Base\Traits;
 
 use \App\Site\Models\Website;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * Trait for elements with Website
@@ -26,8 +28,8 @@ trait WithWebsiteTrait
      * gets website
      *
      * @return Website
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getWebsite(): Website
     {

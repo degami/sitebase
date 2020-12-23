@@ -58,8 +58,9 @@ class Add extends BaseCommand
         }
 
         try {
+            /** @var Role $role */
             $role = $this->getContainer()->call([Role::class, 'new']);
-            $role->name = $name;
+            $role->setName($name);
             $role->persist();
 
             $output->writeln('<info>Role added</info>');

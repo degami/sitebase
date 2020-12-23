@@ -14,6 +14,7 @@ namespace App\Site\Controllers\Frontend;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException as PhpfastcacheSimpleCacheExceptionAlias;
 use \Psr\Container\ContainerInterface;
 use \Degami\PHPFormsApi as FAPI;
@@ -45,7 +46,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheExceptionAlias
-     * @throws \DI\DependencyException
+     * @throws DependencyException
      * @throws \DI\NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
@@ -160,7 +161,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \DI\DependencyException
+     * @throws DependencyException
      * @throws \DI\NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)

@@ -13,6 +13,8 @@
 namespace App\Site\Controllers\Frontend;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Base\Abstracts\Controllers\FormPage;
@@ -73,6 +75,8 @@ class Links extends FormPage
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTemplateData(): array
     {
@@ -141,6 +145,8 @@ class Links extends FormPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
@@ -179,8 +185,8 @@ class Links extends FormPage
      *
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentLocale(): string
     {

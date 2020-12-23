@@ -14,6 +14,8 @@ namespace App\Site\Commands\Users;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
 use \Symfony\Component\Console\Helper\Table;
@@ -40,6 +42,8 @@ class Show extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {

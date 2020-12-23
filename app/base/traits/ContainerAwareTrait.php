@@ -24,8 +24,10 @@ use App\Site\Routing\Web;
 use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
+use ElasticSearch\Client as ElasticSearchClient;
 use Feather\Icons;
 use Gplanchat\EventManager\SharedEventEmitter;
+use GuzzleHttp\Client as GuzzleHttpClient;
 use Imagine\Gd\Imagine;
 use League\Plates\Engine;
 use LessQL\Database;
@@ -232,10 +234,10 @@ trait ContainerAwareTrait
     /**
      * gets guzzle service
      *
-     * @return \GuzzleHttp\Client
+     * @return GuzzleHttpClient
      * @throws BasicException
      */
-    public function getGuzzle(): \GuzzleHttp\Client
+    public function getGuzzle(): GuzzleHttpClient
     {
         return $this->getService('guzzle');
     }
@@ -320,10 +322,10 @@ trait ContainerAwareTrait
     /**
      * gets elasticsearch service
      *
-     * @return \ElasticSearch\Client
+     * @return ElasticSearchClient
      * @throws BasicException
      */
-    public function getElasticsearch(): \ElasticSearch\Client
+    public function getElasticsearch(): ElasticSearchClient
     {
         return $this->getService('elasticsearch');
     }
@@ -336,7 +338,7 @@ trait ContainerAwareTrait
      * @return mixed
      * @throws BasicException
      */
-    public function getEnv($variable, $default = null)
+    public function getEnv(string $variable, $default = null)
     {
         $env = (array)$this->getService('env');
         return $env[$variable] ?? $default;

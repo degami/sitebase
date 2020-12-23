@@ -13,10 +13,13 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\News as NewsModel;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
  * "News" Admin Page
@@ -70,7 +73,9 @@ class News extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -145,8 +150,8 @@ class News extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -159,16 +164,16 @@ class News extends AdminManageFrontendModelsPage
 
         switch ($values['action']) {
             case 'new':
-                $news->user_id = $this->getCurrentUser()->id;
+                $news->setUserId($this->getCurrentUser()->getId());
             // intentional fall trough
             // no break
             case 'edit':
-                $news->url = $values['frontend']['url'];
-                $news->title = $values['title'];
-                $news->locale = $values['frontend']['locale'];
-                $news->content = $values['content'];
-                $news->website_id = $values['frontend']['website_id'];
-                $news->date = $values['date'];
+                $news->setUrl($values['frontend']['url']);
+                $news->setTitle($values['title']);
+                $news->setLocale($values['frontend']['locale']);
+                $news->setContent($values['content']);
+                $news->setWebsiteId($values['frontend']['website_id']);
+                $news->setDate($values['date']);
 
                 $this->setAdminActionLogData($news->getChangedData());
 
@@ -210,7 +215,7 @@ class News extends AdminManageFrontendModelsPage
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($news) {

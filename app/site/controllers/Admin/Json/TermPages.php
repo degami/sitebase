@@ -17,6 +17,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminJsonPage;
 use \App\Site\Models\Page;
 use \App\Site\Models\Taxonomy;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * pages for term in JSON format
@@ -48,8 +50,8 @@ class TermPages extends AdminJsonPage
      *
      * @return array
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getJsonData(): array
     {

@@ -15,6 +15,8 @@ namespace App\Base\Traits;
 use \App\Base\Abstracts\Models\BaseModel;
 use \App\Site\Models\User;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 
 /**
@@ -100,8 +102,8 @@ trait FrontendTrait
      *
      * @return string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentLocale(): string
     {

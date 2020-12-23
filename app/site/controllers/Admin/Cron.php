@@ -15,6 +15,8 @@ namespace App\Site\Controllers\Admin;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
@@ -42,8 +44,9 @@ class Cron extends AdminManageModelsPage
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
      * @throws PermissionDeniedException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -141,6 +144,8 @@ class Cron extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -230,6 +235,8 @@ class Cron extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -241,14 +248,14 @@ class Cron extends AdminManageModelsPage
         $values = $form->values();
         switch ($values['action']) {
             case 'new':
-                $task->user_id = $this->getCurrentUser()->id;
+                $task->setUserId($this->getCurrentUser()->getId());
             // intentional fall trough
             // no break
             case 'edit':
-                $task->title = $values['title'];
-                $task->cron_task_callable = $values['cron_task_callable'];
-                $task->schedule = $values['schedule'];
-                $task->active = intval($values['active']);
+                $task->setTitle($values['title']);
+                $task->setCronTaskCallable($values['cron_task_callable']);
+                $task->setSchedule($values['schedule']);
+                $task->setActive(intval($values['active']));
 
                 $this->setAdminActionLogData($task->getChangedData());
 
@@ -329,8 +336,10 @@ class Cron extends AdminManageModelsPage
      * @param array $data
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($task) {
@@ -360,7 +369,7 @@ class Cron extends AdminManageModelsPage
      * @param integer $object_id
      * @return string
      */
-    public function getRunButton($object_id): string
+    public function getRunButton(int $object_id): string
     {
         return $this->getActionButton('run', $object_id, 'success', 'play', 'Run');
     }

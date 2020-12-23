@@ -18,6 +18,9 @@ use \App\Site\Models\MailLog;
 use \App\Site\Models\RequestLog;
 use \App\Site\Models\CronLog;
 use \App\Site\Models\AdminActionLog;
+use Degami\SqlSchema\Exceptions\OutOfRangeException;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * "Logs" Admin Page
@@ -54,6 +57,9 @@ class Logs extends AdminPage
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws OutOfRangeException
      */
     protected function getTemplateData(): array
     {
@@ -188,8 +194,10 @@ class Logs extends AdminPage
      * @param array $header
      * @return array[]
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function getTableElements($data, $header): array
+    protected function getTableElements(array $data, array $header): array
     {
         return array_map(function ($log) use ($header) {
             $data = $log->getData();
@@ -208,7 +216,7 @@ class Logs extends AdminPage
      * @param array $header
      * @return array
      */
-    protected function getTableHeader($header): array
+    protected function getTableHeader(array $header): array
     {
         $out = [];
         foreach ($header as $element) {

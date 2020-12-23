@@ -22,27 +22,39 @@ use Exception;
  * Taxonomy Model
  *
  * @method int getId()
- * @method string getTitle()
+ * @method int getWebsiteId()
+ * @method string getUrl()
+ * @method int getParentId()
+ * @method int getPosition()
  * @method string getLocale()
- * @method string getContent()
- * @method string getMetaDescription()
+ * @method string getTitle()
  * @method string getMetaKeywords()
+ * @method string getMetaDescription()
  * @method string getHtmlTitle()
+ * @method string getContent()
+ * @method string getTemplateName()
  * @method int getUserId()
- * @method int getParent()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method string getPath()
+ * @method int getLevel()
  * @method self setId(int $id)
- * @method self setTitle(string $title)
+ * @method self setWebsiteId(int $website_id)
+ * @method self setUrl(string $url)
+ * @method self setParentId(int $parent)
+ * @method self setPosition(int $position)
  * @method self setLocale(string $locale)
- * @method self setContent(string $content)
- * @method self setMetaDescription(string $meta_description)
+ * @method self setTitle(string $title)
  * @method self setMetaKeywords(string $met_keywords)
+ * @method self setMetaDescription(string $meta_description)
  * @method self setHtmlTitle(string $html_title)
+ * @method self setContent(string $content)
+ * @method self setTemplateName(string $template_name)
  * @method self setUserId(int $user_id)
- * @method self setParent(int $parent)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
+ * @method self setPath(string $path)
+ * @method self setLevel(int $level)
  */
 class Taxonomy extends FrontendModelWithChildren
 {
@@ -87,8 +99,8 @@ class Taxonomy extends FrontendModelWithChildren
 
     public function prePersist(): BaseModel
     {
-        $this->path = $this->getParentIds();
-        $this->level = max(count(explode("/", $this->path))-1, 0);
+        $this->setPath($this->getParentIds());
+        $this->setLevel(max(count(explode("/", $this->path))-1, 0));
         return parent::prePersist();
     }
 }

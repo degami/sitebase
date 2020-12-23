@@ -17,7 +17,10 @@ use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Element;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
 use \App\Base\Abstracts\Controllers\AdminFormPage;
@@ -53,6 +56,8 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @throws FAPI\Exceptions\FormException
      * @throws OutOfRangeException
      * @throws PermissionDeniedException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -137,7 +142,9 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -279,11 +286,11 @@ class ContactForms extends AdminManageFrontendModelsPage
      * adds a component
      *
      * @param Element $form_component
-     * @param integer $index
+     * @param int $index
      * @param array|null $component
      * @return Element
      */
-    private function addComponent($form_component, $index, $component = null): Element
+    private function addComponent(Element $form_component, int $index, $component = null): Element
     {
         if (is_null($component)) {
             $component = [
@@ -368,6 +375,8 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -380,16 +389,16 @@ class ContactForms extends AdminManageFrontendModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $contact->url = $values['frontend']['url'];
-                $contact->title = $values['title'];
-                $contact->locale = $values['frontend']['locale'];
-                $contact->template_name = $values['template_name'];
-                $contact->content = $values['content'];
-                $contact->submit_to = $values['submit_to'];
-                $contact->website_id = $values['frontend']['website_id'];
-                $contact->meta_keywords = $values['seo']['meta_keywords'];
-                $contact->meta_description = $values['seo']['meta_description'];
-                $contact->html_title = $values['seo']['html_title'];
+                $contact->setUrl($values['frontend']['url']);
+                $contact->setTitle($values['title']);
+                $contact->setLocale($values['frontend']['locale']);
+                $contact->setTemplateName($values['template_name']);
+                $contact->setContent($values['content']);
+                $contact->setSubmitTo($values['submit_to']);
+                $contact->setWebsiteId($values['frontend']['website_id']);
+                $contact->setMetaKeywords($values['seo']['meta_keywords']);
+                $contact->setMetaDescription($values['seo']['meta_description']);
+                $contact->setHtmlTitle($values['seo']['html_title']);
 
                 $contact->persist();
                 if ($values->form_definition) {
@@ -462,7 +471,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @return array
      * @throws Exception
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         if ($this->template_data['action'] == 'submissions') {
             return array_map(

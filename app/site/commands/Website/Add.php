@@ -61,18 +61,19 @@ class Add extends BaseCommand
         }
 
         try {
+            /** @var Website $website */
             $website = $this->getContainer()->call([Website::class, 'new']);
-            $website->site_name = $name;
-            $website->domain = $domain;
+            $website->setSiteName($name);
+            $website->setDomain($domain);
             $website->persist();
 
             foreach ($this->getDb()->table('configuration')->where(['is_system' => 1, 'website_id' => 1])->fetchAll() as $config) {
                 // copy at least is_system configurations
                 $configuration_model = Configuration::new($this->getContainer());
-                $configuration_model->website_id = $website->id;
-                $configuration_model->path = $config->path;
-                $configuration_model->value = '';
-                $configuration_model->is_system = 1;
+                $configuration_model->setWebsiteId($website->id);
+                $configuration_model->setPath($config->path);
+                $configuration_model->setValue('');
+                $configuration_model->setIsSystem(1);
                 $configuration_model->persist();
             }
 

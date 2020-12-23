@@ -48,7 +48,8 @@ class CreateMediaElementsTableMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('id', 'INT', null, ['UNSIGNED'], false)
+        $table
+            ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('path', 'VARCHAR', [1024])
             ->addColumn('filename', 'VARCHAR', [255])
             ->addColumn('mimetype', 'VARCHAR', [50])

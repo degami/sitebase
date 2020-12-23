@@ -12,6 +12,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\HttpFoundation\Response;
 use \App\Base\Traits\AdminTrait;
 use \App\Base\Exceptions\PermissionDeniedException;
@@ -30,6 +31,7 @@ abstract class AdminRestPage extends BaseRestPage
      *
      * @return Response|self
      * @throws PermissionDeniedException
+     * @throws BasicException
      */
     protected function beforeRender()
     {

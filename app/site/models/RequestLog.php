@@ -61,7 +61,6 @@ class RequestLog extends BaseModel
         $this->setMethod($request->getMethod());
         $this->setIpAddress($request->getClientIp());
         $this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
-
         $this->setWebsiteId($this->matchWebsite($request->getHost()));
 
         if ($controller instanceof BasePage && $controller->hasLoggedUser()) {
@@ -78,7 +77,7 @@ class RequestLog extends BaseModel
      * @return integer|null
      * @throws BasicException
      */
-    private function matchWebsite($host): ?int
+    private function matchWebsite(string $host): ?int
     {
         foreach ($this->getDb()->table('website') as $website_row) {
             if (preg_match("/" . $website_row->domain . "/", $host)) {

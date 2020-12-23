@@ -16,6 +16,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \App\Site\Models\QueueMessage;
 use \Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * "Queue" Admin Page
@@ -62,6 +64,12 @@ class Queue extends AdminManageModelsPage
         return 'message_id';
     }
 
+    /**
+     * @return array
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
     protected function getTemplateData(): array
     {
         $out = parent::getTemplateData();
@@ -77,7 +85,6 @@ class Queue extends AdminManageModelsPage
 
         return $out;
     }
-
 
     /**
      * {@inheritdocs}
@@ -129,15 +136,18 @@ class Queue extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
+        /** @var QueueMessage $queue */
         $queue = $this->getObject();
 
         $values = $form->values();
         switch ($values['action']) {
             case 'requeue':
-                $queue->status = QueueMessage::STATUS_PENDING;
+                $queue->setStatus(QueueMessage::STATUS_PENDING);
                 $queue->persist();
 
                 $this->setAdminActionLogData('Requeued queue ' . $queue->getId());
@@ -178,7 +188,7 @@ class Queue extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($message) {

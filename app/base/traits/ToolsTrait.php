@@ -36,7 +36,7 @@ trait ToolsTrait
      * @throws Exception
      * @throws GuzzleException
      */
-    public function requestUrl($url, $method = 'GET', $options = [])
+    public function requestUrl(string $url, $method = 'GET', $options = [])
     {
         if ($this instanceof ContainerAwareObject) {
             $parsed = parse_url($url);

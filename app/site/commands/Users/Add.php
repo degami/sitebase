@@ -104,12 +104,13 @@ class Add extends BaseCommand
         }
 
         try {
+            /** @var User $user */
             $user = $this->getContainer()->call([User::class, 'new']);
-            $user->username = $username;
-            $user->nickname = $username;
-            $user->email = $email;
-            $user->password = $this->getUtils()->getEncodedPass($password);
-            $user->locale = $locale;
+            $user->setUsername($username);
+            $user->setNickname($username);
+            $user->setEmail($email);
+            $user->setPassword($this->getUtils()->getEncodedPass($password));
+            $user->setLocale($locale);
             $user->setRole($role);
             $user->persist();
 

@@ -40,11 +40,11 @@ class Role extends BaseModel
     /**
      * returns permissions array
      *
-     * @param boolean $reset
+     * @param bool $reset
      * @return array
      * @throws Exception
      */
-    public function getPermissionsArray($reset = false): array
+    public function getPermissionsArray(bool $reset = false): array
     {
         $this->checkLoaded();
 
@@ -63,11 +63,11 @@ class Role extends BaseModel
      * checks if role has permission
      *
      * @param string $permission_name
-     * @param boolean $reset
+     * @param bool $reset
      * @return boolean
      * @throws Exception
      */
-    public function checkPermission($permission_name, $reset = false): bool
+    public function checkPermission(string $permission_name, bool $reset = false): bool
     {
         $this->checkLoaded();
 
@@ -87,7 +87,7 @@ class Role extends BaseModel
      * @return self
      * @throws InvalidValueException
      */
-    public function grantPermission($permission_name): Role
+    public function grantPermission(string $permission_name): Role
     {
         $pivot_model = $this->getContainer()->call([RolePermission::class, 'new']);
 
@@ -106,13 +106,13 @@ class Role extends BaseModel
     /**
      * revokes permission from role
      *
-     * @param $permission_name
+     * @param string $permission_name
      * @return $this
      * @throws BasicException
      * @throws InvalidValueException
      * @throws Exception
      */
-    public function revokePermission($permission_name): Role
+    public function revokePermission(string $permission_name): Role
     {
         if (!$this->checkPermission($permission_name)) {
             throw new InvalidValueException("permission not found in role: " . $permission_name);

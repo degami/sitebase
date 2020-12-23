@@ -60,9 +60,10 @@ class Add extends BaseCommand
         }
 
         try {
+            /** @var Configuration $configuration */
             $configuration = $this->getContainer()->call([Configuration::class, 'new']);
-            $configuration->path = $path;
-            $configuration->value = $value;
+            $configuration->setPath($path);
+            $configuration->setValue($value);
             $configuration->persist();
 
             $output->writeln('<info>Config added</info>');

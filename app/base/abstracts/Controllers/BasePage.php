@@ -14,6 +14,8 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Site\Routing\Web;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Exception;
 use \Psr\Container\ContainerInterface;
 use \Symfony\Component\HttpFoundation\Request;
@@ -50,8 +52,8 @@ abstract class BasePage extends ContainerAwareObject
      * @param Request|null $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -91,21 +93,21 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * gets route data
      *
-     * @param null $varname
+     * @param null $var_name
      * @return mixed|null
      */
-    protected function getRouteData($varname = null)
+    protected function getRouteData($var_name = null)
     {
         if (is_null($this->route_info)) {
             return null;
         }
 
-        if ($varname == null) {
+        if ($var_name == null) {
             return $this->getRouteInfo()->getVars();
         }
 
         $vars = $this->getRouteInfo()->getVars();
-        return is_array($vars) && isset($vars[$varname]) ? $vars[$varname] : null;
+        return is_array($vars) && isset($vars[$var_name]) ? $vars[$var_name] : null;
     }
 
     /**
@@ -179,7 +181,7 @@ abstract class BasePage extends ContainerAwareObject
      * @return string
      * @throws BasicException
      */
-    public function getUrl($route_name, $route_params = []): string
+    public function getUrl(string $route_name, $route_params = []): string
     {
         return $this->getWebRouter()->getUrl($route_name, $route_params);
     }
@@ -224,16 +226,16 @@ abstract class BasePage extends ContainerAwareObject
                 $route_vars = $this->getRouteInfo()->getVars();
             }
 
-            foreach ($route_vars as $varname => $value) {
-                $regexp = "/\{" . $varname . Web::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
+            foreach ($route_vars as $var_name => $value) {
+                $regexp = "/\{" . $var_name . Web::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
                 $path = preg_replace($regexp, $value, $path);
             }
 
             return $this->getWebRouter()->getBaseUrl() . $path;
         }
 
-        $routename = str_replace("/", ".", trim($path, "/"));
-        return $this->getUrl($routename);
+        $route_name = str_replace("/", ".", trim($path, "/"));
+        return $this->getUrl($route_name);
     }
 
     /**

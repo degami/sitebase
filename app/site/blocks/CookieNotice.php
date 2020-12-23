@@ -18,7 +18,10 @@ use App\Site\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use \Degami\Basics\Html\TagElement;
 use \Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 
 /**
@@ -125,7 +128,9 @@ class CookieNotice extends BaseCodeBlock
      * @return array
      * @throws BasicException
      * @throws FAPI\Exceptions\FormException
-     * @throws \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array
     {

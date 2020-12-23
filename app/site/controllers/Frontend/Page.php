@@ -116,7 +116,7 @@ class Page extends FrontendPageWithObject
             );
 
             if ($homepage_id) {
-                /** @var \App\Site\Models\Page $page_model */
+                /** @var PageModel $page_model */
                 $page_model = $this->getContainer()->call([PageModel::class, 'load'], ['id' => $homepage_id]);
                 return $this->doRedirect($page_model->getFrontendUrl());
             }
@@ -127,7 +127,7 @@ class Page extends FrontendPageWithObject
         if (!$homepage_id) {
             $homepage_id = $this->getSiteData()->getHomePageId($website_id, null);
             if ($homepage_id) {
-                /** @var \App\Site\Models\Page $page_model */
+                /** @var PageModel $page_model */
                 $page_model = $this->getContainer()->call([PageModel::class, 'load'], ['id' => $homepage_id]);
                 $translations = $page_model->getTranslations();
                 if (isset($translations[$route_vars['lang'] ?? $browser_locale])) {

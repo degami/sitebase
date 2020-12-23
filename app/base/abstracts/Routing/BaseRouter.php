@@ -95,7 +95,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string $route
      * @return boolean
      */
-    protected function checkRouteParameters($route): bool
+    protected function checkRouteParameters(string $route): bool
     {
         if (preg_match("/\{(" . implode("|", $this->avoid_parameter_names) . ")(:.*?)?\}/i", $route)) {
             return false;
@@ -109,7 +109,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param array $verbs
      * @return array
      */
-    protected function checkRouteVerbs($verbs): array
+    protected function checkRouteVerbs(array $verbs): array
     {
         if (!is_array($verbs)) {
             $verbs = [$verbs];
@@ -159,7 +159,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string|null $httpMethod
      * @return array
      */
-    protected function getRouteByClass($class, $uri = null, $httpMethod = null): array
+    protected function getRouteByClass(string $class, $uri = null, $httpMethod = null): array
     {
         $out = [];
         foreach (array_keys($this->routes) as $group) {
@@ -213,7 +213,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string[] $verbs
      * @return self
      */
-    public function addRoute($group, $name, $path, $class, $method = 'renderPage', $verbs = ['GET', 'POST']): BaseRouter
+    public function addRoute(string $group, string $name, string $path, string $class, string $method = 'renderPage', array $verbs = ['GET', 'POST']): BaseRouter
     {
         $this->routes[$group][] = [
             'path' => $path,
@@ -232,7 +232,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string $route
      * @return boolean
      */
-    public function checkRoute(ContainerInterface $container, $route): bool
+    public function checkRoute(ContainerInterface $container, string $route): bool
     {
         try {
             return !in_array($this->getRequestInfo($container, 'GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
@@ -258,7 +258,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string $name
      * @return array
      */
-    public function getRoute($name): ?array
+    public function getRoute(string $name): ?array
     {
         foreach ($this->getRoutes() as $group => $paths) {
             foreach ($paths as $p) {
@@ -306,12 +306,12 @@ abstract class BaseRouter extends ContainerAwareObject
      * @return string
      * @throws BasicException
      */
-    public function getUrl($route_name, $route_params = []): string
+    public function getUrl(string $route_name, $route_params = []): string
     {
         $dispatcherInfo = $this->getRoute($route_name);
         if ($dispatcherInfo != null) {
-            foreach ($route_params as $varname => $value) {
-                $regexp = "/\{" . $varname . self::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
+            foreach ($route_params as $var_name => $value) {
+                $regexp = "/\{" . $var_name . self::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
                 $dispatcherInfo['path'] = preg_replace($regexp, $value, $dispatcherInfo['path']);
             }
             return $this->getBaseUrl() . $dispatcherInfo['path'];

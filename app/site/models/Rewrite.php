@@ -18,6 +18,8 @@ use \App\Base\Traits\WithOwnerTrait;
 use App\Site\Routing\RouteInfo;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 
 /**
@@ -27,6 +29,7 @@ use Exception;
  * @method int getWebsiteId()
  * @method string getUrl()
  * @method string getRoute()
+ * @method string getLocale()
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
@@ -34,6 +37,7 @@ use Exception;
  * @method self setWebsiteId(int $website_id)
  * @method self setUrl(string $url)
  * @method self setRoute(string $route)
+ * @method self setLocale(string $locale)
  * @method self setUserId(int $user_id)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
@@ -50,12 +54,12 @@ class Rewrite extends BaseModel
     /**
      * gets object translations
      *
-     * @param false $reset
+     * @param bool $reset
      * @return array
      * @throws BasicException
      * @throws Exception
      */
-    public function getTranslations($reset = false): array
+    public function getTranslations(bool $reset = false): array
     {
         $this->checkLoaded();
 
@@ -87,8 +91,8 @@ class Rewrite extends BaseModel
      *
      * @return RouteInfo
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRouteInfo(): RouteInfo
     {

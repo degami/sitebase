@@ -19,12 +19,14 @@ use DateTime;
  * Language Model
  *
  * @method int getId()
+ * @method string getLocale()
  * @method string getName()
  * @method string getNative()
  * @method string getFamily()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
+ * @method self setLocale(string $locale)
  * @method self setName(string $name)
  * @method self setNative(string $native)
  * @method self setFamily(string $family)

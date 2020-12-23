@@ -25,6 +25,8 @@ use App\Site\Models\RolePermission;
 use App\Site\Models\User;
 use App\Site\Models\Website;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 
 /**
  * basic data migration
@@ -47,6 +49,9 @@ class InitialDataMigration extends BaseMigration
      *
      * @return void
      * @throws BasicException
+     * @throws InvalidValueException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function up()
     {
@@ -69,12 +74,12 @@ class InitialDataMigration extends BaseMigration
     private function addWebsite(): Website
     {
         $website_model = Website::new($this->getContainer());
-        $website_model->site_name = $this->getEnv('APPNAME');
+        $website_model->setSiteName($this->getEnv('APPNAME'));
 
         $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim($this->getEnv('APPDOMAIN')))), 'www.');
-        $website_model->domain = $site_domain;
-        $website_model->aliases = 'www.' . $site_domain;
-        $website_model->default_locale = 'en';
+        $website_model->setDomain($site_domain);
+        $website_model->setAliases('www.' . $site_domain);
+        $website_model->setDefaultLocale('en');
 
         $website_model->persist();
 
@@ -91,11 +96,11 @@ class InitialDataMigration extends BaseMigration
     private function addAdmin(): BaseModel
     {
         $admin_model = User::new($this->getContainer());
-        $admin_model->username = $this->getEnv('ADMIN_USER');
-        $admin_model->nickname = $this->getEnv('ADMIN_USER');
-        $admin_model->password = $this->getUtils()->getEncodedPass($this->getEnv('ADMIN_PASS'));
-        $admin_model->email = $this->getEnv('ADMIN_EMAIL');
-        $admin_model->locale = 'en';
+        $admin_model->setUsername($this->getEnv('ADMIN_USER'));
+        $admin_model->setNickname($this->getEnv('ADMIN_USER'));
+        $admin_model->setPassword($this->getUtils()->getEncodedPass($this->getEnv('ADMIN_PASS')));
+        $admin_model->setEmail($this->getEnv('ADMIN_EMAIL'));
+        $admin_model->setLocale('en');
 
         $admin_model->setRole('admin');
         $admin_model->persist();
@@ -124,23 +129,23 @@ class InitialDataMigration extends BaseMigration
      * @param string $permission_name
      * @throws BasicException
      * @throws InvalidValueException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    private function addPermission($role_model, $permission_name)
+    private function addPermission(Role $role_model, string $permission_name)
     {
         $permission_dbrow = $this->getDb()->table('permission')->where(['name' => $permission_name])->fetch();
         $permission_model = Permission::new($this->getContainer());
         if ($permission_dbrow) {
             $permission_model = $this->getContainer()->make(Permission::class, ['db_row' => $permission_dbrow]);
         } else {
-            $permission_model->name = $permission_name;
+            $permission_model->setName($permission_name);
             $permission_model->persist();
         }
 
         $pivot_model = RolePermission::new($this->getContainer());
-        $pivot_model->permission_id = $permission_model->id;
-        $pivot_model->role_id = $role_model->id;
+        $pivot_model->setPermissionId($permission_model->getId());
+        $pivot_model->setRoleId($role_model->getId());
         $pivot_model->persist();
     }
 
@@ -149,21 +154,21 @@ class InitialDataMigration extends BaseMigration
      *
      * @throws BasicException
      * @throws InvalidValueException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     private function addRolesPermissions()
     {
         $guest_role_model = Role::new($this->getContainer());
-        $guest_role_model->name = 'guest';
+        $guest_role_model->setName('guest');
         $guest_role_model->persist();
 
         $logged_role_model = Role::new($this->getContainer());
-        $logged_role_model->name = 'logged_user';
+        $logged_role_model->setName('logged_user');
         $logged_role_model->persist();
 
         $admin_role_model = Role::new($this->getContainer());
-        $admin_role_model->name = 'admin';
+        $admin_role_model->setName('admin');
         $admin_role_model->persist();
 
         // base permissions
@@ -223,12 +228,12 @@ class InitialDataMigration extends BaseMigration
                 $lang = array_combine($header, $row);
 
                 $lang_model = Language::new($this->getContainer());
-                $lang_model->locale = $lang['639-1'];
+                $lang_model->setLocale($lang['639-1']);
                 $lang_model->{"639-1"} = $lang['639-1'];
                 $lang_model->{"639-2"} = $lang['639-2'];
-                $lang_model->name = $lang['name'];
-                $lang_model->native = $lang['nativeName'];
-                $lang_model->family = $lang['family'];
+                $lang_model->setName($lang['name']);
+                $lang_model->setNative($lang['nativeName']);
+                $lang_model->setFamily($lang['family']);
 
                 $lang_model->persist();
             }
@@ -238,22 +243,22 @@ class InitialDataMigration extends BaseMigration
     /**
      * adds homepage model
      *
-     * @param $website_model
-     * @param $owner_model
+     * @param Website $website_model
+     * @param User $owner_model
      * @return Page
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addHomePage($website_model, $owner_model): Page
+    private function addHomePage(Website $website_model, User $owner_model): Page
     {
         $page_model = Page::new($this->getContainer());
 
-        $page_model->website_id = $website_model->id;
-        $page_model->url = 'homepage';
-        $page_model->title = $this->getEnv('APPNAME') . ' home';
-        $page_model->locale = $website_model->default_locale;
-        $page_model->content = '';
-        $page_model->user_id = $owner_model->id;
+        $page_model->setWebsiteId($website_model->getId());
+        $page_model->setUrl('homepage');
+        $page_model->setTitle($this->getEnv('APPNAME') . ' home');
+        $page_model->setLocale($website_model->getDefaultLocale());
+        $page_model->setContent('');
+        $page_model->setUserId($owner_model->getId());
 
         $page_model->persist();
         return $page_model;
@@ -267,28 +272,28 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addVariables($website_model, $homePage)
+    private function addVariables(Website $website_model, Page $homePage)
     {
         foreach ([
-                     'app/frontend/homepage' => ['locale' => $website_model->default_locale, 'value' => $homePage->id],
+                     'app/frontend/homepage' => ['locale' => $website_model->getDefaultLocale(), 'value' => $homePage->getId()],
                      'app/frontend/homepage_redirects_to_language' => ['locale' => null, 'value' => 0],
-                     'app/frontend/langs' => ['locale' => null, 'value' => $website_model->default_locale],
-                     'app/frontend/main_menu' => ['locale' => $website_model->default_locale, 'value' => ''],
+                     'app/frontend/langs' => ['locale' => null, 'value' => $website_model->getDefaultLocale()],
+                     'app/frontend/main_menu' => ['locale' => $website_model->getDefaultLocale(), 'value' => ''],
                      'app/global/site_mail_address' => ['locale' => null, 'value' => ''],
-                     'app/mail/ses_sender' => ['locale' => $website_model->default_locale, 'value' => ''],
+                     'app/mail/ses_sender' => ['locale' => $website_model->getDefaultLocale(), 'value' => ''],
                      'app/frontend/menu_with_logo' => ['locale' => null, 'value' => 1],
                      'app/backend/log_requests' => ['locale' => null, 'value' => 1],
                      'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
                      'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
-                     'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://' . $website_model->domain],
-                     'app/frontend/date_format' => ['locale' => $website_model->default_locale, 'value' => 'Y-m-d'],
+                     'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://' . $website_model->getDomain()],
+                     'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
                  ] as $path => $info) {
             $configuration_model = Configuration::new($this->getContainer());
-            $configuration_model->website_id = $website_model->id;
-            $configuration_model->locale = $info['locale'];
-            $configuration_model->path = $path;
-            $configuration_model->value = $info['value'];
-            $configuration_model->is_system = 1;
+            $configuration_model->setWebsiteId($website_model->getId());
+            $configuration_model->setLocale($info['locale']);
+            $configuration_model->setPath($path);
+            $configuration_model->setValue($info['value']);
+            $configuration_model->setIsSystem(1);
             $configuration_model->persist();
         }
     }

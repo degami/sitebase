@@ -14,6 +14,7 @@ namespace App\Site\Models;
 
 use \App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
+use Degami\PHPFormsApi\Fields\Date;
 use Exception;
 
 /**
@@ -34,6 +35,7 @@ use Exception;
  * @method self setLocale(string $locale)
  * @method self setTitle(string $title)
  * @method self setContent(string $content)
+ * @method self setDate(DateTime $date)
  * @method self setUserId(int $user_id)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)

@@ -16,6 +16,8 @@ use Degami\Basics\Exceptions\BasicException;
 use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Redirect;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -71,6 +73,8 @@ class Redirects extends AdminManageModelsPage
      * @return FAPI\Form
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -113,9 +117,9 @@ class Redirects extends AdminManageModelsPage
                     'title' => 'Website',
                     'default_value' => $redirect_website,
                     'options' => $websites,
-                ])->addField('locale', [
+                ])->addField('redirect_code', [
                     'type' => 'select',
-                    'title' => 'Locale',
+                    'title' => 'Redirect Code',
                     'default_value' => $redirect_code,
                     'options' => [
                         '300' => '300 - multiple choices',
@@ -159,6 +163,8 @@ class Redirects extends AdminManageModelsPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -171,10 +177,10 @@ class Redirects extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $redirect->url = $values['url'];
-                $redirect->route = $values['route'];
-                $redirect->website_id = empty($values['website_id']) ? null : $values['website_id'];
-                $redirect->locale = $values['locale'];
+                $redirect->setUrlFrom($values['url_from']);
+                $redirect->setUrlTo($values['url_to']);
+                $redirect->setWebsiteId(empty($values['website_id']) ? null : $values['website_id']);
+                $redirect->setRedirectCode($values['redirect_code']);
 
                 $this->setAdminActionLogData($redirect->getChangedData());
 
@@ -214,7 +220,7 @@ class Redirects extends AdminManageModelsPage
      * @param array $data
      * @return array
      */
-    protected function getTableElements($data): array
+    protected function getTableElements(array $data): array
     {
         return array_map(
             function ($redirect) {

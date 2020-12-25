@@ -61,13 +61,14 @@ class BreadCrumbs extends BaseCodeBlock
             return '';
         }
 
-        $menuitems = $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['rewrite_id' => $route_info->getRewrite()]]);
-        $menu_item = reset($menuitems);
+        $menu_items = $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['rewrite_id' => $route_info->getRewrite()]]);
+        $menu_item = reset($menu_items);
         if ($menu_item instanceof Row) {
             $menu_item = $this->getContainer()->make(Menu::class, ['db_row' => $menu_item]);
         }
         $home_url = $this->getWebRouter()->getUrl('frontend.root');
 
+        /** @var TagElement $breadcrumbs_links */
         $breadcrumbs_links = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'ol',
             'attributes' => [
@@ -207,6 +208,11 @@ class BreadCrumbs extends BaseCodeBlock
             $breadcrumbs_links->addChild($li);
         }
 
+        if (count($breadcrumbs_links->getChildren()) == 0) {
+            return '';
+        }
+
+        /** @var TagElement $breadcrumbs_container */
         $breadcrumbs_container = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'nav',
             'attributes' => [

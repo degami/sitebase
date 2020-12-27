@@ -12,6 +12,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Element;
 use DI\DependencyException;
@@ -23,6 +24,7 @@ use \App\Site\Models\Sitemap;
 use \App\Site\Models\Rewrite;
 use \App\Site\Controllers\Admin\Json\SitemapCallback;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Sitemaps" Admin Page
@@ -67,6 +69,20 @@ class Sitemaps extends AdminManageModelsPage
     protected function getObjectIdQueryParam(): string
     {
         return 'sitemap_id';
+    }
+
+    protected function beforeRender()
+    {
+        if ($this->getRequest()->get('action') == 'generate') {
+            $this->addFlashMessage('success', 'Sitemap Generated.');
+            /** @var Sitemap $sitemap */
+            $sitemap = $this->getObject();
+            $sitemap->generate();
+
+            return $this->doRedirect($this->getControllerUrl());
+        }
+
+        return parent::beforeRender();
     }
 
     /**
@@ -356,6 +372,7 @@ class Sitemaps extends AdminManageModelsPage
                 }
 
                 if ($form->getTriggeringElement()->getName() == 'save_publish') {
+                    $this->addFlashMessage('success', 'Sitemap Generated.');
                     $sitemap->generate();
                 }
 
@@ -406,6 +423,7 @@ class Sitemaps extends AdminManageModelsPage
                         " ",
                         [
                             ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? $this->getFrontendModelButton($sitemap) : ''),
+                            $this->getActionButton('generate', $sitemap->getId(), 'btn btn-warning generate', 'rss', 'Generate'),
                             $this->getEditButton($sitemap->id),
                             $this->getDeleteButton($sitemap->id),
                         ]

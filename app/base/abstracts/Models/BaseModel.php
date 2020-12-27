@@ -83,6 +83,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         $this->setTableName($name);
         $this->setDbRow($db_row);
         $this->setIsFirstSave($this->isNew());
+        if (!$this->isNew()) {
+            $this->postLoad();
+        }
     }
 
     /**
@@ -218,6 +221,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param array $condition
      * @param array $order
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public static function paginate(ContainerInterface $container, Request $request, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = []): array
     {
@@ -235,7 +240,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param ContainerInterface $container
      * @param Request $request
      * @param Result $stmt
+     * @param int $page_size
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public static function paginateByStatement(ContainerInterface $container, Request $request, Result $stmt, $page_size = self::ITEMS_PER_PAGE): array
     {
@@ -260,6 +268,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param array|string $condition
      * @param array $order
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public static function where(ContainerInterface $container, $condition, $order = []): array
     {
@@ -296,7 +306,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         if ($id instanceof Row) {
             $this->checkDbName($id);
             $this->setDbRow($id);
-            $this->setTableName($this->db_row->getTable());
+            $this->setTableName($this->getDbRow()->getTable());
         } elseif (is_numeric($id)) {
             $this->setTableName($this->getTableName());
             $db_row = $this->getDb()->table(static::defaultTableName(), $id);
@@ -314,7 +324,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function isLoaded(): bool
     {
-        return ($this->db_row instanceof Row) && $this->db_row->exists();
+        return ($this->getDbRow() instanceof Row) && $this->getDbRow()->exists();
     }
 
     /**
@@ -350,8 +360,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function reset(): BaseModel
     {
-        if ($this->db_row->exists()) {
-            $db_row = $this->getDb()->table($this->db_row->getTable(), $this->db_row->getOriginalId());
+        if ($this->getDbRow()->exists()) {
+            $db_row = $this->getDb()->table($this->getDbRow()->getTable(), $this->getDbRow()->getOriginalId());
             if ($db_row) {
                 $this->setDbRow($db_row);
                 $this->setOriginalData($db_row->getData());
@@ -369,8 +379,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param integer $id
      * @param bool $reset
      * @return self
-     * @throws InvalidValueException
-     * @throws BasicException
      */
     public static function load(ContainerInterface $container, $id, $reset = false): BaseModel
     {
@@ -389,14 +397,12 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             return static::$loadedObjects[static::defaultTableName()][$id];
         }
 
-        $db_row = $container->get('db')->table(static::defaultTableName(), $id);
-
-        static::$loadedObjects[static::defaultTableName()][$id] = new static($container, $db_row);
+        $object = $container->call([static::class, 'loadByCondition'], ['condition' => ['id' => $id]]);
 
         if (getenv('DEBUG')) {
             $debugbar['time']->stopMeasure($measure_key);
         }
-        return static::$loadedObjects[static::defaultTableName()][$id];
+        return $object;
     }
 
     /**
@@ -406,8 +412,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param array $ids
      * @param bool $reset
      * @return array
-     * @throws InvalidValueException
-     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public static function loadMultiple(ContainerInterface $container, array $ids, bool $reset = false): array
     {
@@ -435,14 +441,19 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      *
      * @param ContainerInterface $container
      * @param array $condition
-     * @return self
-     * @throws InvalidValueException
+     * @return self|null
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public static function loadByCondition(ContainerInterface $container, array $condition): BaseModel
+    public static function loadByCondition(ContainerInterface $container, array $condition): ?BaseModel
     {
-        $db_row = $container->get('db')->table(static::defaultTableName())->where($condition)->limit(1)->fetch();
-        return static::$loadedObjects[static::defaultTableName()][$db_row->id] = new static($container, $db_row);
+        $stmt = static::getModelBasicWhere($container, $condition);
+        $db_row = $stmt->limit(1)->fetch();
+        if (!$db_row || !$db_row->id) {
+            throw new BasicException('Model not found');
+        }
+        return static::$loadedObjects[static::defaultTableName()][$db_row->id] = $container->make(static::class, ['db_row' => $db_row]);
     }
 
     /**
@@ -452,17 +463,18 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param array $condition
      * @param bool $reset
      * @return array
-     * @throws InvalidValueException
-     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public static function loadMultipleByCondition(ContainerInterface $container, array $condition, bool $reset = false): array
     {
         $ids = [];
-        foreach ($container->get('db')->table(static::defaultTableName())->where($condition)->fetchAll() as $db_row) {
+        $stmt = static::getModelBasicWhere($container, $condition);
+        foreach ($stmt->fetchAll() as $db_row) {
             $ids[] = intval($db_row->id);
             /** @var Result $db_row */
             if (!isset($loadedObjects[static::defaultTableName()][$db_row->id]) || $reset) {
-                static::$loadedObjects[static::defaultTableName()][$db_row->id] = new static($container, $db_row);
+                static::$loadedObjects[static::defaultTableName()][$db_row->id] = $container->make(static::class, ['db_row' => $db_row]);
             }
         }
 
@@ -491,14 +503,25 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      *
      * @param ContainerInterface $container
      * @param string $field
-     * @param string $value
+     * @param mixed $value
      * @return self
-     * @throws InvalidValueException
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public static function loadBy(ContainerInterface $container, $field, $value): BaseModel
+    public static function loadBy(ContainerInterface $container, string $field, $value): BaseModel
     {
         return static::loadByCondition($container, [$field => $value]);
+    }
+
+    /**
+     * post load hook
+     *
+     * @return self
+     */
+    public function postLoad(): BaseModel
+    {
+        return $this;
     }
 
     /**
@@ -551,7 +574,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function __call(string $name, $arguments)
     {
-        if (!($this->db_row instanceof Row)) {
+        if (!($this->getDbRow() instanceof Row)) {
             throw new Exception("No row loaded", 1);
         }
 
@@ -571,18 +594,18 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             }
         }
 
-        return call_user_func_array([$this->db_row, $name], $arguments);
+        return call_user_func_array([$this->getDbRow(), $name], $arguments);
     }
 
     /**
      * gets model's data
      *
      * @param null $column
-     * @return array|mixed|null
+     * @return mixed
      */
     public function getData($column = null)
     {
-        $data = $this->db_row->getData();
+        $data = $this->getDbRow()->getData();
 
         if ($column != null) {
             return $data[$column] ?? null;
@@ -596,7 +619,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function getIterator()
     {
-        return $this->db_row->getIterator();
+        return $this->getDbRow()->getIterator();
     }
 
     /**
@@ -644,7 +667,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function current()
     {
-        return $this->db_row->current();
+        return $this->getDbRow()->current();
     }
 
     /**
@@ -652,7 +675,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function key()
     {
-        return $this->db_row->key();
+        return $this->getDbRow()->key();
     }
 
     /**
@@ -660,7 +683,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function next()
     {
-        $this->db_row->next();
+        $this->getDbRow()->next();
     }
 
     /**
@@ -668,7 +691,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function rewind()
     {
-        $this->db_row->rewind();
+        $this->getDbRow()->rewind();
     }
 
     /**
@@ -676,7 +699,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function valid()
     {
-        return $this->db_row->valid();
+        return $this->getDbRow()->valid();
     }
 
     /**
@@ -696,19 +719,19 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     {
         $this->prePersist();
 
-        if (!$this->db_row->exists() && array_key_exists('created_at', $this->db_row->getData())) {
-            $this->db_row->created_at = date("Y-m-d H:i:s", time());
+        if (!$this->getDbRow()->exists() && array_key_exists('created_at', $this->getDbRow()->getData())) {
+            $this->getDbRow()->created_at = date("Y-m-d H:i:s", time());
         }
-        if (array_key_exists('updated_at', $this->db_row->getData())) {
-            $this->db_row->updated_at = date("Y-m-d H:i:s", time());
+        if (array_key_exists('updated_at', $this->getDbRow()->getData())) {
+            $this->getDbRow()->updated_at = date("Y-m-d H:i:s", time());
         }
-        $this->db_row->update($this->getData());
+        $this->getDbRow()->update($this->getData());
 
         $this->postPersist();
 
         $this->setIsFirstSave(false);
 
-        $this->original_data = $this->db_row->getData();
+        $this->original_data = $this->getDbRow()->getData();
 
         return $this;
     }
@@ -750,7 +773,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     {
         $this->preRemove();
 
-        $this->db_row->delete();
+        $this->getDbRow()->delete();
 
         $this->postRemove();
 
@@ -815,9 +838,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * gets model's original data
      *
      * @param null $key
-     * @return array|null|mixed
+     * @return mixed
      */
-    protected function getOriginalData($key = null)
+    protected function getOriginalData($key = null): ?array
     {
         if ($key != null && array_key_exists($key, $this->original_data)) {
             return $this->original_data[$key];

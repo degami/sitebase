@@ -18,6 +18,8 @@ use \App\Base\Abstracts\Controllers\FormPage;
 use \App\Base\Traits\FrontendTrait;
 use \App\Site\Models\User;
 use \App\Base\Exceptions\PermissionDeniedException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -108,7 +110,6 @@ class Login extends FormPage
         return true;
     }
 
-
     /**
      * {@inheritdocs}
      *
@@ -151,8 +152,8 @@ class Login extends FormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -182,8 +183,8 @@ class Login extends FormPage
      * @param array     &$form_state
      * @return boolean|string
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -214,10 +215,16 @@ class Login extends FormPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws \Exception
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
+        /** @var User $logged_user */
         $logged_user = $form_state['logged_user'];
+        $logged_user->getUserSession()->addSessionData('last_login', new \DateTime())->persist();
         return "" . $logged_user->getJWT();
     }
 
@@ -226,6 +233,8 @@ class Login extends FormPage
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRouteName(): string
     {

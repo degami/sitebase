@@ -41,8 +41,11 @@ class Login extends FormPage
      *
      * @param ContainerInterface $container
      * @param Request|null $request
+     * @param RouteInfo $route_info
      * @throws BasicException
+     * @throws DependencyException
      * @throws FAPI\Exceptions\FormException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
@@ -269,10 +272,15 @@ class Login extends FormPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return mixed
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
+        /** @var User $logged_user */
         $logged_user = $form_state['logged_user'];
+        $logged_user->getUserSession()->addSessionData('last_login', new \DateTime())->persist();
         return "" . $logged_user->getJWT();
     }
 

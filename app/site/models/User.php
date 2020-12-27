@@ -15,6 +15,8 @@ namespace App\Site\Models;
 use \App\Base\Abstracts\Models\AccountModel;
 use \DateTime;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 
 /**
@@ -51,11 +53,16 @@ class User extends AccountModel
     protected $roleObj;
 
     /**
+     * @var UserSession session object
+     */
+    protected $sessionObj;
+
+    /**
      * gets user role
      *
      * @return Role
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getRole(): Role
     {
@@ -173,5 +180,38 @@ class User extends AccountModel
             ->getToken(); // Retrieves the generated token
 
         return $token;
+    }
+
+    /**
+     * @return UserSession
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Exception
+     */
+    public function getUserSession(): UserSession
+    {
+        if ($this->sessionObj instanceof UserSession) {
+            return $this->sessionObj;
+        }
+
+        $this->checkLoaded();
+
+        $current_website_id = $this->getSiteData()->getCurrentWebsiteId();
+
+        $user_session = null;
+
+        try {
+            /** @var UserSession $user_session */
+            $user_session = $this->getContainer()->call([UserSession::class, 'loadByCondition'], ['condition' => ['user_id' => $this->getId(), 'website_id' => $current_website_id]]);
+        } catch (Exception $e) {}
+
+        if (!$user_session) {
+            $user_session = $this->getContainer()->call([UserSession::class, 'new']);
+            $user_session->setUserId($this->getId());
+            $user_session->setWebsiteId($current_website_id);
+        }
+
+        return $this->sessionObj = $user_session;
     }
 }

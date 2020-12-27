@@ -211,4 +211,12 @@ class GuestUser extends AccountModel
     {
         return $this;
     }
+
+    /**
+     * no user session for this model
+     */
+    public function getUserSession()
+    {
+        return null;
+    }
 }

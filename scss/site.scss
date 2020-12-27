@@ -85,6 +85,10 @@ ul.breadcrumbs {
     justify-content: space-around;
     background-color: #f8f9fa !important;
 
+    .navbar {
+        width: 100%;
+    }
+
     @media all and (max-width: 991px) {
         flex-direction: column;
     }

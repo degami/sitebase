@@ -52,6 +52,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
             'username' => $this->subject->getUsername(),
             'since' => ($this->subject instanceof GuestUser) ? null : $this->subject->getCreatedAt(),
             'role' => $this->subject->getRole()->getName(),
+            'session' => json_encode($this->subject->getUserSession() ? $this->subject->getUserSession()->getSessionData() : null),
         ];
     }
 

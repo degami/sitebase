@@ -203,10 +203,23 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function all(ContainerInterface $container, $condition = [], $order = []): array
     {
+        /** @var DebugBar $debugbar */
+        $debugbar = $container->get('debugbar');
+
+        $measure_key = 'all model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         $items = static::hydrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
+        }
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->stopMeasure($measure_key);
         }
 
         return $items;
@@ -226,12 +239,27 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function paginate(ContainerInterface $container, Request $request, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = []): array
     {
+        /** @var DebugBar $debugbar */
+        $debugbar = $container->get('debugbar');
+
+        $measure_key = 'paginate model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         if ($condition == null) {
             $condition = [];
         }
 
         $stmt = static::getModelBasicWhere($container, $condition, $order);
-        return static::paginateByStatement($container, $request, $stmt, $page_size);
+        $out = static::paginateByStatement($container, $request, $stmt, $page_size);
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
+        return $out;
     }
 
     /**
@@ -390,6 +418,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         if (getenv('DEBUG')) {
             $debugbar['time']->startMeasure($measure_key);
         }
+
         if (isset(static::$loadedObjects[static::defaultTableName()][$id]) && !$reset) {
             if (getenv('DEBUG')) {
                 $debugbar['time']->stopMeasure($measure_key);
@@ -417,6 +446,15 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function loadMultiple(ContainerInterface $container, array $ids, bool $reset = false): array
     {
+        /** @var DebugBar $debugbar */
+        $debugbar = $container->get('debugbar');
+
+        $measure_key = 'loadMultiple model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         $already_loaded = [];
         if (!$reset && isset(static::$loadedObjects[static::defaultTableName()])) {
             $new_ids = array_diff(array_filter($ids, function ($el) {
@@ -431,9 +469,14 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             });
         }
 
-        return
-            (!empty($ids) ? static::loadMultipleByCondition($container, ['id' => $ids], $reset) : []) +
+        $out = (!empty($ids) ? static::loadMultipleByCondition($container, ['id' => $ids], $reset) : []) +
             (!empty($already_loaded) ? array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($already_loaded)) : []);
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->stopMeasure($measure_key);
+        }
+
+        return $out;
     }
 
     /**
@@ -448,12 +491,28 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function loadByCondition(ContainerInterface $container, array $condition): ?BaseModel
     {
+        /** @var DebugBar $debugbar */
+        $debugbar = $container->get('debugbar');
+
+        $measure_key = 'loadByCondition model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         $stmt = static::getModelBasicWhere($container, $condition);
         $db_row = $stmt->limit(1)->fetch();
         if (!$db_row || !$db_row->id) {
             throw new BasicException('Model not found');
         }
-        return static::$loadedObjects[static::defaultTableName()][$db_row->id] = $container->make(static::class, ['db_row' => $db_row]);
+
+        static::$loadedObjects[static::defaultTableName()][$db_row->id] = $container->make(static::class, ['db_row' => $db_row]);
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->stopMeasure($measure_key);
+        }
+
+        return static::$loadedObjects[static::defaultTableName()][$db_row->id];
     }
 
     /**
@@ -468,6 +527,15 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function loadMultipleByCondition(ContainerInterface $container, array $condition, bool $reset = false): array
     {
+        /** @var DebugBar $debugbar */
+        $debugbar = $container->get('debugbar');
+
+        $measure_key = 'loadMultipleByCondition model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         $ids = [];
         $stmt = static::getModelBasicWhere($container, $condition);
         foreach ($stmt->fetchAll() as $db_row) {
@@ -476,6 +544,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             if (!isset($loadedObjects[static::defaultTableName()][$db_row->id]) || $reset) {
                 static::$loadedObjects[static::defaultTableName()][$db_row->id] = $container->make(static::class, ['db_row' => $db_row]);
             }
+        }
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->stopMeasure($measure_key);
         }
 
         return array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($ids));
@@ -714,9 +786,18 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * saves model on db
      *
      * @return self
+     * @throws BasicException
      */
     public function persist(): BaseModel
     {
+        $debugbar = $this->getDebugbar();
+
+        $measure_key = 'persist model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         $this->prePersist();
 
         if (!$this->getDbRow()->exists() && array_key_exists('created_at', $this->getDbRow()->getData())) {
@@ -732,6 +813,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         $this->setIsFirstSave(false);
 
         $this->original_data = $this->getDbRow()->getData();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->stopMeasure($measure_key);
+        }
 
         return $this;
     }
@@ -768,14 +853,27 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * removes model from db
      *
      * @return self
+     * @throws BasicException
      */
     public function remove(): BaseModel
     {
+        $debugbar = $this->getDebugbar();
+
+        $measure_key = 'delete model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         $this->preRemove();
 
         $this->getDbRow()->delete();
 
         $this->postRemove();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->stopMeasure($measure_key);
+        }
 
         return $this;
     }

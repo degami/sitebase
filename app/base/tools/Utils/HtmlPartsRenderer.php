@@ -283,8 +283,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-        $menu_content->addChild($this->_renderSiteMenu($this->getUtils()->buildSiteMenu($menuitems)));
-        // $menu_content->addChild($this->_renderSiteMenu($this->getUtils()->getSiteMenu($menu_name, $website_id, $locale)));
+        $menu_content->addChild($this->_renderSiteMenu($this->getSiteData()->buildSiteMenu($menuitems)));
         $menu->addChild($menu_content);
 
         // store into cache
@@ -336,7 +335,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         if (is_null($pageBlocks)) {
-            $pageBlocks = $this->getUtils()->getAllPageBlocks($locale);
+            $pageBlocks = $this->getSiteData()->getAllPageBlocks($locale);
         }
 
         $out = "";
@@ -810,7 +809,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             $val = ($request_params['order'][$orderby] == 'ASC') ? 'DESC' : 'ASC';
                         }
                         $request_params['order'][$orderby] = $val;
-                        $th = '<a class="ordering" href="' . ($current_page->getControllerUrl() . '?' . http_build_query($request_params)) . '">' . $th . $this->getUtils()->getIcon($val == 'DESC' ? 'arrow-down' : 'arrow-up') . '</a>';
+                        $th = '<a class="ordering" href="' . ($current_page->getControllerUrl() . '?' . http_build_query($request_params)) . '">' . $th . $this->getIcon($val == 'DESC' ? 'arrow-down' : 'arrow-up') . '</a>';
                     }
                 }
             }
@@ -850,7 +849,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     unset($query_params['search']);
                     $query_params = http_build_query($query_params);
                 }
-                $current_page->addActionLink('search-btn', 'search-btn', $this->getUtils()->getIcon('zoom-in') . $this->getUtils()->translate('Search', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#' . $table_id]);
+                $current_page->addActionLink('search-btn', 'search-btn', $this->getIcon('zoom-in') . $this->getUtils()->translate('Search', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#' . $table_id]);
             }
         }
 
@@ -1055,6 +1054,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @param int $width
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function renderFlag($country_code, $class = 'flag-icon', $width = 20): string
@@ -1080,5 +1081,18 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 ],
             ]
         ));
+    }
+
+    /**
+     * gets an icon
+     *
+     * @param string $icon_name
+     * @param array $attributes
+     * @return string
+     * @throws BasicException
+     */
+    public function getIcon(string $icon_name, $attributes = []): string
+    {
+        return $this->getIcons()->get($icon_name, $attributes, false);
     }
 }

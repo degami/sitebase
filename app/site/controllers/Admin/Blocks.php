@@ -175,7 +175,7 @@ class Blocks extends AdminManageModelsPage
                         'type' => 'select',
                         'title' => 'Block region',
                         'default_value' => $block_region,
-                        'options' => $this->getUtils()->getBlockRegions(),
+                        'options' => $this->getSiteData()->getBlockRegions(),
                         'validate' => ['required'],
                     ]
                 )

@@ -22,8 +22,6 @@ use \GuzzleHttp\Exception\GuzzleException;
 use \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Request;
-use \App\Site\Models\Menu;
-use \App\Site\Models\Block;
 use \App\Site\Models\RequestLog;
 use \App\Site\Models\QueueMessage;
 use \App\Base\Controllers\Dummy\NullPage;
@@ -36,69 +34,6 @@ use \Throwable;
  */
 class Globals extends ContainerAwareObject
 {
-    /**
-     * get page regions list
-     *
-     * @return array
-     * @throws BasicException
-     */
-    public function getPageRegions(): array
-    {
-        return array_filter(array_map('trim', explode(",", $this->getEnv('PAGE_REGIONS', 'menu,header,content,footer'))));
-    }
-
-    /**
-     * gets available block regions
-     *
-     * @return array
-     * @throws BasicException
-     */
-    public function getBlockRegions(): array
-    {
-        $out = [
-            '' => '',
-            'after_body_open' => 'After Body-Open',
-            'before_body_close' => 'Before Body-Close',
-        ];
-
-        foreach ($this->getPageRegions() as $region) {
-            $out['pre_' . $region] = 'Pre-' . ucfirst(strtolower($region));
-            $out['post_' . $region] = 'Post-' . ucfirst(strtolower($region));
-        }
-
-        return $out;
-    }
-
-    /**
-     * gets all blocks for current locale
-     *
-     * @param string|null $locale
-     * @return array
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getAllPageBlocks($locale = null): array
-    {
-        static $pageBlocks = null;
-
-        if (is_null($pageBlocks)) {
-            $website_id = $this->getSiteData()->getCurrentWebsiteId();
-
-            $pageBlocks = [];
-            foreach ($this->getDb()->table('block')->where(['locale' => [$locale, null], 'website_id' => [$website_id, null]])->orderBy('order')->fetchAll() as $row) {
-                $block = $this->getContainer()->make(Block::class, ['db_row' => $row]);
-                if (!isset($pageBlocks[$block->region])) {
-                    $pageBlocks[$block->region] = [];
-                }
-                $block->loadInstance();
-                $pageBlocks[$block->region][] = $block;
-            }
-        }
-
-        return $pageBlocks;
-    }
-
     /**
      * gets websites options for selects
      *
@@ -127,16 +62,16 @@ class Globals extends ContainerAwareObject
     public function getSiteLanguagesSelectOptions($website_id = null): array
     {
         $languages = $this->getSiteData()->getSiteLocales($website_id);
-        $langsDB = [];
+        $languages_on_DB = [];
         foreach ($this->getDb()->table('language')->where(['locale' => $languages])->fetchAll() as $l) {
-            $langsDB[$l->locale] = $l;
+            $languages_on_DB[$l->locale] = $l;
         }
 
         return array_combine(
             $languages,
             array_map(
-                function ($el) use ($langsDB) {
-                    $lang = isset($langsDB[$el]) ? $langsDB[$el] : null;
+                function ($el) use ($languages_on_DB) {
+                    $lang = isset($languages_on_DB[$el]) ? $languages_on_DB[$el] : null;
                     return $lang ? "{$lang->native}" : $el;
                 },
                 $languages
@@ -416,82 +351,6 @@ class Globals extends ContainerAwareObject
     }
 
     /**
-     * returns site menu
-     *
-     * @param string $menu_name
-     * @param integer $website_id
-     * @param string $locale
-     * @param Menu|null $menu_element
-     * @return array
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getSiteMenu(string $menu_name, int $website_id, string $locale, $menu_element = null): array
-    {
-        $out = [];
-        if ($menu_element instanceof Menu) {
-            $out['menu_id'] = $menu_element->getId();
-            $out['title'] = $menu_element->getTitle();
-            $out['href'] = $menu_element->getLinkUrl();
-            $out['target'] = $menu_element->getTarget();
-            $out['breadcrumb'] = $menu_element->getBreadcumb();
-            $out['children'] = [];
-            foreach ($menu_element->getChildren($locale) as $child) {
-                $out['children'][] = $this->getSiteMenu($menu_name, $website_id, $locale, $child);
-            }
-        } else {
-            $query = $this->getDb()->table('menu')->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]])->orderBy('position');
-            $out = array_map(
-                function ($el) use ($menu_name, $website_id, $locale) {
-                    /**
-                     * @var Menu $menu_model
-                     */
-                    $menu_model = $this->getContainer()->make(Menu::class, ['db_row' => $el]);
-                    return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
-                },
-                $query->fetchAll()
-            );
-        }
-        return $out;
-    }
-
-    /**
-     * returns site menu
-     *
-     * @param array $menu_items
-     * @param Menu|null $menu_element
-     * @return array
-     * @throws BasicException
-     */
-    public function buildSiteMenu(array $menu_items, $menu_element = null): array
-    {
-        $out = [];
-        if ($menu_element instanceof Menu) {
-            $out['menu_id'] = $menu_element->getId();
-            $out['title'] = $menu_element->getTitle();
-            $out['href'] = $menu_element->getLinkUrl();
-            $out['target'] = $menu_element->getTarget();
-            $out['breadcrumb'] = $menu_element->getBreadcrumb();
-            $out['children'] = [];
-            foreach ($menu_items as $child) {
-                /** @var Menu $child */
-                if ($child->getParentId() == $menu_element->getId()) {
-                    $out['children'][] = $this->buildSiteMenu($menu_items, $child);
-                }
-            }
-        } else {
-            foreach ($menu_items as $item) {
-                /** @var Menu $item */
-                if ($item->getParentId() == null) {
-                    $out[] = $this->buildSiteMenu($menu_items, $item);
-                }
-            }
-        }
-        return $out;
-    }
-
-    /**
      * logs an exception
      *
      * @param Throwable $e
@@ -506,18 +365,6 @@ class Globals extends ContainerAwareObject
         if ($request != null && !empty($request->request->all())) {
             $this->getLog()->debug(serialize($request->request->all()));
         }
-    }
-
-    /**
-     * gets an icon
-     *
-     * @param string $icon_name
-     * @param array $attributes
-     * @return string
-     */
-    public function getIcon(string $icon_name, $attributes = []): string
-    {
-        return $this->getContainer()->get('icons')->get($icon_name, $attributes, false);
     }
 
     /**

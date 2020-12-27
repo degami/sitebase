@@ -270,7 +270,7 @@ class Config extends AdminManageModelsPage
                     'Locale' => $config->getLocale() == null ? $this->getUtils()->translate('All languages', $this->getCurrentLocale()) : $config->getLocale(),
                     'Path' => $config->path,
                     'Value' => $config->value,
-                    'Is System' => $config->is_system ? $this->getUtils()->getIcon('check') : '&nbsp;',
+                    'Is System' => $config->is_system ? $this->getHtmlRenderer()->getIcon('check') : '&nbsp;',
                     'actions' => implode(
                         " ",
                         [

@@ -224,7 +224,7 @@ abstract class AdminPage extends BaseHtmlPage
             }
         }
 
-        $this->addActionLink('back-btn', 'back-btn', $this->getUtils()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl() . $query_params);
+        $this->addActionLink('back-btn', 'back-btn', $this->getHtmlRenderer()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', $this->getCurrentLocale()), $this->getControllerUrl() . $query_params);
     }
 
     /**

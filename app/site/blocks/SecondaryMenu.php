@@ -46,7 +46,7 @@ class SecondaryMenu extends BaseCodeBlock
             return "";
         }
 
-        $tree = $this->getUtils()->getSiteMenu($menu_name, $website_id, $locale);
+        $tree = $this->getSiteData()->getSiteMenu($menu_name, $website_id, $locale);
 
         $menu_container = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'div',

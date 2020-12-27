@@ -78,7 +78,7 @@ abstract class FrontendPage extends BaseHtmlPage
             $this->getTemplates()->addFolder('theme', App::getDir(App::TEMPLATES) . DS . 'frontend' . DS . $this->getSiteData()->getThemeName(), true);
         }
 
-        foreach ($this->getUtils()->getPageRegions() as $region) {
+        foreach ($this->getSiteData()->getPageRegions() as $region) {
             $this->regions[$region] = [];
         }
 
@@ -96,7 +96,7 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     protected function getBaseTemplateData(): array
     {
-        $this->getUtils()->getAllPageBlocks($this->getCurrentLocale());
+        $this->getSiteData()->getAllPageBlocks($this->getCurrentLocale());
 
         return parent::getBaseTemplateData() + [
                 'locale' => $this->getCurrentLocale(),

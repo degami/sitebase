@@ -67,7 +67,7 @@ class Search extends BaseCodeBlock
                 'attributes' => [
                     'class' => 'btn searchbtn',
                 ],
-                'text' => $this->getUtils()->getIcon('search'),
+                'text' => $this->getHtmlRenderer()->getIcon('search'),
             ]]);
 
             $div = $this->getContainer()->make(TagElement::class, ['options' => [

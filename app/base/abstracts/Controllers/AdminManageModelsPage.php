@@ -220,7 +220,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addNewButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getUtils()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
     }
 
 
@@ -247,7 +247,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                         'href' => $this->getControllerUrl() . '?action=' . $action . '&' . $this->getObjectIdQueryParam() . '=' . $object_id,
                         'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
                     ],
-                    'text' => $this->getUtils()->getIcon($icon),
+                    'text' => $this->getHtmlRenderer()->getIcon($icon),
                 ]
             );
 
@@ -305,7 +305,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                     'target' => '_blank',
                     'title' => $this->getUtils()->translate('View', $this->getCurrentLocale()),
                 ],
-                'text' => $this->getUtils()->getIcon($icon),
+                'text' => $this->getHtmlRenderer()->getIcon($icon),
             ]
         ));
 

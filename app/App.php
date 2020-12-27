@@ -18,6 +18,7 @@ use App\Site\Models\Rewrite;
 use App\Site\Models\Redirect;
 use Degami\Basics\Exceptions\BasicException;
 use DI\ContainerBuilder;
+use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use \Symfony\Component\HttpFoundation\Request;
@@ -212,14 +213,9 @@ class App extends ContainerAwareObject
             $current_website_id = $this->getCurrentWebsiteId();
 
             // preload configuration
-            $cached_configuration = [];
-            $results = $this->getContainer()->call([Configuration::class, 'all']);
-            foreach ($results as $result) {
-                $cached_configuration[$result->website_id][$result->path][$result->locale ?? 'default'] = $result->value;
-            }
-            $this->getCache()->set(SiteData::CONFIGURATION_CACHE_KEY, $cached_configuration);
+            $this->getSiteData()->preloadConfiguration();
 
-            $redirects = $this->getRedirects($current_website_id);
+            $redirects = $this->getSiteData()->getRedirects($current_website_id);
             $redirect_key = urldecode($_SERVER['REQUEST_URI']);
             if (isset($redirects[$redirect_key])) {
                 // redirect is not needed if site is offline
@@ -344,34 +340,6 @@ class App extends ContainerAwareObject
     }
 
     /**
-     * gets defined redirects
-     *
-     * @param int $current_website_id
-     * @return array|mixed
-     * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
-     */
-    protected function getRedirects(int $current_website_id): array
-    {
-        $redirects = [];
-        $redirects_key = "site." . $current_website_id . ".redirects";
-        if (!$this->getCache()->has($redirects_key)) {
-            $redirect_models = $this->getContainer()->call([Redirect::class, 'where'], ['condition' => ['website_id' => $current_website_id]]);
-            foreach ($redirect_models as $redirect_model) {
-                $redirects[$redirect_model->getUrlFrom()] = [
-                    'url_to' => $redirect_model->getUrlTo(),
-                    'redirect_code' => $redirect_model->getRedirectCode(),
-                ];
-            }
-            $this->getCache()->set($redirects_key, $redirects);
-        } else if ($current_website_id) {
-            $redirects = $this->getCache()->get($redirects_key);
-        }
-
-        return $redirects;
-    }
-
-    /**
      * checks if site is offline
      *
      * @return boolean
@@ -492,7 +460,7 @@ class App extends ContainerAwareObject
      *
      * @return int|string|null
      * @throws BasicException
-     * @throws \DI\DependencyException
+     * @throws DependencyException
      * @throws \DI\NotFoundException
      */
     public function getCurrentWebsiteId()

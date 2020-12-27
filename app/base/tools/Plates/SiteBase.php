@@ -236,10 +236,11 @@ class SiteBase implements ExtensionInterface
      *
      * @param string $icon_name
      * @return void
+     * @throws BasicException
      */
     public function drawIcon(string $icon_name)
     {
-        echo $this->getUtils()->getIcon($icon_name);
+        echo $this->getHtmlRenderer()->getIcon($icon_name);
     }
 
     /**
@@ -304,6 +305,6 @@ class SiteBase implements ExtensionInterface
      */
     public function getPageRegions(): array
     {
-        return $this->getUtils()->getPageRegions();
+        return $this->getSiteData()->getPageRegions();
     }
 }

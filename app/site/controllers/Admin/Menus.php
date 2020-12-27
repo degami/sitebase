@@ -110,8 +110,8 @@ class Menus extends AdminManageModelsPage
             );
             $parentFormElement
                 ->addMarkup($menuElement->title)
-                ->addMarkup('<a class="ml-1 btn btn-danger btn-sm float-right" href="' . $this->getControllerUrl() . '?action=delete&menu_id=' . $menuElement->id . '">' . $this->getIcons()->get('trash', [], false) . '</a>')
-                ->addMarkup('<a class="ml-1 btn btn-primary btn-sm float-right" href="' . $this->getControllerUrl() . '?action=edit&menu_id=' . $menuElement->id . '">' . $this->getIcons()->get('edit', [], false) . '</a>')
+                ->addMarkup('<a class="ml-1 btn btn-danger btn-sm float-right" href="' . $this->getControllerUrl() . '?action=delete&menu_id=' . $menuElement->id . '">' . $this->getHtmlRenderer()->getIcon('trash') . '</a>')
+                ->addMarkup('<a class="ml-1 btn btn-primary btn-sm float-right" href="' . $this->getControllerUrl() . '?action=edit&menu_id=' . $menuElement->id . '">' . $this->getHtmlRenderer()->getIcon('edit') . '</a>')
                 ->addMarkup('<div style="clear:both;"></div>');
         } else {
             $parentFormElement->addField('menu_name', [
@@ -161,9 +161,9 @@ class Menus extends AdminManageModelsPage
                 $form
                     ->addMarkup('<div class="clear"></div>')
                     ->addMarkup('<hr />')
-                    ->addMarkup('<a class="btn btn-link btn-sm" href="' . $this->getControllerUrl() . '">' . $this->getIcons()->get('chevron-left', [], false) . 'Back</a>');
+                    ->addMarkup('<a class="btn btn-link btn-sm" href="' . $this->getControllerUrl() . '">' . $this->getHtmlRenderer()->getIcon('chevron-left') . 'Back</a>');
                 $this->addSubmitButton($form, true);
-                $form->addMarkup(' <a class="btn btn-success btn-sm" href="' . $this->getControllerUrl() . '?action=new&menu_name=' . $this->getRequest()->get('menu_name') . '">' . $this->getIcons()->get('plus', [], false) . ' Add new Element</a>');
+                $form->addMarkup(' <a class="btn btn-success btn-sm" href="' . $this->getControllerUrl() . '?action=new&menu_name=' . $this->getRequest()->get('menu_name') . '">' . $this->getHtmlRenderer()->getIcon('plus') . ' Add new Element</a>');
 
                 break;
             case 'edit':
@@ -353,7 +353,7 @@ class Menus extends AdminManageModelsPage
             function ($menu) {
                 return [
                     'Menu Name' => $menu->menu_name,
-                    'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view-menu-name&menu_name=' . $menu->menu_name . '">' . $this->getUtils()->getIcon('zoom-in') . '</a>'
+                    'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view-menu-name&menu_name=' . $menu->menu_name . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>'
                 ];
             },
             $data

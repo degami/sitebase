@@ -13,7 +13,13 @@
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
+use App\Site\Models\Block;
+use App\Site\Models\Configuration;
+use App\Site\Models\Menu;
+use App\Site\Models\Redirect;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Site\Models\Website;
 use \LessQL\Row;
@@ -50,8 +56,8 @@ class SiteData extends ContainerAwareObject
      *
      * @return Website|int|string|null
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentWebsite()
     {
@@ -67,8 +73,8 @@ class SiteData extends ContainerAwareObject
         } else {
             //$website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
             $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)']]])->fetch();
-            $dbrow = $this->getContainer()->make(Row::class, ['db' => $this->getDb(), 'name' => 'website', 'properties' => $result]);
-            $website = $this->getContainer()->make(Website::class, ['db_row' => $dbrow]);
+            $db_row = $this->getContainer()->make(Row::class, ['db' => $this->getDb(), 'name' => 'website', 'properties' => $result]);
+            $website = $this->getContainer()->make(Website::class, ['db_row' => $db_row]);
         }
 
         if ($website instanceof Website) {
@@ -83,8 +89,8 @@ class SiteData extends ContainerAwareObject
      *
      * @return integer|null
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getCurrentWebsiteId()
     {
@@ -108,8 +114,8 @@ class SiteData extends ContainerAwareObject
      *
      * @return string|null
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getDefaultLocale(): ?string
     {
@@ -134,8 +140,8 @@ class SiteData extends ContainerAwareObject
      * @return string
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getBrowserPreferredLanguage(): ?string
     {
@@ -179,6 +185,24 @@ class SiteData extends ContainerAwareObject
         return $lang;
     }
 
+    /**
+     * loads configuration
+     *
+     * @return array
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    public function preloadConfiguration(): array
+    {
+        $configuration = [];
+        $results = $this->getContainer()->call([Configuration::class, 'all']);
+        foreach ($results as $result) {
+            $configuration[$result->website_id][$result->path][$result->locale ?? 'default'] = $result->value;
+        }
+        $this->getCache()->set(SiteData::CONFIGURATION_CACHE_KEY, $configuration);
+
+        return $configuration;
+    }
 
     /**
      * get cached config
@@ -207,10 +231,10 @@ class SiteData extends ContainerAwareObject
      * @return mixed
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getConfigValue($config_path, $website_id = null, $locale = null)
+    public function getConfigValue(string $config_path, $website_id = null, $locale = null)
     {
         if ($website_id == null) {
             $website_id = $this->getCurrentWebsiteId();
@@ -250,8 +274,8 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getHomePageId($website_id = null, $locale = null)
     {
@@ -269,8 +293,8 @@ class SiteData extends ContainerAwareObject
      * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getHomePageRedirectsToLanguage($website_id = null): bool
     {
@@ -284,8 +308,8 @@ class SiteData extends ContainerAwareObject
      * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getShowLogoOnMenu($website_id = null): bool
     {
@@ -299,8 +323,8 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getSiteEmail($website_id = null)
     {
@@ -314,8 +338,8 @@ class SiteData extends ContainerAwareObject
      * @return false|string[]
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getSiteLocales($website_id = null)
     {
@@ -330,8 +354,8 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getMainMenuName($website_id = null, $locale = null)
     {
@@ -346,8 +370,8 @@ class SiteData extends ContainerAwareObject
      * @return mixed|null
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getThemeName($website_id = null, $locale = null)
     {
@@ -362,12 +386,180 @@ class SiteData extends ContainerAwareObject
      * @return string
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getDateFormat($website_id = null, $locale = null): string
     {
         $date_format = $this->getSiteData()->getConfigValue(self::DATE_FORMAT_PATH, $website_id, $locale);
         return $date_format ?: 'Y-m-d';
+    }
+
+
+    /**
+     * gets defined redirects
+     *
+     * @param int $current_website_id
+     * @return array|mixed
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    public function getRedirects(int $current_website_id): array
+    {
+        $redirects = [];
+        $redirects_key = "site." . $current_website_id . ".redirects";
+        if (!$this->getCache()->has($redirects_key)) {
+            $redirect_models = $this->getContainer()->call([Redirect::class, 'where'], ['condition' => ['website_id' => $current_website_id]]);
+            foreach ($redirect_models as $redirect_model) {
+                $redirects[$redirect_model->getUrlFrom()] = [
+                    'url_to' => $redirect_model->getUrlTo(),
+                    'redirect_code' => $redirect_model->getRedirectCode(),
+                ];
+            }
+            $this->getCache()->set($redirects_key, $redirects);
+        } else if ($current_website_id) {
+            $redirects = $this->getCache()->get($redirects_key);
+        }
+
+        return $redirects;
+    }
+
+    /**
+     * get page regions list
+     *
+     * @return array
+     * @throws BasicException
+     */
+    public function getPageRegions(): array
+    {
+        return array_filter(array_map('trim', explode(",", $this->getEnv('PAGE_REGIONS', 'menu,header,content,footer'))));
+    }
+
+    /**
+     * gets available block regions
+     *
+     * @return array
+     * @throws BasicException
+     */
+    public function getBlockRegions(): array
+    {
+        $out = [
+            '' => '',
+            'after_body_open' => 'After Body-Open',
+            'before_body_close' => 'Before Body-Close',
+        ];
+
+        foreach ($this->getPageRegions() as $region) {
+            $out['pre_' . $region] = 'Pre-' . ucfirst(strtolower($region));
+            $out['post_' . $region] = 'Post-' . ucfirst(strtolower($region));
+        }
+
+        return $out;
+    }
+
+    /**
+     * gets all blocks for current locale
+     *
+     * @param string|null $locale
+     * @return array
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getAllPageBlocks($locale = null): array
+    {
+        static $pageBlocks = null;
+
+        if (is_null($pageBlocks)) {
+            $website_id = $this->getSiteData()->getCurrentWebsiteId();
+
+            $pageBlocks = [];
+            foreach ($this->getDb()->table('block')->where(['locale' => [$locale, null], 'website_id' => [$website_id, null]])->orderBy('order')->fetchAll() as $row) {
+                $block = $this->getContainer()->make(Block::class, ['db_row' => $row]);
+                if (!isset($pageBlocks[$block->region])) {
+                    $pageBlocks[$block->region] = [];
+                }
+                $block->loadInstance();
+                $pageBlocks[$block->region][] = $block;
+            }
+        }
+
+        return $pageBlocks;
+    }
+
+    /**
+     * returns site menu
+     *
+     * @param string $menu_name
+     * @param integer $website_id
+     * @param string $locale
+     * @param Menu|null $menu_element
+     * @return array
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getSiteMenu(string $menu_name, int $website_id, string $locale, $menu_element = null): array
+    {
+        $out = [];
+        if ($menu_element instanceof Menu) {
+            $out['menu_id'] = $menu_element->getId();
+            $out['title'] = $menu_element->getTitle();
+            $out['href'] = $menu_element->getLinkUrl();
+            $out['target'] = $menu_element->getTarget();
+            $out['breadcrumb'] = $menu_element->getBreadcumb();
+            $out['children'] = [];
+            foreach ($menu_element->getChildren($locale) as $child) {
+                $out['children'][] = $this->getSiteMenu($menu_name, $website_id, $locale, $child);
+            }
+        } else {
+            $query = $this->getDb()->table('menu')->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]])->orderBy('position');
+            $out = array_map(
+                function ($el) use ($menu_name, $website_id, $locale) {
+                    /**
+                     * @var Menu $menu_model
+                     */
+                    $menu_model = $this->getContainer()->make(Menu::class, ['db_row' => $el]);
+                    return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
+                },
+                $query->fetchAll()
+            );
+        }
+        return $out;
+    }
+
+    /**
+     * returns site menu
+     *
+     * @param array $menu_items
+     * @param Menu|null $menu_element
+     * @return array
+     * @throws BasicException
+     */
+    public function buildSiteMenu(array $menu_items, $menu_element = null): array
+    {
+        $out = [];
+        if ($menu_element instanceof Menu) {
+            $out['menu_id'] = $menu_element->getId();
+            $out['title'] = $menu_element->getTitle();
+            $out['href'] = $menu_element->getLinkUrl();
+            $out['target'] = $menu_element->getTarget();
+            $out['breadcrumb'] = $menu_element->getBreadcrumb();
+            $out['children'] = [];
+            foreach ($menu_items as $child) {
+                /** @var Menu $child */
+                if ($child->getParentId() == $menu_element->getId()) {
+                    $out['children'][] = $this->buildSiteMenu($menu_items, $child);
+                }
+            }
+        } else {
+            foreach ($menu_items as $item) {
+                /** @var Menu $item */
+                if ($item->getParentId() == null) {
+                    $out[] = $this->buildSiteMenu($menu_items, $item);
+                }
+            }
+        }
+        return $out;
     }
 }

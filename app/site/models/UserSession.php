@@ -14,13 +14,9 @@ namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
 use \DateTime;
-use Degami\Basics\Exceptions\BasicException;
-use DI\DependencyException;
-use DI\NotFoundException;
-use Exception;
 
 /**
- * User Model
+ * User Session Model
  *
  * @method int getId()
  * @method int getWebsiteId()
@@ -37,46 +33,129 @@ use Exception;
  */
 class UserSession extends BaseModel
 {
+    /** @var array|null  */
+    protected $session_data_array = null;
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return BaseModel
+     */
     public function postLoad(): BaseModel
     {
-        $session_data = json_decode($this->getSessionData(), true);
-        if (!is_array($session_data)) {
-            $session_data = [$session_data];
-        }
-        $this->setSessionData($session_data);
+        $this->session_data_array = $this->getNormalizedSessionData();
+
         return parent::postLoad();
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return BaseModel
+     */
     public function prePersist(): BaseModel
     {
-        $this->setSessionData(json_encode($this->getSessionData()));
+        $this->setSessionData(json_encode($this->getNormalizedSessionData()));
         return parent::prePersist();
     }
 
-    public function addSessionData($key, $value): UserSession
+    /**
+     * gets session data as array
+     * @return array
+     */
+    protected function getNormalizedSessionData(): array
     {
+        if (is_array($this->session_data_array)) {
+            return $this->session_data_array;
+        }
+
         $session_data = $this->getSessionData();
-        $session_data[$key] = $value;
-        $this->setSessionData($session_data);
+        if (is_string($session_data)) {
+            $session_data = json_decode($session_data, true);
+        }
+        if (!is_array($session_data)) {
+            if (!is_null($session_data)) {
+                $session_data = [$session_data];
+            } else {
+                $session_data = [];
+            }
+        }
+
+        return $session_data;
+    }
+
+    /**
+     * adds data to User Session Object
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return self
+     */
+    public function addSessionData(string $key, $value): UserSession
+    {
+        $session_data = $this->getNormalizedSessionData();
+        if (static::isEncodable($value)) {
+            $session_data[$key] = $value;
+            $this->session_data_array = $session_data;
+        }
 
         return $this;
     }
 
+    /**
+     * sets input array values as session values
+     *
+     * @param array $data
+     * @return self
+     */
     public function arrayToSessionData(array $data): UserSession
     {
         $this->clearSessionData();
 
         foreach ($data as $key => $value) {
+            if (!static::isEncodable($value)) {
+                continue;
+            }
             $this->addSessionData($key, $value);
         }
 
         return $this;
     }
 
-    public function clearSessionData(): UserSession
+    /**
+     * removes session data value by key
+     *
+     * @param string $key
+     * @return self
+     */
+    public function removeSessionData(string $key): UserSession
     {
-        $this->setSessionData([]);
+        $session_data = $this->getNormalizedSessionData();
+        unset($session_data[$key]);
+        $this->session_data_array = $session_data;
 
         return $this;
+    }
+
+    /**
+     * removes session data
+     *
+     * @return self
+     */
+    public function clearSessionData(): UserSession
+    {
+        $this->session_data_array = [];
+
+        return $this;
+    }
+
+    /**
+     * checks if parameter is json representable
+     * @param mixed $var
+     * @return bool
+     */
+    protected static function isEncodable($var): bool
+    {
+        return json_encode($var) !== false;
     }
 }

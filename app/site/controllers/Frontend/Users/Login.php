@@ -225,6 +225,7 @@ class Login extends FormPage
         /** @var User $logged_user */
         $logged_user = $form_state['logged_user'];
         $logged_user->getUserSession()->addSessionData('last_login', new \DateTime())->persist();
+
         return "" . $logged_user->getJWT();
     }
 

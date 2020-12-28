@@ -77,21 +77,23 @@ class User extends AccountModel
      * sets user role
      *
      * @param Role|integer|string $role
-     * @throws BasicException
+     * @return self
      */
-    public function setRole($role)
+    public function setRole($role): User
     {
         if ($role instanceof Role) {
             $this->setRoleId($role->getId());
         } elseif (is_int($role)) {
             $this->setRoleId($role);
         } elseif (is_string($role)) {
-            /** @var Role $role */
-            $role = $this->getDb()->table('role')->where(['name' => $role])->fetch();
-            if ($role) {
+            try {
+                /** @var Role $role */
+                $role = $this->getContainer()->call([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role]);
                 $this->setRoleId($role->getId());
-            }
+            } catch (Exception $e) {}
         }
+
+        return $this;
     }
 
     /**

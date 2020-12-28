@@ -6,6 +6,7 @@ namespace App\Base\Abstracts\Routing;
 
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
+use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -379,15 +380,17 @@ abstract class BaseRouter extends ContainerAwareObject
             } else {
                 // if not found, check the rewrites table
                 $website_id = $container->get('site_data')->getCurrentWebsiteId();
-                $rewrite = $container->get('db')->table('rewrite')->where(['url' => $uri, 'website_id' => $website_id])->fetch();
-                if ($rewrite) {
-                    $route = $rewrite->route;
-                    $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $rewrite->route);
-                    $rewrite_id = $rewrite->getId();
+                try {
+                    $rewrite = $container->call([Rewrite::class, 'loadByCondition'], ['condition' => ['url' => $uri, 'website_id' => $website_id]]);
+                    if ($rewrite instanceof Rewrite) {
+                        $route = $rewrite->getRoute();
+                        $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $rewrite->getRoute());
+                        $rewrite_id = $rewrite->getId();
 
-                    $cached_routes[$domain][$uri] = $rewrite->getData();
-                    $container->get('cache')->set('web.routes', $cached_routes);
-                }
+                        $cached_routes[$domain][$uri] = $rewrite->getData();
+                        $container->get('cache')->set('web.routes', $cached_routes);
+                    }
+                } catch (Exception $e) {}
             }
         }
 

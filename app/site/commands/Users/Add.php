@@ -13,6 +13,7 @@
 namespace App\Site\Commands\Users;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\Role;
 use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\Console\Input\InputInterface;
@@ -71,9 +72,10 @@ class Add extends BaseCommand
                 'User Role? ',
                 array_map(
                     function ($el) {
-                        return $el->name;
+                        /** @var Role $el */
+                        return $el->getName();
                     },
-                    $this->getDb()->table('role')->fetchAll()
+                    $this->getContainer()->call([Role::class, 'all'])
                 ),
                 0
             );

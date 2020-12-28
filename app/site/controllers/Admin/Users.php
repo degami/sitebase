@@ -80,7 +80,9 @@ class Users extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
+        /** @var User $user */
         $user = $this->getObject();
+        /** @var Role $role */
         $role = null;
         if ($user->isLoaded()) {
             $role = $user->getRole();
@@ -97,8 +99,9 @@ class Users extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $roles = [];
-                foreach ($this->getDb()->role()->fetchAll() as $rolerow) {
-                    $roles[$rolerow->id] = $rolerow->name;
+                foreach ($this->getContainer()->call([Role::class, 'all']) as $item) {
+                    /** @var Role $item */
+                    $roles[$item->getId()] = $item->getName();
                 }
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 
@@ -241,6 +244,8 @@ class Users extends AdminManageModelsPage
      *
      * @param array $data
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTableElements(array $data): array
     {

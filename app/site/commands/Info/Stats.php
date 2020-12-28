@@ -13,6 +13,18 @@
 namespace App\Site\Commands\Info;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\Block;
+use App\Site\Models\Contact;
+use App\Site\Models\ContactSubmission;
+use App\Site\Models\LinkExchange;
+use App\Site\Models\MailLog;
+use App\Site\Models\MediaElement;
+use App\Site\Models\RequestLog;
+use App\Site\Models\User;
+use App\Site\Models\Website;
+use App\Site\Models\Page;
+use App\Site\Models\News;
+use App\Site\Models\Taxonomy;
 use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Output\OutputInterface;
@@ -46,23 +58,23 @@ class Stats extends BaseCommand
         $table = new Table($output);
 
         $tables = [
-            'website' => 'Websites',
-            'user' => 'Users',
-            'page' => 'Pages',
-            'contact' => 'Contact Forms',
-            'contact_submission' => 'Contact Forms Submissions',
-            'taxonomy' => 'Taxonomy Terms',
-            'block' => 'Blocks',
-            'media_element' => 'Media Elements',
-            'request_log' => 'Request Logs',
-            'mail_log' => 'Mail Logs',
-            'link_exchange' => 'Link Exchange',
-            'news' => 'News',
+            Website::class => 'Websites',
+            User::class => 'Users',
+            Page::class => 'Pages',
+            Contact::class => 'Contact Forms',
+            ContactSubmission::class => 'Contact Forms Submissions',
+            Taxonomy::class => 'Taxonomy Terms',
+            Block::class => 'Blocks',
+            MediaElement::class => 'Media Elements',
+            RequestLog::class => 'Request Logs',
+            MailLog::class => 'Mail Logs',
+            LinkExchange::class => 'Link Exchange',
+            News::class => 'News',
         ];
 
-        foreach ($tables as $table_name => $label) {
+        foreach ($tables as $class_name => $label) {
             $table
-                ->addRow(['<info>' . $label . '</info>', count($this->getDb()->table($table_name)->fetchAll())])
+                ->addRow(['<info>' . $label . '</info>', $this->getContainer()->call([$class_name, 'totalNum'])])
                 ->addRow(new TableSeparator());
         }
 

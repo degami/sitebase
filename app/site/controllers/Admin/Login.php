@@ -243,15 +243,13 @@ class Login extends FormPage
     {
         $values = $form->values();
 
-        $user = $this->getDb()->user()
-            ->where('username', $values['username'])
-            ->where('password', $this->getUtils()->getEncodedPass($values['password']))
-            ->fetch();
+        try {
+            $user = $this->getContainer()->call([User::class, 'loadByCondition'], ['condition' => [
+                'username' => $values['username'],
+                'password' => $this->getUtils()->getEncodedPass($values['password']),
+            ]]);
 
-        if (!$user) {
-            return $this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale());
-        } else {
-            $form_state['logged_user'] = $this->getContainer()->make(User::class, ['db_row' => $user]);
+            $form_state['logged_user'] = $user;
 
             if (!$form_state['logged_user']->checkPermission('administer_site')) {
                 return $this->getUtils()->translate("Your account is not allowed to access", $this->getCurrentLocale());
@@ -261,6 +259,8 @@ class Login extends FormPage
             $this->getApp()->event('user_logged_in', [
                 'logged_user' => $form_state['logged_user']
             ]);
+        } catch (\Exception $e) {
+            return $this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale());
         }
 
         return true;

@@ -197,7 +197,8 @@ class SiteData extends ContainerAwareObject
         $configuration = [];
         $results = $this->getContainer()->call([Configuration::class, 'all']);
         foreach ($results as $result) {
-            $configuration[$result->website_id][$result->path][$result->locale ?? 'default'] = $result->value;
+            /** @var Configuration $result */
+            $configuration[$result->getWebsiteId()][$result->getPath()][$result->getLocale() ?? 'default'] = $result->getValue();
         }
         $this->getCache()->set(SiteData::CONFIGURATION_CACHE_KEY, $configuration);
 
@@ -256,12 +257,14 @@ class SiteData extends ContainerAwareObject
             return $cached_configuration[$website_id][$config_path]['default'];
         }
 
-        $result = $this->getDb()->table('configuration')->where(['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])])->fetch();
-        if ($result instanceof Row) {
-            $cached_configuration[$website_id][$config_path][$result->locale ?? 'default'] = $result->value;
-            $this->getCache()->set(self::CONFIGURATION_CACHE_KEY, $cached_configuration);
-            return $result->value;
-        }
+        try {
+            $result = $this->getContainer()->call([Configuration::class, 'loadByCondition'], ['condition' => ['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])]]);
+            if ($result instanceof Configuration) {
+                $cached_configuration[$website_id][$config_path][$result->getLocale() ?? 'default'] = $result->getValue();
+                $this->getCache()->set(self::CONFIGURATION_CACHE_KEY, $cached_configuration);
+                return $result->getValue();
+            }
+        } catch (\Exception $e) {}
 
         return null;
     }
@@ -400,15 +403,16 @@ class SiteData extends ContainerAwareObject
      * gets defined redirects
      *
      * @param int $current_website_id
+     * @param bool $reset
      * @return array|mixed
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getRedirects(int $current_website_id): array
+    public function getRedirects(int $current_website_id, bool $reset = false): array
     {
         $redirects = [];
         $redirects_key = "site." . $current_website_id . ".redirects";
-        if (!$this->getCache()->has($redirects_key)) {
+        if (!$this->getCache()->has($redirects_key) || $reset) {
             $redirect_models = $this->getContainer()->call([Redirect::class, 'where'], ['condition' => ['website_id' => $current_website_id]]);
             foreach ($redirect_models as $redirect_model) {
                 $redirects[$redirect_model->getUrlFrom()] = [
@@ -474,13 +478,13 @@ class SiteData extends ContainerAwareObject
             $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
             $pageBlocks = [];
-            foreach ($this->getDb()->table('block')->where(['locale' => [$locale, null], 'website_id' => [$website_id, null]])->orderBy('order')->fetchAll() as $row) {
-                $block = $this->getContainer()->make(Block::class, ['db_row' => $row]);
-                if (!isset($pageBlocks[$block->region])) {
-                    $pageBlocks[$block->region] = [];
+            foreach ($this->getContainer()->call([Block::class, 'where'], ['condition' => ['locale' => [$locale, null], 'website_id' => [$website_id, null]], 'order' => ['order' => 'asc']]) as $block) {
+                /** @var Block $block */
+                if (!isset($pageBlocks[$block->getRegion()])) {
+                    $pageBlocks[$block->getRegion()] = [];
                 }
                 $block->loadInstance();
-                $pageBlocks[$block->region][] = $block;
+                $pageBlocks[$block->getRegion()][] = $block;
             }
         }
 

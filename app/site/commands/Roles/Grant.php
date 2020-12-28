@@ -13,7 +13,9 @@
 namespace App\Site\Commands\Roles;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\Permission;
 use Degami\Basics\Exceptions\BasicException;
+use Exception;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
 use \Symfony\Component\Console\Input\InputOption;
@@ -51,6 +53,7 @@ class Grant extends BaseCommand
      * @param OutputInterface $output
      * @return void
      * @throws BasicException
+     * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -71,12 +74,13 @@ class Grant extends BaseCommand
         $permissions_available = array_filter(
             array_map(
                 function ($el) use ($role) {
-                    if ($role->checkPermission($el->name)) {
+                    /** @var Permission $el */
+                    if ($role->checkPermission($el->getName())) {
                         return '';
                     }
-                    return $el->name;
+                    return $el->getName();
                 },
-                $this->getDb()->table('permission')->fetchAll()
+                $this->getContainer()->call([Permission::class, 'all'])
             )
         );
 

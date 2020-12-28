@@ -209,14 +209,12 @@ class PasswordForgot extends FormPage
 
 
         if ($form->getFormId() == 'confirmemail') {
-            $user = $this->getDb()->user()
-                ->where('email', $values['email'])
-                ->fetch();
-
-            if (!$user) {
+            try {
+                /** @var User $user */
+                $user = $this->getContainer()->call([User::class, 'loadBy'], ['field' => 'email', 'value' => $values['email']]);
+                $form_state['found_user'] = $user;
+            } catch (\Exception $e) {
                 return $this->getUtils()->translate("Invalid email", $this->getCurrentLocale());
-            } else {
-                $form_state['found_user'] = $this->getContainer()->make(User::class, ['db_row' => $user]);
             }
         }
 

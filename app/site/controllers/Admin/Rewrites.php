@@ -79,6 +79,7 @@ class Rewrites extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
+        /** @var Rewrite $rewrite */
         $rewrite = $this->getObject();
 
         $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
@@ -96,10 +97,10 @@ class Rewrites extends AdminManageModelsPage
 
                 $rewrite_url = $rewrite_route = $rewrite_website = $rewrite_locale = '';
                 if ($rewrite instanceof Rewrite) {
-                    $rewrite_url = $rewrite->url;
-                    $rewrite_route = $rewrite->route;
-                    $rewrite_website = $rewrite->website_id;
-                    $rewrite_locale = $rewrite->locale;
+                    $rewrite_url = $rewrite->getUrl();
+                    $rewrite_route = $rewrite->getRoute();
+                    $rewrite_website = $rewrite->getWebsiteId();
+                    $rewrite_locale = $rewrite->getLocale();
                 }
 
                 $form->addField('url', [
@@ -136,8 +137,9 @@ class Rewrites extends AdminManageModelsPage
                 );
 
                 $other_rewrites = [];
-                foreach ($this->getDb()->table('rewrite')->where('id != ?', $rewrite->getId())->fetchAll() as $item) {
-                    $other_rewrites[$item->id] = $item->route . ' - ' . $item->locale . " (" . $item->url . ")";
+                foreach ($this->getContainer()->call([Rewrite::class, 'where'], ['condition' => ['id:not' => $rewrite->getId()]]) as $item) {
+                    /** @var Rewrite $item */
+                    $other_rewrites[$item->getId()] = $item->getRoute() . ' - ' . $item->getLocale() . " (" . $item->getUrl() . ")";
                 }
                 $translations = $rewrite->getTranslations();
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();

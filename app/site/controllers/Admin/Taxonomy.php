@@ -79,6 +79,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws Exception
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -184,14 +185,14 @@ class Taxonomy extends AdminManageFrontendModelsPage
 
                 $pages = array_filter(
                     array_map(
-                        function ($el) use ($not_in) {
-                            if (in_array($el->id, $not_in)) {
+                        function ($page) use ($not_in) {
+                            /** @var Page $page */
+                            if (in_array($page->getId(), $not_in)) {
                                 return null;
                             }
-                            $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
                             return ['title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                         },
-                        $this->getDb()->page()->fetchAll()
+                        $this->getContainer()->call([Page::class, 'all'])
                     )
                 );
 

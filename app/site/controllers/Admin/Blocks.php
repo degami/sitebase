@@ -14,6 +14,7 @@ namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Traits\AdminFormTrait;
+use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -147,8 +148,9 @@ class Blocks extends AdminManageModelsPage
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 
                 $rewrite_options = [];
-                foreach ($this->getDb()->table('rewrite')->fetchAll() as $rewrite) {
-                    $rewrite_options[$rewrite->id] = $rewrite->url;
+                foreach ($this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
+                    /** @var Rewrite $rewrite */
+                    $rewrite_options[$rewrite->getId()] = $rewrite->getUrl();
                 }
 
                 $block_rewrites = [];
@@ -344,13 +346,10 @@ class Blocks extends AdminManageModelsPage
                 }
                 foreach ($to_add as $id_to_add) {
                     try {
-                        $this->getDb()->createRow(
-                            'block_rewrite',
-                            [
-                                'block_id' => $block->getId(),
-                                'rewrite_id' => $id_to_add,
-                            ]
-                        )->save();
+                        $this->getDb()->createRow('block_rewrite', [
+                            'block_id' => $block->getId(),
+                            'rewrite_id' => $id_to_add,
+                        ])->save();
                     } catch (Exception $e) {}
                 }
 

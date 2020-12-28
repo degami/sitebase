@@ -53,7 +53,6 @@ class RequestLog extends BaseModel
      * @param Request $request
      * @param BasePage|null $controller
      * @return $this
-     * @throws BasicException
      */
     public function fillWithRequest(Request $request, BasePage $controller = null): RequestLog
     {
@@ -75,13 +74,13 @@ class RequestLog extends BaseModel
      *
      * @param string $host
      * @return integer|null
-     * @throws BasicException
      */
     private function matchWebsite(string $host): ?int
     {
-        foreach ($this->getDb()->table('website') as $website_row) {
-            if (preg_match("/" . $website_row->domain . "/", $host)) {
-                return $website_row->id;
+        foreach ($this->getContainer()->call([Website::class, 'all']) as $website) {
+            /** @var Website $website */
+            if (preg_match("/" . $website->getDomain() . "/", $host)) {
+                return $website->getId();
             }
         }
 

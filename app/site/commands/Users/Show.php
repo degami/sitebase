@@ -51,8 +51,8 @@ class Show extends BaseCommand
         $table
             ->setHeaders(['ID', 'Username', 'Email', 'Roles']);
 
-        foreach ($this->getDb()->table('user')->fetchAll() as $k => $user_dbrow) {
-            $user = $this->getContainer()->make(User::class, ['db_row' => $user_dbrow]);
+        foreach ($this->getContainer()->call([User::class, 'all']) as $k => $user) {
+            /** @var User $user */
 
             if ($k > 0) {
                 $table->addRow(new TableSeparator());

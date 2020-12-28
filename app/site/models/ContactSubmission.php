@@ -56,17 +56,19 @@ class ContactSubmission extends BaseModel
      * @param ContainerInterface $container
      * @param array $submission_data
      * @return self
+     * @throws BasicException
      */
     public static function submit(ContainerInterface $container, array $submission_data = []): ContactSubmission
     {
+        /** @var ContactSubmission $contact_submission */
         $contact_submission = $container->get(ContactSubmission::class);
-        $contact_submission->contact_id = $submission_data['contact_id'];
-        $contact_submission->user_id = $submission_data['user_id'];
+        $contact_submission->setContactId($submission_data['contact_id']);
+        $contact_submission->setUserId($submission_data['user_id']);
         $contact_submission->persist();
 
         foreach ($submission_data['data'] as $data) {
             $contact_submission_data_row = $container->get('db')->createRow('contact_submission_data');
-            $data['contact_submission_id'] = $contact_submission->id;
+            $data['contact_submission_id'] = $contact_submission->getId();
 
             $contact_submission_data_row->update($data);
         }
@@ -83,7 +85,11 @@ class ContactSubmission extends BaseModel
     public function getFullData(): array
     {
         $data = $this->getData();
-        $data['user'] = $this->getContainer()->call([User::class, 'load'], ['id' => $data['user_id']])->getData();
+        try {
+            $data['user'] = $this->getContainer()->call([User::class, 'load'], ['id' => $data['user_id']])->getData();
+        } catch (Exception $e) {
+            $data['user'] = null;
+        }
         $values = array_map(
             function ($el) {
                 $field_label = $el->contact_definition()->fetch()->field_label;

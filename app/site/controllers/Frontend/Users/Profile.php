@@ -95,8 +95,9 @@ class Profile extends LoggedUserFormPage
         $user = $this->getCurrentUser();
 
         $roles = [];
-        foreach ($this->getDb()->role()->fetchAll() as $rolerow) {
-            $roles[$rolerow->id] = $rolerow->name;
+        foreach ($this->getContainer()->call([Role::class, 'all']) as $item) {
+            /** @var Role $item */
+            $roles[$item->getId()] = $item->getName();
         }
         $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 

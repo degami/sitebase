@@ -50,10 +50,9 @@ abstract class FrontendModel extends BaseModel
         $this->checkLoaded();
 
         if (!($this->rewriteObj instanceof Rewrite)) {
-            $this->rewriteObj = $this->getContainer()->make(
-                Rewrite::class,
-                ['db_row' => $this->getDb()->table('rewrite')->where('route', '/' . $this->getRewritePrefix() . '/' . $this->getId())->fetch()]
-            );
+            try {
+                $this->rewriteObj = $this->getContainer()->call([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => '/' . $this->getRewritePrefix() . '/' . $this->getId()]);
+            } catch (Exception $e) {}
         }
         return $this->rewriteObj;
     }

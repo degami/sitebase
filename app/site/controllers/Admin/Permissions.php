@@ -51,13 +51,12 @@ class Permissions extends AdminFormPage
      * {@inheritdocs}
      *
      * @return array
-     * @throws BasicException
      */
     protected function getTemplateData(): array
     {
         $this->template_data += [
-            'roles' => $this->getDb()->role()->fetchAll(),
-            'permissions' => $this->getDb()->permission()->fetchAll(),
+            'roles' => $this->getContainer()->call([Role::class, 'all']),
+            'permissions' => $this->getContainer()->call([Permission::class, 'all']),
         ];
         return $this->template_data;
     }
@@ -68,9 +67,7 @@ class Permissions extends AdminFormPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
+     * @throws \Exception
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -85,49 +82,47 @@ class Permissions extends AdminFormPage
             ],
         ]);
 
+        $rolesArray = $this->getContainer()->call([Role::class, 'all']);
+
         $table->setTableHeader(
             array_merge(
                 ["&nbsp;"],
                 array_map(
                     function ($el) {
-                        return $el->name;
+                        /** @var Role $el */
+                        return $el->getName();
                     },
-                    $this->getDb()->role()->fetchAll()
+                    $rolesArray
                 )
             )
         );
 
-        $permnum = -1;
+        $permission_num = -1;
 
-        $rolesArray = array_map(
-            function ($el) {
-                return $this->getContainer()->make(Role::class, ['db_row' => $el]);
-            },
-            $this->getDb()->role()->fetchAll()
-        );
-
-        foreach ($this->getDb()->permission()->fetchAll() as $permission) {
-            $permnum++;
+        foreach ($this->getContainer()->call([Permission::class, 'all']) as $permission_model) {
+            /** @var Permission $permission_model */
+            $permission_num++;
             $table
                 ->addRow()
                 ->addField(
-                    $permission->name . '_desc',
+                    $permission_model->getName() . '_desc',
                     [
                         'type' => 'markup',
-                        'value' => $permission->name,
+                        'value' => $permission_model->getName(),
                     ],
-                    $permnum
+                    $permission_num
                 );
 
             foreach ($rolesArray as $role_model) {
+                /** @var Role $role_model */
                 $table->addField(
-                    $permission->name . '|' . $role_model->name . '|enabled',
+                    $permission_model->getName() . '|' . $role_model->getName() . '|enabled',
                     [
                         'type' => 'checkbox',
                         'default_value' => 1,
-                        'value' => $role_model->checkPermission($permission->name),
+                        'value' => $role_model->checkPermission($permission_model->getName()),
                     ],
-                    $permnum
+                    $permission_num
                 );
             }
         }
@@ -157,9 +152,7 @@ class Permissions extends AdminFormPage
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws DependencyException
      * @throws InvalidValueException
-     * @throws NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -192,16 +185,12 @@ class Permissions extends AdminFormPage
      * @param Role $role_model
      * @param Permission $permission_model
      * @return RolePermission|null
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     private function loadRolePermission(Role $role_model, Permission $permission_model): ?RolePermission
     {
-        $role_permission_dbrow = $this->getDb()->table('role_permission')->where(['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()])->fetch();
-        if ($role_permission_dbrow) {
-            return $this->getContainer()->make(RolePermission::class, ['db_row' => $role_permission_dbrow]);
-        }
+        try {
+            return $this->getContainer()->call([RolePermission::class, 'loadByCondition'], ['condition' => ['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()]]);
+        } catch (\Exception $e) {}
 
         return null;
     }

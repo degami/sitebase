@@ -124,10 +124,12 @@ class Media extends AdminManageModelsPage
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws \Exception
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
+        /** @var MediaElement $media */
         $media = $this->getObject();
 
         $form->addField('action', [
@@ -138,7 +140,7 @@ class Media extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
                 $elem_data = $media->getData();
-                $elem_data['owner'] = $media->getOwner()->username;
+                $elem_data['owner'] = $media->getOwner()->getUsername();
 
                 unset($elem_data['id']);
                 unset($elem_data['user_id']);
@@ -176,7 +178,7 @@ class Media extends AdminManageModelsPage
                 ->addField('lazyload', [
                     'type' => 'switchbox',
                     'title' => 'Lazyload',
-                    'default_value' => boolval($media->lazyload) ? 1 : 0,
+                    'default_value' => boolval($media->getLazyload()) ? 1 : 0,
                     'yes_value' => 1,
                     'yes_label' => 'Yes',
                     'no_value' => 0,
@@ -187,26 +189,28 @@ class Media extends AdminManageModelsPage
                 $this->addSubmitButton($form);
 
                 if ($this->getRequest()->get('page_id')) {
+                    /** @var Page $page */
                     $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                     $form->addField('page_id', [
                         'type' => 'hidden',
-                        'default_value' => $page->id,
+                        'default_value' => $page->getId(),
                     ]);
                 }
                 break;
             case 'deassoc':
+                /** @var Page $page */
                 $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
-                    'default_value' => $page->id,
+                    'default_value' => $page->getId(),
                 ])->addField('media_id', [
                     'type' => 'hidden',
-                    'default_value' => $media->id,
+                    'default_value' => $media->getId(),
                 ])->addField('confirm', [
                     'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the selected element from the "' . $page->title . '" page (ID: ' . $page->id . ') ?',
+                    'value' => 'Do you confirm the disassociation of the selected element from the "' . $page->getTitle() . '" page (ID: ' . $page->getId() . ') ?',
                     'suffix' => '<br /><br />',
-                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.pagemedia', ['id' => $page->id]) . '?page_id=' . $page->id . '&action=new">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.pagemedia', ['id' => $page->getId()]) . '?page_id=' . $page->getId() . '&action=new">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
                 break;
@@ -215,19 +219,20 @@ class Media extends AdminManageModelsPage
                     function ($el) {
                         return $el->page_id;
                     },
-                    $this->getDb()->page_media_elementList()->where('media_element_id', $media->id)->fetchAll()
+                    $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->fetchAll()
                 );
 
                 $pages = array_filter(
                     array_map(
-                        function ($el) use ($not_in) {
-                            if (in_array($el->id, $not_in)) {
+                        function ($page) use ($not_in) {
+                            /** @var Page $page */
+                            if (in_array($page->getId(), $not_in)) {
                                 return null;
                             }
-                            $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
+
                             return ['title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                         },
-                        $this->getDb()->page()->fetchAll()
+                        $this->getContainer()->call([Page::class, 'all'])
                     )
                 );
 
@@ -239,7 +244,7 @@ class Media extends AdminManageModelsPage
                     'default_value' => '',
                 ])->addField('media_id', [
                     'type' => 'hidden',
-                    'default_value' => $media->id,
+                    'default_value' => $media->getId(),
                 ]);
 
                 $this->addSubmitButton($form, true);

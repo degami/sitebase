@@ -171,9 +171,31 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         if ($condition == null) {
             $condition = [];
         }
+
+        $conditions_where = [];
+        $conditions_wherenot = [];
+
+        foreach ($condition as $key => $value) {
+            if (preg_match("/:not$/", $key)) {
+                $key = preg_replace("/:not$/","", $key);
+                $conditions_wherenot[$key] = $value;
+            } else {
+                $conditions_where[$key] = $value;
+            }
+        }
+
+        /** @var Result $stmt */
         $stmt = $container->get('db')->table(
             static::defaultTableName()
-        )->where($condition);
+        );
+
+        if (!empty($conditions_where)) {
+            $stmt = $stmt->where($conditions_where);
+        }
+
+        if (!empty($conditions_wherenot)) {
+            $stmt = $stmt->whereNot($conditions_wherenot);
+        }
 
         if (!empty($order) && is_array($order)) {
             foreach ($order as $column => $direction) {
@@ -223,6 +245,20 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         }
 
         return $items;
+    }
+
+    /**
+     * gets total number of elements
+     *
+     * @param ContainerInterface $container
+     * @param array $condition
+     * @return int
+     */
+    public static function totalNum(ContainerInterface $container, $condition = []): int
+    {
+        $stmt = static::getModelBasicWhere($container, $condition);
+
+        return $stmt->count();
     }
 
     /**
@@ -301,10 +337,23 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function where(ContainerInterface $container, $condition, $order = []): array
     {
+        /** @var DebugBar $debugbar */
+        $debugbar = $container->get('debugbar');
+
+        $measure_key = 'where model: ' . static::defaultTableName();
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
+        }
+
         $items = static::hydrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
+        }
+
+        if (getenv('DEBUG')) {
+            $debugbar['time']->startMeasure($measure_key);
         }
 
         return $items;
@@ -938,7 +987,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param null $key
      * @return mixed
      */
-    protected function getOriginalData($key = null): ?array
+    protected function getOriginalData($key = null)
     {
         if ($key != null && array_key_exists($key, $this->original_data)) {
             return $this->original_data[$key];

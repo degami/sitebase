@@ -258,14 +258,15 @@ abstract class FrontendPage extends BaseHtmlPage
         }
 
         if ($this->getRouteInfo()) {
-            if ($this->getRouteInfo()->getRewrite()) {
-                // we have rewrite id into RouteInfo
-                $this->rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
-            } else {
-                // no data into RouteInfo, try by route
-                $rewrite_db = $this->getDb()->table('rewrite')->where(['route' => $this->getRouteInfo()->getRoute()]);
-                $this->rewrite = $this->getContainer()->make(Rewrite::class, ['db_row' => $rewrite_db]);
-            }
+            try {
+                if ($this->getRouteInfo()->getRewrite()) {
+                    // we have rewrite id into RouteInfo
+                    $this->rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
+                } else {
+                    // no data into RouteInfo, try by route
+                    $this->rewrite = $this->getContainer()->call([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => $this->getRouteInfo()->getRoute()]);
+                }
+            } catch (Exception $e) {}
         }
         return $this->rewrite;
     }

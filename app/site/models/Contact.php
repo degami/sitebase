@@ -93,9 +93,10 @@ class Contact extends FrontendModel
 
         return array_map(
             function ($el) {
-                return $el['id'];
+                /** @var ContactSubmission $el */
+                return $el->getId();
             },
-            $this->getDb()->query('SELECT * FROM contact_submission WHERE contact_id = ' . $this->id . '')->fetchAll()
+            $this->getContainer()->call([ContactSubmission::class, 'where'], ['condition' => ['contact_id' => $this->getId()]])
         );
     }
 
@@ -114,7 +115,7 @@ class Contact extends FrontendModel
             function ($el) {
                 return $el->getData();
             },
-            $this->getDb()->table('contact_definition')->where(['contact_id' => $this->id, 'contact_submission_id' => $submission_id])->fetchAll()
+            $this->getDb()->table('contact_definition')->where(['contact_id' => $this->getId(), 'contact_submission_id' => $submission_id])->fetchAll()
         );
     }
 

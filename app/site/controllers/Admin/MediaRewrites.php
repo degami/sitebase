@@ -13,6 +13,7 @@
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Models\MediaElement;
 use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
@@ -102,6 +103,7 @@ class MediaRewrites extends AdminManageModelsPage
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
         $type = $this->getRequest()->get('action') ?? 'list';
+        /** @var MediaElementRewrite $media_rewrite */
         $media_rewrite = $this->getObject();
 
         $form->addField('action', [
@@ -115,19 +117,21 @@ class MediaRewrites extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $rewrites = ['none' => ''];
-                foreach ($this->getDb()->rewrite()->fetchAll() as $rewrite) {
-                    $rewrites[$rewrite->id] = $rewrite->url . " ({$rewrite->route})";
+                foreach ($this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
+                    /** @var Rewrite $rewrite */
+                    $rewrites[$rewrite->getId()] = $rewrite->getUrl() . " ({$rewrite->getRoute()})";
                 }
 
                 $medias = ['' => ''];
-                foreach ($this->getDb()->media_element()->fetchAll() as $media) {
-                    $medias[$media->id] = $media->filename;
+                foreach ($this->getContainer()->call([MediaElement::class, 'all']) as $media) {
+                    /** @var MediaElement $media */
+                    $medias[$media->getId()] = $media->getFilename();
                 }
 
                 $media_rewrite_rewrite_id = $media_rewrite_media_id = '';
                 if ($media_rewrite->isLoaded()) {
-                    $media_rewrite_rewrite_id = $media_rewrite->rewrite_id;
-                    $media_rewrite_media_id = $media_rewrite->media_element_id;
+                    $media_rewrite_rewrite_id = $media_rewrite->getRewriteId();
+                    $media_rewrite_media_id = $media_rewrite->getMediaElementId();
                 }
 
                 $form->addField('rewrite_id', [
@@ -181,7 +185,7 @@ class MediaRewrites extends AdminManageModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         /**
-         * @var Rewrite $rewrite
+         * @var MediaElementRewrite $media_rewrite
          */
         $media_rewrite = $this->getObject();
 
@@ -189,8 +193,8 @@ class MediaRewrites extends AdminManageModelsPage
         switch ($values['action']) {
             case 'new':
             case 'edit':
-                $media_rewrite->rewrite_id = $values['rewrite_id'] == 'none' ? null : $values['rewrite_id'];
-                $media_rewrite->media_element_id = $values['media_id'];
+                $media_rewrite->setRewriteId($values['rewrite_id'] == 'none' ? null : $values['rewrite_id']);
+                $media_rewrite->setMediaElementId($values['media_id']);
                 $media_rewrite->persist();
                 break;
             case 'delete':

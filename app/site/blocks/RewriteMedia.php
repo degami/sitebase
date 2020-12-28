@@ -14,6 +14,7 @@ namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Exceptions\PermissionDeniedException;
 use \App\Site\Models\MediaElementRewrite;
 use Degami\Basics\Exceptions\BasicException;
 use \Degami\Basics\Html\TagElement;
@@ -32,9 +33,8 @@ class RewriteMedia extends BaseCodeBlock
      * @param BasePage|null $current_page
      * @param array $data
      * @return string
-     * @throws DependencyException
-     * @throws NotFoundException
      * @throws BasicException
+     * @throws PermissionDeniedException
      */
     public function renderHTML(BasePage $current_page = null, $data = []): string
     {
@@ -48,12 +48,11 @@ class RewriteMedia extends BaseCodeBlock
         }
 
         $images = array_map(
-            function ($el) {
-                $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class, ['db_row' => $el]);
+            function ($media_rewrite) {
+                /** @var MediaElementRewrite $media_rewrite */
                 return $media_rewrite->getMediaElement()->getImage();
             },
-            $this->getDb()->table('media_element_rewrite')->where(['rewrite_id' => $rewrite_id])->fetchAll()
-        //$current_page->getRewrite()->media_element_rewriteList()->fetchAll()
+            $this->getContainer()->call([MediaElementRewrite::class, 'where'], ['condition' => [ 'rewrite_id' => $rewrite_id]])
         );
 
 

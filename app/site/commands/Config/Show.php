@@ -13,6 +13,7 @@
 namespace App\Site\Commands\Config;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\Configuration;
 use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\Console\Input\InputInterface;
 use \Symfony\Component\Console\Input\InputDefinition;
@@ -45,7 +46,6 @@ class Show extends BaseCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
-     * @throws BasicException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -53,14 +53,20 @@ class Show extends BaseCommand
         $table->setHeaders(['Id', 'Website', 'Path', 'Value', 'System']);
 
         $website = $input->getOption('website');
-        $query = $this->getDb()->table('configuration');
-        if (is_numeric($website)) {
-            $query = $query->where(['website_id' => $website]);
-        }
 
-        $results = $query->fetchAll();
-        foreach ($results as $row) {
-            $table->addRow([$row['id'], $row['website_id'], $row['path'], $row['value'], $row['is_system'] ? 'true' : 'false']);
+        $condition = [];
+        if (is_numeric($website)) {
+            $condition = ['website_id' => $website];
+        }
+        foreach ($this->getContainer()->call([Configuration::class, 'where'], ['condition' => $condition]) as $row) {
+            /** @var Configuration $row */
+            $table->addRow([
+                $row['id'],
+                $row['website_id'],
+                $row['path'],
+                $row['value'],
+                $row['is_system'] ? 'true' : 'false'
+            ]);
         }
 
         $table->render();

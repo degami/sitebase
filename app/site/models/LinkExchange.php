@@ -65,7 +65,7 @@ class LinkExchange extends BaseModel
                 function ($el) {
                     return $this->getContainer()->make(Taxonomy::class, ['db_row' => $el]);
                 },
-                $this->link_echange_taxonomyList()->taxonomy()->fetchAll()
+                $this->link_exchange_taxonomyList()->taxonomy()->fetchAll()
             );
         }
         return $this->terms;
@@ -83,8 +83,8 @@ class LinkExchange extends BaseModel
         $new_link_exchange_taxonomy_row = $this->getDb()->table('link_exchange_taxonomy')->createRow();
         $new_link_exchange_taxonomy_row->update(
             [
-                'link_exchange_id' => $this->id,
-                'taxonomy_id' => $term->id,
+                'link_exchange_id' => $this->getId(),
+                'taxonomy_id' => $term->getId(),
             ]
         );
         return $this;
@@ -99,10 +99,10 @@ class LinkExchange extends BaseModel
      */
     public function removeTerm(Taxonomy $term): LinkExchange
     {
-        $this->getDb()->table('link_echange_taxonomy')->where(
+        $this->getDb()->table('link_exchange_taxonomy')->where(
             [
-                'link_exchange_id' => $this->id,
-                'taxonomy_id' => $term->id,
+                'link_exchange_id' => $this->getId(),
+                'taxonomy_id' => $term->getId(),
             ]
         )->delete();
         return $this;

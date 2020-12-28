@@ -67,13 +67,19 @@ class Add extends BaseCommand
             $website->setDomain($domain);
             $website->persist();
 
-            foreach ($this->getDb()->table('configuration')->where(['is_system' => 1, 'website_id' => 1])->fetchAll() as $config) {
+            foreach ($this->getContainer()->call([Configuration::class, 'where'], ['condition' => ['is_system' => 1, 'website_id' => 1]]) as $config) {
+                /** @var Configuration $config */
+
                 // copy at least is_system configurations
-                $configuration_model = Configuration::new($this->getContainer());
-                $configuration_model->setWebsiteId($website->id);
-                $configuration_model->setPath($config->path);
-                $configuration_model->setValue('');
-                $configuration_model->setIsSystem(1);
+
+                /** @var Configuration $configuration_model */
+                $configuration_model = $this->getContainer()->call([Configuration::class, 'new'], ['initial_data' => [
+                    'website_id' => $website->getId(),
+                    'path' => $config->getPath(),
+                    'value' => '',
+                    'is_system' => 1,
+                ]]);
+
                 $configuration_model->persist();
             }
 

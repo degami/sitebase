@@ -13,6 +13,7 @@
 namespace App\Site\Commands\Cron;
 
 use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Site\Models\CronLog;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use \Symfony\Component\Console\Input\InputInterface;
@@ -41,7 +42,6 @@ class Show extends BaseCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
-     * @throws BasicException
      * @throws Exception
      */
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -53,9 +53,7 @@ class Show extends BaseCommand
         $table = new Table($output);
         $table->setHeaders(['ID', 'Title', 'Callable', 'Schedule', 'Active']);
 
-        foreach ($this->getDb()->table('cron_task')->fetchAll() as $k => $cron_dbrow) {
-            $cron = $this->getContainer()->make(CronTask::class, ['db_row' => $cron_dbrow]);
-
+        foreach ($this->getContainer()->call([CronTask::class, 'all']) as $k => $cron) {
             if ($k > 0) {
                 $table->addRow(new TableSeparator());
             }
@@ -84,8 +82,8 @@ class Show extends BaseCommand
     {
         $out = '<info>No heart beat run yet</info>';
         // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1
-        $last_beat = $this->getContainer()->get('db')
-            ->cron_log()
+        $last_beat = $this->getDb()
+            ->table('cron_log')
             ->where("1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0")
             ->orderBy('run_time', 'DESC')
             ->limit(1)

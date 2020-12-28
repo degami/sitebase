@@ -124,9 +124,8 @@ class Menus extends AdminManageModelsPage
             ])->addMarkup($menu_name);
         }
 
-        $menus = $this->getDb()->table('menu')->where('menu_name', $menu_name)->where('parent_id', $parent_id)->orderBy('position')->fetchAll();
-        foreach ($menus as $db_menu) {
-            $menu = $this->getContainer()->make(Menu::class, ['db_row' => $db_menu]);
+        foreach ($this->getContainer()->call([Menu::class, 'where'], ['condition' => ['menu_name' => $menu_name, 'parent_id' => $parent_id] , 'order' => ['position' => 'asc']]) as $menu) {
+            /** @var Menu $menu */
             $this->addLevel($thisFormElement->addChild(), $menu_name, $menu);
         }
 
@@ -311,11 +310,11 @@ class Menus extends AdminManageModelsPage
      *
      * @param string $menu_name
      * @param array $level
-     * @param array $parent
+     * @param array|null $parent
      * @param int $position
      * @return void
      */
-    protected function saveLevel(string $menu_name, array $level, array $parent, int $position = 0)
+    protected function saveLevel(string $menu_name, array $level, ?array $parent, int $position = 0)
     {
         if (isset($level['children'])) {
             $child_position = 0;
@@ -330,13 +329,15 @@ class Menus extends AdminManageModelsPage
             } else {
                 $parent_id = $parent;
             }
-            $menu_elem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
-            if ($id != null && $menu_elem instanceof Menu) {
-                $menu_elem->parent_id = $parent_id;
-                $menu_elem->position = $position;
+            try {
+                $menu_elem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
+                if ($id != null && $menu_elem instanceof Menu) {
+                    $menu_elem->setParentId($parent_id);
+                    $menu_elem->setPosition($position);
 //                $menu_elem->breadcrumb = $menu_elem->getParentIds();
-                $menu_elem->save();
-            }
+                    $menu_elem->save();
+                }
+            } catch (\Exception $e) {}
         }
     }
 

@@ -12,7 +12,18 @@
 
 namespace App\Site\Controllers\Admin;
 
-use Degami\Basics\Exceptions\BasicException;
+use App\Site\Models\Block;
+use App\Site\Models\Contact;
+use App\Site\Models\ContactSubmission;
+use App\Site\Models\LinkExchange;
+use App\Site\Models\MailLog;
+use App\Site\Models\MediaElement;
+use App\Site\Models\RequestLog;
+use App\Site\Models\User;
+use App\Site\Models\Website;
+use App\Site\Models\Page;
+use App\Site\Models\News;
+use App\Site\Models\Taxonomy;
 use \App\Base\Abstracts\Controllers\AdminPage;
 
 /**
@@ -49,23 +60,22 @@ class Dashboard extends AdminPage
      * {@inheritdocs}
      *
      * @return array
-     * @throws BasicException
      */
     protected function getTemplateData(): array
     {
         $this->template_data = [
-            'websites' => count($this->getDb()->table('website')->fetchAll()),
-            'users' => count($this->getDb()->table('user')->fetchAll()),
-            'pages' => count($this->getDb()->table('page')->fetchAll()),
-            'contact_forms' => count($this->container->get('db')->table('contact')->fetchAll()),
-            'contact_submissions' => count($this->container->get('db')->table('contact_submission')->fetchAll()),
-            'taxonomy_terms' => count($this->getDb()->table('taxonomy')->fetchAll()),
-            'blocks' => count($this->getDb()->table('block')->fetchAll()),
-            'media' => count($this->getDb()->table('media_element')->fetchAll()),
-            'page_views' => count($this->getDb()->table('request_log')->fetchAll()),
-            'mails_sent' => count($this->getDb()->table('mail_log')->fetchAll()),
-            'links' => count($this->getDb()->table('link_exchange')->fetchAll()),
-            'news' => count($this->getDb()->table('news')->fetchAll()),
+            'websites' => $this->getContainer()->call([Website::class, 'totalNum']),
+            'users' => $this->getContainer()->call([User::class, 'totalNum']),
+            'pages' => $this->getContainer()->call([Page::class, 'totalNum']),
+            'contact_forms' => $this->getContainer()->call([Contact::class, 'totalNum']),
+            'contact_submissions' => $this->getContainer()->call([ContactSubmission::class, 'totalNum']),
+            'taxonomy_terms' => $this->getContainer()->call([Taxonomy::class, 'totalNum']),
+            'blocks' => $this->getContainer()->call([Block::class, 'totalNum']),
+            'media' => $this->getContainer()->call([MediaElement::class, 'totalNum']),
+            'page_views' => $this->getContainer()->call([RequestLog::class, 'totalNum']),
+            'mails_sent' => $this->getContainer()->call([MailLog::class, 'totalNum']),
+            'links' => $this->getContainer()->call([LinkExchange::class, 'totalNum']),
+            'news' => $this->getContainer()->call([News::class, 'totalNum']),
         ];
         return $this->template_data;
     }

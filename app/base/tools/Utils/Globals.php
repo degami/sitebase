@@ -13,6 +13,8 @@
 namespace App\Base\Tools\Utils;
 
 use \App\Base\Abstracts\ContainerAwareObject;
+use App\Site\Models\Language;
+use App\Site\Models\Website;
 use \App\Site\Routing\RouteInfo;
 use \Degami\Basics\Exceptions\BasicException;
 use \DI\DependencyException;
@@ -38,15 +40,15 @@ class Globals extends ContainerAwareObject
      * gets websites options for selects
      *
      * @return array
-     * @throws BasicException
      */
     public function getWebsitesSelectOptions(): array
     {
-        $websitesDB = [];
-        foreach ($this->getDb()->table('website')->fetchAll() as $w) {
-            $websitesDB[$w->id] = $w->site_name . " (" . $w->domain . ")";
+        $out = [];
+        foreach ($this->getContainer()->call([Website::class,'all']) as $website) {
+            /** @var Website $website */
+            $out[$website->getId()] = $website->getSiteName() . " (" . $website->getDomain() . ")";
         }
-        return $websitesDB;
+        return $out;
     }
 
     /**
@@ -63,16 +65,18 @@ class Globals extends ContainerAwareObject
     {
         $languages = $this->getSiteData()->getSiteLocales($website_id);
         $languages_on_DB = [];
-        foreach ($this->getDb()->table('language')->where(['locale' => $languages])->fetchAll() as $l) {
-            $languages_on_DB[$l->locale] = $l;
+        foreach ($this->getContainer()->call([Language::class, 'where'], ['condition' => ['locale' => $languages]])  as $l) {
+            /** @var Language $l */
+            $languages_on_DB[$l->getLocale()] = $l;
         }
 
         return array_combine(
             $languages,
             array_map(
                 function ($el) use ($languages_on_DB) {
+                    /** @var Language $lang */
                     $lang = isset($languages_on_DB[$el]) ? $languages_on_DB[$el] : null;
-                    return $lang ? "{$lang->native}" : $el;
+                    return $lang ? $lang->getNative() : $el;
                 },
                 $languages
             )

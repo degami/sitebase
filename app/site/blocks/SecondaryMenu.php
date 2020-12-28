@@ -118,11 +118,15 @@ class SecondaryMenu extends BaseCodeBlock
      */
     protected function _renderMenuLink($leaf, $link_class = 'menu-elem'): string
     {
+        if (empty($leaf['title'])) {
+            return '';
+        }
+
         $link_options = [
             'tag' => 'a',
             'attributes' => [
                 'class' => $link_class,
-                'href' => $leaf['href'],
+                'href' => $leaf['href'] ?? '#',
                 'title' => $leaf['title'],
             ],
             'text' => $leaf['title'],

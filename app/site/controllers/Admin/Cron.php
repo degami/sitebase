@@ -13,6 +13,7 @@
 namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Models\CronLog;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -295,12 +296,8 @@ class Cron extends AdminManageModelsPage
     {
         $out = '<div class="alert alert-danger" role="alert">No heart beat run yet</div>';
         // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1
-        $last_beat = $this->getDb()
-            ->cron_log()
-            ->where("1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0")
-            ->orderBy('run_time', 'DESC')
-            ->limit(1)
-            ->fetch();
+        /** @var CronLog $last_beat */
+        $last_beat = $this->getContainer()->call([CronLog::class, 'select'], ['options' => ['where' => ["1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0"], 'orderBy' => ['run_time DESC'], 'limitCount' => 1]])->fetch();
 
         if ($last_beat != null) {
             $lasbeat_date = new DateTime($last_beat['run_time']);

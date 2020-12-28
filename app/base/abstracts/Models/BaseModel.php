@@ -18,6 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use IteratorAggregate;
+use LessQL\Database;
 use LessQL\Result;
 use \LessQL\Row;
 use PDOStatement;

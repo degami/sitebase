@@ -507,26 +507,18 @@ class SiteData extends ContainerAwareObject
     {
         $out = [];
         if ($menu_element instanceof Menu) {
-            $out['menu_id'] = $menu_element->getId();
-            $out['title'] = $menu_element->getTitle();
-            $out['href'] = $menu_element->getLinkUrl();
-            $out['target'] = $menu_element->getTarget();
-            $out['breadcrumb'] = $menu_element->getBreadcumb();
-            $out['children'] = [];
+            $out = $this->menuElementToArray($menu_element);
+
             foreach ($menu_element->getChildren($locale) as $child) {
                 $out['children'][] = $this->getSiteMenu($menu_name, $website_id, $locale, $child);
             }
         } else {
-            $query = $this->getDb()->table('menu')->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]])->orderBy('position');
             $out = array_map(
-                function ($el) use ($menu_name, $website_id, $locale) {
-                    /**
-                     * @var Menu $menu_model
-                     */
-                    $menu_model = $this->getContainer()->make(Menu::class, ['db_row' => $el]);
+                function ($menu_model) use ($menu_name, $website_id, $locale) {
+                    /** @var Menu $menu_model */
                     return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
                 },
-                $query->fetchAll()
+                $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]], 'order' => ['position' => 'asc']])
             );
         }
         return $out;
@@ -544,12 +536,8 @@ class SiteData extends ContainerAwareObject
     {
         $out = [];
         if ($menu_element instanceof Menu) {
-            $out['menu_id'] = $menu_element->getId();
-            $out['title'] = $menu_element->getTitle();
-            $out['href'] = $menu_element->getLinkUrl();
-            $out['target'] = $menu_element->getTarget();
-            $out['breadcrumb'] = $menu_element->getBreadcrumb();
-            $out['children'] = [];
+            $out = $this->menuElementToArray($menu_element);
+
             foreach ($menu_items as $child) {
                 /** @var Menu $child */
                 if ($child->getParentId() == $menu_element->getId()) {
@@ -564,6 +552,26 @@ class SiteData extends ContainerAwareObject
                 }
             }
         }
+        return $out;
+    }
+
+    /**
+     * converts a menu element to array
+     *
+     * @param Menu $menu_element
+     * @return array
+     * @throws BasicException
+     */
+    protected function menuElementToArray(Menu $menu_element) : array
+    {
+        $out = [];
+        $out['menu_id'] = $menu_element->getId();
+        $out['title'] = $menu_element->getTitle();
+        $out['href'] = $menu_element->getLinkUrl();
+        $out['target'] = $menu_element->getTarget();
+        $out['breadcrumb'] = $menu_element->getBreadcrumb();
+        $out['children'] = [];
+
         return $out;
     }
 }

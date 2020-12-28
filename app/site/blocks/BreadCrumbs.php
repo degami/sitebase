@@ -162,7 +162,7 @@ class BreadCrumbs extends BaseCodeBlock
             );
 
             $atag = null;
-            if ($current_page instanceof FrontendPageWithObject) {
+            if ($current_page instanceof FrontendPageWithObject && $current_page->getRewrite()) {
                 $atag = $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [

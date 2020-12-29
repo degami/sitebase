@@ -247,9 +247,6 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @param bool $reset
      * @return Rewrite|null
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getRewrite($reset = false): ?Rewrite
     {
@@ -339,17 +336,18 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @return array
      * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function getTranslations(): array
     {
-        return array_map(
-            function ($el) {
-                return $el->url;
-            },
-            $this->getRewrite()->getTranslations()
-        );
+        if ($this->getRewrite() != null) {
+            return array_map(
+                function ($el) {
+                    return $el->url;
+                },
+                $this->getRewrite()->getTranslations()
+            );
+        }
+        return [];
     }
 
 

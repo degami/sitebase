@@ -14,6 +14,7 @@ namespace App\Site\Blocks;
 
 use \App\Base\Abstracts\Blocks\BaseCodeBlock;
 use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\FrontendPage;
 use \Degami\PHPFormsApi as FAPI;
 use \App\Site\Models\Language;
 use \Exception;
@@ -42,7 +43,8 @@ class ChangeLanguage extends BaseCodeBlock
                 ];
             }
 
-            if (is_callable([$current_page, 'getTranslations'])) {
+
+            if (($current_page instanceof FrontendPage) && is_callable([$current_page, 'getTranslations'])) {
                 if (($translations = $current_page->getTranslations()) && !empty($translations)) {
                     $changelanguage_links = $this->getContainer()->make(TagElement::class, ['options' => [
                         'tag' => 'ul',

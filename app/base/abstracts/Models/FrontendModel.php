@@ -52,7 +52,9 @@ abstract class FrontendModel extends BaseModel
         if (!($this->rewriteObj instanceof Rewrite)) {
             try {
                 $this->rewriteObj = $this->getContainer()->call([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => '/' . $this->getRewritePrefix() . '/' . $this->getId()]);
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+                $this->rewriteObj = $this->getContainer()->call([Rewrite::class, 'new']);
+            }
         }
         return $this->rewriteObj;
     }

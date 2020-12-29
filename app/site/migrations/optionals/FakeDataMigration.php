@@ -15,6 +15,7 @@ namespace App\Site\Migrations;
 use App\App;
 use \App\Base\Abstracts\Migrations\BaseMigration;
 use App\Site\Models\Block;
+use App\Site\Models\Configuration;
 use App\Site\Models\Contact;
 use App\Site\Models\LinkExchange;
 use App\Site\Models\MediaElement;
@@ -25,9 +26,12 @@ use App\Site\Models\Page;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Taxonomy;
 use App\Site\Models\User;
+use Cassandra\Date;
 use DateInterval;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
@@ -41,7 +45,7 @@ class FakeDataMigration extends BaseMigration
     /**
      * @var string lorem ipsum paragraph
      */
-    protected $lipsum_p = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra sapien nunc, id suscipit sem fermentum eget. Maecenas euismod mauris nibh, id interdum est ultricies nec. Integer euismod justo non ullamcorper facilisis. Fusce varius quam et enim tristique rutrum. Morbi feugiat pretium ultrices. Aenean eu sem ac massa commodo accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ullamcorper pharetra dictum. Fusce rutrum auctor sapien. Aenean vel lectus ex. Duis dictum nisl quis mauris ullamcorper ullamcorper. </p>';
+    protected $lorem_ipsum_p = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra sapien nunc, id suscipit sem fermentum eget. Maecenas euismod mauris nibh, id interdum est ultricies nec. Integer euismod justo non ullamcorper facilisis. Fusce varius quam et enim tristique rutrum. Morbi feugiat pretium ultrices. Aenean eu sem ac massa commodo accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ullamcorper pharetra dictum. Fusce rutrum auctor sapien. Aenean vel lectus ex. Duis dictum nisl quis mauris ullamcorper ullamcorper. </p>';
 
     /**
      * @var array locales
@@ -61,7 +65,7 @@ class FakeDataMigration extends BaseMigration
     /**
      * @var array links
      */
-    protected $linkexchange_urls = ["https://www.google.com", "https://www.wikipedia.org", "https://stackoverflow.com", "https://linux.org/", "https://www.php.net"];
+    protected $link_exchange_urls = ["https://www.google.com", "https://www.wikipedia.org", "https://stackoverflow.com", "https://linux.org/", "https://www.php.net"];
 
     /**
      * @var integer website id
@@ -105,7 +109,7 @@ class FakeDataMigration extends BaseMigration
             foreach ($this->locales as $locale) {
                 $terms[$locale][] = $this->addTerm(
                     "Term" . $i,
-                    str_repeat($this->lipsum_p, rand(1, 3)),
+                    str_repeat($this->lorem_ipsum_p, rand(1, 3)),
                     $locale,
                     $adminUser
                 );
@@ -120,7 +124,7 @@ class FakeDataMigration extends BaseMigration
             foreach ($this->locales as $locale) {
                 $pages[$locale][] = $this->addPage(
                     'Page ' . $i,
-                    str_repeat($this->lipsum_p, rand(2, 6)),
+                    str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $locale,
                     array_intersect_key($terms[$locale], array_flip(array_rand($terms[$locale], rand(2, count($terms[$locale]) - 1)))),
                     $adminUser,
@@ -145,7 +149,7 @@ class FakeDataMigration extends BaseMigration
             foreach ($this->locales as $locale) {
                 $news[$locale][] = $this->addNews(
                     'News ' . $i,
-                    str_repeat($this->lipsum_p, rand(2, 6)),
+                    str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $date,
                     $locale,
                     $adminUser
@@ -154,7 +158,7 @@ class FakeDataMigration extends BaseMigration
         }
 
 
-        foreach ($this->linkexchange_urls as $link_exchange) {
+        foreach ($this->link_exchange_urls as $link_exchange) {
             foreach ($this->locales as $locale) {
                 $links[$locale][] = $this->addLinkExchange(
                     $link_exchange,
@@ -169,7 +173,7 @@ class FakeDataMigration extends BaseMigration
         foreach ($this->locales as $locale) {
             $contacts[$locale][] = $this->addContactForm(
                 'Contact Us',
-                str_repeat($this->lipsum_p, rand(2, 6)),
+                str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                 $locale,
                 [
                     [
@@ -224,9 +228,9 @@ class FakeDataMigration extends BaseMigration
 
         foreach ($this->locales as $locale) {
             foreach (array_diff($this->locales, [$locale]) as $other_locale) {
-                foreach (['pages', 'terms', 'contacts'] as $arrayname) {
-                    foreach (${$arrayname}[$locale] as $index => $element_from) {
-                        $element_to = ${$arrayname}[$other_locale][$index];
+                foreach (['pages', 'terms', 'contacts'] as $array_name) {
+                    foreach (${$array_name}[$locale] as $index => $element_from) {
+                        $element_to = ${$array_name}[$other_locale][$index];
 
                         $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
                         $rewrite_translation_row->update(
@@ -243,24 +247,26 @@ class FakeDataMigration extends BaseMigration
 
             // links exchange
             foreach (array_diff($this->locales, [$locale]) as $other_locale) {
-                $element_from = $links_exchange_rewrites[$locale];
-                $element_to = $links_exchange_rewrites[$other_locale];
-                $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
-                $rewrite_translation_row->update(
-                    [
-                        'source' => $element_from->getId(),
-                        'source_locale' => $element_from->getLocale(),
-                        'destination' => $element_to->getId(),
-                        'destination_locale' => $element_to->getLocale()
-                    ]
-                );
+                foreach (['links_exchange_rewrites', 'news_list_rewrites'] as $array_name) {
+                    $element_from = ${$array_name}[$locale];
+                    $element_to = ${$array_name}[$other_locale];
+                    $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
+                    $rewrite_translation_row->update(
+                        [
+                            'source' => $element_from->getId(),
+                            'source_locale' => $element_from->getLocale(),
+                            'destination' => $element_to->getId(),
+                            'destination_locale' => $element_to->getLocale()
+                        ]
+                    );
+                }
             }
         }
 
         $lastMenuItem = null;
         foreach ($this->locales as $locale) {
-            foreach (['pages', 'terms', 'contacts'] as $arrayname) {
-                foreach (${$arrayname}[$locale] as $index => $element) {
+            foreach (['pages', 'terms', 'contacts'] as $array_name) {
+                foreach (${$array_name}[$locale] as $index => $element) {
                     $lastMenuItem = $this->addMenuItem(
                         $element->getTitle(),
                         $this->menu_names[$locale],
@@ -274,76 +280,65 @@ class FakeDataMigration extends BaseMigration
                 'News',
                 $this->menu_names[$locale],
                 $news_list_rewrites[$locale],
-                $locale,
-                null
+                $locale
             );
             $this->addMenuItem(
                 'Links Exchange',
                 $this->menu_names[$locale],
                 $links_exchange_rewrites[$locale],
-                $locale,
-                null
+                $locale
             );
         }
 
+        // locale dependent configuration
         foreach ($this->locales as $locale) {
-            // menus
-            $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => 'app/frontend/main_menu'])->fetch();
-            if (!$config) {
-                $config = $this->getDb()->createRow('configuration');
+            $configurations = [
+                'app/frontend/main_menu' => $this->menu_names[$locale],
+                'app/mail/ses_sender' => '',
+            ];
+            foreach ($configurations as $path => $value) {
+                /** @var Configuration $config */
+                $config = null;
+                try {
+                    $config = $this->getContainer()->call([Configuration::class, 'loadByCondition'], ['condition' => ['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path]]);
+                } catch (Exception $e) {
+                    $config = $this->getContainer()->call([Configuration::class, 'new'], ['initial_data' => [
+                        'website_id' => $this->website_id,
+                        'locale' => $locale,
+                        'path' => $path,
+                    ]]);
+                }
+
+                $config
+                    ->setValue($value)
+                    ->setIsSystem(1)
+                    ->persist();
             }
-
-            $config->update(
-                [
-                    'website_id' => $this->website_id,
-                    'locale' => $locale,
-                    'path' => 'app/frontend/main_menu',
-                    'value' => $this->menu_names[$locale],
-                    'is_system' => 1,
-                ]
-            );
-
-            // ses
-            $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => 'app/mail/ses_sender'])->fetch();
-            if (!$config) {
-                $config = $this->getDb()->createRow('configuration');
-            }
-
-            $config->update(
-                [
-                    'website_id' => $this->website_id,
-                    'locale' => $locale,
-                    'path' => 'app/mail/ses_sender',
-                    'value' => '',
-                    'is_system' => 1,
-                ]
-            );
         }
 
-        // email
-        $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path' => 'app/global/site_mail_address'])->fetch();
-        $config->update(
-            [
-                'website_id' => $this->website_id,
-                'locale' => null,
-                'path' => 'app/global/site_mail_address',
-                'value' => $this->site_email,
-                'is_system' => 1,
-            ]
-        );
+        // locale independent configuration
+        $configurations = [
+            'app/global/site_mail_address' => $this->site_email,
+            'app/frontend/langs' => implode(',', $this->locales),
+        ];
+        foreach ($configurations as $path => $value) {
+            /** @var Configuration $config */
+            $config = null;
+            try {
+                $config = $this->getContainer()->call([Configuration::class, 'loadByCondition'], ['condition' => ['website_id' => $this->website_id, 'path' => $path]]);
+            } catch (Exception $e) {
+                $config = $this->getContainer()->call([Configuration::class, 'new'], ['initial_data' => [
+                    'website_id' => $this->website_id,
+                    'path' => $path,
+                ]]);
+            }
 
-        // languages
-        $config = $this->getDb()->table('configuration')->where(['website_id' => $this->website_id, 'path' => 'app/frontend/langs'])->fetch();
-        $config->update(
-            [
-                'website_id' => $this->website_id,
-                'locale' => null,
-                'path' => 'app/frontend/langs',
-                'value' => implode(',', $this->locales),
-                'is_system' => 1,
-            ]
-        );
-
+            $config
+                ->setValue($value)
+                ->setLocale(null)
+                ->setIsSystem(1)
+                ->persist();
+        }
 
         $home_page = $this->getContainer()->call([Page::class, 'load'], ['id' => 1]);
         foreach ($this->locales as $locale) {
@@ -355,7 +350,7 @@ class FakeDataMigration extends BaseMigration
                 $rewrites[] = $pages[$locale][$k]->getRewrite();
             }
 
-            $this->addBlock('block_pre_footer', $this->lipsum_p, 'pre_footer', $locale, $rewrites);
+            $this->addBlock('block_pre_footer', $this->lorem_ipsum_p, 'pre_footer', $locale, $rewrites);
         }
 
         $rewrites = [];
@@ -397,22 +392,21 @@ class FakeDataMigration extends BaseMigration
      * @param User|null $owner_model
      * @return NewsModel
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
-    private function addNews($title, $content, $date, $locale = 'en', $owner_model = null): NewsModel
+    private function addNews(string $title, string $content, DateTime $date, $locale = 'en', ?User $owner_model = null): NewsModel
     {
-        $news_model = $this->getContainer()->make(NewsModel::class);
-
-        $news_model->website_id = $this->website_id;
-        $news_model->url = $this->getUtils()->slugify($title, false);
-        $news_model->title = $title;
-        $news_model->locale = $locale;
-        $news_model->content = $content;
-        $news_model->date = $date;
-        $news_model->user_id = $owner_model ? $owner_model->id : 0;
-
+        /** @var NewsModel $news_model */
+        $news_model = $this->getContainer()->call([NewsModel::class, 'new'], ['initial_data' => [
+            'website_id' => $this->website_id,
+            'url' => $this->getUtils()->slugify($title, false),
+            'title' => $title,
+            'locale' => $locale,
+            'content' => $content,
+            'date' => $date,
+            'user_id' => $owner_model ? $owner_model->getId() : 0,
+        ]]);
         $news_model->persist();
+
         return $news_model;
     }
 
@@ -427,20 +421,18 @@ class FakeDataMigration extends BaseMigration
      * @param array $images
      * @return Page
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
-    private function addPage($title, $content, $locale = 'en', $terms = [], $owner_model = null, $images = []): Page
+    private function addPage(string $title, string $content, $locale = 'en', array $terms = [], ?User $owner_model = null, $images = []): Page
     {
-        $page_model = $this->getContainer()->make(Page::class);
-
-        $page_model->website_id = $this->website_id;
-        $page_model->url = $this->getUtils()->slugify($title, false);
-        $page_model->title = $title;
-        $page_model->locale = $locale;
-        $page_model->content = $content;
-        $page_model->user_id = $owner_model ? $owner_model->id : 0;
-
+        /** @var Page $page_model */
+        $page_model = $this->getContainer()->call([Page::class, 'new'], ['initial_data' => [
+            'website_id' => $this->website_id,
+            'url' => $this->getUtils()->slugify($title, false),
+            'title' => $title,
+            'locale' => $locale,
+            'content' => $content,
+            'user_id' => $owner_model ? $owner_model->getId() : 0,
+        ]]);
         $page_model->persist();
 
         foreach ($terms as $key => $term) {
@@ -463,19 +455,18 @@ class FakeDataMigration extends BaseMigration
      * @param User|null $owner_model
      * @return Taxonomy
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
-    private function addTerm($title, $content, $locale = 'en', $owner_model = null): Taxonomy
+    private function addTerm(string $title, string $content, string $locale = 'en', ?User $owner_model = null): Taxonomy
     {
-        $term_model = $this->getContainer()->make(Taxonomy::class);
-
-        $term_model->website_id = $this->website_id;
-        $term_model->url = $this->getUtils()->slugify($title, false);
-        $term_model->title = $title;
-        $term_model->locale = $locale;
-        $term_model->content = $content;
-        $term_model->user_id = $owner_model ? $owner_model->id : 0;
+        /** @var Taxonomy $term_model */
+        $term_model = $this->getContainer()->call([Taxonomy::class, 'new'], ['initial_data' => [
+            'website_id' => $this->website_id,
+            'url' => $this->getUtils()->slugify($title, false),
+            'title' => $title,
+            'locale' => $locale,
+            'content' => $content,
+            'user_id' => $owner_model ? $owner_model->getId() : 0,
+        ]]);
 
         $term_model->persist();
 
@@ -491,22 +482,21 @@ class FakeDataMigration extends BaseMigration
      * @param array $terms
      * @param User|null $owner_model
      * @return LinkExchange
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws BasicException
      */
-    private function addLinkExchange($url, $email, $locale = 'en', $terms = [], $owner_model = null): LinkExchange
+    private function addLinkExchange(string $url, string $email, $locale = 'en', $terms = [], ?User $owner_model = null): LinkExchange
     {
-        $link_exchange_model = $this->getContainer()->make(LinkExchange::class);
-
-        $link_exchange_model->website_id = $this->website_id;
-        $link_exchange_model->url = $url;
-        $link_exchange_model->title = $url;
-        $link_exchange_model->description = $url . ' description<br />' . $this->lipsum_p;
-        $link_exchange_model->email = $email;
-        $link_exchange_model->locale = $locale;
-        $link_exchange_model->active = 1;
-        $link_exchange_model->user_id = $owner_model ? $owner_model->id : 0;
-
+        /** @var LinkExchange $link_exchange_model */
+        $link_exchange_model = $this->getContainer()->call([LinkExchange::class, 'new'], ['initial_data' => [
+            'website_id' => $this->website_id,
+            'url' => $url,
+            'title' => $url,
+            'description' => $url . ' description<br />' . $this->lorem_ipsum_p,
+            'email' => $email,
+            'locale' => $locale,
+            'active' => 1,
+            'user_id' => $owner_model ? $owner_model->getId() : 0,
+        ]]);
         $link_exchange_model->persist();
 
         foreach ($terms as $key => $term) {
@@ -526,27 +516,25 @@ class FakeDataMigration extends BaseMigration
      * @param User|null $owner_model
      * @return Contact
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
-    private function addContactForm($title, $content, $locale = 'en', $fields = [], $owner_model = null): Contact
+    private function addContactForm(string $title, string $content, $locale = 'en', $fields = [], ?User $owner_model = null): Contact
     {
-        $contact_model = $this->getContainer()->make(Contact::class);
-
-        $contact_model->website_id = $this->website_id;
-        $contact_model->url = $this->getUtils()->slugify($title, false);
-        $contact_model->title = $title;
-        $contact_model->locale = $locale;
-        $contact_model->content = $content;
-        $contact_model->user_id = $owner_model ? $owner_model->id : 0;
-        $contact_model->submit_to = $this->site_email;
-
+        /** @var Contact $contact_model */
+        $contact_model = $this->getContainer()->call([Contact::class, 'new'], ['initial_data' => [
+            'website_id' => $this->website_id,
+            'url' => $this->getUtils()->slugify($title, false),
+            'title' => $title,
+            'locale' => $locale,
+            'content' => $content,
+            'user_id' => $owner_model ? $owner_model->getId() : 0,
+            'submit_to' => $this->site_email,
+        ]]);
         $contact_model->persist();
 
         foreach ($fields as $key => $field) {
             $this->getDb()->createRow('contact_definition')->update(
                 [
-                    'contact_id' => $contact_model->id,
+                    'contact_id' => $contact_model->getId(),
                     'field_label' => $field['label'],
                     'field_type' => $field['type'],
                     'field_required' => intval($field['required']),
@@ -567,25 +555,26 @@ class FakeDataMigration extends BaseMigration
      * @param string $locale
      * @param Menu|null $parent
      * @return Menu
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws BasicException
      */
-    private function addMenuItem($title, $menu_name, $rewrite, $locale = 'en', $parent = null): Menu
+    private function addMenuItem(string $title, string $menu_name, Rewrite $rewrite, $locale = 'en', ?Menu $parent = null): Menu
     {
-        $menu_item_model = $this->getContainer()->make(Menu::class);
-
-        $menu_item_model->menu_name = $menu_name;
-        $menu_item_model->website_id = $this->website_id;
-        $menu_item_model->title = $title;
-        $menu_item_model->locale = $locale;
-        $menu_item_model->rewrite_id = $rewrite->getId();
-
-        if ($parent != null) {
-            $menu_item_model->parent_id = $parent->getId();
-        }
-
-        $menu_item_model->breadcrumb = $menu_item_model->getParentIds();
+        /** @var Menu $menu_item_model */
+        $menu_item_model = $this->getContainer()->call([Menu::class, 'new'], ['initial_data' => [
+            'menu_name' => $menu_name,
+            'website_id' => $this->website_id,
+            'title' => $title,
+            'locale' => $locale,
+            'rewrite_id' => $rewrite->getId(),
+            'parent_id' => ($parent != null) ? $parent->getId() : null,
+            //'breadcrumb' => $menu_item_model->getParentIds(),
+        ]]);
         $menu_item_model->persist();
+
+        $menu_item_model
+            ->setBreadcrumb($menu_item_model->getParentIds())
+            ->persist();
+
         return $menu_item_model;
     }
 
@@ -599,20 +588,18 @@ class FakeDataMigration extends BaseMigration
      * @param array $rewrites
      * @return Block
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
      */
-    private function addBlock($title, $content, $region, $locale = 'en', $rewrites = []): Block
+    private function addBlock(string $title, string $content, string $region, $locale = 'en', $rewrites = []): Block
     {
-        $block_model = $this->getContainer()->make(Block::class);
-
-        $block_model->website_id = $this->website_id;
-        $block_model->title = $title;
-        $block_model->locale = $locale;
-        $block_model->instance_class = Block::class;
-        $block_model->content = $content;
-        $block_model->region = $region;
-
+        /** @var Block $block_model */
+        $block_model = $this->getContainer()->call([Block::class, 'new'], ['initial_data' => [
+            'website_id' => $this->website_id,
+            'title' => $title,
+            'locale' => $locale,
+            'instance_class' => Block::class,
+            'content' => $content,
+            'region' => $region,
+        ]]);
         $block_model->persist();
 
         if (!empty($rewrites)) {
@@ -623,8 +610,7 @@ class FakeDataMigration extends BaseMigration
                         'block_id' => $block_model->getId(),
                         'rewrite_id' => $rewrite->getId(),
                     ]
-                )
-                    ->save();
+                )->save();
             }
         }
 
@@ -638,10 +624,10 @@ class FakeDataMigration extends BaseMigration
      * @param integer $h
      * @return MediaElement
      * @throws BasicException
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    private function createImage($w = 400, $h = 400): MediaElement
+    private function createImage(int $w = 400, int $h = 400): MediaElement
     {
         $palette = new RGB();
         $size = new Box($w, $h);
@@ -671,9 +657,9 @@ class FakeDataMigration extends BaseMigration
         $media->path = $filename;
         $media->filename = basename($filename);
 
-        $finfo = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
-        $media->mimetype = finfo_file($finfo, $filename);
-        finfo_close($finfo);
+        $file_info = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
+        $media->mimetype = finfo_file($file_info, $filename);
+        finfo_close($file_info);
 
         $media->filesize = filesize($filename);
 

@@ -129,17 +129,15 @@ class InitialDataMigration extends BaseMigration
      * @param string $permission_name
      * @throws BasicException
      * @throws InvalidValueException
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     private function addPermission(Role $role_model, string $permission_name)
     {
-        $permission_dbrow = $this->getDb()->table('permission')->where(['name' => $permission_name])->fetch();
-        $permission_model = Permission::new($this->getContainer());
-        if ($permission_dbrow) {
-            $permission_model = $this->getContainer()->make(Permission::class, ['db_row' => $permission_dbrow]);
-        } else {
-            $permission_model->setName($permission_name);
+        /** @var Permission $permission_model */
+        $permission_model = null;
+        try {
+            $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+        } catch (\Exception $e) {
+            $permission_model = $this->getContainer()->call([Permission::class, 'new'], ['initial_data' => ['name' => $permission_name]]);
             $permission_model->persist();
         }
 
@@ -154,8 +152,6 @@ class InitialDataMigration extends BaseMigration
      *
      * @throws BasicException
      * @throws InvalidValueException
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     private function addRolesPermissions()
     {
@@ -247,11 +243,11 @@ class InitialDataMigration extends BaseMigration
      * @param User $owner_model
      * @return Page
      * @throws BasicException
-     * @throws InvalidValueException
      */
     private function addHomePage(Website $website_model, User $owner_model): Page
     {
-        $page_model = Page::new($this->getContainer());
+        /** @var Page $page_model */
+        $page_model = $this->getContainer()->call([Page::class, 'new']);
 
         $page_model->setWebsiteId($website_model->getId());
         $page_model->setUrl('homepage');

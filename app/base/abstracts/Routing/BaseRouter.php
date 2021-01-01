@@ -13,13 +13,14 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use FastRoute\Dispatcher;
 use FastRoute\RouteCollector;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 use Exception;
 use function FastRoute\simpleDispatcher;
 
 abstract class BaseRouter extends ContainerAwareObject
 {
-    const REGEXP_ROUTEVAR_EXPRESSION = "(:([^{}]*|\{([^{}]*|\{[^{}]*\})*\})*)?";
+    const REGEXP_ROUTE_VARIABLE_EXPRESSION = "(:([^{}]*|\{([^{}]*|\{[^{}]*\})*\})*)?";
     const CLASS_METHOD = 'renderPage';
 
     /**
@@ -47,11 +48,11 @@ abstract class BaseRouter extends ContainerAwareObject
     {
         parent::__construct($container);
 
-        $routername = $this->getRouterName();
+        $router_name = $this->getRouterName();
 
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
-            $debugbar['time']->startMeasure($routername.'_construct', ucfirst($routername).' construct');
+            $debugbar['time']->startMeasure($router_name.'_construct', ucfirst($router_name).' construct');
         }
 
         $this->dispatcher = simpleDispatcher(
@@ -73,7 +74,7 @@ abstract class BaseRouter extends ContainerAwareObject
 
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
-            $debugbar['time']->stopMeasure($routername.'_construct');
+            $debugbar['time']->stopMeasure($router_name.'_construct');
         }
     }
 
@@ -177,7 +178,7 @@ abstract class BaseRouter extends ContainerAwareObject
 
         if (count($out) > 1) {
             // try to preg_match elements found with $uri, to find the most suitable
-            $regexp = "/\{.*?" . self::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
+            $regexp = "/\{.*?" . self::REGEXP_ROUTE_VARIABLE_EXPRESSION . "\}/i";
 
             foreach ($out as $elem) {
                 if ($httpMethod != null && !in_array($httpMethod, (array)$elem['verbs'])) {
@@ -312,7 +313,7 @@ abstract class BaseRouter extends ContainerAwareObject
         $dispatcherInfo = $this->getRoute($route_name);
         if ($dispatcherInfo != null) {
             foreach ($route_params as $var_name => $value) {
-                $regexp = "/\{" . $var_name . self::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
+                $regexp = "/\{" . $var_name . self::REGEXP_ROUTE_VARIABLE_EXPRESSION . "\}/i";
                 $dispatcherInfo['path'] = preg_replace($regexp, $value, $dispatcherInfo['path']);
             }
             return $this->getBaseUrl() . $dispatcherInfo['path'];
@@ -322,18 +323,36 @@ abstract class BaseRouter extends ContainerAwareObject
     }
 
     /**
+     * @param array $routes
+     * @return $this
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    protected function setCachedRoutes(array $routes): BaseRouter
+    {
+        $cache_key = strtolower($this->getRouterName()).'.routes';
+        $this->getCache()->set($cache_key, $routes);
+
+        return $this;
+    }
+
+    /**
      * gets cached routes
      *
-     * @param ContainerInterface $container
      * @return array
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getCachedRoutes(ContainerInterface $container): array
+    protected function getCachedRoutes(): array
     {
-        if ($container->get('cache')->has('web.routes')) {
-            return $container->get('cache')->get('web.routes');
+        $out = [];
+
+        $cache_key = strtolower($this->getRouterName()).'.routes';
+        if ($this->getCache()->has($cache_key)) {
+            $out += $this->getCache()->get($cache_key);
         }
 
-        return [];
+        return $out;
     }
 
     /**
@@ -344,8 +363,10 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string|null $request_uri
      * @param string|null $domain
      * @return RouteInfo
+     * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getRequestInfo(ContainerInterface $container, $http_method = null, $request_uri = null, $domain = null): RouteInfo
     {
@@ -371,7 +392,7 @@ abstract class BaseRouter extends ContainerAwareObject
 
         $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $uri);
         if ($dispatcherInfo[0] == Dispatcher::NOT_FOUND) {
-            $cached_routes = $this->getCachedRoutes($container);
+            $cached_routes = $this->getCachedRoutes();
             if (isset($cached_routes[$domain][$uri])) {
                 $rewrite = (object)$cached_routes[$domain][$uri];
                 $route = $rewrite->route;
@@ -388,7 +409,7 @@ abstract class BaseRouter extends ContainerAwareObject
                         $rewrite_id = $rewrite->getId();
 
                         $cached_routes[$domain][$uri] = $rewrite->getData();
-                        $container->get('cache')->set('web.routes', $cached_routes);
+                        $this->setCachedRoutes($cached_routes);
                     }
                 } catch (Exception $e) {}
             }

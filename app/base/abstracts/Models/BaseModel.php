@@ -176,19 +176,27 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         $conditions_where = [];
         $conditions_wherenot = [];
 
-        foreach ($condition as $key => $value) {
-            if (preg_match("/:not$/", $key)) {
-                $key = preg_replace("/:not$/","", $key);
-                $conditions_wherenot[$key] = $value;
-            } else {
-                $conditions_where[$key] = $value;
-            }
+        if (!is_array($condition)) {
+             $condition = [$condition];
         }
 
         /** @var Result $stmt */
         $stmt = $container->get('db')->table(
             static::defaultTableName()
         );
+
+        foreach ($condition as $key => $value) {
+            if (!is_numeric($key)) {
+                if (preg_match("/:not$/", $key)) {
+                    $key = preg_replace("/:not$/","", $key);
+                    $conditions_wherenot[$key] = $value;
+                } else {
+                    $conditions_where[$key] = $value;
+                }
+            } else {
+                $stmt = $stmt->where($value);
+            }
+        }
 
         if (!empty($conditions_where)) {
             $stmt = $stmt->where($conditions_where);

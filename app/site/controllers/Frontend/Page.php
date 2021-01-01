@@ -16,6 +16,8 @@ use App\Base\Abstracts\Controllers\BaseHtmlPage;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use \App\Site\Models\Page as PageModel;
@@ -53,6 +55,8 @@ class Page extends FrontendPageWithObject
      *
      * @return string
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     protected function getTemplateName(): string
@@ -159,6 +163,8 @@ class Page extends FrontendPageWithObject
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getBaseTemplateData(): array
     {

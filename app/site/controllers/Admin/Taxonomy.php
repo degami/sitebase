@@ -133,7 +133,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'default_value' => $term_template_name,
                     'options' => ['' => '--'] + $templates,
                 ])->addField('content', [
-                    'type' => 'textarea',
+                    'type' => 'tinymce',
                     'title' => 'Content',
                     'default_value' => $term_content,
                     'rows' => 2,

@@ -17,6 +17,8 @@ use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
 use DebugBar\DebugBar;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Cookie;
 use \League\Plates\Template\Template;
@@ -187,13 +189,22 @@ abstract class BaseHtmlPage extends BasePage
      * @param string $type
      * @param string $message
      * @return self
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function addFlashMessage(string $type, string $message): BaseHtmlPage
     {
         $flash_messages = $this->getFlashMessages();
         $flash_messages[$type][] = $message;
 
-        $this->getResponse()->headers->setCookie(new Cookie('flash_messages', json_encode($flash_messages), time() + 3600, "/"));
+        $cookie = $this->getContainer()->make(Cookie::class, [
+            'name' => 'flash_messages',
+            'value' => json_encode($flash_messages),
+            'expire' => time() + 3600,
+            'path' => '/',
+            'sameSite' => 'Lax',
+        ]);
+        $this->getResponse()->headers->setCookie($cookie);
 
         return $this;
     }

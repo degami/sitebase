@@ -79,14 +79,12 @@ class Cron extends AdminManageModelsPage
                         continue;
                     }
 
-                    $cron_task = $this->getContainer()->make(CronTask::class);
-                    $cron_task->title = $cron_task_name;
-                    $cron_task->cron_task_callable = $cron_task_callable;
-                    $cron_task->schedule = null;
-                    if (defined($taskClass . '::DEFAULT_SCHEDULE')) {
-                        $cron_task->schedule = $taskClass::DEFAULT_SCHEDULE;
-                    }
-                    $cron_task->active = 0;
+                    $cron_task = $this->getContainer()->call([CronTask::class, 'new'], ['initial_data' => [
+                        'title' => $cron_task_name,
+                        'cron_task_callable' => $cron_task_callable,
+                        'schedule' => defined($taskClass . '::DEFAULT_SCHEDULE') ? $taskClass::DEFAULT_SCHEDULE : null,
+                        'active' => 0,
+                    ]]);
 
                     $cron_task->persist();
                 }
@@ -267,12 +265,12 @@ class Cron extends AdminManageModelsPage
                 try {
                     $this->getContainer()->call(json_decode($task->getCronTaskCallable()));
                     $cron_executed[] = $task->getTitle();
+
+                    $this->addFlashMessage('success', "Task executed: ".$task->getTitle());
                 } catch (Exception $e) {
+                    $this->addFlashMessage('error', $e->getMessage());
                     $this->getLog()->critical($e->getMessage() . "\n" . $e->getTraceAsString());
                 }
-
-                $this->addFlashMessage('success', "Task executed: ".$task->getTitle());
-
                 break;
             case 'delete':
                 $task->delete();
@@ -290,7 +288,6 @@ class Cron extends AdminManageModelsPage
      *
      * @return string
      * @throws Exception
-     * @throws BasicException
      */
     protected function getLastHeartBeat(): string
     {

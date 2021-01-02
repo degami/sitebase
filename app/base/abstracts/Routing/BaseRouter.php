@@ -393,25 +393,19 @@ abstract class BaseRouter extends ContainerAwareObject
         $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $uri);
         if ($dispatcherInfo[0] == Dispatcher::NOT_FOUND) {
             $cached_routes = $this->getCachedRoutes();
-            if (isset($cached_routes[$domain][$uri])) {
-                $rewrite = (object)$cached_routes[$domain][$uri];
-                $route = $rewrite->route;
-                $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $rewrite->route);
-                $rewrite_id = $rewrite->id;
-            } else {
-                // if not found, check the rewrites table
-                $website_id = $container->get('site_data')->getCurrentWebsiteId();
-                try {
-                    $rewrite = $container->call([Rewrite::class, 'loadByCondition'], ['condition' => ['url' => $uri, 'website_id' => $website_id]]);
-                    if ($rewrite instanceof Rewrite) {
-                        $route = $rewrite->getRoute();
-                        $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $rewrite->getRoute());
-                        $rewrite_id = $rewrite->getId();
 
-                        $cached_routes[$domain][$uri] = $rewrite->getData();
-                        $this->setCachedRoutes($cached_routes);
-                    }
-                } catch (Exception $e) {}
+            /** @var Rewrite $rewrite */
+            $rewrite = null;
+            if (isset($cached_routes[$domain][$uri])) {
+                $rewrite = $container->call([Rewrite::class, 'new'], ['initial_data' => $cached_routes[$domain][$uri]]);
+            } else {
+                // if not found, check the rewrites table if applicable
+                $rewrite = $this->checkRewrites($uri);
+            }
+
+            if (!is_null($rewrite) && ($rewrite instanceof Rewrite)) {
+                $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $rewrite->getRoute());
+                $rewrite_id = $rewrite->getId();
             }
         }
 
@@ -440,6 +434,19 @@ abstract class BaseRouter extends ContainerAwareObject
             'route_name' => $route_name,
             'rewrite' => $rewrite_id,
         ]);
+    }
+
+    /**
+     * gets rewrite object by uri
+     *
+     * @param string $uri
+     * @return Rewrite|null
+     */
+    protected function checkRewrites(string $uri) : ?Rewrite
+    {
+        // not every router should check for rewrites. return null by default
+
+        return null;
     }
 
     /**

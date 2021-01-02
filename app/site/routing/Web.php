@@ -14,7 +14,10 @@ namespace App\Site\Routing;
 
 use App\Base\Abstracts\Routing\BaseRouter;
 use App\Site\Models\Rewrite;
+use App\Site\Models\Website;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use \HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -116,6 +119,32 @@ class Web extends BaseRouter
             }
         }
         return $this->routes;
+    }
+
+    /**
+     * gets Rewrite Object by uri
+     *
+     * @param string $uri
+     * @return Rewrite|null
+     */
+    protected function checkRewrites(string $uri) : ?Rewrite
+    {
+        try {
+            /** @var Website $website */
+            $website = $this->getSiteData()->getCurrentWebsite();
+            $domain = $website->getDomain();
+            $website_id = $website->getId();
+
+            $rewrite = $this->getContainer()->call([Rewrite::class, 'loadByCondition'], ['condition' => ['url' => $uri, 'website_id' => $website_id]]);
+            if ($rewrite instanceof Rewrite) {
+                $cached_routes[$domain][$uri] = $rewrite->getData();
+                $this->setCachedRoutes($cached_routes);
+
+                return $rewrite;
+            }
+        } catch (Exception $e) {}
+
+        return parent::checkRewrites($uri);
     }
 
     /**

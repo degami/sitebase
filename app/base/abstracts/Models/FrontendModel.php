@@ -99,7 +99,9 @@ abstract class FrontendModel extends BaseModel
      */
     public function preRemove(): BaseModel
     {
-        $this->getRewrite()->remove();
+        try {
+            $this->getRewrite()->remove();
+        } catch (Exception $e) {}
 
         return parent::preRemove();
     }

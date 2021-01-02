@@ -858,7 +858,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         $this->prePersist();
 
-        if (!$this->getDbRow()->exists() && array_key_exists('created_at', $this->getDbRow()->getData())) {
+        if (!$this->getDbRow()->exists() && array_key_exists('created_at', $this->getDbRow()->getData()) && $this->getData('created_at') == null) {
             $this->getDbRow()->created_at = date("Y-m-d H:i:s", time());
         }
         if (array_key_exists('updated_at', $this->getDbRow()->getData())) {

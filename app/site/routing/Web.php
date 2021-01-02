@@ -13,6 +13,7 @@
 namespace App\Site\Routing;
 
 use App\Base\Abstracts\Routing\BaseRouter;
+use App\Site\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use \HaydenPierce\ClassFinder\ClassFinder;
@@ -131,5 +132,17 @@ class Web extends BaseRouter
         }
 
         return [];
+    }
+
+    /**
+     * gets rewrite's object url
+     *
+     * @param Rewrite $rewrite
+     * @return string
+     * @throws BasicException
+     */
+    public function getRewriteUrl(Rewrite $rewrite): string
+    {
+        return $this->getBaseUrl() . $rewrite->getUrl();
     }
 }

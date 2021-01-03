@@ -233,6 +233,8 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param ContainerInterface $container
      * @param string $route
      * @return boolean
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function checkRoute(ContainerInterface $container, string $route): bool
     {
@@ -323,6 +325,55 @@ abstract class BaseRouter extends ContainerAwareObject
     }
 
     /**
+     * compose cache key
+     *
+     * @param string $element
+     * @return string
+     */
+    protected function getCacheKey(string $element) : string
+    {
+        return strtolower($this->getRouterName().'.'.$element);
+    }
+
+    /**
+     * gets array from cache
+     *
+     * @param $array_name
+     * @return array
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    protected function getArrayFromCache($array_name) : array
+    {
+        $out = [];
+        $cache_key = $this->getCacheKey($array_name);
+        if ($this->getCache()->has($cache_key)) {
+            $out += $this->getCache()->get($cache_key);
+        }
+
+        return $out;
+    }
+
+    /**
+     * sets array in cache
+     *
+     * @param $array_name
+     * @param $array
+     * @return self
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    protected function setArrayInCache($array_name, $array) : self
+    {
+        $cache_key = $this->getCacheKey($array_name);
+        $this->getCache()->set($cache_key, $array);
+
+        return $this;
+    }
+
+    /**
+     * sets cached routes
+     *
      * @param array $routes
      * @return $this
      * @throws BasicException
@@ -330,10 +381,7 @@ abstract class BaseRouter extends ContainerAwareObject
      */
     protected function setCachedRoutes(array $routes): BaseRouter
     {
-        $cache_key = strtolower($this->getRouterName()).'.routes';
-        $this->getCache()->set($cache_key, $routes);
-
-        return $this;
+        return $this->setArrayInCache('routes', $routes);
     }
 
     /**
@@ -345,14 +393,32 @@ abstract class BaseRouter extends ContainerAwareObject
      */
     protected function getCachedRoutes(): array
     {
-        $out = [];
+        return $this->getArrayFromCache('routes');
+    }
 
-        $cache_key = strtolower($this->getRouterName()).'.routes';
-        if ($this->getCache()->has($cache_key)) {
-            $out += $this->getCache()->get($cache_key);
-        }
+    /**
+     * sets cached controllers
+     *
+     * @param array $controllers
+     * @return self
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    protected function setCachedControllers(array $controllers): BaseRouter
+    {
+        return $this->setArrayInCache('controllers', $controllers);
+    }
 
-        return $out;
+    /**
+     * gets cached controllers
+     *
+     * @return array
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    protected function getCachedControllers(): array
+    {
+        return $this->getArrayFromCache('controllers');
     }
 
     /**

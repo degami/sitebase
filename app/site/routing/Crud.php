@@ -89,25 +89,9 @@ class Crud extends BaseRouter
                 }
 
                 // cache controllers for faster access
-                $this->getCache()->set('crud.controllers', $this->routes);
+                $this->setCachedControllers($this->routes);
             }
         }
         return $this->routes;
-    }
-
-    /**
-     * gets cached controllers
-     *
-     * @return array
-     * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
-     */
-    protected function getCachedControllers(): array
-    {
-        if ($this->getCache()->has('crud.controllers')) {
-            return $this->getCache()->get('crud.controllers');
-        }
-
-        return [];
     }
 }

@@ -115,7 +115,7 @@ class Web extends BaseRouter
                 $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
 
                 // cache controllers for faster access
-                $this->getCache()->set('web.controllers', $this->routes);
+                $this->setCachedControllers($this->routes);
             }
         }
         return $this->routes;
@@ -130,6 +130,8 @@ class Web extends BaseRouter
     protected function checkRewrites(string $uri) : ?Rewrite
     {
         try {
+            $cached_routes = $this->getCachedRoutes();
+
             /** @var Website $website */
             $website = $this->getSiteData()->getCurrentWebsite();
             $domain = $website->getDomain();
@@ -145,22 +147,6 @@ class Web extends BaseRouter
         } catch (Exception $e) {}
 
         return parent::checkRewrites($uri);
-    }
-
-    /**
-     * gets cached controllers
-     *
-     * @return array
-     * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
-     */
-    protected function getCachedControllers(): array
-    {
-        if ($this->getCache()->has('web.controllers')) {
-            return $this->getCache()->get('web.controllers');
-        }
-
-        return [];
     }
 
     /**

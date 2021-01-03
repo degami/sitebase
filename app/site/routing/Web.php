@@ -130,7 +130,7 @@ class Web extends BaseRouter
     protected function checkRewrites(string $uri) : ?Rewrite
     {
         try {
-            $cached_routes = $this->getCachedRoutes();
+            $cached_routes = $this->getCachedRewrites();
 
             /** @var Website $website */
             $website = $this->getSiteData()->getCurrentWebsite();

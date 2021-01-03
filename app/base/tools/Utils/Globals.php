@@ -12,6 +12,7 @@
 
 namespace App\Base\Tools\Utils;
 
+use App\App;
 use \App\Base\Abstracts\ContainerAwareObject;
 use App\Site\Models\Language;
 use App\Site\Models\Website;
@@ -21,6 +22,7 @@ use \DI\DependencyException;
 use \DI\NotFoundException;
 use \FastRoute\Dispatcher;
 use \GuzzleHttp\Exception\GuzzleException;
+use League\Plates\Template\Template;
 use \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use \Symfony\Component\HttpFoundation\Response;
 use \Symfony\Component\HttpFoundation\Request;
@@ -450,6 +452,7 @@ class Globals extends ContainerAwareObject
      */
     public function addQueueMessage(string $queue_name, $data): QueueMessage
     {
+        /** @var QueueMessage $message */
         $message = $this->getContainer()->call([QueueMessage::class, 'new']);
         $message->setQueueName($queue_name);
         $message->setMessage(json_encode($data));
@@ -474,5 +477,104 @@ class Globals extends ContainerAwareObject
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+    /**
+     * @param string $subject
+     * @param string $mail_body
+     * @param string $template_name
+     * @return string
+     * @throws BasicException
+     * @throws Throwable
+     */
+    public function getWrappedMailBody(string $subject, string $mail_body, $template_name = 'generic') : string
+    {
+        $old_directory = $this->getTemplates()->getDirectory();
+
+        if (!$this->getTemplates()->getFolders()->exists('mails')) {
+            $this->getTemplates()->addFolder( 'mails', App::getDir(App::TEMPLATES) . DS . 'mails');
+        }
+
+        $template = $this->getTemplates()->make('mails::' . $template_name);
+        $template->data([
+            'subject' => $subject,
+            'body' => $mail_body,
+        ]);
+        $out = $template->render();
+        $this->getTemplates()->setDirectory($old_directory);
+
+        return $out;
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param string $queue_name
+     * @param string $template_name
+     * @return QueueMessage
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Throwable
+     */
+    protected function queueMail(string $from, string $to, string $subject, string $body, string $queue_name, string $template_name = 'generic'): QueueMessage
+    {
+        return $this->addQueueMessage($queue_name, [
+            'from' => $from,
+            'to' => $to,
+            'subject' => $subject,
+            'body' => $this->getWrappedMailBody($subject, $body, $template_name),
+        ]);
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @param string $template_name
+     * @return QueueMessage
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Throwable
+     */
+    public function queueInternalMail(string $from, string $to, string $subject, string $body, string $template_name = 'generic'): QueueMessage
+    {
+        return $this->queueMail($from, $to, $subject, $body, 'internal_mail', $template_name);
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @return QueueMessage
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Throwable
+     */
+    public function queueContactFormMail(string $from, string $to, string $subject, string $body): QueueMessage
+    {
+        return $this->queueMail($from, $to, $subject, $body, 'contact_form_mail');
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $body
+     * @return QueueMessage
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Throwable
+     */
+    public function queueLinksFormMail(string $from, string $to, string $subject, string $body): QueueMessage
+    {
+        return $this->queueMail($from, $to, $subject, $body, 'link_form_mail');
     }
 }

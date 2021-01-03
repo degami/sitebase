@@ -334,7 +334,7 @@ class Media extends AdminManageModelsPage
             case 'delete':
                 $media->delete();
 
-                $this->setAdminActionLogData('Deleted meida ' . $media->getId());
+                $this->setAdminActionLogData('Deleted media ' . $media->getId());
 
                 break;
         }

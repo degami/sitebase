@@ -231,6 +231,7 @@ class PasswordForgot extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Throwable
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -245,14 +246,11 @@ class PasswordForgot extends FormPage
 
                 $url = $this->getControllerUrl() . '?confirmation_code=' . $user_model->confirmation_code;
 
-                $this->getUtils()->addQueueMessage(
-                    'internal_mail',
-                    [
-                        'from' => $this->getSiteData()->getSiteEmail(),
-                        'to' => $user_model->getEmail(),
-                        'subject' => 'Password Forgot',
-                        'body' => 'Click this link to change your password. <br /><a href="' . $url . '">' . $url . '</a>',
-                    ]
+                $this->getUtils()->queueInternalMail(
+                    $this->getSiteData()->getSiteEmail(),
+                    $user_model->getEmail(),
+                    'Password Forgot',
+                    'Click this link to change your password. <br /><a href="' . $url . '">' . $url . '</a>'
                 );
             }
         } else {

@@ -158,10 +158,10 @@ abstract class BaseRouter extends ContainerAwareObject
      *
      * @param string $class
      * @param string|null $uri
-     * @param string|null $httpMethod
+     * @param string|null $http_method
      * @return array
      */
-    protected function getRouteByClass(string $class, $uri = null, $httpMethod = null): array
+    protected function getRouteByClass(string $class, $uri = null, $http_method = null): array
     {
         $out = [];
         foreach (array_keys($this->routes) as $group) {
@@ -181,7 +181,7 @@ abstract class BaseRouter extends ContainerAwareObject
             $regexp = "/\{.*?" . self::REGEXP_ROUTE_VARIABLE_EXPRESSION . "\}/i";
 
             foreach ($out as $elem) {
-                if ($httpMethod != null && !in_array($httpMethod, (array)$elem['verbs'])) {
+                if ($http_method != null && !in_array($http_method, (array)$elem['verbs'])) {
                     // http method is not valid. skip check
                     continue;
                 }
@@ -391,7 +391,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getCachedRoutes(): array
+    protected function getCachedRewrites(): array
     {
         return $this->getArrayFromCache('routes');
     }
@@ -447,7 +447,6 @@ abstract class BaseRouter extends ContainerAwareObject
         }
 
         // Fetch method and URI from somewhere
-        $httpMethod = $http_method;
         $parsed = parse_url($request_uri);
 
         // Strip query string (?foo=bar) and decode URI
@@ -456,36 +455,36 @@ abstract class BaseRouter extends ContainerAwareObject
         $route_name = null;
         $rewrite_id = null;
 
-        $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $uri);
-        if ($dispatcherInfo[0] == Dispatcher::NOT_FOUND) {
-            $cached_routes = $this->getCachedRoutes();
+        $dispatcher_info = $this->getDispatcher()->dispatch($http_method, $uri);
+        if ($dispatcher_info[0] == Dispatcher::NOT_FOUND) {
+            $cached_rewrites = $this->getCachedRewrites();
 
             /** @var Rewrite $rewrite */
             $rewrite = null;
-            if (isset($cached_routes[$domain][$uri])) {
-                $rewrite = $container->call([Rewrite::class, 'new'], ['initial_data' => $cached_routes[$domain][$uri]]);
+            if (isset($cached_rewrites[$domain][$uri])) {
+                $rewrite = $container->call([Rewrite::class, 'new'], ['initial_data' => $cached_rewrites[$domain][$uri]]);
             } else {
                 // if not found, check the rewrites table if applicable
                 $rewrite = $this->checkRewrites($uri);
             }
 
             if (!is_null($rewrite) && ($rewrite instanceof Rewrite)) {
-                $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $rewrite->getRoute());
+                $dispatcher_info = $this->getDispatcher()->dispatch($http_method, $rewrite->getRoute());
                 $rewrite_id = $rewrite->getId();
             }
         }
 
-        if ($dispatcherInfo[0] == Dispatcher::NOT_FOUND) {
+        if ($dispatcher_info[0] == Dispatcher::NOT_FOUND) {
             // Add index controller if needed
             if (preg_match("#/$#", $uri)) {
                 $uri .= 'index';
             }
             $route = $uri;
-            $dispatcherInfo = $this->getDispatcher()->dispatch($httpMethod, $uri);
+            $dispatcher_info = $this->getDispatcher()->dispatch($http_method, $uri);
         }
 
-        if ($dispatcherInfo[0] == Dispatcher::FOUND) {
-            $route_info = $this->getRouteByClass($dispatcherInfo[1][0], $uri, $httpMethod);
+        if ($dispatcher_info[0] == Dispatcher::FOUND) {
+            $route_info = $this->getRouteByClass($dispatcher_info[1][0], $uri, $http_method);
             if (isset($route_info['name'])) {
                 $route_name = $route_info['name'];
             }
@@ -493,8 +492,8 @@ abstract class BaseRouter extends ContainerAwareObject
 
         // return a RouteInfo instance
         return $container->make(RouteInfo::class, [
-            'dispatcher_info' => $dispatcherInfo,
-            'http_method' => $httpMethod,
+            'dispatcher_info' => $dispatcher_info,
+            'http_method' => $http_method,
             'uri' => $uri,
             'route' => $route,
             'route_name' => $route_name,
@@ -518,14 +517,14 @@ abstract class BaseRouter extends ContainerAwareObject
     /**
      * gets Class applicable route http verbs
      *
-     * @param $controllerClass
+     * @param $controller_class
      * @return array
      * @throws InvalidValueException
      */
-    protected function getClassHttpVerbs($controllerClass): array
+    protected function getClassHttpVerbs($controller_class): array
     {
-        if (method_exists($controllerClass, 'getRouteVerbs')) {
-            $verbs = $this->getContainer()->call([$controllerClass, 'getRouteVerbs']) ?? $this->getHttpVerbs();
+        if (method_exists($controller_class, 'getRouteVerbs')) {
+            $verbs = $this->getContainer()->call([$controller_class, 'getRouteVerbs']) ?? $this->getHttpVerbs();
             if (!is_array($verbs)) {
                 $verbs = [$verbs];
             }

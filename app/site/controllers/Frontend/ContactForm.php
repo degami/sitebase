@@ -235,7 +235,10 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @param array     &$form_state
      * @return mixed
      * @throws BasicException
-     * @throws Exception
+     * @throws DependencyException
+     * @throws PhpfastcacheSimpleCacheExceptionAlias
+     * @throws Throwable
+     * @throws \DI\NotFoundException
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
@@ -269,14 +272,11 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         //var_dump($form->get_triggering_element());
         // Reset the form if you want it to display again.
 
-        $this->getUtils()->addQueueMessage(
-            'contact_form_mail',
-            [
-                'from' => $this->getSiteData()->getSiteEmail(),
-                'to' => $contact->getSubmitTo(),
-                'subject' => 'New Submission - ' . $contact->getTitle(),
-                'body' => var_export($values, true),
-            ]
+        $this->getUtils()->queueContactFormMail(
+            $this->getSiteData()->getSiteEmail(),
+            $contact->getSubmitTo(),
+            'New Submission - ' . $contact->getTitle(),
+            var_export($values, true)
         );
 
         $form->reset();

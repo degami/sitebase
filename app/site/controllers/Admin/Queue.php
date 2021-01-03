@@ -93,6 +93,8 @@ class Queue extends AdminManageModelsPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state)
     {
@@ -148,6 +150,7 @@ class Queue extends AdminManageModelsPage
         switch ($values['action']) {
             case 'requeue':
                 $queue->setStatus(QueueMessage::STATUS_PENDING);
+                $queue->setResult(null);
                 $queue->persist();
 
                 $this->setAdminActionLogData('Requeued queue ' . $queue->getId());
@@ -187,6 +190,8 @@ class Queue extends AdminManageModelsPage
      *
      * @param array $data
      * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function getTableElements(array $data): array
     {

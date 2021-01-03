@@ -148,32 +148,31 @@ class Links extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Throwable
      */
     public function formSubmitted(FAPI\Form $form, &$form_state)
     {
         $values = $form->getValues();
 
-        $link = $this->getContainer()->call([LinkExchange::class, 'new']);
-        $link->url = $values->url;
-        $link->email = $values->email;
-        $link->title = $values->title;
-        $link->description = $values->description;
-        $link->locale = $this->getCurrentLocale();
-        $link->website_id = $this->getSiteData()->getCurrentWebsiteId();
+        /** @var LinkExchange $link */
+        $link = $this->getContainer()->call([LinkExchange::class, 'new', ['initial_data' => [
+            'url' => $values->url,
+            'email' => $values->email,
+            'title' => $values->title,
+            'description' => $values->description,
+            'locale' => $this->getCurrentLocale(),
+            'website_id' => $this->getSiteData()->getCurrentWebsiteId(),
+        ]]]);
 
         $link->persist();
 
-
         $form->addHighlight('Thanks for your submission!');
 
-        $this->getUtils()->addQueueMessage(
-            'link_form_mail',
-            [
-                'from' => $values->email,
-                'to' => $this->getSiteData()->getSiteEmail(),
-                'subject' => 'New Link exchange',
-                'body' => var_export($values->getData(), true),
-            ]
+        $this->getUtils()->queueLinksFormMail(
+            $values->email,
+            $this->getSiteData()->getSiteEmail(),
+            'New Link exchange',
+            var_export($values->getData(), true)
         );
 
         $form->reset();

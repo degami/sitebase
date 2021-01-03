@@ -1014,6 +1014,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
     public function renderQueueMessage($message)
     {
         $data = $message->getMessageData();
+        if (isset($data['body'])) {
+            $data['body'] = nl2br(htmlentities($data['body']));
+        }
 
         return $this->renderArrayOnTable($data);
     }

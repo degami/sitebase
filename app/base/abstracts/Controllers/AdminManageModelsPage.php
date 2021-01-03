@@ -320,6 +320,9 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function setAdminActionLogData($admin_action_log_data): AdminManageModelsPage
     {
+        if (!is_array($admin_action_log_data)) {
+            $admin_action_log_data = [$admin_action_log_data];
+        }
         $this->admin_action_log_data = $admin_action_log_data;
 
         return $this;

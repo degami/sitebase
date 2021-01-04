@@ -62,11 +62,6 @@ class App extends ContainerAwareObject
     const TRANSLATIONS = 'translations';
 
     /**
-     * @var Dispatcher dispatcher
-     */
-    protected $dispatcher;
-
-    /**
      * @var string current locale
      */
     protected $current_locale = null;
@@ -154,11 +149,7 @@ class App extends ContainerAwareObject
 
             $this->getTemplates()->addFolder('base', static::getDir(static::TEMPLATES));
             $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES) . DS . 'errors');
-
-            $this->dispatcher = $this->getWebRouter()->getDispatcher();
-
-            // dispatch "dispatcher_ready" event
-            $this->event('dispatcher_ready', ['dispatcher' => $this->dispatcher]);
+            $this->getTemplates()->addFolder('mails', static::getDir(static::TEMPLATES) . DS . 'mails');
 
             if ($this->getEnv('DEBUG')) {
                 $debugbar = $this->getDebugbar();

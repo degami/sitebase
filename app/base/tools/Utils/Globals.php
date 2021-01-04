@@ -491,10 +491,6 @@ class Globals extends ContainerAwareObject
     {
         $old_directory = $this->getTemplates()->getDirectory();
 
-        if (!$this->getTemplates()->getFolders()->exists('mails')) {
-            $this->getTemplates()->addFolder( 'mails', App::getDir(App::TEMPLATES) . DS . 'mails');
-        }
-
         $template = $this->getTemplates()->make('mails::' . $template_name);
         $template->data([
             'subject' => $subject,

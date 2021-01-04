@@ -1016,6 +1016,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $data = $message->getMessageData();
         if (isset($data['body'])) {
             $data['body'] = nl2br(htmlentities($data['body']));
+                //highlight_string($data['body'], true);
         }
 
         return $this->renderArrayOnTable($data);

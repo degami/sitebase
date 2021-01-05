@@ -1,5 +1,6 @@
 //=include ../../node_modules/select2/dist/js/select2.full.js
 //=include ../../node_modules/jquery.cookie/jquery.cookie.js
+//=include ../../node_modules/highlightjs/highlight.pack.js
 
 (function($){
     $.fn.appAdmin = function (methodOrOptions) {

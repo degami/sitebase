@@ -1,6 +1,7 @@
 .idea
 .phpdoc
 composer.lock
+package-lock.json
 docs
 vendor
 node_modules/

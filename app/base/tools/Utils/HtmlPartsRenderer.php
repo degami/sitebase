@@ -860,11 +860,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * Renders array as table field name - field value
      * @param array $data
+     * @param bool $nowrap
      * @return mixed
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderArrayOnTable($data)
+    public function renderArrayOnTable(array $data, bool $nowrap = true)
     {
         $table = $this->getContainer()->make(
             TagElement::class,
@@ -917,7 +918,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         'tag' => 'th',
                         'text' => $th,
                         'scope' => 'col',
-                        'attributes' => ['class' => 'nowrap'],
+                        'attributes' => ($nowrap == true) ? ['class' => 'nowrap'] : [],
                     ]]
                 )
             );
@@ -943,7 +944,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         'tag' => 'td',
                         'text' => $property,
                         'scope' => 'col',
-                        'attributes' => ['class' => 'nowrap'],
+                        'attributes' => ($nowrap == true) ? ['class' => 'nowrap'] : [],
                     ]]
                 )
             );
@@ -956,7 +957,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             'tag' => 'td',
                             'text' => $value,
                             'scope' => 'col',
-                            'attributes' => ['class' => 'nowrap'],
+                            'attributes' => ($nowrap == true) ? ['class' => 'nowrap'] : [],
                         ]]
                     )
                 );
@@ -968,7 +969,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             'tag' => 'td',
                             'text' => "<pre>" . var_export($value, true) . "</pre>",
                             'scope' => 'col',
-                            'attributes' => ['class' => 'nowrap'],
+                            'attributes' => ($nowrap == true) ? ['class' => 'nowrap'] : [],
                         ]]
                     )
                 );
@@ -1015,11 +1016,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
     {
         $data = $message->getMessageData();
         if (isset($data['body'])) {
-            $data['body'] = nl2br(htmlentities($data['body']));
+            $data['body'] = '<div class="code"><code class="html">'.htmlentities($data['body']).'</code></div>';
+                //nl2br(htmlentities($data['body']));
                 //highlight_string($data['body'], true);
         }
 
-        return $this->renderArrayOnTable($data);
+        return $this->renderArrayOnTable($data, false);
     }
 
     /**

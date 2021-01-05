@@ -1,5 +1,14 @@
 #!/usr/bin/env php
 <?php
+
+if (!is_dir(dirname(__DIR__).'/vendor')) {
+    echo "###############################################################\n";
+    echo "#  vendor directory not found. installing composer dependencies\n";
+    echo "###############################################################\n";
+
+    system("composer install");
+}
+
 // application.php
 require dirname(__DIR__).'/config/defines.php';
 require dirname(__DIR__).'/vendor/autoload.php';

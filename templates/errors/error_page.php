@@ -2,7 +2,7 @@
 /**
  * @var $title string
  */
-$this->layout('base::html', ['title' => $title] + get_defined_vars()) ?>
+$this->layout('base::page', ['title' => $title] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>
 <link rel="stylesheet" type="text/css" href="/css/site.css">

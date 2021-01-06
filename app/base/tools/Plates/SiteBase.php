@@ -89,6 +89,19 @@ class SiteBase implements ExtensionInterface
     }
 
     /**
+     * gets current website name
+     *
+     * @return string
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getCurrentWebsiteName(): string
+    {
+        return $this->getCurrentWebsite()->getSiteName();
+    }
+
+    /**
      * gets current locale
      *
      * @return string

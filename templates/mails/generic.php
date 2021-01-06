@@ -3,7 +3,7 @@
  * @var string $subject
  * @var string $body
  */
-$this->layout('mails::mail_html', get_defined_vars()) ?>
+$this->layout('base::mail', get_defined_vars()) ?>
 
 <?php $this->start('head') ?>
     <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/site.css');?>">

@@ -12,6 +12,7 @@
 
 namespace App\Base\Abstracts\Commands;
 
+use Degami\Basics\Exceptions\BasicException;
 use \Symfony\Component\Console\Command\Command as SymfonyCommand;
 use \Psr\Container\ContainerInterface;
 use \Dotenv\Dotenv;
@@ -45,6 +46,7 @@ class BaseCommand extends SymfonyCommand
      *
      * @param null $name
      * @param ContainerInterface|null $container
+     * @throws BasicException
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {
@@ -57,6 +59,7 @@ class BaseCommand extends SymfonyCommand
      * boostrap command
      *
      * @return void
+     * @throws BasicException
      */
     protected function bootstrap()
     {
@@ -111,18 +114,34 @@ class BaseCommand extends SymfonyCommand
     /**
      * @param string $option_name
      * @param string $question_message
+     * @param array|null $choices
      * @return bool|mixed|string|string[]|null
      */
-    protected function keepAskingForOption(string $option_name, string $question_message)
+    protected function keepAskingForOption(string $option_name, string $question_message, array $choices = null)
     {
         if ($this->input == null || $this->output == null) {
             return null;
+        }
+
+        if (is_array($choices)) {
+            $choices = array_filter($choices, function ($el) {
+                return stripos(",", $el) === false;
+            });
+
+            if (empty($choices)) {
+                $choices = null;
+            }
         }
 
         $value = $this->input->getOption($option_name);
         while (trim($value) == '') {
             $question = new Question($question_message);
             $value = $this->getQuestionHelper()->ask($this->input, $this->output, $question);
+
+            if (is_array($choices) && !in_array($value, $choices)) {
+                $this->getIo()->error("Can be one of: ".implode(",", $choices));
+                $value = '';
+            }
         }
 
         return $value;

@@ -67,6 +67,7 @@ class Test extends BaseCommand
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws \Throwable
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -76,7 +77,8 @@ class Test extends BaseCommand
             $this->getSiteData()->getSiteEmail(),
             $to,
             'Test Email from '.$this->getSiteData()->getCurrentWebsite()->getDomain(),
-            'This is a test email to check functionality'
+            'This is a test email to check functionality',
+            'plain/text'
         );
 
         $output->writeln("Mail sent. result:".var_export($out, true));

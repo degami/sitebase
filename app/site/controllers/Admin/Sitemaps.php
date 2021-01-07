@@ -113,7 +113,7 @@ class Sitemaps extends AdminManageModelsPage
                 $this->addBackButton();
 
                 if ($sitemap->isLoaded()) {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($sitemap->getWebsite()->getId());
+                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($sitemap->getAppWebsite()->getId());
                 } else {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
                 }

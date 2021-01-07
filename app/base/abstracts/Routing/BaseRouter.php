@@ -72,9 +72,10 @@ abstract class BaseRouter extends ContainerAwareObject
             }
         );
 
-        // dispatch "dispatcher_ready" event
-        $this->getApp()->event('dispatcher_ready', ['router' => $this, 'dispatcher' => $this->dispatcher]);
-
+        if ($this->getContainer()->has('app')) {
+            // dispatch "dispatcher_ready" event
+            $this->getApp()->event('dispatcher_ready', ['router' => $this, 'dispatcher' => $this->dispatcher]);
+        }
 
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();

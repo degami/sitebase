@@ -67,11 +67,6 @@ class App extends ContainerAwareObject
     protected $current_locale = null;
 
     /**
-     * @var RouteInfo route info
-     */
-    protected $route_info = null;
-
-    /**
      * @var array blocked ips list
      */
     protected $blocked_ips = [];
@@ -201,7 +196,7 @@ class App extends ContainerAwareObject
                 throw new BlockedIpException();
             }
 
-            $current_website_id = $this->getCurrentWebsiteId();
+            $current_website_id = $this->getSiteData()->getCurrentWebsiteId();
 
             // preload configuration
             $this->getSiteData()->preloadConfiguration();
@@ -251,8 +246,8 @@ class App extends ContainerAwareObject
                         // ... 405 Method Not Allowed
                         throw new NotAllowedException();
                     case Dispatcher::FOUND:
-                        $handler = $this->getRouteInfo()->getHandler();
-                        $vars = $this->getRouteInfo()->getVars();
+                        $handler = $this->getAppRouteInfo()->getHandler();
+                        $vars = $this->getAppRouteInfo()->getVars();
 
                         // inject container into vars
                         //$vars['container'] = $this->getContainer();
@@ -261,10 +256,10 @@ class App extends ContainerAwareObject
                         //$vars['request'] = $this->getRequest();
 
                         // inject routeInfo
-                        $vars['route_info'] = $this->getRouteInfo();
+                        $vars['route_info'] = $this->getAppRouteInfo();
 
                         // add route collected data
-                        $vars['route_data'] = $this->getRouteInfo()->getVars();
+                        $vars['route_data'] = $this->getAppRouteInfo()->getVars();
 
                         if ($this->isSiteOffline() && !$routeInfo->worksOffline()) {
                             throw new OfflineException();
@@ -298,14 +293,14 @@ class App extends ContainerAwareObject
         } catch (BlockedIpException $e) {
             $response = $this->getContainer()->call([$this->getUtils(), 'blockedIpPage']);
         } catch (NotFoundException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getRouteInfo()]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
         } catch (PermissionDeniedException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $this->getRouteInfo()]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $this->getAppRouteInfo()]);
         } catch (NotAllowedException $e) {
-            $allowedMethods = $this->getRouteInfo()->getAllowedMethods();
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
+            $allowedMethods = $this->getAppRouteInfo()->getAllowedMethods();
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getAppRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
         } catch (BasicException | Exception $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getRouteInfo()]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
         }
 
         // dispatch "before_send" event
@@ -325,7 +320,7 @@ class App extends ContainerAwareObject
             $response->send();
         } else {
             // fallback to 404
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getRouteInfo()]);
+            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
             $response->send();
         }
     }
@@ -434,38 +429,5 @@ class App extends ContainerAwareObject
     public function getCurrentLocale(): ?string
     {
         return $this->current_locale;
-    }
-
-    /**
-     * gets route info
-     *
-     * @return RouteInfo|null
-     */
-    public function getRouteInfo(): ?RouteInfo
-    {
-        return $this->getContainer()->get(RouteInfo::class);
-    }
-
-    /**
-     * gets current website id
-     *
-     * @return int|string|null
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws \DI\NotFoundException
-     */
-    public function getCurrentWebsiteId()
-    {
-        return $this->getSiteData()->getCurrentWebsiteId();
-    }
-
-    /**
-     * gets current request object
-     *
-     * @return Request
-     */
-    public function getRequest(): Request
-    {
-        return $this->getContainer()->get(Request::class);
     }
 }

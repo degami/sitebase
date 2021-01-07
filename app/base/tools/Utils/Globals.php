@@ -98,7 +98,7 @@ class Globals extends ContainerAwareObject
     protected function logRequestIfNeeded($status_code, Request $request)
     {
         if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
-            $route_info = $this->getApp()->getRouteInfo();
+            $route_info = $this->getAppRouteInfo();
             try {
                 $controller = null;
                 if ($route_info instanceof RouteInfo) {
@@ -311,10 +311,10 @@ class Globals extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getEmptyRouteInfo()
+    public function getEmptyRouteInfo()
     {
-        $http_method = $_SERVER['REQUEST_METHOD'];
-        $request_uri = $_SERVER['REQUEST_URI'];
+        $http_method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
+        $request_uri = $_SERVER['REQUEST_URI'] ?? '/no-route';
 
         // Fetch method and URI from somewhere
         $parsed = parse_url($request_uri);

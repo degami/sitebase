@@ -12,7 +12,11 @@
 
 namespace App\Base\Abstracts\Commands;
 
+use App\Site\Models\Website;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use \Symfony\Component\Console\Command\Command as SymfonyCommand;
 use \Psr\Container\ContainerInterface;
 use \Dotenv\Dotenv;
@@ -47,6 +51,8 @@ class BaseCommand extends SymfonyCommand
      * @param null $name
      * @param ContainerInterface|null $container
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function __construct($name = null, ContainerInterface $container = null)
     {
@@ -60,6 +66,8 @@ class BaseCommand extends SymfonyCommand
      *
      * @return void
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function bootstrap()
     {
@@ -77,12 +85,49 @@ class BaseCommand extends SymfonyCommand
                 )
             )
         );
+
+        $this->getContainer()->set(RouteInfo::class, $this->getUtils()->getEmptyRouteInfo());
+
+        if (!$this->getTemplates()->getFolders()->exists('base')) {
+            $this->getTemplates()->addFolder('base', App::getDir(App::TEMPLATES));
+        }
+        if (!$this->getTemplates()->getFolders()->exists('errors')) {
+            $this->getTemplates()->addFolder('errors', App::getDir(App::TEMPLATES) . DS . 'errors');
+        }
+        if (!$this->getTemplates()->getFolders()->exists('mails')) {
+            $this->getTemplates()->addFolder('mails', App::getDir(App::TEMPLATES) . DS . 'mails');
+        }
     }
 
     protected function initialize(InputInterface $input, OutputInterface $output)
     {
         $this->output = $output;
         $this->input = $input;
+
+        /** @var Website $website */
+        $website = null;
+
+        $existing = false;
+        try {
+            $existing = $this->getPdo()->query("SELECT 1 FROM website") !== false;
+        } catch (\Exception $exception) {}
+
+        if ($existing) {
+            try {
+                if ($this->input->hasOption('website') && is_numeric($this->input->getOption('website'))) {
+                    $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->input->getOption('website')]);
+                }
+            } catch(\Exception $e){}
+
+            if (!$website || !$website->isloaded()) {
+                // $website = $this->getContainer()->call([Website::class, 'load'], ['id' => 1]);
+
+                $websites = $this->getContainer()->call([Website::class, 'where'], ['condition' => [], 'limit' => 1, 'order' => ['created_at' => 'ASC']]);
+                $website = reset($websites);
+            }
+        }
+
+        $this->getContainer()->set(Website::class, $website);
 
         parent::initialize($input, $output);
     }

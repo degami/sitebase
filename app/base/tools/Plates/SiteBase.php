@@ -78,12 +78,12 @@ class SiteBase implements ExtensionInterface
     /**
      * gets current website
      *
-     * @return Website
+     * @return Website|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentWebsite(): Website
+    public function getCurrentWebsite(): ?Website
     {
         return $this->getSiteData()->getCurrentWebsite();
     }
@@ -98,6 +98,10 @@ class SiteBase implements ExtensionInterface
      */
     public function getCurrentWebsiteName(): string
     {
+        if ($this->getCurrentWebsite() == null) {
+            return "";
+        }
+
         return $this->getCurrentWebsite()->getSiteName();
     }
 
@@ -108,6 +112,10 @@ class SiteBase implements ExtensionInterface
      */
     public function getCurrentLocale(): ?string
     {
+        if ($this->getApp() == null) {
+            return "";
+        }
+
         return $this->getApp()->getCurrentLocale();
     }
 
@@ -163,7 +171,7 @@ class SiteBase implements ExtensionInterface
      */
     public function assetUrl(string $asset_path): string
     {
-        return $this->getAssets()->assetUrl($asset_path);
+        return $this->getAssets()->assetUrl($asset_path, $this->getCurrentWebsite()->getId());
     }
 
     /**
@@ -222,11 +230,15 @@ class SiteBase implements ExtensionInterface
     /**
      * gets app object
      *
-     * @return App
+     * @return App|null
      */
-    protected function getApp(): App
+    protected function getApp(): ?App
     {
-        return $this->container->get('app');
+        try {
+            return $this->container->get('app');
+        } catch (\Exception $e) {}
+
+        return null;
     }
 
     /**

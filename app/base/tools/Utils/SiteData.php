@@ -46,7 +46,7 @@ class SiteData extends ContainerAwareObject
      *
      * @return string
      */
-    public function currentServerName(): string
+    public function currentServerName(): ?string
     {
         return $_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME'];
     }
@@ -61,10 +61,8 @@ class SiteData extends ContainerAwareObject
      */
     public function getCurrentWebsite()
     {
-        static $current_website = null;
-
-        if ($current_website instanceof Website) {
-            return $current_website;
+        if ($this->getAppWebsite() instanceof Website && $this->getAppWebsite()->isLoaded()) {
+            return $this->getAppWebsite();
         }
 
         $website = null;
@@ -78,7 +76,10 @@ class SiteData extends ContainerAwareObject
         }
 
         if ($website instanceof Website) {
-            return $current_website = $website;
+            // register into container
+            $this->getContainer()->set(Website::class, $website);
+
+            return $website;
         }
 
         return null;
@@ -94,16 +95,16 @@ class SiteData extends ContainerAwareObject
      */
     public function getCurrentWebsiteId()
     {
-        static $current_siteid = null;
+        static $current_site_id = null;
 
-        if (is_numeric($current_siteid)) {
-            return $current_siteid;
+        if (is_numeric($current_site_id)) {
+            return $current_site_id;
         }
 
         $website = $this->getCurrentWebsite();
 
         if ($website instanceof Website) {
-            return $current_siteid = $website->id;
+            return $current_site_id = $website->getId();
         }
 
         return null;
@@ -145,7 +146,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getBrowserPreferredLanguage(): ?string
     {
-        $langs = [];
+        $languages = [];
         $lang = null;
         if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
             // break up string into pieces (languages and q factors)
@@ -156,21 +157,21 @@ class SiteData extends ContainerAwareObject
             );
             if (count($lang_parse[1])) {
                 // create a list like "en" => 0.8
-                $langs = array_combine($lang_parse[1], $lang_parse[4]);
+                $languages = array_combine($lang_parse[1], $lang_parse[4]);
                 // set default to 1 for any without q factor
-                foreach ($langs as $lang => $val) {
+                foreach ($languages as $lang => $val) {
                     if ($val === '') {
-                        $langs[$lang] = 1;
+                        $languages[$lang] = 1;
                     }
                 }
                 // sort list based on value
-                arsort($langs, SORT_NUMERIC);
+                arsort($languages, SORT_NUMERIC);
             }
         }
 
-        if (count($langs) > 1) {
+        if (count($languages) > 1) {
             //extract most important (first)
-            $lang = array_keys($langs)[0];
+            $lang = array_keys($languages)[0];
 
             //if complex language simplify it
             if (stristr($lang, "-")) {

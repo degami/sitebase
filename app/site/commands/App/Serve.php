@@ -56,18 +56,10 @@ class Serve extends BaseCommand
             $port = 8000;
         }
 
-        $website_id = $input->getOption('website');
-        $website = null;
-        if (!is_numeric($website_id) || ($website = $this->getContainer()->call([Website::class, 'load'], ['id' => $website_id]))->id != $website_id) {
-            $website = null;
-            $website_id = 1;
-        }
+        /** @var Website $website */
+        $website = $this->getAppWebsite();
 
-        if (!$website instanceof Website) {
-            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $website_id]);
-        }
-
-        echo "Serving [" . $website->domain . "] pages on http://localhost:" . $port . "\n";
-        system("website_id=" . $website_id . " php -S localhost:" . $port . " " . App::getDir('root') . DS . 'php_server' . DS . 'router.php');
+        echo "Serving [" . $website->getDomain() . "] pages on http://localhost:" . $port . "\n";
+        system("website_id=" . $website->getId() . " php -S localhost:" . $port . " " . App::getDir('root') . DS . 'php_server' . DS . 'router.php');
     }
 }

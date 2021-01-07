@@ -19,7 +19,9 @@ use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
+use App\Site\Models\Website;
 use App\Site\Routing\Crud;
+use App\Site\Routing\RouteInfo;
 use App\Site\Routing\Web;
 use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
@@ -36,6 +38,7 @@ use PDO;
 use \Psr\Container\ContainerInterface;
 use \Degami\Basics\Exceptions\BasicException;
 use Swift_Mailer;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Container Aware Object Trait
@@ -342,5 +345,44 @@ trait ContainerAwareTrait
     {
         $env = (array)$this->getService('env');
         return $env[$variable] ?? $default;
+    }
+
+    /**
+     * gets current request object
+     *
+     * @return Request
+     * @throws BasicException
+     */
+    public function getRequest(): Request
+    {
+        return $this->getService(Request::class);
+    }
+
+    /**
+     * gets route info
+     *
+     * @return RouteInfo|null
+     */
+    public function getAppRouteInfo(): ?RouteInfo
+    {
+        try {
+            return $this->getContainer()->get(RouteInfo::class);
+        } catch (\Exception $e) {}
+
+        return null;
+    }
+
+    /**
+     * gets current website
+     *
+     * @return Website|null
+     */
+    public function getAppWebsite(): ?Website
+    {
+        try {
+            return $this->getContainer()->get(Website::class);
+        } catch (\Exception $e) {}
+
+        return null;
     }
 }

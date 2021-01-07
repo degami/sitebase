@@ -52,6 +52,7 @@ class Test extends BaseCommand
                 new InputDefinition(
                     [
                         new InputOption('mail_to', '', InputOption::VALUE_OPTIONAL),
+                        new InputOption('mail_type', '', InputOption::VALUE_OPTIONAL),
                     ]
                 )
             );
@@ -73,14 +74,31 @@ class Test extends BaseCommand
     {
         $to = $this->keepAskingForOption('mail_to', 'Send mail to? ');
 
-        $out = $this->getMailer()->sendMail(
-            $this->getSiteData()->getSiteEmail(),
-            $to,
-            'Test Email from '.$this->getSiteData()->getCurrentWebsite()->getDomain(),
-            'This is a test email to check functionality',
-            'plain/text'
-        );
+        $type = $this->keepAskingForOption('mail_type', 'Mail mail format (html, text)? ', ['html', 'text']);
+
+        $out = null;
+
+        if ($type == 'html') {
+            $subject = 'Test Email from '.$this->getSiteData()->getCurrentWebsite()->getDomain();
+            $body = $this->getUtils()->getWrappedMailBody($subject, 'This is a test email to check functionality');
+
+            $out = $this->getMailer()->sendMail(
+                $this->getSiteData()->getSiteEmail() ?? 'testmail@'.$this->getSiteData()->getCurrentWebsite()->getDomain(),
+                $to,
+                $subject,
+                $body
+            );
+        } else {
+            $out = $this->getMailer()->sendMail(
+                $this->getSiteData()->getSiteEmail(),
+                $to,
+                'Test Email from '.$this->getSiteData()->getCurrentWebsite()->getDomain(),
+                'This is a test email to check functionality',
+                'plain/text'
+            );
+        }
 
         $output->writeln("Mail sent. result:".var_export($out, true));
+
     }
 }

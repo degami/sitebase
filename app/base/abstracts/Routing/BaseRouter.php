@@ -1,8 +1,17 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 7.0
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
 
 namespace App\Base\Abstracts\Routing;
-
 
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
@@ -16,12 +25,16 @@ use FastRoute\RouteCollector;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 use Exception;
+
 use function FastRoute\simpleDispatcher;
 
+/**
+ * Base Router Class
+ */
 abstract class BaseRouter extends ContainerAwareObject
 {
-    const REGEXP_ROUTE_VARIABLE_EXPRESSION = "(:([^{}]*|\{([^{}]*|\{[^{}]*\})*\})*)?";
-    const CLASS_METHOD = 'renderPage';
+    public const REGEXP_ROUTE_VARIABLE_EXPRESSION = "(:([^{}]*|\{([^{}]*|\{[^{}]*\})*\})*)?";
+    public const CLASS_METHOD = 'renderPage';
 
     /**
      * @var Dispatcher dispatcher
@@ -52,7 +65,7 @@ abstract class BaseRouter extends ContainerAwareObject
 
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
-            $debugbar['time']->startMeasure($router_name.'_construct', ucfirst($router_name).' construct');
+            $debugbar['time']->startMeasure($router_name . '_construct', ucfirst($router_name) . ' construct');
         }
 
         $this->dispatcher = simpleDispatcher(
@@ -62,11 +75,11 @@ abstract class BaseRouter extends ContainerAwareObject
                         $r->addGroup(
                             $group,
                             function (RouteCollector $r) use ($paths) {
-                                $this->_insertRoutes($r, $paths);
+                                $this->insertRoutes($r, $paths);
                             }
                         );
                     } else {
-                        $this->_insertRoutes($r, $paths);
+                        $this->insertRoutes($r, $paths);
                     }
                 }
             }
@@ -79,7 +92,7 @@ abstract class BaseRouter extends ContainerAwareObject
 
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
-            $debugbar['time']->stopMeasure($router_name.'_construct');
+            $debugbar['time']->stopMeasure($router_name . '_construct');
         }
     }
 
@@ -100,7 +113,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * checks route parameters
      *
      * @param string $route
-     * @return boolean
+     * @return bool
      */
     protected function checkRouteParameters(string $route): bool
     {
@@ -135,10 +148,10 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param array $paths
      * @return self
      */
-    private function _insertRoutes(RouteCollector $r, array $paths): BaseRouter
+    private function insertRoutes(RouteCollector $r, array $paths): BaseRouter
     {
         foreach ($paths as $p) {
-            $this->_insertRoute($r, $p);
+            $this->insertRoute($r, $p);
         }
 
         return $this;
@@ -151,7 +164,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param array $p
      * @return self
      */
-    private function _insertRoute(RouteCollector $r, array $p): BaseRouter
+    private function insertRoute(RouteCollector $r, array $p): BaseRouter
     {
         $r->addRoute($p['verbs'], $p['path'], [$p['class'], $p['method']]);
 
@@ -237,7 +250,7 @@ abstract class BaseRouter extends ContainerAwareObject
      *
      * @param ContainerInterface $container
      * @param string $route
-     * @return boolean
+     * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
@@ -335,9 +348,9 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string $element
      * @return string
      */
-    protected function getCacheKey(string $element) : string
+    protected function getCacheKey(string $element): string
     {
-        return strtolower($this->getRouterName().'.'.$element);
+        return strtolower($this->getRouterName() . '.' . $element);
     }
 
     /**
@@ -348,7 +361,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getArrayFromCache($array_name) : array
+    protected function getArrayFromCache($array_name): array
     {
         $out = [];
         $cache_key = $this->getCacheKey($array_name);
@@ -368,7 +381,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function setArrayInCache($array_name, $array) : self
+    protected function setArrayInCache($array_name, $array): self
     {
         $cache_key = $this->getCacheKey($array_name);
         $this->getCache()->set($cache_key, $array);
@@ -512,7 +525,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param string $uri
      * @return Rewrite|null
      */
-    protected function checkRewrites(string $uri) : ?Rewrite
+    protected function checkRewrites(string $uri): ?Rewrite
     {
         // not every router should check for rewrites. return null by default
 

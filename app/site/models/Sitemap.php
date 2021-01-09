@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,11 +13,11 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\FrontendModel;
+use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use \Spatie\ArrayToXml\ArrayToXml;
-use \DateTime;
+use Spatie\ArrayToXml\ArrayToXml;
+use DateTime;
 
 /**
  * Sitemap Model

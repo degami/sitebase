@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -15,9 +16,9 @@ namespace App\Site\Controllers\Frontend\Users;
 use App\Site\Models\Role;
 use App\Site\Models\User;
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Models\AccountModel;
-use \App\Base\Abstracts\Controllers\LoggedUserFormPage;
-use \Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Models\AccountModel;
+use App\Base\Abstracts\Controllers\LoggedUserFormPage;
+use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;

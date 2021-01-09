@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Site\Commands\Info;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use App\Site\Models\Block;
 use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
@@ -26,11 +27,11 @@ use App\Site\Models\Page;
 use App\Site\Models\News;
 use App\Site\Models\Taxonomy;
 use Degami\Basics\Exceptions\BasicException;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableCell;
-use \Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
 
 /**
  * Information Statistics Command

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,25 +14,25 @@
 namespace App\Base\Tools\Utils;
 
 use App\App;
-use \App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\ContainerAwareObject;
 use App\Site\Models\Language;
 use App\Site\Models\Website;
-use \App\Site\Routing\RouteInfo;
-use \Degami\Basics\Exceptions\BasicException;
-use \DI\DependencyException;
-use \DI\NotFoundException;
-use \FastRoute\Dispatcher;
-use \GuzzleHttp\Exception\GuzzleException;
+use App\Site\Routing\RouteInfo;
+use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
+use FastRoute\Dispatcher;
+use GuzzleHttp\Exception\GuzzleException;
 use League\Plates\Template\Template;
-use \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Site\Models\RequestLog;
-use \App\Site\Models\QueueMessage;
-use \App\Base\Controllers\Dummy\NullPage;
-use \Exception;
-use \Spatie\ArrayToXml\ArrayToXml;
-use \Throwable;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Request;
+use App\Site\Models\RequestLog;
+use App\Site\Models\QueueMessage;
+use App\Base\Controllers\Dummy\NullPage;
+use Exception;
+use Spatie\ArrayToXml\ArrayToXml;
+use Throwable;
 
 /**
  * Global utils functions Helper Class
@@ -56,7 +57,7 @@ class Globals extends ContainerAwareObject
     /**
      * gets site languages options for selects
      *
-     * @param integer|null $website_id
+     * @param int|null $website_id
      * @return array
      * @throws BasicException
      * @throws DependencyException
@@ -67,7 +68,7 @@ class Globals extends ContainerAwareObject
     {
         $languages = $this->getSiteData()->getSiteLocales($website_id);
         $languages_on_DB = [];
-        foreach ($this->getContainer()->call([Language::class, 'where'], ['condition' => ['locale' => $languages]])  as $l) {
+        foreach ($this->getContainer()->call([Language::class, 'where'], ['condition' => ['locale' => $languages]]) as $l) {
             /** @var Language $l */
             $languages_on_DB[$l->getLocale()] = $l;
         }
@@ -118,7 +119,7 @@ class Globals extends ContainerAwareObject
     /**
      * return an error page
      *
-     * @param integer $error_code
+     * @param int $error_code
      * @param Request|null $request
      * @param RouteInfo|null $route_info
      * @param array $template_data
@@ -379,7 +380,7 @@ class Globals extends ContainerAwareObject
      * @param string $url
      * @param string $method
      * @param array $options
-     * @return string|boolean
+     * @return string|bool
      * @throws GuzzleException
      * @throws BasicException
      */
@@ -420,7 +421,7 @@ class Globals extends ContainerAwareObject
      *
      * @param string $pass
      * @param string $encoded_pass
-     * @return boolean
+     * @return bool
      */
     public function checkPass(string $pass, string $encoded_pass): bool
     {
@@ -487,7 +488,7 @@ class Globals extends ContainerAwareObject
      * @throws BasicException
      * @throws Throwable
      */
-    public function getWrappedMailBody(string $subject, string $mail_body, $template_name = 'generic') : string
+    public function getWrappedMailBody(string $subject, string $mail_body, $template_name = 'generic'): string
     {
         $old_directory = $this->getTemplates()->getDirectory();
 

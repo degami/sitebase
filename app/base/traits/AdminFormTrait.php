@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,9 +14,9 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Abstracts\Models\FrontendModel;
+use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
-use \Degami\PHPFormsApi as FAPI;
+use Degami\PHPFormsApi as FAPI;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -101,10 +102,8 @@ trait AdminFormTrait
         }
 
         if (in_array('locale', $form_elements)) {
-            if ($form->isPartial() && isset($form_state['build_info']['args'][0]['name']) &&
-                $form_state['build_info']['args'][0]['name'] == 'website_id') {
+            if ($form->isPartial() && isset($form_state['build_info']['args'][0]['name']) && $form_state['build_info']['args'][0]['name'] == 'website_id') {
                 $chosen_website = $form_state['build_info']['args'][0]['value'];
-
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions($chosen_website);
             }
 

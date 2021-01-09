@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,14 +13,14 @@
 
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Degami\PHPFormsApi as FAPI;
-use \Degami\Basics\Html\TagElement;
+use Degami\PHPFormsApi as FAPI;
+use Degami\Basics\Html\TagElement;
 
 /**
  * Secondary Menu Block
@@ -55,7 +56,7 @@ class SecondaryMenu extends BaseCodeBlock
             ],
         ]]);
 
-        $menu_container->addChild($this->_renderSiteMenu($tree));
+        $menu_container->addChild($this->renderSiteMenu($tree));
 
         $out = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'nav',
@@ -78,7 +79,7 @@ class SecondaryMenu extends BaseCodeBlock
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function _renderSiteMenu(array $menu_tree, $parent = null): string
+    protected function renderSiteMenu(array $menu_tree, $parent = null): string
     {
         $menu_list = $this->getContainer()->make(TagElement::class, ['options' => [
             'tag' => 'ul',
@@ -94,13 +95,13 @@ class SecondaryMenu extends BaseCodeBlock
             ]]);
             $menu_list->addChild($li);
 
-            $li->addChild($this->_renderMenuLink($leaf));
+            $li->addChild($this->renderMenuLink($leaf));
 
             if (isset($leaf['children']) && !empty($leaf['children'])) {
-                $li->addChild($this->_renderMenuLink($leaf, 'submenu-elem'));
+                $li->addChild($this->renderMenuLink($leaf, 'submenu-elem'));
                 $parent_item = $leaf;
                 unset($parent_item['children']);
-                $li->addChild($this->_renderMenuLink($leaf['children'], $parent_item));
+                $li->addChild($this->renderMenuLink($leaf['children'], $parent_item));
             }
         }
 
@@ -116,7 +117,7 @@ class SecondaryMenu extends BaseCodeBlock
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function _renderMenuLink($leaf, $link_class = 'menu-elem'): string
+    protected function renderMenuLink(array $leaf, $link_class = 'menu-elem'): string
     {
         if (empty($leaf['title'])) {
             return '';

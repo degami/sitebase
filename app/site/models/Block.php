@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,13 +14,13 @@
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\BlockTrait;
-use \App\Base\Traits\WithWebsiteTrait;
-use \App\Base\Traits\WithOwnerTrait;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\BlockTrait;
+use App\Base\Traits\WithWebsiteTrait;
+use App\Base\Traits\WithOwnerTrait;
+use App\Base\Abstracts\Controllers\BasePage;
 use DateTime;
-use \Degami\Basics\Html\TagElement;
+use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -54,7 +55,9 @@ use Exception;
  */
 class Block extends BaseModel
 {
-    use BlockTrait, WithWebsiteTrait, WithOwnerTrait;
+    use BlockTrait;
+    use WithOwnerTrait;
+    use WithWebsiteTrait;
 
     /**
      * @var array rewrites
@@ -183,7 +186,7 @@ class Block extends BaseModel
      * checks if block can be shown on specific rewrite
      *
      * @param Rewrite $rewrite
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function checkValidRewrite(Rewrite $rewrite): bool
@@ -191,12 +194,12 @@ class Block extends BaseModel
         $this->checkLoaded();
 
         return (count($this->getRewrites()) == 0 || count(
-                array_filter(
-                    $this->getRewrites(),
-                    function ($el) use ($rewrite) {
-                        return $el->getId() == $rewrite->getId();
-                    }
-                )
-            ) > 0);
+            array_filter(
+                $this->getRewrites(),
+                function ($el) use ($rewrite) {
+                    return $el->getId() == $rewrite->getId();
+                }
+            )
+        ) > 0);
     }
 }

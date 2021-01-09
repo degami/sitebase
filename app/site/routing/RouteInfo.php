@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,8 +13,8 @@
 
 namespace App\Site\Routing;
 
-use \FastRoute\Dispatcher;
-use \App\Base\Abstracts\Controllers\BasePage;
+use FastRoute\Dispatcher;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * Route Information Class
@@ -66,7 +67,7 @@ class RouteInfo
     protected $route_name;
 
     /**
-     * @var integer|null rewrite id
+     * @var int|null rewrite id
      */
     protected $rewrite;
 
@@ -83,7 +84,7 @@ class RouteInfo
      * @param string $uri
      * @param string $route
      * @param string|null $route_name
-     * @param integer|null $rewrite
+     * @param int|null $rewrite
      */
     public function __construct(array $dispatcher_info, string $http_method, string $uri, string $route, string $route_name = null, $rewrite = null)
     {
@@ -341,7 +342,7 @@ class RouteInfo
     /**
      * gets rewrite
      *
-     * @return integer|null
+     * @return int|null
      */
     public function getRewrite(): ?int
     {
@@ -374,7 +375,7 @@ class RouteInfo
     /**
      * checks if route is administrative route
      *
-     * @return boolean
+     * @return bool
      */
     public function isAdminRoute(): bool
     {

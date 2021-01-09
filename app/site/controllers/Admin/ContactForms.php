@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -21,15 +22,15 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Base\Abstracts\Controllers\AdminFormPage;
-use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Contact;
-use \App\Site\Models\ContactSubmission;
-use \App\Site\Controllers\Admin\Json\ContactCallback;
-use \App\App;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Base\Abstracts\Controllers\AdminFormPage;
+use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Contact;
+use App\Site\Models\ContactSubmission;
+use App\Site\Controllers\Admin\Json\ContactCallback;
+use App\App;
 
 /**
  * "ContactForms" Admin Page
@@ -209,7 +210,9 @@ class ContactForms extends AdminManageFrontendModelsPage
                     foreach ($contact_definition as $index => $component) {
                         $component['effaceable'] = true;
                         $this->addComponent(
-                            $fieldset->addField('form_component_' . $index . '', [
+                            $fieldset->addField(
+                                'form_component_' . $index . '',
+                                [
                                     'type' => 'fieldset',
                                     'title' => $component['field_label'],
                                     'collapsible' => true,
@@ -226,7 +229,9 @@ class ContactForms extends AdminManageFrontendModelsPage
                         for ($i = 0; $i < ($num_fields - count($contact_definition)); $i++) {
                             $index = count($contact_definition) + $i;
                             $this->addComponent(
-                                $fieldset->addField('form_component_' . $index . '', [
+                                $fieldset->addField(
+                                    'form_component_' . $index . '',
+                                    [
                                         'type' => 'fieldset',
                                         'title' => 'New Field - ' . ($index + 1),
                                         'collapsible' => true,
@@ -355,7 +360,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

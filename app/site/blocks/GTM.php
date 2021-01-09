@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,13 +13,13 @@
 
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Psr\Container\ContainerInterface;
-use \Degami\Basics\Html\TagElement;
+use Psr\Container\ContainerInterface;
+use Degami\Basics\Html\TagElement;
 
 /**
  * GTM Block

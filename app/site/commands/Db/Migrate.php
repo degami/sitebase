@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,20 +13,20 @@
 
 namespace App\Site\Commands\Db;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Genkgo\Migrations\Adapters\AbstractPdoAdapter;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Overrides\Migrations\Factory;
-use \Genkgo\Migrations\Adapters\PdoMysqlAdapter;
-use \Genkgo\Migrations\MigrationInterface;
-use \App\App;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use Psr\Container\ContainerInterface;
+use App\Base\Overrides\Migrations\Factory;
+use Genkgo\Migrations\Adapters\PdoMysqlAdapter;
+use Genkgo\Migrations\MigrationInterface;
+use App\App;
 
 /**
  * Migrate Database Command

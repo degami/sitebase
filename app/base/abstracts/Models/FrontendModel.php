@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,17 +13,18 @@
 
 namespace App\Base\Abstracts\Models;
 
-use \App\Site\Models\Rewrite;
-use \Exception;
-use \App\Base\Traits\WithWebsiteTrait;
-use \App\Base\Traits\WithOwnerTrait;
+use App\Site\Models\Rewrite;
+use Exception;
+use App\Base\Traits\WithWebsiteTrait;
+use App\Base\Traits\WithOwnerTrait;
 
 /**
  * A model that will be shown on frontend
  */
 abstract class FrontendModel extends BaseModel
 {
-    use WithWebsiteTrait, WithOwnerTrait;
+    use WithOwnerTrait;
+    use WithWebsiteTrait;
 
     /**
      * @var Rewrite|null rewrite object
@@ -101,7 +103,8 @@ abstract class FrontendModel extends BaseModel
     {
         try {
             $this->getRewrite()->remove();
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         return parent::preRemove();
     }

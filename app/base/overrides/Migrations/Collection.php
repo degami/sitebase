@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,12 @@
 
 namespace App\Base\Overrides\Migrations;
 
-use \Genkgo\Migrations\Collection as GenkgoMigrationCollection;
-use \Genkgo\Migrations\Log;
-use \Genkgo\Migrations\AdapterInterface;
-use \Genkgo\Migrations\MigrationInterface;
-use \Genkgo\Migrations\AlreadyMigratedException;
-use \Genkgo\Migrations\NotReadyToMigrateException;
+use Genkgo\Migrations\Collection as GenkgoMigrationCollection;
+use Genkgo\Migrations\Log;
+use Genkgo\Migrations\AdapterInterface;
+use Genkgo\Migrations\MigrationInterface;
+use Genkgo\Migrations\AlreadyMigratedException;
+use Genkgo\Migrations\NotReadyToMigrateException;
 use InvalidArgumentException;
 
 /**

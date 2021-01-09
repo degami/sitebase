@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,8 +13,8 @@
 
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Site\Models\User;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Site\Models\User;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -120,7 +121,7 @@ trait FrontendTrait
      *
      * checks user credentials
      *
-     * @return boolean
+     * @return bool
      * @throws BasicException
      */
     protected function checkCredentials(): bool

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,11 +17,11 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Abstracts\Controllers\FormPage;
-use \App\Base\Traits\FrontendTrait;
-use \App\Site\Models\User;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Traits\FrontendTrait;
+use App\Site\Models\User;
+use App\Base\Exceptions\PermissionDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -94,7 +95,7 @@ class PasswordForgot extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean
+     * @return bool
      */
     public function showMenu(): bool
     {
@@ -104,7 +105,7 @@ class PasswordForgot extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean
+     * @return bool
      */
     public function showBlocks(): bool
     {
@@ -198,7 +199,7 @@ class PasswordForgot extends FormPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException

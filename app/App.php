@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -21,45 +22,45 @@ use DI\ContainerBuilder;
 use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \FastRoute\Dispatcher;
-use \Psr\Container\ContainerInterface;
-use \Gplanchat\EventManager\Event;
-use \Dotenv\Dotenv;
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Site\Models\Website;
-use \App\Site\Routing\RouteInfo;
-use \App\Base\Exceptions\OfflineException;
-use \App\Base\Exceptions\BlockedIpException;
-use \App\Base\Exceptions\NotFoundException;
-use \App\Base\Exceptions\NotAllowedException;
-use \App\Base\Exceptions\PermissionDeniedException;
-use \Exception;
-use \Throwable;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use FastRoute\Dispatcher;
+use Psr\Container\ContainerInterface;
+use Gplanchat\EventManager\Event;
+use Dotenv\Dotenv;
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Site\Models\Website;
+use App\Site\Routing\RouteInfo;
+use App\Base\Exceptions\OfflineException;
+use App\Base\Exceptions\BlockedIpException;
+use App\Base\Exceptions\NotFoundException;
+use App\Base\Exceptions\NotAllowedException;
+use App\Base\Exceptions\PermissionDeniedException;
+use Exception;
+use Throwable;
 
 /**
  * App class
  */
 class App extends ContainerAwareObject
 {
-    const ROOT = 'root';
-    const APP = 'app';
-    const CONFIG = 'config';
-    const COMMANDS = 'commands';
-    const CONTROLLERS = 'controllers';
-    const MIGRATIONS = 'migrations';
-    const MODELS = 'models';
-    const ROUTING = 'routing';
-    const LOGS = 'logs';
-    const DUMPS = 'dumps';
-    const TMP = 'tmp';
-    const WEBROOT = 'pub';
-    const MEDIA = 'media';
-    const ASSETS = 'assets';
-    const FLAGS = 'flags';
-    const TEMPLATES = 'templates';
-    const TRANSLATIONS = 'translations';
+    public const ROOT = 'root';
+    public const APP = 'app';
+    public const CONFIG = 'config';
+    public const COMMANDS = 'commands';
+    public const CONTROLLERS = 'controllers';
+    public const MIGRATIONS = 'migrations';
+    public const MODELS = 'models';
+    public const ROUTING = 'routing';
+    public const LOGS = 'logs';
+    public const DUMPS = 'dumps';
+    public const TMP = 'tmp';
+    public const WEBROOT = 'pub';
+    public const MEDIA = 'media';
+    public const ASSETS = 'assets';
+    public const FLAGS = 'flags';
+    public const TEMPLATES = 'templates';
+    public const TRANSLATIONS = 'translations';
 
     /**
      * @var string current locale
@@ -120,16 +121,17 @@ class App extends ContainerAwareObject
 
             // remove some sensible data from _SERVER
             if (!getenv('DEBUG')) {
-                foreach ([
-                             'DATABASE_HOST',
-                             'DATABASE_NAME',
-                             'DATABASE_USER',
-                             'DATABASE_PASS',
-                             'SMTP_HOST',
-                             'SMTP_PORT',
-                             'SMTP_USER',
-                             'SMTP_PASS'
-                         ] as $key) {
+                $keys = [
+                    'DATABASE_HOST',
+                    'DATABASE_NAME',
+                    'DATABASE_USER',
+                    'DATABASE_PASS',
+                    'SMTP_HOST',
+                    'SMTP_PORT',
+                    'SMTP_USER',
+                    'SMTP_PASS'
+                ];
+                foreach ($keys as $key) {
                     unset($_SERVER[$key]);
                     unset($_ENV[$key]);
                 }
@@ -221,7 +223,7 @@ class App extends ContainerAwareObject
                     $this->getContainer()->call([Rewrite::class, 'all']);
                 }
 
-                foreach($this->getRouters() as $router) {
+                foreach ($this->getRouters() as $router) {
                     $routeInfo = $this->getContainer()->call(
                         [$this->getService($router), 'getRequestInfo'],
                         [
@@ -328,7 +330,7 @@ class App extends ContainerAwareObject
     /**
      * checks if site is offline
      *
-     * @return boolean
+     * @return bool
      */
     protected function isSiteOffline(): bool
     {

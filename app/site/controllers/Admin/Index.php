@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -15,8 +16,8 @@ namespace App\Site\Controllers\Admin;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminPage;
-use \App\Site\Routing\RouteInfo;
+use App\Base\Abstracts\Controllers\AdminPage;
+use App\Site\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 

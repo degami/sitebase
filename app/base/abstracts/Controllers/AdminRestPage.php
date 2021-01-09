@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,18 +14,16 @@
 namespace App\Base\Abstracts\Controllers;
 
 use Degami\Basics\Exceptions\BasicException;
-use \Symfony\Component\HttpFoundation\Response;
-use \App\Base\Traits\AdminTrait;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Traits\AdminTrait;
+use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for rest endpoints
  */
 abstract class AdminRestPage extends BaseRestPage
 {
-
     use AdminTrait;
-
 
     /**
      * before render hook

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -15,10 +16,10 @@ namespace App\Site\Controllers\Admin\Json;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Abstracts\Controllers\AdminJsonPage;
-use \App\Base\Traits\AdminFormTrait;
-use \App\Site\Routing\RouteInfo;
-use \Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\AdminJsonPage;
+use App\Base\Traits\AdminFormTrait;
+use App\Site\Routing\RouteInfo;
+use Degami\PHPFormsApi as FAPI;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

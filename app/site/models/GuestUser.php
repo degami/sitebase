@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,21 +13,21 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\AccountModel;
+use App\Base\Abstracts\Models\AccountModel;
 use App\Base\Abstracts\Models\BaseModel;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Psr\Container\ContainerInterface;
-use \DateTime;
-use \Exception;
+use Psr\Container\ContainerInterface;
+use DateTime;
+use Exception;
 
 /**
  * Guest User Model
  */
 class GuestUser extends AccountModel
 {
-    const ROLE_ID = 1;
+    public const ROLE_ID = 1;
 
     /**
      * @var Role user role
@@ -34,7 +35,7 @@ class GuestUser extends AccountModel
     protected $roleObj = null;
 
     /**
-     * @var integer user id
+     * @var int user id
      */
     public $id = 0;
 
@@ -81,7 +82,7 @@ class GuestUser extends AccountModel
      * checks if user has permission
      *
      * @param string $permission_name
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function checkPermission(string $permission_name): bool
@@ -106,7 +107,7 @@ class GuestUser extends AccountModel
     /**
      * gets user id
      *
-     * @return integer
+     * @return int
      */
     public function getId(): int
     {
@@ -136,7 +137,7 @@ class GuestUser extends AccountModel
     /**
      * gets user role id
      *
-     * @return integer
+     * @return int
      */
     public function getRoleId(): int
     {

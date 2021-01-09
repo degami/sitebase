@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,12 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
+use App\Base\Abstracts\Models\BaseModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Traits\WithOwnerTrait;
+use Psr\Container\ContainerInterface;
+use App\Base\Traits\WithOwnerTrait;
 
 /**
  * Contact Submission Model

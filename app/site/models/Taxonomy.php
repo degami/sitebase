@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,7 +14,7 @@
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Abstracts\Models\FrontendModelWithChildren;
+use App\Base\Abstracts\Models\FrontendModelWithChildren;
 use App\Base\Traits\WithParentTrait;
 use DateTime;
 use Exception;
@@ -100,7 +101,7 @@ class Taxonomy extends FrontendModelWithChildren
     public function prePersist(): BaseModel
     {
         $this->setPath($this->getParentIds());
-        $this->setLevel(max(count(explode("/", $this->path))-1, 0));
+        $this->setLevel(max(count(explode("/", $this->path)) - 1, 0));
         return parent::prePersist();
     }
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,12 +14,12 @@
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Abstracts\Models\ModelWithChildren;
+use App\Base\Abstracts\Models\ModelWithChildren;
 use App\Base\Traits\WithParentTrait;
-use \App\Base\Traits\WithWebsiteTrait;
+use App\Base\Traits\WithWebsiteTrait;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
-use \Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Menu Item Model
@@ -52,7 +53,8 @@ use \Psr\Container\ContainerInterface;
  */
 class Menu extends ModelWithChildren
 {
-    use WithWebsiteTrait, WithParentTrait;
+    use WithParentTrait;
+    use WithWebsiteTrait;
 
     /**
      * gets link URL
@@ -98,7 +100,7 @@ class Menu extends ModelWithChildren
     public function prePersist(): BaseModel
     {
         $this->setBreadcrumb($this->getParentIds());
-        $this->setLevel(max(count(explode("/", $this->breadcrumb))-1, 0));
+        $this->setLevel(max(count(explode("/", $this->breadcrumb)) - 1, 0));
         return parent::prePersist();
     }
 }

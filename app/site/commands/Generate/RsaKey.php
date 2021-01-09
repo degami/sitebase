@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,12 @@
 
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use App\Base\Exceptions\NotFoundException;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use \App\App;
+use App\App;
 
 /**
  * Generate RSA Key Command
@@ -44,11 +45,11 @@ class RsaKey extends BaseCommand
     {
         $output->writeln("<info>Generating RSA key</info>");
 
-        if(!$this->command_exist('openssl')) {
+        if (!$this->commandExist('openssl')) {
             throw new NotFoundException('openssl command is missing!');
         }
 
-        $commandline = "openssl genrsa -out ".App::getDir(App::ASSETS) . DS . "rsa_private.key 2048";
+        $commandline = "openssl genrsa -out " . App::getDir(App::ASSETS) . DS . "rsa_private.key 2048";
 
         system($commandline);
 
@@ -62,7 +63,7 @@ class RsaKey extends BaseCommand
      *
      * @return bool
      */
-    protected function command_exist($cmd): bool
+    protected function commandExist($cmd): bool
     {
         $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
         return !empty($return);

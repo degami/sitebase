@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,8 +13,8 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithWebsiteTrait;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithWebsiteTrait;
 use DateTime;
 
 /**
@@ -24,7 +25,7 @@ use DateTime;
  * @method string getPath()
  * @method string getValue()
  * @method string getLocale()
- * @method boolean getIsSystem()
+ * @method bool getIsSystem()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -32,7 +33,7 @@ use DateTime;
  * @method self setPath(string $path)
  * @method self setValue(string $value)
  * @method self setLocale(string $locale)
- * @method self setIsSystem(boolean $is_system)
+ * @method self setIsSystem(bool $is_system)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */

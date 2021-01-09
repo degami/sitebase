@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,9 +13,9 @@
 
 namespace App\Base\Traits;
 
-use \App\Site\Models\User;
+use App\Site\Models\User;
 use Degami\Basics\Exceptions\BasicException;
-use \Degami\Basics\Html\TagElement;
+use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -49,7 +50,7 @@ trait AdminTrait
     /**
      * checks user credentials
      *
-     * @return boolean
+     * @return bool
      * @throws BasicException
      */
     protected function checkCredentials(): bool
@@ -70,7 +71,7 @@ trait AdminTrait
      * checks if current user has permission
      *
      * @param string $permission_name
-     * @return boolean
+     * @return bool
      * @throws BasicException
      */
     public function checkPermission(string $permission_name): bool

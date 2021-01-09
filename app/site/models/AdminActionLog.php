@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,10 +13,10 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\BasePage;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
-use \Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Admin Action Log Model

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Site\Controllers\Admin\Json;
 
-use \App\Base\Abstracts\Controllers\AdminJsonPage;
+use App\Base\Abstracts\Controllers\AdminJsonPage;
 use DI\DependencyException;
 use DI\NotFoundException;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,8 +14,8 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\ContainerAwareObject;
-use \Exception;
-use \Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
+use Exception;
+use Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Psr7\Response;
@@ -32,7 +33,7 @@ trait ToolsTrait
      * @param string $url
      * @param string $method
      * @param array $options
-     * @return string|boolean
+     * @return string|bool
      * @throws Exception
      * @throws GuzzleException
      */

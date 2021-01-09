@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Site\Commands\Mail;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use App\Site\Models\Block;
 use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
@@ -30,12 +31,12 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableCell;
-use \Symfony\Component\Console\Helper\TableSeparator;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
 
 /**
  * Information Statistics Command
@@ -79,11 +80,11 @@ class Test extends BaseCommand
         $out = null;
 
         if ($type == 'html') {
-            $subject = 'Test Email from '.$this->getSiteData()->getCurrentWebsite()->getDomain();
+            $subject = 'Test Email from ' . $this->getSiteData()->getCurrentWebsite()->getDomain();
             $body = $this->getUtils()->getWrappedMailBody($subject, 'This is a test email to check functionality');
 
             $out = $this->getMailer()->sendMail(
-                $this->getSiteData()->getSiteEmail() ?? 'testmail@'.$this->getSiteData()->getCurrentWebsite()->getDomain(),
+                $this->getSiteData()->getSiteEmail() ?? 'testmail@' . $this->getSiteData()->getCurrentWebsite()->getDomain(),
                 $to,
                 $subject,
                 $body
@@ -92,13 +93,12 @@ class Test extends BaseCommand
             $out = $this->getMailer()->sendMail(
                 $this->getSiteData()->getSiteEmail(),
                 $to,
-                'Test Email from '.$this->getSiteData()->getCurrentWebsite()->getDomain(),
+                'Test Email from ' . $this->getSiteData()->getCurrentWebsite()->getDomain(),
                 'This is a test email to check functionality',
                 'plain/text'
             );
         }
 
-        $output->writeln("Mail sent. result:".var_export($out, true));
-
+        $output->writeln("Mail sent. result:" . var_export($out, true));
     }
 }

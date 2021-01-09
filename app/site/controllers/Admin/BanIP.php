@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -18,13 +19,13 @@ use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Exceptions\FormException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \App\Base\Abstracts\Controllers\AdminFormPage;
-use \App\Site\Models\RequestLog;
-use \Degami\PHPFormsApi as FAPI;
-use \App\App;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\AdminFormPage;
+use App\Site\Models\RequestLog;
+use Degami\PHPFormsApi as FAPI;
+use App\App;
 
 /**
  * Class BanIP
@@ -124,7 +125,7 @@ class BanIP extends AdminFormPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -185,7 +186,7 @@ class BanIP extends AdminFormPage
     protected function getBanFileContents(): string
     {
         return "<?php\n\nreturn \$blocked_ips = [\n" . implode("", array_map(function ($el) {
-                return "  '$el',\n";
-            }, $this->blocked_ips)) . "];\n";
+            return "  '$el',\n";
+        }, $this->blocked_ips)) . "];\n";
     }
 }

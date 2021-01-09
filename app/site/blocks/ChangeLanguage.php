@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,13 +13,13 @@
 
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Controllers\FrontendPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Language;
-use \Exception;
-use \Degami\Basics\Html\TagElement;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Language;
+use Exception;
+use Degami\Basics\Html\TagElement;
 
 /**
  * Change Language Block
@@ -53,35 +54,37 @@ class ChangeLanguage extends BaseCodeBlock
                         ],
                     ]]);
 
-                    foreach (array_map(function ($el, $key) use ($config) {
-                                 $text = '';
+                    $atags = array_map(
+                        function ($el, $key) use ($config) {
+                            $text = '';
 
-                                 if (isset($config['show-language']) && $config['show-language'] == 'code') {
-                                     $text = $key;
-                                 }
-                                 if (isset($config['show-language']) && $config['show-language'] == 'full') {
-                                     $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
-                                     $text = $language->native;
-                                 }
-                                 if (isset($config['show-flags']) && boolval($config['show-flags'])) {
-                                     $text .= ' ' . $this->getHtmlRenderer()->renderFlag($key);
-                                 }
+                            if (isset($config['show-language']) && $config['show-language'] == 'code') {
+                                $text = $key;
+                            }
+                            if (isset($config['show-language']) && $config['show-language'] == 'full') {
+                                $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
+                                $text = $language->native;
+                            }
+                            if (isset($config['show-flags']) && boolval($config['show-flags'])) {
+                                $text .= ' ' . $this->getHtmlRenderer()->renderFlag($key);
+                            }
 
-                                 $link_options = [
-                                     'tag' => 'a',
-                                     'attributes' => [
-                                         'class' => '',
-                                         'href' => $el,
-                                         'title' => strip_tags($text),
-                                     ],
-                                     'text' => $text,
-                                 ];
+                            $link_options = [
+                                'tag' => 'a',
+                                'attributes' => [
+                                    'class' => '',
+                                    'href' => $el,
+                                    'title' => strip_tags($text),
+                                ],
+                                'text' => $text,
+                            ];
 
-                                 return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
-                             },
-                             $translations,
-                             array_keys($translations)
-                         ) as $atag) {
+                            return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
+                        },
+                        $translations,
+                        array_keys($translations)
+                    );
+                    foreach ($atags as $atag) {
                         $li = $this->getContainer()->make(
                             TagElement::class,
                             ['options' => [

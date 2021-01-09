@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,6 @@
 
 namespace App\Site\Controllers\Frontend;
 
-
 use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
@@ -24,8 +24,8 @@ use DI\NotFoundException;
  */
 class Search extends FrontendPage
 {
-    const INDEX_NAME = 'sitebase_index';
-    const RESULTS_PER_PAGE = 10;
+    public const INDEX_NAME = 'sitebase_index';
+    public const RESULTS_PER_PAGE = 10;
 
     /**
      * {@inheritdocs}

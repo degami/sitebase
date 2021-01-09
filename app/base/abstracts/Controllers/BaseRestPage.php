@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -17,14 +18,14 @@ use App\Base\Tools\Utils\Globals;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Psr\Container\ContainerInterface;
-use \App\Site\Routing\RouteInfo;
-use \App\Site\Models\RequestLog;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\JsonResponse;
-use \Exception;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Psr\Container\ContainerInterface;
+use App\Site\Routing\RouteInfo;
+use App\Site\Models\RequestLog;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Exception;
+use App\Base\Exceptions\PermissionDeniedException;
 use Throwable;
 
 /**
@@ -71,9 +72,7 @@ abstract class BaseRestPage extends BasePage
             return $return;
         }
 
-        if ($this->getRequest()->headers->get('Content-Type') != 'application/json' &&
-            $this->getRequest()->getContentType() != 'json'
-        ) {
+        if ($this->getRequest()->headers->get('Content-Type') != 'application/json' && $this->getRequest()->getContentType() != 'json') {
             throw new PermissionDeniedException();
         }
 
@@ -93,7 +92,7 @@ abstract class BaseRestPage extends BasePage
     /**
      * loads object by id
      *
-     * @param integer $id
+     * @param int $id
      * @return BaseModel
      */
     protected function loadObject($id): ?BaseModel

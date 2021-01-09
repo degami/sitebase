@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,9 +14,9 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
-use \App\Site\Models\Role;
-use \Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use App\Site\Models\Role;
+use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 
@@ -116,7 +117,7 @@ class Roles extends AdminManageModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

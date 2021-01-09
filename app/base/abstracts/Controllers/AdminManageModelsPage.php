@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -21,10 +22,10 @@ use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Base\Abstracts\Models\FrontendModel;
-use \Degami\Basics\Html\TagElement;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Base\Abstracts\Models\FrontendModel;
+use Degami\Basics\Html\TagElement;
 
 /**
  * Base for admin page that manages a Model
@@ -183,7 +184,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * loads object by id
      *
-     * @param integer $id
+     * @param int $id
      * @return BaseModel
      */
     protected function loadObject($id): ?BaseModel
@@ -228,7 +229,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * gets action button html
      *
      * @param string $action
-     * @param integer $object_id
+     * @param int $object_id
      * @param string $class
      * @param string $icon
      * @param string $title
@@ -261,7 +262,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets delete button html
      *
-     * @param integer $object_id
+     * @param int $object_id
      * @return string
      * @throws DependencyException
      * @throws NotFoundException
@@ -274,7 +275,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets edit button html
      *
-     * @param integer $object_id
+     * @param int $object_id
      * @return string
      * @throws DependencyException
      * @throws NotFoundException

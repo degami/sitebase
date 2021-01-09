@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,7 +15,7 @@ namespace App\Base\Traits;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
-use \Degami\PHPFormsApi as FAPI;
+use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
@@ -66,7 +67,7 @@ trait FormPageTrait
      * adds submit button to form
      *
      * @param FAPI\Form $form
-     * @param boolean $inline_button
+     * @param bool $inline_button
      * @return FAPI\Form
      */
     protected function addSubmitButton(FAPI\Form $form, $inline_button = false): FAPI\Form
@@ -158,7 +159,7 @@ trait FormPageTrait
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     abstract public function formValidate(FAPI\Form $form, &$form_state);
 

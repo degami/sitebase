@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,10 +13,10 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithOwnerTrait;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithOwnerTrait;
 use DateTime;
-use \Exception;
+use Exception;
 
 /**
  * Media Element Rewrite Pivot Model

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,19 +13,19 @@
 
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use App\Base\Exceptions\NotFoundException;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use \App\App;
+use App\App;
 
 /**
  * Generate Documentation Command
  */
 class Docs extends BaseCommand
 {
-    const BASE_NAMESPACE = "App\\Site\\Cron\\Tasks\\";
+    public const BASE_NAMESPACE = "App\\Site\\Cron\\Tasks\\";
 
     /**
      * {@inheritdoc}
@@ -46,7 +47,7 @@ class Docs extends BaseCommand
     {
         $output->writeln("<info>Generating Documentation</info>");
 
-        if(!$this->command_exist('phpdoc')) {
+        if (!$this->commandExist('phpdoc')) {
             throw new NotFoundException('phpdoc command is missing!');
         }
 
@@ -73,7 +74,8 @@ class Docs extends BaseCommand
      *
      * @return bool
      */
-    protected function command_exist($cmd) {
+    protected function commandExist($cmd): bool
+    {
         $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
         return !empty($return);
     }

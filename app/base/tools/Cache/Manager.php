@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -20,16 +21,17 @@ use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheInvalidConfigurationException;
 use Psr\Cache\InvalidArgumentException;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\ContainerAwareObject;
-use \Phpfastcache\Core\Item\ExtendedCacheItemInterface;
-use \Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
-use \Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
-use \Phpfastcache\Exceptions\PhpfastcacheRootException;
-use \Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\SimpleCache\CacheInterface;
+use Psr\Container\ContainerInterface;
+use App\Base\Abstracts\ContainerAwareObject;
+use Phpfastcache\Core\Item\ExtendedCacheItemInterface;
+use Phpfastcache\Core\Pool\ExtendedCacheItemPoolInterface;
+use Phpfastcache\Exceptions\PhpfastcacheInvalidArgumentException;
+use Phpfastcache\Exceptions\PhpfastcacheRootException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use Psr\SimpleCache\CacheInterface;
 use ReflectionException;
 use Traversable;
+
 use function is_int;
 use function iterator_to_array;
 
@@ -38,7 +40,7 @@ use function iterator_to_array;
  */
 class Manager extends ContainerAwareObject implements CacheInterface
 {
-    const CACHE_TAG = 'sitebase_cache';
+    public const CACHE_TAG = 'sitebase_cache';
 
     /**
      * @var ExtendedCacheItemPoolInterface internal cache instance

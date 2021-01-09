@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,7 +14,7 @@
 namespace App\Site\Migrations;
 
 use App\App;
-use \App\Base\Abstracts\Migrations\BaseMigration;
+use App\Base\Abstracts\Migrations\BaseMigration;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\InvalidValueException;
 use App\Site\Models\Configuration;
@@ -270,20 +271,21 @@ class InitialDataMigration extends BaseMigration
      */
     private function addVariables(Website $website_model, Page $homePage)
     {
-        foreach ([
-                     'app/frontend/homepage' => ['locale' => $website_model->getDefaultLocale(), 'value' => $homePage->getId()],
-                     'app/frontend/homepage_redirects_to_language' => ['locale' => null, 'value' => 0],
-                     'app/frontend/langs' => ['locale' => null, 'value' => $website_model->getDefaultLocale()],
-                     'app/frontend/main_menu' => ['locale' => $website_model->getDefaultLocale(), 'value' => ''],
-                     'app/global/site_mail_address' => ['locale' => null, 'value' => ''],
-                     'app/mail/ses_sender' => ['locale' => $website_model->getDefaultLocale(), 'value' => ''],
-                     'app/frontend/menu_with_logo' => ['locale' => null, 'value' => 1],
-                     'app/backend/log_requests' => ['locale' => null, 'value' => 1],
-                     'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
-                     'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
-                     'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://' . $website_model->getDomain()],
-                     'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
-                 ] as $path => $info) {
+        $variables = [
+            'app/frontend/homepage' => ['locale' => $website_model->getDefaultLocale(), 'value' => $homePage->getId()],
+            'app/frontend/homepage_redirects_to_language' => ['locale' => null, 'value' => 0],
+            'app/frontend/langs' => ['locale' => null, 'value' => $website_model->getDefaultLocale()],
+            'app/frontend/main_menu' => ['locale' => $website_model->getDefaultLocale(), 'value' => ''],
+            'app/global/site_mail_address' => ['locale' => null, 'value' => ''],
+            'app/mail/ses_sender' => ['locale' => $website_model->getDefaultLocale(), 'value' => ''],
+            'app/frontend/menu_with_logo' => ['locale' => null, 'value' => 1],
+            'app/backend/log_requests' => ['locale' => null, 'value' => 1],
+            'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
+            'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
+            'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://' . $website_model->getDomain()],
+            'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
+        ];
+        foreach ($variables as $path => $info) {
             $configuration_model = Configuration::new($this->getContainer());
             $configuration_model->setWebsiteId($website_model->getId());
             $configuration_model->setLocale($info['locale']);

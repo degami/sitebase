@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,9 +17,9 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Abstracts\Controllers\FormPage;
-use \App\Site\Models\LinkExchange;
+use Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\FormPage;
+use App\Site\Models\LinkExchange;
 
 /**
  * Link Exchange Page
@@ -131,7 +132,7 @@ class Links extends FormPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

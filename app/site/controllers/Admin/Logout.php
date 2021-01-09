@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,7 +14,7 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminPage;
+use App\Base\Abstracts\Controllers\AdminPage;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;

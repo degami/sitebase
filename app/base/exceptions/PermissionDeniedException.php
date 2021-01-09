@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Base\Exceptions;
 
-use \Degami\Basics\Exceptions\BasicException;
+use Degami\Basics\Exceptions\BasicException;
 
 /**
  * "Permission denied" exception

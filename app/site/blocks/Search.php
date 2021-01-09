@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,11 +13,11 @@
 
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Controllers\Frontend\Search as SearchController;
 use Degami\Basics\Exceptions\BasicException;
-use \Degami\Basics\Html\TagElement;
+use Degami\Basics\Html\TagElement;
 use Exception;
 
 /**

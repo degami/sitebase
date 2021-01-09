@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,14 +13,14 @@
 
 namespace App\Site\Commands\Db;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use Spatie\DbDumper\Exceptions\CannotStartDump;
 use Spatie\DbDumper\Exceptions\DumpFailed;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \Spatie\DbDumper\Databases\MySql;
-use \Spatie\DbDumper\Compressors\GzipCompressor;
-use \App\App;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Spatie\DbDumper\Databases\MySql;
+use Spatie\DbDumper\Compressors\GzipCompressor;
+use App\App;
 
 /**
  * Dump Database Command

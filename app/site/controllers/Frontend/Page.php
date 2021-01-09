@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -19,10 +20,10 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use \App\Site\Models\Page as PageModel;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\FrontendPageWithObject;
+use App\Site\Models\Page as PageModel;
+use App\Site\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
 /**
@@ -151,7 +152,7 @@ class Page extends FrontendPageWithObject
     /**
      * gets page model id
      *
-     * @return integer
+     * @return int
      */
     public function getPageId(): int
     {

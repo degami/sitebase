@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,7 +14,7 @@
 namespace App\Site\Migrations;
 
 use App\App;
-use \App\Base\Abstracts\Migrations\BaseMigration;
+use App\Base\Abstracts\Migrations\BaseMigration;
 use App\Site\Models\Block;
 use App\Site\Models\Configuration;
 use App\Site\Models\Contact;
@@ -68,7 +69,7 @@ class FakeDataMigration extends BaseMigration
     protected $link_exchange_urls = ["https://www.google.com", "https://www.wikipedia.org", "https://stackoverflow.com", "https://linux.org/", "https://www.php.net"];
 
     /**
-     * @var integer website id
+     * @var int website id
      */
     protected $website_id = 1;
 
@@ -137,11 +138,12 @@ class FakeDataMigration extends BaseMigration
             $now = new DateTime();
 
             $interval_spec = 'P';
-            foreach ([
-                         'y' => rand(1, 3),
-                         'm' => rand(1, 12),
-                         'd' => rand(1, 31),
-                     ] as $key => $value) {
+            $date_arr = [
+                'y' => rand(1, 3),
+                'm' => rand(1, 12),
+                'd' => rand(1, 31),
+            ];
+            foreach ($date_arr as $key => $value) {
                 $interval_spec .= $value . strtoupper($key);
             }
 
@@ -620,8 +622,8 @@ class FakeDataMigration extends BaseMigration
     /**
      * generates an image
      *
-     * @param integer $w
-     * @param integer $h
+     * @param int $w
+     * @param int $h
      * @return MediaElement
      * @throws BasicException
      * @throws DependencyException

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,9 +17,9 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\News as NewsModel;
+use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\News as NewsModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -134,7 +135,7 @@ class News extends AdminManageFrontendModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

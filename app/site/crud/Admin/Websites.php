@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,8 +13,8 @@
 
 namespace App\Site\Crud\Admin;
 
-use \App\Base\Abstracts\Controllers\AdminRestPage;
-use \App\Site\Models\Website as WebsiteModel;
+use App\Base\Abstracts\Controllers\AdminRestPage;
+use App\Site\Models\Website as WebsiteModel;
 
 /**
  * Websites REST endpoint

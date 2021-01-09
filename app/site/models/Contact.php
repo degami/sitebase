@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,10 +14,10 @@
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Abstracts\Models\FrontendModel;
+use App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
-use \Degami\PHPFormsApi as FAPI;
+use Degami\PHPFormsApi as FAPI;
 use Exception;
 
 /**

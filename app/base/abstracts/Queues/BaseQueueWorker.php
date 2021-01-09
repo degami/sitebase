@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,8 +13,8 @@
 
 namespace App\Base\Abstracts\Queues;
 
-use \App\Site\Models\QueueMessage;
-use \App\Base\Abstracts\ContainerAwareObject;
+use App\Site\Models\QueueMessage;
+use App\Base\Abstracts\ContainerAwareObject;
 
 /**
  * Base for queue workers

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,19 +17,19 @@ use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException as PhpfastcacheSimpleCacheExceptionAlias;
-use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Abstracts\Controllers\FormPage;
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Abstracts\Controllers\FrontendPage;
-use \App\Site\Models\Contact;
-use \App\Site\Models\ContactSubmission;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \Exception;
-use \App\Base\Traits\FrontendTrait;
-use \App\Base\Exceptions\NotFoundException;
+use Psr\Container\ContainerInterface;
+use Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Abstracts\Controllers\FrontendPage;
+use App\Site\Models\Contact;
+use App\Site\Models\ContactSubmission;
+use App\Site\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
+use App\Base\Traits\FrontendTrait;
+use App\Base\Exceptions\NotFoundException;
 use Throwable;
 
 /**
@@ -129,10 +130,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
-        if (!($this->getObject() instanceof BaseModel &&
-            is_a($this->getObject(), $this->getObjectClass()) &&
-            $this->template_data['object']->isLoaded())
-        ) {
+        if (!($this->getObject() instanceof BaseModel && is_a($this->getObject(), $this->getObjectClass()) && $this->template_data['object']->isLoaded())) {
             throw new NotFoundException();
         }
 
@@ -197,7 +195,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

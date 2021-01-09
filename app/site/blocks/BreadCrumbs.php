@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,20 +13,20 @@
 
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Controllers\FrontendPage;
-use \Degami\PHPFormsApi as FAPI;
+use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use LessQL\Row;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Site\Models\Menu;
-use \App\Base\Traits\AdminTrait;
-use \App\Site\Models\Rewrite;
-use \Degami\Basics\Html\TagElement;
+use App\Site\Models\Menu;
+use App\Base\Traits\AdminTrait;
+use App\Site\Models\Rewrite;
+use Degami\Basics\Html\TagElement;
 
 /**
  * Breadcrumbs Block
@@ -113,29 +114,30 @@ class BreadCrumbs extends BaseCodeBlock
                 }
             }
 
-            foreach (array_map(
-                         function ($id) use ($homepageid, $locale) {
-                             $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
+            $atags = array_map(
+                function ($id) use ($homepageid, $locale) {
+                    $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
 
-                             if ($menuItem->getRewriteId()) {
-                                 /**
-                                  * @var Rewrite $rewrite
-                                  */
-                                 $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $menuItem->getRewriteId()]);
-                                 if ($rewrite->getRoute() == '/page/' . $homepageid) {
-                                     $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
-                                 }
-                             }
+                    if ($menuItem->getRewriteId()) {
+                        /**
+                         * @var Rewrite $rewrite
+                         */
+                        $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $menuItem->getRewriteId()]);
+                        if ($rewrite->getRoute() == '/page/' . $homepageid) {
+                            $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
+                        }
+                    }
 
-                             $leaf = [
-                                 'title' => $menuItem->getTitle(),
-                                 'href' => $menuItem->getLinkUrl(),
-                                 'target' => $menuItem->getTarget(),
-                             ];
-                             return $this->_renderLink($leaf);
-                         },
-                         array_filter($breadcrumbs)
-                     ) as $atag) {
+                    $leaf = [
+                        'title' => $menuItem->getTitle(),
+                        'href' => $menuItem->getLinkUrl(),
+                        'target' => $menuItem->getTarget(),
+                    ];
+                    return $this->renderLink($leaf);
+                },
+                array_filter($breadcrumbs)
+            );
+            foreach ($atags as $atag) {
                 $li = $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
@@ -175,7 +177,7 @@ class BreadCrumbs extends BaseCodeBlock
                         'text' => $current_page->getObjectTitle(),
                     ]]
                 );
-            } else if ($menu_item instanceof Menu){
+            } else if ($menu_item instanceof Menu) {
                 $atag = $this->getContainer()->make(
                     TagElement::class,
                     ['options' => [
@@ -233,7 +235,7 @@ class BreadCrumbs extends BaseCodeBlock
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function _renderLink($leaf, $link_class = 'breadcrumb-link'): string
+    protected function renderLink(array $leaf, $link_class = 'breadcrumb-link'): string
     {
         $link_options = [
             'tag' => 'a',

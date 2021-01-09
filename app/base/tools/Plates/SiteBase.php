@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -21,12 +22,12 @@ use DebugBar\StandardDebugBar;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \League\Plates\Engine;
-use \League\Plates\Extension\ExtensionInterface;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\App;
+use League\Plates\Engine;
+use League\Plates\Extension\ExtensionInterface;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\App;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
+use Psr\Container\ContainerInterface;
 
 /**
  * Plates template helper
@@ -236,7 +237,8 @@ class SiteBase implements ExtensionInterface
     {
         try {
             return $this->container->get('app');
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return null;
     }

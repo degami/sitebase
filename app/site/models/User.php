@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,8 +14,8 @@
 namespace App\Site\Models;
 
 use App\App;
-use \App\Base\Abstracts\Models\AccountModel;
-use \DateTime;
+use App\Base\Abstracts\Models\AccountModel;
+use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -79,7 +80,7 @@ class User extends AccountModel
     /**
      * sets user role
      *
-     * @param Role|integer|string $role
+     * @param Role|int|string $role
      * @return self
      */
     public function setRole($role): User
@@ -93,7 +94,8 @@ class User extends AccountModel
                 /** @var Role $role */
                 $role = $this->getContainer()->call([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role]);
                 $this->setRoleId($role->getId());
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
 
         return $this;
@@ -103,7 +105,7 @@ class User extends AccountModel
      * checks if user has permission
      *
      * @param string $permission_name
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function checkPermission(string $permission_name): bool
@@ -225,7 +227,8 @@ class User extends AccountModel
         try {
             /** @var UserSession $user_session */
             $user_session = $this->getContainer()->call([UserSession::class, 'loadByCondition'], ['condition' => ['user_id' => $this->getId(), 'website_id' => $current_website_id]]);
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         if (!$user_session) {
             $user_session = $this->getContainer()->call([UserSession::class, 'new']);

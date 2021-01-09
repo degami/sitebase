@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,17 +13,17 @@
 
 namespace App\Base\Tools\DataCollector;
 
-use \DebugBar\DataCollector\DataCollector;
-use \DebugBar\DataCollector\Renderable;
-use \DebugBar\DataCollector\AssetProvider;
-use \App\Base\Abstracts\Controllers\BasePage;
+use DebugBar\DataCollector\DataCollector;
+use DebugBar\DataCollector\Renderable;
+use DebugBar\DataCollector\AssetProvider;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * Page data collector for debugging
  */
 class PageDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    const NAME = "Page Data";
+    public const NAME = "Page Data";
 
     /**
      * @var BasePage subject object

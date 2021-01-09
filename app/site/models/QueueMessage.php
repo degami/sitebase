@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,10 +14,10 @@
 namespace App\Site\Models;
 
 use DateTime;
-use \Exception;
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithWebsiteTrait;
-use \Psr\Container\ContainerInterface;
+use Exception;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithWebsiteTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Queue Message Model
@@ -42,10 +43,10 @@ class QueueMessage extends BaseModel
 {
     use WithWebsiteTrait;
 
-    const STATUS_PENDING = 'pending';
-    const STATUS_PROCESSED = 'processed';
-    const ENDED_OK = 1;
-    const ENDED_KO = 0;
+    public const STATUS_PENDING = 'pending';
+    public const STATUS_PROCESSED = 'processed';
+    public const ENDED_OK = 1;
+    public const ENDED_KO = 0;
 
     /**
      * gets decoded message data

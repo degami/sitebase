@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -35,8 +36,8 @@ use League\Plates\Engine;
 use LessQL\Database;
 use Monolog\Logger;
 use PDO;
-use \Psr\Container\ContainerInterface;
-use \Degami\Basics\Exceptions\BasicException;
+use Psr\Container\ContainerInterface;
+use Degami\Basics\Exceptions\BasicException;
 use Swift_Mailer;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -367,7 +368,8 @@ trait ContainerAwareTrait
     {
         try {
             return $this->getContainer()->get(RouteInfo::class);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return null;
     }
@@ -381,7 +383,8 @@ trait ContainerAwareTrait
     {
         try {
             return $this->getContainer()->get(Website::class);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return null;
     }

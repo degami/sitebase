@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -19,12 +20,12 @@ use DebugBar\DebugBar;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\Cookie;
-use \League\Plates\Template\Template;
-use \App\Site\Routing\RouteInfo;
-use \App\Base\Traits\PageTrait;
-use \Throwable;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Cookie;
+use League\Plates\Template\Template;
+use App\Site\Routing\RouteInfo;
+use App\Base\Traits\PageTrait;
+use Throwable;
 
 /**
  * Base for pages rendering an html response

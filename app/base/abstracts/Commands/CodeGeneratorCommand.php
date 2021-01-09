@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,10 +14,10 @@
 namespace App\Base\Abstracts\Commands;
 
 use Exception;
-use \Psr\Container\ContainerInterface;
-use \Nadar\PhpComposerReader\ComposerReader;
-use \Nadar\PhpComposerReader\AutoloadSection;
-use \App\App;
+use Psr\Container\ContainerInterface;
+use Nadar\PhpComposerReader\ComposerReader;
+use Nadar\PhpComposerReader\AutoloadSection;
+use App\App;
 
 /**
  * Base for "generation" commands

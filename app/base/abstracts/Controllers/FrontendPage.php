@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -22,13 +23,13 @@ use Exception;
 use League\Plates\Template\Template;
 use LessQL\Result;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\App;
-use \App\Site\Models\RequestLog;
-use \App\Site\Routing\RouteInfo;
-use \Degami\Basics\Html\TagElement;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\App;
+use App\Site\Models\RequestLog;
+use App\Site\Routing\RouteInfo;
+use Degami\Basics\Html\TagElement;
+use App\Base\Exceptions\PermissionDeniedException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -263,7 +264,8 @@ abstract class FrontendPage extends BaseHtmlPage
                     // no data into RouteInfo, try by route
                     $this->rewrite = $this->getContainer()->call([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => $this->getRouteInfo()->getRoute()]);
                 }
-            } catch (Exception $e) {}
+            } catch (Exception $e) {
+            }
         }
         return $this->rewrite;
     }
@@ -355,7 +357,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * show menu flag.
      * utility function, subclasses can override this method to disable menu load
      *
-     * @return boolean
+     * @return bool
      */
     public function showMenu(): bool
     {
@@ -366,7 +368,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * show blocks flag.
      * utility function, subclasses can override this method to disable blocks load
      *
-     * @return boolean
+     * @return bool
      */
     public function showBlocks(): bool
     {

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -17,7 +18,7 @@ use App\Base\Abstracts\Routing\BaseRouter;
 use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use \HaydenPierce\ClassFinder\ClassFinder;
+use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -30,7 +31,7 @@ class Crud extends BaseRouter
      *
      * @return string[]
      */
-    protected function getHttpVerbs() : array
+    protected function getHttpVerbs(): array
     {
         return ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
     }
@@ -56,7 +57,7 @@ class Crud extends BaseRouter
                     if (is_subclass_of($controllerClass, BaseRestPage::class)) {
                         $group = "/crud";
                         $path = str_replace("app/site/crud/", "", str_replace("\\", "/", strtolower($controllerClass)));
-                        $route_name = 'crud.'.str_replace("/", ".", trim($path, "/"));
+                        $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
 
                         $classMethod = self::CLASS_METHOD;
                         $verbs = $this->getClassHttpVerbs($controllerClass);
@@ -72,7 +73,7 @@ class Crud extends BaseRouter
                         array_walk($path, function ($path_value, $key) use ($route_name, $group, $controllerClass, $classMethod, $verbs) {
                             $path_prefix = "";
                             if (method_exists($controllerClass, 'getRouteGroup')) {
-                                $path_prefix = rtrim($this->getContainer()->call([$controllerClass, 'getRouteGroup']), '/').'/' ?? "";
+                                $path_prefix = rtrim($this->getContainer()->call([$controllerClass, 'getRouteGroup']), '/') . '/' ?? "";
                             }
 
                             if (!is_string($key)) {

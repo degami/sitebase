@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,11 +13,11 @@
 
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
+use App\Base\Abstracts\Commands\CodeGeneratorCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
@@ -25,7 +26,7 @@ use Symfony\Component\Console\Question\Question;
  */
 class Controller extends CodeGeneratorCommand
 {
-    const BASE_NAMESPACE = "App\\Site\\Controllers\\";
+    public const BASE_NAMESPACE = "App\\Site\\Controllers\\";
 
     /**
      * {@inheritdoc}
@@ -80,9 +81,9 @@ class Controller extends CodeGeneratorCommand
 
 namespace App\\Site\\Controllers;
 
-use \\Psr\\Container\\ContainerInterface;
-use \\App\\Base\\Abstracts\\Controllers\\FrontendPage;
-use \\App\\App;
+use Psr\\Container\\ContainerInterface;
+use App\\Base\\Abstracts\\Controllers\\FrontendPage;
+use App\\App;
 
 class " . $className . " extends FrontendPage
 {

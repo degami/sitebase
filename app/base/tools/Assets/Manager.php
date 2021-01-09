@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Base\Tools\Assets;
 
-use \App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\ContainerAwareObject;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Field;
 use Degami\PHPFormsApi\Abstracts\Base\FieldsContainer;
@@ -20,22 +21,22 @@ use Degami\PHPFormsApi\Form;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Degami\Basics\Html\TagElement;
+use Degami\Basics\Html\TagElement;
 
 /**
  * Assets manager
  */
 class Manager extends ContainerAwareObject
 {
-    const ASSETS_DOMAIN_PATH = 'app/frontend/assets_domain';
+    public const ASSETS_DOMAIN_PATH = 'app/frontend/assets_domain';
 
     /**
-     * @var boolean js already generated flag
+     * @var bool js already generated flag
      */
     protected $js_generated = false;
 
     /**
-     * @var boolean head js already generated flag
+     * @var bool head js already generated flag
      */
     protected $head_js_generated = false;
 
@@ -318,7 +319,7 @@ class Manager extends ContainerAwareObject
      * gets url for asset
      *
      * @param string $asset_path
-     * @param integer|null $website_id
+     * @param int|null $website_id
      * @param string|null $locale
      * @return string
      * @throws BasicException

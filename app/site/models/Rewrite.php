@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,9 +13,9 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithWebsiteTrait;
-use \App\Base\Traits\WithOwnerTrait;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithWebsiteTrait;
+use App\Base\Traits\WithOwnerTrait;
 use App\Site\Routing\RouteInfo;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -44,12 +45,13 @@ use Exception;
  */
 class Rewrite extends BaseModel
 {
+    use WithOwnerTrait;
+    use WithWebsiteTrait;
+
     /**
      * @var array rewrite translations
      */
     protected $translations = [];
-
-    use WithWebsiteTrait, WithOwnerTrait;
 
     /**
      * gets object translations

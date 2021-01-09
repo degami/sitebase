@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,11 +17,11 @@ use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Traits\FormPageTrait;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Degami\PHPFormsApi as FAPI;
+use App\Base\Traits\FormPageTrait;
+use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for admin form page

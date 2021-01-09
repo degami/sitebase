@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,12 @@
 
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
+use App\Base\Abstracts\Commands\CodeGeneratorCommand;
 use Degami\Basics\Exceptions\BasicException;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
@@ -27,8 +28,8 @@ use Symfony\Component\Console\Question\Question;
  */
 class Model extends CodeGeneratorCommand
 {
-    const BASE_MODEL_NAMESPACE = "App\\Site\\Models\\";
-    const BASE_MIGRATION_NAMESPACE = "App\\Site\\Migrations\\";
+    public const BASE_MODEL_NAMESPACE = "App\\Site\\Models\\";
+    public const BASE_MIGRATION_NAMESPACE = "App\\Site\\Migrations\\";
 
     /**
      * @var array columns
@@ -128,9 +129,9 @@ class Model extends CodeGeneratorCommand
         }
 
         $types = [
-            'TINYINT' => 'integer',
-            'INT' => 'integer',
-            'BIGINT' => 'integer',
+            'TINYINT' => 'int',
+            'INT' => 'int',
+            'BIGINT' => 'int',
             'DECIMAL' => 'float',
             'FLOAT' => 'float',
             'DOUBLE' => 'float',
@@ -204,7 +205,7 @@ class Model extends CodeGeneratorCommand
         $comment .= " * @method \\DateTime getUpdatedAt()\n";
 
         foreach ($this->columns as $name => $column_info) {
-            $comment .= " * @method self set" . $this->getUtils()->snakeCaseToPascalCase($name) . "(".$column_info['php_type']." \${$name})\n";
+            $comment .= " * @method self set" . $this->getUtils()->snakeCaseToPascalCase($name) . "(" . $column_info['php_type'] . " \${$name})\n";
         }
         $comment .= " * @method self setCreatedAt(\\DateTime \$created_at)\n";
         $comment .= " * @method self setUpdatedAt(\\DateTime \$updated_at)\n";
@@ -213,7 +214,7 @@ class Model extends CodeGeneratorCommand
 
 namespace App\\Site\\Models;
 
-use \\App\\Base\\Abstracts\\Models\\BaseModel;
+use App\\Base\\Abstracts\\Models\\BaseModel;
 
 
 /**\n" . $comment . " */
@@ -228,7 +229,7 @@ class " . $className . " extends BaseModel
      *
      * @param string $className
      * @param string $modelClassName
-     * @param integer $migration_order
+     * @param int $migration_order
      * @return string
      * @throws BasicException
      */
@@ -252,10 +253,10 @@ class " . $className . " extends BaseModel
 
 namespace App\\Site\\Migrations;
 
-use \\App\\Base\\Abstracts\\Migrations\\DBMigration;
-use \\Psr\\Container\\ContainerInterface;
-use \\Degami\\SqlSchema\\Index;
-use \\Degami\\SqlSchema\\Table;
+use App\\Base\\Abstracts\\Migrations\\DBMigration;
+use Psr\\Container\\ContainerInterface;
+use Degami\\SqlSchema\\Index;
+use Degami\\SqlSchema\\Table;
 
 class " . $className . " extends DBMigration
 {

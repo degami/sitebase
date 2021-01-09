@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,7 +17,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use PDO;
-use \App\Base\Abstracts\Controllers\AdminPage;
+use App\Base\Abstracts\Controllers\AdminPage;
 
 /**
  * "Stats" Admin Page

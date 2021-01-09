@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,12 @@
 
 namespace App\Base\Traits;
 
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Site\Controllers\Frontend\Page;
-use \App\Site\Models\Page as PageModel;
-use \App\Base\Abstracts\Models\AccountModel;
-use \App\Site\Models\GuestUser;
-use \App\Site\Models\User;
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Site\Controllers\Frontend\Page;
+use App\Site\Models\Page as PageModel;
+use App\Base\Abstracts\Models\AccountModel;
+use App\Site\Models\GuestUser;
+use App\Site\Models\User;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -50,7 +51,7 @@ trait PageTrait
     /**
      * calculates JWT token id
      *
-     * @param integer $uid
+     * @param int $uid
      * @param string $username
      * @return string
      */
@@ -112,7 +113,7 @@ trait PageTrait
      * checks if token is still active
      *
      * @param Token $token
-     * @return boolean
+     * @return bool
      * @throws DependencyException
      * @throws NotFoundException
      */
@@ -129,7 +130,7 @@ trait PageTrait
     /**
      * gets token data
      *
-     * @return array|boolean
+     * @return array|bool
      */
     protected function getTokenData()
     {
@@ -183,7 +184,7 @@ trait PageTrait
      * checks if current user has specified permission
      *
      * @param string $permission_name
-     * @return boolean
+     * @return bool
      * @throws BasicException
      */
     public function checkPermission(string $permission_name): bool
@@ -200,7 +201,7 @@ trait PageTrait
     /**
      * checks if user is logged in
      *
-     * @return boolean
+     * @return bool
      * @throws DependencyException
      * @throws NotFoundException
      */
@@ -212,7 +213,7 @@ trait PageTrait
     /**
      * checks if current is homepage
      *
-     * @return boolean
+     * @return bool
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException

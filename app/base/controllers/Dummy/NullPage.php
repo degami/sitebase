@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Base\Controllers\Dummy;
 
-use \App\Base\Abstracts\Controllers\BaseHtmlPage;
+use App\Base\Abstracts\Controllers\BaseHtmlPage;
 
 /**
  * This page does nothing

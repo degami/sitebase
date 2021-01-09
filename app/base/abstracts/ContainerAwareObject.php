@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -15,20 +16,21 @@ namespace App\Base\Abstracts;
 use App\Base\Exceptions\InvalidValueException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Psr\Container\ContainerInterface;
-use \Fisharebest\Localization\Locale;
-use \Fisharebest\Localization\Translation;
-use \Fisharebest\Localization\Translator;
-use \App\Base\Traits\ToolsTrait;
-use \App\Base\Traits\ContainerAwareTrait;
-use \App\App;
+use Psr\Container\ContainerInterface;
+use Fisharebest\Localization\Locale;
+use Fisharebest\Localization\Translation;
+use Fisharebest\Localization\Translator;
+use App\Base\Traits\ToolsTrait;
+use App\Base\Traits\ContainerAwareTrait;
+use App\App;
 
 /**
  * Base for objects that are aware of Container
  */
 abstract class ContainerAwareObject
 {
-    use ToolsTrait, ContainerAwareTrait;
+    use ContainerAwareTrait;
+    use ToolsTrait;
 
     /**
      * @var array translators

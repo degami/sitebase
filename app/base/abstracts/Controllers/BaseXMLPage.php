@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,12 +17,12 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \Spatie\ArrayToXml\ArrayToXml;
-use \Exception;
+use Psr\Container\ContainerInterface;
+use App\Site\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Spatie\ArrayToXml\ArrayToXml;
+use Exception;
 
 /**
  * Base for pages rendering an XML response

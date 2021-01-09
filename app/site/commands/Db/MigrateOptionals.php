@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -15,8 +16,8 @@ namespace App\Site\Commands\Db;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Psr\Container\ContainerInterface;
-use \App\App;
+use Psr\Container\ContainerInterface;
+use App\App;
 
 /**
  * Migrate Database Optionals Command

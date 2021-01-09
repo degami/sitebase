@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,14 +13,14 @@
 
 namespace App\Site\Commands\Cache;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \Symfony\Component\Console\Helper\Table;
-use \Symfony\Component\Console\Helper\TableCell;
-use \Symfony\Component\Console\Helper\TableSeparator;
-use \App\Base\Tools\Cache\Manager as CacheManager;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
+use App\Base\Tools\Cache\Manager as CacheManager;
 
 /**
  * Cache Statistics Command

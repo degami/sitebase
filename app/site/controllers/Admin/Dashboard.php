@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -24,7 +25,7 @@ use App\Site\Models\Website;
 use App\Site\Models\Page;
 use App\Site\Models\News;
 use App\Site\Models\Taxonomy;
-use \App\Base\Abstracts\Controllers\AdminPage;
+use App\Base\Abstracts\Controllers\AdminPage;
 
 /**
  * "Dashboard" Admin Page

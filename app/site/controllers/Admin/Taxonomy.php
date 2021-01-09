@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -17,12 +18,12 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Symfony\Component\HttpFoundation\JsonResponse;
-use \App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Taxonomy as TaxonomyModel;
-use \App\Site\Models\Page;
-use \App\App;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Taxonomy as TaxonomyModel;
+use App\Site\Models\Page;
+use App\App;
 
 /**
  * "Taxonomy" Admin Page
@@ -222,7 +223,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

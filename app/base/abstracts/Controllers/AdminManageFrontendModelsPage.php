@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,8 +14,8 @@
 namespace App\Base\Abstracts\Controllers;
 
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Traits\AdminFormTrait;
-use \Degami\Basics\Html\TagElement;
+use App\Base\Traits\AdminFormTrait;
+use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
 use DI\NotFoundException;
 

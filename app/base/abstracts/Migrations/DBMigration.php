@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,9 +14,9 @@
 namespace App\Base\Abstracts\Migrations;
 
 use Degami\Basics\Exceptions\BasicException;
-use \Exception;
-use \Degami\SqlSchema\Schema;
-use \Degami\SqlSchema\Table;
+use Exception;
+use Degami\SqlSchema\Schema;
+use Degami\SqlSchema\Table;
 
 /**
  * Base for database migrations

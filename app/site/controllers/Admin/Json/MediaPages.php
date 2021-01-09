@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,9 +15,9 @@ namespace App\Site\Controllers\Admin\Json;
 
 use App\Site\Controllers\Admin\Pages;
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminJsonPage;
-use \App\Site\Models\Page;
-use \App\Site\Models\MediaElement as Media;
+use App\Base\Abstracts\Controllers\AdminJsonPage;
+use App\Site\Models\Page;
+use App\Site\Models\MediaElement as Media;
 use DI\DependencyException;
 use DI\NotFoundException;
 

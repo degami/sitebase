@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,10 +15,10 @@ namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Element;
-use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Menu;
-use \App\Site\Models\Rewrite;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Menu;
+use App\Site\Models\Rewrite;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -249,7 +250,7 @@ class Menus extends AdminManageModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -337,7 +338,8 @@ class Menus extends AdminManageModelsPage
 //                $menu_elem->breadcrumb = $menu_elem->getParentIds();
                     $menu_elem->save();
                 }
-            } catch (\Exception $e) {}
+            } catch (\Exception $e) {
+            }
         }
     }
 

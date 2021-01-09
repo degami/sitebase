@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -19,14 +20,14 @@ use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Site\Models\Rewrite;
-use \App\Site\Routing\RouteInfo;
-use \App\App;
-use \Degami\Basics\Html\TagElement;
-use \Degami\Basics\Html\TagList;
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Site\Models\Rewrite;
+use App\Site\Routing\RouteInfo;
+use App\App;
+use Degami\Basics\Html\TagElement;
+use Degami\Basics\Html\TagList;
 
 /**
  * Html Parts Renderer Helper Class
@@ -87,7 +88,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function _renderMenuLink($leaf, $link_class = 'nav-link'): TagElement
+    protected function renderMenuLink(array $leaf, $link_class = 'nav-link'): TagElement
     {
         $link_options = [
             'tag' => 'a',
@@ -120,7 +121,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function _renderSiteMenu(array $menu_tree, $parent = null): TagElement
+    protected function internalRenderSiteMenu(array $menu_tree, $parent = null): TagElement
     {
         $tag_options = [
             'tag' => ($parent == null) ? 'ul' : 'div',
@@ -136,7 +137,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $out = $this->getContainer()->make(TagElement::class, ['options' => $tag_options]);
 
         if ($parent && $parent['href'] != '#') {
-            $out->addChild($this->_renderMenuLink($parent));
+            $out->addChild($this->renderMenuLink($parent));
         }
 
         foreach ($menu_tree as $leaf) {
@@ -151,12 +152,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getContainer()->make(TagList::class);
 
             if (isset($leaf['children']) && !empty($leaf['children'])) {
-                $leaf_container->addChild($this->_renderMenuLink($leaf, 'nav-link dropdown-toggle'));
+                $leaf_container->addChild($this->renderMenuLink($leaf, 'nav-link dropdown-toggle'));
                 $parent_item = $leaf;
                 unset($parent_item['children']);
-                $leaf_container->addChild($this->_renderSiteMenu($leaf['children'], $parent_item));
+                $leaf_container->addChild($this->internalRenderSiteMenu($leaf['children'], $parent_item));
             } else {
-                $leaf_container->addChild($this->_renderMenuLink($leaf));
+                $leaf_container->addChild($this->renderMenuLink($leaf));
             }
 
             $out->addChild($leaf_container);
@@ -283,7 +284,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-        $menu_content->addChild($this->_renderSiteMenu($this->getSiteData()->buildSiteMenu($menuitems)));
+        $menu_content->addChild($this->internalRenderSiteMenu($this->getSiteData()->buildSiteMenu($menuitems)));
         $menu->addChild($menu_content);
 
         // store into cache
@@ -396,11 +397,11 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * renders paginator
      *
-     * @param integer $current_page
-     * @param integer $total
+     * @param int $current_page
+     * @param int $total
      * @param BasePage $controller
-     * @param integer $page_size
-     * @param integer $visible_links
+     * @param int $page_size
+     * @param int $visible_links
      * @return string
      * @throws BasicException
      * @throws DependencyException
@@ -1016,9 +1017,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
     {
         $data = $message->getMessageData();
         if (isset($data['body'])) {
-            $data['body'] = '<div class="code"><code class="html">'.htmlentities($data['body']).'</code></div>';
-                //nl2br(htmlentities($data['body']));
-                //highlight_string($data['body'], true);
+            $data['body'] = '<div class="code"><code class="html">' . htmlentities($data['body']) . '</code></div>';
+            //nl2br(htmlentities($data['body']));
+            //highlight_string($data['body'], true);
         }
 
         return $this->renderArrayOnTable($data, false);
@@ -1028,8 +1029,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * Get either a Gravatar image tag for a specified email address.
      *
      * @param string $email The email address
-     * @param integer $s Size in pixels, defaults to 80px [ 1 - 2048 ]
-     * @param string $d Default imageset to use \[ 404 | mp | identicon | monsterid | wavatar ]
+     * @param int $s Size in pixels, defaults to 80px [ 1 - 2048 ]
+     * @param string $d Default imageset to use [ 404 | mp | identicon | monsterid | wavatar ]
      * @param string $r Maximum rating (inclusive) [ g | pg | r | x ]
      * @param string $class html class
      * @return String containing a complete image tag

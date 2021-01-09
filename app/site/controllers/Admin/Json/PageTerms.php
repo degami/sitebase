@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,8 +15,8 @@ namespace App\Site\Controllers\Admin\Json;
 
 use App\Site\Controllers\Admin\Taxonomy;
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminJsonPage;
-use \App\Site\Models\Page;
+use App\Base\Abstracts\Controllers\AdminJsonPage;
+use App\Site\Models\Page;
 use Degami\PHPFormsApi\Abstracts\Base\FieldsContainer;
 use DI\DependencyException;
 use DI\NotFoundException;

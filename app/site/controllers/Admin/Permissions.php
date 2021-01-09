@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,11 +15,11 @@ namespace App\Site\Controllers\Admin;
 
 use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminFormPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Role;
-use \App\Site\Models\Permission;
-use \App\Site\Models\RolePermission;
+use App\Base\Abstracts\Controllers\AdminFormPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Role;
+use App\Site\Models\Permission;
+use App\Site\Models\RolePermission;
 use DI\DependencyException;
 use DI\NotFoundException;
 
@@ -137,7 +138,7 @@ class Permissions extends AdminFormPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -190,7 +191,8 @@ class Permissions extends AdminFormPage
     {
         try {
             return $this->getContainer()->call([RolePermission::class, 'loadByCondition'], ['condition' => ['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()]]);
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return null;
     }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -21,13 +22,13 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \HaydenPierce\ClassFinder\ClassFinder;
-use \App\Base\Abstracts\Controllers\AdminFormPage;
-use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Block;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use HaydenPierce\ClassFinder\ClassFinder;
+use App\Base\Abstracts\Controllers\AdminFormPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Block;
 
 /**
  * "Blocks" Admin Page
@@ -276,7 +277,7 @@ class Blocks extends AdminManageModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -350,7 +351,8 @@ class Blocks extends AdminManageModelsPage
                             'block_id' => $block->getId(),
                             'rewrite_id' => $id_to_add,
                         ])->save();
-                    } catch (Exception $e) {}
+                    } catch (Exception $e) {
+                    }
                 }
 
                 break;

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,9 +13,9 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithWebsiteTrait;
-use \App\Base\Traits\WithOwnerTrait;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithWebsiteTrait;
+use App\Base\Traits\WithOwnerTrait;
 use DateTime;
 
 /**
@@ -39,5 +40,6 @@ use DateTime;
  */
 class Redirect extends BaseModel
 {
-    use WithWebsiteTrait, WithOwnerTrait;
+    use WithOwnerTrait;
+    use WithWebsiteTrait;
 }

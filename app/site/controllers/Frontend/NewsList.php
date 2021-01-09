@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,9 +14,9 @@
 namespace App\Site\Controllers\Frontend;
 
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\FrontendPage;
-use \App\Site\Models\News;
-use \App\Site\Routing\RouteInfo;
+use App\Base\Abstracts\Controllers\FrontendPage;
+use App\Site\Models\News;
+use App\Site\Routing\RouteInfo;
 use DI\DependencyException;
 use DI\NotFoundException;
 

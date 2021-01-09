@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -17,11 +18,11 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Traits\FrontendTrait;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\Container\ContainerInterface;
+use App\Base\Traits\FrontendTrait;
+use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for admin pages

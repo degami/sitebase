@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,12 @@
 
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
-use \Degami\Basics\Html\TagElement;
-use \Degami\PHPFormsApi as FAPI;
+use Degami\Basics\Html\TagElement;
+use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -115,7 +116,8 @@ class CookieNotice extends BaseCodeBlock
                     ]
                 ]
             ));
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
         return "";
     }
 

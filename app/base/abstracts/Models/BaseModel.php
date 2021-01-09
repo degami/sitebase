@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -20,13 +21,13 @@ use DI\NotFoundException;
 use IteratorAggregate;
 use LessQL\Database;
 use LessQL\Result;
-use \LessQL\Row;
+use LessQL\Row;
 use PDOStatement;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Base\Exceptions\InvalidValueException;
-use \Exception;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Exceptions\InvalidValueException;
+use Exception;
 
 /**
  * A wrapper for LessQL Row
@@ -34,7 +35,7 @@ use \Exception;
  */
 abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, IteratorAggregate
 {
-    const ITEMS_PER_PAGE = 50;
+    public const ITEMS_PER_PAGE = 50;
 
     /**
      * @var Row database row
@@ -47,7 +48,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     public $table_name;
 
     /**
-     * @var boolean first save flag
+     * @var bool first save flag
      */
     protected $is_first_save;
 
@@ -188,7 +189,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         foreach ($condition as $key => $value) {
             if (!is_numeric($key)) {
                 if (preg_match("/:not$/", $key)) {
-                    $key = preg_replace("/:not$/","", $key);
+                    $key = preg_replace("/:not$/", "", $key);
                     $conditions_wherenot[$key] = $value;
                 } else {
                     $conditions_where[$key] = $value;
@@ -275,7 +276,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      *
      * @param ContainerInterface $container
      * @param Request $request
-     * @param integer $page_size
+     * @param int $page_size
      * @param array $condition
      * @param array $order
      * @return array
@@ -382,7 +383,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * fills empty model with data
      *
-     * @param integer|Row $id
+     * @param int|Row $id
      * @return self
      * @throws InvalidValueException
      * @throws BasicException
@@ -406,7 +407,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * checks if model is loaded
      *
-     * @return boolean
+     * @return bool
      */
     public function isLoaded(): bool
     {
@@ -416,7 +417,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * checks if model is new
      *
-     * @return boolean
+     * @return bool
      */
     public function isNew(): bool
     {
@@ -462,7 +463,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * loads model by id
      *
      * @param ContainerInterface $container
-     * @param integer $id
+     * @param int $id
      * @param bool $reset
      * @return self
      */

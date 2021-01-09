@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,14 +13,14 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithOwnerTrait;
-use \App\App;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithOwnerTrait;
+use App\App;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
-use \Exception;
-use \App\Base\Exceptions\PermissionDeniedException;
-use \Degami\Basics\Html\TagElement;
+use Exception;
+use App\Base\Exceptions\PermissionDeniedException;
+use Degami\Basics\Html\TagElement;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 
@@ -32,7 +33,7 @@ use Imagine\Image\ImageInterface;
  * @method string getMimetype()
  * @method int getFilesize()
  * @method int getUserId()
- * @method boolean getLazyload()
+ * @method bool getLazyload()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -41,7 +42,7 @@ use Imagine\Image\ImageInterface;
  * @method self setMimetype(string $mimetype)
  * @method self setFilesize(int $filesize)
  * @method self setUserId(int $user_id)
- * @method self setLazyload(boolean $lazyload)
+ * @method self setLazyload(bool $lazyload)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
@@ -49,7 +50,7 @@ class MediaElement extends BaseModel
 {
     use WithOwnerTrait;
 
-    const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+    public const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
     /**
      * gets relative path

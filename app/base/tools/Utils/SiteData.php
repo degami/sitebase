@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Base\Tools\Utils;
 
-use \App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\ContainerAwareObject;
 use App\Site\Models\Block;
 use App\Site\Models\Configuration;
 use App\Site\Models\Menu;
@@ -21,24 +22,24 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Site\Models\Website;
-use \LessQL\Row;
+use App\Site\Models\Website;
+use LessQL\Row;
 
 /**
  * Site Data Helper Class
  */
 class SiteData extends ContainerAwareObject
 {
-    const LOCALES_PATH = 'app/frontend/langs';
-    const HOMEPAGE_ID_PATH = 'app/frontend/homepage';
-    const HOMEPAGE_REDIRECTS_TO_LANGUAGE_PATH = 'app/frontend/homepage_redirects_to_language';
-    const MAINMENU_PATH = 'app/frontend/main_menu';
-    const SITE_EMAIL_PATH = 'app/global/site_mail_address';
-    const CONFIGURATION_CACHE_KEY = 'site.configuration';
-    const MENU_LOGO_PATH = 'app/frontend/menu_with_logo';
-    const THEMENAME_PATH = 'app/frontend/themename';
-    const DEFAULT_LOCALE = 'en';
-    const DATE_FORMAT_PATH = 'app/frontend/date_format';
+    public const LOCALES_PATH = 'app/frontend/langs';
+    public const HOMEPAGE_ID_PATH = 'app/frontend/homepage';
+    public const HOMEPAGE_REDIRECTS_TO_LANGUAGE_PATH = 'app/frontend/homepage_redirects_to_language';
+    public const MAINMENU_PATH = 'app/frontend/main_menu';
+    public const SITE_EMAIL_PATH = 'app/global/site_mail_address';
+    public const CONFIGURATION_CACHE_KEY = 'site.configuration';
+    public const MENU_LOGO_PATH = 'app/frontend/menu_with_logo';
+    public const THEMENAME_PATH = 'app/frontend/themename';
+    public const DEFAULT_LOCALE = 'en';
+    public const DATE_FORMAT_PATH = 'app/frontend/date_format';
 
 
     /**
@@ -88,7 +89,7 @@ class SiteData extends ContainerAwareObject
     /**
      * gets current website id
      *
-     * @return integer|null
+     * @return int|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
@@ -228,7 +229,7 @@ class SiteData extends ContainerAwareObject
      * gets config value
      *
      * @param string $config_path
-     * @param integer|null $website_id
+     * @param int|null $website_id
      * @param string|null $locale
      * @return mixed
      * @throws BasicException
@@ -265,7 +266,8 @@ class SiteData extends ContainerAwareObject
                 $this->getCache()->set(self::CONFIGURATION_CACHE_KEY, $cached_configuration);
                 return $result->getValue();
             }
-        } catch (\Exception $e) {}
+        } catch (\Exception $e) {
+        }
 
         return null;
     }
@@ -496,7 +498,7 @@ class SiteData extends ContainerAwareObject
      * returns site menu
      *
      * @param string $menu_name
-     * @param integer $website_id
+     * @param int $website_id
      * @param string $locale
      * @param Menu|null $menu_element
      * @return array
@@ -563,7 +565,7 @@ class SiteData extends ContainerAwareObject
      * @return array
      * @throws BasicException
      */
-    protected function menuElementToArray(Menu $menu_element) : array
+    protected function menuElementToArray(Menu $menu_element): array
     {
         $out = [];
         $out['menu_id'] = $menu_element->getId();

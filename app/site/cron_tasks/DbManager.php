@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,19 +15,19 @@ namespace App\Site\Cron\Tasks;
 
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\ContainerAwareObject;
-use \Spatie\DbDumper\Databases\MySql;
-use \Spatie\DbDumper\Compressors\GzipCompressor;
-use \App\Site\Models\QueueMessage;
-use \App\App;
+use Psr\Container\ContainerInterface;
+use App\Base\Abstracts\ContainerAwareObject;
+use Spatie\DbDumper\Databases\MySql;
+use Spatie\DbDumper\Compressors\GzipCompressor;
+use App\Site\Models\QueueMessage;
+use App\App;
 
 /**
  * Cache manager cron
  */
 class DbManager extends ContainerAwareObject
 {
-    const DEFAULT_SCHEDULE = '0 5 * * 0';
+    public const DEFAULT_SCHEDULE = '0 5 * * 0';
 
     /**
      * class constructor
@@ -41,7 +42,7 @@ class DbManager extends ContainerAwareObject
     /**
      * flush cache method
      *
-     * @return boolean
+     * @return bool
      */
     public function dumpDB(): bool
     {
@@ -57,7 +58,6 @@ class DbManager extends ContainerAwareObject
 
             return true;
         } catch (Exception $e) {
-
         }
 
         return false;
@@ -66,7 +66,7 @@ class DbManager extends ContainerAwareObject
     /**
      * remove cron logs older than 12 hours
      *
-     * @return boolean
+     * @return bool
      * @throws BasicException
      */
     public function dropOldCronLogs(): bool
@@ -79,7 +79,7 @@ class DbManager extends ContainerAwareObject
 
     /**
      * remove processed queue messages older than 12 hours
-     * @return boolean
+     * @return bool
      * @throws BasicException
      */
     public function dropOldQueueMessages(): bool

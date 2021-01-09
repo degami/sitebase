@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,12 +15,12 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Controllers\Frontend\Page;
-use \App\Site\Routing\RouteInfo;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
-use \Exception;
-use \App\Base\Traits\FrontendTrait;
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Exceptions\NotFoundException;
+use Exception;
+use App\Base\Traits\FrontendTrait;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Exceptions\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -65,11 +66,7 @@ abstract class FrontendPageWithObject extends FrontendPage
             throw new Exception('Missing "object" property');
         }
 
-        if (!(
-            $this->getObject() instanceof BaseModel &&
-            is_a($this->getObject(), $this->getObjectClass()) &&
-            $this->getObject()->isLoaded())
-        ) {
+        if (!($this->getObject() instanceof BaseModel && is_a($this->getObject(), $this->getObjectClass()) && $this->getObject()->isLoaded())) {
             throw new NotFoundException();
         }
 
@@ -89,7 +86,7 @@ abstract class FrontendPageWithObject extends FrontendPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean
+     * @return bool
      */
     public function canBeFPC(): bool
     {

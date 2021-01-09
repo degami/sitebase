@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,11 +14,11 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminPage;
-use \App\Site\Models\MailLog;
-use \App\Site\Models\RequestLog;
-use \App\Site\Models\CronLog;
-use \App\Site\Models\AdminActionLog;
+use App\Base\Abstracts\Controllers\AdminPage;
+use App\Site\Models\MailLog;
+use App\Site\Models\RequestLog;
+use App\Site\Models\CronLog;
+use App\Site\Models\AdminActionLog;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;

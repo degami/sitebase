@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,11 +14,11 @@
 namespace App\Site\Controllers\Frontend\Users;
 
 use Degami\Basics\Exceptions\BasicException;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Abstracts\Controllers\FormPage;
-use \App\Base\Traits\FrontendTrait;
-use \App\Site\Models\User;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Traits\FrontendTrait;
+use App\Site\Models\User;
+use App\Base\Exceptions\PermissionDeniedException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -93,7 +94,7 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean
+     * @return bool
      */
     public function showMenu(): bool
     {
@@ -103,7 +104,7 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean
+     * @return bool
      */
     public function showBlocks(): bool
     {
@@ -181,7 +182,7 @@ class Login extends FormPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException

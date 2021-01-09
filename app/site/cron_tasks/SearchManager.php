@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -20,15 +21,15 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use HaydenPierce\ClassFinder\ClassFinder;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\ContainerAwareObject;
+use Psr\Container\ContainerInterface;
+use App\Base\Abstracts\ContainerAwareObject;
 
 /**
  * Cron Search Related
  */
 class SearchManager extends ContainerAwareObject
 {
-    const DEFAULT_SCHEDULE = '20 3 * * *';
+    public const DEFAULT_SCHEDULE = '20 3 * * *';
 
     /**
      * class constructor

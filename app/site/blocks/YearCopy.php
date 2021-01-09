@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,10 +13,10 @@
 
 namespace App\Site\Blocks;
 
-use \App\Base\Abstracts\Blocks\BaseCodeBlock;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \Degami\Basics\Html\TagElement;
-use \App\Site\Models\Website;
+use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\BasePage;
+use Degami\Basics\Html\TagElement;
+use App\Site\Models\Website;
 use Exception;
 
 /**
@@ -43,7 +44,8 @@ class YearCopy extends BaseCodeBlock
                 ],
                 'text' => $website->getSiteName() . " &copy; - " . date('Y'),
             ]));
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
         return "";
     }
 }

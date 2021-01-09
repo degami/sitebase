@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,9 +13,9 @@
 
 namespace App\Base\Abstracts\Migrations;
 
-use \Genkgo\Migrations\MigrationInterface;
-use \Verraes\ClassFunctions\ClassFunctions;
-use \App\Base\Abstracts\ContainerAwareObject;
+use Genkgo\Migrations\MigrationInterface;
+use Verraes\ClassFunctions\ClassFunctions;
+use App\Base\Abstracts\ContainerAwareObject;
 
 /**
  * Base for migration objects

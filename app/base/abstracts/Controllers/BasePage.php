@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,14 +17,14 @@ use App\Site\Routing\Web;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Exception;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \Symfony\Component\HttpFoundation\RedirectResponse;
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Site\Routing\RouteInfo;
-use \App\Base\Exceptions\PermissionDeniedException;
+use Exception;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\RedirectResponse;
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Site\Routing\RouteInfo;
+use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for all controllers
@@ -118,9 +119,11 @@ abstract class BasePage extends ContainerAwareObject
      */
     protected function beforeRender()
     {
-        if (method_exists($this, 'getAccessPermission') &&
+        if (
+            method_exists($this, 'getAccessPermission') &&
             method_exists($this, 'checkPermission') &&
-            method_exists($this, 'getCurrentUser')) {
+            method_exists($this, 'getCurrentUser')
+        ) {
             if (!$this->checkPermission($this->getAccessPermission())) {
                 throw new PermissionDeniedException();
             }
@@ -256,7 +259,7 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * specifies if this controller is eligible for full page cache
      *
-     * @return boolean
+     * @return bool
      */
     public function canBeFPC(): bool
     {

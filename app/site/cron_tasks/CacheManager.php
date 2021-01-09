@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,15 +15,15 @@ namespace App\Site\Cron\Tasks;
 
 use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\ContainerAwareObject;
+use Psr\Container\ContainerInterface;
+use App\Base\Abstracts\ContainerAwareObject;
 
 /**
  * Cache manager cron
  */
 class CacheManager extends ContainerAwareObject
 {
-    const DEFAULT_SCHEDULE = '0 */2 * * *';
+    public const DEFAULT_SCHEDULE = '0 */2 * * *';
 
     /**
      * class constructor
@@ -37,7 +38,7 @@ class CacheManager extends ContainerAwareObject
     /**
      * flush cache method
      *
-     * @return boolean
+     * @return bool
      * @throws PhpfastcacheSimpleCacheException|BasicException
      */
     public function flush(): bool

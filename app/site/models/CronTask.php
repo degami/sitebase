@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,8 +13,8 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithOwnerTrait;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithOwnerTrait;
 use DateTime;
 
 /**
@@ -23,7 +24,7 @@ use DateTime;
  * @method string getTitle()
  * @method string getCronTaskCallable()
  * @method string getSchedule()
- * @method boolean getActive()
+ * @method bool getActive()
  * @method int getUserId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
@@ -31,7 +32,7 @@ use DateTime;
  * @method self setTitle(string $title)
  * @method self setCronTaskCallable(string $cron_task_callable)
  * @method self setSchedule(string $schedule)
- * @method self setActive(boolean $active)
+ * @method self setActive(bool $active)
  * @method self setUserId(int $user_id)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)

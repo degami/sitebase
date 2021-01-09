@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,16 +14,16 @@
 namespace App\Base\Tools\Utils;
 
 use App\App;
-use \App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\ContainerAwareObject;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Swift_Message;
-use \Exception;
-use \Aws\Exception\AwsException;
-use \App\Site\Models\MailLog;
-use \Swift_TransportException;
+use Swift_Message;
+use Exception;
+use Aws\Exception\AwsException;
+use App\Site\Models\MailLog;
+use Swift_TransportException;
 use Throwable;
 
 /**
@@ -96,7 +97,7 @@ class Mailer extends ContainerAwareObject
      * @param string $subject
      * @param string $body
      * @param string $content_type
-     * @return boolean
+     * @return bool
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
@@ -204,9 +205,9 @@ class Mailer extends ContainerAwareObject
      * @param string $from
      * @param string $to
      * @param string $subject
-     * @param integer $result
+     * @param int $result
      * @param string|null $mail_template
-     * @return MailLog|boolean
+     * @return MailLog|bool
      * @throws BasicException
      */
     protected function logMail(string $from, string $to, string $subject, int $result, $mail_template = null)

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -18,14 +19,14 @@ use DI\NotFoundException;
 use Exception;
 use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Symfony\Component\HttpFoundation\Request;
-use \Symfony\Component\HttpFoundation\Response;
-use \Psr\Container\ContainerInterface;
-use \App\Base\Traits\AdminTrait;
-use \App\Base\Exceptions\PermissionDeniedException;
-use \App\Site\Routing\RouteInfo;
-use \App\Site\Models\AdminActionLog;
-use \App\App;
+use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Psr\Container\ContainerInterface;
+use App\Base\Traits\AdminTrait;
+use App\Base\Exceptions\PermissionDeniedException;
+use App\Site\Routing\RouteInfo;
+use App\Site\Models\AdminActionLog;
+use App\App;
 use Throwable;
 
 /**

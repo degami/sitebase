@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -18,11 +19,11 @@ use Degami\PHPFormsApi\Abstracts\Base\Element;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Sitemap;
-use \App\Site\Models\Rewrite;
-use \App\Site\Controllers\Admin\Json\SitemapCallback;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Sitemap;
+use App\Site\Models\Rewrite;
+use App\Site\Controllers\Admin\Json\SitemapCallback;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -240,7 +241,7 @@ class Sitemaps extends AdminManageModelsPage
      * adds a component
      *
      * @param Element $form_component
-     * @param integer $index
+     * @param int $index
      * @param Sitemap $sitemap
      * @param array|null $component
      * @return Element
@@ -306,7 +307,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

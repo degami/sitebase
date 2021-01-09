@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,11 +13,11 @@
 
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
+use App\Base\Abstracts\Commands\CodeGeneratorCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
@@ -25,7 +26,7 @@ use Symfony\Component\Console\Question\Question;
  */
 class Command extends CodeGeneratorCommand
 {
-    const BASE_NAMESPACE = "App\\Site\\Commands\\";
+    public const BASE_NAMESPACE = "App\\Site\\Commands\\";
 
     /**
      * {@inheritdoc}
@@ -81,10 +82,10 @@ class Command extends CodeGeneratorCommand
 
 namespace " . trim($nameSpace, "\\") . ";
 
-use \\App\\Base\\Abstracts\\Command;
-use \\Symfony\\Component\\Console\\Input\\InputInterface;
-use \\Symfony\\Component\\Console\\Output\\OutputInterface;
-use \\Psr\\Container\\ContainerInterface;
+use App\\Base\\Abstracts\\Command;
+use Symfony\\Component\\Console\\Input\\InputInterface;
+use Symfony\\Component\\Console\\Output\\OutputInterface;
+use Psr\\Container\\ContainerInterface;
 
 class " . $className . " extends BaseCommand
 {

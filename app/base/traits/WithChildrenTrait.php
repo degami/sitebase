@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -29,7 +30,7 @@ trait WithChildrenTrait
      * gets children
      *
      * @param string|null $locale
-     * @param boolean $reset
+     * @param bool $reset
      * @return array
      */
     public function getChildren($locale = null, $reset = false): array

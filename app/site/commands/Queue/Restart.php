@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,18 +13,18 @@
 
 namespace App\Site\Commands\Queue;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \App\App;
+use App\Base\Abstracts\Commands\BaseCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+use App\App;
 
 /**
  * Restart Queue Command
  */
 class Restart extends BaseCommand
 {
-    const KILLFILE_NAME = "kill.queue";
-    const POLL_TIMEOUT = 500000; // 1/2 sec
+    public const KILLFILE_NAME = "kill.queue";
+    public const POLL_TIMEOUT = 500000; // 1/2 sec
 
     /**
      * {@inheritdoc}

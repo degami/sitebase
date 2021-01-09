@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,11 +13,11 @@
 
 namespace App\Site\Commands\Generate;
 
-use \App\Base\Abstracts\Commands\CodeGeneratorCommand;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
+use App\Base\Abstracts\Commands\CodeGeneratorCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 
@@ -25,7 +26,7 @@ use Symfony\Component\Console\Question\Question;
  */
 class Block extends CodeGeneratorCommand
 {
-    const BASE_NAMESPACE = "App\\Site\\Blocks\\";
+    public const BASE_NAMESPACE = "App\\Site\\Blocks\\";
 
     /**
      * {@inheritdoc}
@@ -80,8 +81,8 @@ class Block extends CodeGeneratorCommand
 
 namespace App\\Site\\Blocks;
 
-use \\App\\Base\\Abstracts\\Blocks\\BaseCodeBlock;
-use \\App\\Base\\Abstracts\\Controllers\\BasePage;
+use App\\Base\\Abstracts\\Blocks\\BaseCodeBlock;
+use App\\Base\\Abstracts\\Controllers\\BasePage;
 
 class " . $className . " extends BaseCodeBlock
 {

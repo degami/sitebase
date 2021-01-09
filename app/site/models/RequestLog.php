@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,12 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Abstracts\Controllers\BasePage;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Base\Traits\WithWebsiteTrait;
+use Symfony\Component\HttpFoundation\Request;
+use App\Base\Traits\WithWebsiteTrait;
 
 /**
  * Request Log Model
@@ -73,7 +74,7 @@ class RequestLog extends BaseModel
      * matches request log with website
      *
      * @param string $host
-     * @return integer|null
+     * @return int|null
      */
     private function matchWebsite(string $host): ?int
     {

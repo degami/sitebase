@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Base\Traits;
 
-use \App\Site\Models\User;
+use App\Site\Models\User;
 use DI\DependencyException;
 use DI\NotFoundException;
 

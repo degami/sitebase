@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,8 +13,8 @@
 
 namespace App\Base\Abstracts\Controllers;
 
-use \App\Base\Traits\AdminTrait;
-use \App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Traits\AdminTrait;
+use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\HttpFoundation\Response;
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,9 +17,9 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Language;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Language;
 
 /**
  * "Languages" Admin Page
@@ -149,7 +150,7 @@ class Languages extends AdminManageModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

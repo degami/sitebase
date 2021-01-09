@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,12 +13,14 @@
 
 namespace App\Site\Commands\App;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Output\OutputInterface;
+use App\Base\Abstracts\Commands\BaseCommand;
+use DI\DependencyException;
+use DI\NotFoundException;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use \App\App;
-use \Exception;
+use App\App;
+use Exception;
 
 /**
  * Application Shell Command
@@ -38,12 +41,16 @@ class Shell extends BaseCommand
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $app = new App;
+        $app = $this->getContainer()->make(App::class);
         $this->getContainer()->set('app', $app);
+
+        $this->getIo()->title('Welcome.');
 
         $history = [];
         do {

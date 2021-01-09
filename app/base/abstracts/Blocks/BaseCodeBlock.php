@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,9 +13,9 @@
 
 namespace App\Base\Abstracts\Blocks;
 
-use \App\Base\Abstracts\ContainerAwareObject;
-use \App\Base\Traits\BlockTrait;
-use \App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Traits\BlockTrait;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * Base for code blocks

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,12 +15,12 @@ namespace App\Site\Controllers\Frontend;
 
 use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Abstracts\Controllers\BaseXMLPage;
-use \App\Site\Models\Sitemap as SitemapModel;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Response;
-use \Exception;
-use \App\Base\Exceptions\NotFoundException;
+use App\Base\Abstracts\Controllers\BaseXMLPage;
+use App\Site\Models\Sitemap as SitemapModel;
+use App\Site\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\Response;
+use Exception;
+use App\Base\Exceptions\NotFoundException;
 
 /**
  * A Sitemap

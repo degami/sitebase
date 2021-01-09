@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,10 +13,10 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Exceptions\InvalidValueException;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Exceptions\InvalidValueException;
 use DateTime;
-use \Degami\Basics\Exceptions\BasicException;
+use Degami\Basics\Exceptions\BasicException;
 use Exception;
 
 /**
@@ -64,7 +65,7 @@ class Role extends BaseModel
      *
      * @param string $permission_name
      * @param bool $reset
-     * @return boolean
+     * @return bool
      * @throws Exception
      */
     public function checkPermission(string $permission_name, bool $reset = false): bool

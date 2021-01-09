@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Base\Abstracts\Models;
 
-use \App\Base\Traits\WithChildrenTrait;
+use App\Base\Traits\WithChildrenTrait;
 
 /**
  * A model with children

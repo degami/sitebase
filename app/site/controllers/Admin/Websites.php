@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,9 +14,9 @@
 namespace App\Site\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Site\Models\Website;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use App\Site\Models\Website;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -143,7 +144,7 @@ class Websites extends AdminManageModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {

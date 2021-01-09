@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,9 +14,9 @@
 namespace App\Base\Overrides\Migrations;
 
 use Closure;
-use \Genkgo\Migrations\Factory as GenkgoMigrationFactory;
-use \Genkgo\Migrations\AdapterInterface;
-use \InvalidArgumentException;
+use Genkgo\Migrations\Factory as GenkgoMigrationFactory;
+use Genkgo\Migrations\AdapterInterface;
+use InvalidArgumentException;
 
 /**
  * Migration factory override

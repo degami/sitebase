@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,32 +13,32 @@
 
 namespace App\Site\Commands\Queue;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use Monolog\Logger;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
-use \App\App;
-use \App\Site\Models\QueueMessage;
-use \App\Base\Abstracts\Queues\BaseQueueWorker;
-use \App\Base\Exceptions\InvalidValueException;
-use \Exception;
+use App\App;
+use App\Site\Models\QueueMessage;
+use App\Base\Abstracts\Queues\BaseQueueWorker;
+use App\Base\Exceptions\InvalidValueException;
+use Exception;
 
 /**
  * Process Queue Command
  */
 class Process extends BaseCommand
 {
-    const SLEEP_TIMEOUT = 500000; // 1/2 sec
-    const MAX_EXECUTIONS_NUMBER = 100000;
-    const LOCKFILE_NAME = "lock.queue";
-    const KILLFILE_NAME = "kill.queue";
+    public const SLEEP_TIMEOUT = 500000; // 1/2 sec
+    public const MAX_EXECUTIONS_NUMBER = 100000;
+    public const LOCKFILE_NAME = "lock.queue";
+    public const KILLFILE_NAME = "kill.queue";
 
     /**
-     * @var integer executions number
+     * @var int executions number
      */
     protected $executions = 0;
 

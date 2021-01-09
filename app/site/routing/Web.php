@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -19,11 +20,11 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use \HaydenPierce\ClassFinder\ClassFinder;
+use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Exceptions\InvalidValueException;
-use \App\Base\Abstracts\Controllers\BasePage;
-use \App\Site\Controllers\Frontend\Page;
+use App\Base\Exceptions\InvalidValueException;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Site\Controllers\Frontend\Page;
 use App\Site\Controllers\Frontend\Search;
 
 /**
@@ -36,7 +37,7 @@ class Web extends BaseRouter
      *
      * @return string[]
      */
-    protected function getHttpVerbs() : array
+    protected function getHttpVerbs(): array
     {
         return ['GET', 'POST'];
     }
@@ -127,7 +128,7 @@ class Web extends BaseRouter
      * @param string $uri
      * @return Rewrite|null
      */
-    protected function checkRewrites(string $uri) : ?Rewrite
+    protected function checkRewrites(string $uri): ?Rewrite
     {
         try {
             $cached_routes = $this->getCachedRewrites();
@@ -144,7 +145,8 @@ class Web extends BaseRouter
 
                 return $rewrite;
             }
-        } catch (Exception $e) {}
+        } catch (Exception $e) {
+        }
 
         return parent::checkRewrites($uri);
     }

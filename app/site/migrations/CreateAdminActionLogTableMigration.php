@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,11 +13,11 @@
 
 namespace App\Site\Migrations;
 
-use \App\Base\Abstracts\Migrations\DBMigration;
+use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Exceptions\DuplicateException;
 use Degami\SqlSchema\Exceptions\EmptyException;
-use \Degami\SqlSchema\Index;
-use \Degami\SqlSchema\Table;
+use Degami\SqlSchema\Index;
+use Degami\SqlSchema\Table;
 
 /**
  * "admin_action_log" table migration

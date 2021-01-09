@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -17,10 +18,10 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Traits\FormPageTrait;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use Degami\PHPFormsApi as FAPI;
+use App\Base\Traits\FormPageTrait;
 
 /**
  * Base frontend page for displaying a form

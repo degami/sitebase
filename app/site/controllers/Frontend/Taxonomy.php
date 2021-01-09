@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,9 +15,9 @@ namespace App\Site\Controllers\Frontend;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
-use \App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use \App\Site\Models\Taxonomy as TaxonomyModel;
-use \Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\FrontendPageWithObject;
+use App\Site\Models\Taxonomy as TaxonomyModel;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Taxonomy Term Detail Page

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,9 +13,9 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
-use \App\Base\Traits\WithWebsiteTrait;
-use \App\Base\Traits\WithOwnerTrait;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithWebsiteTrait;
+use App\Base\Traits\WithOwnerTrait;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 
@@ -29,7 +30,7 @@ use Exception;
  * @method string getTitle()
  * @method string getDescription()
  * @method int getUserId()
- * @method boolean getActive()
+ * @method bool getActive()
  * @method self setId(int $id)
  * @method self setWebsiteId(int $website_id)
  * @method self setLocale(string $locale)
@@ -38,11 +39,12 @@ use Exception;
  * @method self setTitle(string $title)
  * @method self setDescription(string $description)
  * @method self setUserId(int $user_id)
- * @method self setActive(boolean $active)
+ * @method self setActive(bool $active)
  */
 class LinkExchange extends BaseModel
 {
-    use WithWebsiteTrait, WithOwnerTrait;
+    use WithOwnerTrait;
+    use WithWebsiteTrait;
 
     /**
      * @var array link taxonomy terms

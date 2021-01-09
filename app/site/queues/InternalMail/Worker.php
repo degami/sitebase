@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -16,7 +17,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Abstracts\Queues\BaseQueueWorker;
+use App\Base\Abstracts\Queues\BaseQueueWorker;
 
 /**
  * InternalMail Queue Worker
@@ -27,7 +28,7 @@ class Worker extends BaseQueueWorker
      * {@inheritdocs}
      *
      * @param array $message_data
-     * @return boolean
+     * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -15,11 +16,11 @@ namespace App\Site\Controllers\Frontend;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use \App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use \App\Site\Models\News;
-use \App\Site\Routing\RouteInfo;
-use \Symfony\Component\HttpFoundation\Response;
-use \App\Base\Exceptions\NotFoundException;
+use App\Base\Abstracts\Controllers\FrontendPageWithObject;
+use App\Site\Models\News;
+use App\Site\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Exceptions\NotFoundException;
 use Throwable;
 
 /**

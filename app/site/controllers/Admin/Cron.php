@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -19,22 +20,22 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use \Psr\Container\ContainerInterface;
-use \Symfony\Component\HttpFoundation\Request;
-use \App\Base\Abstracts\Controllers\AdminFormPage;
-use \App\Base\Abstracts\Controllers\AdminManageModelsPage;
-use \Degami\PHPFormsApi as FAPI;
-use \HaydenPierce\ClassFinder\ClassFinder;
-use \App\Site\Models\CronTask;
-use \App\Base\Abstracts\ContainerAwareObject;
-use \DateTime;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Base\Abstracts\Controllers\AdminFormPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use Degami\PHPFormsApi as FAPI;
+use HaydenPierce\ClassFinder\ClassFinder;
+use App\Site\Models\CronTask;
+use App\Base\Abstracts\ContainerAwareObject;
+use DateTime;
 
 /**
  * "Cron" Admin Page
  */
 class Cron extends AdminManageModelsPage
 {
-    const ATTENTION_SPAN = 1800;
+    public const ATTENTION_SPAN = 1800;
 
     /**
      * {@inheritdocs}
@@ -218,7 +219,7 @@ class Cron extends AdminManageModelsPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      */
     public function formValidate(FAPI\Form $form, &$form_state)
     {
@@ -261,12 +262,11 @@ class Cron extends AdminManageModelsPage
                 $task->persist();
                 break;
             case 'run':
-
                 try {
                     $this->getContainer()->call(json_decode($task->getCronTaskCallable()));
                     $cron_executed[] = $task->getTitle();
 
-                    $this->addFlashMessage('success', "Task executed: ".$task->getTitle());
+                    $this->addFlashMessage('success', "Task executed: " . $task->getTitle());
                 } catch (Exception $e) {
                     $this->addFlashMessage('error', $e->getMessage());
                     $this->getLog()->critical($e->getMessage() . "\n" . $e->getTraceAsString());
@@ -360,7 +360,7 @@ class Cron extends AdminManageModelsPage
     /**
      * gets run button html
      *
-     * @param integer $object_id
+     * @param int $object_id
      * @return string
      */
     public function getRunButton(int $object_id): string

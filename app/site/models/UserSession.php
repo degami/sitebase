@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -13,7 +14,7 @@
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
-use \DateTime;
+use DateTime;
 
 /**
  * User Session Model

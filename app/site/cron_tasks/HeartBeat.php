@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,15 +13,15 @@
 
 namespace App\Site\Cron\Tasks;
 
-use \Psr\Container\ContainerInterface;
-use \App\Base\Abstracts\ContainerAwareObject;
+use Psr\Container\ContainerInterface;
+use App\Base\Abstracts\ContainerAwareObject;
 
 /**
  * Cron HeartBeat
  */
 class HeartBeat extends ContainerAwareObject
 {
-    const DEFAULT_SCHEDULE = '*/5 * * * *';
+    public const DEFAULT_SCHEDULE = '*/5 * * * *';
 
     /**
      * class constructor

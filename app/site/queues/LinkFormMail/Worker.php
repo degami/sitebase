@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,7 +15,7 @@ namespace App\Site\Queues\LinkFormMail;
 
 use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \App\Base\Abstracts\Queues\BaseQueueWorker;
+use App\Base\Abstracts\Queues\BaseQueueWorker;
 
 /**
  * Links Form Queue Worker
@@ -25,7 +26,7 @@ class Worker extends BaseQueueWorker
      * {@inheritdocs}
      *
      * @param array $message_data
-     * @return boolean
+     * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */

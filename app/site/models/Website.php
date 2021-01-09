@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,7 +13,7 @@
 
 namespace App\Site\Models;
 
-use \App\Base\Abstracts\Models\BaseModel;
+use App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Website Model
@@ -21,12 +22,12 @@ use \App\Base\Abstracts\Models\BaseModel;
  * @method string getSiteName()
  * @method string getDomain()
  * @method string getAliases()
- * @method integer getDefaultLocale()
+ * @method int getDefaultLocale()
  * @method self setId(int $id)
  * @method self setSiteName(string $site_name)
  * @method self setDomain(string $domain)
  * @method self setAliases(string $aliases)
- * @method self setDefaultLocale(integer $default_locale)
+ * @method self setDefaultLocale(int $default_locale)
  */
 class Website extends BaseModel
 {

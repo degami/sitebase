@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -17,11 +18,11 @@ use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use \Symfony\Component\Console\Command\Command as SymfonyCommand;
-use \Psr\Container\ContainerInterface;
-use \Dotenv\Dotenv;
-use \App\Base\Traits\ContainerAwareTrait;
-use \App\App;
+use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Psr\Container\ContainerInterface;
+use Dotenv\Dotenv;
+use App\Base\Traits\ContainerAwareTrait;
+use App\App;
 use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -110,14 +111,16 @@ class BaseCommand extends SymfonyCommand
         $existing = false;
         try {
             $existing = $this->getPdo()->query("SELECT 1 FROM website") !== false;
-        } catch (\Exception $exception) {}
+        } catch (\Exception $exception) {
+        }
 
         if ($existing) {
             try {
                 if ($this->input->hasOption('website') && is_numeric($this->input->getOption('website'))) {
                     $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->input->getOption('website')]);
                 }
-            } catch(\Exception $e){}
+            } catch (\Exception $e) {
+            }
 
             if (!$website || !$website->isloaded()) {
                 // $website = $this->getContainer()->call([Website::class, 'load'], ['id' => 1]);
@@ -184,7 +187,7 @@ class BaseCommand extends SymfonyCommand
             $value = $this->getQuestionHelper()->ask($this->input, $this->output, $question);
 
             if (is_array($choices) && !in_array($value, $choices)) {
-                $this->getIo()->error("Can be one of: ".implode(",", $choices));
+                $this->getIo()->error("Can be one of: " . implode(",", $choices));
                 $value = '';
             }
         }
@@ -201,7 +204,7 @@ class BaseCommand extends SymfonyCommand
     {
         $question = new ConfirmationQuestion($confirmation_message, false);
         if (!$this->getQuestionHelper()->ask($this->input, $this->output, $question)) {
-            $this->output->writeln('<info>'.$not_confirm_message.'</info>');
+            $this->output->writeln('<info>' . $not_confirm_message . '</info>');
             return false;
         }
 

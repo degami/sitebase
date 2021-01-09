@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -14,16 +15,16 @@ namespace App\Base\Tools\DataCollector;
 
 use App\Base\Abstracts\Models\AccountModel;
 use App\Site\Models\GuestUser;
-use \DebugBar\DataCollector\DataCollector;
-use \DebugBar\DataCollector\Renderable;
-use \DebugBar\DataCollector\AssetProvider;
+use DebugBar\DataCollector\DataCollector;
+use DebugBar\DataCollector\Renderable;
+use DebugBar\DataCollector\AssetProvider;
 
 /**
  * Session data collector for debugging
  */
 class UserDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    const NAME = "User Data";
+    public const NAME = "User Data";
 
     /**
      * @var AccountModel subject object

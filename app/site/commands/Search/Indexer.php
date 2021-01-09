@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -28,7 +29,7 @@ use Symfony\Component\Console\Output\OutputInterface;
  */
 class Indexer extends BaseCommand
 {
-    const SUMMARIZE_MAX_WORDS = 50;
+    public const SUMMARIZE_MAX_WORDS = 50;
 
     /**
      * {@inheritdoc}

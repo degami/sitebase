@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -19,12 +20,12 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use \Psr\Container\ContainerInterface;
-use \Degami\PHPFormsApi as FAPI;
-use \App\Base\Abstracts\Controllers\FormPage;
-use \App\Base\Traits\AdminTrait;
-use \App\App;
-use \App\Site\Models\User;
+use Psr\Container\ContainerInterface;
+use Degami\PHPFormsApi as FAPI;
+use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Traits\AdminTrait;
+use App\App;
+use App\Site\Models\User;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -104,7 +105,7 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean
+     * @return bool
      */
     public function showMenu(): bool
     {
@@ -114,7 +115,7 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return boolean
+     * @return bool
      */
     public function showBlocks(): bool
     {
@@ -234,7 +235,7 @@ class Login extends FormPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return boolean|string
+     * @return bool|string
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException

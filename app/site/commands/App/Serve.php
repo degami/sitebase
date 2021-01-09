@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SiteBase
  * PHP Version 7.0
@@ -12,13 +13,13 @@
 
 namespace App\Site\Commands\App;
 
-use \App\Base\Abstracts\Commands\BaseCommand;
-use \Symfony\Component\Console\Input\InputInterface;
-use \Symfony\Component\Console\Input\InputDefinition;
-use \Symfony\Component\Console\Input\InputOption;
-use \Symfony\Component\Console\Output\OutputInterface;
-use \App\Site\Models\Website;
-use \App\App;
+use App\Base\Abstracts\Commands\BaseCommand;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Output\OutputInterface;
+use App\Site\Models\Website;
+use App\App;
 
 /**
  * Http Server Command

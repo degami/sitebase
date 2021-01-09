@@ -40,3 +40,4 @@ pub/debugbar
 pub/sitebase_logo.png
 pub/favicon.ico
 js/dest/*
+assets/rsa_private.key

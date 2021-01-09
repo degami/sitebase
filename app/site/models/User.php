@@ -12,12 +12,15 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use \App\Base\Abstracts\Models\AccountModel;
 use \DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use Lcobucci\JWT\Builder;
+use Lcobucci\JWT\Signer;
 
 /**
  * User Model
@@ -153,35 +156,51 @@ class User extends AccountModel
     {
         $this->checkLoaded();
 
-        $token = $this->getContainer()->get('jwt:builder')
-            ->setIssuer($this->getContainer()->get('jwt_issuer'))
-            ->setAudience($this->getContainer()->get('jwt_audience'))
-            ->setId($this->calcTokenId(), true)
-            // Configures the id (jti claim), replicating as a header item
-            ->setIssuedAt(time())
-            // Configures the time that the token was issue (iat claim)
-            ->setNotBefore(time())
-            // Configures the time that the token can be used (nbf claim)
-            ->setExpiration(time() + 3600)
-            // Configures the expiration time of the token (exp claim)
-            ->set('uid', $this->getId())
-            // Configures a new claim, called "uid"
-            ->set('username', $this->getUsername())
-            ->set('userdata', (object)[
-                'id' => $this->getId(),
-                'username' => $this->getUsername(),
-                'email' => $this->getEmail(),
-                'nickname' => $this->getNickname(),
-                'permissions' => array_map(
-                    function ($el) {
-                        return $el->name;
-                    },
-                    $this->getRole()->getPermissionsArray()
-                )
-            ])
-            ->getToken(); // Retrieves the generated token
+        /** @var Builder $builder */
+        $builder = $this->getContainer()->get('jwt:builder');
 
-        return $token;
+        $builder
+        ->issuedBy($this->getContainer()->get('jwt_issuer'))
+        ->permittedFor($this->getContainer()->get('jwt_audience'))
+        ->identifiedBy($this->calcTokenId())
+        // Configures the id (jti claim), replicating as a header item
+        ->issuedAt(new \DateTimeImmutable())
+        // Configures the time that the token was issue (iat claim)
+        ->canOnlyBeUsedAfter(new \DateTimeImmutable())
+        // Configures the time that the token can be used (nbf claim)
+        ->expiresAt(new \DateTimeImmutable("now +1 hour"))
+        // Configures the expiration time of the token (exp claim)
+        ->withClaim('uid', $this->getId())
+        // Configures a new claim, called "uid"
+        ->withClaim('username', $this->getUsername())
+        ->withClaim('userdata', (object)[
+            'id' => $this->getId(),
+            'username' => $this->getUsername(),
+            'email' => $this->getEmail(),
+            'nickname' => $this->getNickname(),
+            'permissions' => array_map(
+                function ($el) {
+                    return $el->name;
+                },
+                $this->getRole()->getPermissionsArray()
+            )
+        ]);
+
+        $key_path = App::getDir(App::ASSETS) . DS . 'rsa_private.key';
+        if (file_exists($key_path)) {
+            /** @var Signer $signer */
+            $signer = $this->getContainer()->make(Signer\Rsa\Sha256::class);
+
+            /** @var Signer\Key $key */
+            $key = $this->getContainer()->make(Signer\Key::class, [
+                'content' => file_get_contents($key_path)
+            ]);
+
+            // Retrieves the generated token
+            return $builder->getToken($signer, $key);
+        }
+
+        return $builder->getToken();
     }
 
     /**

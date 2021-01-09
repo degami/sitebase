@@ -155,14 +155,14 @@ class Links extends FormPage
         $values = $form->getValues();
 
         /** @var LinkExchange $link */
-        $link = $this->getContainer()->call([LinkExchange::class, 'new', ['initial_data' => [
+        $link = $this->getContainer()->call([LinkExchange::class, 'new'], ['initial_data' => [
             'url' => $values->url,
             'email' => $values->email,
             'title' => $values->title,
             'description' => $values->description,
             'locale' => $this->getCurrentLocale(),
             'website_id' => $this->getSiteData()->getCurrentWebsiteId(),
-        ]]]);
+        ]]);
 
         $link->persist();
 

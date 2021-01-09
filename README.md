@@ -16,7 +16,7 @@ This project is open source licenses using GPL. See LICENSE.txt for more info.
 
 ## Requirements:
 
-  * PHP 7+
+  * PHP 7.2+
   * composer
   * npm + gulp
   * compass
@@ -62,6 +62,7 @@ if you want to do it by hand, you can run (in the main project directory):
 - composer install
 - composer dump-autoload
 - bin/console app:deploy
+- bin/console generate:rsa_key
 - bin/console app:mod_env
 - bin/console db:migrate
 - bin/console db:migrate_optionals # (if you want to fill the site with fake data to see the basic features)

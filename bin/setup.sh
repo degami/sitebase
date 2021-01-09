@@ -35,6 +35,7 @@ echo "install site..."
 touch .env
 $php_bin $console_bin app:mod_env
 $php_bin $console_bin app:deploy
+$php_bin $console_bin generate:rsa_key
 $php_bin $console_bin db:migrate
 
 unset REPLY

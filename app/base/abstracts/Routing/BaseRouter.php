@@ -336,6 +336,7 @@ abstract class BaseRouter extends ContainerAwareObject
                 $regexp = "/\{" . $var_name . self::REGEXP_ROUTE_VARIABLE_EXPRESSION . "\}/i";
                 $dispatcherInfo['path'] = preg_replace($regexp, $value, $dispatcherInfo['path']);
             }
+            $dispatcherInfo['path'] = str_replace(['[',']'],"", $dispatcherInfo['path']);
             return $this->getBaseUrl() . $dispatcherInfo['path'];
         }
 

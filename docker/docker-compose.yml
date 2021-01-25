@@ -1,0 +1,52 @@
+version: '3'
+networks:
+  sitebasenet:
+
+services:
+  php-fpm:
+    build:
+      context: ./php-fpm
+    volumes:
+      - ..:/var/www/html
+    networks:
+      - sitebasenet
+  database:
+    build:
+      context: ./database
+    environment:
+      - MYSQL_DATABASE=sitebase
+      - MYSQL_USER=myuser
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=docker
+    volumes:
+      - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql
+#      - ./database/sitebase:/var/lib/mysql/sitebase
+      - ..:/var/www/html
+    networks:
+      - sitebasenet
+    env_file:
+      - ../.env
+  elasticsearch:
+    image: blacktop/elasticsearch
+    networks:
+      - sitebasenet
+  web:
+    build:
+      context: ./nginx
+    volumes:
+      - ..:/var/www/html
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/sites/:/etc/nginx/sites-available
+      - ./nginx/conf.d/:/etc/nginx/conf.d
+      - ./nginx/passwd:/etc/passwd
+      - ./nginx/group:/etc/group
+    depends_on:
+      - php-fpm
+      - database
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - sitebasenet
+    environment:
+      SITEHOST: local.sitebase

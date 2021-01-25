@@ -1,0 +1,2 @@
+-- this file can be used to initial database fill --
+-- is not used, as we have migrations --

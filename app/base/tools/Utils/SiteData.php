@@ -405,7 +405,7 @@ class SiteData extends ContainerAwareObject
     /**
      * gets defined redirects
      *
-     * @param int $current_website_id
+     * @param int|null $current_website_id
      * @param bool $reset
      * @return array|mixed
      * @throws BasicException

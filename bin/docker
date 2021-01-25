@@ -1,0 +1,81 @@
+#!/bin/bash
+
+root_dir=`pwd`
+php_bin=`which php`
+docker_compose_bin=`which docker-compose`
+docker_bin="$root_dir/bin/docker"
+
+function dockerps {
+  target=$1
+  return=$($docker_compose_bin ps $target | grep 'Up')
+
+  if [[ -n $return ]]; then
+    echo 1
+  else
+    echo 0
+  fi
+}
+
+function dockershell {
+  target=$1
+  $docker_compose_bin exec $target /bin/sh
+}
+
+function dockerstart {
+  echo "starting docker"
+  $docker_compose_bin up &
+}
+
+function dockerstop {
+  echo "stopping docker"
+  $docker_compose_bin down &
+}
+
+if ! [ -e $docker_bin ]; then
+    echo "This script should be run from the root dir"
+    exit
+fi
+
+###########
+## start ##
+###########
+
+cd $root_dir/docker
+
+case "$1" in
+  start)
+      if [[ $(dockerps web) = 1 ]]; then
+        echo "docker is up"
+      else
+        dockerstart
+      fi
+      ;;
+  stop)
+      if [[ $(dockerps web) = 1 ]]; then
+        dockerstop
+      else
+        echo "docker is not running"
+      fi
+      ;;
+  status)
+      if [[ $(dockerps web) = 1 ]]; then
+        echo "docker is up"
+      else
+        echo "docker is down"
+      fi
+      ;;
+  restart)
+      dockerstop
+      dockerstart
+      ;;
+  shell)
+      if [[ $(dockerps $2) = 1 ]]; then
+        dockershell $2
+      else
+        echo "container $2 is down"
+      fi
+      ;;
+  *)
+      echo $"Usage: $0 {start|stop|restart|status|shell <web|database|php-fpm>}"
+      exit 1
+esac

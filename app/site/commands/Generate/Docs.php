@@ -13,7 +13,7 @@
 
 namespace App\Site\Commands\Generate;
 
-use App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseExecCommand;
 use App\Base\Exceptions\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,7 @@ use App\App;
 /**
  * Generate Documentation Command
  */
-class Docs extends BaseCommand
+class Docs extends BaseExecCommand
 {
     public const BASE_NAMESPACE = "App\\Site\\Cron\\Tasks\\";
 
@@ -65,18 +65,5 @@ class Docs extends BaseCommand
         }
 
         $output->writeln("<info>Task completed</info>");
-    }
-
-    /**
-     * Checks if command exists
-     *
-     * @param $cmd
-     *
-     * @return bool
-     */
-    protected function commandExist($cmd): bool
-    {
-        $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
-        return !empty($return);
     }
 }

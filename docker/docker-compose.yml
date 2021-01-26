@@ -20,7 +20,8 @@ services:
       - MYSQL_ROOT_PASSWORD=docker
     volumes:
       - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql
-      - ./database/sitebase:/var/lib/mysql/sitebase
+      - ./database/docker.cnf:/etc/mysql/conf.d/docker.cnf:ro
+      - ./database/data:/var/lib/mysql
       - ..:/var/www/html
     networks:
       - sitebasenet

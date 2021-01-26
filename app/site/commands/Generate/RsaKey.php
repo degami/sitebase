@@ -13,7 +13,7 @@
 
 namespace App\Site\Commands\Generate;
 
-use App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Commands\BaseExecCommand;
 use App\Base\Exceptions\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -23,7 +23,7 @@ use App\App;
 /**
  * Generate RSA Key Command
  */
-class RsaKey extends BaseCommand
+class RsaKey extends BaseExecCommand
 {
     /**
      * {@inheritdoc}
@@ -54,18 +54,5 @@ class RsaKey extends BaseCommand
         system($commandline);
 
         $output->writeln("<info>Key created</info>");
-    }
-
-    /**
-     * Checks if command exists
-     *
-     * @param $cmd
-     *
-     * @return bool
-     */
-    protected function commandExist($cmd): bool
-    {
-        $return = shell_exec(sprintf("which %s", escapeshellarg($cmd)));
-        return !empty($return);
     }
 }

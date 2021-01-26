@@ -528,6 +528,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             });
         }
 
+        $already_loaded = array_filter($already_loaded);
+
         $out = (!empty($ids) ? static::loadMultipleByCondition($container, ['id' => $ids], $reset) : []) +
             (!empty($already_loaded) ? array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($already_loaded)) : []);
 

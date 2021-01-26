@@ -41,4 +41,4 @@ pub/sitebase_logo.png
 pub/favicon.ico
 js/dest/*
 assets/rsa_private.key
-/docker/database/sitebase/
+docker/database/data

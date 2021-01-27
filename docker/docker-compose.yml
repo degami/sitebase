@@ -27,6 +27,8 @@ services:
       - sitebasenet
     env_file:
       - ../.env
+    ports:
+      - "3306:3306"
   elasticsearch:
     image: blacktop/elasticsearch
     networks:

@@ -16,9 +16,14 @@ function dockerps {
   fi
 }
 
+function dockerexec {
+  args=$@
+  $docker_compose_bin exec $args
+}
+
 function dockershell {
   target=$1
-  $docker_compose_bin exec $target /bin/sh
+  dockerexec $target /bin/sh
 }
 
 function dockerstart {
@@ -26,7 +31,7 @@ function dockerstart {
   $docker_compose_bin up &
 }
 
-function dockerstop {
+function  dockerstop {
   echo "stopping docker"
   $docker_compose_bin down &
 }
@@ -43,39 +48,51 @@ fi
 cd $root_dir/docker
 
 case "$1" in
-  start)
+  start|go|up)
       if [[ $(dockerps web) = 1 ]]; then
         echo "docker is up"
       else
         dockerstart
       fi
       ;;
-  stop)
+  stop|k|down)
       if [[ $(dockerps web) = 1 ]]; then
         dockerstop
       else
         echo "docker is not running"
       fi
       ;;
-  status)
+  status|st)
       if [[ $(dockerps web) = 1 ]]; then
         echo "docker is up"
       else
         echo "docker is down"
       fi
       ;;
-  restart)
+  restart|r)
       dockerstop
       dockerstart
       ;;
-  shell)
-      if [[ $(dockerps $2) = 1 ]]; then
-        dockershell $2
+  shell|sh)
+      if [[ -n $2 ]]; then
+        if [[ $(dockerps $2) = 1 ]]; then
+          dockershell $2
+        else
+          echo "container $2 is down"
+        fi
       else
-        echo "container $2 is down"
+        echo "missing container name"
       fi
       ;;
+  console)
+      if [[ $(dockerps php-fpm) = 1 ]]; then
+        shift
+        dockerexec php-fpm /var/www/html/bin/console $@
+      else
+        echo "container php-fpm is down"
+      fi
+    ;;
   *)
-      echo $"Usage: $0 {start|stop|restart|status|shell <web|database|php-fpm>}"
+      echo $"Usage: $0 {start|go|up, stop|k|down, restart|r, status|st, sh[ell] <web|database|php-fpm>, console <command>}"
       exit 1
 esac

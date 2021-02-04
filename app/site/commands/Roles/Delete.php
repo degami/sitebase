@@ -30,7 +30,7 @@ class Delete extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Delete role')
             ->setDefinition(
@@ -49,7 +49,7 @@ class Delete extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {

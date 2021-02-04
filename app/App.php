@@ -63,9 +63,9 @@ class App extends ContainerAwareObject
     public const TRANSLATIONS = 'translations';
 
     /**
-     * @var string current locale
+     * @var string|null current locale
      */
-    protected $current_locale = null;
+    protected ?string $current_locale = null;
 
     /**
      * @var array blocked ips list
@@ -356,7 +356,7 @@ class App extends ContainerAwareObject
      * @return self
      * @throws BasicException
      */
-    public function event(string $event_name, $event_data): App
+    public function event(string $event_name, mixed $event_data): App
     {
         $this->getEventManager()->emit(new Event($event_name, $event_data));
 
@@ -398,7 +398,7 @@ class App extends ContainerAwareObject
      * gets application directory by type
      *
      * @param string $type
-     * @return string
+     * @return string|null
      */
     public static function getDir(string $type): ?string
     {

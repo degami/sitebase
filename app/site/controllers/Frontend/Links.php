@@ -20,6 +20,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FormPage;
 use App\Site\Models\LinkExchange;
+use Throwable;
 
 /**
  * Link Exchange Page
@@ -27,9 +28,9 @@ use App\Site\Models\LinkExchange;
 class Links extends FormPage
 {
     /**
-     * @var string locale
+     * @var string|null locale
      */
-    protected $locale = null;
+    protected ?string $locale = null;
 
     /**
      * gets route group
@@ -97,8 +98,9 @@ class Links extends FormPage
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form
+     * @throws FAPI\Exceptions\FormException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $form->addField('url', [
             'type' => 'textfield',
@@ -134,7 +136,7 @@ class Links extends FormPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         return true;
     }
@@ -149,9 +151,9 @@ class Links extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         $values = $form->getValues();
 

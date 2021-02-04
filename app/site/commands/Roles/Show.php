@@ -31,7 +31,7 @@ class Show extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Roles list');
     }
@@ -44,7 +44,7 @@ class Show extends BaseCommand
      * @return void
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $table = new Table($output);
         $table->setHeaders(['ID', 'Name', 'Permissions']);

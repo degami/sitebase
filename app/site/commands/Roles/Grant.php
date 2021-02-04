@@ -34,7 +34,7 @@ class Grant extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Grant permission to role')
             ->setDefinition(
@@ -56,7 +56,7 @@ class Grant extends BaseCommand
      * @throws BasicException
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {

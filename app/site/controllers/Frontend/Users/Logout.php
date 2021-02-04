@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Frontend\Users;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\LoggedUserPage;
 use DI\DependencyException;
@@ -68,12 +69,12 @@ class Logout extends LoggedUserPage
     /**
      * {@inheritdocs}
      *
-     * @return LoggedUserPage|RedirectResponse|Response
+     * @return BasePage|Response
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function beforeRender()
+    public function beforeRender() : BasePage|Response
     {
         // dispatch "user_logged_out" event
         $this->getApp()->event('user_logged_out', [

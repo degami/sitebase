@@ -27,7 +27,7 @@ class CreateWebsiteTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'website';
+    protected string $tableName = 'website';
 
     /**
      * {@inheritdocs}

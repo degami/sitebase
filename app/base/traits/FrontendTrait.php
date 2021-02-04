@@ -26,22 +26,12 @@ use Exception;
 trait FrontendTrait
 {
     use PageTrait;
-
-    /**
-     * @var array template data
-     */
-    protected $template_data = [];
-
-
-    /**
-     * @var User current user model
-     */
-    protected $current_user_model;
+    use TemplatePageTrait;
 
     /**
      * gets route group
      *
-     * @return string
+     * @return string|null
      */
     public static function getRouteGroup(): ?string
     {
@@ -64,7 +54,7 @@ trait FrontendTrait
      * @param BaseModel $object
      * @return self
      */
-    protected function setObject(BaseModel $object)
+    protected function setObject(BaseModel $object) : static
     {
         $this->template_data['object'] = $object;
         return $this;

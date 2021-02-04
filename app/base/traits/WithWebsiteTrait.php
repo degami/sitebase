@@ -22,8 +22,8 @@ use DI\NotFoundException;
  */
 trait WithWebsiteTrait
 {
-    /** @var Website  */
-    protected $websiteModel = null;
+    /** @var Website|null  */
+    protected ?Website $websiteModel = null;
 
     /**
      * gets website

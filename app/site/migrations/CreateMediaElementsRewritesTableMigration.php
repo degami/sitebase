@@ -27,7 +27,7 @@ class CreateMediaElementsRewritesTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'media_element_rewrite';
+    protected string $tableName = 'media_element_rewrite';
 
     /**
      * {@inheritdocs}

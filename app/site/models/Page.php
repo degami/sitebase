@@ -53,12 +53,12 @@ class Page extends FrontendModel
     /**
      * @var array page gallery
      */
-    protected $gallery = [];
+    protected array $gallery = [];
 
     /**
      * @var array page terms
      */
-    protected $terms = [];
+    protected array $terms = [];
 
     /**
      * gets page gallery

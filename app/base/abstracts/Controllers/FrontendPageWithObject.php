@@ -38,7 +38,7 @@ abstract class FrontendPageWithObject extends FrontendPage
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         $route_data = $this->getRouteData();
 

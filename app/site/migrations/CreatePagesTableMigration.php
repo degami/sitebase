@@ -27,7 +27,7 @@ class CreatePagesTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'page';
+    protected string $tableName = 'page';
 
     /**
      * {@inheritdocs}

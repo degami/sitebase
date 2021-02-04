@@ -35,14 +35,14 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
+     * @throws DependencyException
      * @throws FAPI\Exceptions\FormException
+     * @throws NotFoundException
      * @throws PermissionDeniedException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -63,7 +63,7 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    protected function processFormSubmit()
+    protected function processFormSubmit() : void
     {
         if (!$this->checkCredentials()) {
             throw new PermissionDeniedException();

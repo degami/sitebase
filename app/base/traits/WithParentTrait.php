@@ -25,7 +25,7 @@ trait WithParentTrait
      *
      * @return self|null
      */
-    public function getParentObj()
+    public function getParentObj(): ?static
     {
         if ($this->parent_id == null) {
             return null;

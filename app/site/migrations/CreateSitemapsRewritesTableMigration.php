@@ -27,7 +27,7 @@ class CreateSitemapsRewritesTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'sitemap_rewrite';
+    protected string $tableName = 'sitemap_rewrite';
 
     /**
      * {@inheritdocs}

@@ -129,7 +129,7 @@ class Contact extends FrontendModel
      * @throws Exception
      * @throws BasicException
      */
-    public function getFormDefinition($container, &$form_state)
+    public function getFormDefinition(FAPI\Abstracts\Base\Element $container, &$form_state): FAPI\Abstracts\Base\Element
     {
         foreach ($this->getContactDefinition() as $field) {
             $field_data = (array)json_decode($field['field_data']);

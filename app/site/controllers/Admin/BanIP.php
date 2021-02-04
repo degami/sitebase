@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
@@ -36,19 +37,19 @@ class BanIP extends AdminFormPage
     /**
      * @var array blocked ips list
      */
-    protected $blocked_ips = [];
+    protected array $blocked_ips = [];
 
     /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws FormException
-     * @throws PermissionDeniedException
      * @throws DependencyException
+     * @throws FormException
      * @throws NotFoundException
+     * @throws PermissionDeniedException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -61,8 +62,11 @@ class BanIP extends AdminFormPage
      *
      * @return Response|self
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if ($this->getRequest()->get('ip') == null) {
             $this->addFlashMessage('warning', 'Missing IP address');
@@ -100,8 +104,11 @@ class BanIP extends AdminFormPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws FormException
+     * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state) : FAPI\Form
     {
         $form->addField('ip', [
             'type' => 'hidden',
@@ -127,7 +134,7 @@ class BanIP extends AdminFormPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state) : bool|string
     {
         return true;
     }
@@ -137,10 +144,12 @@ class BanIP extends AdminFormPage
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return mixed|Response
+     * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         $values = $form->getValues();
 

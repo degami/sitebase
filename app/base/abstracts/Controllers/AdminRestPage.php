@@ -32,7 +32,7 @@ abstract class AdminRestPage extends BaseRestPage
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    protected function beforeRender()
+    protected function beforeRender(): BasePage|Response
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             throw new PermissionDeniedException();

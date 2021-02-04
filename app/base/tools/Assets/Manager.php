@@ -33,27 +33,27 @@ class Manager extends ContainerAwareObject
     /**
      * @var bool js already generated flag
      */
-    protected $js_generated = false;
+    protected bool $js_generated = false;
 
     /**
      * @var bool head js already generated flag
      */
-    protected $head_js_generated = false;
+    protected bool $head_js_generated = false;
 
     /**
      * @var array head js
      */
-    protected $head_js = ['encapsulated' => [], 'direct' => []];
+    protected array $head_js = ['encapsulated' => [], 'direct' => []];
 
     /**
      * @var array js
      */
-    protected $js = ['encapsulated' => [], 'direct' => []];
+    protected array $js = ['encapsulated' => [], 'direct' => []];
 
     /**
      * @var array css
      */
-    protected $css = [];
+    protected array $css = [];
 
     /**
      * gets js elements
@@ -84,7 +84,7 @@ class Manager extends ContainerAwareObject
      * @param bool $on_ready
      * @return self
      */
-    public function addJs($js, bool $as_is = false, ?string $position = null, bool $on_ready = true): Manager
+    public function addJs(array|string $js, bool $as_is = false, ?string $position = null, bool $on_ready = true): Manager
     {
         if (!$as_is) {
             if (is_array($js)) {
@@ -262,7 +262,7 @@ class Manager extends ContainerAwareObject
      * @param string|array $css css to add
      * @return self
      */
-    public function addCss($css): Manager
+    public function addCss(array|string $css): Manager
     {
         if (is_array($css)) {
             $css = array_filter(array_map('trim', $css));

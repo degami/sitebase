@@ -29,11 +29,6 @@ use DI\NotFoundException;
 class Logs extends AdminPage
 {
     /**
-     * @var array template data
-     */
-    protected $template_data = [];
-
-    /**
      * {@inheritdocs}
      *
      * @return string

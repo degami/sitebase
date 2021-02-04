@@ -24,8 +24,9 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Token;
-use Lcobucci\JWT\ValidationData;
+use Lcobucci\JWT\Validator;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -34,19 +35,19 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 trait PageTrait
 {
     /**
-     * @var array current user data
+     * @var array|object|null current user data
      */
-    protected $current_user = null;
+    protected array|object|null $current_user = null;
 
     /**
-     * @var User current user model
+     * @var AccountModel|null current user model
      */
-    protected $current_user_model = null;
+    protected ?AccountModel $current_user_model = null;
 
     /**
-     * @var RouteInfo route info object
+     * @var RouteInfo|null route info object
      */
-    protected $route_info = null;
+    protected ?RouteInfo $route_info = null;
 
     /**
      * calculates JWT token id
@@ -68,7 +69,7 @@ trait PageTrait
     /**
      * gets Authorization token header
      *
-     * @return string
+     * @return string|null
      */
     protected function getTokenHeader(): ?string
     {
@@ -79,34 +80,19 @@ trait PageTrait
     /**
      * gets Authorization token Object
      *
-     * @return Token
+     * @return ?Token
      */
-    protected function getToken(): Token
+    protected function getToken(): ?Token
     {
         $auth_token = $this->getTokenHeader();
-        return $this->getContainer()->get('jwt:parser')->parse((string)$auth_token);
-    }
 
-    /**
-     * gets token validation data
-     *
-     * @param $token
-     * @return ValidationData
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    protected function getTokenValidationData($token): ValidationData
-    {
-        $data = $this->getContainer()->make(ValidationData::class);
-        $data->setIssuer($this->getContainer()->get('jwt_issuer'));
-        $data->setAudience($this->getContainer()->get('jwt_audience'));
+        if (!$auth_token) {
+            return null;
+        }
 
-        $claimUID = (string)$token->getClaim('uid');
-        $claimUserName = (string)$token->getClaim('username');
-
-        $data->setId($this->calcTokenId($claimUID, $claimUserName));
-
-        return $data;
+        /** @var Parser $parser */
+        $parser = $this->getContainer()->get('jwt:configuration')->parser();
+        return $parser->parse($auth_token);
     }
 
     /**
@@ -114,13 +100,13 @@ trait PageTrait
      *
      * @param Token $token
      * @return bool
-     * @throws DependencyException
-     * @throws NotFoundException
      */
     public function tokenIsActive(Token $token): bool
     {
-        $data = $this->getTokenValidationData($token);
-        if ($token->validate($data) && !$token->isExpired()) {
+        /** @var Validator $validator */
+        $validator = $this->getContainer()->get('jwt:configuration')->validator();
+        $constraints = $this->getContainer()->get('jwt:configuration')->validationConstraints();
+        if ($validator->validate($token, ...$constraints) && !$token->isExpired(new \DateTime())) {
             return true;
         }
 
@@ -130,16 +116,23 @@ trait PageTrait
     /**
      * gets token data
      *
-     * @return array|bool
+     * @return mixed
      */
-    protected function getTokenData()
+    protected function getTokenData(): mixed
     {
         try {
             $token = $this->getToken();
-            $data = $this->getTokenValidationData($token);
-            if ($token->validate($data)) {
-                $this->current_user = $token->getClaim('userdata');
-                return $this->current_user;
+            if (is_null($token)) {
+                return null;
+            }
+            /** @var Validator $validator */
+            $validator = $this->getContainer()->get('jwt:configuration')->validator();
+            $constraints = $this->getContainer()->get('jwt:configuration')->validationConstraints();
+            if ($validator->validate($token, ...$constraints)) {
+                $claims = $token->claims();
+                $this->current_user = $claims->get('userdata');
+
+                return (object)$this->current_user;
             }
         } catch (Exception $e) {
             //$this->getUtils()->logException($e);
@@ -152,11 +145,11 @@ trait PageTrait
      * gets current user
      *
      * @param bool $reset
-     * @return User|GuestUser|null
+     * @return AccountModel|null
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentUser(bool $reset = false)
+    public function getCurrentUser(bool $reset = false): ?AccountModel
     {
         if (($this->current_user_model instanceof AccountModel) && $reset != true) {
             return $this->current_user_model;
@@ -171,6 +164,10 @@ trait PageTrait
 
         if (!$this->current_user) {
             $this->getTokenData();
+        }
+
+        if (is_array($this->current_user)) {
+            $this->current_user = (object)$this->current_user;
         }
 
         if (is_object($this->current_user) && property_exists($this->current_user, 'id')) {

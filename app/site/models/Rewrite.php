@@ -22,6 +22,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
  * Rewrite Model
@@ -51,7 +52,7 @@ class Rewrite extends BaseModel
     /**
      * @var array rewrite translations
      */
-    protected $translations = [];
+    protected array $translations = [];
 
     /**
      * gets object translations
@@ -95,6 +96,7 @@ class Rewrite extends BaseModel
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getRouteInfo(): RouteInfo
     {

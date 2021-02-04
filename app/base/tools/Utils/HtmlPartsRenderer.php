@@ -13,8 +13,12 @@
 
 namespace App\Base\Tools\Utils;
 
+use App\Site\Models\AdminActionLog;
+use App\Site\Models\CronLog;
+use App\Site\Models\MailLog;
 use App\Site\Models\Menu;
 use App\Site\Models\QueueMessage;
+use App\Site\Models\RequestLog;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
@@ -170,13 +174,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * render site menu
      *
      * @param string $locale
-     * @return string
+     * @return string|null
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function renderSiteMenu($locale): ?string
+    public function renderSiteMenu(string $locale): ?string
     {
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
@@ -296,15 +300,15 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * render region blocks
      *
      * @param string $region
-     * @param string|null $locale
+     * @param null $locale
      * @param BasePage|null $current_page
-     * @return mixed|string|null
+     * @return string|null
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function renderBlocks($region, $locale = null, BasePage $current_page = null): ?string
+    public function renderBlocks(string $region, $locale = null, BasePage $current_page = null): ?string
     {
         static $pageBlocks = null;
         static $current_rewrite = null;
@@ -364,7 +368,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    private function getPaginatorLi($li_class, $href, $text): TagElement
+    private function getPaginatorLi(string $li_class, ?string $href, string $text): TagElement
     {
         $li_options = [
             'tag' => 'li',
@@ -407,7 +411,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderPaginator($current_page, $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2): string
+    public function renderPaginator(int $current_page, int $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2): string
     {
         $total_pages = ceil($total / $page_size) - 1;
         if ($total_pages < 1) {
@@ -581,7 +585,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * renders admin table
      *
      * @param array $elements
-     * @param array|null $header
+     * @param null $header
      * @param BasePage|null $current_page
      * @return string
      * @throws BasicException
@@ -589,7 +593,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderAdminTable($elements, $header = null, BasePage $current_page = null): string
+    public function renderAdminTable(array $elements, $header = null, BasePage $current_page = null): string
     {
         $table_id = 'listing-table';
 
@@ -866,7 +870,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderArrayOnTable(array $data, bool $nowrap = true)
+    public function renderArrayOnTable(array $data, bool $nowrap = true): mixed
     {
         $table = $this->getContainer()->make(
             TagElement::class,
@@ -986,13 +990,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * renders log
      *
-     * @param $log
+     * @param RequestLog|CronLog|MailLog|AdminActionLog $log
      * @return mixed
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderLog($log)
+    public function renderLog(RequestLog|CronLog|MailLog|AdminActionLog $log): mixed
     {
         $data = [];
         foreach (array_keys($log->getData()) as $property) {
@@ -1013,7 +1017,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderQueueMessage($message)
+    public function renderQueueMessage(QueueMessage $message): mixed
     {
         $data = $message->getMessageData();
         if (isset($data['body'])) {

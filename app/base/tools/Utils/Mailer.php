@@ -210,7 +210,7 @@ class Mailer extends ContainerAwareObject
      * @return MailLog|bool
      * @throws BasicException
      */
-    protected function logMail(string $from, string $to, string $subject, int $result, $mail_template = null)
+    protected function logMail(string $from, string $to, string $subject, int $result, $mail_template = null) : MailLog|bool
     {
         if (is_array($from)) {
             $from = implode(",", array_values($from));

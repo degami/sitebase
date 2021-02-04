@@ -13,11 +13,13 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Lcobucci\JWT\Parser;
 use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
@@ -56,11 +58,6 @@ class Login extends FormPage
             $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');
         }
     }
-
-    /**
-     * @var array template data
-     */
-    protected $template_data = [];
 
     /**
      * {@inheritdocs}
@@ -173,11 +170,13 @@ class Login extends FormPage
      * @throws BasicException
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if ($this->isSubmitted()) {
             $result = $this->template_data['form']->getSubmitResults(static::class . '::formSubmitted');
-            $token = $this->getContainer()->get('jwt:parser')->parse($result);
+            /** @var Parser $parser */
+            $parser = $this->getContainer()->get('jwt:configuration')->parser();
+            $token = $parser->parse($result)->toString();
 
             $goto_url = $this->getUrl("admin.dashboard");
 
@@ -207,7 +206,7 @@ class Login extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         return $form
             ->setFormId('login')
@@ -240,7 +239,7 @@ class Login extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         $values = $form->values();
 
@@ -277,7 +276,7 @@ class Login extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /** @var User $logged_user */
         $logged_user = $form_state['logged_user'];

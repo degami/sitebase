@@ -21,6 +21,7 @@ use App\Site\Models\Redirect;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Site\Models\Website;
 use LessQL\Row;
@@ -45,7 +46,7 @@ class SiteData extends ContainerAwareObject
     /**
      * gets current server name
      *
-     * @return string
+     * @return string|null
      */
     public function currentServerName(): ?string
     {
@@ -55,12 +56,12 @@ class SiteData extends ContainerAwareObject
     /**
      * gets current website id
      *
-     * @return Website|int|string|null
+     * @return Website|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentWebsite()
+    public function getCurrentWebsite(): ?Website
     {
         if ($this->getAppWebsite() instanceof Website && $this->getAppWebsite()->isLoaded()) {
             return $this->getAppWebsite();
@@ -89,12 +90,12 @@ class SiteData extends ContainerAwareObject
     /**
      * gets current website id
      *
-     * @return int|null
+     * @return int|string|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentWebsiteId()
+    public function getCurrentWebsiteId(): int|string|null
     {
         static $current_site_id = null;
 
@@ -139,11 +140,11 @@ class SiteData extends ContainerAwareObject
     /**
      * gets preferred language by browser configuration
      *
-     * @return string
+     * @return string|null
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function getBrowserPreferredLanguage(): ?string
     {
@@ -237,7 +238,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getConfigValue(string $config_path, $website_id = null, $locale = null)
+    public function getConfigValue(string $config_path, $website_id = null, $locale = null): mixed
     {
         if ($website_id == null) {
             $website_id = $this->getCurrentWebsiteId();
@@ -266,7 +267,7 @@ class SiteData extends ContainerAwareObject
                 $this->getCache()->set(self::CONFIGURATION_CACHE_KEY, $cached_configuration);
                 return $result->getValue();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
         }
 
         return null;
@@ -277,13 +278,13 @@ class SiteData extends ContainerAwareObject
      *
      * @param null $website_id
      * @param null $locale
-     * @return mixed|null
+     * @return mixed
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function getHomePageId($website_id = null, $locale = null)
+    public function getHomePageId($website_id = null, $locale = null): mixed
     {
         if ($locale == null) {
             $locale = static::DEFAULT_LOCALE;
@@ -326,13 +327,13 @@ class SiteData extends ContainerAwareObject
      * gets website email address
      *
      * @param null $website_id
-     * @return mixed|null
+     * @return mixed
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function getSiteEmail($website_id = null)
+    public function getSiteEmail($website_id = null): mixed
     {
         return $this->getConfigValue(self::SITE_EMAIL_PATH, $website_id, null);
     }
@@ -341,13 +342,13 @@ class SiteData extends ContainerAwareObject
      * gets site enabled locales
      *
      * @param null $website_id
-     * @return false|string[]
+     * @return bool|array
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getSiteLocales($website_id = null)
+    public function getSiteLocales($website_id = null): array|bool
     {
         return explode(",", $this->getConfigValue(self::LOCALES_PATH, $website_id, null));
     }
@@ -357,13 +358,13 @@ class SiteData extends ContainerAwareObject
      *
      * @param null $website_id
      * @param null $locale
-     * @return mixed|null
+     * @return mixed
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function getMainMenuName($website_id = null, $locale = null)
+    public function getMainMenuName($website_id = null, $locale = null): mixed
     {
         return $this->getConfigValue(self::MAINMENU_PATH, $website_id, $locale);
     }
@@ -373,13 +374,13 @@ class SiteData extends ContainerAwareObject
      *
      * @param null $website_id
      * @param null $locale
-     * @return mixed|null
+     * @return mixed
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function getThemeName($website_id = null, $locale = null)
+    public function getThemeName($website_id = null, $locale = null): mixed
     {
         return $this->getConfigValue(self::THEMENAME_PATH, $website_id, $locale);
     }
@@ -405,9 +406,9 @@ class SiteData extends ContainerAwareObject
     /**
      * gets defined redirects
      *
-     * @param int|null $current_website_id
+     * @param int $current_website_id
      * @param bool $reset
-     * @return array|mixed
+     * @return array
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
@@ -424,7 +425,7 @@ class SiteData extends ContainerAwareObject
                 ];
             }
             $this->getCache()->set($redirects_key, $redirects);
-        } else if ($current_website_id) {
+        } elseif ($current_website_id) {
             $redirects = $this->getCache()->get($redirects_key);
         }
 

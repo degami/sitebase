@@ -27,7 +27,7 @@ class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'link_exchange_taxonomy';
+    protected string $tableName = 'link_exchange_taxonomy';
 
     /**
      * {@inheritdocs}

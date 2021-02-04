@@ -72,7 +72,7 @@ class AdminActionLog extends RequestLog
      *
      * @return mixed
      */
-    public function getRouteInfo()
+    public function getRouteInfo(): mixed
     {
         return unserialize($this->getData('route_info'));
     }
@@ -82,7 +82,7 @@ class AdminActionLog extends RequestLog
      *
      * @return mixed
      */
-    public function getLogData()
+    public function getLogData(): mixed
     {
         return unserialize($this->getData('log_data'));
     }

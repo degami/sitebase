@@ -14,6 +14,8 @@
 namespace App\Site\Controllers\Admin\Json;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
@@ -31,12 +33,12 @@ class ContactCallback extends AdminJsonPage
     /**
      * @var FAPI\Form form object
      */
-    protected $form;
+    protected FAPI\Form $form;
 
     /**
-     * @var Contact contact object
+     * @var Contact|null contact object
      */
-    protected $contact = null;
+    protected ?Contact $contact = null;
 
     /**
      * {@inheritdocs}
@@ -68,6 +70,8 @@ class ContactCallback extends AdminJsonPage
      * @return Response
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     public function process(RouteInfo $route_info = null, $route_data = []): Response
     {

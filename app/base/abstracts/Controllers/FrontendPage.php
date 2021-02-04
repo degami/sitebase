@@ -13,9 +13,11 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Base\Traits\FrontendTrait;
 use App\Site\Models\Menu;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Website;
+use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -38,38 +40,39 @@ use Throwable;
  */
 abstract class FrontendPage extends BaseHtmlPage
 {
+    use FrontendTrait;
+
     /**
      * @var string locale
      */
-    protected $locale = null;
+    protected ?string $locale = null;
 
     /**
      * @var Rewrite|null rewrite
      */
-    protected $rewrite = null;
+    protected ?Rewrite $rewrite = null;
 
     /**
      * @var array page regions
      */
-    protected $regions = [];
+    protected array $regions = [];
 
     /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
         parent::__construct($container, $request, $route_info);
 
         $this->getTemplates()->setDirectory(App::getDir(App::TEMPLATES) . DS . 'frontend');
-
 
         if (!$this->getTemplates()->getFolders()->exists('frontend')) {
             $this->getTemplates()->addFolder('frontend', App::getDir(App::TEMPLATES) . DS . 'frontend');
@@ -95,7 +98,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getBaseTemplateData(): array
+    public function getBaseTemplateData(): array
     {
         $this->getSiteData()->getAllPageBlocks($this->getCurrentLocale());
 
@@ -109,9 +112,9 @@ abstract class FrontendPage extends BaseHtmlPage
      * get page region tags html
      *
      * @param string $region
-     * @return string
+     * @return bool|string
      */
-    protected function getRegionTags(string $region)
+    protected function getRegionTags(string $region): bool|string
     {
         if (!isset($this->regions[$region])) {
             return false;
@@ -131,9 +134,9 @@ abstract class FrontendPage extends BaseHtmlPage
      * @param string $region
      * @param TagElement|array $tag
      *
-     * @return self|false
+     * @return self|bool
      */
-    public function addTag(string $region, $tag)
+    public function addTag(string $region, TagElement|array $tag): bool|self
     {
         if (!isset($this->regions[$region])) {
             return false;
@@ -202,7 +205,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @throws BasicException
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if (!$this->getRouteInfo()->isAdminRoute() && !$this->checkPermission('view_site')) {
             throw new PermissionDeniedException();
@@ -216,13 +219,16 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return BaseHtmlPage|BasePage|mixed|Response
+     * @return BasePage|Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PermissionDeniedException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
+     * @throws DebugBarException
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = [])
+    public function renderPage(RouteInfo $route_info = null, $route_data = []) : BasePage|Response
     {
         $return = parent::renderPage($route_info, $route_data);
 
@@ -235,7 +241,7 @@ abstract class FrontendPage extends BaseHtmlPage
             } catch (Exception $e) {
                 $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
                 if ($this->getEnv('DEBUG')) {
-                    return $this->getUtils()->exceptionPage($e);
+                    return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
                 }
             }
         }
@@ -273,7 +279,7 @@ abstract class FrontendPage extends BaseHtmlPage
     /**
      * gets current page's locale
      *
-     * @return string
+     * @return string|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
@@ -310,12 +316,12 @@ abstract class FrontendPage extends BaseHtmlPage
     /**
      * gets current website id
      *
-     * @return int|string|null
+     * @return int|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentWebsiteId()
+    public function getCurrentWebsiteId(): int|null
     {
         return $this->getSiteData()->getCurrentWebsiteId();
     }
@@ -323,12 +329,12 @@ abstract class FrontendPage extends BaseHtmlPage
     /**
      * gets current website model
      *
-     * @return Website|int|string|null
+     * @return Website|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentWebsite()
+    public function getCurrentWebsite(): ?Website
     {
         return $this->getSiteData()->getCurrentWebsite();
     }

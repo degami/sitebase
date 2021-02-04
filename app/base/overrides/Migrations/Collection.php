@@ -56,7 +56,7 @@ class Collection extends GenkgoMigrationCollection
      *
      * @param MigrationInterface $migration
      */
-    public function attach(MigrationInterface $migration)
+    public function attach(MigrationInterface $migration) : void
     {
         $this->list[] = $migration;
     }
@@ -66,7 +66,7 @@ class Collection extends GenkgoMigrationCollection
      *
      * @param MigrationInterface $migration
      */
-    public function detach(MigrationInterface $migration)
+    public function detach(MigrationInterface $migration) : void
     {
         if (($key = array_search($migration, $this->list)) !== false) {
             unset($this->list[$key]);
@@ -144,7 +144,7 @@ class Collection extends GenkgoMigrationCollection
      * @param MigrationInterface $migration
      * @param $direction
      */
-    private function execute(MigrationInterface $migration, $direction)
+    private function execute(MigrationInterface $migration, $direction) : void
     {
         if ($direction == MigrationInterface::DIRECTION_UP) {
             $this->adapter->upgrade(

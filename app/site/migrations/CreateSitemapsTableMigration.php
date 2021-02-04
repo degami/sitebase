@@ -27,7 +27,7 @@ class CreateSitemapsTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'sitemap';
+    protected string $tableName = 'sitemap';
 
     /**
      * {@inheritdocs}

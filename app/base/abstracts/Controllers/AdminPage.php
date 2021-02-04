@@ -39,23 +39,18 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * @var string page title
      */
-    protected $page_title;
+    protected string $page_title;
 
     /**
-     * @var string locale
+     * @var string|null locale
      */
-    protected $locale = null;
-
-    /**
-     * @var array template data
-     */
-    protected $template_data = [];
+    protected ?string $locale = null;
 
     /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws DependencyException
@@ -88,7 +83,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws BasicException
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender(): BasePage|Response
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             throw new PermissionDeniedException();
@@ -102,13 +97,16 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return Response
-     * @throws PermissionDeniedException
+     * @return BasePage|Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PermissionDeniedException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
+     * @throws \DebugBar\DebugBarException
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = []): Response
+    public function renderPage(RouteInfo $route_info = null, $route_data = []): BasePage|Response
     {
         $return = parent::renderPage($route_info, $route_data);
 
@@ -168,7 +166,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getBaseTemplateData(): array
+    public function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out['current_user'] = $this->getCurrentUser();
@@ -189,7 +187,7 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * {@inheritdocs}
      *
-     * @return string
+     * @return string|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
@@ -212,7 +210,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addBackButton($query_params = null)
+    public function addBackButton($query_params = null) : void
     {
         if (is_array($query_params)) {
             $query_params = http_build_query($query_params);

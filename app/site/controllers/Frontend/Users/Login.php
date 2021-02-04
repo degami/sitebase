@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Frontend\Users;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FormPage;
@@ -21,6 +22,7 @@ use App\Site\Models\User;
 use App\Base\Exceptions\PermissionDeniedException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Lcobucci\JWT\Parser;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -32,14 +34,9 @@ class Login extends FormPage
     use FrontendTrait;
 
     /**
-     * @var array template data
+     * @var string|null locale
      */
-    protected $template_data = [];
-
-    /**
-     * @var string locale
-     */
-    protected $locale = null;
+    protected ?string $locale = null;
 
     /**
      * {@inheritdocs}
@@ -54,7 +51,7 @@ class Login extends FormPage
     /**
      * gets route group
      *
-     * @return string
+     * @return string|null
      */
     public static function getRouteGroup(): ?string
     {
@@ -114,11 +111,11 @@ class Login extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return Login|RedirectResponse|Response
+     * @return BasePage|Response
      * @throws BasicException
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
             throw new PermissionDeniedException();
@@ -126,7 +123,9 @@ class Login extends FormPage
 
         if ($this->isSubmitted()) {
             $result = $this->template_data['form']->getSubmitResults(static::class . '::formSubmitted');
-            $token = $this->getContainer()->get('jwt:parser')->parse($result);
+            /** @var Parser $parser */
+            $parser = $this->getContainer()->get('jwt:configuration')->parser();
+            $token = $parser->parse($result);
 
             $goto_url = $this->getUrl("frontend.users.profile");
 
@@ -156,7 +155,7 @@ class Login extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         return $form
             ->setFormId('login')
@@ -187,7 +186,7 @@ class Login extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         $values = $form->values();
 
@@ -221,7 +220,7 @@ class Login extends FormPage
      * @throws NotFoundException
      * @throws \Exception
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /** @var User $logged_user */
         $logged_user = $form_state['logged_user'];

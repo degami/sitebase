@@ -27,7 +27,7 @@ class CreatePermissionsTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'permission';
+    protected string $tableName = 'permission';
 
     /**
      * {@inheritdocs}

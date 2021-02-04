@@ -26,12 +26,12 @@ class Factory extends GenkgoMigrationFactory
     /**
      * @var AdapterInterface adapter
      */
-    private $adapter;
+    private AdapterInterface $adapter;
 
     /**
      * @var Closure class loader
      */
-    private $classLoader;
+    private Closure $classLoader;
 
     /**
      * Factory constructor.

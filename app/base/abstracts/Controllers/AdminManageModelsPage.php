@@ -35,25 +35,25 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * @var BaseModel|null object instance
      */
-    protected $objectInstance = null;
+    protected ?BaseModel $objectInstance = null;
 
     /**
      * @var array|null admin_log data
      */
-    protected $admin_action_log_data = null;
+    protected ?array $admin_action_log_data = null;
 
     /**
      * {@inheriydocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws FormException
-     * @throws PermissionDeniedException
      * @throws DependencyException
+     * @throws FormException
      * @throws NotFoundException
      * @throws OutOfRangeException
+     * @throws PermissionDeniedException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -116,7 +116,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets model object (loaded or new)
      *
-     * @return mixed
+     * @return BaseModel|null
      * @throws DependencyException
      * @throws NotFoundException
      */
@@ -138,7 +138,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets model table html
      *
-     * @return string
+     * @return string|null
      */
     public function getTable(): ?string
     {
@@ -152,7 +152,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets paginator html
      *
-     * @return string
+     * @return string|null
      */
     public function getPaginator(): ?string
     {
@@ -185,9 +185,9 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * loads object by id
      *
      * @param int $id
-     * @return BaseModel
+     * @return BaseModel|null
      */
-    protected function loadObject($id): ?BaseModel
+    protected function loadObject(int $id): ?BaseModel
     {
         if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
             return null;
@@ -199,7 +199,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     /**
      * gets new empty model
      *
-     * @return BaseModel
+     * @return BaseModel|null
      * @throws DependencyException
      * @throws NotFoundException
      */
@@ -344,7 +344,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      *
      * @return mixed
      */
-    public function getModelTableName()
+    public function getModelTableName(): mixed
     {
         return $this->getContainer()->call([$this->getObjectClass(), 'defaultTableName']);
     }

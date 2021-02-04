@@ -29,7 +29,7 @@ class Restart extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Restart queue');
     }
@@ -41,7 +41,7 @@ class Restart extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $kill_flag = App::getDir(App::TMP) . DS . self::KILLFILE_NAME;
         if (!file_exists($kill_flag)) {

@@ -70,7 +70,7 @@ class Permissions extends AdminFormPage
      * @return FAPI\Form
      * @throws \Exception
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $table = $form->addField('table', [
             'type' => 'table_container',
@@ -140,7 +140,7 @@ class Permissions extends AdminFormPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         //$values = $form->values();
         return true;
@@ -155,7 +155,7 @@ class Permissions extends AdminFormPage
      * @throws BasicException
      * @throws InvalidValueException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         $values = $form->values();
 
@@ -205,7 +205,7 @@ class Permissions extends AdminFormPage
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addPermission(Role $role_model, Permission $permission_model)
+    private function addPermission(Role $role_model, Permission $permission_model) : void
     {
         $pivot_model = RolePermission::new($this->getContainer());
         $pivot_model->setPermissionId($permission_model->getId());

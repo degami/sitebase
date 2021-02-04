@@ -25,7 +25,7 @@ class AddNavigatorToRequestLogTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'request_log';
+    protected string $tableName = 'request_log';
 
     /**
      * {@inheritdocs}

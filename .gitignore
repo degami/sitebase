@@ -41,4 +41,7 @@ pub/sitebase_logo.png
 pub/favicon.ico
 js/dest/*
 assets/rsa_private.key
+assets/rsa_private.csr
+assets/rsa_private.pem
 docker/database/data
+docker/elasticsearch/data

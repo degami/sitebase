@@ -34,13 +34,13 @@ abstract class AdminFormPage extends AdminPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
      * @throws DependencyException
+     * @throws FAPI\Exceptions\FormException
      * @throws NotFoundException
+     * @throws PermissionDeniedException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -62,7 +62,7 @@ abstract class AdminFormPage extends AdminPage
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    private function processFormSubmit()
+    private function processFormSubmit() : void
     {
         if (!$this->checkCredentials()) {
             throw new PermissionDeniedException();

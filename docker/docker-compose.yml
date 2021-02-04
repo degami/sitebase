@@ -7,6 +7,9 @@ services:
     build:
       context: ./php-fpm
     volumes:
+      - ./php-fpm/passwd:/etc/passwd
+      - ./php-fpm/group:/etc/group
+      - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ..:/var/www/html
     networks:
       - sitebasenet
@@ -31,6 +34,8 @@ services:
       - "3306:3306"
   elasticsearch:
     image: blacktop/elasticsearch
+    volumes:
+      - ./elasticsearch/data:/usr/share/elasticsearch/data
     networks:
       - sitebasenet
   web:

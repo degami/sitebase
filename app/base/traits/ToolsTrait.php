@@ -37,12 +37,12 @@ trait ToolsTrait
      * @throws Exception
      * @throws GuzzleException
      */
-    public function requestUrl(string $url, $method = 'GET', $options = [])
+    public function requestUrl(string $url, $method = 'GET', $options = []): bool|string
     {
         if ($this instanceof ContainerAwareObject) {
             $parsed = parse_url($url);
             if ($parsed) {
-                $base_uri = $parsed['schema'] . '://' . $parsed['host'];
+                $base_uri = $parsed['scheme'] . '://' . $parsed['host'];
 
                 $request_uri = $parsed['path'];
                 if (isset($parsed['query'])) {

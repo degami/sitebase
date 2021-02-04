@@ -136,7 +136,7 @@ class BaseCommand extends SymfonyCommand
     }
 
     /**
-     * @return SymfonyStyle
+     * @return SymfonyStyle|null
      */
     protected function getIo(): ?SymfonyStyle
     {
@@ -163,9 +163,9 @@ class BaseCommand extends SymfonyCommand
      * @param string $option_name
      * @param string $question_message
      * @param array|null $choices
-     * @return bool|mixed|string|string[]|null
+     * @return mixed
      */
-    protected function keepAskingForOption(string $option_name, string $question_message, array $choices = null)
+    protected function keepAskingForOption(string $option_name, string $question_message, array $choices = null): mixed
     {
         if ($this->input == null || $this->output == null) {
             return null;

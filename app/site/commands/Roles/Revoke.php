@@ -31,7 +31,7 @@ class Revoke extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Revoke permission to role')
             ->setDefinition(
@@ -52,7 +52,7 @@ class Revoke extends BaseCommand
      * @return void
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {

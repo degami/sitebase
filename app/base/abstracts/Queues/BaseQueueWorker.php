@@ -15,6 +15,7 @@ namespace App\Base\Abstracts\Queues;
 
 use App\Site\Models\QueueMessage;
 use App\Base\Abstracts\ContainerAwareObject;
+use Degami\Basics\Exceptions\BasicException;
 
 /**
  * Base for queue workers
@@ -24,15 +25,16 @@ abstract class BaseQueueWorker extends ContainerAwareObject
     /**
      * @var QueueMessage message to work
      */
-    private $message;
+    private QueueMessage $message;
 
     /**
      * process message
      *
      * @param QueueMessage $message
      * @return mixed
+     * @throws BasicException
      */
-    public function process(QueueMessage $message)
+    public function process(QueueMessage $message): mixed
     {
         $this->setMessage($message);
         $result = $this->processMessage($this->getMessage()->getMessageData());
@@ -69,5 +71,5 @@ abstract class BaseQueueWorker extends ContainerAwareObject
      * @param array $message_data
      * @return mixed
      */
-    abstract protected function processMessage(array $message_data);
+    abstract protected function processMessage(array $message_data): mixed;
 }

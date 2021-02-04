@@ -36,7 +36,7 @@ class Role extends BaseModel
     /**
      * @var array permissions
      */
-    protected $permissionsArray = [];
+    protected array $permissionsArray = [];
 
     /**
      * returns permissions array

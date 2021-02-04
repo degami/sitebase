@@ -39,17 +39,17 @@ abstract class BaseRouter extends ContainerAwareObject
     /**
      * @var Dispatcher dispatcher
      */
-    protected $dispatcher;
+    protected Dispatcher $dispatcher;
 
     /**
      * @var array routes
      */
-    protected $routes;
+    protected array $routes;
 
     /**
      * @var array reserved parameter names
      */
-    protected $avoid_parameter_names = ['container', 'route_info', 'route_data'];
+    protected array $avoid_parameter_names = ['container', 'route_info', 'route_data'];
 
     /**
      * class constructor
@@ -278,7 +278,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * gets a single route
      *
      * @param string $name
-     * @return array
+     * @return array|null
      */
     public function getRoute(string $name): ?array
     {
@@ -296,7 +296,7 @@ abstract class BaseRouter extends ContainerAwareObject
     /**
      * return base site url
      *
-     * @return string
+     * @return string|null
      * @throws BasicException
      */
     public function getBaseUrl(): ?string

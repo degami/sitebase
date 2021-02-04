@@ -17,6 +17,8 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 /**
@@ -32,7 +34,10 @@ trait AdminFormTrait
      * @param string[] $form_elements
      * @return FAPI\Form
      * @throws BasicException
+     * @throws FAPI\Exceptions\FormException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function addFrontendFormElements(FAPI\Form $form, &$form_state, $form_elements = ['url', 'website_id', 'locale']): FAPI\Form
     {
@@ -130,7 +135,7 @@ trait AdminFormTrait
      * @param FAPI\Form $form
      * @return mixed
      */
-    public function changedWebsiteCallback(FAPI\Form $form)
+    public function changedWebsiteCallback(FAPI\Form $form): mixed
     {
         return $form->getField('frontend')->getField('locale');
     }
@@ -141,6 +146,7 @@ trait AdminFormTrait
      * @param FAPI\Form $form
      * @param $form_state
      * @return FAPI\Form
+     * @throws FAPI\Exceptions\FormException
      */
     protected function addSeoFormElements(FAPI\Form $form, &$form_state): FAPI\Form
     {

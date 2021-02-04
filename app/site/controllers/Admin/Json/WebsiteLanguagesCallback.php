@@ -14,6 +14,8 @@
 namespace App\Site\Controllers\Admin\Json;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
@@ -32,15 +34,15 @@ class WebsiteLanguagesCallback extends AdminJsonPage
     /**
      * @var FAPI\Form form object
      */
-    protected $form;
+    protected FAPI\Form $form;
 
 
     /**
      * gets object class
      *
-     * @return mixed|null
+     * @return mixed
      */
-    public function getObjectClass()
+    public function getObjectClass(): mixed
     {
         return $this->getRequest()->get('object_class');
     }
@@ -49,10 +51,10 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      * gets an object class instance
      *
      * @return mixed
-     * @throws \DI\DependencyException
-     * @throws \DI\NotFoundException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    public function getObject()
+    public function getObject() : mixed
     {
         return $this->getContainer()->make($this->getRequest()->get('object_class'));
     }
@@ -74,6 +76,9 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      * @param array     &$form_state
      * @return FAPI\Form
      * @throws BasicException
+     * @throws DependencyException
+     * @throws FAPI\Exceptions\FormException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function emptyForm(FAPI\Form $form, &$form_state): FAPI\Form
@@ -90,6 +95,8 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      * @param array $route_data
      * @return Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = []): Response

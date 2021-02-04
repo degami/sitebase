@@ -49,7 +49,7 @@ trait ContainerAwareTrait
     /**
      * @var ContainerInterface container
      */
-    protected $container;
+    protected ContainerInterface $container;
 
     /**
      * gets container object
@@ -68,7 +68,7 @@ trait ContainerAwareTrait
      * @return mixed
      * @throws BasicException
      */
-    protected function getService(string $service_key)
+    protected function getService(string $service_key): mixed
     {
         if ($this->getContainer() instanceof ContainerInterface) {
             if ($this->getContainer()->has($service_key)) {

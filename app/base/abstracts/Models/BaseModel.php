@@ -40,27 +40,27 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * @var Row database row
      */
-    protected $db_row;
+    protected Row $db_row;
 
     /**
-     * @var string table name
+     * @var string|null table name
      */
-    public $table_name;
+    public ?string $table_name = null;
 
     /**
      * @var bool first save flag
      */
-    protected $is_first_save;
+    protected bool $is_first_save;
 
     /**
      * @var array|null original model data
      */
-    private $original_data = null;
+    private ?array $original_data = null;
 
     /**
      * @var array objects cache
      */
-    protected static $loadedObjects = [];
+    protected static array $loadedObjects = [];
 
     /**
      * {@inheritdocs}
@@ -388,7 +388,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public function fill($id): BaseModel
+    public function fill(Row|int $id): BaseModel
     {
         if ($id instanceof Row) {
             $this->checkDbName($id);
@@ -662,7 +662,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param $key
      * @return mixed
      */
-    public function __get($key)
+    public function __get($key): mixed
     {
         return $this->db_row[$key];
     }
@@ -671,12 +671,11 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * {@inheritdocs}
      * @param $key
      * @param $value
-     * @return BaseModel
+     * @return void
      */
-    public function __set($key, $value): BaseModel
+    public function __set($key, $value): void
     {
         $this->db_row[$key] = $value;
-        return $this;
     }
 
     /**
@@ -692,8 +691,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * {@inheritdocs}
      * @param $name
+     * @return void
      */
-    public function __unset($name)
+    public function __unset($name): void
     {
         unset($this->db_row[$name]);
     }
@@ -702,10 +702,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * {@inheritdocs}
      * @param string $name
      * @param $arguments
-     * @return BaseModel|bool|mixed
+     * @return mixed
      * @throws Exception
      */
-    public function __call(string $name, $arguments)
+    public function __call(string $name, mixed $arguments): mixed
     {
         if (!($this->getDbRow() instanceof Row)) {
             throw new Exception("No row loaded", 1);
@@ -736,7 +736,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param null $column
      * @return mixed
      */
-    public function getData($column = null)
+    public function getData($column = null): mixed
     {
         $data = $this->getDbRow()->getData();
 
@@ -750,7 +750,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * {@inheritdocs}
      */
-    public function getIterator()
+    public function getIterator(): \Traversable|\ArrayIterator
     {
         return $this->getDbRow()->getIterator();
     }
@@ -759,11 +759,11 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * {@inheritdocs}
      * @param $offset
      * @param $value
-     * @return BaseModel
+     * @return void
      */
-    public function offsetSet($offset, $value): BaseModel
+    public function offsetSet($offset, $value): void
     {
-        return $this->__set($offset, $value);
+        $this->__set($offset, $value);
     }
 
     /**
@@ -779,8 +779,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * {@inheritdocs}
      * @param $offset
+     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         $this->__unset($offset);
     }
@@ -790,7 +791,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param $offset
      * @return mixed
      */
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->__get($offset);
     }
@@ -837,10 +838,13 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
     /**
      * saves model on db
+     *
+     * @return self
+     * @throws BasicException
      */
-    public function save()
+    public function save(): BaseModel
     {
-        $this->persist();
+        return $this->persist();
     }
 
     /**
@@ -904,10 +908,12 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
     /**
      * removes model from db
+     * @return self
+     * @throws BasicException
      */
-    public function delete()
+    public function delete(): BaseModel
     {
-        $this->remove();
+        return $this->remove();
     }
 
     /**
@@ -999,7 +1005,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param null $key
      * @return mixed
      */
-    protected function getOriginalData($key = null)
+    protected function getOriginalData($key = null): mixed
     {
         if ($key != null && array_key_exists($key, $this->original_data)) {
             return $this->original_data[$key];

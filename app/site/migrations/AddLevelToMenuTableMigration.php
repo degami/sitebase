@@ -25,7 +25,7 @@ class AddLevelToMenuTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'menu';
+    protected string $tableName = 'menu';
 
     /**
      * {@inheritdocs}

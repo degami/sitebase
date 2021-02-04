@@ -24,7 +24,7 @@ trait WithChildrenTrait
     /**
      * @var array children
      */
-    protected $children = [];
+    protected array $children = [];
 
     /**
      * gets children
@@ -62,7 +62,7 @@ trait WithChildrenTrait
     /**
      * sort children by position
      */
-    protected function sortChildren()
+    protected function sortChildren() : void
     {
         usort($this->children, [$this, 'cmpPosition']);
     }
@@ -72,7 +72,7 @@ trait WithChildrenTrait
      * @param ModelWithChildren $b
      * @return int
      */
-    protected function cmpPosition($a, $b): int
+    protected function cmpPosition(ModelWithChildren $a, ModelWithChildren $b): int
     {
         if ($a->getPosition() == $b->getPosition()) {
             return 0;
@@ -83,7 +83,7 @@ trait WithChildrenTrait
     /**
      * pre remove hook
      *
-     * @return BaseModel|self
+     * @return BaseModel
      */
     public function preRemove(): BaseModel
     {

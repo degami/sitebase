@@ -27,7 +27,7 @@ class CreateTaxonomyTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'taxonomy';
+    protected string $tableName = 'taxonomy';
 
     /**
      * {@inheritdocs}

@@ -31,7 +31,7 @@ class Add extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Add a new role')
             ->setDefinition(
@@ -50,7 +50,7 @@ class Add extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $name = $this->keepAskingForOption('name', 'Name? ');
 

@@ -27,7 +27,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
     /**
      * @var array files to dump
      */
-    protected $filesToDump = [];
+    protected array $filesToDump = [];
 
     /**
      * @var ComposerReader composer reader

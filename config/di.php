@@ -48,13 +48,22 @@ return [
     }),
     'templates' => DI\get(\League\Plates\Engine::class),
 
-    // 'jwt:builder'
-    \Lcobucci\JWT\Builder::class => DI\create(\Lcobucci\JWT\Builder::class),
-    'jwt:builder' => DI\get(\Lcobucci\JWT\Builder::class),
+    \Lcobucci\JWT\Configuration::class => DI\factory(function(\Psr\Container\ContainerInterface $c){
+        $configuration = \Lcobucci\JWT\Configuration::forSymmetricSigner(
+        // You may use RSA or ECDSA and all their variations (256, 384, and 512) and EdDSA over Curve25519
+            new \Lcobucci\JWT\Signer\Hmac\Sha256(),
+            //\Lcobucci\JWT\Signer\Ecdsa\Sha256::create(),
+            \Lcobucci\JWT\Signer\Key\LocalFileReference::file(\App\App::getDir(\App\App::ASSETS) . '/rsa_private.pem')
+        );
 
-    // 'jwt:parser'
-    \Lcobucci\JWT\Parser::class => DI\create(\Lcobucci\JWT\Parser::class),
-    'jwt:parser' => DI\get(\Lcobucci\JWT\Parser::class),
+        $configuration->setValidationConstraints(
+            new \Lcobucci\JWT\Validation\Constraint\IssuedBy($c->get('jwt_issuer')),
+            new \Lcobucci\JWT\Validation\Constraint\PermittedFor($c->get('jwt_audience'))
+        );
+
+        return $configuration;
+    }),
+    'jwt:configuration' => DI\get(\Lcobucci\JWT\Configuration::class),
 
     // 'imagine'
     \Imagine\Gd\Imagine::class => DI\create(\Imagine\Gd\Imagine::class),

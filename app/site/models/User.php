@@ -52,14 +52,14 @@ use Lcobucci\JWT\Signer;
 class User extends AccountModel
 {
     /**
-     * @var Role role object
+     * @var Role|null role object
      */
-    protected $roleObj;
+    protected ?Role $roleObj = null;
 
     /**
-     * @var UserSession session object
+     * @var UserSession|null session object
      */
-    protected $sessionObj;
+    protected ?UserSession $sessionObj = null;
 
     /**
      * gets user role
@@ -83,7 +83,7 @@ class User extends AccountModel
      * @param Role|int|string $role
      * @return self
      */
-    public function setRole($role): User
+    public function setRole(Role|int|string $role): User
     {
         if ($role instanceof Role) {
             $this->setRoleId($role->getId());
@@ -159,7 +159,9 @@ class User extends AccountModel
         $this->checkLoaded();
 
         /** @var Builder $builder */
-        $builder = $this->getContainer()->get('jwt:builder');
+        //$builder = $this->getContainer()->get('jwt:builder');
+        $builder = $this->getContainer()->get('jwt:configuration')->builder();
+
 
         $builder
         ->issuedBy($this->getContainer()->get('jwt_issuer'))
@@ -188,21 +190,10 @@ class User extends AccountModel
             )
         ]);
 
-        $key_path = App::getDir(App::ASSETS) . DS . 'rsa_private.key';
-        if (file_exists($key_path)) {
-            /** @var Signer $signer */
-            $signer = $this->getContainer()->make(Signer\Rsa\Sha256::class);
+        /** @var \Lcobucci\JWT\Configuration $configuration */
+        $configuration = $this->getContainer()->get('jwt:configuration');
 
-            /** @var Signer\Key $key */
-            $key = $this->getContainer()->make(Signer\Key::class, [
-                'content' => file_get_contents($key_path)
-            ]);
-
-            // Retrieves the generated token
-            return $builder->getToken($signer, $key);
-        }
-
-        return $builder->getToken();
+        return $builder->getToken($configuration->signer(), $configuration->signingKey())->toString();
     }
 
     /**

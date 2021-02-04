@@ -35,7 +35,7 @@ abstract class ContainerAwareObject
     /**
      * @var array translators
      */
-    public static $translators = [];
+    public static array $translators = [];
 
     /**
      * constructor
@@ -100,7 +100,7 @@ abstract class ContainerAwareObject
      * @return mixed
      * @throws InvalidValueException
      */
-    public function __call(string $name, $arguments)
+    public function __call(string $name, mixed $arguments): mixed
     {
         $method = strtolower(substr(trim($name), 0, 3));
         $prop = self::pascalCaseToSnakeCase(substr(trim($name), 3));

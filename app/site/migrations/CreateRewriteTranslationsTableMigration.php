@@ -27,7 +27,7 @@ class CreateRewriteTranslationsTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'rewrite_translation';
+    protected string $tableName = 'rewrite_translation';
 
     /**
      * {@inheritdocs}

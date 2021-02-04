@@ -27,7 +27,7 @@ class CreateCronLogTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'cron_log';
+    protected string $tableName = 'cron_log';
 
     /**
      * {@inheritdocs}

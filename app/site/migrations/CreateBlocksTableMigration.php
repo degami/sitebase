@@ -27,7 +27,7 @@ class CreateBlocksTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'block';
+    protected string $tableName = 'block';
 
     /**
      * {@inheritdocs}

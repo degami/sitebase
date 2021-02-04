@@ -35,7 +35,7 @@ use DateTime;
 class UserSession extends BaseModel
 {
     /** @var array|null  */
-    protected $session_data_array = null;
+    protected ?array $session_data_array = null;
 
     /**
      * {@inheritdoc}

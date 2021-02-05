@@ -42,11 +42,6 @@ abstract class AdminPage extends BaseHtmlPage
     protected string $page_title;
 
     /**
-     * @var string|null locale
-     */
-    protected ?string $locale = null;
-
-    /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container

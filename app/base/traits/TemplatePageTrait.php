@@ -11,4 +11,8 @@ trait TemplatePageTrait
      */
     protected array $template_data = [];
 
+    /**
+     * @var string|null locale
+     */
+    protected ?string $locale = null;
 }

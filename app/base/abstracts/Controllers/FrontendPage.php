@@ -43,11 +43,6 @@ abstract class FrontendPage extends BaseHtmlPage
     use FrontendTrait;
 
     /**
-     * @var string locale
-     */
-    protected ?string $locale = null;
-
-    /**
      * @var Rewrite|null rewrite
      */
     protected ?Rewrite $rewrite = null;

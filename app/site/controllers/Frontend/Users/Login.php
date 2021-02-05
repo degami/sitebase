@@ -34,11 +34,6 @@ class Login extends FormPage
     use FrontendTrait;
 
     /**
-     * @var string|null locale
-     */
-    protected ?string $locale = null;
-
-    /**
      * {@inheritdocs}
      *
      * @return string

@@ -28,11 +28,6 @@ use Throwable;
 class Links extends FormPage
 {
     /**
-     * @var string|null locale
-     */
-    protected ?string $locale = null;
-
-    /**
      * gets route group
      *
      * @return string

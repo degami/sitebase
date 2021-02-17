@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Element;
@@ -72,7 +73,7 @@ class Sitemaps extends AdminManageModelsPage
         return 'sitemap_id';
     }
 
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if ($this->getRequest()->get('action') == 'generate') {
             $this->addFlashMessage('success', 'Sitemap Generated.');
@@ -97,7 +98,7 @@ class Sitemaps extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $sitemap = $this->getObject();
@@ -309,7 +310,7 @@ class Sitemaps extends AdminManageModelsPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         //$values = $form->values();
         return true;
@@ -325,7 +326,7 @@ class Sitemaps extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /**
          * @var Sitemap $sitemap

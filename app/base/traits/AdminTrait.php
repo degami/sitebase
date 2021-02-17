@@ -26,21 +26,17 @@ use Exception;
 trait AdminTrait
 {
     use PageTrait;
-
-    /**
-     * @var User current user model
-     */
-    protected $current_user_model;
+    use TemplatePageTrait;
 
     /**
      * @var array action_buttons
      */
-    protected $action_buttons = [];
+    protected array $action_buttons = [];
 
     /**
      * gets route group
      *
-     * @return string
+     * @return string|null
      */
     public static function getRouteGroup(): ?string
     {
@@ -134,7 +130,7 @@ trait AdminTrait
      * @param string $button_class
      * @return self
      */
-    protected function addActionButton($key, $button_id, $button_text, $button_class = 'btn btn-sm btn-light')
+    protected function addActionButton(string $key, string $button_id, string $button_text, $button_class = 'btn btn-sm btn-light') : static
     {
         $button = (string)(new TagElement(
             [
@@ -163,7 +159,7 @@ trait AdminTrait
      * @param array $attributes
      * @return self
      */
-    public function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light', $attributes = [])
+    public function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light', $attributes = []) : static
     {
         if (!is_array($attributes)) {
             $attributes = [];

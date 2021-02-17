@@ -29,7 +29,7 @@ abstract class FrontendModel extends BaseModel
     /**
      * @var Rewrite|null rewrite object
      */
-    protected $rewriteObj = null;
+    protected ?Rewrite $rewriteObj = null;
 
     /**
      * Field names to be exposed to indexer
@@ -44,7 +44,7 @@ abstract class FrontendModel extends BaseModel
     /**
      * gets object rewrite model
      *
-     * @return Rewrite
+     * @return Rewrite|null
      * @throws Exception
      */
     public function getRewrite(): ?Rewrite

@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminPage;
 use DI\DependencyException;
@@ -63,7 +64,7 @@ class Logout extends AdminPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function beforeRender()
+    public function beforeRender() : BasePage|Response
     {
         // dispatch "user_logged_out" event
         $this->getApp()->event('user_logged_out', [

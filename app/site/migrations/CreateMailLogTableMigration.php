@@ -27,7 +27,7 @@ class CreateMailLogTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'mail_log';
+    protected string $tableName = 'mail_log';
 
     /**
      * {@inheritdocs}

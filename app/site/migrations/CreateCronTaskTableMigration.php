@@ -27,7 +27,7 @@ class CreateCronTaskTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'cron_task';
+    protected string $tableName = 'cron_task';
 
     /**
      * {@inheritdocs}

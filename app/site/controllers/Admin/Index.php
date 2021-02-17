@@ -63,7 +63,7 @@ class Index extends AdminPage
      * @throws BasicException
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             return $this->doRedirect($this->getUrl('admin.login'));

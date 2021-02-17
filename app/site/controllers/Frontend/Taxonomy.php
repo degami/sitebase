@@ -17,6 +17,8 @@ use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Site\Models\Taxonomy as TaxonomyModel;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -65,8 +67,10 @@ class Taxonomy extends FrontendPageWithObject
      *
      * @return array
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
-    protected function getBaseTemplateData(): array
+    public function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' taxonomy-' . $this->getObject()->id;

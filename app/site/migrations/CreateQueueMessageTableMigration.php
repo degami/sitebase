@@ -27,7 +27,7 @@ class CreateQueueMessageTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'queue_message';
+    protected string $tableName = 'queue_message';
 
     /**
      * {@inheritdocs}

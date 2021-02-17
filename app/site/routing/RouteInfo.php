@@ -24,7 +24,7 @@ class RouteInfo
     /**
      * @var array dispatcher info
      */
-    protected $dispatcher_info;
+    protected array $dispatcher_info;
 
     /**
      * @var int dispatcher status
@@ -49,32 +49,32 @@ class RouteInfo
     /**
      * @var string uri
      */
-    protected $uri;
+    protected string $uri;
 
     /**
      * @var string http method
      */
-    protected $http_method;
+    protected string $http_method;
 
     /**
      * @var string route
      */
-    protected $route;
+    protected string $route;
 
     /**
-     * @var string route name
+     * @var string|null route name
      */
-    protected $route_name;
+    protected ?string $route_name;
 
     /**
      * @var int|null rewrite id
      */
-    protected $rewrite;
+    protected ?int $rewrite;
 
     /**
      * @var BasePage|null controller object instance
      */
-    protected $controller_object = null;
+    protected ?BasePage $controller_object = null;
 
     /**
      * class constructor
@@ -143,7 +143,7 @@ class RouteInfo
      *
      * @return mixed
      */
-    public function getHandler()
+    public function getHandler(): mixed
     {
         return $this->handler;
     }
@@ -166,7 +166,7 @@ class RouteInfo
      *
      * @return mixed
      */
-    public function getVars()
+    public function getVars(): mixed
     {
         return $this->vars;
     }
@@ -177,7 +177,7 @@ class RouteInfo
      *
      * @return mixed
      */
-    public function getVar(string $name)
+    public function getVar(string $name): mixed
     {
         return $this->vars[$name] ?? null;
     }
@@ -188,7 +188,7 @@ class RouteInfo
      * @param mixed $vars
      * @return self
      */
-    public function setVars($vars): RouteInfo
+    public function setVars(mixed $vars): RouteInfo
     {
         $this->vars = $vars;
 
@@ -200,7 +200,7 @@ class RouteInfo
      *
      * @return mixed
      */
-    public function getAllowedMethods()
+    public function getAllowedMethods(): mixed
     {
         return $this->allowed_methods;
     }
@@ -212,7 +212,7 @@ class RouteInfo
      *
      * @return self
      */
-    public function setAllowedMethods($allowed_methods): RouteInfo
+    public function setAllowedMethods(mixed $allowed_methods): RouteInfo
     {
         $this->allowed_methods = $allowed_methods;
 
@@ -318,7 +318,7 @@ class RouteInfo
     /**
      * gets route name
      *
-     * @return string
+     * @return string|null
      */
     public function getRouteName(): ?string
     {
@@ -405,7 +405,7 @@ class RouteInfo
     /**
      * sets controller object
      *
-     * @param BasePage|null controller object instance $controller_object
+     * @param BasePage $controller_object
      * @return self
      */
     public function setControllerObject(BasePage $controller_object): RouteInfo

@@ -27,7 +27,7 @@ class CreatePagesTaxonomyTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'page_taxonomy';
+    protected string $tableName = 'page_taxonomy';
 
     /**
      * {@inheritdocs}

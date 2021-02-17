@@ -46,32 +46,32 @@ class FakeDataMigration extends BaseMigration
     /**
      * @var string lorem ipsum paragraph
      */
-    protected $lorem_ipsum_p = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra sapien nunc, id suscipit sem fermentum eget. Maecenas euismod mauris nibh, id interdum est ultricies nec. Integer euismod justo non ullamcorper facilisis. Fusce varius quam et enim tristique rutrum. Morbi feugiat pretium ultrices. Aenean eu sem ac massa commodo accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ullamcorper pharetra dictum. Fusce rutrum auctor sapien. Aenean vel lectus ex. Duis dictum nisl quis mauris ullamcorper ullamcorper. </p>';
+    protected string $lorem_ipsum_p = '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed viverra sapien nunc, id suscipit sem fermentum eget. Maecenas euismod mauris nibh, id interdum est ultricies nec. Integer euismod justo non ullamcorper facilisis. Fusce varius quam et enim tristique rutrum. Morbi feugiat pretium ultrices. Aenean eu sem ac massa commodo accumsan. Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aenean ullamcorper pharetra dictum. Fusce rutrum auctor sapien. Aenean vel lectus ex. Duis dictum nisl quis mauris ullamcorper ullamcorper. </p>';
 
     /**
      * @var array locales
      */
-    protected $locales = ['en', 'fr', 'it', 'ro'];
+    protected array $locales = ['en', 'fr', 'it', 'ro'];
 
     /**
      * @var array menu names
      */
-    protected $menu_names = [];
+    protected array $menu_names = [];
 
     /**
      * @var string site mail address
      */
-    protected $site_email = 'admin@localhost';
+    protected string $site_email = 'admin@localhost';
 
     /**
      * @var array links
      */
-    protected $link_exchange_urls = ["https://www.google.com", "https://www.wikipedia.org", "https://stackoverflow.com", "https://linux.org/", "https://www.php.net"];
+    protected array $link_exchange_urls = ["https://www.google.com", "https://www.wikipedia.org", "https://stackoverflow.com", "https://linux.org/", "https://www.php.net"];
 
     /**
      * @var int website id
      */
-    protected $website_id = 1;
+    protected int $website_id = 1;
 
     /**
      * {@inheritdocs}
@@ -88,7 +88,7 @@ class FakeDataMigration extends BaseMigration
      * @throws BasicException
      * @throws Exception
      */
-    public function up()
+    public function up() : void
     {
         $adminUser = $this->getContainer()->call([User::class, 'load'], ['id' => 1]);
 
@@ -568,7 +568,7 @@ class FakeDataMigration extends BaseMigration
             'title' => $title,
             'locale' => $locale,
             'rewrite_id' => $rewrite->getId(),
-            'parent_id' => ($parent != null) ? $parent->getId() : null,
+            'parent_id' => $parent?->getId() ?? null,
             //'breadcrumb' => $menu_item_model->getParentIds(),
         ]]);
         $menu_item_model->persist();
@@ -674,7 +674,7 @@ class FakeDataMigration extends BaseMigration
      *
      * @return void
      */
-    public function down()
+    public function down() : void
     {
     }
 }

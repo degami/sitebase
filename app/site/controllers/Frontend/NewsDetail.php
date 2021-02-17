@@ -83,7 +83,7 @@ class NewsDetail extends FrontendPageWithObject
      * @return array
      * @throws BasicException
      */
-    protected function getBaseTemplateData(): array
+    public function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' news-' . $this->getObject()->id;

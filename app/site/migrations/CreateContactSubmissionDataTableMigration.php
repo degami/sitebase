@@ -27,7 +27,7 @@ class CreateContactSubmissionDataTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'contact_submission_data';
+    protected string $tableName = 'contact_submission_data';
 
     /**
      * {@inheritdocs}

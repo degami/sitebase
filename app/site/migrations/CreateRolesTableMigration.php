@@ -27,7 +27,7 @@ class CreateRolesTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'role';
+    protected string $tableName = 'role';
 
     /**
      * {@inheritdocs}

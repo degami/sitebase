@@ -27,9 +27,9 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
     public const NAME = "User Data";
 
     /**
-     * @var AccountModel subject object
+     * @var AccountModel|null subject object
      */
-    protected $subject;
+    protected ?AccountModel $subject;
 
     /**
      * PageDataCollector constructor.

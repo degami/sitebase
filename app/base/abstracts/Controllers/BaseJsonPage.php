@@ -33,7 +33,7 @@ abstract class BaseJsonPage extends BasePage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws DependencyException
@@ -52,6 +52,8 @@ abstract class BaseJsonPage extends BasePage
      * @param array $route_data
      * @return Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = []): Response
@@ -71,5 +73,5 @@ abstract class BaseJsonPage extends BasePage
      *
      * @return mixed
      */
-    abstract protected function getJsonData();
+    abstract protected function getJsonData(): mixed;
 }

@@ -26,13 +26,13 @@ abstract class DBMigration extends BaseMigration
     /**
      * @var string table name
      */
-    protected $tableName;
+    protected string $tableName;
 
     /**
      * {@inheritdocs}
      * @throws Exception
      */
-    public function up()
+    public function up() : void
     {
         $table = $sql = null;
         try {
@@ -66,7 +66,7 @@ abstract class DBMigration extends BaseMigration
      * {@inheritdocs}
      * @throws BasicException
      */
-    public function down()
+    public function down() : void
     {
         $this->getPdo()->exec("DROP TABLE {$this->tableName}");
     }

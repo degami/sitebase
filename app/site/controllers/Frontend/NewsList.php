@@ -26,19 +26,9 @@ use DI\NotFoundException;
 class NewsList extends FrontendPage
 {
     /**
-     * @var string locale
+     * @var RouteInfo|null route info object
      */
-    protected $locale = null;
-
-    /**
-     * @var array template data
-     */
-    protected $template_data = [];
-
-    /**
-     * @var RouteInfo route info object
-     */
-    protected $route_info = null;
+    protected ?RouteInfo $route_info = null;
 
     /**
      * gets route group

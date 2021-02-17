@@ -49,7 +49,7 @@ class LinkExchange extends BaseModel
     /**
      * @var array link taxonomy terms
      */
-    protected $terms = [];
+    protected array $terms = [];
 
     /**
      * gets Link Taxonomy Terms

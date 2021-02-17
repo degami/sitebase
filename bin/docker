@@ -84,6 +84,9 @@ case "$1" in
         echo "missing container name"
       fi
       ;;
+  ps)
+      $docker_compose_bin ps
+      ;;
   console)
       if [[ $(dockerps php-fpm) = 1 ]]; then
         shift

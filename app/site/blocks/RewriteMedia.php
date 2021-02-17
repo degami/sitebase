@@ -41,8 +41,8 @@ class RewriteMedia extends BaseCodeBlock
     {
 
         $rewrite_id = [];
-        if ($current_page != null && $current_page->getRewrite() && $current_page->getRewrite()->getId()) {
-            $rewrite_id[] = $current_page->getRewrite()->getId();
+        if ($current_page?->getRewrite()?->getId()) {
+            $rewrite_id[] = $current_page?->getRewrite()?->getId();
             $rewrite_id[] = null;
         } else {
             $rewrite_id = null;

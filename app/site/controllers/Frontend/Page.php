@@ -16,6 +16,7 @@ namespace App\Site\Controllers\Frontend;
 use App\Base\Abstracts\Controllers\BaseHtmlPage;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
+use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -78,13 +79,16 @@ class Page extends FrontendPageWithObject
      *
      * @param $id
      * @param RouteInfo|null $route_info
-     * @return BaseHtmlPage|BasePage|mixed|Response
+     * @return mixed
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PermissionDeniedException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
+     * @throws DebugBarException
      */
-    public function showPage($id, RouteInfo $route_info = null)
+    public function showPage($id, RouteInfo $route_info = null): mixed
     {
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
@@ -106,7 +110,7 @@ class Page extends FrontendPageWithObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException|Throwable
      */
-    public function showFrontPage(RouteInfo $route_info = null)
+    public function showFrontPage(RouteInfo $route_info = null): Response
     {
         $route_vars = $route_info->getVars();
 
@@ -167,7 +171,7 @@ class Page extends FrontendPageWithObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getBaseTemplateData(): array
+    public function getBaseTemplateData(): array
     {
         $out = parent::getBaseTemplateData();
         $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' page-' . $this->getObject()->id;

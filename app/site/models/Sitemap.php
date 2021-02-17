@@ -46,7 +46,7 @@ class Sitemap extends FrontendModel
     /**
      * @var array urlset
      */
-    protected $urlset = [];
+    protected array $urlset = [];
 
     /**
      * gets sitemap urlset

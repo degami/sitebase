@@ -37,7 +37,7 @@ abstract class BaseRestPage extends BasePage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws DependencyException
@@ -65,7 +65,7 @@ abstract class BaseRestPage extends BasePage
      * @return Response|self
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         $return = parent::beforeRender();
         if ($return instanceof Response) {
@@ -93,7 +93,7 @@ abstract class BaseRestPage extends BasePage
      * loads object by id
      *
      * @param int $id
-     * @return BaseModel
+     * @return BaseModel|null
      */
     protected function loadObject($id): ?BaseModel
     {
@@ -129,7 +129,7 @@ abstract class BaseRestPage extends BasePage
         } catch (Exception $e) {
             $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
             if ($this->getEnv('DEBUG')) {
-                return $this->getUtils()->exceptionPage($e);
+                return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
             }
         }
 

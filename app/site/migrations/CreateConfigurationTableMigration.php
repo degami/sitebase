@@ -27,7 +27,7 @@ class CreateConfigurationTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'configuration';
+    protected string $tableName = 'configuration';
 
     /**
      * {@inheritdocs}

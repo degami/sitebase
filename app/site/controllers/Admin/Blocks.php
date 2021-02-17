@@ -18,6 +18,7 @@ use App\Base\Traits\AdminFormTrait;
 use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -41,14 +42,14 @@ class Blocks extends AdminManageModelsPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
      * @throws DependencyException
+     * @throws FAPI\Exceptions\FormException
      * @throws NotFoundException
-     * @throws Exception
+     * @throws PermissionDeniedException
+     * @throws OutOfRangeException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -128,7 +129,7 @@ class Blocks extends AdminManageModelsPage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $block = $this->getObject();
@@ -279,7 +280,7 @@ class Blocks extends AdminManageModelsPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         // $values = $form->values();
         return true;
@@ -293,7 +294,7 @@ class Blocks extends AdminManageModelsPage
      * @return mixed
      * @throws Exception
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /**
          * @var Block $block
@@ -370,7 +371,7 @@ class Blocks extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
-     * @return array
+     * @return array|null
      */
     protected function getTableHeader(): ?array
     {

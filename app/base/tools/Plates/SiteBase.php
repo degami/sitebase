@@ -37,12 +37,12 @@ class SiteBase implements ExtensionInterface
     /**
      * @var Engine templates engine
      */
-    protected $engine;
+    protected Engine $engine;
 
     /**
      * @var ContainerInterface container
      */
-    protected $container;
+    protected ContainerInterface $container;
 
     /**
      * constructor
@@ -60,7 +60,7 @@ class SiteBase implements ExtensionInterface
      * @param Engine $engine [description]
      * @return void
      */
-    public function register(Engine $engine)
+    public function register(Engine $engine) : void
     {
         $this->engine = $engine;
         $engine->registerFunction('sitebase', [$this, 'getObject']);
@@ -109,7 +109,7 @@ class SiteBase implements ExtensionInterface
     /**
      * gets current locale
      *
-     * @return string
+     * @return string|null
      */
     public function getCurrentLocale(): ?string
     {
@@ -247,7 +247,7 @@ class SiteBase implements ExtensionInterface
      * gets gravatar html
      *
      * @param string $email
-     * @param integer $s
+     * @param int $s
      * @param string $d
      * @param string $r
      * @param string $class
@@ -265,7 +265,7 @@ class SiteBase implements ExtensionInterface
      * @return void
      * @throws BasicException
      */
-    public function drawIcon(string $icon_name)
+    public function drawIcon(string $icon_name): void
     {
         echo $this->getHtmlRenderer()->getIcon($icon_name);
     }
@@ -278,7 +278,7 @@ class SiteBase implements ExtensionInterface
      * @return mixed
      * @throws BasicException
      */
-    public function env(string $variable, $default = null)
+    public function env(string $variable, $default = null): mixed
     {
         return $this->getUtils()->getEnv($variable, $default);
     }
@@ -302,7 +302,7 @@ class SiteBase implements ExtensionInterface
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderFlashMessages(BasePage $controller)
+    public function renderFlashMessages(BasePage $controller): void
     {
         echo $this->getHtmlRenderer()->renderFlashMessages($controller);
     }

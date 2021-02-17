@@ -32,12 +32,12 @@ class GuestUser extends AccountModel
     /**
      * @var Role user role
      */
-    protected $roleObj = null;
+    protected ?Role $roleObj = null;
 
     /**
      * @var int user id
      */
-    public $id = 0;
+    public int $id = 0;
 
     /**
      * @var null username
@@ -57,7 +57,7 @@ class GuestUser extends AccountModel
     /**
      * @var array permissions
      */
-    public $permissions = [];
+    public array $permissions = [];
 
     /**
      * class constructor

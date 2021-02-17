@@ -101,7 +101,7 @@ class MediaRewrites extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         /** @var MediaElementRewrite $media_rewrite */
@@ -167,7 +167,7 @@ class MediaRewrites extends AdminManageModelsPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         //$values = $form->values();
         return true;
@@ -183,7 +183,7 @@ class MediaRewrites extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /**
          * @var MediaElementRewrite $media_rewrite
@@ -239,9 +239,9 @@ class MediaRewrites extends AdminManageModelsPage
                     'ID' => $elem->getId(),
                     'Preview' => $elem->getMediaElement()->getThumb('100x100'),
                     'Filename - Path' => $elem->getMediaElement()->getFilename(),
-                    'Website' => $elem->getRewriteId() != null ? $elem->getRewrite()->getWebsite()->getDomain() : 'All',
-                    'Rewrite - Url' => $elem->getRewriteId() != null ? $elem->getRewrite()->getUrl() : 'Everywhere',
-                    'Locale' => $elem->getRewriteId() != null ? $elem->getRewrite()->getLocale() : 'Any',
+                    'Website' => $elem->getRewrite()?->getWebsite()?->getDomain() ?? 'All',
+                    'Rewrite - Url' => $elem->getRewrite()?->getUrl() ?? 'Everywhere',
+                    'Locale' => $elem->getRewrite()?->getLocale() ?? 'Any',
                     'Owner' => $elem->getOwner()->username,
                     'actions' => implode(
                         " ",

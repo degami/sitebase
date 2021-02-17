@@ -45,7 +45,7 @@ class Process extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Process queue')
             ->setDefinition(
@@ -65,7 +65,7 @@ class Process extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : void
     {
         $queue = $input->getOption('queue') ?? null;
         $lock_path = App::getDir(App::TMP) . DS . self::LOCKFILE_NAME;

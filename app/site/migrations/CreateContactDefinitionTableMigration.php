@@ -27,7 +27,7 @@ class CreateContactDefinitionTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'contact_definition';
+    protected string $tableName = 'contact_definition';
 
     /**
      * {@inheritdocs}

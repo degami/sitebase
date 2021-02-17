@@ -27,7 +27,7 @@ class CreateLanguagesTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'language';
+    protected string $tableName = 'language';
 
     /**
      * {@inheritdocs}

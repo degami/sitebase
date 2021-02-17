@@ -13,11 +13,13 @@
 
 namespace App\Site\Controllers\Frontend;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Search page
@@ -60,7 +62,7 @@ class Search extends FrontendPage
     /**
      * {@inheritdocs}
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if ($this->getRouteInfo()->getVar('lang') != null) {
             $this->locale = $this->getRouteInfo()->getVar('lang');
@@ -83,8 +85,8 @@ class Search extends FrontendPage
         $page = $this->getRequest()->get('page') ?? 0;
         $search_result = $this->getSearchResult($this->getSearchQuery(), $page);
 
-        $total = $search_result['hits']['total']['value'];
-        $hits = $search_result['hits']['hits'];
+        $total = $search_result['hits']['total']['value'] ?? 0;
+        $hits = $search_result['hits']['hits'] ?? [];
 
         return [
             'search_query' => $this->getSearchQuery(),
@@ -100,9 +102,9 @@ class Search extends FrontendPage
     /**
      * gets searched string
      *
-     * @return mixed|null
+     * @return mixed
      */
-    protected function getSearchQuery()
+    protected function getSearchQuery(): mixed
     {
         return $this->getRequest()->get('q');
     }

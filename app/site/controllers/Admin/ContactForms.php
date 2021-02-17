@@ -147,7 +147,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $contact = $this->getObject();
@@ -362,7 +362,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         $values = $form->values();
         if (!empty((string)$values->submit_to) && is_string($validation = FAPI\Form::validateEmail((string)$values->submit_to))) {
@@ -383,7 +383,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /**
          * @var Contact $contact

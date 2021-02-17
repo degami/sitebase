@@ -27,7 +27,7 @@ class CreateBlocksRewritesTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'block_rewrite';
+    protected string $tableName = 'block_rewrite';
 
     /**
      * {@inheritdocs}

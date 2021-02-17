@@ -99,7 +99,7 @@ class Config extends AdminManageModelsPage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $configuration = $this->getObject();
@@ -174,7 +174,7 @@ class Config extends AdminManageModelsPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         // $values = $form->values()
         return true;
@@ -191,7 +191,7 @@ class Config extends AdminManageModelsPage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         $values = $form->values();
 

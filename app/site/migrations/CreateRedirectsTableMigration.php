@@ -27,7 +27,7 @@ class CreateRedirectsTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'redirect';
+    protected string $tableName = 'redirect';
 
     /**
      * {@inheritdocs}

@@ -69,11 +69,11 @@ class Index extends LoggedUserPage
     /**
      * {@inheritdocs}
      *
-     * @return LoggedUserPage|RedirectResponse|Response
+     * @return BasePage|Response
      * @throws BasicException
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             return $this->doRedirect($this->getUrl('frontend.users.login'));

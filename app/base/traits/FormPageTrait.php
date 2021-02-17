@@ -13,6 +13,7 @@
 
 namespace App\Base\Traits;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
@@ -25,10 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 trait FormPageTrait
 {
-    /**
-     * @var array template data
-     */
-    protected $template_data = [];
+    use TemplatePageTrait;
 
     /**
      * gets form id
@@ -44,15 +42,11 @@ trait FormPageTrait
     /**
      * get form object
      *
-     * @return FAPI\Form
+     * @return FAPI\Form|null
      */
     public function getForm(): ?FAPI\Form
     {
-        if (!is_null($this->getTemplate())) {
-            return $this->getTemplate()->data()['form'] ?? null;
-        }
-
-        return $this->template_data['form'] ?? null;
+        return $this->getTemplate()?->data()['form'] ?? ($this->template_data['form'] ?? null);
     }
 
     /**
@@ -69,6 +63,7 @@ trait FormPageTrait
      * @param FAPI\Form $form
      * @param bool $inline_button
      * @return FAPI\Form
+     * @throws FAPI\Exceptions\FormException
      */
     protected function addSubmitButton(FAPI\Form $form, $inline_button = false): FAPI\Form
     {
@@ -107,13 +102,13 @@ trait FormPageTrait
      *
      * @param string $confirm_message
      * @param FAPI\Form $form
-     * @param string|null $cancel_url
+     * @param null $cancel_url
      * @return FAPI\Form
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function fillConfirmationForm($confirm_message, $form, $cancel_url = null): FAPI\Form
+    protected function fillConfirmationForm(string $confirm_message, FAPI\Form $form, $cancel_url = null): FAPI\Form
     {
         $form->addField(
             'confirm',
@@ -136,7 +131,7 @@ trait FormPageTrait
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if ($this->getForm() && $this->getForm()->isSubmitted()) {
             $this->getApp()->event('form_submitted', ['form' => $this->getForm()]);
@@ -152,7 +147,7 @@ trait FormPageTrait
      * @param array     &$form_state
      * @return FAPI\Form
      */
-    abstract public function getFormDefinition(FAPI\Form $form, &$form_state);
+    abstract public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form;
 
     /**
      * validates form submission
@@ -161,14 +156,14 @@ trait FormPageTrait
      * @param array     &$form_state
      * @return bool|string
      */
-    abstract public function formValidate(FAPI\Form $form, &$form_state);
+    abstract public function formValidate(FAPI\Form $form, &$form_state): bool|string;
 
     /**
      * handles form submission
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
-     * @return mixed|Response
+     * @return mixed
      */
-    abstract public function formSubmitted(FAPI\Form $form, &$form_state);
+    abstract public function formSubmitted(FAPI\Form $form, &$form_state): mixed;
 }

@@ -34,13 +34,13 @@ abstract class FormPage extends FrontendPage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
+     * @throws FAPI\Exceptions\FormException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -61,11 +61,9 @@ abstract class FormPage extends FrontendPage
      * @return void
      * @throws BasicException
      */
-    protected function processFormSubmit()
+    protected function processFormSubmit() : void
     {
         $this->getApp()->event('before_form_process', ['form' => $this->getForm()]);
-        if ($this->getForm() != null) {
-            $this->getForm()->process();
-        }
+        $this->getForm()?->process();
     }
 }

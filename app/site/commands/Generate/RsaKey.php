@@ -49,8 +49,13 @@ class RsaKey extends BaseExecCommand
             throw new NotFoundException('openssl command is missing!');
         }
 
-        $commandline = "openssl genrsa -out " . App::getDir(App::ASSETS) . DS . "rsa_private.key 2048";
+//        $commandline = "openssl genrsa -out " . App::getDir(App::ASSETS) . DS . "rsa_private.key 2048";
 
+        $commandline = "openssl req -new -newkey -sha256 -nodes -subj \"/C=IT/ST=IT/L=City/O=Organization/CN=CommonName\" -keyout " . App::getDir(App::ASSETS) . DS . "rsa_private.key -out " . App::getDir(App::ASSETS) . DS . "rsa_private.csr";
+        echo $commandline."\n";
+        system($commandline);
+
+        $commandline = "openssl x509 -req -sha256 -days 365 -in " . App::getDir(App::ASSETS) . DS . "rsa_private.csr -signkey " . App::getDir(App::ASSETS) . DS . "rsa_private.key -out " . App::getDir(App::ASSETS) . DS . "rsa_private.pem";
         system($commandline);
 
         $output->writeln("<info>Key created</info>");

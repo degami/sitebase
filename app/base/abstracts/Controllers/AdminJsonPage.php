@@ -32,7 +32,7 @@ abstract class AdminJsonPage extends BaseJsonPage
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    protected function beforeRender()
+    protected function beforeRender(): BasePage|Response
     {
         if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
             throw new PermissionDeniedException();

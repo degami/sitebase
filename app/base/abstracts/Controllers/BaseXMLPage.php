@@ -33,7 +33,7 @@ abstract class BaseXMLPage extends BasePage
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws DependencyException
@@ -52,6 +52,8 @@ abstract class BaseXMLPage extends BasePage
      * @param array $route_data
      * @return Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = []): Response
@@ -74,5 +76,5 @@ abstract class BaseXMLPage extends BasePage
      *
      * @return mixed
      */
-    abstract protected function getXMLData();
+    abstract protected function getXMLData(): mixed;
 }

@@ -27,7 +27,7 @@ class CreateUsersTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'user';
+    protected string $tableName = 'user';
 
     /**
      * {@inheritdocs}

@@ -32,7 +32,7 @@ use App\Base\Abstracts\Models\BaseModel;
 class Website extends BaseModel
 {
     /**
-     * @var mixed|string
+     * @var mixed
      */
     protected $aliases;
 

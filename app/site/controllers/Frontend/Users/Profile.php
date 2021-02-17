@@ -31,11 +31,6 @@ use Symfony\Component\HttpFoundation\Response;
 class Profile extends LoggedUserFormPage
 {
     /**
-     * @var array template data
-     */
-    protected $template_data = [];
-
-    /**
      * {@inheritdocs}
      *
      * @return string
@@ -91,7 +86,7 @@ class Profile extends LoggedUserFormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $user = $this->getCurrentUser();
 
@@ -167,7 +162,7 @@ class Profile extends LoggedUserFormPage
      * @param array $form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         //$values = $form->values();
         return true;
@@ -178,12 +173,12 @@ class Profile extends LoggedUserFormPage
      *
      * @param FAPI\Form $form
      * @param array $form_state
-     * @return mixed|RedirectResponse|Response
+     * @return mixed
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /**
          * @var User $user

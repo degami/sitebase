@@ -96,7 +96,7 @@ class Globals extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function logRequestIfNeeded($status_code, Request $request)
+    protected function logRequestIfNeeded($status_code, Request $request) : void
     {
         if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
             $route_info = $this->getAppRouteInfo();
@@ -120,12 +120,14 @@ class Globals extends ContainerAwareObject
      * return an error page
      *
      * @param int $error_code
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo|null $route_info
      * @param array $template_data
-     * @param string|null $template_name
+     * @param null $template_name
      * @return Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
@@ -188,10 +190,12 @@ class Globals extends ContainerAwareObject
      * returns a exception error page
      *
      * @param Throwable $exception
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
@@ -308,11 +312,11 @@ class Globals extends ContainerAwareObject
     /**
      * gets an empty RouteInfo object
      *
-     * @return mixed
+     * @return RouteInfo
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getEmptyRouteInfo()
+    public function getEmptyRouteInfo() : RouteInfo
     {
         $http_method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
         $request_uri = $_SERVER['REQUEST_URI'] ?? '/no-route';
@@ -340,14 +344,14 @@ class Globals extends ContainerAwareObject
     /**
      * returns a "site is offline" error page
      *
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
-     * @throws Throwable
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws Throwable
      */
     public function offlinePage(Request $request, RouteInfo $route_info = null): Response
     {
@@ -365,11 +369,11 @@ class Globals extends ContainerAwareObject
      * @param Request|null $request
      * @throws BasicException
      */
-    public function logException(Throwable $e, $prefix = null, Request $request = null)
+    public function logException(Throwable $e, $prefix = null, Request $request = null) : void
     {
         $this->getLog()->error($prefix . ($prefix != null ? ' - ' : '') . $e->getMessage());
         $this->getLog()->debug($e->getTraceAsString());
-        if ($request != null && !empty($request->request->all())) {
+        if (!empty($request?->request->all())) {
             $this->getLog()->debug(serialize($request->request->all()));
         }
     }
@@ -380,11 +384,11 @@ class Globals extends ContainerAwareObject
      * @param string $url
      * @param string $method
      * @param array $options
-     * @return string|bool
+     * @return mixed
      * @throws GuzzleException
      * @throws BasicException
      */
-    public function httpRequest(string $url, $method = 'GET', array $options = [])
+    public function httpRequest(string $url, $method = 'GET', array $options = []) : mixed
     {
         $res = $this->getGuzzle()->request($method, $url, $options);
         if ($res->getStatusCode() == 200) {
@@ -451,7 +455,7 @@ class Globals extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addQueueMessage(string $queue_name, $data): QueueMessage
+    public function addQueueMessage(string $queue_name, mixed $data): QueueMessage
     {
         /** @var QueueMessage $message */
         $message = $this->getContainer()->call([QueueMessage::class, 'new']);

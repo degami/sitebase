@@ -27,7 +27,7 @@ class CreateUserSessionsTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'user_session';
+    protected string $tableName = 'user_session';
 
     /**
      * {@inheritdocs}

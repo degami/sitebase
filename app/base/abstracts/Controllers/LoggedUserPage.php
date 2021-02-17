@@ -34,28 +34,18 @@ abstract class LoggedUserPage extends FrontendPage
     /**
      * @var string page title
      */
-    protected $page_title;
-
-    /**
-     * @var string locale
-     */
-    protected $locale = null;
-
-    /**
-     * @var array template data
-     */
-    protected $template_data = [];
+    protected string $page_title;
 
     /**
      * {@inheritdocs}
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
-     * @throws PhpfastcacheSimpleCacheException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
     {
@@ -81,7 +71,7 @@ abstract class LoggedUserPage extends FrontendPage
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
             throw new PermissionDeniedException();
@@ -117,7 +107,7 @@ abstract class LoggedUserPage extends FrontendPage
     /**
      * gets route group
      *
-     * @return string
+     * @return string|null
      */
     public static function getRouteGroup(): ?string
     {

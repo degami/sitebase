@@ -27,7 +27,7 @@ class CreateNewsTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'news';
+    protected string $tableName = 'news';
 
     /**
      * {@inheritdocs}

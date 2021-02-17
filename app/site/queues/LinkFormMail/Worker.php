@@ -14,6 +14,8 @@
 namespace App\Site\Queues\LinkFormMail;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Queues\BaseQueueWorker;
 
@@ -29,6 +31,8 @@ class Worker extends BaseQueueWorker
      * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
      */
     protected function processMessage(array $message_data): bool
     {

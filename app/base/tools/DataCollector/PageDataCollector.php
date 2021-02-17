@@ -26,9 +26,9 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
     public const NAME = "Page Data";
 
     /**
-     * @var BasePage subject object
+     * @var BasePage|null subject object
      */
-    protected $subject;
+    protected ?BasePage $subject;
 
     /**
      * PageDataCollector constructor.

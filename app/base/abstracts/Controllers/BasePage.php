@@ -18,6 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use JetBrains\PhpStorm\Pure;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -34,7 +35,7 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * @var Request request object
      */
-    protected $request;
+    protected Request $request;
 
     /**
      * @var Response response object
@@ -44,13 +45,13 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * @var RouteInfo route info object
      */
-    protected $route_info = null;
+    protected ?RouteInfo $route_info = null;
 
     /**
      * BasePage constructor.
      *
      * @param ContainerInterface $container
-     * @param Request|null $request
+     * @param Request $request
      * @param RouteInfo $route_info
      * @throws BasicException
      * @throws DependencyException
@@ -78,7 +79,7 @@ abstract class BasePage extends ContainerAwareObject
      * @return Response|self
      * @throws PermissionDeniedException
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = [])
+    public function renderPage(RouteInfo $route_info = null, $route_data = []): BasePage|Response
     {
         $this->route_info = $route_info;
 
@@ -95,9 +96,9 @@ abstract class BasePage extends ContainerAwareObject
      * gets route data
      *
      * @param null $var_name
-     * @return mixed|null
+     * @return mixed
      */
-    protected function getRouteData($var_name = null)
+    protected function getRouteData($var_name = null): mixed
     {
         if (is_null($this->route_info)) {
             return null;
@@ -117,7 +118,7 @@ abstract class BasePage extends ContainerAwareObject
      * @return Response|self
      * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender(): BasePage|Response
     {
         if (
             method_exists($this, 'getAccessPermission') &&
@@ -155,7 +156,7 @@ abstract class BasePage extends ContainerAwareObject
     /**
      * get route_info array
      *
-     * @return RouteInfo
+     * @return RouteInfo|null
      */
     public function getRouteInfo(): ?RouteInfo
     {
@@ -167,7 +168,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return string the form html
      */
-    public function __toString(): string
+    #[Pure] public function __toString(): string
     {
         try {
             return get_class($this);
@@ -290,7 +291,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return Response|self
+     * @return Response
      */
     abstract public function process(RouteInfo $route_info = null, $route_data = []): Response;
 }

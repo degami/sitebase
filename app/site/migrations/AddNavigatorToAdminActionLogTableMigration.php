@@ -25,7 +25,7 @@ class AddNavigatorToAdminActionLogTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'admin_action_log';
+    protected string $tableName = 'admin_action_log';
 
     /**
      * {@inheritdocs}

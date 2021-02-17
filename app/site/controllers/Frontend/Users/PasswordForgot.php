@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Frontend\Users;
 
+use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -24,6 +25,7 @@ use App\Site\Models\User;
 use App\Base\Exceptions\PermissionDeniedException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
+use Throwable;
 
 /**
  * PasswordForgot Page
@@ -31,16 +33,6 @@ use Symfony\Component\HttpFoundation\Response;
 class PasswordForgot extends FormPage
 {
     use FrontendTrait;
-
-    /**
-     * @var array template data
-     */
-    protected $template_data = [];
-
-    /**
-     * @var string locale
-     */
-    protected $locale = null;
 
     /**
      * {@inheritdocs}
@@ -55,7 +47,7 @@ class PasswordForgot extends FormPage
     /**
      * gets route group
      *
-     * @return string
+     * @return string|null
      */
     public static function getRouteGroup(): ?string
     {
@@ -115,13 +107,13 @@ class PasswordForgot extends FormPage
     /**
      * {@inheritdocs}
      *
-     * @return PasswordForgot|RedirectResponse|Response
+     * @return BasePage|Response
      * @throws BasicException
-     * @throws PermissionDeniedException
      * @throws DependencyException
      * @throws NotFoundException
+     * @throws PermissionDeniedException
      */
-    protected function beforeRender()
+    protected function beforeRender() : BasePage|Response
     {
         if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
             throw new PermissionDeniedException();
@@ -157,7 +149,7 @@ class PasswordForgot extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         if ($this->getRequest()->get('confirmation_code') && ($user = $this->getContainer()->call([User::class, 'loadBy'], ['field' => 'confirmation_code', 'value' => $this->getRequest()->get('confirmation_code')])) && $user->getId()) {
             $form
@@ -204,7 +196,7 @@ class PasswordForgot extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         $values = $form->values();
 
@@ -232,9 +224,9 @@ class PasswordForgot extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
-     * @throws \Throwable
+     * @throws Throwable
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         $values = $form->values();
 

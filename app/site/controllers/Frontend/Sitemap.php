@@ -14,6 +14,7 @@
 namespace App\Site\Controllers\Frontend;
 
 use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\BaseXMLPage;
 use App\Site\Models\Sitemap as SitemapModel;
@@ -56,6 +57,8 @@ class Sitemap extends BaseXMLPage
      * @throws BasicException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws \DI\NotFoundException
      */
     public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
@@ -90,7 +93,7 @@ class Sitemap extends BaseXMLPage
      *
      * @return array
      */
-    protected function getXMLData(): array
+    protected function getXMLData(): mixed
     {
         return [];
     }

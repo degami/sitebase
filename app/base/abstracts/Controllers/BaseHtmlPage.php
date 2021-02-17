@@ -17,9 +17,11 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
 use DebugBar\DebugBar;
+use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use League\Plates\Template\Template;
@@ -35,9 +37,9 @@ abstract class BaseHtmlPage extends BasePage
     use PageTrait;
 
     /**
-     * @var Template template object
+     * @var Template|null template object
      */
-    protected $template;
+    protected ?Template $template = null;
 
     /**
      * prepare template object
@@ -58,12 +60,15 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return Response|self
-     * @throws PermissionDeniedException
+     * @return BasePage|BaseHtmlPage|Response
      * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PermissionDeniedException
      * @throws Throwable
+     * @throws DebugBarException
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = [])
+    public function renderPage(RouteInfo $route_info = null, $route_data = []): BasePage|Response
     {
         $this->route_info = $route_info;
 
@@ -92,9 +97,10 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return BasePage|Response
+     * @return Response
      * @throws BasicException
      * @throws Throwable
+     * @throws PhpfastcacheSimpleCacheException
      */
     public function process(RouteInfo $route_info = null, $route_data = []): Response
     {
@@ -127,7 +133,7 @@ abstract class BaseHtmlPage extends BasePage
     /**
      * get current template
      *
-     * @return Template
+     * @return Template|null
      */
     public function getTemplate(): ?Template
     {
@@ -139,7 +145,7 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @return array
      */
-    protected function getBaseTemplateData(): array
+    public function getBaseTemplateData(): array
     {
         return [
             'controller' => $this,
@@ -225,7 +231,7 @@ abstract class BaseHtmlPage extends BasePage
     /**
      * gets currently stored flash messages
      *
-     * @return array
+     * @return array|null
      */
     public function getFlashMessages(): ?array
     {

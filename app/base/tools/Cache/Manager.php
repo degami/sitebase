@@ -16,6 +16,7 @@ namespace App\Base\Tools\Cache;
 use DateInterval;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
+use Phpfastcache\Entities\DriverStatistic;
 use Phpfastcache\Exceptions\PhpfastcacheDriverCheckException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverException;
 use Phpfastcache\Exceptions\PhpfastcacheDriverNotFoundException;
@@ -43,9 +44,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
     public const CACHE_TAG = 'sitebase_cache';
 
     /**
-     * @var ExtendedCacheItemPoolInterface internal cache instance
+     * @var ExtendedCacheItemPoolInterface|null internal cache instance
      */
-    public static $internalCacheInstance;
+    public static ?ExtendedCacheItemPoolInterface $internalCacheInstance = null;
 
     /**
      * constructor
@@ -78,11 +79,11 @@ class Manager extends ContainerAwareObject implements CacheInterface
      *
      * @param mixed $key
      * @param null $default
-     * @return mixed|null
-     * @throws PhpfastcacheSimpleCacheException
+     * @return mixed
      * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
      */
-    public function get($key, $default = null)
+    public function get(mixed $key, $default = null) : mixed
     {
         if ($this->getEnv('DISABLE_CACHE')) {
             return $default;
@@ -107,7 +108,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @return int|Dateinterval
      * @throws BasicException
      */
-    public function getCacheLifetime($ttl = null)
+    public function getCacheLifetime($ttl = null): DateInterval|int
     {
         return (is_int($ttl) || $ttl instanceof DateInterval) ? $ttl : ($this->getEnv('CACHE_LIFETIME') ?? 300);
     }
@@ -122,7 +123,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    public function set($key, $value, $ttl = null): bool
+    public function set(mixed $key, mixed $value, $ttl = null): bool
     {
         if ($this->getEnv('DISABLE_CACHE')) {
             return false;
@@ -207,12 +208,12 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * sets multiple elements into cache
      *
      * @param mixed $values
-     * @param null|int|DateInterval $ttl
+     * @param null $ttl
      * @return bool
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    public function setMultiple($values, $ttl = null): bool
+    public function setMultiple(mixed $values, $ttl = null): bool
     {
         $ttl = $this->getCacheLifetime($ttl);
 
@@ -265,7 +266,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    public function has($key): bool
+    public function has(mixed $key): bool
     {
         if ($this->getEnv('DISABLE_CACHE')) {
             return false;
@@ -297,9 +298,9 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * get cache statistics
      *
-     * @return mixed
+     * @return DriverStatistic
      */
-    public function getStats()
+    public function getStats(): DriverStatistic
     {
         return $this->getInternalCacheInstance()->getStats();
     }
@@ -311,7 +312,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @param mixed $arguments
      * @return mixed
      */
-    public function __call(string $name, $arguments)
+    public function __call(string $name, mixed $arguments): mixed
     {
         return call_user_func_array([$this->getInternalCacheInstance(), $name], $arguments);
     }
@@ -322,7 +323,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @param string $tagName
      * @return     array
      */
-    public function getAllItemsByTag($tagName): array
+    public function getAllItemsByTag(string $tagName): array
     {
         return $this->getItemsByTag($tagName);
     }

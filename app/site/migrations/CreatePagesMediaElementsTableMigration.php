@@ -27,7 +27,7 @@ class CreatePagesMediaElementsTableMigration extends DBMigration
     /**
      * @var string table name
      */
-    protected $tableName = 'page_media_element';
+    protected string $tableName = 'page_media_element';
 
     /**
      * {@inheritdocs}

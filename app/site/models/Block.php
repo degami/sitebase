@@ -62,12 +62,12 @@ class Block extends BaseModel
     /**
      * @var array rewrites
      */
-    protected $rewrites = [];
+    protected array $rewrites = [];
 
     /**
-     * @var BaseCodeBlock code block instance
+     * @var BaseCodeBlock|null code block instance
      */
-    protected $codeBlockInstance = null;
+    protected ?BaseCodeBlock $codeBlockInstance = null;
 
     /**
      * {@inheritdocs}
@@ -106,7 +106,7 @@ class Block extends BaseModel
     /**
      * loads code block instance
      *
-     * @return BaseCodeBlock
+     * @return BaseCodeBlock|null
      * @throws DependencyException
      * @throws NotFoundException
      */
@@ -122,11 +122,11 @@ class Block extends BaseModel
     /**
      * gets real block instance
      *
-     * @return self|BaseCodeBlock
+     * @return Block|BaseCodeBlock|null
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getRealInstance()
+    public function getRealInstance(): Block|BaseCodeBlock|null
     {
         return ($this->getInstance() == Block::class) ? $this : $this->loadInstance();
     }

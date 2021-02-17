@@ -83,7 +83,7 @@ class Pages extends AdminManageFrontendModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state)
+    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $page = $this->getObject();
@@ -211,7 +211,7 @@ class Pages extends AdminManageFrontendModelsPage
      * @param array     &$form_state
      * @return bool|string
      */
-    public function formValidate(FAPI\Form $form, &$form_state)
+    public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         //$values = $form->values();
         // @todo : check if page language is in page website languages?
@@ -228,7 +228,7 @@ class Pages extends AdminManageFrontendModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function formSubmitted(FAPI\Form $form, &$form_state)
+    public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /**
          * @var Page $page

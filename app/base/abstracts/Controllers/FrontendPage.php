@@ -284,7 +284,7 @@ abstract class FrontendPage extends BaseHtmlPage
         if ($this->locale == null) {
             // try by menu
             $rewrite = $this->getRewrite();
-            if ($rewrite != null && (($menu_obj = $rewrite->menuList()->fetch()) != null)) {
+            if (($menu_obj = $rewrite?->menuList()->fetch()) != null) {
                 /** @var Menu $menu_obj */
                 $menu_obj = $this->getContainer()->make(Menu::class, ['db_row' => $menu_obj]);
                 $this->locale = $menu_obj->getLocale();
@@ -342,15 +342,12 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     public function getTranslations(): array
     {
-        if ($this->getRewrite() != null) {
-            return array_map(
-                function ($el) {
-                    return $el->url;
-                },
-                $this->getRewrite()->getTranslations()
-            );
-        }
-        return [];
+        return array_map(
+            function ($el) {
+                return $el->url;
+            },
+            $this->getRewrite()?->getTranslations() ?? []
+        );
     }
 
 

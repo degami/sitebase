@@ -568,7 +568,7 @@ class FakeDataMigration extends BaseMigration
             'title' => $title,
             'locale' => $locale,
             'rewrite_id' => $rewrite->getId(),
-            'parent_id' => ($parent != null) ? $parent->getId() : null,
+            'parent_id' => $parent?->getId() ?? null,
             //'breadcrumb' => $menu_item_model->getParentIds(),
         ]]);
         $menu_item_model->persist();

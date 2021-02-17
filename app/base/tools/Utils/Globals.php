@@ -373,7 +373,7 @@ class Globals extends ContainerAwareObject
     {
         $this->getLog()->error($prefix . ($prefix != null ? ' - ' : '') . $e->getMessage());
         $this->getLog()->debug($e->getTraceAsString());
-        if ($request != null && !empty($request->request->all())) {
+        if (!empty($request?->request->all())) {
             $this->getLog()->debug(serialize($request->request->all()));
         }
     }

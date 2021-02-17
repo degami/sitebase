@@ -46,11 +46,7 @@ trait FormPageTrait
      */
     public function getForm(): ?FAPI\Form
     {
-        if (!is_null($this->getTemplate())) {
-            return $this->getTemplate()->data()['form'] ?? null;
-        }
-
-        return $this->template_data['form'] ?? null;
+        return $this->getTemplate()?->data()['form'] ?? ($this->template_data['form'] ?? null);
     }
 
     /**

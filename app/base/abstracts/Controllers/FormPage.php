@@ -64,8 +64,6 @@ abstract class FormPage extends FrontendPage
     protected function processFormSubmit() : void
     {
         $this->getApp()->event('before_form_process', ['form' => $this->getForm()]);
-        if ($this->getForm() != null) {
-            $this->getForm()->process();
-        }
+        $this->getForm()?->process();
     }
 }

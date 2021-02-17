@@ -142,11 +142,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getTable(): ?string
     {
-        if (!is_null($this->getTemplate())) {
-            return $this->getTemplate()->data()['table'] ?? null;
-        }
-
-        return $this->getTemplateData()['table'] ?? null;
+        return $this->getTemplate()?->data()['table'] ?? ($this->getTemplateData()['table'] ?? null);
     }
 
     /**
@@ -156,11 +152,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getPaginator(): ?string
     {
-        if (!is_null($this->getTemplate())) {
-            return $this->getTemplate()->data()['paginator'] ?? null;
-        }
-
-        return $this->getTemplateData()['paginator'] ?? null;
+        return $this->getTemplate()?->data()['paginator'] ?? ($this->getTemplateData()['paginator'] ?? null);
     }
 
     /**

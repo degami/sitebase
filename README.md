@@ -16,7 +16,7 @@ This project is open source licenses using GPL. See LICENSE.txt for more info.
 
 ## Requirements:
 
-  * PHP 7.2+
+  * PHP 8.0+
   * composer
   * npm + gulp
   * compass

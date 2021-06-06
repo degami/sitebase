@@ -13,7 +13,9 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Traits\AdminTrait;
 use App\Base\Exceptions\PermissionDeniedException;
@@ -40,6 +42,22 @@ abstract class AdminRestPage extends BaseRestPage
 
         return parent::beforeRender();
     }
+
+    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    {
+        /** @var JsonResponse $out */
+        $out = parent::process($route_info, $route_data);
+
+        if ($out instanceof JsonResponse) {
+            // add auth info to response
+            $data = json_decode($out->getContent(), true);
+            $data['auth'] = $this->getTokenData();
+            $out->setData($data);
+        }
+
+        return $out;
+    }
+
 
     /**
      * gets access permission name

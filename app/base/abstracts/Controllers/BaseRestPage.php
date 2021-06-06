@@ -135,7 +135,7 @@ abstract class BaseRestPage extends BasePage
 
         /** @var BaseModel $object */
         $object = $this->getContainer()->call([$this->getObjectClass(), 'new']);
-        if (in_array($this->getVerb(), ['GET', 'PUT', 'DELETE'])) {
+        if (in_array($this->getVerb(), ['GET', 'PUT', 'DELETE']) && isset($route_data['id'])) {
             $object = $this->loadObject($route_data['id']);
         }
 

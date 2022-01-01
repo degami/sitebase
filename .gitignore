@@ -13,6 +13,7 @@ node_modules/
 .env
 .install_done
 .sass-cache
+.vscode
 var/log/*.log
 var/cache/*
 var/dumps/*

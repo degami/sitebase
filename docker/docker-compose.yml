@@ -14,6 +14,10 @@ services:
       - ..:/var/www/html
     networks:
       - sitebasenet
+    depends_on:
+      - database
+      - elasticsearch
+      - mailhog
   database:
     build:
       context: ./database
@@ -32,11 +36,20 @@ services:
     env_file:
       - ../.env
     ports:
-      - "3306:3306"
+      - 3306:3306
   elasticsearch:
     image: blacktop/elasticsearch
     volumes:
       - ./elasticsearch/data:/usr/share/elasticsearch/data
+    networks:
+      - sitebasenet
+  mailhog:
+    image: mailhog/mailhog
+    logging:
+      driver: 'none'  # disable saving logs
+    ports:
+      - 1025:1025 # smtp server
+      - 8025:8025 # web ui
     networks:
       - sitebasenet
   web:
@@ -51,11 +64,9 @@ services:
       - ./nginx/group:/etc/group
     depends_on:
       - php-fpm
-      - database
-      - elasticsearch
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     networks:
       - sitebasenet
     environment:

@@ -28,12 +28,12 @@ function dockershell {
 
 function dockerstart {
   echo "starting docker"
-  $docker_compose_bin up &
+  $docker_compose_bin up -d
 }
 
 function  dockerstop {
   echo "stopping docker"
-  $docker_compose_bin down &
+  $docker_compose_bin stop
 }
 
 if ! [ -e $docker_bin ]; then

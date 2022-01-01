@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 7.0
+ * PHP Version 8.0
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase

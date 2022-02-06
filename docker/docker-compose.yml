@@ -18,6 +18,8 @@ services:
       - database
       - elasticsearch
       - mailhog
+    ports:
+      - 9003:9003
   database:
     build:
       context: ./database

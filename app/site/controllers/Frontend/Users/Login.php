@@ -120,7 +120,7 @@ class Login extends FormPage
             $result = $this->template_data['form']->getSubmitResults(static::class . '::formSubmitted');
             /** @var Parser $parser */
             $parser = $this->getContainer()->get('jwt:configuration')->parser();
-            $token = $parser->parse($result);
+            $token = $parser->parse($result)->toString();
 
             $goto_url = $this->getUrl("frontend.users.profile");
 

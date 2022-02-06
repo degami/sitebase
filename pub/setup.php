@@ -12,6 +12,11 @@ if (file_exists('.install_done')) {
     die('Installation already done.');
 }
 
+if (isset($_REQUEST['info'])) {
+  echo phpinfo();
+  die();
+}
+
 if (isset($_GET['step'])) :
     $dotenv_sections = [
         'Basic Info' => ['APPNAME','APPDOMAIN','SALT'],
@@ -132,7 +137,7 @@ if (isset($_GET['step'])) :
         echo json_encode(['html' => '', 'js' => 'window.setTimeout(function(){loadStep(7, "Run migrations");}, 1000);']);
     elseif ($_GET['step'] == 7) :
         // run migrations
-        
+
         $commands = [
             'bin/console db:migrate',
         ];
@@ -153,7 +158,7 @@ if (isset($_GET['step'])) :
         echo json_encode(['html' => '<pre>'.$html.'</pre><button class="btn btn-primary" id="continuebtn">Continue</button>', 'js' => '$(\'#continuebtn\').click(function(){loadStep(8, "And that\'s it");});']);
     elseif ($_GET['step'] == 8) :
         // TYP
-        
+
         touch('.install_done');
         echo json_encode(['html' => 'Enjoy your site.', 'js' => 'window.setTimeout(function(){ document.location = \'/\';}, 5000);']);
     endif;
@@ -165,7 +170,7 @@ else :
     <meta charset="utf-8">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
     <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" />
-    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet"> 
+    <link href="https://fonts.googleapis.com/css?family=Raleway&display=swap" rel="stylesheet">
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <style type="text/css">
     body {

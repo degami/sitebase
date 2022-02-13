@@ -373,7 +373,7 @@ class FakeDataMigration extends BaseMigration
                 $rewrite = $rewrites[$r];
                 $media = $backgrounds[$i];
 
-                if ($media->id && $rewrite->id) {
+                if ($media && $rewrite && $media->id && $rewrite->id) {
                     $media_rewrite = $this->getContainer()->make(MediaElementRewrite::class);
                     $media_rewrite->media_element_id = $media->id;
                     $media_rewrite->rewrite_id = $rewrite->id;
@@ -539,7 +539,7 @@ class FakeDataMigration extends BaseMigration
                     'contact_id' => $contact_model->getId(),
                     'field_label' => $field['label'],
                     'field_type' => $field['type'],
-                    'field_required' => intval($field['required']),
+                    'field_required' => intval($field['required'] ?? 0),
                     'field_data' => $field['data'],
                 ]
             );

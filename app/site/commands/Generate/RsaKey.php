@@ -44,7 +44,7 @@ class RsaKey extends BaseExecCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln("<info>Generating RSA key</info>");
-
+/*
         if (!$this->commandExist('openssl')) {
             throw new NotFoundException('openssl command is missing!');
         }
@@ -57,7 +57,50 @@ class RsaKey extends BaseExecCommand
 
         $commandline = "openssl x509 -req -sha256 -days 365 -in " . App::getDir(App::ASSETS) . DS . "rsa_private.csr -signkey " . App::getDir(App::ASSETS) . DS . "rsa_private.key -out " . App::getDir(App::ASSETS) . DS . "rsa_private.pem";
         system($commandline);
+*/
+
+        $this->generateCSR('IT', 'IT', 'City', 'Organization', 'CommonName');
+        $this->generateCertificate(
+            App::getDir(App::ASSETS) . DS . 'rsa_private.csr',
+            App::getDir(App::ASSETS) . DS . 'rsa_private.key',
+            App::getDir(App::ASSETS) . DS . 'rsa_private.pem'
+        );
 
         $output->writeln("<info>Key created</info>");
+    }
+
+    protected function generateCSR($country, $state, $locality, $organization, $commonName)
+    {
+        $privateKey = \openssl_pkey_new(array(
+            'private_key_type' => OPENSSL_KEYTYPE_RSA,
+            'rsa_key_bits' => 2048,
+        ));
+
+        $csrDetails = array(
+            'countryName' => $country,
+            'stateOrProvinceName' => $state,
+            'localityName' => $locality,
+            'organizationName' => $organization,
+            'commonName' => $commonName,
+        );
+
+        $csr = \openssl_csr_new($csrDetails, $privateKey);
+
+        \openssl_pkey_export($privateKey, $privateKeyContents);
+        file_put_contents(App::getDir(App::ASSETS) . DS . 'rsa_private.key', $privateKeyContents);
+
+        \openssl_csr_export($csr, $csrContents);
+        file_put_contents(App::getDir(App::ASSETS) . DS . 'rsa_private.csr', $csrContents);
+    }
+
+    protected function generateCertificate($csrPath, $privateKeyPath, $outputPath, $days = 365)
+    {
+        $csr = file_get_contents($csrPath);
+        $privateKey = file_get_contents($privateKeyPath);
+
+        $cert = \openssl_csr_sign($csr, null, $privateKey, $days, array('digest_alg' => 'sha256'));
+
+        \openssl_x509_export($cert, $certificate);
+        file_put_contents($outputPath, $certificate);
     }
 }

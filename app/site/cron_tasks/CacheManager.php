@@ -26,16 +26,6 @@ class CacheManager extends ContainerAwareObject
     public const DEFAULT_SCHEDULE = '0 */2 * * *';
 
     /**
-     * class constructor
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        parent::__construct($container);
-    }
-
-    /**
      * flush cache method
      *
      * @return bool

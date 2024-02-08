@@ -18,8 +18,17 @@ services:
       - database
       - elasticsearch
       - mailhog
+      - redis
     ports:
       - 9003:9003
+  redis:
+    image: redis:6.2-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning
+    networks:
+      - sitebasenet
   database:
     build:
       context: ./database
@@ -43,6 +52,8 @@ services:
     image: blacktop/elasticsearch
     volumes:
       - ./elasticsearch/data:/usr/share/elasticsearch/data
+    ports:
+      - 9200:9200
     networks:
       - sitebasenet
   mailhog:

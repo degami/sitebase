@@ -32,16 +32,6 @@ class SearchManager extends ContainerAwareObject
     public const DEFAULT_SCHEDULE = '20 3 * * *';
 
     /**
-     * class constructor
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        parent::__construct($container);
-    }
-
-    /**
      * update search DB method
      *
      * @return string|null

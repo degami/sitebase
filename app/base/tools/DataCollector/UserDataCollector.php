@@ -27,19 +27,13 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
     public const NAME = "User Data";
 
     /**
-     * @var AccountModel|null subject object
-     */
-    protected ?AccountModel $subject;
-
-    /**
      * PageDataCollector constructor.
      *
      * @param AccountModel|null $user
      */
-    public function __construct(AccountModel $user = null)
-    {
-        $this->subject = $user;
-    }
+    public function __construct(
+        protected ?AccountModel $subject = null
+    ) { }
 
     /**
      * collects data
@@ -49,11 +43,11 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
     public function collect(): array
     {
         return [
-            'user_id' => $this->subject->getId(),
-            'username' => $this->subject->getUsername(),
-            'since' => ($this->subject instanceof GuestUser) ? null : $this->subject->getCreatedAt(),
-            'role' => $this->subject->getRole()->getName(),
-            'session' => ($this->subject->getUserSession() ? $this->subject->getUserSession()->getSessionData() : null),
+            'user_id' => $this->subject?->getId(),
+            'username' => $this->subject?->getUsername(),
+            'since' => ($this->subject instanceof GuestUser) ? null : $this->subject?->getCreatedAt(),
+            'role' => $this->subject?->getRole()?->getName(),
+            'session' => $this->subject?->getUserSession()?->getSessionData(),
         ];
     }
 

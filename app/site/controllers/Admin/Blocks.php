@@ -51,8 +51,11 @@ class Blocks extends AdminManageModelsPage
      * @throws PermissionDeniedException
      * @throws OutOfRangeException
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         AdminFormPage::__construct($container, $request, $route_info);
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
             $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');

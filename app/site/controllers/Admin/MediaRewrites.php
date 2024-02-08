@@ -45,8 +45,11 @@ class MediaRewrites extends AdminManageModelsPage
      * @throws NotFoundException
      * @throws OutOfRangeException
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         parent::__construct($container, $request, $route_info);
         $this->page_title = 'Rewrite / Media';
     }

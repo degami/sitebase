@@ -50,8 +50,11 @@ class Cron extends AdminManageModelsPage
      * @throws NotFoundException
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         AdminFormPage::__construct($container, $request, $route_info);
         $this->page_title = 'Cron Tasks';
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {

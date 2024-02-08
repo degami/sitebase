@@ -40,19 +40,13 @@ class SiteBase implements ExtensionInterface
     protected Engine $engine;
 
     /**
-     * @var ContainerInterface container
-     */
-    protected ContainerInterface $container;
-
-    /**
      * constructor
      *
      * @param ContainerInterface $container
      */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(
+        protected ContainerInterface $container
+    ) { }
 
     /**
      * {@inheritdocs}

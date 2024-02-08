@@ -59,16 +59,27 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @throws PhpfastcacheInvalidConfigurationException
      * @throws ReflectionException
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        protected ContainerInterface $container
+    ) {
         parent::__construct($container);
 
         if (self::$internalCacheInstance == null) {
-            $config = new \Phpfastcache\Drivers\Files\Config([
-                'path' => \App\App::getDir(\App\App::ROOT) . DS . 'var' . DS . 'cache',
-            ]);
-            $config->setSecurityKey(str_replace(" ", "_", strtolower(getenv('APPNAME'))));
-            $cache = \Phpfastcache\CacheManager::getInstance('Files', $config);
+            if ($this->getEnv('REDIS_CACHE')) {
+                $config = new \Phpfastcache\Drivers\Redis\Config([
+                    'host' => $this->getEnv('REDIS_HOST', '127.0.0.1'),
+                    'port' => intval($this->getEnv('REDIS_PORT', 6379)),
+                    'password' => $this->getEnv('REDIS_PASSWORD', ''),
+                    'database' => intval($this->getEnv('REDIS_DATABASE', 0)),
+                ]);
+                $cache = \Phpfastcache\CacheManager::getInstance('Redis', $config);
+            } else {
+                $config = new \Phpfastcache\Drivers\Files\Config([
+                    'path' => \App\App::getDir(\App\App::ROOT) . DS . 'var' . DS . 'cache',
+                ]);
+                $config->setSecurityKey(str_replace(" ", "_", strtolower(getenv('APPNAME'))));
+                $cache = \Phpfastcache\CacheManager::getInstance('Files', $config);    
+            }
 
             self::$internalCacheInstance = $cache;
         }

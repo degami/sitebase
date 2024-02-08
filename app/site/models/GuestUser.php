@@ -65,8 +65,9 @@ class GuestUser extends AccountModel
      * @param ContainerInterface $container
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        protected ContainerInterface $container
+    ) {
         parent::__construct($container);
 
         /* @todo chek if it is possible to store data to a jwt token */

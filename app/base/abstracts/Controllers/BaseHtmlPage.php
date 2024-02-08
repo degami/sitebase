@@ -15,6 +15,7 @@ namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Tools\DataCollector\PageDataCollector;
+use App\Base\Tools\DataCollector\RedisDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
 use DebugBar\DebugBar;
 use DebugBar\DebugBarException;
@@ -68,7 +69,7 @@ abstract class BaseHtmlPage extends BasePage
      * @throws Throwable
      * @throws DebugBarException
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, $route_data = []): BasePage|Response
     {
         $this->route_info = $route_info;
 
@@ -87,6 +88,9 @@ abstract class BaseHtmlPage extends BasePage
             $debugbar = $this->getContainer()->get('debugbar');
             $debugbar->addCollector(new PageDataCollector($this));
             $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
+            if ($this->getEnv('REDIS_CACHE', 0) == 1) {
+                $debugbar->addCollector(new RedisDataCollector());
+            }
         }
 
         return $this->process($route_info, $route_data);
@@ -102,7 +106,7 @@ abstract class BaseHtmlPage extends BasePage
      * @throws Throwable
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, $route_data = []): Response
     {
         try {
             $template_html = '';

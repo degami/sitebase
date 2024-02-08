@@ -33,19 +33,9 @@ use App\Base\Exceptions\PermissionDeniedException;
 abstract class BasePage extends ContainerAwareObject
 {
     /**
-     * @var Request request object
-     */
-    protected Request $request;
-
-    /**
      * @var Response response object
      */
-    protected $response;
-
-    /**
-     * @var RouteInfo route info object
-     */
-    protected ?RouteInfo $route_info = null;
+    protected Response $response;
 
     /**
      * BasePage constructor.
@@ -57,8 +47,11 @@ abstract class BasePage extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         parent::__construct($container);
         $this->request = $request ?: $this->getApp()->getRequest();
         $this->route_info = $route_info ?: $this->getAppRouteInfo();

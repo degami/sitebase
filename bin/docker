@@ -36,6 +36,12 @@ function  dockerstop {
   $docker_compose_bin stop
 }
 
+function  dockerbuild {
+  echo "building docker"
+  args=$@
+  $docker_compose_bin build $args
+}
+
 if ! [ -e $docker_bin ]; then
     echo "This script should be run from the root dir"
     exit
@@ -48,6 +54,14 @@ fi
 cd $root_dir/docker
 
 case "$1" in
+  build)
+      if [[ $(dockerps web) = 1 ]]; then
+        echo "docker is up"
+      else
+        shift
+        dockerbuild $@
+      fi
+      ;;
   start|go|up)
       if [[ $(dockerps web) = 1 ]]; then
         echo "docker is up"
@@ -96,6 +110,6 @@ case "$1" in
       fi
     ;;
   *)
-      echo $"Usage: $0 {start|go|up, stop|k|down, restart|r, status|st, sh[ell] <web|database|php-fpm>, console <command>}"
+      echo $"Usage: $0 {build, start|go|up, stop|k|down, restart|r, status|st, sh[ell] <web|database|php-fpm>, console <command>}"
       exit 1
 esac

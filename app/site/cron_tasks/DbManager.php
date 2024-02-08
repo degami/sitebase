@@ -30,16 +30,6 @@ class DbManager extends ContainerAwareObject
     public const DEFAULT_SCHEDULE = '0 5 * * 0';
 
     /**
-     * class constructor
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        parent::__construct($container);
-    }
-
-    /**
      * flush cache method
      *
      * @return bool

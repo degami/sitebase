@@ -24,8 +24,10 @@ if (isset($_GET['step'])) :
         'Admin Info' => ['ADMINPAGES_GROUP','ADMIN_USER','ADMIN_PASS','ADMIN_EMAIL'],
         'Cache Info' => ['CACHE_LIFETIME','DISABLE_CACHE','ENABLE_FPC'],
         'Other Info' => ['DEBUG','GTMID'],
+        'ElasticSearch Info' => ['ELASTICSEARCH','ELASTICSEARCH_HOST','ELASTICSEARCH_PORT'],
         'Smtp Info' => ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASS'],
         'SES Info' => ['SES_REGION','SES_PROFILE'],
+        'Redis Info' => ['REDIS_CACHE','REDIS_HOST','REDIS_PORT','REDIS_PASSWORD','REDIS_DATABASE'],
     ];
 
     header('Content-Type: application/json');

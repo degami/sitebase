@@ -44,8 +44,11 @@ abstract class LoggedUserFormPage extends LoggedUserPage
      * @throws PermissionDeniedException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         parent::__construct($container, $request, $route_info);
         $this->template_data = [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())

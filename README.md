@@ -16,10 +16,12 @@ This project is open source licenses using GPL. See LICENSE.txt for more info.
 
 ## Requirements:
 
-  * PHP 7.2+
+  * PHP 8.0+
   * composer
   * npm + gulp
   * compass
+  * elasticsearch (optional)
+  * redis (optional)
   * an unix environment (i've tested it on Linux and Mac)
 
 ## Roadmap
@@ -77,7 +79,7 @@ if you want to do it by hand, you can run (in the main project directory):
 
 using bin/console should be quite familiar ( and auto explicative ).
 
-In the .env file you can change the basic informations (eg. the administration location or the database / smtp / ses credentials )
+In the .env file you can change the basic informations (eg. the administration location or the database / elasticsearch / redis / smtp / ses credentials )
 
 ## Help Wanted
 

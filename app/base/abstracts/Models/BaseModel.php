@@ -70,8 +70,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container, $db_row = null)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        Row $db_row = null
+    ) {
         parent::__construct($container);
 
         $name = $this->getTableName();

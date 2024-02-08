@@ -55,8 +55,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @throws OutOfRangeException
      * @throws PermissionDeniedException
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         parent::__construct($container, $request, $route_info);
         if ($this->template_data['action'] == 'list') {
             $this->addNewButton();

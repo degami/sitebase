@@ -51,8 +51,11 @@ class Login extends FormPage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         parent::__construct($container, $request, $route_info);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
             $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');

@@ -55,10 +55,11 @@ class BaseCommand extends SymfonyCommand
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function __construct($name = null, ContainerInterface $container = null)
-    {
+    public function __construct(
+        protected ContainerInterface $container,
+        $name = null
+    ) {
         parent::__construct($name);
-        $this->container = $container;
         $this->bootstrap();
     }
 

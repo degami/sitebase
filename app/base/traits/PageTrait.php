@@ -47,7 +47,7 @@ trait PageTrait
     /**
      * @var RouteInfo|null route info object
      */
-    protected ?RouteInfo $route_info = null;
+    protected ?RouteInfo $route_info;
 
     /**
      * calculates JWT token id

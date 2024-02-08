@@ -57,8 +57,9 @@ abstract class BaseRouter extends ContainerAwareObject
      * @param ContainerInterface $container
      * @throws Exception
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        protected ContainerInterface $container
+    ) {
         parent::__construct($container);
 
         $router_name = $this->getRouterName();

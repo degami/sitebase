@@ -24,16 +24,6 @@ class HeartBeat extends ContainerAwareObject
     public const DEFAULT_SCHEDULE = '*/5 * * * *';
 
     /**
-     * class constructor
-     *
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        parent::__construct($container);
-    }
-
-    /**
      * pulse method
      *
      * @return string

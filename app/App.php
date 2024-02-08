@@ -36,6 +36,10 @@ use App\Base\Exceptions\BlockedIpException;
 use App\Base\Exceptions\NotFoundException;
 use App\Base\Exceptions\NotAllowedException;
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Exceptions\InvalidValueException;
+use App\Base\Traits\ContainerAwareTrait;
+use App\Base\Traits\ToolsTrait;
+use App\Base\Traits\TranslatorsTrait;
 use Exception;
 use Throwable;
 
@@ -44,6 +48,10 @@ use Throwable;
  */
 class App extends ContainerAwareObject
 {
+    use ContainerAwareTrait;
+    use ToolsTrait;
+    use TranslatorsTrait;
+
     public const ROOT = 'root';
     public const APP = 'app';
     public const CONFIG = 'config';
@@ -75,8 +83,7 @@ class App extends ContainerAwareObject
     /**
      * class constructor
      */
-    public function __construct()
-    {
+    public function __construct() {
         // do we need php sessions ?
         // session_start();
 
@@ -91,7 +98,7 @@ class App extends ContainerAwareObject
             /**
              * @var ContainerInterface $this ->container
              */
-            parent::__construct($builder->build());
+            $this->container = $builder->build();
 
             if (is_file($this->getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
                 $this->blocked_ips = include($this->getDir(self::CONFIG) . DS . 'blocked_ips.php');
@@ -431,5 +438,25 @@ class App extends ContainerAwareObject
     public function getCurrentLocale(): ?string
     {
         return $this->current_locale;
+    }
+
+
+    /**
+     * {@inheritdocs}
+     *
+     * @param string $name
+     * @param mixed $arguments
+     * @return mixed
+     * @throws InvalidValueException
+     */
+    public function __call(string $name, mixed $arguments): mixed
+    {
+        $method = strtolower(substr(trim($name), 0, 3));
+        $prop = self::pascalCaseToSnakeCase(substr(trim($name), 3));
+        if ($method == 'get' && $this->getContainer()->has($prop)) {
+            return $this->getContainer()->get($prop);
+        }
+
+        throw new InvalidValueException("Method \"{$name}\" not found in class\"" . get_class($this) . "\"!", 1);
     }
 }

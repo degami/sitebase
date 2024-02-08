@@ -21,7 +21,7 @@ use App\Base\Abstracts\Models\ModelWithChildren;
  */
 trait WithLatLngTrait
 {
-    public const EARTHRADIUS = 6371000;
+    protected int $EARTHRADIUS = 6371000;
 
     /**
      * @var float latitude
@@ -58,7 +58,7 @@ trait WithLatLngTrait
      *
      * @return float
      */
-    public function distance(static $other): float
+    public function distance(self $other): float
     {
       // convert from degrees to radians
       $latFrom = deg2rad($this->getLatitude());
@@ -70,6 +70,6 @@ trait WithLatLngTrait
       $lonDelta = $lonTo - $lonFrom;
 
       $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
-      return $angle * static::EARTHRADIUS;
+      return $angle * $this->EARTHRADIUS;
     }
 }

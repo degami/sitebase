@@ -40,24 +40,6 @@ class BanIP extends AdminFormPage
     protected array $blocked_ips = [];
 
     /**
-     * {@inheritdocs}
-     *
-     * @param ContainerInterface $container
-     * @param Request $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws FormException
-     * @throws NotFoundException
-     * @throws PermissionDeniedException
-     */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
-        parent::__construct($container, $request, $route_info);
-    }
-
-
-    /**
      * {@intheritdocs}
      *
      * @return Response|self

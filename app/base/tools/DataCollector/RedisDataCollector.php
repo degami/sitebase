@@ -13,26 +13,19 @@
 
 namespace App\Base\Tools\DataCollector;
 
+use App\Base\Abstracts\Models\AccountModel;
+use App\Site\Models\GuestUser;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;
-use App\Base\Abstracts\Controllers\BasePage;
+use Redis as RedisClient;
 
 /**
- * Page data collector for debugging
+ * Redis data collector for debugging
  */
-class PageDataCollector extends DataCollector implements Renderable, AssetProvider
+class RedisDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    public const NAME = "Page Data";
-
-    /**
-     * PageDataCollector constructor.
-     *
-     * @param BasePage|null $page
-     */
-    public function __construct(
-        protected ?BasePage $subject = null
-    ) { }
+    public const NAME = "Redis Data";
 
     /**
      * collects data
@@ -41,7 +34,20 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
      */
     public function collect(): array
     {
-        return $this->subject?->getInfo() ?? [];
+        $client = new RedisClient();
+        $isConnected = $client->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'), 5);
+        if (!empty(getenv('REDIS_PASSWORD', ''))) {
+            $client->auth(getenv('REDIS_PASSWORD',''));
+        }
+        $client->select(getenv('REDIS_DATABASE'));
+
+        return [
+            'host' => getenv('REDIS_HOST'),
+            'port' => getenv('REDIS_PORT'),
+            'database' => getenv('REDIS_DATABASE'),
+            'dbsize' => $client->dbSize(),
+            'keys' => json_encode($client->keys('*')),
+        ];
     }
 
     /**
@@ -64,7 +70,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "Page Variables",
+                "tooltip" => "Redis Data",
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => self::NAME,
                 "default" => "''"

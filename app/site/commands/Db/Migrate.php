@@ -57,9 +57,11 @@ class Migrate extends BaseCommand
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function __construct($name = null, ContainerInterface $container = null)
-    {
-        parent::__construct($name, $container);
+    public function __construct(
+        protected ContainerInterface $container,
+        $name = null
+    ) {
+        parent::__construct($container, $name);
         $this->adapter = $this->getContainer()->make(PdoMysqlAdapter::class, ['pdo' => $this->getPdo()]);
         $this->factory = $this->getContainer()->make(
             Factory::class,

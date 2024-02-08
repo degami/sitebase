@@ -60,8 +60,11 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function __construct(ContainerInterface $container, Request $request, RouteInfo $route_info)
-    {
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
         AdminFormPage::__construct($container, $request, $route_info);
         $this->page_title = 'Contact Forms';
         if ($this->template_data['action'] == 'list' || $this->template_data['action'] == 'submissions') {

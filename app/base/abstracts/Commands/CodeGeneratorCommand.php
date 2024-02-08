@@ -41,9 +41,11 @@ abstract class CodeGeneratorCommand extends BaseCommand
      * @param ContainerInterface|null $container
      * @throws Exception
      */
-    public function __construct($name = null, ContainerInterface $container = null)
-    {
-        parent::__construct($name, $container);
+    public function __construct(
+        protected ContainerInterface $container,
+        $name = null
+    ) {
+        parent::__construct($container, $name);
         $this->composer_reader = $this->getContainer()->make(ComposerReader::class, ['file' => App::getDir('root') . DS . 'composer.json']);
 
         if (!$this->composer_reader->canRead()) {

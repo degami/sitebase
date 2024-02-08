@@ -32,8 +32,9 @@ class GTM extends BaseCodeBlock
      * @param ContainerInterface $container
      * @throws BasicException
      */
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        protected ContainerInterface $container
+    ) {
         parent::__construct($container);
         $this->getAssets()->addJs(
             "(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':

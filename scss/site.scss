@@ -1,6 +1,6 @@
-$lightgrey: #eaeaea;
-
+@import "partials/colors";
 @import "partials/forms";
+@import "partials/lightbox";
 
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:100,300,400,600");
@@ -9,8 +9,8 @@ $lightgrey: #eaeaea;
 
 body {
     padding: 10px;
-    background: $lightgrey;
-    color: #333858;
+    background: $color-lightergray;
+    color: $color-darkblue;
     font-family: 'Raleway', sans-serif;
     font-weight: 400;
 }
@@ -83,7 +83,7 @@ ul.breadcrumbs {
 .menu {
     display: flex;
     justify-content: space-around;
-    background-color: #f8f9fa !important;
+    background-color: $color-almostwhite2 !important;
 
     .navbar {
         width: 100%;

@@ -7,6 +7,7 @@
 
 //@import "compass/reset";
 @import "rgbapng";
+@import "partials/colors";
 @import "partials/forms";
 @import "../node_modules/select2/src/scss/core";
 @import '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
@@ -66,13 +67,13 @@ body {
         padding: 8px 8px 8px 32px;
         text-decoration: none;
         font-size: 25px;
-        color: #818181;
+        color: $color-lightgray2;
         display: block;
         transition: 0.3s;
 
         /* When you mouse over the navigation links, change their color */
         &:hover {
-            color: #f1f1f1;
+            color: $color-lightergray2;
         }
     }
 
@@ -92,7 +93,7 @@ body {
             white-space: nowrap;
             font-weight: 500;
             font-size: .750rem;
-            color: #333;
+            color: $color-gray;
             padding: .4rem 1rem;
 
             .text {
@@ -101,11 +102,11 @@ body {
 
             .feather {
                 margin-right: 4px;
-                color: #999;
+                color: $color-lightgray;
             }
 
             &.active {
-                color: #007bff;
+                color: $color-blue;
             }
 
             &:hover, &.active {
@@ -119,7 +120,7 @@ body {
             position: absolute;
             bottom: 40px;
             right: 0;
-            color: #000;
+            color: $color-black;
             span {
                 color: inherit;
             }
@@ -201,7 +202,7 @@ body {
 .navbar {
     &.navbar-dark,
     &.bg-dark {
-        color: #fff;
+        color: $color-white;
     }
 
     .navbar-brand {
@@ -221,7 +222,7 @@ body {
 }
 
 .form-control-dark {
-    color: #fff;
+    color: $color-white;
     background-color: rgba(255, 255, 255, .1);
     border-color: rgba(255, 255, 255, .1);
 
@@ -235,8 +236,8 @@ body {
 * Utilities
 */
 
-.border-top { border-top: 1px solid #e5e5e5; }
-.border-bottom { border-bottom: 1px solid #e5e5e5; }
+.border-top { border-top: 1px solid $color-almostwhite3; }
+.border-bottom { border-bottom: 1px solid $color-almostwhite3; }
 
 .nowrap {
     white-space: nowrap;
@@ -261,7 +262,7 @@ body {
     z-index: 10000; /* Stay on top */
     top: 0;
     right: 0;
-    background-color: #efefef; /* grey*/
+    background-color: $color-almostwhite; /* grey*/
     overflow-x: hidden; /* Disable horizontal scroll */
     padding-top: 60px; /* Place content 60px from the top */
     transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
@@ -271,13 +272,13 @@ body {
         padding: 8px 8px 8px 32px;
         text-decoration: none;
         font-size: 25px;
-        color: #818181;
+        color: $color-lightgray2;
         display: block;
         transition: 0.3s;
 
         /* When you mouse over the navigation links, change their color */
         &:hover {
-            color: #f1f1f1;
+            color: $color-lightergray2;
         }
     }
 
@@ -300,13 +301,13 @@ body {
 .openSidePanelBtn {
     font-size: 20px;
     cursor: pointer;
-    background-color: #111;
-    color: white;
+    background-color: $color-almostblack;
+    color: $color-white;
     padding: 10px 15px;
     border: none;
 
     &:hover {
-        background-color: #444;
+        background-color: $color-gray2;
     }
 }
 
@@ -345,7 +346,7 @@ body {
 }
 
 .form-control.has-errors {
-    border-color: #dc3545;
+    border-color: $color-red;
     padding-right: calc(1.5em + 0.75rem);
     background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='%23dc3545' viewBox='-2 -2 7 7'%3e%3cpath stroke='%23dc3545' d='M0 0l3 3m0-3L0 3'/%3e%3ccircle r='.5'/%3e%3ccircle cx='3' r='.5'/%3e%3ccircle cy='3' r='.5'/%3e%3ccircle cx='3' cy='3' r='.5'/%3e%3c/svg%3E");
     background-repeat: no-repeat;
@@ -356,7 +357,7 @@ body {
 .form-control {
     padding: 4px 8px;
     font-size: .875rem;
-    border-color: #aaa;
+    border-color: $color-lightgray3;
 }
 
 .form-item {
@@ -434,7 +435,7 @@ body {
 }
 
 .version {
-    color: #c4c4c4;
+    color: $color-lightgray4;
     font-size: 0.5em;
     position: fixed;
     bottom: 0;
@@ -468,11 +469,11 @@ body {
 }
 
 .btn.btnaddmore {
-  color: #fff;
-  background-color: #007bff;
+  color: $color-white;
+  background-color: $color-blue;
 
     &:hover {
-      color: #fff;
-      background-color: #0069d9;
+      color: $color-white;
+      background-color: $color-blue2;
     }
 }

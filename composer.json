@@ -36,12 +36,13 @@
         "tinymce/tinymce": "^5.0",
         "dragonmantank/cron-expression": "^2.3",
         "swiftmailer/swiftmailer": "^6.2",
-        "phpfastcache/phpfastcache": "^7.1",
+        "phpfastcache/phpfastcache": "^8.0.7",
         "nadar/php-composer-reader": "^1.3",
         "spatie/db-dumper": "^2.13",
         "stidges/country-flags": "^2.0",
         "spatie/array-to-xml": "^2.11",
-        "elasticsearch/elasticsearch": "~7.0"
+        "elasticsearch/elasticsearch": "~7.0",
+        "mathiasverraes/classfunctions": "^1.1@dev"
     },
   "autoload": {
     "files": [

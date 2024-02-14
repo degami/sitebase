@@ -16,12 +16,14 @@ namespace App\Base\Overrides\Migrations;
 use Closure;
 use Genkgo\Migrations\Factory as GenkgoMigrationFactory;
 use Genkgo\Migrations\AdapterInterface;
+use Genkgo\Migrations\Utils\FileList;
+use Genkgo\Migrations\MigrationInterface;
 use InvalidArgumentException;
 
 /**
  * Migration factory override
  */
-class Factory extends GenkgoMigrationFactory
+class Factory
 {
     /**
      * @var AdapterInterface adapter
@@ -45,6 +47,15 @@ class Factory extends GenkgoMigrationFactory
         $this->setClassLoader($classLoader);
     }
 
+    public function setClassLoader(\Closure $classLoader = null): void
+    {
+        if (null === $classLoader) {
+            $classLoader = fn ($classname) => new $classname;
+        }
+
+        $this->classLoader = $classLoader;
+    }
+
     /**
      * gets a new collection
      *
@@ -57,5 +68,24 @@ class Factory extends GenkgoMigrationFactory
             throw new InvalidArgumentException('Namespace incorrect, follow psr-4 namespace rules. Do not forget trailing slashes');
         }
         return (new Collection($this->adapter))->setNamespace($namespace);
+    }
+
+    public function newListFromDirectory(string $directory, string $namespace = '\\'): Collection
+    {
+        $collection = $this->newList($namespace);
+        $classloader = $this->classLoader;
+
+        $files = FileList::fromDirectory($directory);
+        foreach ($files as $file) {
+            require_once $file;
+            $classname = \basename($file, '.php');
+            $qualifiedClassName = $namespace . $classname;
+
+            if (\is_a($qualifiedClassName, MigrationInterface::class, true)) {
+                $collection->attach($classloader($qualifiedClassName));
+            }
+        }
+
+        return $collection;
     }
 }

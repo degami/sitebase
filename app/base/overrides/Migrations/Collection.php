@@ -24,7 +24,7 @@ use InvalidArgumentException;
 /**
  * Overrides migrations collection in order to have them sorted
  */
-class Collection extends GenkgoMigrationCollection
+class Collection
 {
     /**
      * @var AdapterInterface adapter

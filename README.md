@@ -43,6 +43,7 @@ Till now i didn't found a project that has **all** this requirements:
 - supports Full Page Cache in the core
 - supports migrations in the core
 - supports SMTP/SES in the core
+- supports 2FA in the core
 - has users/roles permission logics
 - supports queues (long running processes) and crontabs (scheduled actions) in the core
 - monolithic by design (you need to develop your site needed features, not to install something made by someone else that does "almost" the same as your needs and then override its behaviour)

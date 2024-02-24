@@ -14,6 +14,7 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
+use App\Site\Models\User2Fa;
 use App\Site\Models\User;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -119,6 +120,11 @@ trait FrontendTrait
         try {
             if ($this->getTokenData()) {
                 $this->current_user_model = $this->getCurrentUser();
+
+                if ($this->getEnv('USE2FA_USERS') && !in_array($this->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && ($this->current_user?->passed2fa ?? false) != true) {
+                    return false;
+                }
+
                 return $this->current_user_model->checkPermission('view_logged_site');
             }
         } catch (Exception $e) {

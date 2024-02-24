@@ -54,6 +54,11 @@ trait AdminTrait
         try {
             if ($this->getTokenData()) {
                 $this->current_user_model = $this->getCurrentUser();
+
+                if ($this->getEnv('USE2FA_ADMIN') && !in_array($this->getRouteInfo()->getRouteName(), ['admin.twofa', 'admin.login']) && ($this->current_user?->passed2fa ?? false) != true) {
+                    return false;
+                }
+
                 return $this->current_user_model->checkPermission('administer_site');
             }
         } catch (Exception $e) {

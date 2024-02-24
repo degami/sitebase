@@ -67,35 +67,6 @@ trait PageTrait
     }
 
     /**
-     * gets Authorization token header
-     *
-     * @return string|null
-     */
-    protected function getTokenHeader(): ?string
-    {
-        $token = $this->getRequest()->headers->get('Authorization');
-        return $token ?: $this->getRequest()->cookies->get('Authorization');
-    }
-
-    /**
-     * gets Authorization token Object
-     *
-     * @return ?Token
-     */
-    protected function getToken(): ?Token
-    {
-        $auth_token = $this->getTokenHeader();
-
-        if (!$auth_token) {
-            return null;
-        }
-
-        /** @var Parser $parser */
-        $parser = $this->getContainer()->get('jwt:configuration')->parser();
-        return $parser->parse($auth_token);
-    }
-
-    /**
      * checks if token is still active
      *
      * @param Token $token
@@ -120,22 +91,10 @@ trait PageTrait
      */
     protected function getTokenData(): mixed
     {
-        try {
-            $token = $this->getToken();
-            if (is_null($token)) {
-                return null;
-            }
-            /** @var Validator $validator */
-            $validator = $this->getContainer()->get('jwt:configuration')->validator();
-            $constraints = $this->getContainer()->get('jwt:configuration')->validationConstraints();
-            if ($validator->validate($token, ...$constraints)) {
-                $claims = $token->claims();
-                $this->current_user = $claims->get('userdata');
-
-                return (object)$this->current_user;
-            }
-        } catch (Exception $e) {
-            //$this->getUtils()->logException($e);
+        $userDataClaim = $this->getContainer()->get('utils')->getTokenUserDataClaim();
+        if ($userDataClaim !== false && !empty($userDataClaim)) {
+            $this->current_user = (object)$userDataClaim;
+            return $this->current_user;
         }
 
         return false;

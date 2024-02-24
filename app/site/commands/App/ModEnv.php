@@ -33,9 +33,11 @@ class ModEnv extends BaseCommand
         'Database Info' => ['DATABASE_HOST', 'DATABASE_NAME', 'DATABASE_USER', 'DATABASE_PASS'],
         'Admin Info' => ['ADMINPAGES_GROUP', 'ADMIN_USER', 'ADMIN_PASS', 'ADMIN_EMAIL'],
         'Cache Info' => ['CACHE_LIFETIME', 'DISABLE_CACHE', 'ENABLE_FPC', 'PRELOAD_REWRITES'],
-        'Other Info' => ['ENABLE_LOGGEDPAGES', 'LOGGEDPAGES_GROUP', 'DEBUG', 'GTMID', 'ELASTICSEARCH', 'ELASTICSEARCH_HOST', 'ELASTICSEARCH_PORT'],
+        'Other Info' => ['DEBUG','GTMID', 'ENABLE_LOGGEDPAGES', 'USE2FA_USERS', 'LOGGEDPAGES_GROUP'],
+        'ElasticSearch Info' => ['ELASTICSEARCH','ELASTICSEARCH_HOST','ELASTICSEARCH_PORT'],
         'Smtp Info' => ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS'],
-        'SES Info' => ['SES_REGION', 'SES_PROFILE'],
+        'SES Info' => ['SES_REGION','SES_PROFILE'],
+        'Redis Info' => ['REDIS_CACHE','REDIS_HOST','REDIS_PORT','REDIS_PASSWORD','REDIS_DATABASE'],
     ];
 
     /**

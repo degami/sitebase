@@ -38,6 +38,7 @@ use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 use Degami\Basics\Exceptions\BasicException;
+use PHPGangsta_GoogleAuthenticator;
 use Swift_Mailer;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -387,5 +388,16 @@ trait ContainerAwareTrait
         }
 
         return null;
+    }
+
+    /**
+     * gets google authenticator service
+     * 
+     * @return PHPGangsta_GoogleAuthenticator
+     * @throws BasicException
+     */
+    public function getGoogleAuthenticator(): PHPGangsta_GoogleAuthenticator
+    {
+        return $this->getService('googleauthenticator');
     }
 }

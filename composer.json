@@ -42,7 +42,8 @@
         "stidges/country-flags": "^2.0",
         "spatie/array-to-xml": "^2.11",
         "elasticsearch/elasticsearch": "~7.0",
-        "mathiasverraes/classfunctions": "^1.1@dev"
+        "mathiasverraes/classfunctions": "^1.1@dev",
+        "phpgangsta/googleauthenticator": "dev-master"
     },
   "autoload": {
     "files": [

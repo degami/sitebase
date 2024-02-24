@@ -193,6 +193,9 @@ return [
     }),
     'elasticsearch' => DI\get(\Elasticsearch\Client::class),
 
+    \PHPGangsta_GoogleAuthenticator::class => DI\create(PHPGangsta_GoogleAuthenticator::class),
+    'googleauthenticator' => DI\get(\PHPGangsta_GoogleAuthenticator::class),
+
     // 'request'
     \Symfony\Component\HttpFoundation\Request::class => DI\factory(function(){
         return \Symfony\Component\HttpFoundation\Request::createFromGlobals();

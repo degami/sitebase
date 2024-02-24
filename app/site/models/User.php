@@ -154,14 +154,37 @@ class User extends AccountModel
      * @return string
      * @throws Exception
      */
-    public function getJWT(): string
+    public function getJWT(array $extraData = []): string
     {
         $this->checkLoaded();
+
+
+        $tokenData = $this->getContainer()->get('utils')->getTokenUserDataClaim();
 
         /** @var Builder $builder */
         //$builder = $this->getContainer()->get('jwt:builder');
         $builder = $this->getContainer()->get('jwt:configuration')->builder();
 
+
+        $userData = [
+            'id' => $this->getId(),
+            'username' => $this->getUsername(),
+            'email' => $this->getEmail(),
+            'nickname' => $this->getNickname(),
+            'permissions' => array_map(
+                function ($el) {
+                    return $el->name;
+                },
+                $this->getRole()->getPermissionsArray()
+            )
+        ];
+
+        // add existing data if user is the same
+        if ($tokenData && $this->getId() == $tokenData->id) {
+            $userData += $tokenData;
+        }
+
+        $userData += $extraData;
 
         $builder
         ->issuedBy($this->getContainer()->get('jwt_issuer'))
@@ -177,18 +200,7 @@ class User extends AccountModel
         ->withClaim('uid', $this->getId())
         // Configures a new claim, called "uid"
         ->withClaim('username', $this->getUsername())
-        ->withClaim('userdata', (object)[
-            'id' => $this->getId(),
-            'username' => $this->getUsername(),
-            'email' => $this->getEmail(),
-            'nickname' => $this->getNickname(),
-            'permissions' => array_map(
-                function ($el) {
-                    return $el->name;
-                },
-                $this->getRole()->getPermissionsArray()
-            )
-        ]);
+        ->withClaim('userdata', (object)$userData);
 
         /** @var \Lcobucci\JWT\Configuration $configuration */
         $configuration = $this->getContainer()->get('jwt:configuration');

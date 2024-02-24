@@ -27,6 +27,9 @@ use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Lcobucci\JWT\Parser;
+use Lcobucci\JWT\Token;
+use Lcobucci\JWT\Validator;
 use App\Site\Models\RequestLog;
 use App\Site\Models\QueueMessage;
 use App\Base\Controllers\Dummy\NullPage;
@@ -578,4 +581,60 @@ class Globals extends ContainerAwareObject
     {
         return $this->queueMail($from, $to, $subject, $body, 'link_form_mail');
     }
+
+
+    /**
+     * gets Authorization token header
+     *
+     * @return string|null
+     */
+    public function getTokenHeader(): ?string
+    {
+        $token = $this->getRequest()->headers->get('Authorization');
+        return $token ?: $this->getRequest()->cookies->get('Authorization');
+    }
+
+    /**
+     * gets Authorization token Object
+     *
+     * @return ?Token
+     */
+    public function getToken(): ?Token
+    {
+        $auth_token = $this->getTokenHeader();
+
+        if (!$auth_token) {
+            return null;
+        }
+
+        /** @var Parser $parser */
+        $parser = $this->getContainer()->get('jwt:configuration')->parser();
+        return $parser->parse($auth_token);
+    }
+
+    /**
+     * gets token data
+     *
+     * @return mixed
+     */
+    public function getTokenUserDataClaim(): mixed
+    {
+        try {
+            $token = $this->getToken();
+            if (is_null($token)) {
+                return null;
+            }
+            /** @var Validator $validator */
+            $validator = $this->getContainer()->get('jwt:configuration')->validator();
+            $constraints = $this->getContainer()->get('jwt:configuration')->validationConstraints();
+            if ($validator->validate($token, ...$constraints)) {
+                $claims = $token->claims();
+                return (array) $claims->get('userdata');
+            }
+        } catch (Exception $e) {
+            //$this->getUtils()->logException($e);
+        }
+
+        return false;
+    }    
 }

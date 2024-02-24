@@ -161,7 +161,7 @@ abstract class BasePage extends ContainerAwareObject
      *
      * @return string the form html
      */
-    #[Pure] public function __toString(): string
+    public function __toString(): string
     {
         try {
             return get_class($this);

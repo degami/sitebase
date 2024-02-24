@@ -122,13 +122,22 @@ class Login extends FormPage
             $parser = $this->getContainer()->get('jwt:configuration')->parser();
             $token = $parser->parse($result)->toString();
 
-            $goto_url = $this->getUrl("frontend.users.profile");
 
-            if ($this->getRequest()->get('dest')) {
-                $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
+            if ($this->getEnv('USE2FA_USERS') && ($this->current_user?->passed2fa ?? false) != true){
+                $goto_url = $this->getUrl('frontend.users.twofa');
 
-                if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnv('SALT'))) {
-                    $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));
+                if ($this->getRequest()->get('dest')) {
+                    $goto_url .= '?dest'.$this->getRequest()->get('dest');
+                }
+            } else {
+                $goto_url = $this->getUrl("frontend.users.profile");
+
+                if ($this->getRequest()->get('dest')) {
+                    $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
+    
+                    if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnv('SALT'))) {
+                        $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));
+                    }
                 }
             }
 

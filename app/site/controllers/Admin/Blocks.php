@@ -134,6 +134,7 @@ class Blocks extends AdminManageModelsPage
             'icon' => 'box',
             'text' => 'Blocks',
             'section' => 'cms',
+            'order' => 0,
         ];
     }
 

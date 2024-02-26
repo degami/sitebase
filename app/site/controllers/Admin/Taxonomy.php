@@ -73,6 +73,23 @@ class Taxonomy extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.taxonomy',
+            'icon' => 'list',
+            'text' => 'Taxonomy',
+            'section' => 'cms',
+            'order' => 30,
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form

@@ -73,6 +73,22 @@ class Sitemaps extends AdminManageModelsPage
         return 'sitemap_id';
     }
 
+    /**
+     * {@inheritdocs}
+     *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.sitemaps',
+            'icon' => 'link',
+            'text' => 'Sitemaps',
+            'section' => 'site',
+        ];
+    }
+
     protected function beforeRender() : BasePage|Response
     {
         if ($this->getRequest()->get('action') == 'generate') {

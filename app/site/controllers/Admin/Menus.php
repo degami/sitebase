@@ -83,6 +83,21 @@ class Menus extends AdminManageModelsPage
         return $this->template_data;
     }
 
+    /**
+     * {@inheritdocs}
+     *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.menus',
+            'icon' => 'menu',
+            'text' => 'Menu',
+            'section' => 'site',
+        ];
+    }
 
     /**
      * adds a menu level

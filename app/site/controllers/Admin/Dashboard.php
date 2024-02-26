@@ -55,6 +55,22 @@ class Dashboard extends AdminPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => '',
+            'route_name' => 'admin.dashboard',
+            'icon' => 'home',
+            'text' => 'Dashboard',
+            'section' => '',
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @return array
      */
     protected function getTemplateData(): array

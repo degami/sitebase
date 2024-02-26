@@ -22,6 +22,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Site\Models\Website;
 use LessQL\Row;
@@ -577,5 +578,39 @@ class SiteData extends ContainerAwareObject
         $out['children'] = [];
 
         return $out;
+    }
+
+    public function getAdminSidebarMenu(bool $reset = false) : array
+    {
+        $links = [];
+
+        $admin_links_key = "admin.links";
+        if (!$this->getCache()->has($admin_links_key) || $reset) {
+            $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
+            foreach ($controllerClasses as $controllerClass) {
+                if (method_exists($controllerClass, 'getAdminPageLink')) {
+                    $adminLink = $this->getContainer()->call([$controllerClass, 'getAdminPageLink']) ?? null;
+                    if ($adminLink) {
+                        $links[$adminLink['section']][] = $adminLink;
+                    }
+                }
+            }
+    
+            $this->getCache()->set($admin_links_key, $links);
+        } else {
+            $links = $this->getCache()->get($admin_links_key);
+        }
+
+        foreach ($links as $sectionName => $sectionLinks) {
+            usort($links[$sectionName], function ($a, $b) {
+                if (isset($a['order']) && isset($b['order'])) {
+                    return $a['order'] <=> $b['order'];
+                }
+                return ($a['text'] ?? '') <=> ($b['text'] ?? '');
+            });
+        }
+
+        ksort($links);
+        return $links;
     }
 }

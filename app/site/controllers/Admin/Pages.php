@@ -75,6 +75,23 @@ class Pages extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.pages',
+            'icon' => 'file-text',
+            'text' => 'Pages',
+            'section' => 'cms',
+            'order' => 10,
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form

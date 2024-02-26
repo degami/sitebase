@@ -51,6 +51,22 @@ class Logs extends AdminPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.logs',
+            'icon' => 'info',
+            'text' => 'Logs',
+            'section' => 'system',
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @return array
      * @throws BasicException
      * @throws DependencyException

@@ -69,6 +69,22 @@ class Redirects extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.redirects',
+            'icon' => 'corner-up-right',
+            'text' => 'Redirects',
+            'section' => 'site',
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form

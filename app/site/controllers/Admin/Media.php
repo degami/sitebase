@@ -122,6 +122,23 @@ class Media extends AdminManageModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.media',
+            'icon' => 'image',
+            'text' => 'Media',
+            'section' => 'cms',
+            'order' => 40,
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form

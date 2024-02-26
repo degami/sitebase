@@ -70,6 +70,23 @@ class News extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.news',
+            'icon' => 'file-text',
+            'text' => 'News',
+            'section' => 'cms',
+            'order' => 20,
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form

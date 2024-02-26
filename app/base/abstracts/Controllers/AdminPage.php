@@ -27,6 +27,8 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use App\Site\Models\AdminActionLog;
 use App\App;
+use App\Base\Controllers\Dummy\NullPage;
+use League\Plates\Template\Func;
 use Throwable;
 
 /**
@@ -72,6 +74,17 @@ abstract class AdminPage extends BaseHtmlPage
     public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
+    }
+
+
+    /**
+     * returns admin sidebar link info array, if any
+     * 
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return null;
     }
 
     /**

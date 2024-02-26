@@ -142,6 +142,22 @@ class ContactForms extends AdminManageFrontendModelsPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.contactforms',
+            'icon' => 'file-text',
+            'text' => 'Contact Forms',
+            'section' => 'site',
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form

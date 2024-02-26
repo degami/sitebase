@@ -65,6 +65,23 @@ class Queue extends AdminManageModelsPage
         return 'message_id';
     }
 
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => 'admin.queue',
+            'icon' => 'truck',
+            'text' => 'Queue',
+            'section' => 'system',
+        ];
+    }
+
     /**
      * @return array
      * @throws BasicException

@@ -328,4 +328,14 @@ class SiteBase implements ExtensionInterface
     {
         return $this->getSiteData()->getPageRegions();
     }
+
+    /**
+     * returns admin links for sidebar
+     *
+     * @return array
+     */
+    public function getAdminSidebarMenu() : array
+    {
+        return $this->getSiteData()->getAdminSidebarMenu();
+    }
 }

@@ -26,6 +26,8 @@ use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Controllers\Frontend\Page;
 use App\Site\Controllers\Frontend\Search;
+use App\Site\Controllers\Admin\TwoFa as Admin2Fa;
+use App\Site\Controllers\Frontend\Users\TwoFa as Users2Fa;
 
 /**
  * Web Router Class
@@ -62,6 +64,14 @@ class Web extends BaseRouter
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {
                         if ($controllerClass == Search::class && !$this->getEnv('ELASTICSEARCH')) {
+                            continue;
+                        }
+
+                        if ($controllerClass == Users2Fa::class && !$this->getEnv('USE2FA_USERS')) {
+                            continue;
+                        }
+
+                        if ($controllerClass == Admin2Fa::class && !$this->getEnv('USE2FA_ADMIN')) {
                             continue;
                         }
 

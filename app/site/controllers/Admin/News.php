@@ -76,7 +76,7 @@ class News extends AdminManageFrontendModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.news',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'file-text',
             'text' => 'News',
             'section' => 'cms',

@@ -75,7 +75,7 @@ class Queue extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.queue',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'truck',
             'text' => 'Queue',
             'section' => 'system',

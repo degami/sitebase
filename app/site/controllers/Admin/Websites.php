@@ -75,7 +75,7 @@ class Websites extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.websites',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'globe',
             'text' => 'Websites',
             'section' => 'system',

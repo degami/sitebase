@@ -77,7 +77,7 @@ class Links extends AdminManageFrontendModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.links',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'link',
             'text' => 'Links',
             'section' => 'site',

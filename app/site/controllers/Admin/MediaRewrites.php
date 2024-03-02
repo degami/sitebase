@@ -103,7 +103,7 @@ class MediaRewrites extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.mediarewrites',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'layers',
             'text' => 'Rewrites Media',
             'section' => 'site',

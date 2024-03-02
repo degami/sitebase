@@ -81,7 +81,7 @@ class Pages extends AdminManageFrontendModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.pages',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'file-text',
             'text' => 'Pages',
             'section' => 'cms',

@@ -130,7 +130,7 @@ class Blocks extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.blocks',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'box',
             'text' => 'Blocks',
             'section' => 'cms',

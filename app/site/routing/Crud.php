@@ -59,6 +59,10 @@ class Crud extends BaseRouter
                         $path = str_replace("app/site/crud/", "", str_replace("\\", "/", strtolower($controllerClass)));
                         $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
 
+                        if (is_callable([$controllerClass, 'getPageRouteName'])) {
+                            $route_name = $this->getContainer()->call([$controllerClass, 'getPageRouteName']);
+                        }
+
                         $classMethod = self::CLASS_METHOD;
                         $verbs = $this->getClassHttpVerbs($controllerClass);
 

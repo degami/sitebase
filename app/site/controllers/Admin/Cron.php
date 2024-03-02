@@ -149,7 +149,7 @@ class Cron extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.cron',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'watch',
             'text' => 'Cron Tasks',
             'section' => 'system',

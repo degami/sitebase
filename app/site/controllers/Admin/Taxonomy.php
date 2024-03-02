@@ -79,7 +79,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.taxonomy',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'list',
             'text' => 'Taxonomy',
             'section' => 'cms',

@@ -75,7 +75,7 @@ class Rewrites extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.rewrites',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'globe',
             'text' => 'Rewrites',
             'section' => 'site',

@@ -92,7 +92,7 @@ class Menus extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.menus',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'menu',
             'text' => 'Menu',
             'section' => 'site',

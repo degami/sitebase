@@ -243,6 +243,18 @@ abstract class BaseHtmlPage extends BasePage
     }
 
     /**
+     * gets controller route name
+     */
+    static public function getPageRouteName() : string
+    {
+        $controllerClass = static::class;
+        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
+        $route_name = str_replace("/", ".", trim($path, "/"));
+
+        return $route_name;
+    }
+
+    /**
      * gets current page template name
      *
      * @return string

@@ -75,7 +75,7 @@ class Redirects extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.redirects',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'corner-up-right',
             'text' => 'Redirects',
             'section' => 'site',

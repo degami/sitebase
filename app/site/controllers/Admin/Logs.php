@@ -57,7 +57,7 @@ class Logs extends AdminPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.logs',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'info',
             'text' => 'Logs',
             'section' => 'system',

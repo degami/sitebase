@@ -75,7 +75,7 @@ class Config extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.config',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'sliders',
             'text' => 'Config',
             'section' => 'system',

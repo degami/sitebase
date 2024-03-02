@@ -82,7 +82,7 @@ class Sitemaps extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.sitemaps',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'link',
             'text' => 'Sitemaps',
             'section' => 'site',

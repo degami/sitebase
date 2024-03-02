@@ -61,7 +61,7 @@ class Dashboard extends AdminPage
     {
         return [
             'permission_name' => '',
-            'route_name' => 'admin.dashboard',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'home',
             'text' => 'Dashboard',
             'section' => '',

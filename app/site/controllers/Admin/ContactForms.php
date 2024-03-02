@@ -148,7 +148,7 @@ class ContactForms extends AdminManageFrontendModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.contactforms',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'file-text',
             'text' => 'Contact Forms',
             'section' => 'site',

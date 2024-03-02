@@ -72,6 +72,18 @@ abstract class BaseJsonPage extends BasePage
     }
 
     /**
+     * gets controller route name
+     */
+    static public function getPageRouteName() : string
+    {
+        $controllerClass = static::class;
+        $path = str_replace("app/site/crud/", "", str_replace("\\", "/", strtolower($controllerClass)));
+        $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
+
+        return $route_name;
+    }
+
+    /**
      * gets JSON data
      *
      * @return mixed

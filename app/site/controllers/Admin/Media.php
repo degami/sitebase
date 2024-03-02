@@ -128,7 +128,7 @@ class Media extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.media',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'image',
             'text' => 'Media',
             'section' => 'cms',

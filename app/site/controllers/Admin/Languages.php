@@ -75,7 +75,7 @@ class Languages extends AdminManageModelsPage
     {
         return [
             'permission_name' => $this->getAccessPermission(),
-            'route_name' => 'admin.languages',
+            'route_name' => static::getPageRouteName(),
             'icon' => 'flag',
             'text' => 'Languages',
             'section' => 'system',

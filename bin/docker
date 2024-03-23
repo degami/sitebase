@@ -3,6 +3,10 @@
 root_dir=`pwd`
 php_bin=`which php`
 docker_compose_bin=`which docker-compose`
+if [[ -z $docker_compose_bin ]]; then
+  docker=`which docker`
+  docker_compose_bin="$docker compose"
+fi
 docker_bin="$root_dir/bin/docker"
 
 function dockerps {

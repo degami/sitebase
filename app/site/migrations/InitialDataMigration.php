@@ -74,7 +74,7 @@ class InitialDataMigration extends BaseMigration
      */
     private function addWebsite(): Website
     {
-        $website_model = Website::new($this->getContainer());
+        $website_model = Website::new();
         $website_model->setSiteName($this->getEnv('APPNAME'));
 
         $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim($this->getEnv('APPDOMAIN')))), 'www.');
@@ -96,7 +96,7 @@ class InitialDataMigration extends BaseMigration
      */
     private function addAdmin(): BaseModel
     {
-        $admin_model = User::new($this->getContainer());
+        $admin_model = User::new();
         $admin_model->setUsername($this->getEnv('ADMIN_USER'));
         $admin_model->setNickname($this->getEnv('ADMIN_USER'));
         $admin_model->setPassword($this->getUtils()->getEncodedPass($this->getEnv('ADMIN_PASS')));
@@ -142,7 +142,7 @@ class InitialDataMigration extends BaseMigration
             $permission_model->persist();
         }
 
-        $pivot_model = RolePermission::new($this->getContainer());
+        $pivot_model = RolePermission::new();
         $pivot_model->setPermissionId($permission_model->getId());
         $pivot_model->setRoleId($role_model->getId());
         $pivot_model->persist();
@@ -156,15 +156,15 @@ class InitialDataMigration extends BaseMigration
      */
     private function addRolesPermissions()
     {
-        $guest_role_model = Role::new($this->getContainer());
+        $guest_role_model = $this->getContainer()->call([Role::class, 'new']);
         $guest_role_model->setName('guest');
         $guest_role_model->persist();
 
-        $logged_role_model = Role::new($this->getContainer());
+        $logged_role_model = $this->getContainer()->call([Role::class, 'new']);
         $logged_role_model->setName('logged_user');
         $logged_role_model->persist();
 
-        $admin_role_model = Role::new($this->getContainer());
+        $admin_role_model = $this->getContainer()->call([Role::class, 'new']);
         $admin_role_model->setName('admin');
         $admin_role_model->persist();
 
@@ -224,7 +224,7 @@ class InitialDataMigration extends BaseMigration
             } else {
                 $lang = array_combine($header, $row);
 
-                $lang_model = Language::new($this->getContainer());
+                $lang_model = Language::new();
                 $lang_model->setLocale($lang['639-1']);
                 $lang_model->{"639-1"} = $lang['639-1'];
                 $lang_model->{"639-2"} = $lang['639-2'];
@@ -286,7 +286,7 @@ class InitialDataMigration extends BaseMigration
             'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
         ];
         foreach ($variables as $path => $info) {
-            $configuration_model = Configuration::new($this->getContainer());
+            $configuration_model = $this->getContainer()->call([Configuration::class, 'new']);
             $configuration_model->setWebsiteId($website_model->getId());
             $configuration_model->setLocale($info['locale']);
             $configuration_model->setPath($path);

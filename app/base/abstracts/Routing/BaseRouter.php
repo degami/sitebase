@@ -315,6 +315,7 @@ abstract class BaseRouter extends ContainerAwareObject
                 $_SERVER['REQUEST_URI']
             )
         );
+
         if ($parsed) {
             return $parsed['scheme'] . '://' . $parsed['host'];
         }

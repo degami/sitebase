@@ -80,6 +80,8 @@ class App extends ContainerAwareObject
      */
     protected $blocked_ips = [];
 
+    public static ?App $instance = null;
+
     /**
      * class constructor
      */
@@ -169,6 +171,8 @@ class App extends ContainerAwareObject
                 $debugbar = $this->getDebugbar();
                 $debugbar['time']->stopMeasure('app_construct');
             }
+
+            App::$instance = $this;
         } catch (Exception $e) {
             $response = new Response(
                 'Critical: ' . $e->getMessage(),
@@ -458,5 +462,15 @@ class App extends ContainerAwareObject
         }
 
         throw new InvalidValueException("Method \"{$name}\" not found in class\"" . get_class($this) . "\"!", 1);
+    }
+
+    /**
+     * get current app instance
+     * 
+     * @return App
+     */
+    public static function getInstance() : ?App
+    {
+        return App::$instance;
     }
 }

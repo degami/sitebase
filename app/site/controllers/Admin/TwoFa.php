@@ -248,10 +248,10 @@ class TwoFa extends AdminFormPage
     protected function getSecret(User $user) : string
     {
             /** @var User2Fa $user2Fa */
-        $user2Fa = current(User2Fa::where($this->getContainer(), ['user_id' => $user->getId(), 'website_id' => null]));
+        $user2Fa = current(User2Fa::where(['user_id' => $user->getId(), 'website_id' => null]));
 
         if (!$user2Fa) {
-            $user2Fa = User2Fa::new($this->getContainer());
+            $user2Fa = User2Fa::new();
             $user2Fa->setUserId($user->getId());
             $user2Fa->setWebsiteId(null);
         }

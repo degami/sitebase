@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Models;
 
+use App\App;
 use ArrayAccess;
 use DebugBar\DebugBar;
 use Degami\Basics\Exceptions\BasicException;
@@ -134,14 +135,14 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * returns an array of models, starting from a statement Result
      *
-     * @param ContainerInterface $container
      * @param Result $stmt
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function hydrateStatementResult(ContainerInterface $container, Result $stmt): array
+    public static function hydrateStatementResult(Result $stmt): array
     {
+        $container = App::getInstance()->getContainer();
         return array_map(
             function ($el) use ($container) {
                 return $container->make(static::class, ['db_row' => $el]);
@@ -153,25 +154,25 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * basic select statement
      *
-     * @param ContainerInterface $container
      * @param array $options
      * @return PDOStatement
      */
-    public static function select(ContainerInterface $container, $options = []): PDOStatement
+    public static function select($options = []): PDOStatement
     {
+        $container = App::getInstance()->getContainer();
         return $container->get('db')->select(static::defaultTableName(), $options);
     }
 
     /**
      * gets basic where statement for model
      *
-     * @param ContainerInterface $container
      * @param array $condition
      * @param array $order
      * @return Result
      */
-    protected static function getModelBasicWhere(ContainerInterface $container, $condition = [], $order = []): Result
+    protected static function getModelBasicWhere($condition = [], $order = []): Result
     {
+        $container = App::getInstance()->getContainer();
         if ($condition == null) {
             $condition = [];
         }
@@ -228,15 +229,16 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * returns all found items
      *
-     * @param ContainerInterface $container
      * @param array $condition
      * @param array $order
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function all(ContainerInterface $container, $condition = [], $order = []): array
+    public static function all($condition = [], $order = []): array
     {
+        $container = App::getInstance()->getContainer();
+
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
@@ -246,7 +248,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        $items = static::hydrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
+        $items = static::hydrateStatementResult(static::getModelBasicWhere($condition, $order));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -262,13 +264,12 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * gets total number of elements
      *
-     * @param ContainerInterface $container
      * @param array $condition
      * @return int
      */
-    public static function totalNum(ContainerInterface $container, $condition = []): int
+    public static function totalNum($condition = []): int
     {
-        $stmt = static::getModelBasicWhere($container, $condition);
+        $stmt = static::getModelBasicWhere($condition);
 
         return $stmt->count();
     }
@@ -276,7 +277,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * return subset of found items (useful for paginate)
      *
-     * @param ContainerInterface $container
      * @param Request $request
      * @param int $page_size
      * @param array $condition
@@ -285,8 +285,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function paginate(ContainerInterface $container, Request $request, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = []): array
+    public static function paginate(Request $request, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = []): array
     {
+        $container = App::getInstance()->getContainer();
+
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
@@ -300,8 +302,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             $condition = [];
         }
 
-        $stmt = static::getModelBasicWhere($container, $condition, $order);
-        $out = static::paginateByStatement($container, $request, $stmt, $page_size);
+        $stmt = static::getModelBasicWhere($condition, $order);
+        $out = static::paginateByStatement($request, $stmt, $page_size);
 
         if (getenv('DEBUG')) {
             $debugbar['time']->startMeasure($measure_key);
@@ -313,7 +315,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * return subset of found items (useful for paginate)
      *
-     * @param ContainerInterface $container
      * @param Request $request
      * @param Result $stmt
      * @param int $page_size
@@ -321,14 +322,14 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function paginateByStatement(ContainerInterface $container, Request $request, Result $stmt, $page_size = self::ITEMS_PER_PAGE): array
+    public static function paginateByStatement(Request $request, Result $stmt, $page_size = self::ITEMS_PER_PAGE): array
     {
         $page = $request->get('page') ?? 0;
         $start = (int)$page * $page_size;
 
         $total = (clone $stmt)->count();
 
-        $items = static::hydrateStatementResult($container, $stmt->limit($page_size, $start));
+        $items = static::hydrateStatementResult($stmt->limit($page_size, $start));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -340,15 +341,16 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * finds elements
      *
-     * @param ContainerInterface $container
      * @param array|string $condition
      * @param array $order
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function where(ContainerInterface $container, $condition, $order = []): array
+    public static function where($condition, $order = []): array
     {
+        $container = App::getInstance()->getContainer();
+
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
@@ -358,7 +360,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        $items = static::hydrateStatementResult($container, static::getModelBasicWhere($container, $condition, $order));
+        $items = static::hydrateStatementResult(static::getModelBasicWhere($condition, $order));
 
         foreach ($items as $item) {
             static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
@@ -464,13 +466,14 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * loads model by id
      *
-     * @param ContainerInterface $container
      * @param int $id
      * @param bool $reset
      * @return self
      */
-    public static function load(ContainerInterface $container, $id, $reset = false): BaseModel
+    public static function load($id, $reset = false): BaseModel
     {
+        $container = App::getInstance()->getContainer();
+
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
@@ -498,15 +501,16 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * loads multiple models by id
      *
-     * @param ContainerInterface $container
      * @param array $ids
      * @param bool $reset
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function loadMultiple(ContainerInterface $container, array $ids, bool $reset = false): array
+    public static function loadMultiple(array $ids, bool $reset = false): array
     {
+        $container = App::getInstance()->getContainer();
+
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
@@ -532,7 +536,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         $already_loaded = array_filter($already_loaded);
 
-        $out = (!empty($ids) ? static::loadMultipleByCondition($container, ['id' => $ids], $reset) : []) +
+        $out = (!empty($ids) ? static::loadMultipleByCondition(['id' => $ids], $reset) : []) +
             (!empty($already_loaded) ? array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($already_loaded)) : []);
 
         if (getenv('DEBUG')) {
@@ -545,15 +549,16 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * loads model by condition
      *
-     * @param ContainerInterface $container
      * @param array $condition
      * @return self|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function loadByCondition(ContainerInterface $container, array $condition): ?BaseModel
+    public static function loadByCondition(array $condition): ?BaseModel
     {
+        $container = App::getInstance()->getContainer();
+
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
@@ -563,7 +568,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        $stmt = static::getModelBasicWhere($container, $condition);
+        $stmt = static::getModelBasicWhere($condition);
         $db_row = $stmt->limit(1)->fetch();
         if (!$db_row || !$db_row->id) {
             throw new BasicException('Model not found');
@@ -581,15 +586,16 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * loads multiple models by condition
      *
-     * @param ContainerInterface $container
      * @param array $condition
      * @param bool $reset
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function loadMultipleByCondition(ContainerInterface $container, array $condition, bool $reset = false): array
+    public static function loadMultipleByCondition(array $condition, bool $reset = false): array
     {
+        $container = App::getInstance()->getContainer();
+
         /** @var DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
@@ -600,7 +606,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         }
 
         $ids = [];
-        $stmt = static::getModelBasicWhere($container, $condition);
+        $stmt = static::getModelBasicWhere($condition);
         foreach ($stmt->fetchAll() as $db_row) {
             $ids[] = intval($db_row->id);
             /** @var Result $db_row */
@@ -620,14 +626,15 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * gets new empty model
      *
-     * @param ContainerInterface $container
      * @param array $initial_data
      * @return static
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public static function new(ContainerInterface $container, $initial_data = []): BaseModel
+    public static function new($initial_data = []): BaseModel
     {
+        $container = App::getInstance()->getContainer();
+
         $db_row = $container->get('db')->createRow(static::defaultTableName());
         $db_row->setData($initial_data);
         return new static($container, $db_row);
@@ -636,7 +643,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * loads model by field - value pair
      *
-     * @param ContainerInterface $container
      * @param string $field
      * @param mixed $value
      * @return self
@@ -644,9 +650,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function loadBy(ContainerInterface $container, string $field, $value): BaseModel
+    public static function loadBy(string $field, $value): BaseModel
     {
-        return static::loadByCondition($container, [$field => $value]);
+        return static::loadByCondition([$field => $value]);
     }
 
     /**

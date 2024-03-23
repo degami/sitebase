@@ -208,7 +208,7 @@ class Permissions extends AdminFormPage
      */
     private function addPermission(Role $role_model, Permission $permission_model) : void
     {
-        $pivot_model = RolePermission::new($this->getContainer());
+        $pivot_model = RolePermission::new();
         $pivot_model->setPermissionId($permission_model->getId());
         $pivot_model->setRoleId($role_model->getId());
         $pivot_model->persist();

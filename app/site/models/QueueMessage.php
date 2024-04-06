@@ -78,18 +78,28 @@ class QueueMessage extends BaseModel
     public static function nextMessage(ContainerInterface $container, $queue_name = null): ?QueueMessage
     {
         try {
-            $messageDBRow = static::getModelBasicWhere(
-                $container,
+
+            $message = static::getCollection()->where(
                 ['status' => self::STATUS_PENDING] + ($queue_name != null ? ['queue_name' => $queue_name] : []),
                 ['created_at' => 'ASC']
-            )
-                ->limit(1)
-                ->fetch();
+            )->getFirst();
+            if ($message) {
+                $message->setStatus(self::STATUS_PROCESSED)->persist();
+                return $message;
+            }
+
+            /*
+            $messageDBRow = static::getCollection()->where(
+                ['status' => self::STATUS_PENDING] + ($queue_name != null ? ['queue_name' => $queue_name] : []),
+                ['created_at' => 'ASC'],
+                1
+            )->fetchDbRow();            
             if ($messageDBRow && $messageDBRow->id) {
                 $message = $container->make(static::class, ['db_row' => $messageDBRow]);
                 $message->setStatus(self::STATUS_PROCESSED)->persist();
                 return $message;
             }
+            */
         } catch (Exception $e) {
             // ignore
         }

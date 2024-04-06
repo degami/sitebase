@@ -74,8 +74,10 @@ class Stats extends BaseCommand
         ];
 
         foreach ($tables as $class_name => $label) {
+            /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+            $collection = $this->getContainer()->call([$class_name, 'getCollection']);
             $table
-                ->addRow(['<info>' . $label . '</info>', $this->getContainer()->call([$class_name, 'totalNum'])])
+                ->addRow(['<info>' . $label . '</info>', $collection->count()])
                 ->addRow(new TableSeparator());
         }
 

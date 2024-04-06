@@ -154,7 +154,7 @@ class Rewrites extends AdminManageModelsPage
                 );
 
                 $other_rewrites = [];
-                foreach ($this->getContainer()->call([Rewrite::class, 'where'], ['condition' => ['id:not' => $rewrite->getId()]]) as $item) {
+                foreach (Rewrite::getCollection()->where(['id:not' => $rewrite->getId()]) as $item) {
                     /** @var Rewrite $item */
                     $other_rewrites[$item->getId()] = $item->getRoute() . ' - ' . $item->getLocale() . " (" . $item->getUrl() . ")";
                 }

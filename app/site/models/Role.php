@@ -124,9 +124,8 @@ class Role extends BaseModel
             throw new InvalidValueException("permission not found: " . $permission_name);
         }
 
-        $pivot_model = $this->getContainer()->call([RolePermission::class, 'where'], ['condition' => ['permission_id' => $permission_model->id, 'role_id' => $this->id]]);
-        $pivot_model = reset($pivot_model);
-        if (!$pivot_model->isLoaded()) {
+        $pivot_model = RolePermission::getCollection()->where(['permission_id' => $permission_model->id, 'role_id' => $this->id])->getFirst();
+        if (!$pivot_model || !$pivot_model->isLoaded()) {
             throw new BasicException("errors finding pivot model");
         }
 

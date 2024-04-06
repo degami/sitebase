@@ -45,7 +45,7 @@ class Show extends BaseCommand
         $table = new Table($output);
         $table->setHeaders(['Id', 'Name', 'Domain']);
 
-        foreach ($this->getContainer()->call([Website::class, 'all']) as $website) {
+        foreach (Website::getCollection() as $website) {
             /** @var Website $website */
             $table->addRow([
                 $website->getId(),

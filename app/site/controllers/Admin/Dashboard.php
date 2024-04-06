@@ -76,18 +76,18 @@ class Dashboard extends AdminPage
     protected function getTemplateData(): array
     {
         $this->template_data = [
-            'websites' => $this->getContainer()->call([Website::class, 'totalNum']),
-            'users' => $this->getContainer()->call([User::class, 'totalNum']),
-            'pages' => $this->getContainer()->call([Page::class, 'totalNum']),
-            'contact_forms' => $this->getContainer()->call([Contact::class, 'totalNum']),
-            'contact_submissions' => $this->getContainer()->call([ContactSubmission::class, 'totalNum']),
-            'taxonomy_terms' => $this->getContainer()->call([Taxonomy::class, 'totalNum']),
-            'blocks' => $this->getContainer()->call([Block::class, 'totalNum']),
-            'media' => $this->getContainer()->call([MediaElement::class, 'totalNum']),
-            'page_views' => $this->getContainer()->call([RequestLog::class, 'totalNum']),
-            'mails_sent' => $this->getContainer()->call([MailLog::class, 'totalNum']),
-            'links' => $this->getContainer()->call([LinkExchange::class, 'totalNum']),
-            'news' => $this->getContainer()->call([News::class, 'totalNum']),
+            'websites' => Website::getCollection()->count(),
+            'users' => User::getCollection()->count(),
+            'pages' => Page::getCollection()->count(),
+            'contact_forms' => Contact::getCollection()->count(),
+            'contact_submissions' => ContactSubmission::getCollection()->count(),
+            'taxonomy_terms' => Taxonomy::getCollection()->count(),
+            'blocks' => Block::getCollection()->count(),
+            'media' => MediaElement::getCollection()->count(),
+            'page_views' => RequestLog::getCollection()->count(),
+            'mails_sent' => MailLog::getCollection()->count(),
+            'links' => LinkExchange::getCollection()->count(),
+            'news' => News::getCollection()->count(),
         ];
         return $this->template_data;
     }

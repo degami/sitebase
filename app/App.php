@@ -231,7 +231,7 @@ class App extends ContainerAwareObject
                 // continue with execution
                 if ($this->getEnv('PRELOAD_REWRITES')) {
                     // preload all rewrites
-                    $this->getContainer()->call([Rewrite::class, 'all']);
+                    Rewrite::getCollection()->getItems();
                 }
 
                 foreach ($this->getRouters() as $router) {

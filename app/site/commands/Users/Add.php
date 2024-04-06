@@ -76,7 +76,7 @@ class Add extends BaseCommand
                         /** @var Role $el */
                         return $el->getName();
                     },
-                    $this->getContainer()->call([Role::class, 'all'])
+                    Role::getCollection()->getItems()
                 ),
                 0
             );

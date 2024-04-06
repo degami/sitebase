@@ -56,8 +56,8 @@ class Permissions extends AdminFormPage
     protected function getTemplateData(): array
     {
         $this->template_data += [
-            'roles' => $this->getContainer()->call([Role::class, 'all']),
-            'permissions' => $this->getContainer()->call([Permission::class, 'all']),
+            'roles' => Role::getCollection()->getItems(),
+            'permissions' => Permission::getCollection()->getItems(),
         ];
         return $this->template_data;
     }
@@ -83,7 +83,7 @@ class Permissions extends AdminFormPage
             ],
         ]);
 
-        $rolesArray = $this->getContainer()->call([Role::class, 'all']);
+        $rolesArray = Role::getCollection()->getItems();
 
         $table->setTableHeader(
             array_merge(
@@ -100,7 +100,7 @@ class Permissions extends AdminFormPage
 
         $permission_num = -1;
 
-        foreach ($this->getContainer()->call([Permission::class, 'all']) as $permission_model) {
+        foreach (Permission::getCollection() as $permission_model) {
             /** @var Permission $permission_model */
             $permission_num++;
             $table

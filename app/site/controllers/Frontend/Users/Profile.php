@@ -91,7 +91,7 @@ class Profile extends LoggedUserFormPage
         $user = $this->getCurrentUser();
 
         $roles = [];
-        foreach ($this->getContainer()->call([Role::class, 'all']) as $item) {
+        foreach (Role::getCollection() as $item) {
             /** @var Role $item */
             $roles[$item->getId()] = $item->getName();
         }

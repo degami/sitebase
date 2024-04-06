@@ -81,7 +81,7 @@ class Grant extends BaseCommand
                     }
                     return $el->getName();
                 },
-                $this->getContainer()->call([Permission::class, 'all'])
+                Permission::getCollection()->getItems()
             )
         );
 

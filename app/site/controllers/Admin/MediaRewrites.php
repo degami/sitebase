@@ -137,13 +137,13 @@ class MediaRewrites extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $rewrites = ['none' => ''];
-                foreach ($this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
+                foreach (Rewrite::getCollection() as $rewrite) {
                     /** @var Rewrite $rewrite */
                     $rewrites[$rewrite->getId()] = $rewrite->getUrl() . " ({$rewrite->getRoute()})";
                 }
 
                 $medias = ['' => ''];
-                foreach ($this->getContainer()->call([MediaElement::class, 'all']) as $media) {
+                foreach (MediaElement::getCollection() as $media) {
                     /** @var MediaElement $media */
                     $medias[$media->getId()] = $media->getFilename();
                 }

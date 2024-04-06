@@ -78,7 +78,7 @@ class RequestLog extends BaseModel
      */
     private function matchWebsite(string $host): ?int
     {
-        foreach ($this->getContainer()->call([Website::class, 'all']) as $website) {
+        foreach (Website::getCollection() as $website) {
             /** @var Website $website */
             if (preg_match("/" . $website->getDomain() . "/", $host)) {
                 return $website->getId();

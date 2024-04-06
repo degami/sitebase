@@ -52,10 +52,11 @@ class Show extends BaseCommand
         $table
             ->setHeaders(['ID', 'Username', 'Email', 'Roles']);
 
-        foreach ($this->getContainer()->call([User::class, 'all']) as $k => $user) {
+        $k = 0;
+        foreach (User::getCollection() as $user) {
             /** @var User $user */
 
-            if ($k > 0) {
+            if ($k++ > 0) {
                 $table->addRow(new TableSeparator());
             }
 

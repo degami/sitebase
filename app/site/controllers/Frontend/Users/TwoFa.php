@@ -156,7 +156,7 @@ class TwoFa extends LoggedUserFormPage
     protected function getSecret(User $user) : string
     {
             /** @var User2Fa $user2Fa */
-        $user2Fa = current(User2Fa::where(['user_id' => $user->getId(), 'website_id' => $this->getCurrentWebsiteId()]));
+        $user2Fa = User2Fa::getCollection()->where(['user_id' => $user->getId(), 'website_id' => $this->getCurrentWebsiteId()])->getFirst();
 
         if (!$user2Fa) {
             $user2Fa = User2Fa::new();

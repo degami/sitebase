@@ -140,7 +140,7 @@ class Menus extends AdminManageModelsPage
             ])->addMarkup($menu_name);
         }
 
-        foreach ($this->getContainer()->call([Menu::class, 'where'], ['condition' => ['menu_name' => $menu_name, 'parent_id' => $parent_id] , 'order' => ['position' => 'asc']]) as $menu) {
+        foreach (Menu::getCollection()->where(['menu_name' => $menu_name, 'parent_id' => $parent_id], ['position' => 'asc']) as $menu) {
             /** @var Menu $menu */
             $this->addLevel($thisFormElement->addChild(), $menu_name, $menu);
         }
@@ -189,7 +189,7 @@ class Menus extends AdminManageModelsPage
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $rewrites = ['' => ''];
-                foreach ((array)$this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
+                foreach (Rewrite::getCollection() as $rewrite) {
                     $rewrites[$rewrite->id] = $rewrite->route;
                 }
 

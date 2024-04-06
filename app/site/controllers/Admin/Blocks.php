@@ -61,7 +61,7 @@ class Blocks extends AdminManageModelsPage
             $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');
 
             foreach ($blockClasses as $blockClass) {
-                $existing_blocks = $this->getContainer()->call([Block::class, 'where'], ['condition' => ['instance_class' => $blockClass]]);
+                $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();
                 if (count($existing_blocks) > 0) {
                     continue;
                 }
@@ -170,7 +170,7 @@ class Blocks extends AdminManageModelsPage
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 
                 $rewrite_options = [];
-                foreach ($this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
+                foreach (Rewrite::getCollection() as $rewrite) {
                     /** @var Rewrite $rewrite */
                     $rewrite_options[$rewrite->getId()] = $rewrite->getUrl();
                 }

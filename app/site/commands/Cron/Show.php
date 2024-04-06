@@ -54,8 +54,9 @@ class Show extends BaseCommand
         $table = new Table($output);
         $table->setHeaders(['ID', 'Title', 'Callable', 'Schedule', 'Active']);
 
-        foreach ($this->getContainer()->call([CronTask::class, 'all']) as $k => $cron) {
-            if ($k > 0) {
+        $k = 0;
+        foreach (CronTask::getCollection() as $cron) {
+            if ($k++ > 0) {
                 $table->addRow(new TableSeparator());
             }
 

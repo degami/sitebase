@@ -125,9 +125,7 @@ class BaseCommand extends SymfonyCommand
 
             if (!$website || !$website->isloaded()) {
                 // $website = $this->getContainer()->call([Website::class, 'load'], ['id' => 1]);
-
-                $websites = $this->getContainer()->call([Website::class, 'where'], ['condition' => [], 'limit' => 1, 'order' => ['created_at' => 'ASC']]);
-                $website = reset($websites);
+                $website = Website::getCollection()->where([], ['created_at' => 'ASC'])->getFirst();
             }
         }
 

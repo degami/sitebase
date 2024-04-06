@@ -90,8 +90,10 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
                 $paginate_params['condition'] = array_filter($conditions);
             }
-
-            $data = $this->getContainer()->call([$this->getObjectClass(), 'paginate'], $paginate_params);
+            /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+            $collection = $this->getContainer()->call([$this->getObjectClass(), 'getCollection']);
+            $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+            $data = $this->getContainer()->call([$collection, 'paginate']);
             $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],

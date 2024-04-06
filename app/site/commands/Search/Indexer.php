@@ -65,7 +65,7 @@ class Indexer extends BaseCommand
                     $fields_to_index = $this->getContainer()->call([$modelClass, 'exposeToIndexer']);
                 }
 
-                foreach ($this->getContainer()->call([$modelClass, 'all']) as $object) {
+                foreach ($this->getContainer()->call([$modelClass, 'getCollection']) as $object) {
                     $body = [];
 
                     foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {

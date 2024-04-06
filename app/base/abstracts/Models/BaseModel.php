@@ -36,8 +36,6 @@ use Exception;
  */
 abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, IteratorAggregate
 {
-    public const ITEMS_PER_PAGE = 50;
-
     /**
      * @var Row database row
      */
@@ -151,6 +149,12 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         );
     }
 
+    public static function getCollection() : BaseCollection
+    {
+        $container = App::getInstance()->getContainer();
+        return $container->make(BaseCollection::class, ['className' => static::class]);
+    }
+
     /**
      * basic select statement
      *
@@ -224,153 +228,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         }
 
         return $stmt;
-    }
-
-    /**
-     * returns all found items
-     *
-     * @param array $condition
-     * @param array $order
-     * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public static function all($condition = [], $order = []): array
-    {
-        $container = App::getInstance()->getContainer();
-
-        /** @var DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
-
-        $measure_key = 'all model: ' . static::defaultTableName();
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        $items = static::hydrateStatementResult(static::getModelBasicWhere($condition, $order));
-
-        foreach ($items as $item) {
-            static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
-        }
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->stopMeasure($measure_key);
-        }
-
-        return $items;
-    }
-
-    /**
-     * gets total number of elements
-     *
-     * @param array $condition
-     * @return int
-     */
-    public static function totalNum($condition = []): int
-    {
-        $stmt = static::getModelBasicWhere($condition);
-
-        return $stmt->count();
-    }
-
-    /**
-     * return subset of found items (useful for paginate)
-     *
-     * @param Request $request
-     * @param int $page_size
-     * @param array $condition
-     * @param array $order
-     * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public static function paginate(Request $request, $page_size = self::ITEMS_PER_PAGE, $condition = [], $order = []): array
-    {
-        $container = App::getInstance()->getContainer();
-
-        /** @var DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
-
-        $measure_key = 'paginate model: ' . static::defaultTableName();
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        if ($condition == null) {
-            $condition = [];
-        }
-
-        $stmt = static::getModelBasicWhere($condition, $order);
-        $out = static::paginateByStatement($request, $stmt, $page_size);
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        return $out;
-    }
-
-    /**
-     * return subset of found items (useful for paginate)
-     *
-     * @param Request $request
-     * @param Result $stmt
-     * @param int $page_size
-     * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public static function paginateByStatement(Request $request, Result $stmt, $page_size = self::ITEMS_PER_PAGE): array
-    {
-        $page = $request->get('page') ?? 0;
-        $start = (int)$page * $page_size;
-
-        $total = (clone $stmt)->count();
-
-        $items = static::hydrateStatementResult($stmt->limit($page_size, $start));
-
-        foreach ($items as $item) {
-            static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
-        }
-
-        return ['items' => $items, 'page' => $page, 'total' => $total];
-    }
-
-    /**
-     * finds elements
-     *
-     * @param array|string $condition
-     * @param array $order
-     * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public static function where($condition, $order = []): array
-    {
-        $container = App::getInstance()->getContainer();
-
-        /** @var DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
-
-        $measure_key = 'where model: ' . static::defaultTableName();
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        $items = static::hydrateStatementResult(static::getModelBasicWhere($condition, $order));
-
-        foreach ($items as $item) {
-            static::$loadedObjects[static::defaultTableName()][$item->id] = $item;
-        }
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        return $items;
     }
 
     /**
@@ -499,54 +356,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * loads multiple models by id
-     *
-     * @param array $ids
-     * @param bool $reset
-     * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public static function loadMultiple(array $ids, bool $reset = false): array
-    {
-        $container = App::getInstance()->getContainer();
-
-        /** @var DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
-
-        $measure_key = 'loadMultiple model: ' . static::defaultTableName();
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        $already_loaded = [];
-        if (!$reset && isset(static::$loadedObjects[static::defaultTableName()])) {
-            $new_ids = array_diff(array_filter($ids, function ($el) {
-                return is_numeric($el) && $el > 0;
-            }), array_keys(static::$loadedObjects[static::defaultTableName()]));
-
-            $already_loaded = array_diff($ids, $new_ids);
-            $ids = $new_ids;
-        } else {
-            $ids = array_filter($ids, function ($el) {
-                return is_numeric($el) && $el > 0;
-            });
-        }
-
-        $already_loaded = array_filter($already_loaded);
-
-        $out = (!empty($ids) ? static::loadMultipleByCondition(['id' => $ids], $reset) : []) +
-            (!empty($already_loaded) ? array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($already_loaded)) : []);
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->stopMeasure($measure_key);
-        }
-
-        return $out;
-    }
-
-    /**
      * loads model by condition
      *
      * @param array $condition
@@ -582,46 +391,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
         return static::$loadedObjects[static::defaultTableName()][$db_row->id];
     }
-
-    /**
-     * loads multiple models by condition
-     *
-     * @param array $condition
-     * @param bool $reset
-     * @return array
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public static function loadMultipleByCondition(array $condition, bool $reset = false): array
-    {
-        $container = App::getInstance()->getContainer();
-
-        /** @var DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
-
-        $measure_key = 'loadMultipleByCondition model: ' . static::defaultTableName();
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        $ids = [];
-        $stmt = static::getModelBasicWhere($condition);
-        foreach ($stmt->fetchAll() as $db_row) {
-            $ids[] = intval($db_row->id);
-            /** @var Result $db_row */
-            if (!isset($loadedObjects[static::defaultTableName()][$db_row->id]) || $reset) {
-                static::$loadedObjects[static::defaultTableName()][$db_row->id] = $container->make(static::class, ['db_row' => $db_row]);
-            }
-        }
-
-        if (getenv('DEBUG')) {
-            $debugbar['time']->stopMeasure($measure_key);
-        }
-
-        return array_intersect_key(static::$loadedObjects[static::defaultTableName()], array_flip($ids));
-    }
-
 
     /**
      * gets new empty model

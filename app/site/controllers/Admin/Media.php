@@ -253,7 +253,7 @@ class Media extends AdminManageModelsPage
 
                             return ['title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                         },
-                        $this->getContainer()->call([Page::class, 'all'])
+                        Page::getCollection()->getItems()
                     )
                 );
 

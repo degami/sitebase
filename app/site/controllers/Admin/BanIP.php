@@ -146,8 +146,7 @@ class BanIP extends AdminFormPage
         $this->blocked_ips[] = $values->ip;
 
         if ($values->delete_fromdb == 1) {
-            $list = $this->getContainer()->call([RequestLog::class, 'where'], ['condition' => ['ip_address' => $values->ip]]);
-            foreach ($list as $elem) {
+            foreach (RequestLog::getCollection()->where(['ip_address' => $values->ip]) as $elem) {
                 $elem->delete();
             }
         }

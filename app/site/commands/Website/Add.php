@@ -68,7 +68,7 @@ class Add extends BaseCommand
             $website->setDomain($domain);
             $website->persist();
 
-            foreach ($this->getContainer()->call([Configuration::class, 'where'], ['condition' => ['is_system' => 1, 'website_id' => 1]]) as $config) {
+            foreach (Configuration::getCollection()->where(['is_system' => 1, 'website_id' => 1]) as $config) {
                 /** @var Configuration $config */
 
                 // copy at least is_system configurations

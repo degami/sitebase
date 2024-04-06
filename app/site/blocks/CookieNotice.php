@@ -140,7 +140,7 @@ class CookieNotice extends BaseCodeBlock
         $config_fields = [];
 
         $rewrites = ['none' => ''];
-        foreach ($this->getContainer()->call([Rewrite::class, 'all']) as $rewrite) {
+        foreach (Rewrite::getCollection() as $rewrite) {
             /** @var Rewrite $rewrite */
             $rewrites[$rewrite->getId()] = $rewrite->getUrl() . " ({$rewrite->getRoute()})";
         }

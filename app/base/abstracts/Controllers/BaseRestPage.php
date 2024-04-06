@@ -163,7 +163,7 @@ abstract class BaseRestPage extends BasePage
                         ->prepare($this->getRequest())
                         ->setData(array_map(function ($object) {
                             return $object->getData();
-                        }, $this->getContainer()->call([$this->getObjectClass(), 'all'])));
+                        }, $this->getContainer()->call([$this->getObjectClass(), 'getCollection'])->getItems()));
                 }
 
                 return $this

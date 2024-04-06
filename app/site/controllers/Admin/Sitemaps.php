@@ -276,7 +276,7 @@ class Sitemaps extends AdminManageModelsPage
         }
 
         $rewrite_options = [];
-        foreach ($this->getContainer()->call([Rewrite::class, 'where'], ['condition' => ['locale' => $sitemap->getLocale()]]) as $rewrite) {
+        foreach (Rewrite::getCollection()->where(['locale' => $sitemap->getLocale()]) as $rewrite) {
             $rewrite_options[$rewrite->id] = $rewrite->url;
         }
 

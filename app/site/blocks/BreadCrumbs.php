@@ -62,11 +62,7 @@ class BreadCrumbs extends BaseCodeBlock
             return '';
         }
 
-        $menu_items = $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['rewrite_id' => $route_info->getRewrite()]]);
-        $menu_item = reset($menu_items);
-        if ($menu_item instanceof Row) {
-            $menu_item = $this->getContainer()->make(Menu::class, ['db_row' => $menu_item]);
-        }
+        $menu_item = Menu::getCollection()->where(['rewrite_id' => $route_info->getRewrite()])->getFirst();
         $home_url = $this->getWebRouter()->getUrl('frontend.root');
 
         /** @var TagElement $breadcrumbs_links */

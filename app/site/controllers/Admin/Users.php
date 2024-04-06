@@ -116,7 +116,7 @@ class Users extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $roles = [];
-                foreach ($this->getContainer()->call([Role::class, 'all']) as $item) {
+                foreach (Role::getCollection() as $item) {
                     /** @var Role $item */
                     $roles[$item->getId()] = $item->getName();
                 }

@@ -73,11 +73,13 @@ class ContactForms extends AdminManageFrontendModelsPage
             } else {
                 $this->addBackButton();
             }
-            $data = $this->getContainer()->call(
-                [$this->getObjectClass(), 'paginate'],
-                ['order' => $this->getRequest()->query->get('order')] +
-                (($this->template_data['action'] == 'submissions') ? ['condition' => ['contact_id' => $this->getRequest()->get('contact_id')]] : [])
-            );
+            /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+            $collection = $this->getContainer()->call([$this->getObjectClass(), 'getCollection']);
+            $collection->addOrder($this->getRequest()->query->get('order'));
+            if ($this->template_data['action'] == 'submissions') {
+                $collection->addCondition(['contact_id' => $this->getRequest()->get('contact_id')]);
+            }
+            $data = $this->getContainer()->call([$collection, 'paginate']);
 
             $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),

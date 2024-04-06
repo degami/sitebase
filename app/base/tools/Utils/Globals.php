@@ -50,7 +50,7 @@ class Globals extends ContainerAwareObject
     public function getWebsitesSelectOptions(): array
     {
         $out = [];
-        foreach ($this->getContainer()->call([Website::class,'all']) as $website) {
+        foreach (Website::getCollection() as $website) {
             /** @var Website $website */
             $out[$website->getId()] = $website->getSiteName() . " (" . $website->getDomain() . ")";
         }
@@ -71,7 +71,7 @@ class Globals extends ContainerAwareObject
     {
         $languages = $this->getSiteData()->getSiteLocales($website_id);
         $languages_on_DB = [];
-        foreach ($this->getContainer()->call([Language::class, 'where'], ['condition' => ['locale' => $languages]]) as $l) {
+        foreach (Language::getCollection()->where(['locale' => $languages]) as $l) {
             /** @var Language $l */
             $languages_on_DB[$l->getLocale()] = $l;
         }

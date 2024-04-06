@@ -59,7 +59,7 @@ class Show extends BaseCommand
         if (is_numeric($website)) {
             $condition = ['website_id' => $website];
         }
-        foreach ($this->getContainer()->call([Configuration::class, 'where'], ['condition' => $condition]) as $row) {
+        foreach (Configuration::getCollection()->where($condition) as $row) {
             /** @var Configuration $row */
             $table->addRow([
                 $row['id'],

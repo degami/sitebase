@@ -53,7 +53,8 @@ class Run extends BaseCommand
         $start_mtime = microtime(true);
         $start_time = new DateTime();
         $cron_executed = [];
-        foreach ($this->getContainer()->call([CronTask::class, 'where'], ['condition' => 'schedule IS NOT NULL AND active = 1']) as $task) {
+        $this->getLog()->info('Cron run.');
+        foreach (CronTask::getCollection()->where('schedule IS NOT NULL AND active = 1') as $task) {
             $cron = CronExpression::factory($task->getSchedule());
             if ($cron->isDue()) {
                 try {
@@ -73,5 +74,6 @@ class Run extends BaseCommand
 
             $cron_log->persist();
         }
+        $this->getLog()->info('Cron end. executed tasks: '.count($cron_executed));
     }
 }

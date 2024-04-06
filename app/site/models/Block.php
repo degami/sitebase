@@ -177,7 +177,11 @@ class Block extends BaseModel
             $query->execute(['id' => $this->getId()]);
             $ids = $query->fetchAll(\PDO::FETCH_COLUMN, 0);
 
-            $this->rewrites = $this->getContainer()->call([Rewrite::class, 'loadMultiple'], ['ids' => $ids]);
+            /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+            $collection = $this->getContainer()->call([Rewrite::class, 'getCollection']);
+            $collection->addCondition(['id' => $ids]);
+
+            $this->rewrites = $collection->getItems();
         }
         return $this->rewrites;
     }

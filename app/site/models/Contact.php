@@ -97,7 +97,7 @@ class Contact extends FrontendModel
                 /** @var ContactSubmission $el */
                 return $el->getId();
             },
-            $this->getContainer()->call([ContactSubmission::class, 'where'], ['condition' => ['contact_id' => $this->getId()]])
+            ContactSubmission::getCollection()->where(['contact_id' => $this->getId()])->getItems()
         );
     }
 

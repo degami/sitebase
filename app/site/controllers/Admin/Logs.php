@@ -124,7 +124,10 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([RequestLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([RequestLog::class, 'paginate'], $paginate_params);
+                        /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+                        $collection = $this->getContainer()->call([RequestLog::class, 'getCollection']);
+                        $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+                        $data = $this->getContainer()->call([$collection, 'paginate']);
                         $header = ['id', 'url', 'method', 'response_code', 'user_id', 'ip_address', 'created_at', 'updated_at'];
                     }
 
@@ -135,7 +138,10 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([MailLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([MailLog::class, 'paginate'], $paginate_params);
+                        /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+                        $collection = $this->getContainer()->call([MailLog::class, 'getCollection']);
+                        $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+                        $data = $this->getContainer()->call([$collection, 'paginate']);
                         $header = ['id', 'from', 'to', 'subject', 'template_name', 'result', 'created_at', 'updated_at'];
                     }
 
@@ -146,7 +152,10 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([CronLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([CronLog::class, 'paginate'], $paginate_params);
+                        /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+                        $collection = $this->getContainer()->call([CronLog::class, 'getCollection']);
+                        $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+                        $data = $this->getContainer()->call([$collection, 'paginate']);
                         $header = ['id', 'run_time', 'duration', 'tasks', 'created_at', 'updated_at'];
                     }
 
@@ -157,7 +166,10 @@ class Logs extends AdminPage
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->getContainer()->call([AdminActionLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
                     } else {
-                        $data = $this->getContainer()->call([AdminActionLog::class, 'paginate'], $paginate_params);
+                        /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+                        $collection = $this->getContainer()->call([AdminActionLog::class, 'getCollection']);
+                        $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+                        $data = $this->getContainer()->call([$collection, 'paginate']);
                         $header = ['id', 'action', 'method', 'url', 'created_at', 'updated_at'];
                     }
 

@@ -30,6 +30,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use App\App;
+use App\Base\Abstracts\Models\BaseCollection;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
 
@@ -199,7 +200,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         // preload menu items
-        $menuitems = $this->getContainer()->call([Menu::class, 'loadMultipleByCondition'], ['condition' => ['menu_name' => $menu_name, 'website_id' => $website_id]]);
+        /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+        $collection = $this->getContainer()->call([Menu::class, 'getCollection']);
+        $collection->addCondition(['menu_name' => $menu_name, 'website_id' => $website_id]);
+        $menuitems = $collection->getItems();
 
         usort($menuitems, function ($a, $b) {
             if ($a->position == $b->position) {
@@ -411,7 +415,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderPaginator(int $current_page, int $total, BasePage $controller, $page_size = BaseModel::ITEMS_PER_PAGE, $visible_links = 2): string
+    public function renderPaginator(int $current_page, int $total, BasePage $controller, $page_size = BaseCollection::ITEMS_PER_PAGE, $visible_links = 2): string
     {
         $total_pages = ceil($total / $page_size) - 1;
         if ($total_pages < 1) {

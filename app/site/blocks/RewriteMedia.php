@@ -53,7 +53,7 @@ class RewriteMedia extends BaseCodeBlock
                 /** @var MediaElementRewrite $media_rewrite */
                 return $media_rewrite->getMediaElement()->getImage();
             },
-            $this->getContainer()->call([MediaElementRewrite::class, 'where'], ['condition' => [ 'rewrite_id' => $rewrite_id]])
+            MediaElementRewrite::getCollection()->where(['rewrite_id' => $rewrite_id])->getItems()
         );
 
 

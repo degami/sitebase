@@ -78,7 +78,7 @@ class Cron extends AdminManageModelsPage
                         continue;
                     }
 
-                    $existing_tasks = $this->getContainer()->call([CronTask::class, 'where'], ['condition' => 'title = "' . $cron_task_name . '"']);
+                    $existing_tasks = CronTask::getCollection()->where('title = "' . $cron_task_name . '"')->getItems();
                     if (count($existing_tasks) > 0) {
                         continue;
                     }

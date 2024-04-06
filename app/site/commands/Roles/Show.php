@@ -49,10 +49,11 @@ class Show extends BaseCommand
         $table = new Table($output);
         $table->setHeaders(['ID', 'Name', 'Permissions']);
 
-        foreach ($this->getContainer()->call([Role::class, 'all']) as $k => $role) {
+        $k = 0;
+        foreach (Role::getCollection() as $role) {
             /** @var Role $role */
 
-            if ($k > 0) {
+            if ($k++ > 0) {
                 $table->addRow(new TableSeparator());
             }
 

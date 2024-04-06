@@ -58,9 +58,8 @@ class Website extends BaseModel
         if ($this->isFirstSave()) {
             $first_website = $this->getContainer()->call([Website::class, 'select'], ['options' => ['expr' => 'id', 'limitCount' => 1]])->fetch();
             $copy_from = $first_website['id'];
-            $copy_configurations = $this->getContainer()->call([Configuration::class, 'where'], ['condition' => ['is_system' => 1, 'website_id' => $copy_from]]);
             $configurations = [];
-            foreach ($copy_configurations as $to_copy) {
+            foreach (Configuration::getCollection()->where(['is_system' => 1, 'website_id' => $copy_from]) as $to_copy) {
                 $data = [
                     'path' => $to_copy->getPath(),
                     'value' => $to_copy->getValue(),

@@ -199,8 +199,7 @@ class SiteData extends ContainerAwareObject
     public function preloadConfiguration(): array
     {
         $configuration = [];
-        $results = $this->getContainer()->call([Configuration::class, 'all']);
-        foreach ($results as $result) {
+        foreach (Configuration::getCollection() as $result) {
             /** @var Configuration $result */
             $configuration[$result->getWebsiteId()][$result->getPath()][$result->getLocale() ?? 'default'] = $result->getValue();
         }
@@ -418,8 +417,7 @@ class SiteData extends ContainerAwareObject
         $redirects = [];
         $redirects_key = "site." . $current_website_id . ".redirects";
         if (!$this->getCache()->has($redirects_key) || $reset) {
-            $redirect_models = $this->getContainer()->call([Redirect::class, 'where'], ['condition' => ['website_id' => $current_website_id]]);
-            foreach ($redirect_models as $redirect_model) {
+            foreach (Redirect::getCollection()->where(['website_id' => $current_website_id]) as $redirect_model) {
                 $redirects[$redirect_model->getUrlFrom()] = [
                     'url_to' => $redirect_model->getUrlTo(),
                     'redirect_code' => $redirect_model->getRedirectCode(),
@@ -483,7 +481,7 @@ class SiteData extends ContainerAwareObject
             $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
             $pageBlocks = [];
-            foreach ($this->getContainer()->call([Block::class, 'where'], ['condition' => ['locale' => [$locale, null], 'website_id' => [$website_id, null]], 'order' => ['order' => 'asc']]) as $block) {
+            foreach (Block::getCollection()->where(['locale' => [$locale, null], 'website_id' => [$website_id, null]], ['order' => 'asc']) as $block) {
                 /** @var Block $block */
                 if (!isset($pageBlocks[$block->getRegion()])) {
                     $pageBlocks[$block->getRegion()] = [];
@@ -523,7 +521,7 @@ class SiteData extends ContainerAwareObject
                     /** @var Menu $menu_model */
                     return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
                 },
-                $this->getContainer()->call([Menu::class, 'where'], ['condition' => ['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]], 'order' => ['position' => 'asc']])
+                Menu::getCollection()->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]], ['position' => 'asc'])->getItems()
             );
         }
         return $out;

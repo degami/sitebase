@@ -40,6 +40,11 @@ class SiteBase implements ExtensionInterface
     protected Engine $engine;
 
     /**
+     * @var Website|null current website cached element
+     */
+    protected static $currentWebsite = null;
+
+    /**
      * constructor
      *
      * @param ContainerInterface $container
@@ -80,7 +85,10 @@ class SiteBase implements ExtensionInterface
      */
     public function getCurrentWebsite(): ?Website
     {
-        return $this->getSiteData()->getCurrentWebsite();
+        if (is_null(static::$currentWebsite)) {
+            static::$currentWebsite = $this->getSiteData()->getCurrentWebsite();
+        }
+        return static::$currentWebsite;
     }
 
     /**

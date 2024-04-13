@@ -43,7 +43,8 @@
         "spatie/array-to-xml": "^2.11",
         "elasticsearch/elasticsearch": "~7.0",
         "mathiasverraes/classfunctions": "^1.1@dev",
-        "phpgangsta/googleauthenticator": "dev-master"
+        "phpgangsta/googleauthenticator": "dev-master",
+        "cweagans/composer-patches": "dev-main"
     },
   "autoload": {
     "files": [
@@ -72,5 +73,18 @@
   },
     "require-dev": {
         "maximebf/debugbar": "^1.15"
-    }
+    },
+    "config": {
+        "allow-plugins": {
+            "cweagans/composer-patches": true
+        }
+    },
+    "extra": {
+      "composer-exit-on-patch-failure": true,
+      "patches": {
+          "maximebf/debugbar": {
+              "fixes sql queries not shown due to js errors": "patches/debugbar_sql.patch"
+          }
+      }
+  }
 }

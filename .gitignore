@@ -2,6 +2,7 @@
 .phpdoc
 composer.lock
 package-lock.json
+patches.lock.json
 docs
 vendor
 node_modules/

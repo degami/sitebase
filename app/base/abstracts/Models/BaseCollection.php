@@ -49,11 +49,6 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
      */
     protected ?Result $stmt = null;
 
-    /**
-     * @var array objects cache
-     */
-    protected static array $loadedObjects = [];
-
 
     public function __construct(
         protected ContainerInterface $container,
@@ -153,7 +148,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
                 }
             }
         } else {
-            $this->stmt = $this->getSelect()->orderBy('id');
+            $this->stmt = $this->getSelect()->orderBy($this->getContainer()->call([$this->className, 'getKeyField']));
         }
 
         return $this;
@@ -215,7 +210,6 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
             $this->items = [];
             foreach($this->getContainer()->call([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()]) as $item) {
                 $this->items[$item->getId()] = $item;
-                static::$loadedObjects[$this->getTableName()][$item->getId()] = $item;
             }
 
             if (getenv('DEBUG')) {
@@ -246,7 +240,6 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
             return null;
         }
 
-        static::$loadedObjects[$this->getTableName()][$item->getId()] = $item;
         return $item;
     }
 
@@ -408,7 +401,6 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
         $this->items = [];
         foreach ($this->getContainer()->call([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()->limit($page_size, $start)]) as $item) {
             $this->items[$item->getId()] = $item;
-            static::$loadedObjects[$this->getTableName()][$item->getId()] = $item;
         }
 
         $out = ['items' => $this->getItems(), 'page' => $page, 'total' => $total];

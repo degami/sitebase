@@ -1,0 +1,20 @@
+--- a/src/DebugBar/Resources/widgets/sqlqueries/widget.js	2024-04-13 14:49:54.902665978 +0200
++++ b/src/DebugBar/Resources/widgets/sqlqueries/widget.js	2024-04-13 14:50:43.998929879 +0200
+@@ -70,10 +70,14 @@
+             var filters = [], self = this;
+ 
+             this.$list = new PhpDebugBar.Widgets.ListWidget({ itemRenderer: function(li, stmt) {
+-                if (stmt.type === 'transaction') {
++                try {
++                    if (stmt.type === 'transaction') {
++                        $('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(stmt.sql).appendTo(li);
++                    } else {
++                        $('<code />').addClass(csscls('sql')).html(PhpDebugBar.Widgets.highlight(stmt.sql, 'sql')).appendTo(li);
++                    }    
++                } catch (Exception) {
+                     $('<strong />').addClass(csscls('sql')).addClass(csscls('name')).text(stmt.sql).appendTo(li);
+-                } else {
+-                    $('<code />').addClass(csscls('sql')).html(PhpDebugBar.Widgets.highlight(stmt.sql, 'sql')).appendTo(li);
+                 }
+                 if (stmt.width_percent) {
+                     $('<div />').addClass(csscls('bg-measure')).append(

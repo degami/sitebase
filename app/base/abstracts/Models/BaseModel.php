@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use Exception;
+use League\Plates\Template\Func;
 
 /**
  * A wrapper for LessQL Row
@@ -60,6 +61,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @var array objects cache
      */
     protected static array $loadedObjects = [];
+
+    protected static string|array $keyField = 'id';
 
     /**
      * {@inheritdocs}
@@ -224,7 +227,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
                 }
             }
         } else {
-            $stmt = $stmt->orderBy('id');
+            $stmt = $stmt->orderBy(static::getKeyField());
         }
 
         return $stmt;
@@ -239,6 +242,33 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     {
         $path = explode('\\', static::class);
         return strtolower(static::pascalCaseToSnakeCase(array_pop($path)));
+    }
+
+    public static Function getKeyField() : string|array
+    {
+        return static::$keyField;
+    }
+
+    protected static function loadedObjectsIdentifier($id)
+    {
+        if (is_array(static::getKeyField())) {
+            return implode("|", array_map(function($column, $value) {
+                return $column.':'.$value;
+            }, static::getKeyField(), $id));
+        }
+
+        return static::getKeyField().':'.$id;
+    }
+
+    public function getKeyFieldValue() : mixed
+    {
+        if (!is_array(static::getKeyField())) {
+            return $this->getData(static::getKeyField());
+        }
+
+        return array_combine(static::getKeyField(), array_map(function($column) {
+            return $this->getData($column);
+        }, static::getKeyField()));
     }
 
     /**
@@ -340,14 +370,21 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        if (isset(static::$loadedObjects[static::defaultTableName()][$id]) && !$reset) {
+        if (isset(static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($id)]) && !$reset) {
             if (getenv('DEBUG')) {
                 $debugbar['time']->stopMeasure($measure_key);
             }
-            return static::$loadedObjects[static::defaultTableName()][$id];
+            return static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($id)];
         }
 
-        $object = $container->call([static::class, 'loadByCondition'], ['condition' => ['id' => $id]]);
+        $keyField = static::getKeyField();
+        if (is_array($keyField)) {
+            $condition = array_combine($keyField, $id);
+        } else {
+            $condition = [$keyField => $id];
+        }
+
+        $object = $container->call([static::class, 'loadByCondition'], ['condition' => $condition]);
 
         if (getenv('DEBUG')) {
             $debugbar['time']->stopMeasure($measure_key);
@@ -383,13 +420,13 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             throw new BasicException('Model not found');
         }
 
-        static::$loadedObjects[static::defaultTableName()][$db_row->id] = $container->make(static::class, ['db_row' => $db_row]);
+        static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($db_row->id)] = $container->make(static::class, ['db_row' => $db_row]);
 
         if (getenv('DEBUG')) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 
-        return static::$loadedObjects[static::defaultTableName()][$db_row->id];
+        return static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($db_row->id)];
     }
 
     /**

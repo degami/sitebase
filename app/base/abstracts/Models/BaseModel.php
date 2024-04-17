@@ -539,6 +539,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
                         return isset($this->{$prop});
                 }
             }
+            if (str_starts_with($method_name, 'load_by_')) {
+                return $this->loadBy(substr($method_name, 8), ...$arguments);
+            }
         }
 
         return call_user_func_array([$this->getDbRow(), $name], $arguments);
@@ -559,6 +562,30 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         }
 
         return $data;
+    }
+
+    /**
+     * gets Model json rapresentation
+     * 
+     * @param int $level internally used
+     * @return string
+     */
+    public function toJson(int $level = 0)
+    {
+        $out = [];
+        foreach ($this->getData() as $key => $value) {
+            if ($value instanceof BaseModel) {
+                $out[$key] = $value->toJson($level++);
+            } else {
+                $out[$key] = $value;
+            }
+        }
+
+        if ($level == 0) {
+            return json_encode($out);
+        }
+
+        return $out;
     }
 
     /**

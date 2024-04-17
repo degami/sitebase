@@ -83,10 +83,7 @@ class SiteData extends ContainerAwareObject
         if (php_sapi_name() == 'cli-server' || php_sapi_name() == 'cli') {
             $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
         } else {
-            //$website = $this->getContainer()->call([Website::class, 'loadBy'], ['field' => 'domain', 'value' => $_SERVER['SERVER_NAME']]);
-            $result = $this->getContainer()->call([Website::class, 'select'], ['options' => ['where' => ['domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)']]])->fetch();
-            $db_row = $this->getContainer()->make(Row::class, ['db' => $this->getDb(), 'name' => 'website', 'properties' => $result]);
-            $website = $this->getContainer()->make(Website::class, ['db_row' => $db_row]);
+            $website = Website::getCollection()->where('domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)')->getFirst();
         }
 
         if (getenv('DEBUG')) {

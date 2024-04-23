@@ -108,4 +108,12 @@ return [
     'show more' => 'mostrar más',
     '%y years %m months %d days' => '%y años %m meses %d días',
     'Results for: <em>%s</em>' => 'Resultados para: <em>%s</em>',
+    'Delete' => 'Eliminar',
+    'Site Name' => 'Nombre del sitio',
+    'Domain' => 'Dominio',
+    'Default Locale' => 'Idioma predeterminado',
+    'Aliases' => 'Alternativas',
+    'View' => 'Ver',
+    'Translations' => 'Traducciones',
+    'Usage' => 'Uso',
 ];

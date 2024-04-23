@@ -108,4 +108,12 @@ return [
     'show more' => 'show more',
     '%y years %m months %d days' => '%y years %m months %d days',
     'Results for: <em>%s</em>' => 'Results for: <em>%s</em>',
+    'Delete' => 'Delete',
+    'Site Name' => 'Site Name',
+    'Domain' => 'Domain',
+    'Default Locale' => 'Default Locale',
+    'Aliases' => 'Aliases',
+    'View' => 'View',
+    'Translations' => 'Translations',
+    'Usage' => 'Usage',
 ];

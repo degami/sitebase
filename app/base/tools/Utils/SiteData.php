@@ -25,7 +25,6 @@ use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Site\Models\Website;
-use LessQL\Row;
 
 /**
  * Site Data Helper Class
@@ -579,15 +578,14 @@ class SiteData extends ContainerAwareObject
      */
     protected function menuElementToArray(Menu $menu_element): array
     {
-        $out = [];
-        $out['menu_id'] = $menu_element->getId();
-        $out['title'] = $menu_element->getTitle();
-        $out['href'] = $menu_element->getLinkUrl();
-        $out['target'] = $menu_element->getTarget();
-        $out['breadcrumb'] = $menu_element->getBreadcrumb();
-        $out['children'] = [];
-
-        return $out;
+        return [
+            'menu_id' => $menu_element->getId(),
+            'title' => $menu_element->getTitle(),
+            'href' => $menu_element->getLinkUrl(),
+            'target' => $menu_element->getTarget(),
+            'breadcrumb' => $menu_element->getBreadcrumb(),
+            'children' => [],
+        ];
     }
 
     public function getAdminSidebarMenu(bool $reset = false) : array

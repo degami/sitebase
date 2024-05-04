@@ -17,19 +17,21 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableSeparator;
 use Redis as RedisClient;
 
 /**
  * Information Statistics Command
  */
-class Flush extends BaseCommand
+class Keys extends BaseCommand
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setDescription('Flush Redis');
+        $this->setDescription('List Redis Entries');
     }
 
     /**
@@ -56,8 +58,23 @@ class Flush extends BaseCommand
             $client->auth(getenv('REDIS_PASSWORD',''));
         }
         $client->select(getenv('REDIS_DATABASE'));
+        $table = new Table($output);
+        $table->setHeaders(['Key', 'Length']);
 
-        $client->flushAll();
-        $output->writeln('<info>Redis Flushed</info>');
+        $k = 0;
+        foreach ($client->keys('*') as $key) {
+            if ($k++ > 0) {
+                $table->addRow(new TableSeparator());
+            }
+
+            $table
+                ->addRow(
+                    [
+                        '<info>' . $key . '</info>',
+                        strlen($client->get($key)),
+                    ]
+                );
+        }
+        $table->render();
     }
 }

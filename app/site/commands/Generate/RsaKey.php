@@ -17,7 +17,6 @@ use App\Base\Abstracts\Commands\BaseExecCommand;
 use App\Base\Exceptions\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ConfirmationQuestion;
 use App\App;
 
 /**

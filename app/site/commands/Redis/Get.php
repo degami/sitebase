@@ -18,18 +18,27 @@ use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Redis as RedisClient;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Information Statistics Command
  */
-class Flush extends BaseCommand
+class Get extends BaseCommand
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setDescription('Flush Redis');
+        $this->setDescription('Get Redis Entry')
+        ->setDefinition(
+            new InputDefinition(
+                [
+                    new InputOption('key', 'k', InputOption::VALUE_OPTIONAL),
+                ]
+            )
+        );
     }
 
     /**
@@ -56,8 +65,9 @@ class Flush extends BaseCommand
             $client->auth(getenv('REDIS_PASSWORD',''));
         }
         $client->select(getenv('REDIS_DATABASE'));
+        
+        $key = $this->keepAskingForOption('key', 'Cache item key? ');
 
-        $client->flushAll();
-        $output->writeln('<info>Redis Flushed</info>');
+        $output->writeln($client->get($key));
     }
 }

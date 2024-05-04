@@ -15,7 +15,6 @@ namespace App\Site\Commands\Config;
 
 use App\Base\Abstracts\Commands\BaseCommand;
 use App\Site\Models\Configuration;
-use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;

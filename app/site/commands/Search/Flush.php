@@ -14,13 +14,10 @@
 namespace App\Site\Commands\Search;
 
 use App\Base\Abstracts\Commands\BaseCommand;
-use App\Base\Abstracts\Models\FrontendModel;
-use App\Base\Tools\Plates\SiteBase;
 use App\Site\Controllers\Frontend\Search;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 

@@ -15,7 +15,6 @@ namespace App\Site\Commands\Cron;
 
 use App\Base\Abstracts\Commands\BaseCommand;
 use App\Site\Models\CronLog;
-use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;

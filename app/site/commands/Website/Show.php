@@ -15,7 +15,6 @@ namespace App\Site\Commands\Website;
 
 use App\Base\Abstracts\Commands\BaseCommand;
 use App\Site\Models\Website;
-use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Helper\Table;

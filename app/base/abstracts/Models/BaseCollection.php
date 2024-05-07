@@ -68,7 +68,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
      */
     public function getTableName() : string
     {
-        return $this->getContainer()->call([$this->className, 'defaultTableName']);
+        return $this->containerCall([$this->className, 'defaultTableName']);
     }
 
     /**
@@ -148,7 +148,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
                 }
             }
         } else {
-            $this->stmt = $this->getSelect()->orderBy($this->getContainer()->call([$this->className, 'getKeyField']));
+            $this->stmt = $this->getSelect()->orderBy($this->containerCall([$this->className, 'getKeyField']));
         }
 
         return $this;
@@ -208,7 +208,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
             }
 
             $this->items = [];
-            foreach($this->getContainer()->call([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()]) as $item) {
+            foreach($this->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()]) as $item) {
                 $this->items[$item->getId()] = $item;
             }
 
@@ -233,7 +233,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     public function getFirst()
     {
         $stmt = $this->getSelect()->limit(1);
-        $item = $this->getContainer()->call([$this->className, 'hydrateStatementResult'], ['stmt' => $stmt]); 
+        $item = $this->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $stmt]); 
         $item = reset($item);
 
         if (!$item) {
@@ -399,7 +399,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
         $total = $this->count();
         
         $this->items = [];
-        foreach ($this->getContainer()->call([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()->limit($page_size, $start)]) as $item) {
+        foreach ($this->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()->limit($page_size, $start)]) as $item) {
             $this->items[$item->getId()] = $item;
         }
 

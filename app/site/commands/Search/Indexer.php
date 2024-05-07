@@ -62,10 +62,10 @@ class Indexer extends BaseCommand
 
                 $fields_to_index = ['title', 'content'];
                 if (method_exists($modelClass, 'exposeToIndexer')) {
-                    $fields_to_index = $this->getContainer()->call([$modelClass, 'exposeToIndexer']);
+                    $fields_to_index = $this->containerCall([$modelClass, 'exposeToIndexer']);
                 }
 
-                foreach ($this->getContainer()->call([$modelClass, 'getCollection']) as $object) {
+                foreach ($this->containerCall([$modelClass, 'getCollection']) as $object) {
                     $body = [];
 
                     foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
@@ -78,7 +78,7 @@ class Indexer extends BaseCommand
                     ];
 
                     if (in_array('content', $fields_to_index)) {
-                        $body_additional['excerpt'] = $this->getContainer()->make(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
+                        $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
                     }
 
                     $params = [

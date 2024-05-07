@@ -65,11 +65,11 @@ class RewriteMedia extends BaseCodeBlock
             }
         }
 
-        return (string)(new TagElement([
+        return $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'div',
             'attributes' => $tag_attributes,
             'children' => $images,
-        ]));
+        ]]);
     }
 
     /**

@@ -65,7 +65,7 @@ class LinkExchange extends BaseModel
         if (!(is_array($this->terms) && !empty($this->terms)) || $reset == true) {
             $this->terms = array_map(
                 function ($el) {
-                    return $this->getContainer()->make(Taxonomy::class, ['db_row' => $el]);
+                    return $this->containerMake(Taxonomy::class, ['db_row' => $el]);
                 },
                 $this->link_exchange_taxonomyList()->taxonomy()->fetchAll()
             );

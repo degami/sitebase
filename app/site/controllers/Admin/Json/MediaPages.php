@@ -57,20 +57,20 @@ class MediaPages extends AdminJsonPage
     protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
-        $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $route_data['id']]);
+        $media = $this->containerCall([Media::class, 'load'], ['id' => $route_data['id']]);
 
         $pages = array_map(
             function ($el) use ($media) {
-                $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
+                $page = $this->containerMake(Page::class, ['db_row' => $el]);
                 return $page->getTitle() .
-                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('admin.json.mediapages', ['id' => $media->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=media_deassoc">&times;</a>';
+                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $media->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=media_deassoc">&times;</a>';
             },
             $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll()
         );
 
         $pagesData = array_map(
             function ($el) {
-                $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
+                $page = $this->containerMake(Page::class, ['db_row' => $el]);
                 return $page->getData();
             },
             $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll()
@@ -78,7 +78,7 @@ class MediaPages extends AdminJsonPage
 
 
         if ($this->getRequest()->get('action') == 'media_deassoc') {
-            $pagesController = $this->getContainer()->make(Pages::class);
+            $pagesController = $this->containerMake(Pages::class);
             $form = $pagesController->getForm();
 
             $form->setAction($this->getUrl('admin.pages') . '?action=' . $this->getRequest()->get('action'));
@@ -90,7 +90,7 @@ class MediaPages extends AdminJsonPage
                 ]
             );
         } else {
-            $mediaController = $this->getContainer()->make(\App\Site\Controllers\Admin\Media::class);
+            $mediaController = $this->containerMake(\App\Site\Controllers\Admin\Media::class);
             $form = $mediaController->getForm();
 
             $form->setAction($this->getUrl('admin.media') . '?action=' . $this->getRequest()->get('action'));

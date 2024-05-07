@@ -80,7 +80,7 @@ class Web extends BaseRouter
                         $route_name = str_replace("/", ".", trim($path, "/"));
 
                         if (is_callable([$controllerClass, 'getPageRouteName'])) {
-                            $route_name = $this->getContainer()->call([$controllerClass, 'getPageRouteName']);
+                            $route_name = $this->containerCall([$controllerClass, 'getPageRouteName']);
                         }
 
                         $classMethod = self::CLASS_METHOD;
@@ -102,11 +102,11 @@ class Web extends BaseRouter
                         }
 
                         if (method_exists($controllerClass, 'getRouteGroup')) {
-                            $group = $this->getContainer()->call([$controllerClass, 'getRouteGroup']) ?? $group;
+                            $group = $this->containerCall([$controllerClass, 'getRouteGroup']) ?? $group;
                         }
 
                         if (method_exists($controllerClass, 'getRoutePath')) {
-                            $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
+                            $path = $this->containerCall([$controllerClass, 'getRoutePath']) ?? $path;
                         }
 
                         if (is_string($path)) {
@@ -152,7 +152,7 @@ class Web extends BaseRouter
             $domain = $website->getDomain();
             $website_id = $website->getId();
 
-            $rewrite = $this->getContainer()->call([Rewrite::class, 'loadByCondition'], ['condition' => ['url' => $uri, 'website_id' => $website_id]]);
+            $rewrite = $this->containerCall([Rewrite::class, 'loadByCondition'], ['condition' => ['url' => $uri, 'website_id' => $website_id]]);
             if ($rewrite instanceof Rewrite) {
                 $cached_routes[$domain][$uri] = $rewrite->getData();
                 $this->setCachedRoutes($cached_routes);

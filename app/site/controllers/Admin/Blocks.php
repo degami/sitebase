@@ -67,7 +67,7 @@ class Blocks extends AdminManageModelsPage
                 }
 
                 /** @var Block $new_block */
-                $new_block = $this->getContainer()->make(Block::class);
+                $new_block = $this->containerMake(Block::class);
                 $new_block->setRegion(null);
                 $new_block->setTitle(str_replace("App\\Site\\Blocks\\", "", $blockClass));
                 $new_block->setLocale(null);

@@ -37,7 +37,7 @@ trait WithWebsiteTrait
         $this->checkLoaded();
 
         if ($this->websiteModel == null) {
-            $this->websiteModel = $this->getContainer()->make(Website::class, ['db_row' => $this->website()->fetch()]);
+            $this->websiteModel = $this->containerMake(Website::class, ['db_row' => $this->website()->fetch()]);
         }
 
         return $this->websiteModel;

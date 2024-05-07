@@ -58,7 +58,7 @@ abstract class BasePage extends ContainerAwareObject
 
         // dispatch "request_created" event
         $this->getApp()->event('request_created', ['request' => $this->request]);
-        $this->response = $this->getContainer()->make(Response::class);
+        $this->response = $this->containerMake(Response::class);
 
         // let App know this is the controller object
         $this->getAppRouteInfo()->setControllerObject($this);

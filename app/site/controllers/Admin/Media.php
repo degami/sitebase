@@ -54,7 +54,7 @@ class Media extends AdminManageModelsPage
         if ($this->template_data['action'] == 'list') {
             parent::__construct($container, $request, $route_info);
         } elseif ($this->template_data['action'] == 'usage') {
-            $media = $this->getContainer()->call([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
+            $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
             $elem_data = $media->getData();
             $elem_data['owner'] = $media->getOwner()->username;
 
@@ -70,7 +70,7 @@ class Media extends AdminManageModelsPage
                 'elem_data' => $elem_data,
                 'pages' => array_map(
                     function ($el) {
-                        $page = $this->getContainer()->make(Page::class, ['db_row' => $el]);
+                        $page = $this->containerMake(Page::class, ['db_row' => $el]);
                         return ['url' => $page->getRewrite()->getUrl(), 'title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                     },
                     $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->get('media_id'))->page()->fetchAll()
@@ -161,7 +161,9 @@ class Media extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
                 $elem_data = $media->getData();
-                $elem_data['owner'] = $media->getOwner()->getUsername();
+                try {
+                    $elem_data['owner'] = $media->getOwner()->getUsername();
+                } catch (\Exception $e) {}
 
                 unset($elem_data['id']);
                 unset($elem_data['user_id']);
@@ -177,7 +179,7 @@ class Media extends AdminManageModelsPage
                     'pages-btn',
                     'pages-btn',
                     '&#9776; Pages',
-                    $this->getUrl('admin.json.mediapages', ['id' => $this->getRequest()->get('media_id')]) . '?media_id=' . $this->getRequest()->get('media_id') . '&action=page_assoc',
+                    $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $this->getRequest()->get('media_id')]) . '?media_id=' . $this->getRequest()->get('media_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
 
@@ -211,7 +213,7 @@ class Media extends AdminManageModelsPage
 
                 if ($this->getRequest()->get('page_id')) {
                     /** @var Page $page */
-                    $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                     $form->addField('page_id', [
                         'type' => 'hidden',
                         'default_value' => $page->getId(),
@@ -220,7 +222,7 @@ class Media extends AdminManageModelsPage
                 break;
             case 'deassoc':
                 /** @var Page $page */
-                $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->getId(),
@@ -231,7 +233,7 @@ class Media extends AdminManageModelsPage
                     'type' => 'markup',
                     'value' => 'Do you confirm the disassociation of the selected element from the "' . $page->getTitle() . '" page (ID: ' . $page->getId() . ') ?',
                     'suffix' => '<br /><br />',
-                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.pagemedia', ['id' => $page->getId()]) . '?page_id=' . $page->getId() . '&action=new">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $page->getId()]) . '?page_id=' . $page->getId() . '&action=new">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
                 break;
@@ -342,13 +344,13 @@ class Media extends AdminManageModelsPage
                 break;
             case 'deassoc':
                 if ($values['page_id']) {
-                    $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $values['page_id']]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->removeMedia($media);
                 }
                 break;
             case 'page_assoc':
                 if ($values['page_id']) {
-                    $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $values['page_id']]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->addMedia($media);
                 }
                 break;

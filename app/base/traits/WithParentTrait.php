@@ -31,7 +31,7 @@ trait WithParentTrait
             return null;
         }
 
-        return $this->getContainer()->call([static::class, 'load'], ['id' => $this->parent_id]);
+        return $this->containerCall([static::class, 'load'], ['id' => $this->parent_id]);
     }
 
     /**

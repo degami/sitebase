@@ -43,7 +43,7 @@ abstract class FrontendPageWithObject extends FrontendPage
         $route_data = $this->getRouteData();
 
         if (isset($route_data['id'])) {
-            $this->setObject($this->getContainer()->call([static::getObjectClass(), 'load'], ['id' => $route_data['id']]));
+            $this->setObject($this->containerCall([static::getObjectClass(), 'load'], ['id' => $route_data['id']]));
         }
 
         return parent::beforeRender();

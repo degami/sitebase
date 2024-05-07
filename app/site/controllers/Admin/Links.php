@@ -111,7 +111,7 @@ class Links extends AdminManageFrontendModelsPage
                     'taxonomy-btn',
                     'taxonomy-btn',
                     '&#9776; Terms',
-                    $this->getUrl('admin.json.linkterms', ['id' => $this->getRequest()->get('link_id')]) . '?link_id=' . $this->getRequest()->get('link_id') . '&action=new',
+                    $this->getUrl('crud.app.site.controllers.admin.json.linkterms', ['id' => $this->getRequest()->get('link_id')]) . '?link_id=' . $this->getRequest()->get('link_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall-trough
@@ -181,7 +181,7 @@ class Links extends AdminManageFrontendModelsPage
                 break;
 
             case 'term_deassoc':
-                $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
+                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
                 $form->addField('link_id', [
                     'type' => 'hidden',
                     'default_value' => $link->id,
@@ -193,7 +193,7 @@ class Links extends AdminManageFrontendModelsPage
                     'value' => 'Do you confirm the disassociation of the "' . $link->title . '"  from the "' . $term->title . '" term (ID: ' . $term->id . ') ?',
                     'suffix' => '<br /><br />',
                 ])
-                ->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.termlinks', ['id' => $term->id]) . '?term_id=' . $term->id . '&action=page_assoc">Cancel</a>');
+                ->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.termlinks', ['id' => $term->id]) . '?term_id=' . $term->id . '&action=page_assoc">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
 
@@ -261,7 +261,7 @@ class Links extends AdminManageFrontendModelsPage
                 break;
             case 'term_deassoc':
                 if ($values['term_id']) {
-                    $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $values['term_id']]);
+                    $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $values['term_id']]);
                     $link->removeTerm($term);
                 }
                 break;

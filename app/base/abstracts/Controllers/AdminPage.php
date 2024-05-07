@@ -123,7 +123,7 @@ abstract class AdminPage extends BaseHtmlPage
 
         if ($this->getSiteData()->getConfigValue('app/backend/log_requests') == true) {
             try {
-                $log = $this->getContainer()->make(AdminActionLog::class);
+                $log = $this->containerMake(AdminActionLog::class);
                 $log->fillWithRequest($this->getRequest(), $this);
                 $log->persist();
             } catch (Exception $e) {
@@ -153,7 +153,7 @@ abstract class AdminPage extends BaseHtmlPage
         $this->getAssets()->addJs(
             "\$('#admin').appAdmin(" . json_encode(
                 [
-                    'checkLoggedUrl' => $this->getUrl('admin.json.checksession'),
+                    'checkLoggedUrl' => $this->getUrl('crud.app.site.controllers.admin.json.checksession'),
                     'logoutUrl' => $this->getUrl('admin.logout'),
                 ]
             ) . ");"

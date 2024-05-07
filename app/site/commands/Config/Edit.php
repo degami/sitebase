@@ -58,7 +58,7 @@ class Edit extends BaseCommand
         }
 
         /** @var Configuration $configuration */
-        $configuration = $this->getContainer()->call([Configuration::class, 'load'], ['id' => $id]);
+        $configuration = $this->containerCall([Configuration::class, 'load'], ['id' => $id]);
         if (!$configuration->isLoaded()) {
             $this->getIo()->error('Config does not exists');
             return;

@@ -61,7 +61,7 @@ class Add extends BaseCommand
 
         try {
             /** @var Website $website */
-            $website = $this->getContainer()->call([Website::class, 'new']);
+            $website = $this->containerCall([Website::class, 'new']);
             $website->setSiteName($name);
             $website->setDomain($domain);
             $website->persist();
@@ -72,7 +72,7 @@ class Add extends BaseCommand
                 // copy at least is_system configurations
 
                 /** @var Configuration $configuration_model */
-                $configuration_model = $this->getContainer()->call([Configuration::class, 'new'], ['initial_data' => [
+                $configuration_model = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
                     'website_id' => $website->getId(),
                     'path' => $config->getPath(),
                     'value' => '',

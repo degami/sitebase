@@ -33,17 +33,17 @@ class YearCopy extends BaseCodeBlock
     public function renderHTML(BasePage $current_page = null): string
     {
         try {
-            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);
+            $website = $this->containerCall([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);
 
             $class = 'block copy';
 
-            return (string)(new TagElement([
+            return $this->containerMake(TagElement::class, ['options' => [
                 'tag' => 'div',
                 'attributes' => [
                     'class' => $class,
                 ],
                 'text' => $website->getSiteName() . " &copy; - " . date('Y'),
-            ]));
+            ]]);
         } catch (Exception $e) {
         }
         return "";

@@ -53,9 +53,9 @@ abstract class FrontendModel extends BaseModel
 
         if (!($this->rewriteObj instanceof Rewrite)) {
             try {
-                $this->rewriteObj = $this->getContainer()->call([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => '/' . $this->getRewritePrefix() . '/' . $this->getId()]);
+                $this->rewriteObj = $this->containerCall([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => '/' . $this->getRewritePrefix() . '/' . $this->getId()]);
             } catch (Exception $e) {
-                $this->rewriteObj = $this->getContainer()->call([Rewrite::class, 'new']);
+                $this->rewriteObj = $this->containerCall([Rewrite::class, 'new']);
             }
         }
         return $this->rewriteObj;
@@ -120,8 +120,8 @@ abstract class FrontendModel extends BaseModel
         return array_map(
             function ($el) {
                 $routeInfo = $el->getRouteInfo();
-                $modelClass = $this->getContainer()->call([$routeInfo->getHandler()[0], 'getObjectClass']);
-                $model = $this->getContainer()->call([$modelClass, 'load'], $routeInfo->getVars());
+                $modelClass = $this->containerCall([$routeInfo->getHandler()[0], 'getObjectClass']);
+                $model = $this->containerCall([$modelClass, 'load'], $routeInfo->getVars());
                 return $model->getRewrite()->getUrl();
             },
             $this->getRewrite()->getTranslations()

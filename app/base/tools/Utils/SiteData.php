@@ -80,7 +80,7 @@ class SiteData extends ContainerAwareObject
 
         $website = null;
         if (php_sapi_name() == 'cli-server' || php_sapi_name() == 'cli') {
-            $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
+            $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
         } else {
             $website = Website::getCollection()->where('domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)')->getFirst();
         }
@@ -272,7 +272,7 @@ class SiteData extends ContainerAwareObject
         }
 
         try {
-            $result = $this->getContainer()->call([Configuration::class, 'loadByCondition'], ['condition' => ['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])]]);
+            $result = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])]]);
             if ($result instanceof Configuration) {
                 $cached_configuration[$website_id][$config_path][$result->getLocale() ?? 'default'] = $result->getValue();
                 $this->getCache()->set(self::CONFIGURATION_CACHE_KEY, $cached_configuration);
@@ -597,7 +597,7 @@ class SiteData extends ContainerAwareObject
             $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
             foreach ($controllerClasses as $controllerClass) {
                 if (method_exists($controllerClass, 'getAdminPageLink')) {
-                    $adminLink = $this->getContainer()->call([$controllerClass, 'getAdminPageLink']) ?? null;
+                    $adminLink = $this->containerCall([$controllerClass, 'getAdminPageLink']) ?? null;
                     if ($adminLink) {
                         $links[$adminLink['section']][] = $adminLink;
                     }

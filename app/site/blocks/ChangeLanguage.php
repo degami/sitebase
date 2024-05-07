@@ -47,7 +47,7 @@ class ChangeLanguage extends BaseCodeBlock
 
             if (($current_page instanceof FrontendPage) && is_callable([$current_page, 'getTranslations'])) {
                 if (($translations = $current_page->getTranslations()) && !empty($translations)) {
-                    $changelanguage_links = $this->getContainer()->make(TagElement::class, ['options' => [
+                    $changelanguage_links = $this->containerMake(TagElement::class, ['options' => [
                         'tag' => 'ul',
                         'attributes' => [
                             'class' => 'choose-lang',
@@ -62,7 +62,7 @@ class ChangeLanguage extends BaseCodeBlock
                                 $text = $key;
                             }
                             if (isset($config['show-language']) && $config['show-language'] == 'full') {
-                                $language = $this->getContainer()->call([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
+                                $language = $this->containerCall([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
                                 $text = $language->native;
                             }
                             if (isset($config['show-flags']) && boolval($config['show-flags'])) {
@@ -79,13 +79,13 @@ class ChangeLanguage extends BaseCodeBlock
                                 'text' => $text,
                             ];
 
-                            return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
+                            return $this->containerMake(TagElement::class, ['options' => $link_options]);
                         },
                         $translations,
                         array_keys($translations)
                     );
                     foreach ($atags as $atag) {
-                        $li = $this->getContainer()->make(
+                        $li = $this->containerMake(
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'li',

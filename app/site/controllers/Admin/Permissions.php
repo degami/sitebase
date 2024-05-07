@@ -166,8 +166,8 @@ class Permissions extends AdminFormPage
             if (count($tmp) == 3) {
                 $permission_name = $tmp[0];
                 $role_name = $tmp[1];
-                $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
-                $role_model = $this->getContainer()->call([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role_name]);
+                $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+                $role_model = $this->containerCall([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role_name]);
                 $role_permission_model = $this->loadRolePermission($role_model, $permission_model);
 
                 if ($value == true && $role_permission_model == null) {
@@ -191,7 +191,7 @@ class Permissions extends AdminFormPage
     private function loadRolePermission(Role $role_model, Permission $permission_model): ?RolePermission
     {
         try {
-            return $this->getContainer()->call([RolePermission::class, 'loadByCondition'], ['condition' => ['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()]]);
+            return $this->containerCall([RolePermission::class, 'loadByCondition'], ['condition' => ['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()]]);
         } catch (\Exception $e) {
         }
 

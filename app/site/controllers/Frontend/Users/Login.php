@@ -195,7 +195,7 @@ class Login extends FormPage
         $values = $form->values();
 
         try {
-            $user = $this->getContainer()->call([User::class, 'loadByCondition'], ['condition' => [
+            $user = $this->containerCall([User::class, 'loadByCondition'], ['condition' => [
                 'username' => $values['username'],
                 'password' => $this->getUtils()->getEncodedPass($values['password']),
             ]]);

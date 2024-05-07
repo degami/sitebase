@@ -34,17 +34,17 @@ class RedisDataCollector extends DataCollector implements Renderable, AssetProvi
      */
     public function collect(): array
     {
-        $client = new RedisClient();
-        $isConnected = $client->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'), 5);
-        if (!empty(getenv('REDIS_PASSWORD', ''))) {
-            $client->auth(getenv('REDIS_PASSWORD',''));
+        
+        try {
+            $client = \App\App::getInstance()->getRedis();
+        } catch (\Exception $e) {
+            return [];
         }
-        $client->select(getenv('REDIS_DATABASE'));
 
         return [
-            'host' => getenv('REDIS_HOST'),
-            'port' => getenv('REDIS_PORT'),
-            'database' => getenv('REDIS_DATABASE'),
+            'host' => $client->getHost(),
+            'port' => $client->getPort(),
+            'database' => $client->getDBNum(),
             'dbsize' => $client->dbSize(),
             'keys' => json_encode($client->keys('*')),
         ];

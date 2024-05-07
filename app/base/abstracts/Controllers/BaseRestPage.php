@@ -104,7 +104,7 @@ abstract class BaseRestPage extends BasePage
             return null;
         }
 
-        return $this->getContainer()->call([$this->getObjectClass(), 'load'], ['id' => $id]);
+        return $this->containerCall([$this->getObjectClass(), 'load'], ['id' => $id]);
     }
 
     /**
@@ -125,7 +125,7 @@ abstract class BaseRestPage extends BasePage
         }
 
         try {
-            $log = $this->getContainer()->make(RequestLog::class);
+            $log = $this->containerMake(RequestLog::class);
             $log->fillWithRequest($this->getRequest(), $this);
             $log->setResponseCode(200);
             $log->persist();
@@ -137,7 +137,7 @@ abstract class BaseRestPage extends BasePage
         }
 
         /** @var BaseModel $object */
-        $object = $this->getContainer()->call([$this->getObjectClass(), 'new']);
+        $object = $this->containerCall([$this->getObjectClass(), 'new']);
         if (in_array($this->getVerb(), ['GET', 'PUT', 'DELETE']) && isset($route_data['id'])) {
             $object = $this->loadObject($route_data['id']);
         }
@@ -163,7 +163,7 @@ abstract class BaseRestPage extends BasePage
                         ->prepare($this->getRequest())
                         ->setData(array_map(function ($object) {
                             return $object->getData();
-                        }, $this->getContainer()->call([$this->getObjectClass(), 'getCollection'])->getItems()));
+                        }, $this->containerCall([$this->getObjectClass(), 'getCollection'])->getItems()));
                 }
 
                 return $this
@@ -182,7 +182,7 @@ abstract class BaseRestPage extends BasePage
                     ->setData($old_data);
         }
 
-        return $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 500, 'route_info' => $route_info]);
+        return $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 500, 'route_info' => $route_info]);
     }
 
     /**

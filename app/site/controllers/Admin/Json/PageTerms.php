@@ -57,11 +57,11 @@ class PageTerms extends AdminJsonPage
     protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
-        $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $route_data['id']]);
+        $page = $this->containerCall([Page::class, 'load'], ['id' => $route_data['id']]);
 
         $terms = array_map(
             function ($el) use ($page) {
-                return $el->getTitle() . ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=deassoc">&times;</a>';
+                return $el->getTitle() . ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=deassoc">&times;</a>';
             },
             $page->getTerms()
         );
@@ -73,7 +73,7 @@ class PageTerms extends AdminJsonPage
             $page->getTerms()
         );
 
-        $taxonomyController = $this->getContainer()->make(Taxonomy::class);
+        $taxonomyController = $this->containerMake(Taxonomy::class);
         $form = $taxonomyController->getForm();
 
         $form->removeField('seo');

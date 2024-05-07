@@ -59,7 +59,7 @@ class Edit extends BaseCommand
         }
 
         /** @var Website $website */
-        $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $id]);
+        $website = $this->containerCall([Website::class, 'load'], ['id' => $id]);
 
         if (!$website->isLoaded()) {
             $this->getIo()->error('Website does not exists');

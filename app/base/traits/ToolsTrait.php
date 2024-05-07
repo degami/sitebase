@@ -50,7 +50,7 @@ trait ToolsTrait
                 }
 
                 /** @var Client $client */
-                $client = $this->getContainer()->make(
+                $client = $this->containerMake(
                     Client::class,
                     [
                         'base_uri' => $base_uri,

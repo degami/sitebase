@@ -208,7 +208,7 @@ abstract class BaseHtmlPage extends BasePage
         $flash_messages = $this->getFlashMessages();
         $flash_messages[$type][] = $message;
 
-        $cookie = $this->getContainer()->make(Cookie::class, [
+        $cookie = $this->containerMake(Cookie::class, [
             'name' => 'flash_messages',
             'value' => json_encode($flash_messages),
             'expire' => time() + 3600,

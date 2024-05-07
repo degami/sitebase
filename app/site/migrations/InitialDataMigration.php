@@ -136,9 +136,9 @@ class InitialDataMigration extends BaseMigration
         /** @var Permission $permission_model */
         $permission_model = null;
         try {
-            $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+            $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
         } catch (\Exception $e) {
-            $permission_model = $this->getContainer()->call([Permission::class, 'new'], ['initial_data' => ['name' => $permission_name]]);
+            $permission_model = $this->containerCall([Permission::class, 'new'], ['initial_data' => ['name' => $permission_name]]);
             $permission_model->persist();
         }
 
@@ -156,15 +156,15 @@ class InitialDataMigration extends BaseMigration
      */
     private function addRolesPermissions()
     {
-        $guest_role_model = $this->getContainer()->call([Role::class, 'new']);
+        $guest_role_model = $this->containerCall([Role::class, 'new']);
         $guest_role_model->setName('guest');
         $guest_role_model->persist();
 
-        $logged_role_model = $this->getContainer()->call([Role::class, 'new']);
+        $logged_role_model = $this->containerCall([Role::class, 'new']);
         $logged_role_model->setName('logged_user');
         $logged_role_model->persist();
 
-        $admin_role_model = $this->getContainer()->call([Role::class, 'new']);
+        $admin_role_model = $this->containerCall([Role::class, 'new']);
         $admin_role_model->setName('admin');
         $admin_role_model->persist();
 
@@ -248,7 +248,7 @@ class InitialDataMigration extends BaseMigration
     private function addHomePage(Website $website_model, User $owner_model): Page
     {
         /** @var Page $page_model */
-        $page_model = $this->getContainer()->call([Page::class, 'new']);
+        $page_model = $this->containerCall([Page::class, 'new']);
 
         $page_model->setWebsiteId($website_model->getId());
         $page_model->setUrl('homepage');
@@ -286,7 +286,7 @@ class InitialDataMigration extends BaseMigration
             'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
         ];
         foreach ($variables as $path => $info) {
-            $configuration_model = $this->getContainer()->call([Configuration::class, 'new']);
+            $configuration_model = $this->containerCall([Configuration::class, 'new']);
             $configuration_model->setWebsiteId($website_model->getId());
             $configuration_model->setLocale($info['locale']);
             $configuration_model->setPath($path);

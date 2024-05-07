@@ -106,7 +106,7 @@ class Add extends BaseCommand
 
         try {
             /** @var User $user */
-            $user = $this->getContainer()->call([User::class, 'new']);
+            $user = $this->containerCall([User::class, 'new']);
             $user->setUsername($username);
             $user->setNickname($username);
             $user->setEmail($email);

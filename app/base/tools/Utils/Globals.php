@@ -109,7 +109,7 @@ class Globals extends ContainerAwareObject
                     $controller = $route_info->getControllerObject();
                 }
                 /** @var RequestLog $log */
-                $log = $this->getContainer()->make(RequestLog::class);
+                $log = $this->containerMake(RequestLog::class);
                 $log->fillWithRequest($request, $controller);
                 $log->setResponseCode($status_code);
                 $log->persist();
@@ -145,7 +145,7 @@ class Globals extends ContainerAwareObject
             $template_data = [$template_data];
         }
         if (!isset($template_data['controller'])) {
-            $template_data['controller'] = $this->getContainer()->make(NullPage::class, ['request' => $request,'route_info' => $route_info]);
+            $template_data['controller'] = $this->containerMake(NullPage::class, ['request' => $request,'route_info' => $route_info]);
         }
         if (!isset($template_data['body_class'])) {
             $template_data['body_class'] = 'error';
@@ -334,7 +334,7 @@ class Globals extends ContainerAwareObject
         $rewrite_id = null;
 
         // return a RouteInfo instance
-        return $this->getContainer()->make(RouteInfo::class, [
+        return $this->containerMake(RouteInfo::class, [
             'dispatcher_info' => [Dispatcher::NOT_FOUND],
             'http_method' => $http_method,
             'uri' => $uri,
@@ -461,7 +461,7 @@ class Globals extends ContainerAwareObject
     public function addQueueMessage(string $queue_name, mixed $data): QueueMessage
     {
         /** @var QueueMessage $message */
-        $message = $this->getContainer()->call([QueueMessage::class, 'new']);
+        $message = $this->containerCall([QueueMessage::class, 'new']);
         $message->setQueueName($queue_name);
         $message->setMessage(json_encode($data));
         $message->setStatus(QueueMessage::STATUS_PENDING);

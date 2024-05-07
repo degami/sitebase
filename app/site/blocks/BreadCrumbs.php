@@ -66,7 +66,7 @@ class BreadCrumbs extends BaseCodeBlock
         $home_url = $this->getWebRouter()->getUrl('frontend.root');
 
         /** @var TagElement $breadcrumbs_links */
-        $breadcrumbs_links = $this->getContainer()->make(TagElement::class, ['options' => [
+        $breadcrumbs_links = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'ol',
             'attributes' => [
                 'class' => 'breadcrumb',
@@ -76,7 +76,7 @@ class BreadCrumbs extends BaseCodeBlock
         $homepageid = $this->getSiteData()->getHomePageId($website_id, $locale);
 
         if (!$current_page->isHomePage()) {
-            $li = $this->getContainer()->make(
+            $li = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'li',
@@ -84,7 +84,7 @@ class BreadCrumbs extends BaseCodeBlock
                 ]]
             );
 
-            $atag = $this->getContainer()->make(
+            $atag = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'a',
@@ -112,13 +112,13 @@ class BreadCrumbs extends BaseCodeBlock
 
             $atags = array_map(
                 function ($id) use ($homepageid, $locale) {
-                    $menuItem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
+                    $menuItem = $this->containerCall([Menu::class, 'load'], ['id' => $id]);
 
                     if ($menuItem->getRewriteId()) {
                         /**
                          * @var Rewrite $rewrite
                          */
-                        $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $menuItem->getRewriteId()]);
+                        $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $menuItem->getRewriteId()]);
                         if ($rewrite->getRoute() == '/page/' . $homepageid) {
                             $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
                         }
@@ -134,7 +134,7 @@ class BreadCrumbs extends BaseCodeBlock
                 array_filter($breadcrumbs)
             );
             foreach ($atags as $atag) {
-                $li = $this->getContainer()->make(
+                $li = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'li',
@@ -151,7 +151,7 @@ class BreadCrumbs extends BaseCodeBlock
             ($config['add-current'] == true) &&
             ($current_page instanceof FrontendPage)
         ) {
-            $li = $this->getContainer()->make(
+            $li = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'li',
@@ -161,7 +161,7 @@ class BreadCrumbs extends BaseCodeBlock
 
             $atag = null;
             if ($current_page instanceof FrontendPageWithObject && $current_page->getRewrite()) {
-                $atag = $this->getContainer()->make(
+                $atag = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'a',
@@ -174,7 +174,7 @@ class BreadCrumbs extends BaseCodeBlock
                     ]]
                 );
             } else if ($menu_item instanceof Menu) {
-                $atag = $this->getContainer()->make(
+                $atag = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'a',
@@ -187,7 +187,7 @@ class BreadCrumbs extends BaseCodeBlock
                     ]]
                 );
             } else {
-                $atag = $this->getContainer()->make(
+                $atag = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'a',
@@ -211,7 +211,7 @@ class BreadCrumbs extends BaseCodeBlock
         }
 
         /** @var TagElement $breadcrumbs_container */
-        $breadcrumbs_container = $this->getContainer()->make(TagElement::class, ['options' => [
+        $breadcrumbs_container = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'nav',
             'attributes' => [
                 'aria-label' => 'breadcrumb',
@@ -247,7 +247,7 @@ class BreadCrumbs extends BaseCodeBlock
             $link_options['attributes']['target'] = $leaf['target'];
         }
 
-        return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
+        return $this->containerMake(TagElement::class, ['options' => $link_options]);
     }
 
 

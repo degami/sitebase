@@ -55,14 +55,14 @@ trait TranslatorsTrait
         }
 
         // Create the translation
-        $translation = $this->getContainer()->make(
+        $translation = $this->containerMake(
             Translation::class,
             [
                 'filename' => App::getDir(App::TRANSLATIONS) . DS . $locale->language()->code() . '.php',
             ]
         );  // Can use .CSV, .PHP, .PO and .MO files
         // Create the translator
-        static::$translators[$locale_code] = $this->getContainer()->make(
+        static::$translators[$locale_code] = $this->containerMake(
             Translator::class,
             [
                 'translations' => $translation->asArray(),

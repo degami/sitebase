@@ -56,7 +56,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      */
     public function getObject() : mixed
     {
-        return $this->getContainer()->make($this->getRequest()->get('object_class'));
+        return $this->containerMake($this->getRequest()->get('object_class'));
     }
 
     /**

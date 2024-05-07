@@ -52,7 +52,7 @@ class Role extends BaseModel
         if (!(is_array($this->permissionsArray) && !empty($this->permissionsArray)) || $reset == true) {
             $this->permissionsArray = array_map(
                 function ($el) {
-                    return $this->getContainer()->make(Permission::class, ['db_row' => $el]);
+                    return $this->containerMake(Permission::class, ['db_row' => $el]);
                 },
                 $this->role_permissionList()->permission()->fetchAll()
             );
@@ -90,9 +90,9 @@ class Role extends BaseModel
      */
     public function grantPermission(string $permission_name): Role
     {
-        $pivot_model = $this->getContainer()->call([RolePermission::class, 'new']);
+        $pivot_model = $this->containerCall([RolePermission::class, 'new']);
 
-        $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+        $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
         if (!$permission_model->isLoaded()) {
             throw new InvalidValueException("permission not found: " . $permission_name);
         }
@@ -119,7 +119,7 @@ class Role extends BaseModel
             throw new InvalidValueException("permission not found in role: " . $permission_name);
         }
 
-        $permission_model = $this->getContainer()->call([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+        $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
         if (!$permission_model->isLoaded()) {
             throw new InvalidValueException("permission not found: " . $permission_name);
         }

@@ -95,7 +95,7 @@ class Config extends AdminManageModelsPage
         if ($this->template_data['action'] == 'list') {
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
             $collection = Configuration::getCollection();
-            $data = $this->getContainer()->call([$collection, 'paginate']);
+            $data = $this->containerCall([$collection, 'paginate']);
             $this->template_data += [
                 'configs' => $data['items'],
                 'total' => $data['total'],

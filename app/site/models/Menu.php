@@ -72,7 +72,7 @@ class Menu extends ModelWithChildren
             /**
              * @var Rewrite $rewrite
              */
-            $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
+            $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
             return $this->getWebRouter()->getUrl('/') . '/' . ltrim($rewrite->getUrl(), '/');
         }
 

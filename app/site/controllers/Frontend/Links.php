@@ -78,9 +78,9 @@ class Links extends FormPage
     protected function getTemplateData(): array
     {
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-        $collection = $this->getContainer()->call([LinkExchange::class, 'getCollection']);
+        $collection = $this->containerCall([LinkExchange::class, 'getCollection']);
         $collection->addCondition(['active' => 1, 'locale' => $this->getCurrentLocale()]);        
-        $data = $this->getContainer()->call([$collection, 'paginate']);
+        $data = $this->containerCall([$collection, 'paginate']);
         return $this->template_data += [
             'page_title' => $this->getUtils()->translate('Links exchange', $this->getCurrentLocale()),
             'links' => $data['items'],
@@ -156,7 +156,7 @@ class Links extends FormPage
         $values = $form->getValues();
 
         /** @var LinkExchange $link */
-        $link = $this->getContainer()->call([LinkExchange::class, 'new'], ['initial_data' => [
+        $link = $this->containerCall([LinkExchange::class, 'new'], ['initial_data' => [
             'url' => $values->url,
             'email' => $values->email,
             'title' => $values->title,

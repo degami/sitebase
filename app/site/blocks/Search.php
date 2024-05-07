@@ -43,14 +43,14 @@ class Search extends BaseCodeBlock
         }
 
         try {
-            $form_content = $this->getContainer()->make(TagElement::class, ['options' => [
+            $form_content = $this->containerMake(TagElement::class, ['options' => [
                 'tag' => 'div',
                 'attributes' => [
                     'class' => 'searchbar input-group',
                 ],
             ]]);
 
-            $input = $this->getContainer()->make(TagElement::class, ['options' => [
+            $input = $this->containerMake(TagElement::class, ['options' => [
                 'tag' => 'input',
                 'type' => 'text',
                 'name' => 'q',
@@ -61,7 +61,7 @@ class Search extends BaseCodeBlock
 
             $form_content->addChild($input);
 
-            $button = $this->getContainer()->make(TagElement::class, ['options' => [
+            $button = $this->containerMake(TagElement::class, ['options' => [
                 'tag' => 'button',
                 'type' => 'submit',
                 'value' => $this->getUtils()->translate('Search'),
@@ -71,7 +71,7 @@ class Search extends BaseCodeBlock
                 'text' => $this->getHtmlRenderer()->getIcon('search'),
             ]]);
 
-            $div = $this->getContainer()->make(TagElement::class, ['options' => [
+            $div = $this->containerMake(TagElement::class, ['options' => [
                 'tag' => 'div',
                 'attributes' => [
                     'class' => 'input-group-append',

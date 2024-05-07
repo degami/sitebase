@@ -46,7 +46,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
         $name = null
     ) {
         parent::__construct($container, $name);
-        $this->composer_reader = $this->getContainer()->make(ComposerReader::class, ['file' => App::getDir('root') . DS . 'composer.json']);
+        $this->composer_reader = $this->containerMake(ComposerReader::class, ['file' => App::getDir('root') . DS . 'composer.json']);
 
         if (!$this->composer_reader->canRead()) {
             throw new Exception("Unable to read json.");

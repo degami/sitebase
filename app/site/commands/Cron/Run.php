@@ -58,7 +58,7 @@ class Run extends BaseCommand
             $cron = CronExpression::factory($task->getSchedule());
             if ($cron->isDue()) {
                 try {
-                    $this->getContainer()->call(json_decode($task->getCronTaskCallable()));
+                    $this->containerCall(json_decode($task->getCronTaskCallable()));
                     $cron_executed[] = $task->getTitle();
                 } catch (Exception $e) {
                     $this->getLog()->critical($e->getMessage() . "\n" . $e->getTraceAsString());
@@ -67,7 +67,7 @@ class Run extends BaseCommand
         }
 
         if (!empty($cron_executed)) {
-            $cron_log = $this->getContainer()->make(CronLog::class);
+            $cron_log = $this->containerMake(CronLog::class);
             $cron_log->run_time = $start_time->format('Y-m-d H:i:s');
             $cron_log->tasks = implode(',', $cron_executed);
             $cron_log->duration = (microtime(true) - $start_mtime);

@@ -48,16 +48,14 @@ class Keys extends BaseCommand
             $output->writeln('<error>Redis cache is not enabled</error>');
             return;
         }
-        $client = new RedisClient();
-        $isConnected = $client->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'), 5);
-        if (!$isConnected) {
+
+        try {
+            $client = $this->getRedis();
+        } catch (\Exception $e) {
             $output->writeln('<error>Can\'t connect to redis server</error>');
             return;
         }
-        if (!empty(getenv('REDIS_PASSWORD', ''))) {
-            $client->auth(getenv('REDIS_PASSWORD',''));
-        }
-        $client->select(getenv('REDIS_DATABASE'));
+
         $table = new Table($output);
         $table->setHeaders(['Key', 'Length']);
 

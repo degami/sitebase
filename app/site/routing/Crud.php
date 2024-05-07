@@ -60,14 +60,14 @@ class Crud extends BaseRouter
                         $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
 
                         if (is_callable([$controllerClass, 'getPageRouteName'])) {
-                            $route_name = $this->getContainer()->call([$controllerClass, 'getPageRouteName']);
+                            $route_name = $this->containerCall([$controllerClass, 'getPageRouteName']);
                         }
 
                         $classMethod = self::CLASS_METHOD;
                         $verbs = $this->getClassHttpVerbs($controllerClass);
 
                         if (method_exists($controllerClass, 'getRoutePath')) {
-                            $path = $this->getContainer()->call([$controllerClass, 'getRoutePath']) ?? $path;
+                            $path = $this->containerCall([$controllerClass, 'getRoutePath']) ?? $path;
                         }
 
                         if (is_string($path)) {
@@ -77,7 +77,7 @@ class Crud extends BaseRouter
                         array_walk($path, function ($path_value, $key) use ($route_name, $group, $controllerClass, $classMethod, $verbs) {
                             $path_prefix = "";
                             if (method_exists($controllerClass, 'getRouteGroup')) {
-                                $path_prefix = rtrim($this->getContainer()->call([$controllerClass, 'getRouteGroup']), '/') . '/' ?? "";
+                                $path_prefix = rtrim($this->containerCall([$controllerClass, 'getRouteGroup']), '/') . '/' ?? "";
                             }
 
                             if (!is_string($key)) {

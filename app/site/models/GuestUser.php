@@ -102,7 +102,7 @@ class GuestUser extends AccountModel
             return $this->roleObj;
         }
 
-        return $this->roleObj = $this->getContainer()->call([Role::class, 'load'], ['id' => $this->getRoleId()]);
+        return $this->roleObj = $this->containerCall([Role::class, 'load'], ['id' => $this->getRoleId()]);
     }
 
     /**

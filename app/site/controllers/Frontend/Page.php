@@ -94,7 +94,7 @@ class Page extends FrontendPageWithObject
             $debugbar = $this->getDebugbar();
             $debugbar['time']->startMeasure('showpage');
         }
-        $this->setObject($this->getContainer()->call([PageModel::class, 'load'], ['id' => $id]));
+        $this->setObject($this->containerCall([PageModel::class, 'load'], ['id' => $id]));
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
             $debugbar['time']->stopMeasure('showpage');
@@ -126,7 +126,7 @@ class Page extends FrontendPageWithObject
 
             if ($homepage_id) {
                 /** @var PageModel $page_model */
-                $page_model = $this->getContainer()->call([PageModel::class, 'load'], ['id' => $homepage_id]);
+                $page_model = $this->containerCall([PageModel::class, 'load'], ['id' => $homepage_id]);
                 return $this->doRedirect($page_model->getFrontendUrl());
             }
         } else {
@@ -137,7 +137,7 @@ class Page extends FrontendPageWithObject
             $homepage_id = $this->getSiteData()->getHomePageId($website_id, null);
             if ($homepage_id) {
                 /** @var PageModel $page_model */
-                $page_model = $this->getContainer()->call([PageModel::class, 'load'], ['id' => $homepage_id]);
+                $page_model = $this->containerCall([PageModel::class, 'load'], ['id' => $homepage_id]);
                 $translations = $page_model->getTranslations();
                 if (isset($translations[$route_vars['lang'] ?? $browser_locale])) {
                     return $this->doRedirect($translations[$route_vars['lang'] ?? $browser_locale]);

@@ -84,9 +84,9 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             ],
         ];
 
-        $iframe = $this->getContainer()->make(TagElement::class, ['options' => $options]);
+        $iframe = $this->containerMake(TagElement::class, ['options' => $options]);
 
-        return $this->getContainer()->make(TagElement::class, ['options' => [
+        return $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'noscript',
             'attributes' => [
                 'class' => '',

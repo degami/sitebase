@@ -141,7 +141,7 @@ abstract class FrontendPage extends BaseHtmlPage
         }
 
         if (is_array($tag) && isset($tag['tag'])) {
-            $tag = new TagElement($tag);
+            $tag = $this->containerMake(TagElement::class, ['options' => $tag]);
         }
 
         if ($tag instanceof TagElement) {
@@ -232,7 +232,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
         if ($this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
             try {
-                $log = $this->getContainer()->make(RequestLog::class);
+                $log = $this->containerMake(RequestLog::class);
                 $log->fillWithRequest($this->getRequest(), $this);
                 $log->setResponseCode($return instanceof Response ? $return->getStatusCode() : 200);
                 $log->persist();
@@ -263,10 +263,10 @@ abstract class FrontendPage extends BaseHtmlPage
             try {
                 if ($this->getRouteInfo()->getRewrite()) {
                     // we have rewrite id into RouteInfo
-                    $this->rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
+                    $this->rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
                 } else {
                     // no data into RouteInfo, try by route
-                    $this->rewrite = $this->getContainer()->call([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => $this->getRouteInfo()->getRoute()]);
+                    $this->rewrite = $this->containerCall([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => $this->getRouteInfo()->getRoute()]);
                 }
             } catch (Exception $e) {
             }
@@ -289,7 +289,7 @@ abstract class FrontendPage extends BaseHtmlPage
             $rewrite = $this->getRewrite();
             if (($menu_obj = $rewrite?->menuList()->fetch()) != null) {
                 /** @var Menu $menu_obj */
-                $menu_obj = $this->getContainer()->make(Menu::class, ['db_row' => $menu_obj]);
+                $menu_obj = $this->containerMake(Menu::class, ['db_row' => $menu_obj]);
                 $this->locale = $menu_obj->getLocale();
             } elseif ($rewrite != null) {
                 $this->locale = $rewrite->getLocale();

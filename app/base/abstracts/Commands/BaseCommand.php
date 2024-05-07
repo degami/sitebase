@@ -118,7 +118,7 @@ class BaseCommand extends SymfonyCommand
         if ($existing) {
             try {
                 if ($this->input->hasOption('website') && is_numeric($this->input->getOption('website'))) {
-                    $website = $this->getContainer()->call([Website::class, 'load'], ['id' => $this->input->getOption('website')]);
+                    $website = $this->containerCall([Website::class, 'load'], ['id' => $this->input->getOption('website')]);
                 }
             } catch (\Exception $e) {
             }

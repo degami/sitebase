@@ -48,7 +48,7 @@ class ContactSubmission extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(Contact::class, ['db_row' => $this->contact()->fetch()]);
+        return $this->containerMake(Contact::class, ['db_row' => $this->contact()->fetch()]);
     }
 
     /**
@@ -87,7 +87,7 @@ class ContactSubmission extends BaseModel
     {
         $data = $this->getData();
         try {
-            $data['user'] = $this->getContainer()->call([User::class, 'load'], ['id' => $data['user_id']])->getData();
+            $data['user'] = $this->containerCall([User::class, 'load'], ['id' => $data['user_id']])->getData();
         } catch (Exception $e) {
             $data['user'] = null;
         }

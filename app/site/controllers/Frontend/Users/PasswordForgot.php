@@ -151,7 +151,7 @@ class PasswordForgot extends FormPage
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
-        if ($this->getRequest()->get('confirmation_code') && ($user = $this->getContainer()->call([User::class, 'loadBy'], ['field' => 'confirmation_code', 'value' => $this->getRequest()->get('confirmation_code')])) && $user->getId()) {
+        if ($this->getRequest()->get('confirmation_code') && ($user = $this->containerCall([User::class, 'loadBy'], ['field' => 'confirmation_code', 'value' => $this->getRequest()->get('confirmation_code')])) && $user->getId()) {
             $form
                 ->setFormId('changepass')
                 ->addField('user_id', [
@@ -204,7 +204,7 @@ class PasswordForgot extends FormPage
         if ($form->getFormId() == 'confirmemail') {
             try {
                 /** @var User $user */
-                $user = $this->getContainer()->call([User::class, 'loadBy'], ['field' => 'email', 'value' => $values['email']]);
+                $user = $this->containerCall([User::class, 'loadBy'], ['field' => 'email', 'value' => $values['email']]);
                 $form_state['found_user'] = $user;
             } catch (\Exception $e) {
                 return $this->getUtils()->translate("Invalid email", $this->getCurrentLocale());
@@ -247,7 +247,7 @@ class PasswordForgot extends FormPage
                 );
             }
         } else {
-            $user_model = $this->getContainer()->call([User::class, 'load'], ['id' => $values['user_id']]);
+            $user_model = $this->containerCall([User::class, 'load'], ['id' => $values['user_id']]);
             $user_model->password = $this->getUtils()->getEncodedPass($values['password']);
             $user_model->confirmation_code = null;
         }

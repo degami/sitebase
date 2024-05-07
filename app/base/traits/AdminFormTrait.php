@@ -91,7 +91,7 @@ trait AdminFormTrait
                     'options' => $websites,
                     'validate' => ['required'],
 
-                    'ajax_url' => $this->getUrl('admin.json.websitelanguagescallback') . '?' . $_SERVER['QUERY_STRING'] . '&object_class=' . urlencode($this->getObjectClass()),
+                    'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.websitelanguagescallback') . '?' . $_SERVER['QUERY_STRING'] . '&object_class=' . urlencode($this->getObjectClass()),
                     'event' => [
                         [
                             'event' => 'change',

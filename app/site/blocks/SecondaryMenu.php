@@ -49,7 +49,7 @@ class SecondaryMenu extends BaseCodeBlock
 
         $tree = $this->getSiteData()->getSiteMenu($menu_name, $website_id, $locale);
 
-        $menu_container = $this->getContainer()->make(TagElement::class, ['options' => [
+        $menu_container = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'div',
             'attributes' => [
                 'class' => 'menu',
@@ -58,7 +58,7 @@ class SecondaryMenu extends BaseCodeBlock
 
         $menu_container->addChild($this->renderSiteMenu($tree));
 
-        $out = $this->getContainer()->make(TagElement::class, ['options' => [
+        $out = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'nav',
             'attributes' => [
                 'class' => 'secondary-menu',
@@ -81,7 +81,7 @@ class SecondaryMenu extends BaseCodeBlock
      */
     protected function renderSiteMenu(array $menu_tree, $parent = null): string
     {
-        $menu_list = $this->getContainer()->make(TagElement::class, ['options' => [
+        $menu_list = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'ul',
             'attributes' => [
                 'class' => 'navbar-nav mr-auto',
@@ -89,7 +89,7 @@ class SecondaryMenu extends BaseCodeBlock
         ]]);
 
         foreach ($menu_tree as $leaf) {
-            $li = $this->getContainer()->make(TagElement::class, ['options' => [
+            $li = $this->containerMake(TagElement::class, ['options' => [
                 'tag' => 'li',
                 'attributes' => ['class' => 'menu-item'],
             ]]);
@@ -137,7 +137,7 @@ class SecondaryMenu extends BaseCodeBlock
             $link_options['attributes']['target'] = $leaf['target'];
         }
 
-        return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
+        return $this->containerMake(TagElement::class, ['options' => $link_options]);
     }
 
     /**

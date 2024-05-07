@@ -16,6 +16,7 @@ namespace App\Base\Traits;
 use App\App;
 use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Cache\Manager as CacheManager;
+use App\Base\Tools\Redis\Manager as RedisManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
@@ -60,6 +61,26 @@ trait ContainerAwareTrait
     public function getContainer(): ContainerInterface
     {
         return $this->container;
+    }
+
+    /**
+     * call method through container
+     * 
+     * @param callable $callable
+     * @param array $arguments
+     * @return mixed
+     */
+    public function containerCall(callable|array $callable, array $arguments = []) : mixed
+    {
+        return $this->getContainer()->call($callable, $arguments);
+    }
+
+    /**
+     * create object through container
+     */
+    public function containerMake(string $className, array $arguments = []) : mixed
+    {
+        return $this->getContainer()->make($className, $arguments);
     }
 
     /**
@@ -336,6 +357,28 @@ trait ContainerAwareTrait
     }
 
     /**
+     * gets redis service
+     * 
+     * @return RedisManager
+     * @throws BasicException
+     */
+    public function getRedis(): RedisManager
+    {
+        return $this->getService('redis');
+    }
+
+    /**
+     * gets google authenticator service
+     * 
+     * @return PHPGangsta_GoogleAuthenticator
+     * @throws BasicException
+     */
+    public function getGoogleAuthenticator(): PHPGangsta_GoogleAuthenticator
+    {
+        return $this->getService('googleauthenticator');
+    }
+
+    /**
      * gets env variable
      *
      * @param string $variable
@@ -388,16 +431,5 @@ trait ContainerAwareTrait
         }
 
         return null;
-    }
-
-    /**
-     * gets google authenticator service
-     * 
-     * @return PHPGangsta_GoogleAuthenticator
-     * @throws BasicException
-     */
-    public function getGoogleAuthenticator(): PHPGangsta_GoogleAuthenticator
-    {
-        return $this->getService('googleauthenticator');
     }
 }

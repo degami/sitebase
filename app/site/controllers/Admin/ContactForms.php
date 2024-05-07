@@ -74,12 +74,12 @@ class ContactForms extends AdminManageFrontendModelsPage
                 $this->addBackButton();
             }
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-            $collection = $this->getContainer()->call([$this->getObjectClass(), 'getCollection']);
+            $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
             $collection->addOrder($this->getRequest()->query->get('order'));
             if ($this->template_data['action'] == 'submissions') {
                 $collection->addCondition(['contact_id' => $this->getRequest()->get('contact_id')]);
             }
-            $data = $this->getContainer()->call([$collection, 'paginate']);
+            $data = $this->containerCall([$collection, 'paginate']);
 
             $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
@@ -90,7 +90,7 @@ class ContactForms extends AdminManageFrontendModelsPage
         } elseif ($this->template_data['action'] == 'view_submission') {
             $this->addBackButton();
             $this->template_data += [
-                'submission' => $this->getContainer()->call([ContactSubmission::class, 'load'], ['id' => $this->getRequest()->get('submission_id')]),
+                'submission' => $this->containerCall([ContactSubmission::class, 'load'], ['id' => $this->getRequest()->get('submission_id')]),
             ];
         }
     }
@@ -275,7 +275,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                     $form->addField('addmore', [
                         'type' => 'submit',
                         'value' => 'Add more',
-                        'ajax_url' => $this->getUrl('admin.json.contactcallback') . '?action=' . $this->getRequest()->get('action') . '&contact_id=' . $this->getRequest()->get('contact_id'),
+                        'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.contactcallback') . '?action=' . $this->getRequest()->get('action') . '&contact_id=' . $this->getRequest()->get('contact_id'),
                         'event' => [
                             [
                                 'event' => 'click',

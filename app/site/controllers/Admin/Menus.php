@@ -346,7 +346,7 @@ class Menus extends AdminManageModelsPage
                 $parent_id = $parent;
             }
             try {
-                $menu_elem = $this->getContainer()->call([Menu::class, 'load'], ['id' => $id]);
+                $menu_elem = $this->containerCall([Menu::class, 'load'], ['id' => $id]);
                 if ($id != null && $menu_elem instanceof Menu) {
                     $menu_elem->setParentId($parent_id);
                     $menu_elem->setPosition($position);

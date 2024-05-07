@@ -110,7 +110,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         $route_data = $this->getRouteData();
 
         if (isset($route_data['id'])) {
-            $this->setObject($this->getContainer()->call([Contact::class, 'load'], ['id' => $route_data['id']]));
+            $this->setObject($this->containerCall([Contact::class, 'load'], ['id' => $route_data['id']]));
 
             $this->template_data += [
                 'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
@@ -270,7 +270,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
         }
 
         //$submission_obj =
-        $this->getContainer()->call([ContactSubmission::class, 'submit'], ['submission_data' => $submission]);
+        $this->containerCall([ContactSubmission::class, 'submit'], ['submission_data' => $submission]);
 
         $form->addHighlight('Thanks for your submission!');
         //var_dump($form->get_triggering_element());

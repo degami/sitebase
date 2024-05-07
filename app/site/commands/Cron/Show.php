@@ -84,7 +84,7 @@ class Show extends BaseCommand
         $out = '<info>No heart beat run yet</info>';
         // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1
         /** @var CronLog $last_beat */
-        $last_beat = $this->getContainer()->call([CronLog::class, 'select'], ['options' => ['where' => ["1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0"], 'orderBy' => ['run_time DESC'], 'limitCount' => 1]])->fetch();
+        $last_beat = $this->containerCall([CronLog::class, 'select'], ['options' => ['where' => ["1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0"], 'orderBy' => ['run_time DESC'], 'limitCount' => 1]])->fetch();
 
         if ($last_beat != null) {
             $last_beat->getData();

@@ -82,15 +82,14 @@ class Block extends BaseModel
 
         $class = 'block block-' . $this->getId();
 
-        return (string)(new TagElement(
-            [
-                'tag' => 'div',
-                'attributes' => [
-                    'class' => $class,
-                ],
-                'text' => $this->getContent(),
-            ]
-        ));
+        return $this->containerMake(TagElement::class, ['options' => 
+        [
+            'tag' => 'div',
+            'attributes' => [
+                'class' => $class,
+            ],
+            'text' => $this->getContent(),
+        ]]);
     }
 
     /**
@@ -113,7 +112,7 @@ class Block extends BaseModel
     public function loadInstance(): ?BaseCodeBlock
     {
         if ($this->isCodeBlock() && is_null($this->codeBlockInstance)) {
-            $this->codeBlockInstance = $this->getContainer()->make($this->getInstance());
+            $this->codeBlockInstance = $this->containerMake($this->getInstance());
         }
 
         return $this->codeBlockInstance;
@@ -168,7 +167,7 @@ class Block extends BaseModel
             /*
                         $this->rewrites = array_map(
                             function ($el) {
-                                return $this->getContainer()->make(Rewrite::class, ['db_row' => $el]);
+                                return $this->containerMake(Rewrite::class, ['db_row' => $el]);
                             },
                             $this->block_rewriteList()->rewrite()->fetchAll()
                         );
@@ -178,7 +177,7 @@ class Block extends BaseModel
             $ids = $query->fetchAll(\PDO::FETCH_COLUMN, 0);
 
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-            $collection = $this->getContainer()->call([Rewrite::class, 'getCollection']);
+            $collection = $this->containerCall([Rewrite::class, 'getCollection']);
             $collection->addCondition(['id' => $ids]);
 
             $this->rewrites = $collection->getItems();

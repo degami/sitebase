@@ -84,7 +84,7 @@ trait FrontendTrait
             function ($el) {
                 return $this->getWebRouter()->getBaseUrl() . $el;
             },
-            $this->getContainer()->call([$this->getObject(), 'getTranslations'])
+            $this->containerCall([$this->getObject(), 'getTranslations'])
         );
     }
 

@@ -62,8 +62,8 @@ class Migrate extends BaseCommand
         $name = null
     ) {
         parent::__construct($container, $name);
-        $this->adapter = $this->getContainer()->make(PdoMysqlAdapter::class, ['pdo' => $this->getPdo()]);
-        $this->factory = $this->getContainer()->make(
+        $this->adapter = $this->containerMake(PdoMysqlAdapter::class, ['pdo' => $this->getPdo()]);
+        $this->factory = $this->containerMake(
             Factory::class,
             [
                 'adapter' => $this->adapter,

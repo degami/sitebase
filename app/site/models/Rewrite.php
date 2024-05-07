@@ -75,7 +75,7 @@ class Rewrite extends BaseModel
                         }
                         return [
                             'locale' => $el->destination_locale,
-                            'rewrite' => $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $el->destination])
+                            'rewrite' => $this->containerCall([Rewrite::class, 'load'], ['id' => $el->destination])
                         ];
                     },
                     [] + $this->getDb()->table('rewrite_translation')->where('source', $this->getId())->fetchAll()

@@ -101,7 +101,7 @@ trait AdminTrait
         }
 
 
-        $ul = $this->getContainer()->make(
+        $ul = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'ul',
@@ -112,7 +112,7 @@ trait AdminTrait
 
         foreach ($this->action_buttons as $key => $button_html) {
             $ul->addChild(
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'li',
@@ -137,17 +137,15 @@ trait AdminTrait
      */
     protected function addActionButton(string $key, string $button_id, string $button_text, $button_class = 'btn btn-sm btn-light') : static
     {
-        $button = (string)(new TagElement(
-            [
-                'tag' => 'button',
-                'id' => $button_id,
-                'attributes' => [
-                    'class' => $button_class,
-                    'title' => $button_text,
-                ],
-                'text' => $button_text,
-            ]
-        ));
+        $button = $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'button',
+            'id' => $button_id,
+            'attributes' => [
+                'class' => $button_class,
+                'title' => $button_text,
+            ],
+            'text' => $button_text,
+        ]]);
         $this->action_buttons[$key] = $button;
 
         return $this;
@@ -169,18 +167,16 @@ trait AdminTrait
         if (!is_array($attributes)) {
             $attributes = [];
         }
-        $button = (string)(new TagElement(
-            [
-                'tag' => 'a',
-                'id' => $link_id,
-                'attributes' => [
-                        'class' => $link_class,
-                        'href' => $link_href,
-                        'title' => strip_tags($link_text),
-                    ] + $attributes,
-                'text' => $link_text,
-            ]
-        ));
+        $button = $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'a',
+            'id' => $link_id,
+            'attributes' => [
+                    'class' => $link_class,
+                    'href' => $link_href,
+                    'title' => strip_tags($link_text),
+                ] + $attributes,
+            'text' => $link_text,
+        ]]);
 
         $this->action_buttons[$key] = $button;
         return $this;

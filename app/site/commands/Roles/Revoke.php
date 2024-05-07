@@ -59,7 +59,7 @@ class Revoke extends BaseCommand
         }
 
         /** @var Role $role */
-        $role = $this->getContainer()->call([Role::class, 'load'], ['id' => $id]);
+        $role = $this->containerCall([Role::class, 'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
             $this->getIo()->error('Role does not exists');

@@ -56,13 +56,13 @@ class PageMedia extends AdminJsonPage
     protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
-        $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $route_data['id']]);
+        $page = $this->containerCall([Page::class, 'load'], ['id' => $route_data['id']]);
 
         $gallery = array_map(
             function ($el) use ($page) {
                 return '<div class="gallery-elem">' .
                     $el->getThumb("150x100", null, 'img-fluid img-thumbnail') .
-                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('admin.json.pagemedia', ['id' => $page->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=deassoc">&times;</a>' .
+                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $page->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=deassoc">&times;</a>' .
                     '</div>';
             },
             $page->getGallery()
@@ -75,7 +75,7 @@ class PageMedia extends AdminJsonPage
             $page->getGallery()
         );
 
-        $mediaController = $this->getContainer()->make(Media::class);
+        $mediaController = $this->containerMake(Media::class);
         $form = $mediaController->getForm();
 
         $form->setAction($this->getUrl('admin.media') . '?action=' . $this->getRequest()->get('action'));

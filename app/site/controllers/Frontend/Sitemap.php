@@ -65,7 +65,7 @@ class Sitemap extends BaseXMLPage
         $sitemap = null;
 
         if (isset($route_data['id'])) {
-            $sitemap = $this->getContainer()->call([SitemapModel::class, 'load'], ['id' => $route_data['id']]);
+            $sitemap = $this->containerCall([SitemapModel::class, 'load'], ['id' => $route_data['id']]);
         }
 
         if (!($sitemap instanceof SitemapModel && $sitemap->isLoaded())) {

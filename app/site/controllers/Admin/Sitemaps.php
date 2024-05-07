@@ -221,7 +221,7 @@ class Sitemaps extends AdminManageModelsPage
                     $form->addField('addmore', [
                         'type' => 'submit',
                         'value' => 'Add more',
-                        'ajax_url' => $this->getUrl('admin.json.sitemapcallback') . '?action=' . $this->getRequest()->get('action') . '&sitemap_id=' . $this->getRequest()->get('sitemap_id'),
+                        'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.sitemapcallback') . '?action=' . $this->getRequest()->get('action') . '&sitemap_id=' . $this->getRequest()->get('sitemap_id'),
                         'event' => [
                             [
                                 'event' => 'click',

@@ -116,14 +116,14 @@ class Pages extends AdminManageFrontendModelsPage
                     'media-btn',
                     'media-btn',
                     '&#9776; Media',
-                    $this->getUrl('admin.json.pagemedia', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
+                    $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
                 $this->addActionLink(
                     'taxonomy-btn',
                     'taxonomy-btn',
                     '&#9776; Terms',
-                    $this->getUrl('admin.json.pageterms', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
+                    $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall-trough
@@ -183,7 +183,7 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
 
             case 'media_deassoc':
-                $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
+                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
@@ -194,13 +194,13 @@ class Pages extends AdminManageFrontendModelsPage
                     'type' => 'markup',
                     'value' => 'Do you confirm the disassociation of the "' . $page->title . '" page from the media ID: ' . $media->id . '?',
                     'suffix' => '<br /><br />',
-                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.mediapages', ['id' => $media->id]) . '?media_id=' . $media->id . '&action=page_assoc">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $media->id]) . '?media_id=' . $media->id . '&action=page_assoc">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
                 break;
 
             case 'term_deassoc':
-                $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
+                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
@@ -211,7 +211,7 @@ class Pages extends AdminManageFrontendModelsPage
                     'type' => 'markup',
                     'value' => 'Do you confirm the disassociation of the "' . $page->title . '"  from the "' . $term->title . '" term (ID: ' . $term->id . ') ?',
                     'suffix' => '<br /><br />',
-                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.termpages', ['id' => $term->id]) . '?term_id=' . $term->id . '&action=page_assoc">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.termpages', ['id' => $term->id]) . '?term_id=' . $term->id . '&action=page_assoc">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
 
@@ -282,13 +282,13 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
             case 'media_deassoc':
                 if ($values['media_id']) {
-                    $media = $this->getContainer()->call([Media::class, 'load'], ['id' => $values['media_id']]);
+                    $media = $this->containerCall([Media::class, 'load'], ['id' => $values['media_id']]);
                     $page->removeMedia($media);
                 }
                 break;
             case 'term_deassoc':
                 if ($values['term_id']) {
-                    $term = $this->getContainer()->call([Taxonomy::class, 'load'], ['id' => $values['term_id']]);
+                    $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $values['term_id']]);
                     $page->removeTerm($term);
                 }
                 break;

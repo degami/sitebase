@@ -71,9 +71,9 @@ class NewsList extends FrontendPage
     protected function getTemplateData(): array
     {
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-        $collection = $this->getContainer()->call([News::class, 'getCollection']);
+        $collection = $this->containerCall([News::class, 'getCollection']);
         $collection->addCondition(['locale' => $this->getCurrentLocale()])->addOrder(['date' => 'DESC']);
-        $data = $this->getContainer()->call([$collection, 'paginate']);
+        $data = $this->containerCall([$collection, 'paginate']);
         return $this->template_data += [
             'page_title' => $this->getUtils()->translate('News', $this->getCurrentLocale()),
             'news' => $data['items'],

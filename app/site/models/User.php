@@ -74,7 +74,7 @@ class User extends AccountModel
             return $this->roleObj;
         }
 
-        return $this->roleObj = $this->getContainer()->make(Role::class, ['db_row' => $this->role()->fetch()]);
+        return $this->roleObj = $this->containerMake(Role::class, ['db_row' => $this->role()->fetch()]);
     }
 
     /**
@@ -92,7 +92,7 @@ class User extends AccountModel
         } elseif (is_string($role)) {
             try {
                 /** @var Role $role */
-                $role = $this->getContainer()->call([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role]);
+                $role = $this->containerCall([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role]);
                 $this->setRoleId($role->getId());
             } catch (Exception $e) {
             }
@@ -229,12 +229,12 @@ class User extends AccountModel
 
         try {
             /** @var UserSession $user_session */
-            $user_session = $this->getContainer()->call([UserSession::class, 'loadByCondition'], ['condition' => ['user_id' => $this->getId(), 'website_id' => $current_website_id]]);
+            $user_session = $this->containerCall([UserSession::class, 'loadByCondition'], ['condition' => ['user_id' => $this->getId(), 'website_id' => $current_website_id]]);
         } catch (Exception $e) {
         }
 
         if (!$user_session) {
-            $user_session = $this->getContainer()->call([UserSession::class, 'new']);
+            $user_session = $this->containerCall([UserSession::class, 'new']);
             $user_session->setUserId($this->getId());
             $user_session->setWebsiteId($current_website_id);
         }

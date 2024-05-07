@@ -47,7 +47,7 @@ class Shell extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $helper = $this->getHelper('question');
-        $app = $this->getContainer()->make(App::class);
+        $app = $this->containerMake(App::class);
         $this->getContainer()->set('app', $app);
 
         $this->getIo()->title('Welcome.');

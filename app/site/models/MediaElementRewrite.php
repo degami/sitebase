@@ -48,7 +48,7 @@ class MediaElementRewrite extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(MediaElement::class, ['db_row' => $this->media_element()->fetch()]);
+        return $this->containerMake(MediaElement::class, ['db_row' => $this->media_element()->fetch()]);
     }
 
     /**
@@ -61,6 +61,6 @@ class MediaElementRewrite extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->getContainer()->make(Rewrite::class, ['db_row' => $this->rewrite()->fetch()]);
+        return $this->containerMake(Rewrite::class, ['db_row' => $this->rewrite()->fetch()]);
     }
 }

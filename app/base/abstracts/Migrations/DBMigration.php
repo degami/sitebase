@@ -36,7 +36,7 @@ abstract class DBMigration extends BaseMigration
     {
         $table = $sql = null;
         try {
-            $schema = $this->getContainer()->make(Schema::class, ['pdo' => $this->getPdo(), 'preload' => true]);
+            $schema = $this->containerMake(Schema::class, ['pdo' => $this->getPdo(), 'preload' => true]);
 
             try {
                 $table = $schema->getTable($this->tableName);

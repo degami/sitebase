@@ -52,14 +52,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $flash_messages = $controller->getFlashMessages();
         $controller->dropFlashMessages();
 
-        $messages_container = $this->getContainer()->make(TagList::class);
+        $messages_container = $this->containerMake(TagList::class);
 
         foreach ((array)$flash_messages as $type => $messages) {
-            $messages_list = $this->getContainer()->make(TagList::class);
+            $messages_list = $this->containerMake(TagList::class);
 
             foreach ($messages as $message) {
                 $messages_list->addChild(
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'div',
@@ -70,7 +70,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             }
 
             $messages_container->addChild(
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'div',
@@ -114,7 +114,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $link_options['attributes']['aria-expanded'] = 'false';
         }
 
-        return $this->getContainer()->make(TagElement::class, ['options' => $link_options]);
+        return $this->containerMake(TagElement::class, ['options' => $link_options]);
     }
 
     /**
@@ -139,7 +139,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $tag_options['attributes']['aria-labelledby'] = 'navbarDropdown-' . $parent['menu_id'];
         }
 
-        $out = $this->getContainer()->make(TagElement::class, ['options' => $tag_options]);
+        $out = $this->containerMake(TagElement::class, ['options' => $tag_options]);
 
         if ($parent && $parent['href'] != '#') {
             $out->addChild($this->renderMenuLink($parent));
@@ -147,14 +147,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         foreach ($menu_tree as $leaf) {
             $leaf_container = ($parent == null) ?
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'li',
                         'attributes' => ['class' => 'nav-item'],
                     ]]
                 ) :
-                $this->getContainer()->make(TagList::class);
+                $this->containerMake(TagList::class);
 
             if (isset($leaf['children']) && !empty($leaf['children'])) {
                 $leaf_container->addChild($this->renderMenuLink($leaf, 'nav-link dropdown-toggle'));
@@ -201,7 +201,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         // preload menu items
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-        $collection = $this->getContainer()->call([Menu::class, 'getCollection']);
+        $collection = $this->containerCall([Menu::class, 'getCollection']);
         $collection->addCondition(['menu_name' => $menu_name, 'website_id' => $website_id]);
         $menuitems = $collection->getItems();
 
@@ -212,7 +212,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             return ($a->position < $b->position) ? -1 : 1;
         });
 
-        $menu = $this->getContainer()->make(
+        $menu = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'nav',
@@ -223,7 +223,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         if ($this->getSiteData()->getShowLogoOnMenu($website_id)) {
             // add logo
-            $logo = $this->getContainer()->make(
+            $logo = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'img',
@@ -235,7 +235,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 ]]
             );
 
-            $atag = $this->getContainer()->make(
+            $atag = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'a',
@@ -252,7 +252,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         // add mobile toggle button
-        $button = $this->getContainer()->make(
+        $button = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'button',
@@ -268,7 +268,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
         $button->addChild(
-            $this->getContainer()->make(
+            $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'span',
@@ -281,7 +281,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $menu->addChild($button);
 
         // add menu content
-        $menu_content = $this->getContainer()->make(
+        $menu_content = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'div',
@@ -340,7 +340,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         if ($current_rewrite == null && ($route_info instanceof RouteInfo) && is_numeric($route_info->getRewrite())) {
-            $current_rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $route_info->getRewrite()]);
+            $current_rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $route_info->getRewrite()]);
         }
 
         if (is_null($pageBlocks)) {
@@ -381,11 +381,11 @@ class HtmlPartsRenderer extends ContainerAwareObject
         if (empty($href)) {
             $li_options['text'] = $text;
         }
-        $li = $this->getContainer()->make(TagElement::class, ['options' => $li_options]);
+        $li = $this->containerMake(TagElement::class, ['options' => $li_options]);
 
         if (!empty($href)) {
             $li->addChild(
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'a',
@@ -426,7 +426,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $query_params = $controller->getRequest()->query->all();
         unset($query_params['page']);
 
-        $out = $this->getContainer()->make(
+        $out = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'nav',
@@ -434,7 +434,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-        $ul = $this->getContainer()->make(
+        $ul = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'ul',
@@ -459,10 +459,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item',
                     $current_base . '?' . http_build_query($query_params + ['page' => ($current_page - 1)]),
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagList::class
                     )->addChild(
-                        $this->getContainer()->make(
+                        $this->containerMake(
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'span',
@@ -474,7 +474,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             ]]
                         )
                     )->addChild(
-                        $this->getContainer()->make(
+                        $this->containerMake(
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'span',
@@ -494,7 +494,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item disabled',
                     null,
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'span',
@@ -523,7 +523,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item disabled',
                     null,
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'span',
@@ -543,10 +543,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $this->getPaginatorLi(
                     'page-item',
                     $current_base . '?' . http_build_query($query_params + ['page' => ($current_page + 1)]),
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagList::class
                     )->addChild(
-                        $this->getContainer()->make(
+                        $this->containerMake(
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'span',
@@ -558,7 +558,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             ]]
                         )
                     )->addChild(
-                        $this->getContainer()->make(
+                        $this->containerMake(
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'span',
@@ -602,7 +602,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $table_id = 'listing-table';
 
 
-        $table = $this->getContainer()->make(
+        $table = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'table',
@@ -615,19 +615,19 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-        $thead = $this->getContainer()->make(
+        $thead = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'thead',
             ]]
         );
-        $tbody = $this->getContainer()->make(
+        $tbody = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'tbody',
             ]]
         );
-        $tfoot = $this->getContainer()->make(
+        $tfoot = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'tfoot',
@@ -648,7 +648,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $add_searchrow = false;
         if (count($elements) > 0 && $current_page instanceof BasePage) {
-            $search_row = $this->getContainer()->make(
+            $search_row = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'tr',
@@ -659,7 +659,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
                     $searchqueryparam = (is_array($current_page->getRequest()->query->get('search')) && isset($current_page->getRequest()->query->get('search')[$v['search']])) ? $current_page->getRequest()->query->get('search')[$v['search']] : '';
 
-                    $td = $this->getContainer()->make(
+                    $td = $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'td',
@@ -688,7 +688,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         return '<option value="' . $key . '">' . $val . '</option>';
                     }, $select_options, array_keys($select_options));
 
-                    $td = $this->getContainer()->make(
+                    $td = $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'td',
@@ -699,7 +699,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
                     $add_searchrow = true;
                 } else {
-                    $td = $this->getContainer()->make(
+                    $td = $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'td',
@@ -722,7 +722,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             foreach ($elements as $key => $elem) {
                 // ensure all header cols are in row cols
                 $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
-                $row = $this->getContainer()->make(
+                $row = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'tr',
@@ -736,7 +736,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     }
                     $row->addChild(
                         ($td instanceof TagElement && $td->getTag() == 'td') ? $td :
-                            $this->getContainer()->make(
+                            $this->containerMake(
                                 TagElement::class,
                                 ['options' => [
                                     'tag' => 'td',
@@ -747,7 +747,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 }
 
                 $row->addChild(
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'td',
@@ -766,7 +766,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $text = $this->getUtils()->translate($text, $current_page->getCurrentLocale());
             }
 
-            $row = $this->getContainer()->make(
+            $row = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'tr',
@@ -775,7 +775,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             );
 
             $row->addChild(
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'td',
@@ -790,7 +790,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         // thead
 
-        $row = $this->getContainer()->make(
+        $row = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'tr',
@@ -827,7 +827,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $th = '';
             }
             $row->addChild(
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'th',
@@ -876,7 +876,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      */
     public function renderArrayOnTable(array $data, bool $nowrap = true): mixed
     {
-        $table = $this->getContainer()->make(
+        $table = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'table',
@@ -889,19 +889,19 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-        $thead = $this->getContainer()->make(
+        $thead = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'thead',
             ]]
         );
-        $tbody = $this->getContainer()->make(
+        $tbody = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'tbody',
             ]]
         );
-        $tfoot = $this->getContainer()->make(
+        $tfoot = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'tfoot',
@@ -910,7 +910,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $table->addChild($thead);
 
-        $row = $this->getContainer()->make(
+        $row = $this->containerMake(
             TagElement::class,
             ['options' => [
                 'tag' => 'tr',
@@ -921,7 +921,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $fields = ['Field Name', 'Field Value'];
         foreach ($fields as $th) {
             $row->addChild(
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'th',
@@ -938,7 +938,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $counter = 0;
         foreach ($data as $property => $value) {
-            $row = $this->getContainer()->make(
+            $row = $this->containerMake(
                 TagElement::class,
                 ['options' => [
                     'tag' => 'tr',
@@ -947,7 +947,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             );
 
             $row->addChild(
-                $this->getContainer()->make(
+                $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'td',
@@ -960,7 +960,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
             if (is_scalar($value)) {
                 $row->addChild(
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'td',
@@ -972,7 +972,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 );
             } else {
                 $row->addChild(
-                    $this->getContainer()->make(
+                    $this->containerMake(
                         TagElement::class,
                         ['options' => [
                             'tag' => 'td',
@@ -1049,16 +1049,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $url .= md5(strtolower(trim($email)));
         $url .= "?s=$s&d=$d&r=$r";
 
-        return (string)(new TagElement(
-            [
-                'tag' => 'img',
-                'attributes' => [
-                    'src' => $url,
-                    'class' => $class,
-                    'border' => 0,
-                ],
-            ]
-        ));
+        return $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'img',
+            'attributes' => [
+                'src' => $url,
+                'class' => $class,
+                'border' => 0,
+            ],
+        ]]);
     }
 
     /**
@@ -1085,17 +1083,15 @@ class HtmlPartsRenderer extends ContainerAwareObject
             return "";
         }
 
-        return (string)(new TagElement(
-            [
-                'tag' => 'img',
-                'attributes' => [
-                    'width' => $width,
-                    'src' => $src,
-                    'class' => $class,
-                    'border' => 0,
-                ],
-            ]
-        ));
+        return $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'img',
+            'attributes' => [
+                'width' => $width,
+                'src' => $src,
+                'class' => $class,
+                'border' => 0,
+            ],
+        ]]);
     }
 
     /**

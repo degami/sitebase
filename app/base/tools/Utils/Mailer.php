@@ -113,7 +113,7 @@ class Mailer extends ContainerAwareObject
             }
 
             // Create a message
-            $message = $this->getContainer()->make(Swift_Message::class)
+            $message = $this->containerMake(Swift_Message::class)
                 ->setFrom($from)
                 ->setTo($to)
                 ->setContentType($content_type)
@@ -221,7 +221,7 @@ class Mailer extends ContainerAwareObject
         }
 
         try {
-            $maillog = $this->getContainer()->make(MailLog::class);
+            $maillog = $this->containerMake(MailLog::class);
             $maillog->from = $from;
             $maillog->to = $to;
             $maillog->subject = $subject;

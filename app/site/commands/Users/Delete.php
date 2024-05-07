@@ -55,7 +55,7 @@ class Delete extends BaseCommand
             return;
         }
 
-        $user = $this->getContainer()->call([User::class, 'load'], ['id' => $id]);
+        $user = $this->containerCall([User::class, 'load'], ['id' => $id]);
 
         if (!$user->isLoaded()) {
             $this->getIo()->error('User does not exists');

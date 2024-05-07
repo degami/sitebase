@@ -118,7 +118,7 @@ trait PageTrait
             if ($this->current_user_model instanceof AccountModel) {
                 return $this->current_user_model;
             }
-            return ($this->current_user_model = $this->getContainer()->make(GuestUser::class));
+            return ($this->current_user_model = $this->containerMake(GuestUser::class));
         }
 
         if (!$this->current_user) {
@@ -130,7 +130,7 @@ trait PageTrait
         }
 
         if (is_object($this->current_user) && property_exists($this->current_user, 'id')) {
-            $this->current_user_model = $this->getContainer()->call([User::class, 'load'], ['id' => $this->current_user->id]);
+            $this->current_user_model = $this->containerCall([User::class, 'load'], ['id' => $this->current_user->id]);
         }
 
         return $this->current_user_model;

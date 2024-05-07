@@ -56,7 +56,7 @@ class Website extends BaseModel
     public function postPersist(): BaseModel
     {
         if ($this->isFirstSave()) {
-            $first_website = $this->getContainer()->call([Website::class, 'select'], ['options' => ['expr' => 'id', 'limitCount' => 1]])->fetch();
+            $first_website = $this->containerCall([Website::class, 'select'], ['options' => ['expr' => 'id', 'limitCount' => 1]])->fetch();
             $copy_from = $first_website['id'];
             $configurations = [];
             foreach (Configuration::getCollection()->where(['is_system' => 1, 'website_id' => $copy_from]) as $to_copy) {
@@ -67,7 +67,7 @@ class Website extends BaseModel
                     'is_system' => 1,
                     'website_id' => $this->getId(),
                 ];
-                $configuration = $this->getContainer()->call([Configuration::class, 'new'], ['initial_data' => $data]);
+                $configuration = $this->containerCall([Configuration::class, 'new'], ['initial_data' => $data]);
                 $configurations[$data['path']] = $configuration;
             }
 

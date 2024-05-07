@@ -545,7 +545,7 @@ abstract class BaseRouter extends ContainerAwareObject
     protected function getClassHttpVerbs($controller_class): array
     {
         if (method_exists($controller_class, 'getRouteVerbs')) {
-            $verbs = $this->getContainer()->call([$controller_class, 'getRouteVerbs']) ?? $this->getHttpVerbs();
+            $verbs = $this->containerCall([$controller_class, 'getRouteVerbs']) ?? $this->getHttpVerbs();
             if (!is_array($verbs)) {
                 $verbs = [$verbs];
             }

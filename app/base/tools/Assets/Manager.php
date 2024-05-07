@@ -224,7 +224,7 @@ class Manager extends ContainerAwareObject
                 'text' => $js,
             ];
 
-            return $this->getContainer()->make(TagElement::class, ['options' => $options]);
+            return $this->containerMake(TagElement::class, ['options' => $options]);
         }
 
         return '';
@@ -250,7 +250,7 @@ class Manager extends ContainerAwareObject
                 'text' => $js,
             ];
 
-            return $this->getContainer()->make(TagElement::class, ['options' => $options]);
+            return $this->containerMake(TagElement::class, ['options' => $options]);
         }
 
         return '';
@@ -309,7 +309,7 @@ class Manager extends ContainerAwareObject
                 'text' => implode("\n", $this->getCss()),
             ];
 
-            return $this->getContainer()->make(TagElement::class, ['options' => $options]);
+            return $this->containerMake(TagElement::class, ['options' => $options]);
         }
 
         return '';

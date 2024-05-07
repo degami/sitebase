@@ -84,7 +84,7 @@ class Process extends BaseCommand
                     }
 
                     try {
-                        $message = $this->getContainer()->call([QueueMessage::class, 'nextMessage'], ['queue_name' => $queue]);
+                        $message = $this->containerCall([QueueMessage::class, 'nextMessage'], ['queue_name' => $queue]);
                         if ($message instanceof QueueMessage) {
                             $worker_class = $message->getWorkerClass();
 
@@ -92,7 +92,7 @@ class Process extends BaseCommand
                                 throw new InvalidValueException($worker_class . " is not a QueueWorker", 1);
                             }
                             //$result =
-                            $this->getContainer()->call([$worker_class, 'process'], ['message' => $message]);
+                            $this->containerCall([$worker_class, 'process'], ['message' => $message]);
                         }
                     } catch (Exception $e) {
                         echo $e->getMessage();

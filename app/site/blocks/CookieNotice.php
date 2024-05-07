@@ -92,31 +92,29 @@ class CookieNotice extends BaseCodeBlock
 
             $locale = $current_page->getCurrentLocale();
             /** @var Rewrite $rewrite */
-            $rewrite = $this->getContainer()->call([Rewrite::class, 'load'], ['id' => $config['rewrite_' . $locale]]);
+            $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $config['rewrite_' . $locale]]);
 
-            return (string)(new TagElement(
-                [
-                    'tag' => 'div',
-                    'attributes' => [
-                        'class' => $class,
-                        'style' => "display:none;{$config['sticky']}: 0;background-color: {$config['background-color']};color: {$config['color']};border-" . (($config['sticky'] == 'top' ? 'bottom' : 'top')) . ": solid 1px {$config['color']};",
-                    ],
-                    'text' =>
-                        sprintf(
-                            $this->getUtils()->translate('We use cookies to ensure that we give you the best experience on our website. <a href="%s" target="_blank">Click here</a> for more information.'),
-                            $rewrite->getUrl()
-                        ),
-                    'children' => [
-                        new TagElement([
-                            'tag' => 'button',
-                            'attributes' => [
-                                'class' => 'btn btn-primary btn-sm ml-2 close-btn',
-                            ],
-                            'text' => $this->getUtils()->translate('Got it!'),
-                        ])
-                    ]
+            return $this->containerMake(TagElement::class, ['options' => [
+                'tag' => 'div',
+                'attributes' => [
+                    'class' => $class,
+                    'style' => "display:none;{$config['sticky']}: 0;background-color: {$config['background-color']};color: {$config['color']};border-" . (($config['sticky'] == 'top' ? 'bottom' : 'top')) . ": solid 1px {$config['color']};",
+                ],
+                'text' =>
+                    sprintf(
+                        $this->getUtils()->translate('We use cookies to ensure that we give you the best experience on our website. <a href="%s" target="_blank">Click here</a> for more information.'),
+                        $rewrite->getUrl()
+                    ),
+                'children' => [
+                    $this->containerMake(TagElement::class, ['options' => [
+                        'tag' => 'button',
+                        'attributes' => [
+                            'class' => 'btn btn-primary btn-sm ml-2 close-btn',
+                        ],
+                        'text' => $this->getUtils()->translate('Got it!'),
+                    ]])
                 ]
-            ));
+            ]]);
         } catch (Exception $e) {
         }
         return "";

@@ -91,9 +91,9 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 $paginate_params['condition'] = array_filter($conditions);
             }
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-            $collection = $this->getContainer()->call([$this->getObjectClass(), 'getCollection']);
+            $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
             $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
-            $data = $this->getContainer()->call([$collection, 'paginate']);
+            $data = $this->containerCall([$collection, 'paginate']);
             $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
@@ -190,7 +190,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             return null;
         }
 
-        return $this->getContainer()->call([$this->getObjectClass(), 'load'], ['id' => $id]);
+        return $this->containerCall([$this->getObjectClass(), 'load'], ['id' => $id]);
     }
 
     /**
@@ -206,7 +206,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             return null;
         }
 
-        return $this->getContainer()->make($this->getObjectClass());
+        return $this->containerMake($this->getObjectClass());
     }
 
     /**
@@ -237,17 +237,15 @@ abstract class AdminManageModelsPage extends AdminFormPage
     public function getActionButton(string $action, int $object_id, string $class, string $icon, string $title = ''): string
     {
         try {
-            $button = new TagElement(
-                [
-                    'tag' => 'a',
-                    'attributes' => [
-                        'class' => 'btn btn-sm btn-' . $class,
-                        'href' => $this->getControllerUrl() . '?action=' . $action . '&' . $this->getObjectIdQueryParam() . '=' . $object_id,
-                        'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
-                    ],
-                    'text' => $this->getHtmlRenderer()->getIcon($icon),
-                ]
-            );
+            $button = $this->containerMake(TagElement::class, ['options' => [
+                'tag' => 'a',
+                'attributes' => [
+                    'class' => 'btn btn-sm btn-' . $class,
+                    'href' => $this->getControllerUrl() . '?action=' . $action . '&' . $this->getObjectIdQueryParam() . '=' . $object_id,
+                    'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
+                ],
+                'text' => $this->getHtmlRenderer()->getIcon($icon),
+            ]]);
 
             return (string)$button;
         } catch (BasicException $e) {
@@ -294,20 +292,18 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getFrontendModelButton(FrontendModel $object, $class = 'light', $icon = 'zoom-in'): string
     {
-        $button = (string)(new TagElement(
-            [
-                'tag' => 'a',
-                'attributes' => [
-                    'class' => 'btn btn-sm btn-' . $class,
-                    'href' => $object->getFrontendUrl(),
-                    'target' => '_blank',
-                    'title' => $this->getUtils()->translate('View', $this->getCurrentLocale()),
-                ],
-                'text' => $this->getHtmlRenderer()->getIcon($icon),
-            ]
-        ));
+        $button = $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'a',
+            'attributes' => [
+                'class' => 'btn btn-sm btn-' . $class,
+                'href' => $object->getFrontendUrl(),
+                'target' => '_blank',
+                'title' => $this->getUtils()->translate('View', $this->getCurrentLocale()),
+            ],
+            'text' => $this->getHtmlRenderer()->getIcon($icon),
+        ]]);
 
-        return (string)$button;
+        return $button;
     }
 
     /**
@@ -343,7 +339,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getModelTableName(): mixed
     {
-        return $this->getContainer()->call([$this->getObjectClass(), 'defaultTableName']);
+        return $this->containerCall([$this->getObjectClass(), 'defaultTableName']);
     }
 
     /**

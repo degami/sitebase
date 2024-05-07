@@ -40,17 +40,15 @@ abstract class AdminManageFrontendModelsPage extends AdminManageModelsPage
             return '';
         }
         try {
-            $button = new TagElement(
-                [
-                    'tag' => 'a',
-                    'attributes' => [
-                        'class' => 'btn btn-sm btn-success',
-                        'href' => $this->getUrl('admin.rewrites') . '?action=translations&rewrite_id=' . $object->getRewrite()->id,
-                        'title' => $this->getUtils()->translate('Translations', $this->getCurrentLocale()),
-                    ],
-                    'text' => $this->getHtmlRenderer()->getIcon('tag'),
-                ]
-            );
+            $button = $this->containerMake(TagElement::class, ['options' => [
+                'tag' => 'a',
+                'attributes' => [
+                    'class' => 'btn btn-sm btn-success',
+                    'href' => $this->getUrl('admin.rewrites') . '?action=translations&rewrite_id=' . $object->getRewrite()->id,
+                    'title' => $this->getUtils()->translate('Translations', $this->getCurrentLocale()),
+                ],
+                'text' => $this->getHtmlRenderer()->getIcon('tag'),
+            ]]);
 
             return (string)$button;
         } catch (BasicException $e) {

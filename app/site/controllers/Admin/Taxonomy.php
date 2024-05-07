@@ -115,7 +115,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'pages-btn',
                     'pages-btn',
                     '&#9776; Pages',
-                    $this->getUrl('admin.json.termpages', ['id' => $this->getRequest()->get('term_id')]) . '?term_id=' . $this->getRequest()->get('term_id') . '&action=page_assoc',
+                    $this->getUrl('crud.app.site.controllers.admin.json.termpages', ['id' => $this->getRequest()->get('term_id')]) . '?term_id=' . $this->getRequest()->get('term_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall trough
@@ -169,7 +169,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
 
 
                 if ($this->getRequest()->get('page_id')) {
-                    $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                     $form->addField('page_id', [
                         'type' => 'hidden',
                         'default_value' => $page->id,
@@ -177,7 +177,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 }
                 break;
             case 'deassoc':
-                $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
@@ -188,7 +188,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'type' => 'markup',
                     'value' => 'Do you confirm the disassociation of the selected element "' . $term->title . '" from the "' . $page->title . '" page (ID: ' . $page->id . ') ?',
                     'suffix' => '<br /><br />',
-                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&action=new">Cancel</a>');
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&action=new">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
 
@@ -299,13 +299,13 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 break;
             case 'deassoc':
                 if ($values['page_id']) {
-                    $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $values['page_id']]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->removeTerm($term);
                 }
                 break;
             case 'page_assoc':
                 if ($values['page_id']) {
-                    $page = $this->getContainer()->call([Page::class, 'load'], ['id' => $values['page_id']]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->addTerm($term);
                 }
                 break;

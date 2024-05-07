@@ -201,7 +201,7 @@ class App extends ContainerAwareObject
         try {
             $website = null;
             if (php_sapi_name() == 'cli-server') {
-                $website = $this->getContainer()->call([Website::class, 'load'], ['id' => getenv('website_id')]);
+                $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
             }
 
             if ($this->isBlocked($this->getRequest()->getClientIp())) {
@@ -235,7 +235,7 @@ class App extends ContainerAwareObject
                 }
 
                 foreach ($this->getRouters() as $router) {
-                    $routeInfo = $this->getContainer()->call(
+                    $routeInfo = $this->containerCall(
                         [$this->getService($router), 'getRequestInfo'],
                         [
                             'http_method' => $_SERVER['REQUEST_METHOD'],
@@ -284,7 +284,7 @@ class App extends ContainerAwareObject
                         }
 
                         // ... call $handler with $vars
-                        $result = $this->getContainer()->call($handler, $vars);
+                        $result = $this->containerCall($handler, $vars);
                         if ($result instanceof Response) {
                             $response = $result;
                         } else {
@@ -302,18 +302,18 @@ class App extends ContainerAwareObject
                 }
             }
         } catch (OfflineException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'offlinePage']);
+            $response = $this->containerCall([$this->getUtils(), 'offlinePage']);
         } catch (BlockedIpException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'blockedIpPage']);
+            $response = $this->containerCall([$this->getUtils(), 'blockedIpPage']);
         } catch (NotFoundException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
         } catch (PermissionDeniedException $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $this->getAppRouteInfo()]);
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $this->getAppRouteInfo()]);
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getAppRouteInfo()->getAllowedMethods();
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getAppRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getAppRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
         } catch (BasicException | Exception $e) {
-            $response = $this->getContainer()->call([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
+            $response = $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
         }
 
         // dispatch "before_send" event
@@ -333,7 +333,7 @@ class App extends ContainerAwareObject
             $response->send();
         } else {
             // fallback to 404
-            $response = $this->getContainer()->call([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
             $response->send();
         }
     }

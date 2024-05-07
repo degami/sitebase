@@ -61,7 +61,7 @@ class AdminActionLog extends RequestLog
             $this->setRouteInfo(serialize($controller->getRouteInfo()->getData()));
             $this->setAction($controller->getRouteInfo()->getRouteName());
             if (method_exists($controller, 'getAdminActionLogData')) {
-                $this->setLogData(serialize($this->getContainer()->call([$controller, 'getAdminActionLogData'])));
+                $this->setLogData(serialize($this->containerCall([$controller, 'getAdminActionLogData'])));
             }
         }
         return $this;

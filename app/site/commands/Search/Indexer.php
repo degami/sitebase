@@ -54,6 +54,7 @@ class Indexer extends BaseCommand
     {
         $client = $this->getElasticsearch();
 
+        $results = [];
         $classes = ClassFinder::getClassesInNamespace('App\Site\Models', ClassFinder::RECURSIVE_MODE);
         foreach ($classes as $modelClass) {
             if (is_subclass_of($modelClass, FrontendModel::class)) {
@@ -88,8 +89,15 @@ class Indexer extends BaseCommand
                     ];
 
                     $response = $client->index($params);
+                    if (!isset($results[$response['result']])) {
+                        $results[$response['result']] = 0;
+                    }
+                    $results[$response['result']]++;
                 }
             }
         }
+
+        $this->renderTitle('Indexer results');
+        $this->renderTable(array_keys($results), [$results]);
     }
 }

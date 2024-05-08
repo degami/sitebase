@@ -109,9 +109,11 @@ class Migrate extends BaseCommand
         $list = $this->factory->newListFromDirectory($this->directory, 'App\\Site\\Migrations\\');
         $result = $list->migrate($direction);
 
+        $migrations = [];
         foreach ($result as $item) {
-            $output->writeln($item->getName());
+            $migrations[] = $item->getName();
         }
+        $this->getIo()->listing($migrations);
 
         $this->getIo()->success('Migration done.');
     }

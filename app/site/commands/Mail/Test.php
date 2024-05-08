@@ -84,6 +84,10 @@ class Test extends BaseCommand
             );
         }
 
-        $output->writeln("Mail sent. result:" . var_export($out, true));
+        if ($out) {
+            $this->getIo()->success('Mail sent.');
+        } else {
+            $this->getIo()->error('Mail not sent.');
+        }
     }
 }

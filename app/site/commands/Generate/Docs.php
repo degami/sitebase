@@ -64,6 +64,6 @@ class Docs extends BaseExecCommand
             symlink(App::getDir(App::ROOT) . DS . "docs", App::getDir(App::WEBROOT) . DS . "docs");
         }
 
-        $output->writeln("<info>Task completed</info>");
+        $this->getIo()->success('Task completed');
     }
 }

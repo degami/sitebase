@@ -42,7 +42,7 @@ class RsaKey extends BaseExecCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("<info>Generating RSA key</info>");
+        $this->renderTitle('Generating RSA key');
 /*
         if (!$this->commandExist('openssl')) {
             throw new NotFoundException('openssl command is missing!');
@@ -65,7 +65,7 @@ class RsaKey extends BaseExecCommand
             App::getDir(App::ASSETS) . DS . 'rsa_private.pem'
         );
 
-        $output->writeln("<info>Key created</info>");
+        $this->getIo()->success('Key created');
     }
 
     protected function generateCSR($country, $state, $locality, $organization, $commonName)

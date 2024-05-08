@@ -46,6 +46,7 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $this->renderTitle('Users');
         $this->renderTable(['ID', 'Username', 'Email', 'Roles'], array_map(fn($user) => [
             '<info>' . $user->getId() . '</info>',
             $user->getUsername(),

@@ -44,10 +44,6 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln("");
-        $output->writeln($this->getLastHeartBeat());
-        $output->writeln("");
-
         $tableContents = array_map(fn($cron) => [
             '<info>' . $cron->getId() . '</info>',
             $cron->getTitle(),
@@ -55,7 +51,9 @@ class Show extends BaseCommand
             $cron->getSchedule(),
             $cron->getActive(),
         ], CronTask::getCollection()->getItems());
+        $tableContents[] = [$this->getLastHeartBeat()];
 
+        $this->renderTitle('Crons');
         $this->renderTable(['ID', 'Title', 'Callable', 'Schedule', 'Active'], $tableContents);
     }
 

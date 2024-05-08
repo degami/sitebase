@@ -60,7 +60,7 @@ class Serve extends BaseCommand
         /** @var Website $website */
         $website = $this->getAppWebsite();
 
-        echo "Serving [" . $website->getDomain() . "] pages on http://localhost:" . $port . "\n";
+        $this->getIo()->title("Serving [" . $website->getDomain() . "] pages on http://localhost:" . $port );
         system("website_id=" . $website->getId() . " php -S localhost:" . $port . " " . App::getDir('root') . DS . 'php_server' . DS . 'router.php');
     }
 }

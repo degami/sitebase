@@ -41,6 +41,7 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
+        $this->renderTitle('Roles');
         $this->renderTable(['ID', 'Name', 'Permissions'], array_map(function($role) {
             return [
                 '<info>' . $role->getId() . '</info>',

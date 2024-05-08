@@ -40,7 +40,8 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->renderTable(['Id', 'Name', 'Domain'], array_map(fn($website) => [
+        $this->renderTitle('Websites');
+        $this->renderTable(['ID', 'Name', 'Domain'], array_map(fn($website) => [
             $website->getId(),
             $website->getSiteName(),
             $website->getDomain()

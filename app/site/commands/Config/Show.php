@@ -56,13 +56,14 @@ class Show extends BaseCommand
         }
 
         $tableContents = array_map(fn($row) => [
-            $row['id'],
+            '<info>'.$row['id'].'</info>',
             $row['website_id'],
             $row['path'],
             $row['value'],
             $row['is_system'] ? 'true' : 'false'
         ], Configuration::getCollection()->where($condition)->getItems());
 
-        $this->renderTable(['Id', 'Website', 'Path', 'Value', 'System'], $tableContents);
+        $this->renderTitle('Configurations');
+        $this->renderTable(['ID', 'Website', 'Path', 'Value', 'System'], $tableContents);
     }
 }

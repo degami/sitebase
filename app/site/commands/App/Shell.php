@@ -44,8 +44,6 @@ class Shell extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $app = \App\App::getInstance();
-
         $this->getIo()->title('Welcome.');
 
         $history = [];

@@ -59,6 +59,7 @@ class Routes extends BaseCommand
             }
         }
 
+        $this->renderTitle('Routes');
         $this->renderTable(['Name', 'Group', 'Path', 'Callable'], $tableContents);
     }
 }

@@ -99,7 +99,7 @@ class ModEnv extends BaseCommand
         }
 
 
-        $this->getIo()->title("new .env file");
+        $this->renderTitle("new .env file");
         $output->writeln($dotenv);
 
         if (!$this->confirmSave('Save Config? ')) {

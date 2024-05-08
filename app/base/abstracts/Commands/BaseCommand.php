@@ -246,9 +246,14 @@ class BaseCommand extends SymfonyCommand
         return $this->confirmMessage($confirmation_message, 'Not deleted');
     }
 
-    protected function renderTable(array $header, array $rows)
+    protected function renderTable(array $header, array $rows, $compressed = false)
     {
         $table = new Table($this->output);
+
+        if ($compressed == true) {
+            $table->getStyle()->setVerticalBorderChar(' ');
+        }
+
         if (!empty($header)) {
             $table
             ->setHeaders($header);
@@ -265,9 +270,10 @@ class BaseCommand extends SymfonyCommand
         }
 
         foreach ($rows as $indexRow => $row) {
-            if ($row instanceof TableSeparator) {
+            $tableRow = null;
+            if (!$compressed && ($row instanceof TableSeparator)) {
                 $tableRow = $row;
-            } else {
+            } else if(is_array($row)) {
                 $tableRow = [];
                 $colspan = null;
 
@@ -302,11 +308,15 @@ class BaseCommand extends SymfonyCommand
                 }
             }
 
-            $table->addRow($tableRow);
+            if (!is_null($tableRow)) {
+                $table->addRow($tableRow);
+            }
 
-            // array indexes are always numeric
-            if (is_array($tableRow) && $indexRow < (count($rows) -1) && !($rows[$indexRow+1] instanceof TableSeparator)) {
-                $table->addRow(new TableSeparator());
+            if (!$compressed) {
+                // array indexes are always numeric
+                if (is_array($tableRow) && $indexRow < (count($rows) -1) && !($rows[$indexRow+1] instanceof TableSeparator)) {
+                    $table->addRow(new TableSeparator());
+                }
             }
         }
 
@@ -315,6 +325,6 @@ class BaseCommand extends SymfonyCommand
 
     protected function renderTitle($title)
     {
-        $this->getIo()->block(implode("\n", [$title, str_repeat('-', strlen($title))]), null, 'fg=green;bg=default', '', false, true);
+        $this->getIo()->block(implode("\n", [$title, str_repeat('=', strlen($title))]), null, 'fg=green;bg=default', '', false, true);
     }
 }

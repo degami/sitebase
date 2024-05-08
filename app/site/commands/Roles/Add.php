@@ -62,7 +62,7 @@ class Add extends BaseCommand
             $role->setName($name);
             $role->persist();
 
-            $output->writeln('<info>Role added</info>');
+            $this->getIo()->success('Role added');
         } catch (Exception $e) {
             $this->getIo()->error($e->getMessage());
         }

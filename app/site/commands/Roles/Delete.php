@@ -72,6 +72,6 @@ class Delete extends BaseCommand
         }
 
         $role->delete();
-        $output->writeln('<info>Role deleted</info>');
+        $this->getIo()->success('Role deleted');
     }
 }

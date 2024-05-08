@@ -94,6 +94,6 @@ class Revoke extends BaseCommand
         }
 
         $role->revokePermission($permission);
-        $output->writeln('<info>Role saved</info>');
+        $this->getIo()->success('Role saved');
     }
 }

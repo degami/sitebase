@@ -29,6 +29,9 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Console\Helper\Table;
+use Symfony\Component\Console\Helper\TableCell;
+use Symfony\Component\Console\Helper\TableSeparator;
 
 /**
  * Base for cli commands
@@ -159,6 +162,21 @@ class BaseCommand extends SymfonyCommand
     }
 
     /**
+     * @param string $question_message
+     * @return mixed
+     */
+    protected function keepAsking(string $question_message)
+    {
+        $value = "";
+        while (trim($value) == '') {
+            $question = new Question($question_message);
+            $value = $this->getQuestionHelper()->ask($this->input, $this->output, $question);
+        }
+
+        return $value;
+    }
+
+    /**
      * @param string $option_name
      * @param string $question_message
      * @param array|null $choices
@@ -226,5 +244,77 @@ class BaseCommand extends SymfonyCommand
     protected function confirmDelete(string $confirmation_message): bool
     {
         return $this->confirmMessage($confirmation_message, 'Not deleted');
+    }
+
+    protected function renderTable(array $header, array $rows)
+    {
+        $table = new Table($this->output);
+        if (!empty($header)) {
+            $table
+            ->setHeaders($header);
+        }
+
+        $rows = array_filter(array_values($rows), fn ($row) => (is_array($row) || ($row instanceof TableSeparator)));
+
+        $maxCols = 0;
+        if (!empty($rows)) {
+            $maxCols = max(array_map(fn($row) => is_array($row) ? count($row) : 1, $rows));
+        }
+        if (!empty($header)) {
+            $maxCols = count($header);
+        }
+
+        foreach ($rows as $indexRow => $row) {
+            if ($row instanceof TableSeparator) {
+                $tableRow = $row;
+            } else {
+                $tableRow = [];
+                $colspan = null;
+
+                // avoid non numeric keys
+                $row = array_values($row);
+    
+                if (count($row) < $maxCols) {
+                    $colspan = ($maxCols - count($row)) + 1;
+                }
+
+                if (count($row) > $maxCols) {
+                    $row = array_slice($row, 0, $maxCols);
+                }
+    
+                foreach ($row as $indexCol => $column) {
+                    $content = (is_array($column) && isset($column['content'])) ? $column['content'] : $column;
+                    if (is_array($column) && isset($column['content'])) {
+                        unset($column['content']);
+                    }
+ 
+                    if ($indexCol == count($row)-1 && !empty($colspan)) {
+                        $tableRow[] = new TableCell(
+                            $content,
+                            ['colspan' => $colspan] + (is_array($column) ? $column : [])
+                        );
+                    } else {
+                        $tableRow[] = new TableCell(
+                            $content,
+                            (is_array($column) ? $column : [])
+                        );
+                    }
+                }
+            }
+
+            $table->addRow($tableRow);
+
+            // array indexes are always numeric
+            if (is_array($tableRow) && $indexRow < (count($rows) -1) && !($rows[$indexRow+1] instanceof TableSeparator)) {
+                $table->addRow(new TableSeparator());
+            }
+        }
+
+        $table->render();
+    }
+
+    protected function renderTitle($title)
+    {
+        $this->getIo()->block(implode("\n", [$title, str_repeat('-', strlen($title))]), null, 'fg=green;bg=default', '', false, true);
     }
 }

@@ -13,7 +13,6 @@
 
 namespace App\Site\Models;
 
-use App\App;
 use App\Base\Abstracts\Models\AccountModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -21,7 +20,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Lcobucci\JWT\Builder;
-use Lcobucci\JWT\Signer;
 
 /**
  * User Model

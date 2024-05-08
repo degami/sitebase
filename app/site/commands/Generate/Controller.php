@@ -60,10 +60,10 @@ class Controller extends CodeGeneratorCommand
         list($files_written, $errors) = array_values($this->doWrite());
         if (!empty($errors)) {
             foreach ($errors as $error) {
-                $output->writeln("<error>\n\n " . $error . "\n</error>");
+                $this->getIo()->error($error);
             }
         } else {
-            $output->writeln('<info>' . count($files_written) . ' File(s) saved</info>');
+            $this->getIo()->success(count($files_written) . ' File(s) saved');
         }
     }
 

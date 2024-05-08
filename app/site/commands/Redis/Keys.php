@@ -17,9 +17,6 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
-use Redis as RedisClient;
 
 /**
  * Information Statistics Command
@@ -56,23 +53,11 @@ class Keys extends BaseCommand
             return;
         }
 
-        $table = new Table($output);
-        $table->setHeaders(['Key', 'Length']);
-
-        $k = 0;
-        foreach ($client->keys('*') as $key) {
-            if ($k++ > 0) {
-                $table->addRow(new TableSeparator());
-            }
-
-            $table
-                ->addRow(
-                    [
-                        '<info>' . $key . '</info>',
-                        strlen($client->get($key)),
-                    ]
-                );
-        }
-        $table->render();
+        $this->renderTable(['Key', 'Length'], array_map(function ($key) use ($client){
+            return [
+                '<info>' . $key . '</info>',
+                strlen($client->get($key)),
+            ];
+        }, $client->keys('*')));
     }
 }

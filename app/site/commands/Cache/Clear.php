@@ -44,6 +44,6 @@ class Clear extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $this->getCache()->clear();
-        $output->writeln('<info>Cache flushed.</info>');
+        $this->getIo()->success('Cache flushed.');
     }
 }

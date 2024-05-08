@@ -82,9 +82,9 @@ class Add extends BaseCommand
                 $configuration_model->persist();
             }
 
-            $output->writeln('<info>Website added</info>');
+            $this->getIo()->success('Website added');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
+            $this->getIo()->error($e->getMessage());
         }
     }
 }

@@ -17,7 +17,6 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use App\Site\Models\Website;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 
 /**
  * Show Website Command
@@ -41,18 +40,10 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = new Table($output);
-        $table->setHeaders(['Id', 'Name', 'Domain']);
-
-        foreach (Website::getCollection() as $website) {
-            /** @var Website $website */
-            $table->addRow([
-                $website->getId(),
-                $website->getSiteName(),
-                $website->getDomain()
-            ]);
-        }
-
-        $table->render();
+        $this->renderTable(['Id', 'Name', 'Domain'], array_map(fn($website) => [
+            $website->getId(),
+            $website->getSiteName(),
+            $website->getDomain()
+        ], Website::getCollection()->getItems()));
     }
 }

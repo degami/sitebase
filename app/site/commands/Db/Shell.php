@@ -18,7 +18,6 @@ use PDO;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
-use Symfony\Component\Console\Helper\Table;
 use Exception;
 
 /**
@@ -45,21 +44,16 @@ class Shell extends BaseCommand
     {
         $helper = $this->getHelper('question');
 
+        $this->getIo()->title('Welcome.');
+
         $history = [];
         do {
-            $command = '';
-            while (trim($command) == '') {
-                $question = new Question("\n> ");
-                $command = $helper->ask($input, $output, $question);
-                $command = rtrim(trim($command), ';');
-            }
+            $command = rtrim(trim($this->keepAsking("\n> ")), ';');
 
             switch ($command) {
                 case 'history':
-                    $output->writeln('<info>History</info>');
-                    foreach ($history as $key => $value) {
-                        $output->writeln($value);
-                    }
+                    $this->renderTitle('History');
+                    $this->getIo()->listing($history);
                     break;
                 case 'quit':
                 case 'exit':
@@ -73,16 +67,22 @@ class Shell extends BaseCommand
                         $statement->execute();
                         switch ($query_type) {
                             case 'SELECT':
-                                $table = new Table($output);
+                                $tableContents = [];
+                                $tableHeader = [];
                                 $count = 0;
                                 while ($row = $statement->fetch(PDO::FETCH_ASSOC)) {
                                     if ($count == 0) {
-                                        $table->setHeaders(array_keys($row));
+                                        $tableHeader = array_keys($row);
                                     }
-                                    $table->addRow($row);
+                                    foreach($row as $key => $value) {
+                                        if ($value === null) {
+                                            $row[$key] = 'NULL';
+                                        }
+                                    }
+                                    $tableContents[] = $row;
                                     $count++;
                                 }
-                                $table->render();
+                                $this->renderTable($tableHeader, $tableContents);
                                 break;
                             default:
                                 if ($statement->columnCount() == 0) {

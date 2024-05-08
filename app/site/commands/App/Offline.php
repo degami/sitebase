@@ -41,6 +41,6 @@ class Offline extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         @touch(App::getDir(App::APP) . DS . 'offline.flag');
-        $output->writeln('<info>Maintenance mode ON</info>');
+        $this->getIo()->success('Maintenance mode ON');
     }
 }

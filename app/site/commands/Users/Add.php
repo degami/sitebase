@@ -95,7 +95,7 @@ class Add extends BaseCommand
 
         $password = $this->keepAskingForOption('password', 'Password? ');
 
-        $output->writeln('<info>User Info</info>');
+        $this->renderTitle('User Info');
         foreach (['username', 'email', 'role', 'locale', 'password'] as $key) {
             $output->writeln('<info>' . $key . ':</info> ' . ${$key});
         }
@@ -115,9 +115,9 @@ class Add extends BaseCommand
             $user->setRole($role);
             $user->persist();
 
-            $output->writeln('<info>User added</info>');
+            $this->getIo()->success('User added');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
+            $this->getIo()->error($e->getMessage());
         }
     }
 }

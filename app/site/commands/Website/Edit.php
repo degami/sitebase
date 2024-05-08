@@ -79,9 +79,9 @@ class Edit extends BaseCommand
 
             $website->persist();
 
-            $output->writeln('<info>Website saved</info>');
+            $this->getIo()->success('Website saved');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
+            $this->getIo()->error($e->getMessage());
         }
     }
 }

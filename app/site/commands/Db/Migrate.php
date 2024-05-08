@@ -113,6 +113,6 @@ class Migrate extends BaseCommand
             $output->writeln($item->getName());
         }
 
-        $output->writeln('<info>Migration done.</info>');
+        $this->getIo()->success('Migration done.');
     }
 }

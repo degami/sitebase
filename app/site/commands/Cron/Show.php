@@ -18,8 +18,6 @@ use App\Site\Models\CronLog;
 use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
 use App\Site\Models\CronTask;
 use DateTime;
 
@@ -50,27 +48,15 @@ class Show extends BaseCommand
         $output->writeln($this->getLastHeartBeat());
         $output->writeln("");
 
-        $table = new Table($output);
-        $table->setHeaders(['ID', 'Title', 'Callable', 'Schedule', 'Active']);
+        $tableContents = array_map(fn($cron) => [
+            '<info>' . $cron->getId() . '</info>',
+            $cron->getTitle(),
+            $cron->getCronTaskCallable(),
+            $cron->getSchedule(),
+            $cron->getActive(),
+        ], CronTask::getCollection()->getItems());
 
-        $k = 0;
-        foreach (CronTask::getCollection() as $cron) {
-            if ($k++ > 0) {
-                $table->addRow(new TableSeparator());
-            }
-
-            $table
-                ->addRow(
-                    [
-                        '<info>' . $cron->getId() . '</info>',
-                        $cron->getTitle(),
-                        $cron->getCronTaskCallable(),
-                        $cron->getSchedule(),
-                        $cron->getActive(),
-                    ]
-                );
-        }
-        $table->render();
+        $this->renderTable(['ID', 'Title', 'Callable', 'Schedule', 'Active'], $tableContents);
     }
 
     /**
@@ -87,7 +73,6 @@ class Show extends BaseCommand
         $last_beat = $this->containerCall([CronLog::class, 'select'], ['options' => ['where' => ["1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0"], 'orderBy' => ['run_time DESC'], 'limitCount' => 1]])->fetch();
 
         if ($last_beat != null) {
-            $last_beat->getData();
             $interval = date_diff(new DateTime($last_beat['run_time']), new DateTime());
             $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
             $out = '<info>Last Beat on ' . $last_beat['run_time'] . ' (' . $interval->format($differenceFormat) . ' ago)</info>';

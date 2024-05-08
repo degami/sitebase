@@ -51,6 +51,6 @@ class Restart extends BaseCommand
         while (file_exists($kill_flag)) {
             usleep(self::POLL_TIMEOUT);
         }
-        $output->writeln('<info>Queue restarted</info>');
+        $this->getIo()->success('Queue restarted');
     }
 }

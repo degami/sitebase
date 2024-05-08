@@ -104,6 +104,6 @@ class Grant extends BaseCommand
         }
 
         $role->grantPermission($permission);
-        $output->writeln('<info>Role saved</info>');
+        $this->getIo()->success('Role saved');
     }
 }

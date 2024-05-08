@@ -107,6 +107,6 @@ class ModEnv extends BaseCommand
         }
 
         file_put_contents('.env', trim($dotenv) . "\n", LOCK_EX);
-        $output->writeln('<info>Config saved</info>');
+        $this->getIo()->success('Config saved');
     }
 }

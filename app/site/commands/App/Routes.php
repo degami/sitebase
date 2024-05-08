@@ -19,7 +19,6 @@ use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 
 /**
  * Show Routes Command
@@ -46,23 +45,20 @@ class Routes extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = new Table($output);
-        $table
-            ->setHeaders(['Name', 'Group', 'Path', 'Callable']);
+        $tableContents = [];
 
         foreach ($this->getWebRouter()->getRoutes() as $group => $routes) {
             foreach ($routes as $route) {
-                $table->addRow([$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']]);
+                $tableContents[] = [$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']];
             }
         }
 
         foreach ($this->getCrudRouter()->getRoutes() as $group => $routes) {
             foreach ($routes as $route) {
-                $table->addRow([$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']]);
+                $tableContents[] = [$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']];
             }
         }
 
-
-        $table->render();
+        $this->renderTable(['Name', 'Group', 'Path', 'Callable'], $tableContents);
     }
 }

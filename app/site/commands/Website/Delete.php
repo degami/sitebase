@@ -67,6 +67,6 @@ class Delete extends BaseCommand
         }
 
         $website->delete();
-        $output->writeln('<info>Website deleted</info>');
+        $this->getIo()->success('Website deleted');
     }
 }

@@ -16,8 +16,6 @@ namespace App\Site\Commands\Roles;
 use App\Base\Abstracts\Commands\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
 use App\Site\Models\Role;
 
 /**
@@ -43,34 +41,20 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : void
     {
-        $table = new Table($output);
-        $table->setHeaders(['ID', 'Name', 'Permissions']);
-
-        $k = 0;
-        foreach (Role::getCollection() as $role) {
-            /** @var Role $role */
-
-            if ($k++ > 0) {
-                $table->addRow(new TableSeparator());
-            }
-
-            $table
-                ->addRow(
-                    [
-                        '<info>' . $role->getId() . '</info>',
-                        $role->getName(),
-                        implode(
-                            "\n",
-                            array_map(
-                                function ($el) {
-                                    return $el->getName();
-                                },
-                                $role->getPermissionsArray()
-                            )
-                        ),
-                    ]
-                );
-        }
-        $table->render();
+        $this->renderTable(['ID', 'Name', 'Permissions'], array_map(function($role) {
+            return [
+                '<info>' . $role->getId() . '</info>',
+                $role->getName(),
+                implode(
+                    "\n",
+                    array_map(
+                        function ($el) {
+                            return $el->getName();
+                        },
+                        $role->getPermissionsArray()
+                    )
+                ),
+            ];
+        }, Role::getCollection()->getItems()));
     }
 }

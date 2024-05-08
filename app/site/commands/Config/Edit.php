@@ -74,9 +74,9 @@ class Edit extends BaseCommand
             $configuration->setValue($value);
             $configuration->persist();
 
-            $output->writeln('<info>Config added</info>');
+            $this->getIo()->success('Config added');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
+            $this->getIo()->error($e->getMessage());
         }
     }
 }

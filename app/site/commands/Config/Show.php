@@ -18,7 +18,6 @@ use App\Site\Models\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
 
 /**
  * Show Config Command
@@ -49,26 +48,21 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = new Table($output);
-        $table->setHeaders(['Id', 'Website', 'Path', 'Value', 'System']);
-
         $website = $input->getOption('website');
 
         $condition = [];
         if (is_numeric($website)) {
             $condition = ['website_id' => $website];
         }
-        foreach (Configuration::getCollection()->where($condition) as $row) {
-            /** @var Configuration $row */
-            $table->addRow([
-                $row['id'],
-                $row['website_id'],
-                $row['path'],
-                $row['value'],
-                $row['is_system'] ? 'true' : 'false'
-            ]);
-        }
 
-        $table->render();
+        $tableContents = array_map(fn($row) => [
+            $row['id'],
+            $row['website_id'],
+            $row['path'],
+            $row['value'],
+            $row['is_system'] ? 'true' : 'false'
+        ], Configuration::getCollection()->where($condition)->getItems());
+
+        $this->renderTable(['Id', 'Website', 'Path', 'Value', 'System'], $tableContents);
     }
 }

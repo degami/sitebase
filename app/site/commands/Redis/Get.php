@@ -52,14 +52,14 @@ class Get extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         if (getenv('REDIS_CACHE', 0) == 0) {
-            $output->writeln('<error>Redis cache is not enabled</error>');
+            $this->getIo()->error('Redis cache is not enabled');
             return;
         }
 
         try {
             $client = $this->getRedis();
         } catch (\Exception $e) {
-            $output->writeln('<error>Can\'t connect to redis server</error>');
+            $this->getIo()->error('Can\'t connect to redis server');
             return;
         }
         

@@ -18,8 +18,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\Question;
-use App\App;
 use Exception;
 
 /**
@@ -46,27 +44,17 @@ class Shell extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $helper = $this->getHelper('question');
-        $app = $this->containerMake(App::class);
-        $this->getContainer()->set('app', $app);
+        $app = \App\App::getInstance();
 
         $this->getIo()->title('Welcome.');
 
         $history = [];
         do {
-            $command = '';
-            while (trim($command) == '') {
-                $question = new Question("\n> ");
-                $command = $helper->ask($input, $output, $question);
-                $command = rtrim(trim($command), ';');
-            }
-
+            $command = rtrim(trim($this->keepAsking("\n> ")), ';'); 
             switch ($command) {
                 case 'history':
-                    $output->writeln('<info>History</info>');
-                    foreach ($history as $key => $value) {
-                        $output->writeln($value);
-                    }
+                    $this->renderTitle('History');
+                    $this->getIo()->listing($history);
                     break;
                 case 'quit':
                 case 'exit':

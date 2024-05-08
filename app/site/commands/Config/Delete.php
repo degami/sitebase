@@ -72,6 +72,6 @@ class Delete extends BaseCommand
         }
 
         $configuration->delete();
-        $output->writeln('<info>User deleted</info>');
+        $this->getIo()->success('User deleted');
     }
 }

@@ -64,7 +64,7 @@ class Add extends BaseCommand
 
             $output->writeln('<info>Role added</info>');
         } catch (Exception $e) {
-            $output->writeln("<error>\n\n" . $e->getMessage() . "\n</error>");
+            $this->getIo()->error($e->getMessage());
         }
     }
 }

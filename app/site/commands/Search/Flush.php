@@ -60,6 +60,6 @@ class Flush extends BaseCommand
             ],
         ]);
 
-        $output->writeln('<info>Data flushed</info>');
+        $this->getIo()->success('Data flushed');
     }
 }

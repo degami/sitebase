@@ -75,6 +75,6 @@ class Password extends BaseCommand
         $user->setPassword($this->getUtils()->getEncodedPass($password));
         $user->persist();
 
-        $output->writeln('<info>Password changed</info>');
+        $this->getIo()->success('Password changed');
     }
 }

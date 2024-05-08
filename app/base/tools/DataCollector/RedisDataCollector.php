@@ -13,12 +13,10 @@
 
 namespace App\Base\Tools\DataCollector;
 
-use App\Base\Abstracts\Models\AccountModel;
-use App\Site\Models\GuestUser;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;
-use Redis as RedisClient;
+use App\Base\Tools\Redis\Manager as RedisManager;
 
 /**
  * Redis data collector for debugging
@@ -28,25 +26,32 @@ class RedisDataCollector extends DataCollector implements Renderable, AssetProvi
     public const NAME = "Redis Data";
 
     /**
+     * PageDataCollector constructor.
+     *
+     * @param BasePage|null $page
+     */
+    public function __construct(
+        protected ?RedisManager $subject = null
+    ) { }
+
+
+    /**
      * collects data
      *
      * @return array
      */
     public function collect(): array
     {
-        
-        try {
-            $client = \App\App::getInstance()->getRedis();
-        } catch (\Exception $e) {
+        if (!$this->subject) {
             return [];
         }
 
         return [
-            'host' => $client->getHost(),
-            'port' => $client->getPort(),
-            'database' => $client->getDBNum(),
-            'dbsize' => $client->dbSize(),
-            'keys' => json_encode($client->keys('*')),
+            'host' => $this->subject->getHost(),
+            'port' => $this->subject->getPort(),
+            'database' => $this->subject->getDBNum(),
+            'dbsize' => $this->subject->dbSize(),
+            'keys' => json_encode($this->subject->keys('*')),
         ];
     }
 

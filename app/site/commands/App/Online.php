@@ -41,6 +41,6 @@ class Online extends BaseCommand
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         @unlink(App::getDir(App::APP) . DS . 'offline.flag');
-        $output->writeln('<info>Maintenance mode OFF</info>');
+        $this->getIo()->success('Maintenance mode OFF');
     }
 }

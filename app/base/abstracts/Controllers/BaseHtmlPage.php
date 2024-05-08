@@ -89,7 +89,7 @@ abstract class BaseHtmlPage extends BasePage
             $debugbar->addCollector(new PageDataCollector($this));
             $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
             if ($this->getEnv('REDIS_CACHE', 0) == 1) {
-                $debugbar->addCollector(new RedisDataCollector());
+                $debugbar->addCollector(new RedisDataCollector($this->getRedis()));
             }
         }
 

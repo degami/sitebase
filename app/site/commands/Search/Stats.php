@@ -17,9 +17,6 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableCell;
-use Symfony\Component\Console\Helper\TableSeparator;
 use App\Site\Controllers\Frontend\Search;
 
 /**
@@ -45,10 +42,6 @@ class Stats extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('<info>Search stats.</info>');
-
-        $table = new Table($output);
-
         $client = $this->getElasticsearch();
 
         $count_result = $client->count([
@@ -92,24 +85,17 @@ class Stats extends BaseCommand
             }
         }
 
-        $table
-            ->addRow(
-                [new TableCell(
-                    "Total documents: " . $count_result,
-                    ['colspan' => 2]
-                )]
-            );
 
-        $table
-            ->addRow(new TableSeparator())
-            ->addRow(['<info>Type</info>', '<info>Count</info>']);
+        $tableContents = [
+            ["Total documents: " . $count_result],
+            ['<info>Type</info>', '<info>Count</info>']
+        ];
 
         foreach ($types as $type => $count) {
-            $table
-                ->addRow(new TableSeparator())
-                ->addRow([$type, $count]);
+            $tableContents[] = [$type, $count];
         }
 
-        $table->render();
+        $this->renderTitle('Search stats');
+        $this->renderTable([], $tableContents);
     }
 }

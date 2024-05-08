@@ -19,8 +19,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableSeparator;
 use App\Site\Models\User;
 
 /**
@@ -48,28 +46,11 @@ class Show extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = new Table($output);
-        $table
-            ->setHeaders(['ID', 'Username', 'Email', 'Roles']);
-
-        $k = 0;
-        foreach (User::getCollection() as $user) {
-            /** @var User $user */
-
-            if ($k++ > 0) {
-                $table->addRow(new TableSeparator());
-            }
-
-            $table
-                ->addRow(
-                    [
-                        '<info>' . $user->getId() . '</info>',
-                        $user->getUsername(),
-                        $user->getEmail(),
-                        $user->getRole()->getName(),
-                    ]
-                );
-        }
-        $table->render();
+        $this->renderTable(['ID', 'Username', 'Email', 'Roles'], array_map(fn($user) => [
+            '<info>' . $user->getId() . '</info>',
+            $user->getUsername(),
+            $user->getEmail(),
+            $user->getRole()->getName(),
+        ], User::getCollection()->getItems()));
     }
 }

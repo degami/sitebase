@@ -29,9 +29,6 @@ use App\Site\Models\Taxonomy;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Helper\Table;
-use Symfony\Component\Console\Helper\TableCell;
-use Symfony\Component\Console\Helper\TableSeparator;
 
 /**
  * Information Statistics Command
@@ -56,8 +53,6 @@ class Stats extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $table = new Table($output);
-
         $tables = [
             Website::class => 'Websites',
             User::class => 'Users',
@@ -73,24 +68,18 @@ class Stats extends BaseCommand
             News::class => 'News',
         ];
 
+        $tableContents = [];
+
         foreach ($tables as $class_name => $label) {
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
             $collection = $this->containerCall([$class_name, 'getCollection']);
-            $table
-                ->addRow(['<info>' . $label . '</info>', $collection->count()])
-                ->addRow(new TableSeparator());
+            $tableContents[] = ['<info>' . $label . '</info>', $collection->count()];
         }
 
-        $table
-            ->addRow(
-                [new TableCell(
-                    $this->getCache()->getStats()->getInfo() . "\n" .
-                    "Cache size: " . $this->getCache()->getStats()->getSize() . "\n" .
-                    "Cache Lifetime: " . $this->getCache()->getCacheLifetime(),
-                    ['colspan' => 2]
-                )]
-            );
+        $tableContents[] = [$this->getCache()->getStats()->getInfo() . "\n" .
+        "Cache size: " . $this->getCache()->getStats()->getSize() . "\n" .
+        "Cache Lifetime: " . $this->getCache()->getCacheLifetime()];
 
-        $table->render();
+        $this->renderTable([], $tableContents);
     }
 }

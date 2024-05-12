@@ -694,7 +694,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @return self
      * @throws BasicException
      */
-    public function persist(): BaseModel
+    public function persist(bool $recursive = true): BaseModel
     {
         $debugbar = $this->getDebugbar();
 
@@ -712,7 +712,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         if (array_key_exists('updated_at', $this->getDbRow()->getData())) {
             $this->getDbRow()->updated_at = date("Y-m-d H:i:s", time());
         }
-        $this->getDbRow()->update($this->getData());
+        $this->getDbRow()->update($this->getData(), $recursive);
 
         $this->postPersist();
 
@@ -907,5 +907,15 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         }
 
         return $changed;
+    }
+
+    public static function getTableColumns(?ContainerInterface $container = null)
+    {
+        // if argument is missing, try get it from environment
+        if (is_null($container)) {
+            $container = \App\App::getInstance()->getContainer();
+        }
+
+        return array_values(array_map(fn($column) => $column->getName(), $container->get('schema')->getTable(static::defaultTableName())?->getColumns()));
     }
 }

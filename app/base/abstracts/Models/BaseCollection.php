@@ -133,19 +133,34 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     /**
      * adds order to collection
      *
-     * @param array $order
+     * @param array|string $order
      * @return static
      */
     public function addOrder($order = []) : static 
     {
+        $tableColumns = $this->containerCall([$this->className, 'getTableColumns']);
         if (!empty($order) && is_array($order)) {
             foreach ($order as $column => $direction) {
                 if (!in_array(strtoupper(trim($direction)), ['ASC', 'DESC'])) {
                     // not a direction, maybe not in form <columnaname> => <direction>, use direction as column
-                    $this->stmt = $this->getSelect()->orderBy($direction);
+                    if (in_array($direction, $tableColumns)) {
+                        $this->stmt = $this->getSelect()->orderBy($direction);
+                    } else {
+                        $this->stmt = $this->getSelect()->orderBy($direction, true);
+                    }
                 } else {
-                    $this->stmt = $this->getSelect()->orderBy($column, strtoupper(trim($direction)) ?? 'ASC');
+                    if (in_array($column, $tableColumns)) {
+                        $this->stmt = $this->getSelect()->orderBy($column, strtoupper(trim($direction)));
+                    } else {
+                        $this->stmt = $this->getSelect()->orderBy($column .' '. strtoupper(trim($direction)), true);
+                    }
                 }
+            }
+        } else if (is_string($order) && !empty($order)) {
+            if (in_array($order, $tableColumns)) {
+                $this->stmt = $this->getSelect()->orderBy($order);
+            } else {
+                $this->stmt = $this->getSelect()->orderBy($order, true);
             }
         } else {
             $this->stmt = $this->getSelect()->orderBy($this->containerCall([$this->className, 'getKeyField']));

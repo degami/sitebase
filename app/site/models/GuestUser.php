@@ -201,7 +201,7 @@ class GuestUser extends AccountModel
     /**
      * no save for this model
      */
-    public function persist(): BaseModel
+    public function persist(bool $recursive = true): BaseModel
     {
         return $this;
     }

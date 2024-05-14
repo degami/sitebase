@@ -29,6 +29,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Tools\DataCollector\CollectionDataCollector;
 use Exception;
 
 /**
@@ -56,6 +57,16 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     ) {
         if (!is_subclass_of($className, BaseModel::class, true)) {
             throw new InvalidValueException("$className is not a subclass of BaseModel");
+        }
+
+        parent::__construct($container);
+
+        if ($this->getEnv('DEBUG')) {
+            /** @var DebugBar $debugbar */
+            $debugbar = $this->getContainer()->get('debugbar');
+            if (!$debugbar->hasCollector(CollectionDataCollector::NAME)) {
+                $debugbar->addCollector(new CollectionDataCollector());
+            }
         }
 
         $this->reset();
@@ -222,13 +233,22 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
                 $debugbar['time']->startMeasure($measure_key);
             }
 
+            $before = memory_get_usage();
             $this->items = [];
             foreach($this->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()]) as $item) {
-                $this->items[$item->getId()] = $item;
+                /** @var BaseModel $item */
+                $this->items[$item->getKeyFieldValue()] = $item;
             }
+            $after = memory_get_usage();
 
             if (getenv('DEBUG')) {
                 $debugbar['time']->stopMeasure($measure_key);
+
+                if ($debugbar->hasCollector(CollectionDataCollector::NAME)) {
+                    /** @var CollectionDataCollector $dataCollector */
+                    $dataCollector = $debugbar->getCollector(CollectionDataCollector::NAME);
+                    $dataCollector->addElements($this->getTableName(), array_keys($this->items), ($after - $before));
+                }
             }
         }
 

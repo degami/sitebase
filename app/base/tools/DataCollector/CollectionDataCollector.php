@@ -43,8 +43,8 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
     public function collect(): array
     {
         $out = ['n_collections' => count($this->collectionsInfo), 'collections'];
-        foreach ($this->collectionsInfo as $tableName => $info) {
-            $out['collections'][$tableName] = count($info['keys']). ' items, '.$this->convert($info['size']);
+        foreach ($this->collectionsInfo as $className => $info) {
+            $out['collections'][basename(str_replace("\\","/",$className))."Collection"] = count($info['keys']). ' items, '.$this->convert($info['size']);
         }
         return $out;
     }
@@ -94,14 +94,14 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
         ];
     }
 
-    public function addElements($tableName, $keys, $allocatedSize) : self 
+    public function addElements($className, $keys, $allocatedSize) : self 
     {
-        if (!isset($this->collectionsInfo[$tableName])) {
-            $this->collectionsInfo[$tableName] = ['keys' => [], 'size' => 0];
+        if (!isset($this->collectionsInfo[$className])) {
+            $this->collectionsInfo[$className] = ['keys' => [], 'size' => 0];
         }
 
-        $this->collectionsInfo[$tableName]['keys'] = array_unique(array_merge($this->collectionsInfo[$tableName]['keys'], $keys));
-        $this->collectionsInfo[$tableName]['size'] += $allocatedSize;
+        $this->collectionsInfo[$className]['keys'] = array_unique(array_merge($this->collectionsInfo[$className]['keys'], $keys));
+        $this->collectionsInfo[$className]['size'] += $allocatedSize;
 
         return $this;
     }

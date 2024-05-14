@@ -247,7 +247,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
                 if ($debugbar->hasCollector(CollectionDataCollector::NAME)) {
                     /** @var CollectionDataCollector $dataCollector */
                     $dataCollector = $debugbar->getCollector(CollectionDataCollector::NAME);
-                    $dataCollector->addElements($this->getTableName(), array_keys($this->items), ($after - $before));
+                    $dataCollector->addElements($this->className, array_keys($this->items), ($after - $before));
                 }
             }
         }

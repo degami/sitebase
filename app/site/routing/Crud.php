@@ -13,6 +13,7 @@
 
 namespace App\Site\Routing;
 
+use App\Base\Abstracts\Controllers\BaseJsonPage;
 use App\Base\Abstracts\Controllers\BaseRestPage;
 use App\Base\Abstracts\Routing\BaseRouter;
 use App\Base\Exceptions\InvalidValueException;
@@ -20,6 +21,9 @@ use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use App\Site\Routing\RouteInfo;
+use Psr\Container\ContainerInterface;
+
 
 /**
  * Crud Router Class
@@ -54,7 +58,7 @@ class Crud extends BaseRouter
 
                 $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Crud', ClassFinder::RECURSIVE_MODE);
                 foreach ($controllerClasses as $controllerClass) {
-                    if (is_subclass_of($controllerClass, BaseRestPage::class)) {
+                    if (is_subclass_of($controllerClass, BaseRestPage::class) || is_subclass_of($controllerClass, BaseJsonPage::class)) {
                         $group = "/crud";
                         $path = str_replace("app/site/crud/", "", str_replace("\\", "/", strtolower($controllerClass)));
                         $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
@@ -99,4 +103,24 @@ class Crud extends BaseRouter
         }
         return $this->routes;
     }
+
+    /**
+     * returns a RouteInfo instance for current request
+     *
+     * @param ContainerInterface $container
+     * @param string|null $http_method
+     * @param string|null $request_uri
+     * @param string|null $domain
+     * @return RouteInfo
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    public function getRequestInfo(ContainerInterface $container, $http_method = null, $request_uri = null, $domain = null): RouteInfo
+    {
+        // set request info type as crud
+        return parent::getRequestInfo($container, $http_method, $request_uri, $domain)->setType('crud');
+    }
+
 }

@@ -14,6 +14,7 @@
 namespace App\Base\Traits;
 
 use App\Site\Models\User;
+use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
@@ -55,7 +56,7 @@ trait AdminTrait
             if ($this->getTokenData()) {
                 $this->current_user_model = $this->getCurrentUser();
 
-                if ($this->getEnv('USE2FA_ADMIN') && !in_array($this->getRouteInfo()->getRouteName(), ['admin.twofa', 'admin.login']) && ($this->current_user?->passed2fa ?? false) != true) {
+                if ($this->getEnv('USE2FA_ADMIN') && !$this->isCrud($this->getRouteInfo()) && !in_array($this->getRouteInfo()->getRouteName(), ['admin.twofa', 'admin.login']) && ($this->current_user?->passed2fa ?? false) != true) {
                     return false;
                 }
 
@@ -180,5 +181,23 @@ trait AdminTrait
 
         $this->action_buttons[$key] = $button;
         return $this;
+    }
+
+    public function isWeb(RouteInfo $routeInfo) : bool
+    {
+        if ($routeInfo->getType() != 'crud' ) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public function isCrud(RouteInfo $routeInfo) : bool
+    {
+        if ($routeInfo->getType() == 'crud') {
+            return true;
+        }
+
+        return false;
     }
 }

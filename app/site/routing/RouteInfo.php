@@ -72,6 +72,11 @@ class RouteInfo
     protected ?int $rewrite;
 
     /**
+     * @var string|null type
+     */
+    protected ?string $type;
+
+    /**
      * @var BasePage|null controller object instance
      */
     protected ?BasePage $controller_object = null;
@@ -86,7 +91,7 @@ class RouteInfo
      * @param string|null $route_name
      * @param int|null $rewrite
      */
-    public function __construct(array $dispatcher_info, string $http_method, string $uri, string $route, string $route_name = null, $rewrite = null)
+    public function __construct(array $dispatcher_info, string $http_method, string $uri, string $route, string $route_name = null, $rewrite = null, $type = null)
     {
         $this->dispatcher_info = $dispatcher_info;
         $this->http_method = $http_method;
@@ -95,6 +100,7 @@ class RouteInfo
         $this->status = $dispatcher_info[0];
         $this->route_name = $route_name;
         $this->rewrite = $rewrite;
+        $this->type = $type;
 
         switch ($this->status) {
             case Dispatcher::NOT_FOUND:
@@ -361,6 +367,30 @@ class RouteInfo
 
         return $this;
     }
+
+    /**
+     * gets type
+     *
+     * @return int|null
+     */
+    public function getType(): ?string
+    {
+        return $this->type;
+    }
+
+    /**
+     * sets type
+     *
+     * @param int $rewrite
+     * @return self
+     */
+    public function setType(string $type): RouteInfo
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
 
     /**
      * checks if route works also if site is offline

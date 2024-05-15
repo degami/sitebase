@@ -214,6 +214,14 @@ class Globals extends ContainerAwareObject
             'e' => $exception,
         ];
 
+        /** @var DebugBar $debugbar */
+        $debugbar = $this->getDebugbar();
+
+        if (getenv('DEBUG')) {
+            $debugbar['exceptions']->addException($exception);
+        }
+
+
         return $this->errorPage(500, $request, $route_info, $template_data, 'errors::exception');
     }
 
@@ -591,7 +599,7 @@ class Globals extends ContainerAwareObject
     public function getTokenHeader(): ?string
     {
         $token = $this->getRequest()->headers->get('Authorization');
-        return $token ?: $this->getRequest()->cookies->get('Authorization');
+        return str_replace("Bearer ", "", $token ?: $this->getRequest()->cookies->get('Authorization'));
     }
 
     /**
@@ -632,7 +640,7 @@ class Globals extends ContainerAwareObject
                 return (array) $claims->get('userdata');
             }
         } catch (Exception $e) {
-            //$this->getUtils()->logException($e);
+            $this->getUtils()->logException($e);
         }
 
         return false;

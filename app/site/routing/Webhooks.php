@@ -56,7 +56,6 @@ class Webhooks extends BaseRouter
                 // collect routes
 
                 $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Webhooks', ClassFinder::RECURSIVE_MODE);
-                var_dump($controllerClasses);
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BaseWebhookPage::class)) {
                         $group = "/webhooks";

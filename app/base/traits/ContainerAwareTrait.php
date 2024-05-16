@@ -25,6 +25,7 @@ use App\Site\Models\Website;
 use App\Site\Routing\Crud;
 use App\Site\Routing\RouteInfo;
 use App\Site\Routing\Web;
+use App\Site\Routing\Webhooks;
 use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
@@ -211,6 +212,17 @@ trait ContainerAwareTrait
     public function getCrudRouter(): Crud
     {
         return $this->getService('crud_router');
+    }
+
+   /**
+     * gets webhooks service
+     *
+     * @return Webhooks
+     * @throws BasicException
+     */
+    public function getWebhooksRouter(): Webhooks
+    {
+        return $this->getService('webhooks_router');
     }
 
     /**

@@ -113,10 +113,15 @@ return [
     \App\Site\Routing\Crud::class => DI\autowire(\App\Site\Routing\Crud::class),
     'crud_router' => DI\get(\App\Site\Routing\Crud::class),
 
+    // 'webhooks_router'
+    \App\Site\Routing\Webhooks::class => DI\autowire(\App\Site\Routing\Webhooks::class),
+    'webhooks_router' => DI\get(\App\Site\Routing\Webhooks::class),
+
     // 'routers'
     'routers' => [
         'web_router',
         'crud_router',
+        'webhooks_router',
     ],
 
     // 'site_data'
@@ -192,6 +197,9 @@ return [
             ->build();
     }),
     'elasticsearch' => DI\get(\Elasticsearch\Client::class),
+
+    \App\Base\Tools\Redis\Manager::class => DI\autowire(\App\Base\Tools\Redis\Manager::class),
+    'redis' => DI\get(\App\Base\Tools\Redis\Manager::class),
 
     \PHPGangsta_GoogleAuthenticator::class => DI\create(PHPGangsta_GoogleAuthenticator::class),
     'googleauthenticator' => DI\get(\PHPGangsta_GoogleAuthenticator::class),

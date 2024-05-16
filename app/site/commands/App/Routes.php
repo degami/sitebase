@@ -47,16 +47,14 @@ class Routes extends BaseCommand
     {
         $tableContents = [];
 
-        foreach ($this->getWebRouter()->getRoutes() as $group => $routes) {
-            foreach ($routes as $route) {
-                $tableContents[] = [$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']];
-            }
-        }
-
-        foreach ($this->getCrudRouter()->getRoutes() as $group => $routes) {
-            foreach ($routes as $route) {
-                $tableContents[] = [$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']];
-            }
+        foreach ($this->getRouters() as $routerName) {
+            $router = $this->getService($routerName);
+            $tableContents[] = ['<info>'.$routerName.'</info>'];
+            foreach ($router->getRoutes() as $group => $routes) {
+                foreach ($routes as $route) {
+                    $tableContents[] = [$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']];
+                }
+            }    
         }
 
         $this->renderTitle('Routes');

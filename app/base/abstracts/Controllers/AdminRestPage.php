@@ -48,11 +48,13 @@ abstract class AdminRestPage extends BaseRestPage
         /** @var JsonResponse $out */
         $out = parent::process($route_info, $route_data);
 
-        if ($out instanceof JsonResponse) {
-            // add auth info to response
-            $data = json_decode($out->getContent(), true);
-            $data['auth'] = $this->getTokenData();
-            $out->setData($data);
+        if ($this->getEnv('DEBUG')) {
+            if ($out instanceof JsonResponse) {
+                // add auth info to response
+                $data = json_decode($out->getContent(), true);
+                $data['auth'] = $this->getTokenData();
+                $out->setData($data);
+            }
         }
 
         return $out;

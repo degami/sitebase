@@ -143,7 +143,6 @@ class Web extends BaseRouter
     /**
      * returns a RouteInfo instance for current request
      *
-     * @param ContainerInterface $container
      * @param string|null $http_method
      * @param string|null $request_uri
      * @param string|null $domain

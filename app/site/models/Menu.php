@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\ModelWithChildren;
 use App\Base\Traits\WithParentTrait;
@@ -82,11 +83,15 @@ class Menu extends ModelWithChildren
     /**
      * gets all menu names
      *
-     * @param ContainerInterface $container
+     * @param ContainerInterface|null $container
      * @return array
      */
-    public static function allMenusNames(ContainerInterface $container): array
+    public static function allMenusNames(?ContainerInterface $container = null): array
     {
+        if (is_null($container)) {
+            $container = App::getInstance()->getContainer();
+        }
+    
         return array_map(
             function ($el) use ($container) {
                 return (object)($el);

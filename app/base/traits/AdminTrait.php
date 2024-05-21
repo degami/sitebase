@@ -14,7 +14,9 @@
 namespace App\Base\Traits;
 
 use App\Site\Models\User;
+use App\Site\Routing\Crud;
 use App\Site\Routing\RouteInfo;
+use App\Site\Routing\Web;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
@@ -185,7 +187,7 @@ trait AdminTrait
 
     public function isWeb(RouteInfo $routeInfo) : bool
     {
-        if ($routeInfo->getType() != 'crud' ) {
+        if ($routeInfo->getType() == Web::ROUTER_TYPE ) {
             return true;
         }
 
@@ -194,7 +196,7 @@ trait AdminTrait
 
     public function isCrud(RouteInfo $routeInfo) : bool
     {
-        if ($routeInfo->getType() == 'crud') {
+        if ($routeInfo->getType() == Crud::ROUTER_TYPE) {
             return true;
         }
 

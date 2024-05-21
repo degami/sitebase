@@ -249,16 +249,15 @@ abstract class BaseRouter extends ContainerAwareObject
     /**
      * checks a route
      *
-     * @param ContainerInterface $container
      * @param string $route
      * @return bool
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function checkRoute(ContainerInterface $container, string $route): bool
+    public function checkRoute(string $route): bool
     {
         try {
-            return !in_array($this->getRequestInfo($container, 'GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
+            return !in_array($this->getRequestInfo('GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
         } catch (DependencyException | NotFoundException $e) {
         }
 
@@ -445,7 +444,6 @@ abstract class BaseRouter extends ContainerAwareObject
     /**
      * returns a RouteInfo instance for current request
      *
-     * @param ContainerInterface $container
      * @param string|null $http_method
      * @param string|null $request_uri
      * @param string|null $domain
@@ -455,7 +453,7 @@ abstract class BaseRouter extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getRequestInfo(ContainerInterface $container, $http_method = null, $request_uri = null, $domain = null): RouteInfo
+    public function getRequestInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
     {
         if (empty($http_method)) {
             $http_method = $_SERVER['REQUEST_METHOD'];
@@ -464,7 +462,7 @@ abstract class BaseRouter extends ContainerAwareObject
             $request_uri = $_SERVER['REQUEST_URI'];
         }
         if (empty($domain)) {
-            $domain = $container->get('site_data')->currentServerName();
+            $domain = $this->getSiteData()->currentServerName();
         }
 
         // Fetch method and URI from somewhere
@@ -483,7 +481,7 @@ abstract class BaseRouter extends ContainerAwareObject
             /** @var Rewrite $rewrite */
             $rewrite = null;
             if (isset($cached_rewrites[$domain][$uri])) {
-                $rewrite = $container->call([Rewrite::class, 'new'], ['initial_data' => $cached_rewrites[$domain][$uri]]);
+                $rewrite = $this->containerCall([Rewrite::class, 'new'], ['initial_data' => $cached_rewrites[$domain][$uri]]);
             } else {
                 // if not found, check the rewrites table if applicable
                 $rewrite = $this->checkRewrites($uri);
@@ -512,7 +510,7 @@ abstract class BaseRouter extends ContainerAwareObject
         }
 
         // return a RouteInfo instance
-        return $container->make(RouteInfo::class, [
+        return $this->containerMake(RouteInfo::class, [
             'dispatcher_info' => $dispatcher_info,
             'http_method' => $http_method,
             'uri' => $uri,

@@ -71,11 +71,10 @@ class QueueMessage extends BaseModel
     /**
      * gets next message on queue
      *
-     * @param ContainerInterface $container
      * @param string|null $queue_name
      * @return self|null
      */
-    public static function nextMessage(ContainerInterface $container, $queue_name = null): ?QueueMessage
+    public static function nextMessage($queue_name = null): ?QueueMessage
     {
         try {
 
@@ -87,19 +86,6 @@ class QueueMessage extends BaseModel
                 $message->setStatus(self::STATUS_PROCESSED)->persist();
                 return $message;
             }
-
-            /*
-            $messageDBRow = static::getCollection()->where(
-                ['status' => self::STATUS_PENDING] + ($queue_name != null ? ['queue_name' => $queue_name] : []),
-                ['created_at' => 'ASC'],
-                1
-            )->fetchDbRow();            
-            if ($messageDBRow && $messageDBRow->id) {
-                $message = $container->make(static::class, ['db_row' => $messageDBRow]);
-                $message->setStatus(self::STATUS_PROCESSED)->persist();
-                return $message;
-            }
-            */
         } catch (Exception $e) {
             // ignore
         }

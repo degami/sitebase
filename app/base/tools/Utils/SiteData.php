@@ -67,10 +67,8 @@ class SiteData extends ContainerAwareObject
             return $this->getAppWebsite();
         }
 
-        $container = $this->getContainer();
-
         /** @var DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
+        $debugbar = $this->getDebugbar();
 
         $measure_key = 'SiteData getCurrentWebsite';
 

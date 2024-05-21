@@ -29,6 +29,8 @@ use Psr\Container\ContainerInterface;
  */
 class Webhooks extends BaseRouter
 {
+    public const ROUTER_TYPE = 'webhook';
+
     /**
      * {@inheritdoc}
      *
@@ -106,7 +108,6 @@ class Webhooks extends BaseRouter
     /**
      * returns a RouteInfo instance for current request
      *
-     * @param ContainerInterface $container
      * @param string|null $http_method
      * @param string|null $request_uri
      * @param string|null $domain
@@ -116,10 +117,10 @@ class Webhooks extends BaseRouter
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getRequestInfo(ContainerInterface $container, $http_method = null, $request_uri = null, $domain = null): RouteInfo
+    public function getRequestInfo($http_method = null, $request_uri = null, $domain = null): RouteInfo
     {
         // set request info type as crud
-        return parent::getRequestInfo($container, $http_method, $request_uri, $domain)->setType('webhook');
+        return parent::getRequestInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);
     }
 
 }

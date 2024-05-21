@@ -85,7 +85,7 @@ class Deploy extends BaseCommand
         }
 
         foreach ($symlinks as $from => $to) {
-            if (!file_exists($to)) {
+            if (!file_exists($to) && file_exists($from)) {
                 echo "symlink " . $from . " to " . $to . "\n";
                 symlink($from, $to);
             }

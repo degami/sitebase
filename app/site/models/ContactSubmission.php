@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -54,15 +55,19 @@ class ContactSubmission extends BaseModel
     /**
      * submit data
      *
-     * @param ContainerInterface $container
+     * @param ContainerInterface|null $container
      * @param array $submission_data
      * @return self
      * @throws BasicException
      */
-    public static function submit(ContainerInterface $container, array $submission_data = []): ContactSubmission
+    public static function submit(?ContainerInterface $container = null, array $submission_data = []): ContactSubmission
     {
+        if (is_null($container)) {
+            $container = App::getInstance()->getContainer();
+        }
+    
         /** @var ContactSubmission $contact_submission */
-        $contact_submission = $container->get(ContactSubmission::class);
+        $contact_submission = $container->make(ContactSubmission::class);
         $contact_submission->setContactId($submission_data['contact_id']);
         $contact_submission->setUserId($submission_data['user_id']);
         $contact_submission->persist();

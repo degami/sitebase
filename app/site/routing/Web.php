@@ -28,12 +28,16 @@ use App\Site\Controllers\Frontend\Page;
 use App\Site\Controllers\Frontend\Search;
 use App\Site\Controllers\Admin\TwoFa as Admin2Fa;
 use App\Site\Controllers\Frontend\Users\TwoFa as Users2Fa;
+use App\Site\Routing\RouteInfo;
+use Psr\Container\ContainerInterface;
 
 /**
  * Web Router Class
  */
 class Web extends BaseRouter
 {
+    public const ROUTER_TYPE = 'web';
+
     /**
      * {@inheritdoc}
      *
@@ -134,6 +138,25 @@ class Web extends BaseRouter
             }
         }
         return $this->routes;
+    }
+
+    /**
+     * returns a RouteInfo instance for current request
+     *
+     * @param ContainerInterface $container
+     * @param string|null $http_method
+     * @param string|null $request_uri
+     * @param string|null $domain
+     * @return RouteInfo
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    public function getRequestInfo($http_method = null, $request_uri = null, $domain = null): RouteInfo
+    {
+        // set request info type as crud
+        return parent::getRequestInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);
     }
 
     /**

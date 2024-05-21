@@ -91,19 +91,19 @@ class App extends ContainerAwareObject
 
         try {
             // load environment variables
-            $dotenv = Dotenv::create($this->getDir(self::ROOT));
+            $dotenv = Dotenv::create(static::getDir(self::ROOT));
             $dotenv->load();
 
             $builder = new ContainerBuilder();
-            $builder->addDefinitions($this->getDir(self::CONFIG) . DS . 'di.php');
+            $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
 
             /**
              * @var ContainerInterface $this ->container
              */
             $this->container = $builder->build();
 
-            if (is_file($this->getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
-                $this->blocked_ips = include($this->getDir(self::CONFIG) . DS . 'blocked_ips.php');
+            if (is_file(static::getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
+                $this->blocked_ips = include(static::getDir(self::CONFIG) . DS . 'blocked_ips.php');
                 if (!is_array($this->blocked_ips)) {
                     $this->blocked_ips = [$this->blocked_ips];
                 }

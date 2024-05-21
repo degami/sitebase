@@ -405,7 +405,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     {
         $container = App::getInstance()->getContainer();
 
-        /** @var DebugBar $debugbar */
+        /** @var$container-> DebugBar $debugbar */
         $debugbar = $container->get('debugbar');
 
         $measure_key = 'loadByCondition model: ' . static::defaultTableName();

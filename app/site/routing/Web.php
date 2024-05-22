@@ -29,7 +29,6 @@ use App\Site\Controllers\Frontend\Search;
 use App\Site\Controllers\Admin\TwoFa as Admin2Fa;
 use App\Site\Controllers\Frontend\Users\TwoFa as Users2Fa;
 use App\Site\Routing\RouteInfo;
-use Psr\Container\ContainerInterface;
 
 /**
  * Web Router Class

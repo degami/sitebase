@@ -18,6 +18,8 @@ use Exception;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use Psr\Container\ContainerInterface;
+use App\App;
+use PDO;
 
 /**
  * Queue Message Model
@@ -90,5 +92,22 @@ class QueueMessage extends BaseModel
             // ignore
         }
         return null;
+    }
+
+    public static function getQueueNames(?ContainerInterface $container = null) : array
+    {
+        try {
+            if (is_null($container)) {
+                $container = App::getInstance()->getContainer();
+            }
+
+            $query = "SELECT DISTINCT(queue_name) FROM ".static::defaultTableName();
+            $stmt = $container->get('db')->prepare($query);
+            $stmt->execute();
+            return array_values($stmt->fetchAll(PDO::FETCH_COLUMN, 0));
+        } catch (Exception $e) {
+            // ignore
+        }
+        return [];
     }
 }

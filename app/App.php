@@ -13,16 +13,10 @@
 
 namespace App;
 
-use App\Base\Tools\Utils\SiteData;
-use App\Site\Models\Configuration;
 use App\Site\Models\Rewrite;
-use App\Site\Models\Redirect;
 use Degami\Basics\Exceptions\BasicException;
 use DI\ContainerBuilder;
-use DI\DependencyException;
-use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use FastRoute\Dispatcher;
 use Psr\Container\ContainerInterface;

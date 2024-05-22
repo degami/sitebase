@@ -21,8 +21,6 @@ use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Site\Routing\RouteInfo;
-use Psr\Container\ContainerInterface;
-
 
 /**
  * Webhooks Router Class
@@ -122,5 +120,4 @@ class Webhooks extends BaseRouter
         // set request info type as crud
         return parent::getRequestInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);
     }
-
 }

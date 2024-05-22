@@ -16,7 +16,6 @@ namespace App\Site\Models;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Controllers\BasePage;
 use DateTime;
-use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\HttpFoundation\Request;
 use App\Base\Traits\WithWebsiteTrait;
 

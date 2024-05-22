@@ -16,8 +16,6 @@ namespace App\Site\Models;
 use App\Base\Abstracts\Models\ModelWithLocation;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
-use Degami\Basics\Exceptions\BasicException;
-use Exception;
 
 /**
  * Position Model

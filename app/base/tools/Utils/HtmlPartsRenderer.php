@@ -26,7 +26,6 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\BasePage;
-use App\Base\Abstracts\Models\BaseModel;
 use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use App\App;

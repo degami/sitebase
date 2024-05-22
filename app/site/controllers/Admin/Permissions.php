@@ -65,6 +65,23 @@ class Permissions extends AdminFormPage
     /**
      * {@inheritdocs}
      *
+     * @return array|null
+     */
+    public Function getAdminPageLink() : array|null
+    {
+        return [
+            'permission_name' => $this->getAccessPermission(),
+            'route_name' => static::getPageRouteName(),
+            'icon' => 'key',
+            'text' => 'Permissions',
+            'section' => 'system',
+            'order' => 10,
+        ];
+    }
+
+    /**
+     * {@inheritdocs}
+     *
      * @param FAPI\Form $form
      * @param array     &$form_state
      * @return FAPI\Form

@@ -129,7 +129,7 @@ abstract class AdminPage extends BaseHtmlPage
             } catch (Exception $e) {
                 $this->getUtils()->logException($e, "Can't write AdminActionLog", $this->getRequest());
                 if ($this->getEnv('DEBUG')) {
-                    return $this->getUtils()->exceptionPage($e);
+                    return $this->getUtils()->exceptionPage($e, $this->getRequest());
                 }
             }
         }
@@ -182,6 +182,11 @@ abstract class AdminPage extends BaseHtmlPage
         $out = parent::getBaseTemplateData();
         $out['current_user'] = $this->getCurrentUser();
         $out['body_class'] = 'admin-page ' . str_replace('.', '-', $this->getRouteName());
+        $out['icon'] = 'box';
+        if (method_exists($this, 'getAdminPageLink')) {
+            $pageLink = $this->getAdminPageLink();
+            $out['icon'] = $pageLink['icon'] ?? 'box';
+        }
         return $out;
     }
 

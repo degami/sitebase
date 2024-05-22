@@ -22,7 +22,7 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
     </div>
     <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->
 
-    <h1 class="h3 px-2 nowrap">-&nbsp;<?= ucwords(strtolower($this->sitebase()->translate($title))); ?>&nbsp;-</h1>
+    <h1 class="h3 px-2 nowrap page-title">-&nbsp;<?php $this->sitebase()->drawIcon($icon); ?> <?= ucwords(strtolower($this->sitebase()->translate($title))); ?>&nbsp;-</h1>
     <ul class="navbar-nav navbar-expand px-3 d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center py-1 w-100">
         <li class="nav-item px-1">
             <button type="button" id="sidebarCollapse" class="btn btn-dark d-sm-block d-md-none">

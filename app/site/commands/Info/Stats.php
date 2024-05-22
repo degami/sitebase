@@ -80,6 +80,7 @@ class Stats extends BaseCommand
         "Cache size: " . $this->getCache()->getStats()->getSize() . "\n" .
         "Cache Lifetime: " . $this->getCache()->getCacheLifetime()];
 
+        $this->renderTitle('App stats');
         $this->renderTable([], $tableContents);
     }
 }

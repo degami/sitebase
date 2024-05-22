@@ -52,6 +52,7 @@ class Stats extends BaseCommand
             $tableContents[] = ['<info>' . $queueName . '</info>', $collectionProcessed->count(), $collectionPending->count()];
         }
 
+        $this->renderTitle('Queues stats');
         $this->renderTable([__('Queue name'), __('Processed'), __('Pending')], $tableContents);
     }
 }

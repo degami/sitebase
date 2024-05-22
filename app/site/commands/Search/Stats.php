@@ -29,7 +29,7 @@ class Stats extends BaseCommand
      */
     protected function configure()
     {
-        $this->setDescription('Search stats');
+        $this->setDescription('Search Statistics');
     }
 
     /**

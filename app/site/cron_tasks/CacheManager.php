@@ -15,7 +15,6 @@ namespace App\Site\Cron\Tasks;
 
 use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use Psr\Container\ContainerInterface;
 use App\Base\Abstracts\ContainerAwareObject;
 
 /**

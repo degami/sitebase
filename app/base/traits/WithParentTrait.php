@@ -13,8 +13,6 @@
 
 namespace App\Base\Traits;
 
-use App\Site\Models\Taxonomy;
-
 /**
  * Trait for elements with parent
  */

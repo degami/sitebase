@@ -20,16 +20,13 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use IteratorAggregate;
-use LessQL\Database;
 use LessQL\Result;
 use LessQL\Row;
 use PDOStatement;
 use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use Exception;
-use League\Plates\Template\Func;
 
 /**
  * A wrapper for LessQL Row

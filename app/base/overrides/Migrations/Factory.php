@@ -14,7 +14,6 @@
 namespace App\Base\Overrides\Migrations;
 
 use Closure;
-use Genkgo\Migrations\Factory as GenkgoMigrationFactory;
 use Genkgo\Migrations\AdapterInterface;
 use Genkgo\Migrations\Utils\FileList;
 use Genkgo\Migrations\MigrationInterface;

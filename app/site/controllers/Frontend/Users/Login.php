@@ -23,7 +23,6 @@ use App\Base\Exceptions\PermissionDeniedException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Lcobucci\JWT\Parser;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

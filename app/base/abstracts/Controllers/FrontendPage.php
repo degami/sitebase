@@ -23,7 +23,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use League\Plates\Template\Template;
-use LessQL\Result;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;

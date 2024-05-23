@@ -20,8 +20,6 @@ use App\Site\Models\MediaElementRewrite;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\Basics\Html\TagElement;
 use Degami\PHPFormsApi as FAPI;
-use DI\DependencyException;
-use DI\NotFoundException;
 
 /**
  * Rewrite Media Block

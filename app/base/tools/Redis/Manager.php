@@ -16,7 +16,6 @@ namespace App\Base\Tools\Redis;
 use Psr\Container\ContainerInterface;
 use App\Base\Abstracts\ContainerAwareObject;
 use Degami\Basics\Exceptions\BasicException;
-use Exception;
 use Redis as RedisClient;
 
 /**

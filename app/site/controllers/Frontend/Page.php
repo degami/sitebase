@@ -13,8 +13,6 @@
 
 namespace App\Site\Controllers\Frontend;
 
-use App\Base\Abstracts\Controllers\BaseHtmlPage;
-use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;

@@ -27,8 +27,6 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use App\Site\Models\AdminActionLog;
 use App\App;
-use App\Base\Controllers\Dummy\NullPage;
-use League\Plates\Template\Func;
 use Throwable;
 
 /**

@@ -14,8 +14,6 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
-use App\Site\Models\User2Fa;
-use App\Site\Models\User;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;

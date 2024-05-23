@@ -14,7 +14,6 @@
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Exceptions\PermissionDeniedException;
-use App\Site\Controllers\Frontend\Page;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;

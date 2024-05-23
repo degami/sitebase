@@ -24,7 +24,6 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validator;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;

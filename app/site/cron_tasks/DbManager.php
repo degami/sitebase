@@ -15,7 +15,6 @@ namespace App\Site\Cron\Tasks;
 
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use Psr\Container\ContainerInterface;
 use App\Base\Abstracts\ContainerAwareObject;
 use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Compressors\GzipCompressor;

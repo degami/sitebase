@@ -13,24 +13,18 @@
 
 namespace App\Base\Abstracts\Models;
 
-use App\App;
 use ArrayAccess;
 use DebugBar\DebugBar;
-use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use IteratorAggregate;
-use LessQL\Database;
 use LessQL\Result;
-use LessQL\Row;
-use PDOStatement;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Tools\DataCollector\CollectionDataCollector;
-use Exception;
 
 /**
  * A LessQL Collection

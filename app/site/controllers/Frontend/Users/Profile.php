@@ -22,8 +22,6 @@ use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Profile" Logged Page

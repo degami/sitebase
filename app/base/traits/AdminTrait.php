@@ -13,7 +13,6 @@
 
 namespace App\Base\Traits;
 
-use App\Site\Models\User;
 use App\Site\Routing\Crud;
 use App\Site\Routing\RouteInfo;
 use App\Site\Routing\Web;

@@ -14,8 +14,6 @@
 namespace App\Base\Abstracts;
 
 use App\Base\Exceptions\InvalidValueException;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Psr\Container\ContainerInterface;
 use App\Base\Traits\ToolsTrait;
 use App\Base\Traits\ContainerAwareTrait;

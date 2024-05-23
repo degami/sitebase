@@ -13,7 +13,6 @@
 
 namespace App\Base\Overrides\Migrations;
 
-use Genkgo\Migrations\Collection as GenkgoMigrationCollection;
 use Genkgo\Migrations\Log;
 use Genkgo\Migrations\AdapterInterface;
 use Genkgo\Migrations\MigrationInterface;

@@ -13,7 +13,6 @@
 
 namespace App\Site\Controllers\Frontend;
 
-use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;

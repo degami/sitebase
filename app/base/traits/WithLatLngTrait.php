@@ -13,9 +13,6 @@
 
 namespace App\Base\Traits;
 
-use App\Base\Abstracts\Models\BaseModel;
-use App\Base\Abstracts\Models\ModelWithChildren;
-
 /**
  * Trait for elements with latitude and longitude
  */

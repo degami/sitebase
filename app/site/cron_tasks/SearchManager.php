@@ -21,7 +21,6 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use HaydenPierce\ClassFinder\ClassFinder;
-use Psr\Container\ContainerInterface;
 use App\Base\Abstracts\ContainerAwareObject;
 
 /**

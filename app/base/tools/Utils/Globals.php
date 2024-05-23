@@ -13,7 +13,6 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Site\Models\Language;
 use App\Site\Models\Website;
@@ -23,7 +22,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use FastRoute\Dispatcher;
 use GuzzleHttp\Exception\GuzzleException;
-use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;

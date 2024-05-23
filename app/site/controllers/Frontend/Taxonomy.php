@@ -13,13 +13,11 @@
 
 namespace App\Site\Controllers\Frontend;
 
-use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Site\Models\Taxonomy as TaxonomyModel;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Taxonomy Term Detail Page

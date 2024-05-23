@@ -14,7 +14,6 @@
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Abstracts\Models\BaseModel;
-use App\Base\Tools\Utils\Globals;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;

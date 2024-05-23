@@ -18,7 +18,6 @@ use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\LoggedUserPage;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

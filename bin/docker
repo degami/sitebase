@@ -57,6 +57,11 @@ fi
 
 cd $root_dir/docker
 
+
+if [[ ! -e .env ]]; then
+  cp .env.sample .env
+fi
+
 case "$1" in
   build)
       if [[ $(dockerps web) = 1 ]]; then

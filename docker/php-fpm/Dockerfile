@@ -16,4 +16,4 @@ RUN chmod 775 /usr/local/bin/composer
 
 CMD ["php-fpm"]
 
-EXPOSE 9003
+#EXPOSE 9003

@@ -1,9 +1,16 @@
 version: '3'
+
 networks:
   sitebasenet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${IPV4_CLASS}.0.0/16
+#          gateway: ${IPV4_CLASS}.0.254
 
 services:
   php-fpm:
+    user: "${UID}:${GID}"
     build:
       context: ./php-fpm
     volumes:
@@ -13,14 +20,34 @@ services:
       - ./php-fpm/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ..:/var/www/html
     networks:
-      - sitebasenet
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.2
     depends_on:
       - database
       - elasticsearch
       - mailhog
       - redis
+#    ports:
+#      - 9003:9003
+    env_file:
+      - ./.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+  database:
+    build:
+      context: ./database
+    volumes:
+      - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql
+      - ./database/docker.cnf:/etc/mysql/conf.d/docker.cnf:ro
+      - ./database/data:/var/lib/mysql
+      - ..:/var/www/html
+    networks:
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.3
+    env_file:
+      - ./.env
     ports:
-      - 9003:9003
+      - 3306:3306
   redis:
     image: redis:6.2-alpine
     restart: always
@@ -28,26 +55,8 @@ services:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
     networks:
-      - sitebasenet
-  database:
-    build:
-      context: ./database
-    environment:
-      - MYSQL_DATABASE=sitebase
-      - MYSQL_USER=myuser
-      - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=docker
-    volumes:
-      - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql
-      - ./database/docker.cnf:/etc/mysql/conf.d/docker.cnf:ro
-      - ./database/data:/var/lib/mysql
-      - ..:/var/www/html
-    networks:
-      - sitebasenet
-    env_file:
-      - ../.env
-    ports:
-      - 3306:3306
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.4
   elasticsearch:
     image: blacktop/elasticsearch
     volumes:
@@ -55,7 +64,8 @@ services:
     ports:
       - 9200:9200
     networks:
-      - sitebasenet
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.5
   mailhog:
     image: mailhog/mailhog
     logging:
@@ -64,7 +74,8 @@ services:
       - 1025:1025 # smtp server
       - 8025:8025 # web ui
     networks:
-      - sitebasenet
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.6
   web:
     build:
       context: ./nginx
@@ -81,6 +92,7 @@ services:
       - 80:80
       - 443:443
     networks:
-      - sitebasenet
-    environment:
-      SITEHOST: local.sitebase
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.7
+    env_file:
+      - ./.env

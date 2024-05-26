@@ -153,6 +153,7 @@ class Cron extends AdminManageModelsPage
             'icon' => 'watch',
             'text' => 'Cron Tasks',
             'section' => 'system',
+            'order' => 8,
         ];
     }
 

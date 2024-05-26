@@ -79,6 +79,7 @@ class Websites extends AdminManageModelsPage
             'icon' => 'globe',
             'text' => 'Websites',
             'section' => 'system',
+            'order' => 3,
         ];
     }
 

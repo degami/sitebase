@@ -79,6 +79,7 @@ class Config extends AdminManageModelsPage
             'icon' => 'sliders',
             'text' => 'Config',
             'section' => 'system',
+            'order' => 1,
         ];
     }
 

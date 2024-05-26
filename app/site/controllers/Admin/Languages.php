@@ -79,6 +79,7 @@ class Languages extends AdminManageModelsPage
             'icon' => 'flag',
             'text' => 'Languages',
             'section' => 'system',
+            'order' => 2,
         ];
     }
 

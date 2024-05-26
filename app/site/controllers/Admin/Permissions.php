@@ -73,7 +73,7 @@ class Permissions extends AdminFormPage
             'icon' => 'key',
             'text' => 'Permissions',
             'section' => 'system',
-            'order' => 10,
+            'order' => 4,
         ];
     }
 

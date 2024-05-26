@@ -80,6 +80,7 @@ class Users extends AdminManageModelsPage
             'icon' => 'user',
             'text' => 'Users',
             'section' => 'system',
+            'order' => 4,
         ];
     }
 

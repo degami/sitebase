@@ -79,6 +79,7 @@ class Queue extends AdminManageModelsPage
             'icon' => 'truck',
             'text' => 'Queue',
             'section' => 'system',
+            'order' => 7,
         ];
     }
 

@@ -61,6 +61,7 @@ class Logs extends AdminPage
             'icon' => 'info',
             'text' => 'Logs',
             'section' => 'system',
+            'order' => 8,
         ];
     }
 

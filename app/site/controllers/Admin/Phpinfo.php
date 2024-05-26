@@ -41,7 +41,7 @@ class Phpinfo extends AdminPage
      */
     protected function getAccessPermission(): string
     {
-        return 'administer_site';
+        return 'system_info';
     }
 
     /**

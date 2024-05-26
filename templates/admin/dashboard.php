@@ -46,7 +46,9 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
             <div class="counter"><hr /></div>
             <div class="counter"><label><?= $this->sitebase()->translate('Page Views');?></label> <?= $page_views;?></div>
             <div class="counter"><label><?= $this->sitebase()->translate('Mails sent');?></label> <?= $mails_sent;?></div>
-            <div><a href="<?= $this->sitebase()->getUrl('admin.stats');?>"><?= $this->sitebase()->translate('Stats');?></a></div>
+            <?php if ($controller->checkPermission('administer_logs')) :?>
+                <div><a href="<?= $this->sitebase()->getUrl('admin.stats');?>"><?= $this->sitebase()->translate('Stats');?></a></div>
+            <?php endif; ?>
         </div>
     </div>
 </div>

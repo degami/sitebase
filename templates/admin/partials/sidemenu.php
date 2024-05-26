@@ -1,9 +1,23 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var array $links
  */
 
  $links = $this->sitebase()->getAdminSidebarMenu();
+
+foreach ($links as $sectionName => $sectionLinks) {
+    $sectionLinks = array_filter(array_map(function ($link) use ($controller) {
+        if (empty($link['permission_name']) || $controller->checkPermission($link['permission_name'])) {
+            return $link;
+        }
+        return false;
+    }, $sectionLinks));
+
+    if (empty($sectionLinks)) {
+        unset($links[$sectionName]);
+    }
+}
 
 ?>
 <ul class="nav flex-column">

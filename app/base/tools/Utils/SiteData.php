@@ -608,6 +608,11 @@ class SiteData extends ContainerAwareObject
         }
 
         foreach ($links as $sectionName => $sectionLinks) {
+            if (empty($sectionLinks)) {
+                unset($links[$sectionName]);
+                continue;
+            }
+
             usort($links[$sectionName], function ($a, $b) {
                 if (isset($a['order']) && isset($b['order'])) {
                     return $a['order'] <=> $b['order'];

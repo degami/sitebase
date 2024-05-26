@@ -186,6 +186,8 @@ class InitialDataMigration extends BaseMigration
         // admin only permissions
         $permissions = [
             'administer_site',
+            'administer_configuration',
+            'administer_websites',
             'administer_users',
             'administer_permissions',
             'administer_pages',
@@ -202,6 +204,7 @@ class InitialDataMigration extends BaseMigration
             'administer_queue',
             'administer_news',
             'administer_sitemaps',
+            'system_info',
         ];
         foreach ($permissions as $permission_name) {
             $this->addPermission($admin_role_model, $permission_name);

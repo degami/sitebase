@@ -43,7 +43,7 @@ class Websites extends AdminManageModelsPage
      */
     protected function getAccessPermission(): string
     {
-        return 'administer_site';
+        return 'administer_websites';
     }
 
     /**

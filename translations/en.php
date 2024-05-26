@@ -116,4 +116,6 @@ return [
     'View' => 'View',
     'Translations' => 'Translations',
     'Usage' => 'Usage',
+    'Admin Actions' => 'Admin Actions',
+    'Admin Actions Logs' => 'Admin Actions Logs',
 ];

@@ -116,4 +116,6 @@ return [
     'View' => 'Vedi',
     'Translations' => 'Traduzioni',
     'Usage' => 'Utilizzo',
+    'Admin Actions' => 'Azioni Amministratore',
+    'Admin Actions Logs' => 'Registro Azioni Amministrazione',
 ];

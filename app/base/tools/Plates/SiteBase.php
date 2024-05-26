@@ -267,9 +267,9 @@ class SiteBase implements ExtensionInterface
      * @return void
      * @throws BasicException
      */
-    public function drawIcon(string $icon_name): void
+    public function drawIcon(string $icon_name, $attributes = []): void
     {
-        echo $this->getHtmlRenderer()->getIcon($icon_name);
+        echo $this->getHtmlRenderer()->getIcon($icon_name, $attributes);
     }
 
     /**

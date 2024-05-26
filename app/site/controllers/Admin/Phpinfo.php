@@ -88,7 +88,16 @@ class Phpinfo extends AdminPage
         }
 
         $style = preg_replace("/body {.*?}/msi","",$style);
-        $style = implode("\n", array_map(fn($line) => ".phpinfo ".$line, array_filter(explode("\n", $style))));
+        $style = implode("\n", array_map(function($line) {
+            $line = trim ($line);
+            if (str_starts_with($line, "table")) {
+                $line = preg_replace("/width: .*?;/", "width: 100%;", $line);
+            }
+            if (str_starts_with($line, "td")) {
+                $line = preg_replace("/font-size: .*?;/", "font-size: 100%;", $line);
+            }
+            return ".phpinfo ".$line;
+        } , array_filter(explode("\n", $style))));
 
         $this->template_data = [
             'php_info' => '<div class="phpinfo">'.$phpinfo.'</div>',

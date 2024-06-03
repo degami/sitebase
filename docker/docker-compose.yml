@@ -33,6 +33,7 @@ services:
       - ./.env
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    restart: unless-stopped
   database:
     build:
       context: ./database
@@ -48,15 +49,16 @@ services:
       - ./.env
     ports:
       - 3306:3306
+    restart: unless-stopped
   redis:
     image: redis:6.2-alpine
-    restart: always
     ports:
       - '6379:6379'
     command: redis-server --save 20 1 --loglevel warning
     networks:
       sitebasenet:
         ipv4_address: ${IPV4_CLASS}.0.4
+    restart: unless-stopped
   elasticsearch:
     image: blacktop/elasticsearch
     volumes:
@@ -66,6 +68,7 @@ services:
     networks:
       sitebasenet:
         ipv4_address: ${IPV4_CLASS}.0.5
+    restart: unless-stopped
   mailhog:
     image: mailhog/mailhog
     logging:
@@ -76,6 +79,7 @@ services:
     networks:
       sitebasenet:
         ipv4_address: ${IPV4_CLASS}.0.6
+    restart: unless-stopped
   web:
     build:
       context: ./nginx
@@ -96,3 +100,4 @@ services:
         ipv4_address: ${IPV4_CLASS}.0.7
     env_file:
       - ./.env
+    restart: unless-stopped

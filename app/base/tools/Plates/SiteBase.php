@@ -26,6 +26,7 @@ use League\Plates\Engine;
 use League\Plates\Extension\ExtensionInterface;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\App;
+use App\Base\Abstracts\Controllers\AdminPage;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 
@@ -342,8 +343,8 @@ class SiteBase implements ExtensionInterface
      *
      * @return array
      */
-    public function getAdminSidebarMenu() : array
+    public function getAdminSidebarVisibleLinks(AdminPage $controller) : array
     {
-        return $this->getSiteData()->getAdminSidebarMenu();
+        return $this->getSiteData()->getAdminSidebarVisibleLinks($controller);
     }
 }

@@ -14,6 +14,8 @@
 namespace App\Base\Tools\Utils;
 
 use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Controllers\AdminPage;
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Models\Block;
 use App\Site\Models\Configuration;
 use App\Site\Models\Menu;
@@ -622,6 +624,26 @@ class SiteData extends ContainerAwareObject
         }
 
         ksort($links);
+        return $links;
+    }
+
+    public function getAdminSidebarVisibleLinks(AdminPage $controller)
+    {
+        $links = $this->getAdminSidebarMenu();
+
+        foreach ($links as $sectionName => $sectionLinks) {
+            $sectionLinks = array_filter(array_map(function ($link) use ($controller) {
+                if (empty($link['permission_name']) || $controller->checkPermission($link['permission_name'])) {
+                    return $link;
+                }
+                return false;
+            }, $sectionLinks));
+        
+            if (empty($sectionLinks)) {
+                unset($links[$sectionName]);
+            }
+        }
+
         return $links;
     }
 }

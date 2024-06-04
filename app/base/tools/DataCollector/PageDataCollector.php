@@ -65,7 +65,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
             self::NAME => [
                 "icon" => "file-alt",
                 "tooltip" => "Page Variables",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
+                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => self::NAME,
                 "default" => "''"
             ]

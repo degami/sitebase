@@ -52,7 +52,7 @@ class RedisDataCollector extends DataCollector implements Renderable, AssetProvi
                 'port' => $this->subject->getPort(),
                 'database' => $this->subject->getDBNum(),
                 'dbsize' => $this->subject->dbSize(),
-                'keys' => json_encode($this->subject->keys('*')),
+                'keys' => '<ul><li>'.implode('</li><li>', $this->subject->keys('*')).'</li></ul>',
             ],
             'n_keys' => count($this->subject->keys('*'))
         ];
@@ -79,7 +79,7 @@ class RedisDataCollector extends DataCollector implements Renderable, AssetProvi
             self::NAME => [
                 "icon" => "file-alt",
                 "tooltip" => "Redis Data",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
+                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => self::NAME.'.info',
                 "default" => "[]"
             ],

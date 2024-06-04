@@ -157,12 +157,14 @@ class User extends AccountModel
         $this->checkLoaded();
 
 
-        $tokenData = $this->getContainer()->get('utils')->getTokenUserDataClaim();
+        $tokenData = $this->getUtils()->getTokenUserDataClaim();
+        if (is_object($tokenData)) {
+            $tokenData = (array) $tokenData;
+        }
 
         /** @var Builder $builder */
         //$builder = $this->getContainer()->get('jwt:builder');
         $builder = $this->getContainer()->get('jwt:configuration')->builder();
-
 
         $userData = [
             'id' => $this->getId(),
@@ -178,7 +180,7 @@ class User extends AccountModel
         ];
 
         // add existing data if user is the same
-        if ($tokenData && $this->getId() == $tokenData->id) {
+        if ($tokenData && $this->getId() == $tokenData['id']) {
             $userData += $tokenData;
         }
 

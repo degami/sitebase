@@ -47,7 +47,9 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
             'username' => $this->subject?->getUsername(),
             'since' => ($this->subject instanceof GuestUser) ? null : $this->subject?->getCreatedAt(),
             'role' => $this->subject?->getRole()?->getName(),
+            'permissions' => '<ul><li>'. implode('</li><li>', array_map(fn ($permission) => $permission->name, $this->subject?->getRole()->getPermissionsArray())) . '</li><li>',
             'session' => $this->subject?->getUserSession()?->getSessionData(),
+            'jwt' => $this->subject?->getJWT(),
         ];
     }
 
@@ -72,7 +74,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
             self::NAME => [
                 "icon" => "file-alt",
                 "tooltip" => "User Data",
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
+                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => self::NAME,
                 "default" => "''"
             ]

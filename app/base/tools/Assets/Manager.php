@@ -13,6 +13,7 @@
 
 namespace App\Base\Tools\Assets;
 
+use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Field;
@@ -22,6 +23,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\Basics\Html\TagElement;
+use finfo;
 
 /**
  * Assets manager
@@ -337,6 +339,17 @@ class Manager extends ContainerAwareObject
             $domain_prefix = $this->getSiteData()->getConfigValue(self::ASSETS_DOMAIN_PATH, $website_id, $locale);
             if (empty($domain_prefix)) {
                 $domain_prefix = $this->getWebRouter()->getUrl('frontend.root');
+            }
+        }
+
+        // check if file is found, add query string to avoid browser caching
+        $filesystemPath = App::getDir(App::WEBROOT).DIRECTORY_SEPARATOR.str_replace("/", DIRECTORY_SEPARATOR, $asset_path);
+        if (file_exists($filesystemPath)) {
+            $mtime = filemtime($filesystemPath);
+            $parsed = parse_url(rtrim($domain_prefix, "/") . "/" . ltrim($asset_path, "/"));
+            if ($parsed) {
+                parse_str($parsed['query'] ?? "", $existingQuery);
+                return $parsed['scheme'].'://'.$parsed['host'].$parsed['path'].'?'.http_build_query($existingQuery + ['_ver' => $mtime]);
             }
         }
 

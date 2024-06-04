@@ -14,7 +14,10 @@ $this->layout('frontend::layout', ['title' => 'Links'] + get_defined_vars()) ?>
         <ul class="links_exchange">
             <?php foreach ($links as $key => $link_exchange) :?>
                 <li>
-                    <a href="<?= $link_exchange->getUrl(); ?>" rel="nofollow" target="_blank" class="link-url"><?= $link_exchange->getUrl(); ?></a>
+                    <a href="<?= $link_exchange->getUrl(); ?>" rel="nofollow" target="_blank" class="link-url">
+                        <img style="max-width: 1em; vertical-align: baseline;" src="<?= $link_exchange->getDomain(); ?>/favicon.ico" />
+                        <?= $link_exchange->getUrl(); ?>
+                    </a>
                     <span class="link-title"><?= $link_exchange->getTitle(); ?></span>
                     <span class="link-description"><?= $link_exchange->getDescription(); ?></span>
                 </li>

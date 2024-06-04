@@ -1,5 +1,7 @@
 .idea
 .phpdoc
+.npm
+.ash_history
 composer.lock
 package-lock.json
 patches.lock.json

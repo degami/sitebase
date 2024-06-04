@@ -109,4 +109,10 @@ class LinkExchange extends BaseModel
         )->delete();
         return $this;
     }
+
+    public function getDomain()
+    {
+        $parsed = parse_url($this->getUrl());
+        return $parsed['scheme'].'://'.$parsed['host'];
+    }
 }

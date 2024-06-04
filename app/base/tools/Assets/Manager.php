@@ -23,7 +23,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\Basics\Html\TagElement;
-use finfo;
 
 /**
  * Assets manager
@@ -347,7 +346,7 @@ class Manager extends ContainerAwareObject
         if (file_exists($filesystemPath)) {
             $mtime = filemtime($filesystemPath);
             $parsed = parse_url(rtrim($domain_prefix, "/") . "/" . ltrim($asset_path, "/"));
-            if ($parsed) {
+            if (is_array($parsed) && isset($parsed['scheme'], $parsed['host'], $parsed['path'])) {
                 parse_str($parsed['query'] ?? "", $existingQuery);
                 return $parsed['scheme'].'://'.$parsed['host'].$parsed['path'].'?'.http_build_query($existingQuery + ['_ver' => $mtime]);
             }

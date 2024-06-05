@@ -2,7 +2,7 @@
 .phpdoc
 .npm
 .composer
-.rdn
+.rnd
 .ash_history
 composer.lock
 package-lock.json

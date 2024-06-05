@@ -183,6 +183,22 @@
             var href = $(btn).attr('href');
             document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
+        askChatGPT: function(text) {
+            var chatGPTUrl = $(this).appAdmin('getSettings').chatGPTUrl;
+
+            $.ajax({
+                type: "POST",
+                url: chatGPTUrl,
+                data: JSON.stringify({'prompt': text}),
+                processData: false,
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                }
+            });
+        },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD
         update : function( content ) {  }// !!!
@@ -191,5 +207,6 @@
     $.fn.appAdmin.defaults = {
         'checkLoggedUrl': null,
         'logoutUrl': null,
+        'chatGPTUrl': null,
     }
 })(jQuery);

@@ -285,6 +285,45 @@ class SiteData extends ContainerAwareObject
     }
 
     /**
+     * sets config value
+     *
+     * @param string $config_path
+     * @param int|null $website_id
+     * @param string|null $locale
+     * @return bool
+     */
+    public function setConfigValue(string $config_path, mixed $value, $website_id = null, $locale = null) : bool
+    {
+        if ($website_id == null) {
+            $website_id = $this->getCurrentWebsiteId();
+        }
+
+        if ($locale == null && $this->getContainer()->has('app')) {
+            $locale = $this->getApp()->getCurrentLocale();
+        }
+
+        if ($locale == null) {
+            $locale = static::DEFAULT_LOCALE;
+        }
+
+        try {
+            $result = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])]]);
+            if ($result instanceof Configuration) {
+                $result->setValue($value);
+                $result->persist();
+            }
+        } catch (Exception $e) {
+            return false;
+        }
+
+        // refresh configuration
+        $this->getCache()->delete(self::CONFIGURATION_CACHE_KEY);
+        $this->preloadConfiguration();
+
+        return true;
+    }
+
+    /**
      * gets homepage page id
      *
      * @param null $website_id

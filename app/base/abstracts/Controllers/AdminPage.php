@@ -153,6 +153,7 @@ abstract class AdminPage extends BaseHtmlPage
                 [
                     'checkLoggedUrl' => $this->getUrl('crud.app.site.controllers.admin.json.checksession'),
                     'logoutUrl' => $this->getUrl('admin.logout'),
+                    'chatGPTUrl' => $this->getUrl('crud.app.site.controllers.admin.json.chatgpt'),
                 ]
             ) . ");"
         );

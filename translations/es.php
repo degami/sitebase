@@ -118,4 +118,5 @@ return [
     'Usage' => 'Uso',
     'Admin Actions' => 'Acciones de administrador',
     'Admin Actions Logs' => 'Registros de acciones de administrador',
+    'Links exchange' => 'Intercambio de enlaces',
 ];

@@ -118,4 +118,5 @@ return [
     'Usage' => 'Usage',
     'Admin Actions' => 'Admin Actions',
     'Admin Actions Logs' => 'Admin Actions Logs',
+    'Links exchange' => 'Links exchange',
 ];

@@ -1,6 +1,8 @@
 .idea
 .phpdoc
 .npm
+.composer
+.rdn
 .ash_history
 composer.lock
 package-lock.json

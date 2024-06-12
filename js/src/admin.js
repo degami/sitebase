@@ -199,6 +199,22 @@
                 }
             });
         },
+        askGoogleGemini: function(text) {
+            var googleGeminiUrl = $(this).appAdmin('getSettings').googleGeminiUrl;
+
+            $.ajax({
+                type: "POST",
+                url: googleGeminiUrl,
+                data: JSON.stringify({'prompt': text}),
+                processData: false,
+                contentType: 'application/json',
+                success: function(data) {
+                    console.log(data);
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                }
+            });
+        },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD
         update : function( content ) {  }// !!!
@@ -208,5 +224,6 @@
         'checkLoggedUrl': null,
         'logoutUrl': null,
         'chatGPTUrl': null,
+        'googleGeminiUrl': null,
     }
 })(jQuery);

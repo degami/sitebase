@@ -183,37 +183,43 @@
             var href = $(btn).attr('href');
             document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
-        askChatGPT: function(text) {
-            var chatGPTUrl = $(this).appAdmin('getSettings').chatGPTUrl;
+        askAI: function(type, text, target) {
+            var AIUrl = null;
+            switch(type) {
+                case 'chatGPT':
+                    AIUrl = $(this).appAdmin('getSettings').chatGPTUrl;
+                    break;
+                case 'gemini':
+                    AIUrl = $(this).appAdmin('getSettings').googleGeminiUrl;
+                    break;    
+            }
 
-            $.ajax({
-                type: "POST",
-                url: chatGPTUrl,
-                data: JSON.stringify({'prompt': text}),
-                processData: false,
-                contentType: 'application/json',
-                success: function(data) {
-                    console.log(data);
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                }
-            });
+            if (AIUrl != null) {
+                $.ajax({
+                    type: "POST",
+                    url: AIUrl,
+                    data: JSON.stringify({'prompt': text}),
+                    processData: false,
+                    contentType: 'application/json',
+                    success: function(data) {
+                        if (data.success == true) {
+                            var $target = $(target);
+                            if ($target.is('input')) {
+                                $target.val(data.text);
+                            } else if ($target.is('div,p,span,li,textarea')) {
+                                $target.html(data.text);
+                            }
+                        }
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {}
+                });
+            }
         },
-        askGoogleGemini: function(text) {
-            var googleGeminiUrl = $(this).appAdmin('getSettings').googleGeminiUrl;
-
-            $.ajax({
-                type: "POST",
-                url: googleGeminiUrl,
-                data: JSON.stringify({'prompt': text}),
-                processData: false,
-                contentType: 'application/json',
-                success: function(data) {
-                    console.log(data);
-                },
-                error: function(xhr, ajaxOptions, thrownError) {
-                }
-            });
+        askChatGPT: function(text, target) {
+            $(this).appAdmin('askAI', 'chatGPT', text, target);
+        },
+        askGoogleGemini: function(text, target) {
+            $(this).appAdmin('askAI', 'gemini', text, target);
         },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD

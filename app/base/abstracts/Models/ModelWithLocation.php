@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Models;
 
+use App\App;
 use App\Base\Traits\WithLatLngTrait;
 
 /**
@@ -22,7 +23,13 @@ use App\Base\Traits\WithLatLngTrait;
  * @method float getLongitude();
  * @method float distance(static $other);
  */
-abstract class ModelWithLocation extends BaseModel
+abstract class ModelWithLocation extends FrontendModel
 {
     use WithLatLngTrait;
+
+    public static function getCollection() : BaseCollection
+    {
+        $container = App::getInstance()->getContainer();
+        return $container->make(ModelWithLocationCollection::class, ['className' => static::class]);
+    }
 }

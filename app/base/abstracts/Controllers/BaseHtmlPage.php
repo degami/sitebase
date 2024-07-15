@@ -213,7 +213,7 @@ abstract class BaseHtmlPage extends BasePage
             'value' => json_encode($flash_messages),
             'expire' => time() + 3600,
             'path' => '/',
-            'sameSite' => 'Lax',
+            'sameSite' => Cookie::SAMESITE_LAX,
         ]);
         $this->getResponse()->headers->setCookie($cookie);
 

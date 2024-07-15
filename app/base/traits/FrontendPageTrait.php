@@ -22,7 +22,7 @@ use Exception;
 /**
  * Frontend pages Trait
  */
-trait FrontendTrait
+trait FrontendPageTrait
 {
     use PageTrait;
     use TemplatePageTrait;

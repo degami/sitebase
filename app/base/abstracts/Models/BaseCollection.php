@@ -92,6 +92,24 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
         return $this->stmt;
     }
 
+    public function addSelect($select): static
+    {
+        $this->stmt = $this->getSelect()->select($select);
+        return $this;
+    }
+
+    public function addGroupBy($groupBy): static
+    {
+        $this->stmt = $this->getSelect()->groupBy($groupBy);
+        return $this;
+    }
+
+    public function addHaving($having): static
+    {
+        $this->stmt = $this->getSelect()->having($having);
+        return $this;
+    }
+
     /**
      * adds condition to collection
      *

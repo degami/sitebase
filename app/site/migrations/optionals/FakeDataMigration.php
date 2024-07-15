@@ -23,6 +23,7 @@ use App\Site\Models\MediaElement;
 use App\Site\Models\MediaElementRewrite;
 use App\Site\Models\Menu;
 use App\Site\Models\News as NewsModel;
+use App\Site\Models\Event as EventModel;
 use App\Site\Models\Page;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Taxonomy;
@@ -94,12 +95,14 @@ class FakeDataMigration extends BaseMigration
         $terms = [];
         $pages = [];
         $news = [];
+        $events = [];
         $contacts = [];
         $links = [];
         $images = [];
         $backgrounds = [];
         $links_exchange_rewrites = [];
         $news_list_rewrites = [];
+        $events_list_rewrites = [];
 
         foreach ($this->locales as $locale) {
             $this->menu_names[$locale] = 'primary-menu_' . $locale;
@@ -133,6 +136,39 @@ class FakeDataMigration extends BaseMigration
             }
         }
 
+        $cities = [
+            ['name' => 'New York', 'latitude' => 40.7128, 'longitude' => -74.0060],
+            ['name' => 'London', 'latitude' => 51.5074, 'longitude' => -0.1278],
+            ['name' => 'Tokyo', 'latitude' => 35.6895, 'longitude' => 139.6917],
+            ['name' => 'Sydney', 'latitude' => -33.8688, 'longitude' => 151.2093],
+            ['name' => 'Paris', 'latitude' => 48.8566, 'longitude' => 2.3522],
+            ['name' => 'Berlin', 'latitude' => 52.5200, 'longitude' => 13.4050],
+            ['name' => 'Moscow', 'latitude' => 55.7558, 'longitude' => 37.6173],
+            ['name' => 'Rio de Janeiro', 'latitude' => -22.9068, 'longitude' => -43.1729],
+            ['name' => 'Beijing', 'latitude' => 39.9042, 'longitude' => 116.4074],
+            ['name' => 'Cairo', 'latitude' => 30.0444, 'longitude' => 31.2357],
+            ['name' => 'Mumbai', 'latitude' => 19.0760, 'longitude' => 72.8777],
+            ['name' => 'Buenos Aires', 'latitude' => -34.6037, 'longitude' => -58.3816],
+            ['name' => 'Cape Town', 'latitude' => -33.9249, 'longitude' => 18.4241],
+            ['name' => 'Bangkok', 'latitude' => 13.7563, 'longitude' => 100.5018],
+            ['name' => 'Lagos', 'latitude' => 6.5244, 'longitude' => 3.3792],
+            ['name' => 'Jakarta', 'latitude' => -6.2088, 'longitude' => 106.8456],
+            ['name' => 'Istanbul', 'latitude' => 41.0082, 'longitude' => 28.9784],
+            ['name' => 'Seoul', 'latitude' => 37.5665, 'longitude' => 126.9780],
+            ['name' => 'Mexico City', 'latitude' => 19.4326, 'longitude' => -99.1332],
+            ['name' => 'Nairobi', 'latitude' => -1.2921, 'longitude' => 36.8219],
+            ['name' => 'Singapore', 'latitude' => 1.3521, 'longitude' => 103.8198],
+            ['name' => 'Hong Kong', 'latitude' => 22.3193, 'longitude' => 114.1694],
+            ['name' => 'Madrid', 'latitude' => 40.4168, 'longitude' => -3.7038],
+            ['name' => 'Toronto', 'latitude' => 43.6511, 'longitude' => -79.3835],
+            ['name' => 'San Francisco', 'latitude' => 37.7749, 'longitude' => -122.4194],
+            ['name' => 'Rome', 'latitude' => 41.9028, 'longitude' => 12.4964],
+            ['name' => 'Athens', 'latitude' => 37.9838, 'longitude' => 23.7275],
+            ['name' => 'Lisbon', 'latitude' => 38.7223, 'longitude' => -9.1393],
+            ['name' => 'Kuala Lumpur', 'latitude' => 3.1390, 'longitude' => 101.6869],
+            ['name' => 'Dubai', 'latitude' => 25.276987, 'longitude' => 55.296249]
+        ];
+        
         for ($i = 1; $i <= 15; $i++) {
             $now = new DateTime();
 
@@ -154,6 +190,20 @@ class FakeDataMigration extends BaseMigration
                     $date,
                     $locale,
                     $adminUser
+                );
+            }
+
+            $location = $cities[array_rand($cities)];
+            $date = $now->add(new DateInterval($interval_spec));
+            foreach ($this->locales as $locale) {
+                $events[$locale][] = $this->addEvent(
+                    'Event ' . $i,
+                    str_repeat($this->lorem_ipsum_p, rand(2, 6)),
+                    $date,
+                    $location['latitude'],
+                    $location['longitude'],
+                    $locale,
+                    $adminUser,
                 );
             }
         }
@@ -228,6 +278,17 @@ class FakeDataMigration extends BaseMigration
         }
 
         foreach ($this->locales as $locale) {
+            $rewrite_model = $this->containerMake(Rewrite::class);
+            $rewrite_model->url = '/' . $locale . '/events.html';
+            $rewrite_model->route = '/events';
+            $rewrite_model->locale = $locale;
+            $rewrite_model->website_id = $this->website_id;
+
+            $rewrite_model->persist();
+            $events_list_rewrites[$locale] = $rewrite_model;
+        }
+
+        foreach ($this->locales as $locale) {
             foreach (array_diff($this->locales, [$locale]) as $other_locale) {
                 foreach (['pages', 'terms', 'contacts'] as $array_name) {
                     foreach (${$array_name}[$locale] as $index => $element_from) {
@@ -248,7 +309,7 @@ class FakeDataMigration extends BaseMigration
 
             // links exchange
             foreach (array_diff($this->locales, [$locale]) as $other_locale) {
-                foreach (['links_exchange_rewrites', 'news_list_rewrites'] as $array_name) {
+                foreach (['links_exchange_rewrites', 'news_list_rewrites', 'events_list_rewrites'] as $array_name) {
                     $element_from = ${$array_name}[$locale];
                     $element_to = ${$array_name}[$other_locale];
                     $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
@@ -281,6 +342,12 @@ class FakeDataMigration extends BaseMigration
                 'News',
                 $this->menu_names[$locale],
                 $news_list_rewrites[$locale],
+                $locale
+            );
+            $this->addMenuItem(
+                'Events',
+                $this->menu_names[$locale],
+                $events_list_rewrites[$locale],
                 $locale
             );
             $this->addMenuItem(
@@ -411,6 +478,37 @@ class FakeDataMigration extends BaseMigration
         return $news_model;
     }
 
+    /**
+     * adds a event model
+     *
+     * @param string $title
+     * @param string $content
+     * @param DateTime $date
+     * @param float $latitude
+     * @param float $longitude
+     * @param string $locale
+     * @param User|null $owner_model
+     * @return EventModel
+     * @throws BasicException
+     */
+    private function addEvent(string $title, string $content, DateTime $date, float $latitude, float $longitude, $locale = 'en', ?User $owner_model = null): EventModel
+    {
+        /** @var EventModel $event_model */
+        $event_model = $this->containerCall([EventModel::class, 'new'], ['initial_data' => [
+            'website_id' => $this->website_id,
+            'url' => $this->getUtils()->slugify($title, false),
+            'title' => $title,
+            'locale' => $locale,
+            'content' => $content,
+            'date' => $date,
+            'latitude' => $latitude,
+            'longitude' => $longitude,
+            'user_id' => $owner_model ? $owner_model->getId() : 0,
+        ]]);
+        $event_model->persist();
+
+        return $event_model;
+    }
     /**
      * adds a page model
      *

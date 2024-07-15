@@ -20,7 +20,7 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FormPage;
-use App\Base\Traits\FrontendTrait;
+use App\Base\Traits\FrontendPageTrait;
 use App\Site\Models\User;
 use App\Base\Exceptions\PermissionDeniedException;
 use Symfony\Component\HttpFoundation\Response;
@@ -31,7 +31,7 @@ use Throwable;
  */
 class PasswordForgot extends FormPage
 {
-    use FrontendTrait;
+    use FrontendPageTrait;
 
     /**
      * {@inheritdocs}

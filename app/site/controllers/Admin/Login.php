@@ -150,8 +150,12 @@ class Login extends FormPage
         $this->getAssets()->addCss('.content {background: transparent; border: 0;}');
         $this->getAssets()->addCss('.footer .copy {text-align: center;}');
 
-
+        $template->start('head_styles');
+        echo $this->getAssets()->renderHeadCSS();
+        $template->stop();
+        
         $template->start('head_scripts');
+        echo $this->getAssets()->renderHeadJsScripts();
         echo $this->getAssets()->renderHeadInlineJS();
         $template->stop();
 

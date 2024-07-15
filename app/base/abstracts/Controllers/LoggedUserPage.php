@@ -21,7 +21,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Container\ContainerInterface;
-use App\Base\Traits\FrontendTrait;
+use App\Base\Traits\FrontendPageTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 
 /**
@@ -29,7 +29,7 @@ use App\Base\Exceptions\PermissionDeniedException;
  */
 abstract class LoggedUserPage extends FrontendPage
 {
-    use FrontendTrait;
+    use FrontendPageTrait;
 
     /**
      * @var string page title

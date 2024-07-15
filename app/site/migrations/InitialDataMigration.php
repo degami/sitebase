@@ -203,6 +203,7 @@ class InitialDataMigration extends BaseMigration
             'administer_links',
             'administer_queue',
             'administer_news',
+            'administer_events',
             'administer_sitemaps',
             'system_info',
         ];
@@ -287,6 +288,7 @@ class InitialDataMigration extends BaseMigration
             'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
             'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://' . $website_model->getDomain()],
             'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
+            'app/frontend/date_time_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d H:i'],
         ];
         foreach ($variables as $path => $info) {
             $configuration_model = $this->containerCall([Configuration::class, 'new']);

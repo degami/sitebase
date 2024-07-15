@@ -13,7 +13,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
-use App\Base\Traits\FrontendTrait;
+use App\Base\Traits\FrontendPageTrait;
 use App\Site\Models\Menu;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Website;
@@ -39,7 +39,7 @@ use Throwable;
  */
 abstract class FrontendPage extends BaseHtmlPage
 {
-    use FrontendTrait;
+    use FrontendPageTrait;
 
     /**
      * @var Rewrite|null rewrite
@@ -171,7 +171,12 @@ abstract class FrontendPage extends BaseHtmlPage
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());
         $locale = $template->data()['locale'] ?? $this->getCurrentLocale();
 
+        $template->start('head_styles');
+        echo $this->getAssets()->renderHeadCSS();
+        $template->stop();
+
         $template->start('head_scripts');
+        echo $this->getAssets()->renderHeadJsScripts();
         echo $this->getAssets()->renderHeadInlineJS();
         $template->stop();
 

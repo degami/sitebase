@@ -13,6 +13,9 @@
 
 namespace App\Base\Traits;
 
+use App\Base\Abstracts\Models\BaseCollection;
+use App\Base\Abstracts\Models\ModelWithLocationCollection;
+
 /**
  * Trait for elements with latitude and longitude
  */
@@ -68,5 +71,18 @@ trait WithLatLngTrait
 
       $angle = 2 * asin(sqrt(pow(sin($latDelta / 2), 2) + cos($latFrom) * cos($latTo) * pow(sin($lonDelta / 2), 2)));
       return $angle * $this->EARTHRADIUS;
+    }
+
+    /**
+     * get elements nearby within radius (in meters)
+     */
+    public function nearBy(float $radius) : ModelWithLocationCollection|BaseCollection
+    {
+        $collection = static::getCollection();
+        if (is_callable([$collection, 'withinRange'])) {
+            return $collection->withinRange($this->getLatitude(), $this->getLongitude(), $radius);
+        }
+
+        return $collection;
     }
 }

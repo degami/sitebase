@@ -52,6 +52,16 @@ class Manager extends ContainerAwareObject
     protected array $js = ['encapsulated' => [], 'direct' => []];
 
     /**
+     * @var array head js scripts
+     */
+    protected array $head_js_scripts = [];
+
+    /**
+     * @var array head css
+     */
+    protected $head_css = [];
+
+    /**
      * @var array css
      */
     protected array $css = [];
@@ -76,6 +86,11 @@ class Manager extends ContainerAwareObject
         return $this->head_js;
     }
 
+    public function getHeadJsScripts() : array
+    {
+        return $this->head_js_scripts;
+    }
+
     /**
      * add js
      *
@@ -89,7 +104,7 @@ class Manager extends ContainerAwareObject
     {
         if (!$as_is) {
             if (is_array($js)) {
-                $js = array_filter(array_map(['minify_js', $this], $js));
+                $js = array_filter(array_map(['minifyJs', $this], $js));
             } elseif (is_string($js) && trim($js) != '') {
                 $js = $this->minifyJs($js);
             }
@@ -110,6 +125,23 @@ class Manager extends ContainerAwareObject
         } elseif (is_string($js) && trim($js) != '') {
             $this->{$target}[$section][] = $js;
         }
+
+        return $this;
+    }
+
+    /**
+     * add head js
+     * 
+     * @param string $url javascript url to add
+     * @param array $tagAttributes tag attributes
+     * @return self
+     */
+    public function addHeadJs(string $url, array $tagAttributes = []): Manager
+    {
+        $this->head_js_scripts[] = [
+            'src' => $url,
+            'attributes' => $tagAttributes,
+        ];
 
         return $this;
     }
@@ -257,6 +289,32 @@ class Manager extends ContainerAwareObject
         return '';
     }
 
+    public function renderHeadJsScripts() : string
+    {
+        if (empty($this->head_js_scripts)) {
+            return '';
+        }
+
+
+        $out = '';
+        foreach ($this->head_js_scripts as $headScript) {
+            if (isset($headScript['src']) && $this->isUrl($headScript['src'])) {
+                $options = [
+                    'tag' => 'script',
+                    'type' => 'text/javascript',
+                    'attributes' => [
+                        'class' => '',
+                        'src' => $headScript['src'],
+                    ] + ($headScript['attributes'] ?? []),
+                ];
+
+                $out .= $this->containerMake(TagElement::class, ['options' => $options]);
+            }
+        }
+        
+        return $out;
+    }
+
     /**
      * Add css to element
      *
@@ -271,6 +329,23 @@ class Manager extends ContainerAwareObject
         } elseif (is_string($css) && trim($css) != '') {
             $this->css[] = trim($css);
         }
+
+        return $this;
+    }
+
+    /**
+     * add head css
+     * 
+     * @param string $url css url to add
+     * @param array $tagAttributes tag attributes
+     * @return self
+     */
+    public function addHeadCss(string $url, array $tagAttributes = []): Manager
+    {
+        $this->head_css[] = [
+            'href' => $url,
+            'attributes' => $tagAttributes,
+        ];
 
         return $this;
     }
@@ -316,6 +391,32 @@ class Manager extends ContainerAwareObject
         return '';
     }
 
+    public function renderHeadCSS(): string
+    {
+        if (empty($this->head_css)) {
+            return '';
+        }
+
+
+        $out = '';
+        foreach ($this->head_css as $headStyle) {
+            if (isset($headStyle['href']) && $this->isUrl($headStyle['href'])) {
+                $options = [
+                    'tag' => 'link',
+                    'attributes' => [
+                        'class' => '',
+                        'rel' => 'stylesheet',
+                        'href' => $headStyle['href'],
+                    ] + ($headStyle['attributes'] ?? []),
+                ];
+
+                $out .= $this->containerMake(TagElement::class, ['options' => $options]);
+            }
+        }
+        
+        return $out;
+    }
+
     /**
      * gets url for asset
      *
@@ -353,5 +454,10 @@ class Manager extends ContainerAwareObject
         }
 
         return rtrim($domain_prefix, "/") . "/" . ltrim($asset_path, "/");
+    }
+
+    protected function isUrl($string) : bool 
+    {
+        return filter_var($string, FILTER_VALIDATE_URL) !== false;
     }
 }

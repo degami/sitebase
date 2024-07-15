@@ -17,7 +17,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FormPage;
-use App\Base\Traits\FrontendTrait;
+use App\Base\Traits\FrontendPageTrait;
 use App\Site\Models\User;
 use App\Base\Exceptions\PermissionDeniedException;
 use DI\DependencyException;
@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Login extends FormPage
 {
-    use FrontendTrait;
+    use FrontendPageTrait;
 
     /**
      * {@inheritdocs}

@@ -16,6 +16,7 @@ $this->layout('base::html', get_defined_vars()) ?>
 <?php $this->start('head') ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/bootstrap/css/bootstrap.min.css');?>" />
 <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/jqueryui/themes/base/all.css');?>">
+<?= $this->section('head_styles'); ?>
 <script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/jquery/jquery.min.js');?>"></script>
 <meta name="viewport" content="minimum-scale=1.0, maximum-scale=1.0, width=device-width">
 <?= getenv('DEBUG') ? $debugbarRenderer->renderHead() : ''; ?>

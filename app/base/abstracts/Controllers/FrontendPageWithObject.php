@@ -17,7 +17,7 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use App\Base\Traits\FrontendTrait;
+use App\Base\Traits\FrontendPageTrait;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
@@ -28,7 +28,7 @@ use Throwable;
  */
 abstract class FrontendPageWithObject extends FrontendPage
 {
-    use FrontendTrait;
+    use FrontendPageTrait;
 
     /**
      * {@inheritdocs}

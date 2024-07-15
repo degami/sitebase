@@ -43,7 +43,7 @@ class SiteData extends ContainerAwareObject
     public const THEMENAME_PATH = 'app/frontend/themename';
     public const DEFAULT_LOCALE = 'en';
     public const DATE_FORMAT_PATH = 'app/frontend/date_format';
-
+    public const DATE_TIME_FORMAT_PATH = 'app/frontend/date_time_format';
 
     /**
      * gets current server name
@@ -452,6 +452,22 @@ class SiteData extends ContainerAwareObject
         return $date_format ?: 'Y-m-d';
     }
 
+    /**
+     * gets date format string
+     *
+     * @param null $website_id
+     * @param null $locale
+     * @return string
+     * @throws BasicException
+     * @throws PhpfastcacheSimpleCacheException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getDateTimeFormat($website_id = null, $locale = null): string
+    {
+        $date_format = $this->getSiteData()->getConfigValue(self::DATE_TIME_FORMAT_PATH, $website_id, $locale);
+        return $date_format ?: 'Y-m-d H:i';
+    }
 
     /**
      * gets defined redirects

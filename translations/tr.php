@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Yönetici Eylemleri',
     'Admin Actions Logs' => 'Yönetici Eylem Günlükleri',
     'Links exchange' => 'Bağlantıları değiştir',
+    'Events' => 'Etkinlikler',
+    'Near by Events' => 'Yakındaki Etkinlikler',
+    'distance' => 'mesafe',
 ];

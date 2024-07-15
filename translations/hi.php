@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'व्यवस्थापक क्रियाएँ',
     'Admin Actions Logs' => 'व्यवस्थापक क्रियाएँ लॉग',
     'Links exchange' => 'लिंक विनिमय',
+    'Events' => 'इवेंट्स',
+    'Near by Events' => 'नजदीकी इवेंट्स',
+    'distance' => 'दूरी',
 ];

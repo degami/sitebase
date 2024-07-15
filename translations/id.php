@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Tindakan Admin',
     'Admin Actions Logs' => 'Log Tindakan Admin',
     'Links exchange' => 'Tukar Tautan',
+    'Events' => 'Acara',
+    'Near by Events' => 'Acara Terdekat',
+    'distance' => 'jarak',
 ];

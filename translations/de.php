@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Verwaltungsaktionen',
     'Admin Actions Logs' => 'Aufzeichnungen über Verwaltungsmaßnahmen',
     'Links exchange' => 'Linkaustausch',
+    'Events' => 'Veranstaltungen',
+    'Near by Events' => 'Veranstaltungen in der Nähe',
+    'distance' => 'Entfernung',
 ];

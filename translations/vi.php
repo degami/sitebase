@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Hành động quản trị',
     'Admin Actions Logs' => 'Nhật ký hành động quản trị',
     'Links exchange' => 'Trao đổi liên kết',
+    'Events' => 'Sự kiện',
+    'Near by Events' => 'Sự kiện gần đây',
+    'distance' => 'khoảng cách',
 ];

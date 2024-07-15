@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Adminisztrátori műveletek',
     'Admin Actions Logs' => 'Adminisztrátori műveletek naplói',
     'Links exchange' => 'Linkcsere',
+    'Events' => 'Események',
+    'Near by Events' => 'Közeli Események',
+    'distance' => 'távolság',
 ];

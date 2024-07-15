@@ -119,4 +119,7 @@ return [
     'Admin Actions' => '관리자 작업',
     'Admin Actions Logs' => '관리자 작업 로그',
     'Links exchange' => '링크 교환',
+    'Events' => '이벤트',
+    'Near by Events' => '근처 이벤트',
+    'distance' => '거리',
 ];

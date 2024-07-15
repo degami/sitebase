@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Beheerdersacties',
     'Admin Actions Logs' => 'Beheerdersactie Logs',
     'Links exchange' => 'Links uitwisselen',
+    'Events' => 'Evenementen',
+    'Near by Events' => 'Evenementen in de buurt',
+    'distance' => 'afstand',
 ];

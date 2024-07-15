@@ -25,7 +25,7 @@ $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_def
             <?php foreach ($object->nearBy(10000 * KILOMETER) as $key => $event) :?>
                 <li>
                     <div>
-                        <a href="<?= $event->getFrontendUrl(); ?>" class="news-detail">
+                        <a href="<?= $event->getFrontendUrl(); ?>" class="event-detail">
                             <span class="event-title"><?= $event->getTitle(); ?></span>
                         </a>
                         <span class="event-date"><?= $event->getDate(); ?></span>

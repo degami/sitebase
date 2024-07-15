@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Acțiuni de administrator',
     'Admin Actions Logs' => 'Jurnale de acțiuni de administrator',
     'Links exchange' => 'Schimb de linkuri',
+    'Events' => 'Evenimente',
+    'Near by Events' => 'Evenimente Apropiate',
+    'distance' => 'distanță',
 ];

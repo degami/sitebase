@@ -13,7 +13,7 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Even
             <?php foreach ($events as $key => $event) :?>
                 <li>
                     <div>
-                        <a href="<?= $event->getFrontendUrl(); ?>" class="news-detail">
+                        <a href="<?= $event->getFrontendUrl(); ?>" class="event-detail">
                             <span class="event-title"><?= $event->getTitle(); ?></span>
                         </a>
                         <span class="event-date"><?= $event->getDate(); ?></span>

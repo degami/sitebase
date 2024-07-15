@@ -121,4 +121,7 @@ return [
     'Admin Actions' => 'অ্যাডমিন অ্যাকশনগুলি',
     'Admin Actions Logs' => 'অ্যাডমিন অ্যাকশন লগগুলি',
     'Links exchange' => 'লিঙ্ক বিনিময়',
+    'Events' => 'ইভেন্টস',
+    'Near by Events' => 'নিকটস্থ ইভেন্টস',
+    'distance' => 'দূরত্ব',
 ];

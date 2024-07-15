@@ -119,4 +119,7 @@ return [
     'Admin Actions' => 'Действия администратора',
     'Admin Actions Logs' => 'Журналы действий администратора',
     'Links exchange' => 'Обмен ссылками',
+    'Events' => 'События',
+    'Near by Events' => 'Ближайшие События',
+    'distance' => 'расстояние',
 ];

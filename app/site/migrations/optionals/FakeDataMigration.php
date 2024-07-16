@@ -37,6 +37,7 @@ use Exception;
 use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
+use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * fake data migration
@@ -423,7 +424,7 @@ class FakeDataMigration extends BaseMigration
 
         $rewrites = [];
         foreach ($this->locales as $locale) {
-            foreach (['terms', 'pages', 'contacts', 'links', 'news'] as $array) {
+            foreach (['terms', 'pages', 'contacts', 'links', 'news', 'events'] as $array) {
                 foreach (${$array}[$locale] as $key => $object) {
                     $rewrites[] = $object->getRewrite();
                 }
@@ -448,6 +449,35 @@ class FakeDataMigration extends BaseMigration
                 }
             }
         }
+
+
+        // add all blocks
+        $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');
+
+        foreach ($blockClasses as $blockClass) {
+            $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();
+            if (count($existing_blocks) > 0) {
+                continue;
+            }
+
+            /** @var Block $new_block */
+            $new_block = $this->containerMake(Block::class);
+            $new_block->setRegion(null);
+            $new_block->setTitle(str_replace("App\\Site\\Blocks\\", "", $blockClass));
+            $new_block->setLocale(null);
+            $new_block->setInstanceClass($blockClass);
+            $new_block->setContent(null);
+
+            $new_block->persist();
+        }
+
+        // update blocks positions
+        $this->getDb()->query('UPDATE `block` SET `region` = \'pre_content\', `config` = \'{"add-current":"0"}\', `order` = 1 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\BreadCrumbs\' LIMIT 1;');
+        $this->getDb()->query('UPDATE `block` SET `region` = \'pre_footer\', `config` = \'{"show-language":"none","show-flags":"1"}\', `order` = 1  WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\ChangeLanguage\' LIMIT 1;');
+        $this->getDb()->query('UPDATE `block` SET `region` = \'before_body_close\', `config` = \'{"rewrite_en":"1","rewrite_fr":"1","rewrite_it":"1","rewrite_ro":"1","background-color":"#CECECE","color":"#000000","sticky":"bottom"}\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\CookieNotice\' LIMIT 1;');
+        $this->getDb()->query('UPDATE `block` SET `region` = \'pre_content\', `config` = \'{"fx":"","speed":"","timeout":""}\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\RewriteMedia\' LIMIT 1;');
+        $this->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\Search\' LIMIT 1;'); 
+        $this->getDb()->query('UPDATE `block` SET `region` = \'post_content\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\YearCopy\' LIMIT 1;'); 
     }
 
     /**

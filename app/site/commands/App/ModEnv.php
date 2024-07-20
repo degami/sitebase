@@ -49,8 +49,8 @@ class ModEnv extends BaseCommand
             ->setDefinition(
                 new InputDefinition(
                     [
-                        new InputOption('key', null, InputOption::VALUE_OPTIONAL),
-                        new InputOption('value', null, InputOption::VALUE_OPTIONAL),
+                        new InputOption('key', null, InputOption::VALUE_OPTIONAL,'', null),
+                        new InputOption('value', null, InputOption::VALUE_OPTIONAL,'', null),
                     ]
                 )
             );
@@ -84,7 +84,7 @@ class ModEnv extends BaseCommand
 
                 $old_value = $dotenv[$key] ?? '';
 
-                if ($input->hasOption('key')) {
+                if ($input->getOption('key') != null) {
                     if ($key == $input->getOption('key')) {
                         $value = $input->getOption('value') ?? '';
                     } else {
@@ -121,7 +121,7 @@ class ModEnv extends BaseCommand
             }
         }
 
-        if (!$input->hasOption('key')) {
+        if ($input->getOption('key') == null) {
             $this->renderTitle("new .env file");
             $output->writeln($dotenv);
     

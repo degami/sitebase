@@ -132,5 +132,15 @@ class Event extends ModelWithLocation
         }
 
         return $collection;
-    }    
+    }
+
+    /**
+     * return page title
+     *
+     * @return string
+     */
+    public function getPageTitle(): string
+    {
+        return $this->html_title ?: $this->title;
+    }
 }

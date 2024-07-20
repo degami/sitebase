@@ -17,6 +17,8 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Input\InputDefinition;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Modify Env Command
@@ -43,7 +45,15 @@ class ModEnv extends BaseCommand
      */
     protected function configure()
     {
-        $this->setDescription('Edit .env file');
+        $this->setDescription('Edit .env file')
+            ->setDefinition(
+                new InputDefinition(
+                    [
+                        new InputOption('key', null, InputOption::VALUE_OPTIONAL),
+                        new InputOption('value', null, InputOption::VALUE_OPTIONAL),
+                    ]
+                )
+            );
     }
 
     /**
@@ -71,13 +81,26 @@ class ModEnv extends BaseCommand
                 if (substr($key, 0, 1) == '#' || substr($key, 0, 1) == ';') {
                     continue;
                 }
+
                 $old_value = $dotenv[$key] ?? '';
 
-                $question = new Question($key . ' value? defaults to [' . $old_value . ']');
-                $value = $this->getQuestionHelper()->ask($input, $output, $question);
-                if (trim($value) == '') {
-                    $value = $old_value;
+                if ($input->hasOption('key')) {
+                    if ($key == $input->getOption('key')) {
+                        $value = $input->getOption('value') ?? '';
+                    } else {
+                        $value = $old_value;
+                    }
+                } else {
+                    $question = new Question($key . ' value? defaults to [' . $old_value . ']');
+                    $value = $this->getQuestionHelper()->ask($input, $output, $question);
+                    if (trim($value) == '' && in_array($key, ['ADMIN_EMAIL', 'ADMIN_PASS', 'ADMIN_USER'])) {
+                        $value = $this->keepAsking($key . " can't be empty. ".$key.' value?');
+                    }
+                    if (trim($value) == '') {
+                        $value = $old_value;
+                    }    
                 }
+
                 $values[$key] = $value;
             }
         }
@@ -98,12 +121,13 @@ class ModEnv extends BaseCommand
             }
         }
 
-
-        $this->renderTitle("new .env file");
-        $output->writeln($dotenv);
-
-        if (!$this->confirmSave('Save Config? ')) {
-            return;
+        if (!$input->hasOption('key')) {
+            $this->renderTitle("new .env file");
+            $output->writeln($dotenv);
+    
+            if (!$this->confirmSave('Save Config? ')) {
+                return;
+            }    
         }
 
         file_put_contents('.env', trim($dotenv) . "\n", LOCK_EX);

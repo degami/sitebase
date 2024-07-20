@@ -28,6 +28,7 @@ use Symfony\Component\HttpFoundation\Cookie;
 use League\Plates\Template\Template;
 use App\Site\Routing\RouteInfo;
 use App\Base\Traits\PageTrait;
+use App\Site\Models\Rewrite;
 use Throwable;
 
 /**
@@ -110,8 +111,8 @@ abstract class BaseHtmlPage extends BasePage
     {
         try {
             $template_html = '';
-            $page_cache_key = 'site.fpc.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
-
+            //$page_cache_key = 'site.fpc.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
+            $page_cache_key = $this->getFpcCacheKey();
             if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnv('DEBUG') && $this->getEnv('ENABLE_FPC')) {
                 if ($this->canBeFPC() && $this->getCache()->has($page_cache_key)) {
                     $template_html = $this->getCache()->get($page_cache_key);
@@ -121,7 +122,9 @@ abstract class BaseHtmlPage extends BasePage
             if (empty($template_html)) {
                 $template_html = $this->template->render();
                 if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnv('DEBUG') && $this->getEnv('ENABLE_FPC')) {
-                    $this->getCache()->set($page_cache_key, $template_html);
+                    if ($this->canBeFPC()) {
+                        $this->getCache()->set($page_cache_key, $template_html);
+                    }
                 }
             }
 
@@ -132,6 +135,41 @@ abstract class BaseHtmlPage extends BasePage
         } catch (Throwable $e) {
             return $this->getUtils()->exceptionPage($e, $this->getRequest());
         }
+    }
+
+    /**
+     * gets cache key
+     */
+    public function getCacheKey() : string
+    {
+        if ($this->getRewriteObject() == null) {
+            return 'site.' . $this->getSiteData()->getCurrentWebsiteId() . '.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
+        }
+
+        return 
+            'site.'.$this->getRewriteObject()?->getWebsiteId().
+            '.' . $this->getRewriteObject()?->getLocale() . 
+            '.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
+    }
+
+    /**
+     * gets fpc cache key
+     */
+    public function getFpcCacheKey() : string
+    {
+        return 'fpc.'.$this->getCacheKey();
+    }
+
+    /**
+     * gets rewrite object
+     */
+    public function getRewriteObject() : ?Rewrite
+    {
+        if ($this->getRouteInfo()->getRewrite()) {
+            return $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
+        }
+
+        return null;
     }
 
     /**

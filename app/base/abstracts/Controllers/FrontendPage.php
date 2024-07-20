@@ -379,4 +379,14 @@ abstract class FrontendPage extends BaseHtmlPage
     {
         return true;
     }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return bool
+     */
+    public function canBeFPC(): bool
+    {
+        return true;
+    }    
 }

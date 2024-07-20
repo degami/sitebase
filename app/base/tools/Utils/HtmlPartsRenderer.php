@@ -319,7 +319,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
         $route_info = null;
-        $cache_key = strtolower('site.' . $website_id . '.blocks.' . $region . '.html.' . $locale);
+        $cache_key = strtolower('site.' . $website_id  . '.' . $locale . '.blocks.' . $region);
         if ($current_page) {
             if (method_exists($current_page, 'showBlocks') && $current_page->showBlocks() === false) {
                 return '';
@@ -327,13 +327,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
             $route_info = $current_page->getRouteInfo();
             if ($route_info instanceof RouteInfo) {
-                $cache_key = strtolower('site.' . $website_id . '.' . trim(str_replace("/", ".", $route_info->getRoute()), '.') . '.blocks.' . $region . '.html.' . $locale);
-
+                //$cache_key = strtolower('site.' . $website_id . '.' . trim(str_replace("/", ".", $route_info->getRoute()), '.') . '.blocks.' . $region . '.html.' . $locale);
+                $cache_key = $current_page->getCacheKey() . '.blocks.' . $region;
                 if ($route_info->isAdminRoute()) {
                     $cache_key = null;
                 }
             }
         }
+
         if (!empty($cache_key) && $this->getCache()->has($cache_key)) {
             return $this->getCache()->get($cache_key);
         }

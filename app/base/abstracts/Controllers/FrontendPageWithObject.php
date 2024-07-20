@@ -19,6 +19,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\Traits\FrontendPageTrait;
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Exceptions\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
@@ -83,13 +84,38 @@ abstract class FrontendPageWithObject extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
-     *
-     * @return bool
+     * gets cache key
      */
-    public function canBeFPC(): bool
+    public function getCacheKey() : string
     {
-        return true;
+
+        $website_id = $this->getSiteData()->getCurrentWebsiteId();
+        $locale = $this->getSiteData()->getDefaultLocale();
+
+        $prefix = 'site.'.$website_id.'.'.$locale.'.';
+
+        if ($this->getRewriteObject() != null) {
+            $prefix = 'site'.
+            '.' . $this->getRewriteObject()->getWebsiteId().
+            '.' . $this->getRewriteObject()->getLocale() . 
+            '.';
+        }
+
+        $prefix .= trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
+
+        if ($this->getObject() instanceof FrontendModel) {
+            return $prefix . '.' . $this->getUtils()->slugify($this->getObject()->getUrl(), false);
+        }
+
+        return $prefix . '.id.'. $this->getObject()->getId();
+    }
+
+    /**
+     * gets fpc cache key
+     */
+    public function getFpcCacheKey() : string
+    {
+        return 'fpc.'.$this->getCacheKey();
     }
 
     /**

@@ -37,6 +37,8 @@ class Web extends BaseRouter
 {
     public const ROUTER_TYPE = 'web';
 
+    public const REGEXP_ROUTEVAR_EXPRESSION = ':[^}]+';
+
     /**
      * {@inheritdoc}
      *

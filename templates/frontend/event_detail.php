@@ -11,10 +11,12 @@ $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_def
 <?php $this->stop() ?>
 
 <h1 class="event-title"><?php echo $object->getTitle();?></h1>
-<div class="event-date"><?php echo $object->getDate();?></div>
+<div class="event-map"><?php echo $object->getMap('100%', 300);?></div>
 <div class="event-location">lat: <?php echo $object->getLocation()['latitude'];?>, lon: <?php echo $object->getLocation()['longitude'];?></div>
-<div class="event-content"><?php echo $object->getContent();?></div>
+<div class="event-date"><?php echo $object->getDate();?></div>
+<br />
 
+<div class="event-content"><?php echo $object->getContent();?></div>
 <?= $this->section('content'); ?>
 
 

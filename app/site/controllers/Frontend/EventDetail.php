@@ -16,10 +16,12 @@ namespace App\Site\Controllers\Frontend;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
+use App\Base\Abstracts\Models\ModelWithLocation;
 use App\Site\Models\Event;
 use App\Site\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Exceptions\NotFoundException;
+use App\Base\Abstracts\Controllers\BasePage;
 use Throwable;
 
 /**
@@ -55,6 +57,20 @@ class EventDetail extends FrontendPageWithObject
     protected function getTemplateName(): string
     {
         return 'event_detail';
+    }
+
+    /**
+     * {@inheritdocs}
+     *
+     * @return Response|self
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     */
+    protected function beforeRender() : BasePage|Response
+    {
+        ModelWithLocation::addHeadDependencies();
+
+        return parent::beforeRender();
     }
 
     /**

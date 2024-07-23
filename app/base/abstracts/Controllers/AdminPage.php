@@ -151,10 +151,12 @@ abstract class AdminPage extends BaseHtmlPage
         $this->getAssets()->addJs(
             "\$('#admin').appAdmin(" . json_encode(
                 [
+                    'currentRoute' => $this->getRouteInfo()->getRouteName(),
                     'checkLoggedUrl' => $this->getUrl('crud.app.site.controllers.admin.json.checksession'),
                     'logoutUrl' => $this->getUrl('admin.logout'),
                     'chatGPTUrl' => $this->getUrl('crud.app.site.controllers.admin.json.chatgpt'),
                     'googleGeminiUrl' => $this->getUrl('crud.app.site.controllers.admin.json.googlegemini'),
+                    'uIsettingsUrl' => $this->getUrl('crud.app.site.controllers.admin.json.uisettings'),
                 ]
             ) . ");"
         );

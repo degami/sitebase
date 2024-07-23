@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Routing\RouteInfo;
@@ -26,6 +27,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Html\TagElement;
+use App\Site\Models\User;
 
 /**
  * Base for admin page that manages a Model
@@ -62,6 +64,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     ) {
         parent::__construct($container, $request, $route_info);
         if ($this->template_data['action'] == 'list') {
+            $this->addPaginationSizeSelector();
             $this->addNewButton();
 
             $paginate_params = [
@@ -90,17 +93,41 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
                 $paginate_params['condition'] = array_filter($conditions);
             }
+
+            $itemsPerPage = $this->getItemsPerPage();
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
             $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
             $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
-            $data = $this->containerCall([$collection, 'paginate']);
+            $data = $this->containerCall([$collection, 'paginate'], ['page_size' => $itemsPerPage]);
             $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
                 'current_page' => $data['page'],
-                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
             ];
         }
+    }
+
+    /**
+     * get items per page on listing
+     * 
+     * @return int
+     */
+    protected function getItemsPerPage() : int 
+    {
+        /** @var User $user */
+        $user = $this->getCurrentUser();
+
+        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
+        $currentRoute = $this->getRouteInfo()->getRouteName();
+
+        if (is_array($uiSettings) && isset($uiSettings[$currentRoute])) {
+            if (isset($uiSettings[$currentRoute]['itemsPerPage'])) {
+                return intval($uiSettings[$currentRoute]['itemsPerPage']);
+            }
+        }
+
+        return BaseCollection::ITEMS_PER_PAGE;
     }
 
     /**
@@ -221,6 +248,36 @@ abstract class AdminManageModelsPage extends AdminFormPage
         $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
     }
 
+    public function addPaginationSizeSelector()
+    {
+        // calculate options values, including value used for pagination
+        $options = array_unique(array_merge([10, 25, 50, 200, 500], [$this->getItemsPerPage()]));
+        sort($options);
+
+        $select = $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'select',
+            'id' => 'pagination-size-selector',
+            'attributes' => [
+                'class' => 'paginator-items-choice',
+                'style' => 'width: 50px',
+            ],
+            'children' => array_map(function($val) {
+                $selected = [];
+                if ($val == $this->getItemsPerPage()) {
+                    $selected = ['selected' => 'selected'];
+                }
+                return $this->containerMake(TagElement::class, ['options' => [
+                    'tag' => 'option',
+                    'value' => $val,
+                    'attributes' => [
+                        'class' => '',
+                    ] + $selected,
+                    'text' => $val,
+                ]]);
+            }, $options),
+        ]]);
+        $this->action_buttons[] = __('Items per page'). ':' . $select;
+    }
 
     /**
      * gets action button html

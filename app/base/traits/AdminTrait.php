@@ -118,7 +118,7 @@ trait AdminTrait
                     TagElement::class,
                     ['options' => [
                         'tag' => 'li',
-                        'attributes' => ['class' => 'nav-item ml-1'],
+                        'attributes' => ['class' => 'nav-item ml-1 text-nowrap'],
                         'text' => $button_html
                     ]]
                 )

@@ -104,6 +104,22 @@ class UserSession extends BaseModel
     }
 
     /**
+     * gets session data by key
+     * 
+     * @param string $key
+     * @return mixed
+     */
+    public function getSessionKey(string $key): mixed
+    {
+        $session_data = $this->getNormalizedSessionData();
+        if (array_key_exists($key, $session_data)) {
+            return $session_data[$key];
+        }
+
+        return null;
+    }
+
+    /**
      * sets input array values as session values
      *
      * @param array $data

@@ -29,7 +29,19 @@
 
                 $elem.data('appAdmin', instance);
 
-                $('select:not(".select2-processed")', $elem).select2({'width':'100%'}).addClass('select2-processed');
+                $('select:not(".select2-processed")', $elem).each(function(index, select){
+                    $(select).select2({'width': $(select).css('width') ? $(select).css('width') : '100%'}).addClass('select2-processed');
+                });
+
+                $('select.paginator-items-choice').on('change', function(){
+                    $elem.appAdmin('updateUserUiSettings', 
+                        {'currentRoute': $elem.appAdmin('getSettings').currentRoute, 'itemsPerPage': $(this).val()},
+                        function (data) {
+                            document.location.reload();
+                        }
+                    );
+                });
+
                 $('a.inToolSidePanel[href]', $elem).click(function(evt){
                     if($(this).attr('href') != '#') {
                        evt.preventDefault();
@@ -221,6 +233,18 @@
         askGoogleGemini: function(text, target) {
             $(this).appAdmin('askAI', 'gemini', text, target);
         },
+        updateUserUiSettings: function(settings, succesCallback) {
+            var uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
+            $.ajax({
+                type: "POST",
+                url: uIsettingsUrl,
+                data: JSON.stringify(settings),
+                processData: false,
+                contentType: 'application/json',
+                success: succesCallback,
+                error: function(xhr, ajaxOptions, thrownError) {}
+            });
+        },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD
         update : function( content ) {  }// !!!
@@ -231,5 +255,7 @@
         'logoutUrl': null,
         'chatGPTUrl': null,
         'googleGeminiUrl': null,
+        'uIsettingsUrl': null,
+        'currentRoute': null,
     }
 })(jQuery);

@@ -268,8 +268,18 @@ class SiteBase implements ExtensionInterface
      * @return void
      * @throws BasicException
      */
-    public function drawIcon(string $icon_name, $attributes = []): void
+    public function drawIcon(string $icon_name, $attributes = [], $translateSectionsName = false): void
     {
+        if ($translateSectionsName == true) {
+            $icon_name = match($icon_name) {
+                'main' => 'award',
+                'cms' => 'feather',
+                'site' => 'layout',
+                'system' => 'settings',
+                default => $icon_name
+            };    
+        }
+
         echo $this->getHtmlRenderer()->getIcon($icon_name, $attributes);
     }
 

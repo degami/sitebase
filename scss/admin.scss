@@ -88,54 +88,56 @@ body {
         @media (max-width: 768px) {
             margin-top: 20px;
         }
+    }
 
-        .nav-link {
-            white-space: nowrap;
-            font-weight: 500;
-            font-size: .750rem;
-            color: $color-gray;
-            padding: .4rem 1rem;
 
-            .text {
-                display: inline-block;
-            }
+    .nav-link {
+        white-space: nowrap;
+        font-weight: 500;
+        font-size: .750rem;
+        color: $color-gray;
+        padding: .4rem 1rem;
+        padding-left: 0;
 
-            .feather {
-                margin-right: 4px;
-                color: $color-lightgray;
-            }
-
-            &.active {
-                color: $color-blue;
-            }
-
-            &:hover, &.active {
-                .feather {
-                    color: inherit;
-                }
-            }
+        .text {
+            display: inline-block;
         }
 
-        #sidebar-minimize-btn {
-            position: absolute;
-            bottom: 40px;
-            right: 0;
-            color: $color-black;
-            span {
+        .feather {
+            margin-right: 4px;
+            color: $color-lightgray;
+        }
+
+        &.active {
+            color: $color-blue;
+        }
+
+        &:hover, &.active {
+            .feather {
                 color: inherit;
             }
+        }
+    }
 
-            .close-arrow{
-                display: inline;
-            }
+    #sidebar-minimize-btn {
+        position: absolute;
+        bottom: 40px;
+        right: 0;
+        color: $color-black;
+        span {
+            color: inherit;
+        }
 
-            .open-arrow{
-                display: none;
-            }
+        .close-arrow{
+            display: inline;
+        }
 
-            @media (max-width: 768px) {
-                display: none;
-            }
+        .open-arrow{
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            display: none;
         }
     }
 
@@ -155,7 +157,16 @@ body {
             }
         }
 
-        .nav {
+        .btn-link {
+            .text {
+                display: none;
+                @media (max-width: 768px) {
+                    display: inline-block;
+                }
+            }
+        }
+
+        .nav-item {
             .nav-link {
                 .text {
                     display: none;
@@ -164,16 +175,16 @@ body {
                     }
                 }
             }
+        }
 
-            #sidebar-minimize-btn {
-                outline: none;
-                .close-arrow{
-                    display: none;
-                }
+        #sidebar-minimize-btn {
+            outline: none;
+            .close-arrow{
+                display: none;
+            }
 
-                .open-arrow{
-                    display: inline;
-                }
+            .open-arrow{
+                display: inline;
             }
         }
     }

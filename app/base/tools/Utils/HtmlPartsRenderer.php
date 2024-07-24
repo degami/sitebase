@@ -659,18 +659,38 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
                     $searchqueryparam = (is_array($current_page->getRequest()->query->get('search')) && isset($current_page->getRequest()->query->get('search')[$v['search']])) ? $current_page->getRequest()->query->get('search')[$v['search']] : '';
 
-                    $td = $this->containerMake(
-                        TagElement::class,
-                        ['options' => [
-                            'tag' => 'td',
-                            'attributes' => ['class' => 'small'],
-                            'text' => '<input class="form-control" name="search[' . $v['search'] . ']" value="' . $searchqueryparam . '"/>',
-                        ]]
-                    );
+                    if ($v['search'] == 'locale') {
+                        $select_options = ['' => '-- '.__('All').' --'] + $this->getUtils()->getSiteLanguagesSelectOptions();
+                        $select_options = array_map(function ($val, $key) use ($searchqueryparam) {
+                            $selected = ($key == $searchqueryparam) ? ' selected="selected"': '';
+                            return '<option value="' . $key . '"'.$selected.'>' . $val . '</option>';
+                        }, $select_options, array_keys($select_options));
+    
+
+                        $td = $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'td',
+                                'attributes' => ['class' => 'small'],
+                                'text' => '<select name="search[' . $v['search'] . ']">' . implode("", $select_options) . '</select>',
+                            ]]
+                        );    
+                    } else {
+                        $td = $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'td',
+                                'attributes' => ['class' => 'small'],
+                                'text' => '<input class="form-control" name="search[' . $v['search'] . ']" value="' . $searchqueryparam . '"/>',
+                            ]]
+                        );
+                    }
                     $add_searchrow = true;
                 } else if (is_array($v) && isset($v['foreign']) && boolval($v['foreign']) == true) {
+                    $foreignqueryparam = (is_array($current_page->getRequest()->query->get('foreign')) && isset($current_page->getRequest()->query->get('foreign')[$v['foreign']])) ? $current_page->getRequest()->query->get('foreign')[$v['foreign']] : '';
+
                     $dbtable = $this->getSchema()->getTable($v['table']);
-                    $select_options = [];
+                    $select_options = ['' => '-- '.__('All').' --'];
                     foreach ($dbtable->getForeignKeys() as $fkobj) {
                         if (in_array($v['foreign'], $fkobj->getColumns())) {
                             $foreign_key = $fkobj->getTargetColumns()[0];
@@ -684,8 +704,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         }
                     }
 
-                    $select_options = array_map(function ($val, $key) {
-                        return '<option value="' . $key . '">' . $val . '</option>';
+                    $select_options = array_map(function ($val, $key) use ($foreignqueryparam) {
+                        $selected = ($key == $foreignqueryparam) ? ' selected="selected"': '';
+                        return '<option value="' . $key . '"'.$selected.'>' . $val . '</option>';
                     }, $select_options, array_keys($select_options));
 
                     $td = $this->containerMake(

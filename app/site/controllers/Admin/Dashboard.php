@@ -64,7 +64,7 @@ class Dashboard extends AdminPage
             'route_name' => static::getPageRouteName(),
             'icon' => 'home',
             'text' => 'Dashboard',
-            'section' => '',
+            'section' => 'Main',
         ];
     }
 

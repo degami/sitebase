@@ -49,7 +49,7 @@
         <div class="card-header" id="heading<?= $sectionKey; ?>">
             <h5 class="mb-0">
                 <button class="btn d-block text-left pl-0 shadow-none" data-toggle="collapse" data-target="#collapse<?= $sectionKey; ?>" aria-expanded="true" aria-controls="collapseOne">
-                    <?php $this->sitebase()->drawIcon($sectionKey, [], true); ?> <span class="text"><?= ucfirst(strtolower($this->sitebase()->translate($sectionName)));?></span>
+                    <?php $this->sitebase()->drawIcon($sectionKey, [], true); ?> <span class="text"><?= $this->sitebase()->translate(ucfirst(strtolower($sectionName)));?></span>
                 </button>
             </h5>
         </div>

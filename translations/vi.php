@@ -123,4 +123,8 @@ return [
     'Near by Events' => 'Sự kiện gần đây',
     'distance' => 'khoảng cách',
     'All' => 'Tất cả',
+    'System' => 'Hệ thống',
+    'Cms' => 'Cms',
+    'Site' => 'Trang web',
+    'Main' => 'Chính',
 ];

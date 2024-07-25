@@ -123,4 +123,8 @@ return [
     'Near by Events' => 'Közeli Események',
     'distance' => 'távolság',
     'All' => 'Összes',
+    'System' => 'Rendszer',
+    'Cms' => 'Tartalomkezelő',
+    'Site' => 'Oldal',
+    'Main' => 'Fő',
 ];

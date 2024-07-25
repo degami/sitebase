@@ -123,4 +123,8 @@ return [
     'Near by Events' => '附近的活动',
     'distance' => '距离',
     'All' => '所有',
+    'System' => '系统',
+    'Cms' => '内容管理系统',
+    'Site' => '网站',
+    'Main' => '主要',
 ];

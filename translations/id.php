@@ -123,4 +123,8 @@ return [
     'Near by Events' => 'Acara Terdekat',
     'distance' => 'jarak',
     'All' => 'Semua',
+    'System' => 'Sistem',
+    'Cms' => 'Cms',
+    'Site' => 'Situs',
+    'Main' => 'Utama',
 ];

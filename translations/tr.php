@@ -123,4 +123,8 @@ return [
     'Near by Events' => 'Yakındaki Etkinlikler',
     'distance' => 'mesafe',
     'All' => 'Hepsi',
+    'System' => 'Sistem',
+    'Cms' => 'İçerik Yönetim Sistemi',
+    'Site' => 'Site',
+    'Main' => 'Ana',
 ];

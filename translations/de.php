@@ -123,4 +123,8 @@ return [
     'Near by Events' => 'Veranstaltungen in der Nähe',
     'distance' => 'Entfernung',
     'All' => 'Alle',
+    'System' => 'System',
+    'Cms' => 'Cms',
+    'Site' => 'Seite',
+    'Main' => 'Haupt',
 ];

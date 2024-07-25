@@ -122,4 +122,5 @@ return [
     'Events' => 'Események',
     'Near by Events' => 'Közeli Események',
     'distance' => 'távolság',
+    'All' => 'Összes',
 ];

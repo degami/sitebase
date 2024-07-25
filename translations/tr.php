@@ -122,4 +122,5 @@ return [
     'Events' => 'Etkinlikler',
     'Near by Events' => 'Yakındaki Etkinlikler',
     'distance' => 'mesafe',
+    'All' => 'Hepsi',
 ];

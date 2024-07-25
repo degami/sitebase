@@ -122,4 +122,5 @@ return [
     'Events' => 'Evenimente',
     'Near by Events' => 'Evenimente Apropiate',
     'distance' => 'distanță',
+    'All' => 'Toate',
 ];

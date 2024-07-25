@@ -122,4 +122,5 @@ return [
     'Events' => 'Acara',
     'Near by Events' => 'Acara Terdekat',
     'distance' => 'jarak',
+    'All' => 'Semua',
 ];

@@ -122,4 +122,5 @@ return [
     'Events' => 'Events',
     'Near by Events' => 'Near by Events',
     'distance' => 'distance',
+    'All' => 'All',
 ];

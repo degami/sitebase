@@ -124,4 +124,5 @@ return [
     'Events' => 'ইভেন্টস',
     'Near by Events' => 'নিকটস্থ ইভেন্টস',
     'distance' => 'দূরত্ব',
+    'All' => 'সব',
 ];

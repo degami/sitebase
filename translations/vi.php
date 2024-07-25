@@ -122,4 +122,5 @@ return [
     'Events' => 'Sự kiện',
     'Near by Events' => 'Sự kiện gần đây',
     'distance' => 'khoảng cách',
+    'All' => 'Tất cả',
 ];

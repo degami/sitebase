@@ -122,4 +122,5 @@ return [
     'Events' => 'イベント',
     'Near by Events' => '近くのイベント',
     'distance' => '距離',
+    'All' => 'すべて',
 ];

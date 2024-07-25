@@ -26,6 +26,7 @@ use App\Site\Models\Page;
 use App\Site\Models\News;
 use App\Site\Models\Taxonomy;
 use App\Base\Abstracts\Controllers\AdminPage;
+use App\Site\Models\Event;
 
 /**
  * "Dashboard" Admin Page
@@ -88,6 +89,7 @@ class Dashboard extends AdminPage
             'mails_sent' => MailLog::getCollection()->count(),
             'links' => LinkExchange::getCollection()->count(),
             'news' => News::getCollection()->count(),
+            'events' => Event::getCollection()->count(),
         ];
         return $this->template_data;
     }

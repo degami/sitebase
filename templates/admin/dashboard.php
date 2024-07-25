@@ -38,6 +38,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
             <div class="counter"><label><?= $this->sitebase()->translate('Contact Submissions');?></label> <?= $contact_submissions;?></div>
             <div class="counter"><label><?= $this->sitebase()->translate('Taxonomy Terms');?></label> <?= $taxonomy_terms;?></div>
             <div class="counter"><label><?= $this->sitebase()->translate('News');?></label> <?= $news;?></div>
+            <div class="counter"><label><?= $this->sitebase()->translate('Events');?></label> <?= $events;?></div>
         </div>
         <div class="col-6">
             <div class="counter"><label><?= $this->sitebase()->translate('Links');?></label> <?= $links;?></div>

@@ -127,4 +127,10 @@ return [
     'Cms' => 'Система управления контентом',
     'Site' => 'Сайт',
     'Main' => 'Главный',
+    'Do you confirm lock of selected element?' => 'Вы подтверждаете блокировку выбранного элемента?',
+    'Do you confirm unlock of the selected element?' => 'Вы подтверждаете разблокировку выбранного элемента?',
+    'Lock' => 'Блокировать',
+    'Unlock' => 'Разблокировать',
+    'Is Locked' => 'Заблокировано',
+    'Account locked. try again lated.' => 'Аккаунт заблокирован. попробуйте позже.',
 ];

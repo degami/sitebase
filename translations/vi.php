@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Trang web',
     'Main' => 'Chính',
+    'Do you confirm lock of selected element?' => 'Bạn có xác nhận khóa phần tử đã chọn không?',
+    'Do you confirm unlock of the selected element?' => 'Bạn có xác nhận mở khóa phần tử đã chọn không?',
+    'Lock' => 'Khóa',
+    'Unlock' => 'Mở khóa',
+    'Is Locked' => 'Đã bị khóa',
+    'Account locked. try again lated.' => 'Tài khoản bị khóa. thử lại sau.',
 ];

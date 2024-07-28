@@ -127,4 +127,10 @@ return [
     'Cms' => 'إدارة المحتوى',
     'Site' => 'الموقع',
     'Main' => 'الرئيسي',
+    'Do you confirm lock of selected element?' => 'هل تؤكد قفل العنصر المحدد؟',
+    'Do you confirm unlock of the selected element?' => 'هل تؤكد فتح العنصر المحدد؟',
+    'Lock' => 'قفل',
+    'Unlock' => 'فتح',
+    'Is Locked' => 'مقفل',
+    'Account locked. try again lated.' => 'تم قفل الحساب. حاول مرة أخرى لاحقاً.',
 ];

@@ -127,4 +127,10 @@ return [
     'Cms' => 'コンテンツ管理システム',
     'Site' => 'サイト',
     'Main' => 'メイン',
+    'Do you confirm lock of selected element?' => '選択した要素のロックを確認しますか？',
+    'Do you confirm unlock of the selected element?' => '選択した要素のロック解除を確認しますか？',
+    'Lock' => 'ロック',
+    'Unlock' => 'ロック解除',
+    'Is Locked' => 'ロックされています',
+    'Account locked. try again lated.' => 'アカウントがロックされました。後でもう一度お試しください。',
 ];

@@ -127,4 +127,10 @@ return [
     'Cms' => '콘텐츠 관리 시스템',
     'Site' => '사이트',
     'Main' => '메인',
+    'Do you confirm lock of selected element?' => '선택한 요소의 잠금을 확인하시겠습니까?',
+    'Do you confirm unlock of the selected element?' => '선택한 요소의 잠금 해제를 확인하시겠습니까?',
+    'Lock' => '잠금',
+    'Unlock' => '잠금 해제',
+    'Is Locked' => '잠김 상태입니다',
+    'Account locked. try again lated.' => '계정이 잠겼습니다. 나중에 다시 시도하십시오.',
 ];

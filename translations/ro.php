@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Site',
     'Main' => 'Principal',
+    'Do you confirm lock of selected element?' => 'Confirmați blocarea elementului selectat?',
+    'Do you confirm unlock of the selected element?' => 'Confirmați deblocarea elementului selectat?',
+    'Lock' => 'Blocați',
+    'Unlock' => 'Deblocați',
+    'Is Locked' => 'Este blocat',
+    'Account locked. try again lated.' => 'Cont blocat. încercați din nou mai târziu.',
 ];

@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Site',
     'Main' => 'Hoofd',
+    'Do you confirm lock of selected element?' => 'Bevestigt u het vergrendelen van het geselecteerde element?',
+    'Do you confirm unlock of the selected element?' => 'Bevestigt u het ontgrendelen van het geselecteerde element?',
+    'Lock' => 'Vergrendelen',
+    'Unlock' => 'Ontgrendelen',
+    'Is Locked' => 'Is vergrendeld',
+    'Account locked. try again lated.' => 'Account vergrendeld. probeer het later opnieuw.',
 ];

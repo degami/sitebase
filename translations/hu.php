@@ -127,4 +127,10 @@ return [
     'Cms' => 'Tartalomkezelő',
     'Site' => 'Oldal',
     'Main' => 'Fő',
+    'Do you confirm lock of selected element?' => 'Megerősíti a kiválasztott elem zárolását?',
+    'Do you confirm unlock of the selected element?' => 'Megerősíti a kiválasztott elem feloldását?',
+    'Lock' => 'Zárolás',
+    'Unlock' => 'Feloldás',
+    'Is Locked' => 'Zárolva van',
+    'Account locked. try again lated.' => 'A fiók zárolva. Próbálja újra később.',
 ];

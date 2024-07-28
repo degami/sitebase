@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Site',
     'Main' => 'Main',
+    'Do you confirm lock of selected element?' => 'Do you confirm lock of selected element?',
+    'Do you confirm unlock of the selected element?' => 'Do you confirm unlock of the selected element?',
+    'Lock' => 'Lock',
+    'Unlock' => 'Unlock',
+    'Is Locked' => 'Is Locked',
+    'Account locked. try again lated.' => 'Account locked. try again lated.',
 ];

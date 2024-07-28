@@ -127,4 +127,10 @@ return [
     'Cms' => 'İçerik Yönetim Sistemi',
     'Site' => 'Site',
     'Main' => 'Ana',
+    'Do you confirm lock of selected element?' => 'Seçilen öğenin kilitlendiğini onaylıyor musunuz?',
+    'Do you confirm unlock of the selected element?' => 'Seçilen öğenin kilidini açtığınızı onaylıyor musunuz?',
+    'Lock' => 'Kilit',
+    'Unlock' => 'Kilidi aç',
+    'Is Locked' => 'Kilitli',
+    'Account locked. try again lated.' => 'Hesap kilitlendi. daha sonra tekrar deneyin.',
 ];

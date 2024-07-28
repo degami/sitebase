@@ -127,4 +127,10 @@ return [
     'Cms' => 'सीएमएस',
     'Site' => 'साइट',
     'Main' => 'मुख्य',
+    'Do you confirm lock of selected element?' => 'क्या आप चयनित तत्व के लॉक की पुष्टि करते हैं?',
+    'Do you confirm unlock of the selected element?' => 'क्या आप चयनित तत्व के अनलॉक की पुष्टि करते हैं?',
+    'Lock' => 'लॉक',
+    'Unlock' => 'अनलॉक',
+    'Is Locked' => 'लॉक किया गया है',
+    'Account locked. try again lated.' => 'खाता लॉक कर दिया गया है। बाद में पुनः प्रयास करें।',
 ];

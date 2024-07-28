@@ -127,4 +127,10 @@ return [
     'Cms' => 'Διαχείριση Περιεχομένου',
     'Site' => 'Ιστοσελίδα',
     'Main' => 'Κύριο',
+    'Do you confirm lock of selected element?' => 'Επιβεβαιώνετε το κλείδωμα του επιλεγμένου στοιχείου;',
+    'Do you confirm unlock of the selected element?' => 'Επιβεβαιώνετε το ξεκλείδωμα του επιλεγμένου στοιχείου;',
+    'Lock' => 'Κλείδωμα',
+    'Unlock' => 'Ξεκλείδωμα',
+    'Is Locked' => 'Είναι κλειδωμένο',
+    'Account locked. try again lated.' => 'Ο λογαριασμός κλειδώθηκε. Δοκιμάστε ξανά αργότερα.',
 ];

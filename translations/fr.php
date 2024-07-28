@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Site',
     'Main' => 'Principal',
+    'Do you confirm lock of selected element?' => 'Confirmez-vous le verrouillage de l\'élément sélectionné?',
+    'Do you confirm unlock of the selected element?' => 'Confirmez-vous le déverrouillage de l\'élément sélectionné?',
+    'Lock' => 'Verrouiller',
+    'Unlock' => 'Déverrouiller',
+    'Is Locked' => 'Est verrouillé',
+    'Account locked. try again lated.' => 'Compte verrouillé. Réessayez plus tard.',
 ];

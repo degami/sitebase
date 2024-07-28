@@ -129,4 +129,10 @@ return [
     'Cms' => 'সিএমএস',
     'Site' => 'সাইট',
     'Main' => 'প্রধান',
+    'Do you confirm lock of selected element?' => 'আপনি কি নির্বাচিত উপাদানটি লক নিশ্চিত করছেন?',
+    'Do you confirm unlock of the selected element?' => 'আপনি কি নির্বাচিত উপাদানটি আনলক নিশ্চিত করছেন?',
+    'Lock' => 'লক',
+    'Unlock' => 'আনলক',
+    'Is Locked' => 'লক করা হয়েছে',
+    'Account locked. try again lated.' => 'অ্যাকাউন্ট লক করা হয়েছে। পরে আবার চেষ্টা করুন।',
 ];

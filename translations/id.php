@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Situs',
     'Main' => 'Utama',
+    'Do you confirm lock of selected element?' => 'Apakah Anda mengkonfirmasi penguncian elemen yang dipilih?',
+    'Do you confirm unlock of the selected element?' => 'Apakah Anda mengkonfirmasi pembukaan kunci elemen yang dipilih?',
+    'Lock' => 'Kunci',
+    'Unlock' => 'Buka kunci',
+    'Is Locked' => 'Terkunci',
+    'Account locked. try again lated.' => 'Akun terkunci. coba lagi nanti.',
 ];

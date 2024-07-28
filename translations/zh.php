@@ -127,4 +127,10 @@ return [
     'Cms' => '内容管理系统',
     'Site' => '网站',
     'Main' => '主要',
+    'Do you confirm lock of selected element?' => '您确认锁定所选元素吗？',
+    'Do you confirm unlock of the selected element?' => '您确认解锁所选元素吗？',
+    'Lock' => '锁定',
+    'Unlock' => '解锁',
+    'Is Locked' => '已锁定',
+    'Account locked. try again lated.' => '账户被锁定。请稍后再试。',
 ];

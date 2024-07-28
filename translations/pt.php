@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Site',
     'Main' => 'Principal',
+    'Do you confirm lock of selected element?' => 'Confirma o bloqueio do elemento selecionado?',
+    'Do you confirm unlock of the selected element?' => 'Confirma o desbloqueio do elemento selecionado?',
+    'Lock' => 'Bloquear',
+    'Unlock' => 'Desbloquear',
+    'Is Locked' => 'Está bloqueado',
+    'Account locked. try again lated.' => 'Conta bloqueada. tente novamente mais tarde.',
 ];

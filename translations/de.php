@@ -127,4 +127,10 @@ return [
     'Cms' => 'Cms',
     'Site' => 'Seite',
     'Main' => 'Haupt',
+    'Do you confirm lock of selected element?' => 'Bestätigen Sie das Sperren des ausgewählten Elements?',
+    'Do you confirm unlock of the selected element?' => 'Bestätigen Sie das Entsperren des ausgewählten Elements?',
+    'Lock' => 'Sperren',
+    'Unlock' => 'Entsperren',
+    'Is Locked' => 'Ist gesperrt',
+    'Account locked. try again lated.' => 'Konto gesperrt. Versuchen Sie es später erneut.',
 ];

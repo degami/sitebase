@@ -58,7 +58,7 @@
             <div class="card-body">
                 <?php foreach ($sectionLinks as $key => $link) :?>
                     <div class="nav-item">
-                        <a class="nav-link<?= ($controller->getRouteName() == $link['route_name']) ? ' active' : '';?>" href="<?= $this->sitebase()->getUrl($link['route_name']);?>">
+                        <a class="nav-link<?= ($controller->getRouteName() == $link['route_name']) ? ' active' : '';?>" href="<?= $this->sitebase()->getUrl($link['route_name']);?>" title="<?= $this->sitebase()->translate($link['text']);?>">
                             <?php $this->sitebase()->drawIcon($link['icon']); ?> <span class="text"><?= $this->sitebase()->translate($link['text']);?></span>
                         </a>
                 </div>

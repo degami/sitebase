@@ -34,6 +34,11 @@ use App\Base\Controllers\Dummy\NullPage;
 use Exception;
 use Spatie\ArrayToXml\ArrayToXml;
 use Throwable;
+use App\Base\Exceptions\OfflineException;
+use App\Base\Exceptions\BlockedIpException;
+use App\Base\Exceptions\NotFoundException as AppNotFoundException;
+use App\Base\Exceptions\NotAllowedException;
+use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Global utils functions Helper Class
@@ -217,7 +222,6 @@ class Globals extends ContainerAwareObject
 
         if (getenv('DEBUG')) {
             $debugbar['exceptions']->addThrowable($exception);
-
         }
 
 
@@ -269,17 +273,27 @@ class Globals extends ContainerAwareObject
                 'success' => false,
                 'message' => $exception->getMessage(),
                 'trace' => $exception->getTraceAsString(),
+                'class' => get_class($exception),
             ];
         } else {
             $content = [
                 'success' => false,
                 'message' => 'Exception!',
             ];
-        }
+        }        
+
+        $exceptionCode = match(get_class($exception)) {
+            OfflineException::class => 503,
+            BlockedIpException::class => 503,
+            AppNotFoundException::class => 404,
+            PermissionDeniedException::class => 403,
+            NotAllowedException::class => 405,
+            default => 500,
+        };
 
         return (new Response(
             json_encode($content),
-            500,
+            $exceptionCode,
             ['Content-Type' => 'application/json']
         ));
     }

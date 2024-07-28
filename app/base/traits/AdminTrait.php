@@ -21,6 +21,7 @@ use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Administration pages Trait
@@ -56,6 +57,10 @@ trait AdminTrait
         try {
             if ($this->getTokenData()) {
                 $this->current_user_model = $this->getCurrentUser();
+
+                if ($this->current_user_model->locked == true) {
+                    throw new PermissionDeniedException('User Locked');
+                }
 
                 if ($this->getEnv('USE2FA_ADMIN') && !$this->isCrud($this->getRouteInfo()) && !in_array($this->getRouteInfo()->getRouteName(), ['admin.twofa', 'admin.login']) && ($this->current_user?->passed2fa ?? false) != true) {
                     return false;

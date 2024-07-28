@@ -14,6 +14,7 @@
 namespace App\Site\Controllers\Admin\Json;
 
 use App\Base\Abstracts\Controllers\AdminJsonPage;
+use App\Base\Exceptions\PermissionDeniedException;
 use DI\DependencyException;
 use DI\NotFoundException;
 
@@ -41,8 +42,14 @@ class CheckSession extends AdminJsonPage
      */
     protected function getJsonData(): array
     {
+        $user = $this->getCurrentUser();
+
+        if ($user->locked == true) {
+            throw new PermissionDeniedException('User Locked');
+        }
+
         return [
-            'user' => $this->getCurrentUser()->getData(),
+            'user' => $user->getData(),
         ];
     }
 }

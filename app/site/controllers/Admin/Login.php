@@ -323,7 +323,6 @@ class Login extends FormPage
                     return $this->getUtils()->translate("Account locked. try again lated.", $this->getCurrentLocale());
                 }
 
-
             } catch (Exception $e) {}
 
             return $this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale());

@@ -20,6 +20,7 @@ use App\Base\Abstracts\Controllers\FormPage;
 use App\Base\Traits\FrontendPageTrait;
 use App\Site\Models\User;
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Lcobucci\JWT\Parser;
@@ -194,18 +195,64 @@ class Login extends FormPage
         $values = $form->values();
 
         try {
+            /*
             $user = $this->containerCall([User::class, 'loadByCondition'], ['condition' => [
                 'username' => $values['username'],
                 'password' => $this->getUtils()->getEncodedPass($values['password']),
             ]]);
+            */
+
+            /** @var User $user */
+            $user = User::getCollection()->addCondition([
+                'username' => $values['username'],
+                'password' => $this->getUtils()->getEncodedPass($values['password']),
+            ])->addCondition('locked != 1 OR locked_until < NOW()')->getFirst();
+            
+            if (!$user) {
+                throw new ExceptionsNotFoundException('User not found');
+            }
 
             $form_state['logged_user'] = $user;
+
+            $user->setLocked(0)->setLockedSince(null)->setLockedUntil(null)->setLoginTries(0)->persist();
 
             // dispatch "user_logged_in" event
             $this->getApp()->event('user_logged_in', [
                 'logged_user' => $form_state['logged_user']
             ]);
         } catch (\Exception $e) {
+
+            try {
+                /** @var User $user */
+                $user = $this->containerCall([User::class, 'loadByCondition'], ['condition' => [
+                    'username' => $values['username'],
+                ]]);
+
+                $user->setLoginTries(($user->getLoginTries() ?? 0) + 1);
+
+                if ($user->getLoginTries() >= 3) {
+                    $now = new \DateTime();
+                    $oneHour = clone $now;
+                    $oneHour->add(new \DateInterval('PT1H'));
+                    $userSince = new \DateTime((string)$user->getLockedSince());
+                    $userUntil = new \DateTime((string)$user->getLockedUntil());
+                    if ($userSince < $now) {
+                        $now = $userSince;
+                    }
+                    if ($userUntil > $oneHour) {
+                        $oneHour = $userUntil;
+                    }
+                    $user->setLocked(1)->setLockedSince($now)->setLockedUntil($oneHour);
+                }
+
+                $user->persist();
+
+                if ($user->getLocked() == true) {
+                    return $this->getUtils()->translate("Account locked. try again lated.", $this->getCurrentLocale());
+                }
+
+            } catch (\Exception $e) {}
+
             return $this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale());
         }
 

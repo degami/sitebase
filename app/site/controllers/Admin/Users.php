@@ -198,7 +198,7 @@ class Users extends AdminManageModelsPage
                 break;
 
             case 'unlock':
-                $this->fillConfirmationForm('Do you confirm unklock of the selected element?', $form);
+                $this->fillConfirmationForm('Do you confirm unlock of the selected element?', $form);
                 break;
 
             case 'delete':

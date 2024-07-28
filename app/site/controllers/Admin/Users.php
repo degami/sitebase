@@ -116,6 +116,24 @@ class Users extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
+                if ($type == 'edit') {
+                    if ($user->locked) {
+                        $this->addActionLink(
+                            'lock-btn',
+                            'lock-btn',
+                            $this->getHtmlRenderer()->getIcon('lock') . ' ' . $this->getUtils()->translate('Unlock', $this->getCurrentLocale()),
+                            $this->getUrl('admin.users'). '?' . http_build_query(['action' => 'unlock', 'user_id' => $user->id]),
+                        );
+                    } else {
+                        $this->addActionLink(
+                            'unlock-btn',
+                            'unlock-btn',
+                            $this->getHtmlRenderer()->getIcon('unlock') . ' ' . $this->getUtils()->translate('Lock', $this->getCurrentLocale()),
+                            $this->getUrl('admin.users') . '?' . http_build_query(['action' => 'lock', 'user_id' => $user->id]),
+                        );
+                    }
+                }
+
                 $roles = [];
                 foreach (Role::getCollection() as $item) {
                     /** @var Role $item */
@@ -175,6 +193,14 @@ class Users extends AdminManageModelsPage
                 $this->addSubmitButton($form);
                 break;
 
+            case 'lock':
+                $this->fillConfirmationForm('Do you confirm lock of selected element?', $form);
+                break;
+
+            case 'unlock':
+                $this->fillConfirmationForm('Do you confirm unklock of the selected element?', $form);
+                break;
+
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
                 break;
@@ -228,6 +254,23 @@ class Users extends AdminManageModelsPage
 
                 $user->persist();
                 break;
+
+            case 'lock':
+                $user->lock()->persist();
+
+                $this->setAdminActionLogData('Locked user ' . $user->getId());
+
+                return $this->doRedirect($this->getControllerUrl());
+                break;
+
+            case 'unlock':
+                $user->unlock()->persist();
+
+                $this->setAdminActionLogData('Unlocked user ' . $user->getId());
+
+                return $this->doRedirect($this->getControllerUrl());
+                break;
+                
             case 'delete':
                 $user->delete();
 
@@ -252,6 +295,7 @@ class Users extends AdminManageModelsPage
             'Email' => ['order' => 'email', 'search' => 'email'],
             'Role' => 'role_id',
             'Nickname' => ['order' => 'nickname', 'search' => 'nickname'],
+            'Is Locked' => 'locked',
             'Created at' => 'created_at',
             'actions' => null,
         ];
@@ -275,6 +319,7 @@ class Users extends AdminManageModelsPage
                     'Email' => $user->email,
                     'Role' => $user->getRole()->name,
                     'Nickname' => $user->nickname,
+                    'Is Locked' => $user->locked ? __('Yes') : __('No'),
                     'Created at' => $user->created_at,
                     'actions' => implode(
                         " ",

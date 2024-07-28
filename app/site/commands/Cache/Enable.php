@@ -44,13 +44,13 @@ class Enable extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $greetInput = new ArrayInput([
+        $argInput = new ArrayInput([
             // the command name is passed as first argument
             'command' => 'app:mod_env',
             '--key'  => 'DISABLE_CACHE',
             '--value' => 0,
         ]);
 
-        $this->getApplication()->run($greetInput, $output);
+        $this->getApplication()->run($argInput, $output);
     }
 }

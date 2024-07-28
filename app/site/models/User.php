@@ -35,6 +35,10 @@ use Lcobucci\JWT\Builder;
  * @method string getAdditionalData()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method int getLocked()
+ * @method ?int getLoginTries()
+ * @method ?DateTime getLockedSince()
+ * @method ?DateTime getLockedUntil()
  * @method self setId(int $id)
  * @method self setUsername(string $username)
  * @method self setPassword(string $password)
@@ -46,6 +50,10 @@ use Lcobucci\JWT\Builder;
  * @method self setAdditionalData(string $additional_data)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
+ * @method self setLocked(int $locked)
+ * @method self setLoginTries(?int $login_tries)
+ * @method self setLockedSince(?DateTime $locked_since)
+ * @method self setLockedUntil(?DateTime $locked_until)
  */
 class User extends AccountModel
 {
@@ -122,7 +130,7 @@ class User extends AccountModel
     public function getRegisteredSince(): string
     {
         if ($this->isLoaded()) {
-            $date = new DateTime($this->getCreatedAt());
+            $date = new DateTime((string)$this->getCreatedAt());
             $now = new DateTime();
 
             $interval = date_diff($date, $now);
@@ -214,6 +222,7 @@ class User extends AccountModel
      * @throws DependencyException
      * @throws NotFoundException
      * @throws Exception
+     * @return UserSession
      */
     public function getUserSession(): UserSession
     {
@@ -240,5 +249,30 @@ class User extends AccountModel
         }
 
         return $this->sessionObj = $user_session;
+    }
+
+    /**
+     * lock user
+     * 
+     * @return self
+     */
+    public function lock(?\DateTime $until = null) : User
+    {
+        $now = new \DateTime();
+        if (!$until || $until < $now) {
+            $until = clone $now;
+            $until->add(new \DateInterval('PT1H'));
+        }
+        return $this->setLocked(1)->setLockedSince($now)->setLockedUntil($until);
+    }
+
+    /**
+     * unlock user
+     * 
+     * @return self
+     */
+    public function unlock() : User
+    {
+        return $this->setLocked(0)->setLockedSince(null)->setLockedUntil(null)->setLoginTries(0);
     }
 }

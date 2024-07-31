@@ -657,5 +657,21 @@ class Globals extends ContainerAwareObject
         }
 
         return false;
-    }    
+    }
+
+    /**
+     * gets csv string from array
+     */
+    public function array2csv($data, $header = [], $delimiter = ',', $enclosure = '"', $escape_char = "\\") : string|false
+    {
+        $f = fopen('php://memory', 'r+');
+        if (!empty($header)) {
+            fputcsv($f, $header, $delimiter, $enclosure, $escape_char);
+        }
+        foreach ($data as $item) {
+            fputcsv($f, $item, $delimiter, $enclosure, $escape_char);
+        }
+        rewind($f);
+        return stream_get_contents($f);
+    }
 }

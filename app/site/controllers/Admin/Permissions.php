@@ -33,7 +33,7 @@ class Permissions extends AdminFormPage
      */
     protected function getTemplateName(): string
     {
-        return 'permissions';
+        return 'form_admin_page';
     }
 
     /**

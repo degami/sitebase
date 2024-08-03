@@ -49,7 +49,7 @@ class AddUserLockingMigration extends DBMigration
      */
     public function addDBTableDefinition(Table $table): Table
     {
-        $table->addColumn('locked', 'BOOLEAN', null, [], false, false)
+        $table->addColumn('locked', 'BOOLEAN', null, [], false, '0')
             ->addColumn('login_tries', 'INT', null, ['UNSIGNED'], true, null)
             ->addColumn('locked_since', 'TIMESTAMP', null, [], true, null)
             ->addColumn('locked_until', 'TIMESTAMP', null, [], true, null);

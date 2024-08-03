@@ -661,6 +661,13 @@ class Globals extends ContainerAwareObject
 
     /**
      * gets csv string from array
+     * 
+     * @param array $data
+     * @param array $header
+     * @param string $delimiter
+     * @param string $enclosure
+     * @param string $escape_char
+     * @return string|false
      */
     public function array2csv($data, $header = [], $delimiter = ',', $enclosure = '"', $escape_char = "\\") : string|false
     {
@@ -673,5 +680,30 @@ class Globals extends ContainerAwareObject
         }
         rewind($f);
         return stream_get_contents($f);
+    }
+
+    /**
+     * gets csv contents as array
+     * 
+     * @param string $csvFile
+     * @return array
+     */
+    public function csv2array(string $csvFile) : array
+    {
+        $out = [];
+        $csvHeader = null;
+        if (($handle = fopen($csvFile, "r")) !== FALSE) {
+            while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+                if ($csvHeader == null) {
+                    $csvHeader = $data;
+                } else {
+                    $out[] = array_combine($csvHeader, $data);
+                }
+            }
+    
+            fclose($handle);
+        }
+
+        return $out;
     }
 }

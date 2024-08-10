@@ -18,6 +18,7 @@ services:
       - ./php-fpm/group:/etc/group
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./php-fpm/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./php-fpm/supervisord.conf:/etc/supervisord.conf
       - ..:/var/www/html
     networks:
       sitebasenet:
@@ -69,6 +70,25 @@ services:
       sitebasenet:
         ipv4_address: ${IPV4_CLASS}.0.5
     restart: unless-stopped
+  supervisor:
+    build:
+      context: ./supervisor
+    volumes:
+      - ./supervisor/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+      - ./supervisor/supervisord.conf:/etc/supervisord.conf
+      - ..:/var/www/html
+    networks:
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.8
+    depends_on:
+      - php-fpm
+    env_file:
+      - ./.env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped
+    ports:
+      - 9001:9001 # supervisor
   mailhog:
     image: mailhog/mailhog
     logging:

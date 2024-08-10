@@ -200,6 +200,7 @@ class Queue extends AdminManageModelsPage
             'Status' => 'status',
             'Result' => null,
             'Created At' => null,
+            'Executed At' => null,
             'actions' => null,
         ];
     }
@@ -222,6 +223,7 @@ class Queue extends AdminManageModelsPage
                     'Status' => $message->status,
                     'Result' => $message->result,
                     'Created At' => $message->created_at,
+                    'Executed At' => $message->executed_at,
                     'actions' => implode(
                         " ",
                         [

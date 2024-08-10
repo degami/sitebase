@@ -44,6 +44,7 @@ class Stats extends BaseCommand
     {
         $queueNames = $this->containerCall([QueueMessage::class, 'getQueueNames']);
 
+        $tableContents = [];
         foreach ($queueNames as $queueName) {
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
             $collection = $this->containerCall([QueueMessage::class, 'getCollection'])->addCondition(['queue_name' => $queueName]);

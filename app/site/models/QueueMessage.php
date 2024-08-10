@@ -85,7 +85,7 @@ class QueueMessage extends BaseModel
                 ['created_at' => 'ASC']
             )->getFirst();
             if ($message) {
-                $message->setStatus(self::STATUS_PROCESSED)->persist();
+                $message->setStatus(self::STATUS_PROCESSED)->setExecutedAt(date('Y-m-d H:i:s'))->persist();
                 return $message;
             }
         } catch (Exception $e) {

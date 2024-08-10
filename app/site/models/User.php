@@ -275,4 +275,29 @@ class User extends AccountModel
     {
         return $this->setLocked(0)->setLockedSince(null)->setLockedUntil(null)->setLoginTries(0);
     }
+
+    /**
+     * increments login_tries and eventually locks user
+     */
+    public function incrementLoginTries() : User
+    {
+        $this->setLoginTries(($this->getLoginTries() ?? 0) + 1);
+
+        if ($this->getLoginTries() >= 3) {
+            $now = new \DateTime();
+            $oneHour = clone $now;
+            $oneHour->add(new \DateInterval('PT1H'));
+            $userSince = new \DateTime((string)$this->getLockedSince());
+            $userUntil = new \DateTime((string)$this->getLockedUntil());
+            if ($userSince < $now) {
+                $now = $userSince;
+            }
+            if ($userUntil > $oneHour) {
+                $oneHour = $userUntil;
+            }
+            $this->setLocked(1)->setLockedSince($now)->setLockedUntil($oneHour);
+        }
+
+        return $this;
+    }
 }

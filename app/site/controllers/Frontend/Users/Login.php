@@ -214,7 +214,7 @@ class Login extends FormPage
 
             $form_state['logged_user'] = $user;
 
-            $user->setLocked(0)->setLockedSince(null)->setLockedUntil(null)->setLoginTries(0)->persist();
+            $user->unlock()->persist();
 
             // dispatch "user_logged_in" event
             $this->getApp()->event('user_logged_in', [
@@ -228,24 +228,7 @@ class Login extends FormPage
                     'username' => $values['username'],
                 ]]);
 
-                $user->setLoginTries(($user->getLoginTries() ?? 0) + 1);
-
-                if ($user->getLoginTries() >= 3) {
-                    $now = new \DateTime();
-                    $oneHour = clone $now;
-                    $oneHour->add(new \DateInterval('PT1H'));
-                    $userSince = new \DateTime((string)$user->getLockedSince());
-                    $userUntil = new \DateTime((string)$user->getLockedUntil());
-                    if ($userSince < $now) {
-                        $now = $userSince;
-                    }
-                    if ($userUntil > $oneHour) {
-                        $oneHour = $userUntil;
-                    }
-                    $user->setLocked(1)->setLockedSince($now)->setLockedUntil($oneHour);
-                }
-
-                $user->persist();
+                $user->incrementLoginTries()->persist();
 
                 if ($user->getLocked() == true) {
                     return $this->getUtils()->translate("Account locked. try again lated.", $this->getCurrentLocale());

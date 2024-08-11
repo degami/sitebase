@@ -64,7 +64,7 @@ trait FrontendPageTrait
      *
      * @return BaseModel|null
      */
-    protected function getObject(): ?BaseModel
+    public function getObject(): ?BaseModel
     {
         return $this->template_data['object'] ?? null;
     }

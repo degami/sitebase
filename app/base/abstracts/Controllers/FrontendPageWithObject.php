@@ -119,6 +119,20 @@ abstract class FrontendPageWithObject extends FrontendPage
     }
 
     /**
+     * author info are available
+     * 
+     * @return bool
+     */
+    public function canShowAuthorInfo() : bool
+    {
+        if (is_subclass_of($this->getObject(), FrontendModel::class)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
      * gets object class name for loading
      *
      * @return string

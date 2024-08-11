@@ -300,4 +300,9 @@ class User extends AccountModel
 
         return $this;
     }
+
+    public function getDisplayName() : string
+    {
+        return $this->getNickname() ?? 'anonymous';
+    }
 }

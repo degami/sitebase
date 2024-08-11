@@ -276,6 +276,7 @@ class SiteBase implements ExtensionInterface
                 'cms' => 'feather',
                 'site' => 'layout',
                 'system' => 'settings',
+                'tools' => 'tool',
                 default => $icon_name
             };    
         }

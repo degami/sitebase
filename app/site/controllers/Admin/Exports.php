@@ -60,7 +60,7 @@ class Exports extends AdminFormPage
             'route_name' => static::getPageRouteName(),
             'icon' => 'archive',
             'text' => 'Exports',
-            'section' => 'system',
+            'section' => 'tools',
         ];
     }
 

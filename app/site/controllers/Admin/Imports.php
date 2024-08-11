@@ -60,9 +60,9 @@ class Imports extends AdminFormPage
         return [
             'permission_name' => $this->getAccessPermission(),
             'route_name' => static::getPageRouteName(),
-            'icon' => 'archive',
+            'icon' => 'arrow-down-circle',
             'text' => 'Imports',
-            'section' => 'system',
+            'section' => 'tools',
         ];
     }
 

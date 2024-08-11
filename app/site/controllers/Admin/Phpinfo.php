@@ -56,7 +56,7 @@ class Phpinfo extends AdminPage
             'route_name' => static::getPageRouteName(),
             'icon' => 'info',
             'text' => 'Php Info',
-            'section' => 'system',
+            'section' => 'tools',
             'order' => 100,
         ];
     }

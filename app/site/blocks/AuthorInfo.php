@@ -66,14 +66,14 @@ class AuthorInfo extends BaseCodeBlock
         /** @var FrontendPageWithObject $current_page */
 
         /** @var User $author */
-        $author = $current_page->getObject()->getOwner();
+        $author = $current_page->getObject()?->getOwner();
 
         $info = [
             'tag' => 'div',
             'attributes' => [
                 'class' => 'author-info',
             ],
-            'text' => __('by:').' <strong>' . $author->getDisplayName() . '</strong> '.__('on:').' ' . date_format(new \DateTime($current_page->getObject()->getCreatedAt()), $config['date-format']),
+            'text' => __('by:').' <strong>' . $author?->getDisplayName() . '</strong> '.__('on:').' ' . date_format(new \DateTime($current_page->getObject()->getCreatedAt()), $config['date-format']),
         ];
 
         return "".$this->containerMake(TagElement::class, ['options' => $info]);

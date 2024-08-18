@@ -1,19 +1,40 @@
 schema {
   query: Query
-  mutation: Mutation
+#  mutation: Mutation
 }
 
 type Query {
-  greetings(input: HelloInput!): String!
-  pages: [Page]
-  news: [News]
-  events: [Event]
-  medias: [MediaElement]
-  websites: [Website]
+  greetings(firstName: String!, lastName: String!): String!
+  pages(input: SearchCriteriaInput): [Page]
+  news(input: SearchCriteriaInput): [News]
+  events(input: SearchCriteriaInput): [Event]
+  medias(input: SearchCriteriaInput): [MediaElement]
+  websites(input: SearchCriteriaInput): [Website]
 }
 
-type Mutation {
-  greetings(input: HelloInput!): String!
+#type Mutation {
+#}
+
+input SearchCriteriaInput {
+  criteria: [SearchCriterionInput]
+  limit: Int
+  offset: Int
+  orderBy: [OrderByInput]
+}
+
+input SearchCriterionInput {
+  key: String!
+  value: String!
+}
+
+input OrderByInput {
+  field: String!
+  direction: OrderDirection!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
 }
 
 input HelloInput {

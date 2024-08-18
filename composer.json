@@ -71,7 +71,8 @@
       "App\\Site\\Commands\\": "app/site/commands",
       "App\\Site\\Migrations\\": "app/site/migrations",
       "App\\Site\\Cron\\Tasks\\": "app/site/cron_tasks",
-      "App\\Site\\Queues\\": "app/site/queues"
+      "App\\Site\\Queues\\": "app/site/queues",
+      "App\\Site\\GraphQL\\Resolvers\\": "app/site/graphql/Resolvers"
     }
   },
     "require-dev": {

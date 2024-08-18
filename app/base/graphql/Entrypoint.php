@@ -120,7 +120,7 @@ class Entrypoint extends BasePage
         }
 
         if (class_exists("App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName)) && is_callable(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'])) {
-            return $this->containerCall(["App\\Site\\GraphQL\\Resolvers\\".$fieldName, 'resolve'], ['args' => $args]);
+            return $this->containerCall(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'], ['args' => $args]);
         }
 
         if ($mandatory) {

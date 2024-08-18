@@ -15,7 +15,7 @@ use App\Base\Abstracts\Models\BaseCollection;
 use App\Site\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 
-class Index extends BasePage
+class Entrypoint extends BasePage
 {
     public function renderPage(RouteInfo $route_info = null, $route_data = []) : JsonResponse
     {

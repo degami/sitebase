@@ -44,7 +44,8 @@
         "elasticsearch/elasticsearch": "~7.0",
         "mathiasverraes/classfunctions": "^1.1@dev",
         "phpgangsta/googleauthenticator": "dev-master",
-        "cweagans/composer-patches": "dev-main"
+        "cweagans/composer-patches": "dev-main",
+        "webonyx/graphql-php": "dev-master"
     },
   "autoload": {
     "files": [
@@ -59,6 +60,7 @@
       "App\\Base\\Controllers\\": "app/base/controllers",
       "App\\Base\\Overrides\\": "app/base/overrides",
       "App\\Base\\Tools\\": "app/base/tools",
+      "App\\Base\\GraphQl\\": "app/base/graphql",
       "App\\Site\\": "app/site",
       "App\\Site\\Routing\\": "app/site/routing",
       "App\\Site\\Controllers\\": "app/site/controllers",

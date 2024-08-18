@@ -1,0 +1,105 @@
+schema {
+  query: Query
+  mutation: Mutation
+}
+
+type Query {
+  greetings(input: HelloInput!): String!
+  pages: [Page]
+  news: [News]
+  events: [Event]
+  medias: [MediaElement]
+  websites: [Website]
+}
+
+type Mutation {
+  greetings(input: HelloInput!): String!
+}
+
+input HelloInput {
+  firstName: String!
+  lastName: String
+}
+
+type User {
+  nickname: String!
+}
+
+type Website {
+  id: Int!
+  site_name: String!
+  domain: String!
+  aliases: String
+  default_locale: String
+}
+
+type Taxonomy {
+  id: Int!
+  title: String!
+  position: Int
+  locale: String
+  content: String
+  url: String!
+  path: String
+  level: Int
+  owner: User
+  website: Website
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+}
+
+type MediaElement {
+  id: Int!
+  path: String!
+  filename: String!
+  mimetype: String!
+  filesize: Int!
+  lazyload: Boolean
+  website: Website
+}
+
+type Page {
+  id: Int!
+  title: String!
+  locale: String
+  content: String
+  url: String!
+  owner: User
+  website: Website
+  terms: [Taxonomy]
+  gallery: [MediaElement]
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+}
+
+type News {
+  id: Int!
+  title: String!
+  locale: String
+  content: String
+  url: String!
+  date: String!
+  owner: User
+  website: Website
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+}
+
+type Event {
+  id: Int!
+  title: String!
+  locale: String
+  content: String
+  url: String!
+  date: String!
+  latitude: Float!
+  longitude: Float!
+  owner: User
+  website: Website
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+}

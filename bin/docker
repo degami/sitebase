@@ -32,7 +32,20 @@ function dockershell {
 
 function dockerstart {
   echo "starting docker"
-  $docker_compose_bin up -d
+
+  no_detach=0
+  for arg in "$@"; do
+      if [[ "$arg" == "--no-detach" ]]; then
+          no_detach=1
+          break
+      fi
+  done
+
+  if [[ $no_detach -eq 1 ]]; then
+    $docker_compose_bin up
+  else
+    $docker_compose_bin up -d
+  fi
 }
 
 function  dockerstop {
@@ -75,7 +88,7 @@ case "$1" in
       if [[ $(dockerps web) = 1 ]]; then
         echo "docker is up"
       else
-        dockerstart
+        dockerstart $@
       fi
       ;;
   stop|k|down)

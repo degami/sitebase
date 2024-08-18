@@ -63,6 +63,7 @@ class App extends ContainerAwareObject
     public const FLAGS = 'flags';
     public const TEMPLATES = 'templates';
     public const TRANSLATIONS = 'translations';
+    public const GRAPHQL = 'graphql';
 
     /**
      * @var string|null current locale
@@ -396,6 +397,7 @@ class App extends ContainerAwareObject
             self::FLAGS => $rootPath . DS . 'assets' . DS . 'flags',
             self::TEMPLATES => $rootPath . DS . 'templates',
             self::TRANSLATIONS => $rootPath . DS . 'translations',
+            self::GRAPHQL => $appPath . DS . 'site' . DS . 'graphql',
         ];
     }
 

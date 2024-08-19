@@ -90,7 +90,7 @@ class CookieNotice extends BaseCodeBlock
             $config = array_filter(json_decode($data['config'] ?? '{}', true));
             $config += ['sticky' => 'bottom'];
 
-            $locale = $current_page->getCurrentLocale();
+            $locale = $current_page?->getCurrentLocale();
             /** @var Rewrite $rewrite */
             $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $config['rewrite_' . $locale]]);
 
@@ -100,18 +100,14 @@ class CookieNotice extends BaseCodeBlock
                     'class' => $class,
                     'style' => "display:none;{$config['sticky']}: 0;background-color: {$config['background-color']};color: {$config['color']};border-" . (($config['sticky'] == 'top' ? 'bottom' : 'top')) . ": solid 1px {$config['color']};",
                 ],
-                'text' =>
-                    sprintf(
-                        $this->getUtils()->translate('We use cookies to ensure that we give you the best experience on our website. <a href="%s" target="_blank">Click here</a> for more information.'),
-                        $rewrite->getUrl()
-                    ),
+                'text' => $this->getUtils()->translate('We use cookies to ensure that we give you the best experience on our website. <a href="%s" target="_blank">Click here</a> for more information.', locale: $locale, params: [$rewrite->getUrl()]),
                 'children' => [
                     $this->containerMake(TagElement::class, ['options' => [
                         'tag' => 'button',
                         'attributes' => [
                             'class' => 'btn btn-primary btn-sm ml-2 close-btn',
                         ],
-                        'text' => $this->getUtils()->translate('Got it!'),
+                        'text' => $this->getUtils()->translate('Got it!', locale: $locale),
                     ]])
                 ]
             ]]);

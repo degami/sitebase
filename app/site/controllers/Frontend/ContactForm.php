@@ -187,7 +187,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
             $contact->getFormDefinition($fieldset, $form_state);
             $form->addField('button', [
                 'type' => 'button',
-                'value' => $this->getUtils()->translate('Send', $this->getCurrentLocale()),
+                'value' => $this->getUtils()->translate('Send', locale: $this->getCurrentLocale()),
                 'container_class' => 'form-item mt-3',
                 'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
             ]);

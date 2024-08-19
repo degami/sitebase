@@ -362,7 +362,7 @@ class Cron extends AdminManageModelsPage
                     'Title' => $task->title,
                     'Callable' => $task->cron_task_callable,
                     'Schedule' => '<a href="' . $task->getInfoUrl() . '" target="_blank">' . $task->schedule . '</a>',
-                    'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', $this->getCurrentLocale()),
+                    'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
                     'actions' => implode(
                         " ",
                         [

@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Mở khóa',
     'Is Locked' => 'Đã bị khóa',
     'Account locked. try again lated.' => 'Tài khoản bị khóa. thử lại sau.',
+    'Items per page' => 'Số mục trên mỗi trang',
+    'Executed At' => 'Thực hiện lúc',
+    'Tools' => 'Công cụ',
+    'Exports' => 'Xuất khẩu',
+    'Imports' => 'Nhập khẩu',
+    'by: <strong>%s</strong> on: %s' => 'bởi: <strong>%s</strong> vào: %s',
 ];

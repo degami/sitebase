@@ -133,7 +133,7 @@ class Contact extends FrontendModel
     {
         foreach ($this->getContactDefinition() as $field) {
             $field_data = (array)json_decode($field['field_data']);
-            $field_data['title'] = $this->getUtils()->translate($field_data['title'], $this->getLocale());
+            $field_data['title'] = $this->getUtils()->translate($field_data['title'], locale: $this->getLocale());
             $container->addField(
                 $this->slugify($field['field_label']),
                 ['type' => $field['field_type']] +

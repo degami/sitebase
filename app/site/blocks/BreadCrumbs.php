@@ -52,16 +52,16 @@ class BreadCrumbs extends BaseCodeBlock
             ];
         }
 
-        $locale = $current_page->getCurrentLocale();
+        $locale = $current_page?->getCurrentLocale();
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
-        $route_info = $current_page->getRouteInfo();
+        $route_info = $current_page?->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
-        if ($current_page->getRouteGroup() == AdminTrait::getRouteGroup() || $route_info->isAdminRoute()) {
+        if ($current_page?->getRouteGroup() == AdminTrait::getRouteGroup() || $route_info?->isAdminRoute()) {
             return '';
         }
 
-        $menu_item = Menu::getCollection()->where(['rewrite_id' => $route_info->getRewrite()])->getFirst();
+        $menu_item = Menu::getCollection()->where(['rewrite_id' => $route_info?->getRewrite()])->getFirst();
         $home_url = $this->getWebRouter()->getUrl('frontend.root');
 
         /** @var TagElement $breadcrumbs_links */
@@ -74,7 +74,7 @@ class BreadCrumbs extends BaseCodeBlock
 
         $homepageid = $this->getSiteData()->getHomePageId($website_id, $locale);
 
-        if (!$current_page->isHomePage()) {
+        if (!$current_page?->isHomePage()) {
             $li = $this->containerMake(
                 TagElement::class,
                 ['options' => [
@@ -90,9 +90,9 @@ class BreadCrumbs extends BaseCodeBlock
                     'attributes' => [
                         'class' => 'breadcrumb-link',
                         'href' => $home_url,
-                        'title' => $this->getUtils()->translate('Home', $locale),
+                        'title' => $this->getUtils()->translate('Home', locale: $locale),
                     ],
-                    'text' => $this->getUtils()->translate('Home', $locale),
+                    'text' => $this->getUtils()->translate('Home', locale: $locale),
                 ]]
             );
 
@@ -119,7 +119,7 @@ class BreadCrumbs extends BaseCodeBlock
                          */
                         $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $menuItem->getRewriteId()]);
                         if ($rewrite->getRoute() == '/page/' . $homepageid) {
-                            $menuItem->setTitle($this->getUtils()->translate('Home', $locale));
+                            $menuItem->setTitle($this->getUtils()->translate('Home', locale: $locale));
                         }
                     }
 

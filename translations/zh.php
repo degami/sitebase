@@ -133,4 +133,10 @@ return [
     'Unlock' => '解锁',
     'Is Locked' => '已锁定',
     'Account locked. try again lated.' => '账户被锁定。请稍后再试。',
+    'Items per page' => '每页项目数',
+    'Executed At' => '执行时间',
+    'Tools' => '工具',
+    'Exports' => '出口',
+    'Imports' => '进口',
+    'by: <strong>%s</strong> on: %s' => '由: <strong>%s</strong> 于: %s',
 ];

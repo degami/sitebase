@@ -7,7 +7,7 @@
  * @param  string $locale
  * @return string
  */
-function __($string, $locale = null)
+function __($string, $params = [], $locale = null)
 {
     global $app;
 
@@ -15,7 +15,7 @@ function __($string, $locale = null)
         $locale = $app->getCurrentLocale();
     }
 
-    return $app->getUtils()->translate($string, $locale);
+    return $app->getUtils()->translate($string, params: $params, locale: $locale);
 }
 
 /**

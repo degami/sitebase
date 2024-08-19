@@ -164,18 +164,18 @@ class Login extends FormPage
         return $form
             ->setFormId('login')
             ->addField('username', [
-                'title' => $this->getUtils()->translate('Username', $this->getCurrentLocale()),
+                'title' => $this->getUtils()->translate('Username', locale: $this->getCurrentLocale()),
                 'type' => 'textfield',
                 'validate' => ['required'],
-                'attributes' => ['placeholder' => $this->getUtils()->translate('Username', $this->getCurrentLocale())],
+                'attributes' => ['placeholder' => $this->getUtils()->translate('Username', locale: $this->getCurrentLocale())],
             ])->addField('password', [
-                'title' => $this->getUtils()->translate('Password', $this->getCurrentLocale()),
+                'title' => $this->getUtils()->translate('Password', locale: $this->getCurrentLocale()),
                 'type' => 'password',
                 'validate' => ['required'],
-                'attributes' => ['placeholder' => $this->getUtils()->translate('Password', $this->getCurrentLocale())],
+                'attributes' => ['placeholder' => $this->getUtils()->translate('Password', locale: $this->getCurrentLocale())],
             ])->addField('button', [
                 'type' => 'submit',
-                'value' => $this->getUtils()->translate('Login', $this->getCurrentLocale()),
+                'value' => $this->getUtils()->translate('Login', locale: $this->getCurrentLocale()),
                 'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
             ]);
     }
@@ -231,12 +231,12 @@ class Login extends FormPage
                 $user->incrementLoginTries()->persist();
 
                 if ($user->getLocked() == true) {
-                    return $this->getUtils()->translate("Account locked. try again lated.", $this->getCurrentLocale());
+                    return $this->getUtils()->translate("Account locked. try again lated.", locale: $this->getCurrentLocale());
                 }
 
             } catch (\Exception $e) {}
 
-            return $this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale());
+            return $this->getUtils()->translate("Invalid username / password", locale: $this->getCurrentLocale());
         }
 
         return true;
@@ -272,6 +272,6 @@ class Login extends FormPage
      */
     public function getRouteName(): string
     {
-        return $this->getUtils()->translate('Login');
+        return $this->getUtils()->translate('Login', locale: $this->getCurrentLocale());
     }
 }

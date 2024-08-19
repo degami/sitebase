@@ -131,7 +131,7 @@ class PasswordForgot extends FormPage
                     ]
                 );
             } else {
-                $this->template_data['result'] = '<h2>' . $this->getUtils()->translate('Confirmation email sent', $this->getCurrentLocale()) . '</h2>';
+                $this->template_data['result'] = '<h2>' . $this->getUtils()->translate('Confirmation email sent', locale: $this->getCurrentLocale()) . '</h2>';
             }
         }
 
@@ -157,28 +157,28 @@ class PasswordForgot extends FormPage
                     'type' => 'hidden',
                     'default_value' => $user->getId(),
                 ])
-                ->addMarkup($this->getUtils()->translate('Change your password', $this->getCurrentLocale()) . ' <strong>' . $user->getNickname() . '</strong>')
+                ->addMarkup($this->getUtils()->translate('Change your password', locale: $this->getCurrentLocale()) . ' <strong>' . $user->getNickname() . '</strong>')
                 ->addField('password', [
-                    'title' => $this->getUtils()->translate('Password', $this->getCurrentLocale()),
+                    'title' => $this->getUtils()->translate('Password', locale: $this->getCurrentLocale()),
                     'type' => 'password',
                     'with_confirm' => true,
                     'validate' => ['required'],
-                    'attributes' => ['placeholder' => $this->getUtils()->translate('Password', $this->getCurrentLocale())],
+                    'attributes' => ['placeholder' => $this->getUtils()->translate('Password', locale: $this->getCurrentLocale())],
                 ]);
         } else {
             $form
                 ->setFormId('confirmemail')
                 ->addField('email', [
-                    'title' => $this->getUtils()->translate('Email', $this->getCurrentLocale()),
+                    'title' => $this->getUtils()->translate('Email', locale: $this->getCurrentLocale()),
                     'type' => 'textfield',
                     'validate' => ['required', 'email'],
-                    'attributes' => ['placeholder' => $this->getUtils()->translate('Email', $this->getCurrentLocale())],
+                    'attributes' => ['placeholder' => $this->getUtils()->translate('Email', locale: $this->getCurrentLocale())],
                 ]);
         }
 
         $form->addField('button', [
             'type' => 'submit',
-            'value' => $this->getUtils()->translate('Submit', $this->getCurrentLocale()),
+            'value' => $this->getUtils()->translate('Submit', locale: $this->getCurrentLocale()),
             'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
         ]);
 
@@ -206,7 +206,7 @@ class PasswordForgot extends FormPage
                 $user = $this->containerCall([User::class, 'loadBy'], ['field' => 'email', 'value' => $values['email']]);
                 $form_state['found_user'] = $user;
             } catch (\Exception $e) {
-                return $this->getUtils()->translate("Invalid email", $this->getCurrentLocale());
+                return $this->getUtils()->translate("Invalid email", locale: $this->getCurrentLocale());
             }
         }
 
@@ -268,6 +268,6 @@ class PasswordForgot extends FormPage
      */
     public function getRouteName(): string
     {
-        return $this->getUtils()->translate('Forgot Password?');
+        return $this->getUtils()->translate('Forgot Password?', locale: $this->getCurrentLocale());
     }
 }

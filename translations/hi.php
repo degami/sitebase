@@ -133,4 +133,10 @@ return [
     'Unlock' => 'अनलॉक',
     'Is Locked' => 'लॉक किया गया है',
     'Account locked. try again lated.' => 'खाता लॉक कर दिया गया है। बाद में पुनः प्रयास करें।',
+    'Items per page' => 'प्रति पृष्ठ आइटम',
+    'Executed At' => 'निष्पादित समय',
+    'Tools' => 'उपकरण',
+    'Exports' => 'निर्यात',
+    'Imports' => 'आयात',
+    'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> द्वारा: %s',
 ];

@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Unlock',
     'Is Locked' => 'Is Locked',
     'Account locked. try again lated.' => 'Account locked. try again lated.',
+    'Items per page' => 'Items per page',
+    'Executed At' => 'Executed At',
+    'Tools' => 'Tools',
+    'Exports' => 'Exports',
+    'Imports' => 'Imports',
+    'by: <strong>%s</strong> on: %s' => 'by: <strong>%s</strong> on: %s',
 ];

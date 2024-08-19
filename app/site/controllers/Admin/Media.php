@@ -406,7 +406,7 @@ class Media extends AdminManageModelsPage
                     'Mimetype' => $elem->getMimetype(),
                     'Filesize' => $this->formatBytes($elem->getFilesize()),
                     'Owner' => $elem->getOwner()->username,
-                    'Lazyload' => $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', $this->getCurrentLocale()),
+                    'Lazyload' => $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
                     'actions' => implode(
                         " ",
                         [

@@ -45,7 +45,7 @@ abstract class AdminManageFrontendModelsPage extends AdminManageModelsPage
                 'attributes' => [
                     'class' => 'btn btn-sm btn-success',
                     'href' => $this->getUrl('admin.rewrites') . '?action=translations&rewrite_id=' . $object->getRewrite()->id,
-                    'title' => $this->getUtils()->translate('Translations', $this->getCurrentLocale()),
+                    'title' => $this->getUtils()->translate('Translations', locale: $this->getCurrentLocale()),
                 ],
                 'text' => $this->getHtmlRenderer()->getIcon('tag'),
             ]]);

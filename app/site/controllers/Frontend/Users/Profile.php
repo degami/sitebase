@@ -212,6 +212,6 @@ class Profile extends LoggedUserFormPage
      */
     public function getRouteName(): string
     {
-        return $this->getUtils()->translate('User profile');
+        return $this->getUtils()->translate('User profile', locale: $this->getCurrentLocale());
     }
 }

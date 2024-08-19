@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Entsperren',
     'Is Locked' => 'Ist gesperrt',
     'Account locked. try again lated.' => 'Konto gesperrt. Versuchen Sie es später erneut.',
+    'Items per page' => 'Artikel pro Seite',
+    'Executed At' => 'Ausgeführt um',
+    'Tools' => 'Werkzeuge',
+    'Exports' => 'Exporte',
+    'Imports' => 'Importe',
+    'by: <strong>%s</strong> on: %s' => 'von: <strong>%s</strong> am: %s',
 ];

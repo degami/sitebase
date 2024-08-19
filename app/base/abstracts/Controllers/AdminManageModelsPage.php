@@ -245,7 +245,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addNewButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
     }
 
     public function addPaginationSizeSelector()
@@ -276,7 +276,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 ]]);
             }, $options),
         ]]);
-        $this->action_buttons[] = __('Items per page'). ':' . $select;
+        $this->action_buttons[] = $this->getUtils()->translate('Items per page', locale: $this->getCurrentLocale()). ':' . $select;
     }
 
     /**
@@ -299,7 +299,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'attributes' => [
                     'class' => 'btn btn-sm btn-' . $class,
                     'href' => $this->getControllerUrl() . '?action=' . $action . '&' . $this->getObjectIdQueryParam() . '=' . $object_id,
-                    'title' => (trim($title) != '') ? $this->getUtils()->translate($title, $this->getCurrentLocale()) : '',
+                    'title' => (trim($title) != '') ? $this->getUtils()->translate($title, locale: $this->getCurrentLocale()) : '',
                 ],
                 'text' => $this->getHtmlRenderer()->getIcon($icon),
             ]]);
@@ -355,7 +355,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'class' => 'btn btn-sm btn-' . $class,
                 'href' => $object->getFrontendUrl(),
                 'target' => '_blank',
-                'title' => $this->getUtils()->translate('View', $this->getCurrentLocale()),
+                'title' => $this->getUtils()->translate('View', locale: $this->getCurrentLocale()),
             ],
             'text' => $this->getHtmlRenderer()->getIcon($icon),
         ]]);

@@ -436,12 +436,12 @@ class Globals extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function translate(string $string, $locale = null): string
+    public function translate(string $string, array $params = [], $locale = null): string
     {
         if ($locale == null) {
             $locale = $this->getApp()->getCurrentLocale();
         }
-        return $this->getTranslator($locale)->translate($string);
+        return sprintf($this->getTranslator($locale)->translate($string), ...$params);
     }
 
     /**

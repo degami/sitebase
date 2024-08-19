@@ -63,7 +63,7 @@ class Token extends BaseJsonPage
             $parser = $this->getContainer()->get('jwt:configuration')->parser();
             $token = $parser->parse($jwt)->toString();
         } catch (\Exception $e) {
-            throw new NotAllowedException($this->getUtils()->translate("Invalid username / password", $this->getCurrentLocale()));
+            throw new NotAllowedException($this->getUtils()->translate("Invalid username / password", locale: $this->getCurrentLocale()));
         }
 
         return $token;

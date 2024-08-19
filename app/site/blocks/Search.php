@@ -64,7 +64,7 @@ class Search extends BaseCodeBlock
             $button = $this->containerMake(TagElement::class, ['options' => [
                 'tag' => 'button',
                 'type' => 'submit',
-                'value' => $this->getUtils()->translate('Search'),
+                'value' => $this->getUtils()->translate('Search', locale: $current_page?->getCurrentLocale()),
                 'attributes' => [
                     'class' => 'btn searchbtn',
                 ],

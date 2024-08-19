@@ -449,7 +449,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $this->getPaginatorLi(
                 'page-item' . (($current_page == 0) ? ' disabled' : ''),
                 $current_base . '?' . http_build_query($query_params + ['page' => 0]),
-                $this->getUtils()->translate('First', $controller->getCurrentLocale())
+                $this->getUtils()->translate('First', locale: $controller->getCurrentLocale())
             )
         );
 
@@ -481,7 +481,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                                 'attributes' => [
                                     'class' => 'sr-only',
                                 ],
-                                'text' => $this->getUtils()->translate('Previous', $controller->getCurrentLocale()),
+                                'text' => $this->getUtils()->translate('Previous', locale: $controller->getCurrentLocale()),
                             ]]
                         )
                     )
@@ -565,7 +565,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                                 'attributes' => [
                                     'class' => 'sr-only',
                                 ],
-                                'text' => $this->getUtils()->translate('Next', $controller->getCurrentLocale()),
+                                'text' => $this->getUtils()->translate('Next', locale: $controller->getCurrentLocale()),
                             ]]
                         )
                     )
@@ -578,7 +578,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $this->getPaginatorLi(
                 'page-item' . (($current_page == $total_pages) ? ' disabled' : ''),
                 $current_base . '?' . http_build_query($query_params + ['page' => $total_pages]),
-                $this->getUtils()->translate('Last', $controller->getCurrentLocale())
+                $this->getUtils()->translate('Last', locale: $controller->getCurrentLocale())
             )
         );
 
@@ -660,7 +660,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $searchqueryparam = (is_array($current_page->getRequest()->query->get('search')) && isset($current_page->getRequest()->query->get('search')[$v['search']])) ? $current_page->getRequest()->query->get('search')[$v['search']] : '';
 
                     if ($v['search'] == 'locale') {
-                        $select_options = ['' => '-- '.__('All').' --'] + $this->getUtils()->getSiteLanguagesSelectOptions();
+                        $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'] + $this->getUtils()->getSiteLanguagesSelectOptions();
                         $select_options = array_map(function ($val, $key) use ($searchqueryparam) {
                             $selected = ($key == $searchqueryparam) ? ' selected="selected"': '';
                             return '<option value="' . $key . '"'.$selected.'>' . $val . '</option>';
@@ -690,7 +690,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     $foreignqueryparam = (is_array($current_page->getRequest()->query->get('foreign')) && isset($current_page->getRequest()->query->get('foreign')[$v['foreign']])) ? $current_page->getRequest()->query->get('foreign')[$v['foreign']] : '';
 
                     $dbtable = $this->getSchema()->getTable($v['table']);
-                    $select_options = ['' => '-- '.__('All').' --'];
+                    $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'];
                     foreach ($dbtable->getForeignKeys() as $fkobj) {
                         if (in_array($v['foreign'], $fkobj->getColumns())) {
                             $foreign_key = $fkobj->getTargetColumns()[0];
@@ -784,7 +784,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         } else {
             $text = 'No elements found !';
             if (($current_page instanceof BasePage)) {
-                $text = $this->getUtils()->translate($text, $current_page->getCurrentLocale());
+                $text = $this->getUtils()->translate($text, locale: $current_page?->getCurrentLocale());
             }
 
             $row = $this->containerMake(
@@ -820,7 +820,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         );
 
         foreach ($header as $th => $column) {
-            $th = $this->getUtils()->translate($th, $current_page->getCurrentLocale());
+            $th = $this->getUtils()->translate($th, locale: $current_page?->getCurrentLocale());
             if ($current_page instanceof BasePage) {
                 $request_params = $current_page->getRequest()->query->all();
 
@@ -870,7 +870,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 if (strlen($add_query_parameters)) {
                     $add_query_parameters = '?' . $add_query_parameters;
                 }
-                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . $add_query_parameters, 'btn btn-sm btn-warning');
+                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . $add_query_parameters, 'btn btn-sm btn-warning');
             }
             if ($add_searchrow) {
                 $query_params = '';
@@ -879,7 +879,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     unset($query_params['search']);
                     $query_params = http_build_query($query_params);
                 }
-                $current_page->addActionLink('search-btn', 'search-btn', $this->getIcon('zoom-in') . $this->getUtils()->translate('Search', $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#' . $table_id]);
+                $current_page->addActionLink('search-btn', 'search-btn', $this->getIcon('zoom-in') . $this->getUtils()->translate('Search', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#' . $table_id]);
             }
         }
 

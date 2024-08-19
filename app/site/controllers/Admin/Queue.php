@@ -174,7 +174,7 @@ class Queue extends AdminManageModelsPage
 
                 $this->setAdminActionLogData('Requeued queue ' . $queue->getId());
 
-                $this->addFlashMessage('success', $this->getUtils()->translate('Message has been set for re-queue'));
+                $this->addFlashMessage('success', $this->getUtils()->translate('Message has been set for re-queue', locale: $this->getCurrentLocale()));
                 break;
             case 'delete':
                 $queue->delete();

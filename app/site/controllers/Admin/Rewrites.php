@@ -150,7 +150,7 @@ class Rewrites extends AdminManageModelsPage
                 $this->addBackButton();
 
                 $form->addMarkup(
-                    '<h4>' . sprintf($this->getUtils()->translate('Translations for <strong>%s</strong>'), $rewrite->getUrl()) . '</h4>'
+                    '<h4>' . $this->getUtils()->translate('Translations for <strong>%s</strong>', locale: $this->getCurrentLocale(), params: [$rewrite->getUrl()]) . '</h4>'
                 );
 
                 $other_rewrites = [];

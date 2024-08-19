@@ -135,4 +135,10 @@ return [
     'Unlock' => 'আনলক',
     'Is Locked' => 'লক করা হয়েছে',
     'Account locked. try again lated.' => 'অ্যাকাউন্ট লক করা হয়েছে। পরে আবার চেষ্টা করুন।',
+    'Items per page' => 'প্রতি পৃষ্ঠায় আইটেম',
+    'Executed At' => 'নির্বাহিত সময়',
+    'Tools' => 'টুলস',
+    'Exports' => 'রপ্তানি',
+    'Imports' => 'আমদানি',
+    'by: <strong>%s</strong> on: %s' => 'দ্বারা: <strong>%s</strong> এ: %s',
 ];

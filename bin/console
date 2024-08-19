@@ -42,6 +42,8 @@ try {
 
     global $app;
     $app = new \App\App();
+    $container->set(\App\App::class, $app);
+    $container->set('app', $container->get(App::class));
     $website = null;
 
     // reading with like this as trying to bind applicationDefinition to a new ArgvInput

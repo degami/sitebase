@@ -82,7 +82,7 @@ class Links extends FormPage
         $collection->addCondition(['active' => 1, 'locale' => $this->getCurrentLocale()]);        
         $data = $this->containerCall([$collection, 'paginate']);
         return $this->template_data += [
-            'page_title' => $this->getUtils()->translate('Links exchange', $this->getCurrentLocale()),
+            'page_title' => $this->getUtils()->translate('Links exchange', locale: $this->getCurrentLocale()),
             'links' => $data['items'],
             'total' => $data['total'],
             'current_page' => $data['page'],

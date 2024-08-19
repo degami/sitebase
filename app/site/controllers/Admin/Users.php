@@ -121,14 +121,14 @@ class Users extends AdminManageModelsPage
                         $this->addActionLink(
                             'lock-btn',
                             'lock-btn',
-                            $this->getHtmlRenderer()->getIcon('lock') . ' ' . $this->getUtils()->translate('Unlock', $this->getCurrentLocale()),
+                            $this->getHtmlRenderer()->getIcon('lock') . ' ' . $this->getUtils()->translate('Unlock', locale: $this->getCurrentLocale()),
                             $this->getUrl('admin.users'). '?' . http_build_query(['action' => 'unlock', 'user_id' => $user->id]),
                         );
                     } else {
                         $this->addActionLink(
                             'unlock-btn',
                             'unlock-btn',
-                            $this->getHtmlRenderer()->getIcon('unlock') . ' ' . $this->getUtils()->translate('Lock', $this->getCurrentLocale()),
+                            $this->getHtmlRenderer()->getIcon('unlock') . ' ' . $this->getUtils()->translate('Lock', locale: $this->getCurrentLocale()),
                             $this->getUrl('admin.users') . '?' . http_build_query(['action' => 'lock', 'user_id' => $user->id]),
                         );
                     }
@@ -319,7 +319,7 @@ class Users extends AdminManageModelsPage
                     'Email' => $user->email,
                     'Role' => $user->getRole()->name,
                     'Nickname' => $user->nickname,
-                    'Is Locked' => $user->locked ? __('Yes') : __('No'),
+                    'Is Locked' => $user->locked ? $this->getUtils()->translate('Yes', locale: $this->getCurrentLocale()) : $this->getUtils()->translate('No', locale: $this->getCurrentLocale()),
                     'Created at' => $user->created_at,
                     'actions' => implode(
                         " ",

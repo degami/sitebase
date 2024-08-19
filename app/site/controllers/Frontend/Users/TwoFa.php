@@ -62,7 +62,7 @@ class TwoFa extends LoggedUserFormPage
     protected function getTemplateData(): array
     {
         $this->template_data += [
-            'pageIntro' => $this->getUtils()->translate('2 Factor Authentication needed'),
+            'pageIntro' => $this->getUtils()->translate('2 Factor Authentication needed', locale: $this->getCurrentLocale()),
         ];
 
         return $this->template_data;
@@ -88,7 +88,7 @@ class TwoFa extends LoggedUserFormPage
         $table = new FAPI\Containers\TableContainer([], 'otp_table');
 
         $table->addRow()
-        ->addMarkup('<div>'.$this->getUtils()->translate('Add to your Google Authenticator App with QR-Code:').'</div><br /><img src="'.$qrCodeUrl.'" />')
+        ->addMarkup('<div>'.$this->getUtils()->translate('Add to your Google Authenticator App with QR-Code:', locale: $this->getCurrentLocale()).'</div><br /><img src="'.$qrCodeUrl.'" />')
         ->addField('otp', [
             'type' => 'textfield',
             'title' => 'Enter your OTP',
@@ -120,7 +120,7 @@ class TwoFa extends LoggedUserFormPage
             //@see \App\Site\Models\User::getJWT
             //@see \App\Base\Traits\PageTrait::getToken
         }
-        return $isValid ?: $this->getUtils()->translate('Otp Code is invalid', $this->getCurrentLocale()); 
+        return $isValid ?: $this->getUtils()->translate('Otp Code is invalid', locale: $this->getCurrentLocale()); 
     }
 
     /**

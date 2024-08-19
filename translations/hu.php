@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Feloldás',
     'Is Locked' => 'Zárolva van',
     'Account locked. try again lated.' => 'A fiók zárolva. Próbálja újra később.',
+    'Items per page' => 'Elemek oldalanként',
+    'Executed At' => 'Végrehajtva',
+    'Tools' => 'Eszközök',
+    'Exports' => 'Exportok',
+    'Imports' => 'Importok',
+    'by: <strong>%s</strong> on: %s' => 'által: <strong>%s</strong> ekkor: %s',
 ];

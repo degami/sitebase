@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Buka kunci',
     'Is Locked' => 'Terkunci',
     'Account locked. try again lated.' => 'Akun terkunci. coba lagi nanti.',
+    'Items per page' => 'Item per halaman',
+    'Executed At' => 'Dieksekusi pada',
+    'Tools' => 'Alat',
+    'Exports' => 'Ekspor',
+    'Imports' => 'Impor',
+    'by: <strong>%s</strong> on: %s' => 'oleh: <strong>%s</strong> pada: %s',
 ];

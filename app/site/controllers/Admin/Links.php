@@ -309,7 +309,7 @@ class Links extends AdminManageFrontendModelsPage
                     'URL' => $link->url,
                     'Locale' => $link->locale,
                     'Title' => $link->title,
-                    'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', $this->getCurrentLocale()),
+                    'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
                     'actions' => implode(
                         " ",
                         [

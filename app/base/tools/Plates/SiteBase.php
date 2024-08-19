@@ -150,7 +150,7 @@ class SiteBase implements ExtensionInterface
      */
     public function translate(string $string): string
     {
-        return $this->getUtils()->translate($string, $this->getCurrentLocale());
+        return $this->getUtils()->translate($string, locale: $this->getCurrentLocale());
     }
 
     /**

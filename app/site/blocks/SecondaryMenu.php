@@ -40,7 +40,7 @@ class SecondaryMenu extends BaseCodeBlock
     public function renderHTML(BasePage $current_page = null, $data = []): string
     {
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
-        $locale = $current_page->getCurrentLocale();
+        $locale = $current_page?->getCurrentLocale();
         $config = array_filter(json_decode($data['config'] ?? '{}', true));
         $menu_name = $config['menu_name_' . $locale] ?? '';
         if (empty($menu_name)) {

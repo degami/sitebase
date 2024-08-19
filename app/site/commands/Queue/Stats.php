@@ -54,6 +54,6 @@ class Stats extends BaseCommand
         }
 
         $this->renderTitle('Queues stats');
-        $this->renderTable([__('Queue name'), __('Processed'), __('Pending')], $tableContents);
+        $this->renderTable([$this->getUtils()->translate('Queue name'), $this->getUtils()->translate('Processed'), $this->getUtils()->translate('Pending')], $tableContents);
     }
 }

@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Ξεκλείδωμα',
     'Is Locked' => 'Είναι κλειδωμένο',
     'Account locked. try again lated.' => 'Ο λογαριασμός κλειδώθηκε. Δοκιμάστε ξανά αργότερα.',
+    'Items per page' => 'Στοιχεία ανά σελίδα',
+    'Executed At' => 'Εκτελέστηκε στις',
+    'Tools' => 'Εργαλεία',
+    'Exports' => 'Εξαγωγές',
+    'Imports' => 'Εισαγωγές',
+    'by: <strong>%s</strong> on: %s' => 'από: <strong>%s</strong> στις: %s',
 ];

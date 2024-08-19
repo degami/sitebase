@@ -133,4 +133,10 @@ return [
     'Unlock' => 'ロック解除',
     'Is Locked' => 'ロックされています',
     'Account locked. try again lated.' => 'アカウントがロックされました。後でもう一度お試しください。',
+    'Items per page' => 'ページごとのアイテム数',
+    'Executed At' => '実行日時',
+    'Tools' => 'ツール',
+    'Exports' => '輸出',
+    'Imports' => '輸入',
+    'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> による %s',
 ];

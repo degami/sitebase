@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Déverrouiller',
     'Is Locked' => 'Est verrouillé',
     'Account locked. try again lated.' => 'Compte verrouillé. Réessayez plus tard.',
+    'Items per page' => 'Éléments par page',
+    'Executed At' => 'Exécuté à',
+    'Tools' => 'Outils',
+    'Exports' => 'Exportations',
+    'Imports' => 'Importations',
+    'by: <strong>%s</strong> on: %s' => 'par: <strong>%s</strong> le: %s',
 ];

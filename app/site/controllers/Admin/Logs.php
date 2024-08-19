@@ -230,7 +230,7 @@ class Logs extends AdminPage
             foreach ($header as $element) {
                 $out[$element] = $data[$element] ?? null;
             }
-            $out['actions'] = '<a href="' . $this->getControllerUrl() . '?logtype=' . $this->getRequest()->query->get('logtype') . '&id=' . $log->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in', ['style' => 'vertical-align: middle']) . ' ' . $this->getUtils()->translate('View') . '</a>';
+            $out['actions'] = '<a href="' . $this->getControllerUrl() . '?logtype=' . $this->getRequest()->query->get('logtype') . '&id=' . $log->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in', ['style' => 'vertical-align: middle']) . ' ' . $this->getUtils()->translate('View', locale: $this->getCurrentLocale()) . '</a>';
             return $out;
         }, $data);
     }

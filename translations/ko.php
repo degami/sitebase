@@ -133,4 +133,10 @@ return [
     'Unlock' => '잠금 해제',
     'Is Locked' => '잠김 상태입니다',
     'Account locked. try again lated.' => '계정이 잠겼습니다. 나중에 다시 시도하십시오.',
+    'Items per page' => '페이지당 항목 수',
+    'Executed At' => '실행 시간',
+    'Tools' => '도구',
+    'Exports' => '수출',
+    'Imports' => '수입',
+    'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> 작성일: %s',
 ];

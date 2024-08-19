@@ -75,7 +75,7 @@ class EventList extends FrontendPage
         $collection->addCondition(['locale' => $this->getCurrentLocale()])->addOrder(['date' => 'DESC']);
         $data = $this->containerCall([$collection, 'paginate']);
         return $this->template_data += [
-            'page_title' => $this->getUtils()->translate('Events', $this->getCurrentLocale()),
+            'page_title' => $this->getUtils()->translate('Events', locale: $this->getCurrentLocale()),
             'events' => $data['items'],
             'total' => $data['total'],
             'current_page' => $data['page'],

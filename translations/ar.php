@@ -133,4 +133,10 @@ return [
     'Unlock' => 'فتح',
     'Is Locked' => 'مقفل',
     'Account locked. try again lated.' => 'تم قفل الحساب. حاول مرة أخرى لاحقاً.',
+    'Items per page' => 'العناصر لكل صفحة',
+    'Executed At' => 'تم التنفيذ في',
+    'Tools' => 'الأدوات',
+    'Exports' => 'الصادرات',
+    'Imports' => 'الواردات',
+    'by: <strong>%s</strong> on: %s' => 'بواسطة: <strong>%s</strong> في: %s',
 ];

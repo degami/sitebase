@@ -435,7 +435,7 @@ class Sitemaps extends AdminManageModelsPage
                     'Site Name' => $sitemap->getWebsite()->site_name,
                     'Locale' => $sitemap->locale,
                     'Title' => $sitemap->title,
-                    'Is Published' => $this->getUtils()->translate($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? 'Yes' : 'No', $this->getCurrentLocale()),
+                    'Is Published' => $this->getUtils()->translate($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
                     'actions' => implode(
                         " ",
                         [

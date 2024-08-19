@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Ontgrendelen',
     'Is Locked' => 'Is vergrendeld',
     'Account locked. try again lated.' => 'Account vergrendeld. probeer het later opnieuw.',
+    'Items per page' => 'Items per pagina',
+    'Executed At' => 'Uitgevoerd om',
+    'Tools' => 'Gereedschappen',
+    'Exports' => 'Exporten',
+    'Imports' => 'Importen',
+    'by: <strong>%s</strong> on: %s' => 'door: <strong>%s</strong> op: %s',
 ];

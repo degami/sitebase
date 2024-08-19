@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Sblocca',
     'Is Locked' => 'È bloccato',
     'Account locked. try again lated.' => 'Account bloccato. riprova più tardi.',
+    'Items per page' => 'Elementi per pagina',
+    'Executed At' => 'Eseguito a',
+    'Tools' => 'Strumenti',
+    'Exports' => 'Esportazioni',
+    'Imports' => 'Importazioni',
+    'by: <strong>%s</strong> on: %s' => 'di: <strong>%s</strong> il: %s',
 ];

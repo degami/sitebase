@@ -162,6 +162,6 @@ class Search extends FrontendPage
      */
     public function getRouteName(): string
     {
-        return $this->getUtils()->translate('Search');
+        return $this->getUtils()->translate('Search', locale: $this->getCurrentLocale());
     }
 }

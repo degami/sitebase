@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Deblocați',
     'Is Locked' => 'Este blocat',
     'Account locked. try again lated.' => 'Cont blocat. încercați din nou mai târziu.',
+    'Items per page' => 'Elemente pe pagină',
+    'Executed At' => 'Executat la',
+    'Tools' => 'Instrumente',
+    'Exports' => 'Exporturi',
+    'Imports' => 'Importuri',
+    'by: <strong>%s</strong> on: %s' => 'de: <strong>%s</strong> pe: %s',
 ];

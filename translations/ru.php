@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Разблокировать',
     'Is Locked' => 'Заблокировано',
     'Account locked. try again lated.' => 'Аккаунт заблокирован. попробуйте позже.',
+    'Items per page' => 'Элементов на страницу',
+    'Executed At' => 'Выполнено в',
+    'Tools' => 'Инструменты',
+    'Exports' => 'Экспорт',
+    'Imports' => 'Импорт',
+    'by: <strong>%s</strong> on: %s' => 'от: <strong>%s</strong> на: %s',
 ];

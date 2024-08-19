@@ -422,11 +422,11 @@ class Blocks extends AdminManageModelsPage
             function ($block) {
                 return [
                     'ID' => $block->id,
-                    'Website' => $block->getWebsiteId() == null ? $this->getUtils()->translate('All websites', $this->getCurrentLocale()) : $block->getWebsite()->domain,
+                    'Website' => $block->getWebsiteId() == null ? $this->getUtils()->translate('All websites', locale: $this->getCurrentLocale()) : $block->getWebsite()->domain,
                     'Region' => $block->region,
-                    'Locale' => !$block->isCodeBlock() ? $block->locale : $this->getUtils()->translate('All languages', $this->getCurrentLocale()),
+                    'Locale' => !$block->isCodeBlock() ? $block->locale : $this->getUtils()->translate('All languages', locale: $this->getCurrentLocale()),
                     'Title' => $block->title,
-                    'Where' => (count($block->getRewrites()) == 0) ? $this->getUtils()->translate('All Pages', $this->getCurrentLocale()) : implode(
+                    'Where' => (count($block->getRewrites()) == 0) ? $this->getUtils()->translate('All Pages', locale: $this->getCurrentLocale()) : implode(
                         "<br>",
                         array_map(
                             function ($e) {

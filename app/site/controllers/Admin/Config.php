@@ -137,7 +137,7 @@ class Config extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                $languages = [null => $this->getUtils()->translate('All languages')] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
+                $languages = [null => $this->getUtils()->translate('All languages', locale: $this->getCurrentLocale())] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $configuration_path = $configuration_value = $configuration_website = $configuration_locale = '';
@@ -286,8 +286,8 @@ class Config extends AdminManageModelsPage
             function ($config) {
                 return [
                     'ID' => $config->id,
-                    'Website' => $config->getWebsiteId() == null ? $this->getUtils()->translate('All websites', $this->getCurrentLocale()) : $config->getWebsite()->domain,
-                    'Locale' => $config->getLocale() == null ? $this->getUtils()->translate('All languages', $this->getCurrentLocale()) : $config->getLocale(),
+                    'Website' => $config->getWebsiteId() == null ? $this->getUtils()->translate('All websites', locale: $this->getCurrentLocale()) : $config->getWebsite()->domain,
+                    'Locale' => $config->getLocale() == null ? $this->getUtils()->translate('All languages', locale: $this->getCurrentLocale()) : $config->getLocale(),
                     'Path' => $config->path,
                     'Value' => $config->value,
                     'Is System' => $config->is_system ? $this->getHtmlRenderer()->getIcon('check') : '&nbsp;',

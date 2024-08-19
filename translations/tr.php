@@ -133,4 +133,10 @@ return [
     'Unlock' => 'Kilidi aç',
     'Is Locked' => 'Kilitli',
     'Account locked. try again lated.' => 'Hesap kilitlendi. daha sonra tekrar deneyin.',
+    'Items per page' => 'Sayfa başına öğe',
+    'Executed At' => 'Yürütülme Zamanı',
+    'Tools' => 'Araçlar',
+    'Exports' => 'İhracatlar',
+    'Imports' => 'İthalatlar',
+    'by: <strong>%s</strong> on: %s' => 'tarafından: <strong>%s</strong> tarihinde: %s',
 ];

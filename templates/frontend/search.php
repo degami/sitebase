@@ -12,7 +12,7 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Sear
 
 <h1 class="page-title"><?= $this->sitebase()->translate('Search');?></h1>
 <?php if($search_query) :?>
-    <h2><?= sprintf($this->sitebase()->translate("Results for: <em>%s</em>"), $search_query); ?></h2>
+    <h2><?= $this->sitebase()->translate("Results for: <em>%s</em>", params: [$search_query]); ?></h2>
     <?php if(count($search_result)):?>
     <div class="page-content">
         <ul>

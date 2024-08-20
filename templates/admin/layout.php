@@ -8,7 +8,7 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
 
 <?php $this->start('head') ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/admin.css');?>">
-<script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/tinymce/tinymce.min.js');?>"></script>
+<script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/tinymce/tinymce.js');?>"></script>
 <script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/js/admin.js');?>"></script>
 <?= $this->section('head'); ?>
 <?php $this->stop() ?>

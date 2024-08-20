@@ -441,6 +441,9 @@ class Globals extends ContainerAwareObject
         if ($locale == null) {
             $locale = $this->getApp()->getCurrentLocale();
         }
+        if (empty($params)) {
+            return $this->getTranslator($locale)->translate($string);
+        }
         return sprintf($this->getTranslator($locale)->translate($string), ...$params);
     }
 

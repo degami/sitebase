@@ -52,6 +52,8 @@ class MediaElement extends BaseModel
 
     public const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
+    public const ORIGINAL_SIZE = 'originals';
+
     /**
      * gets relative path
      *
@@ -114,7 +116,7 @@ class MediaElement extends BaseModel
         $this->checkLoaded();
 
         $thumb_sizes = null;
-        if ($size != 'originals') {
+        if ($size != self::ORIGINAL_SIZE) {
             if (!preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
                 return $this->getPath();
             }
@@ -190,7 +192,7 @@ class MediaElement extends BaseModel
      */
     public function getImage(string $class = 'img-fluid'): string
     {
-        return $this->getThumb('originals', null, $class);
+        return $this->getThumb(self::ORIGINAL_SIZE, null, $class);
     }
 
     /**
@@ -202,6 +204,6 @@ class MediaElement extends BaseModel
      */
     public function getImageUrl(): string
     {
-        return $this->getThumbUrl('originals');
+        return $this->getThumbUrl(self::ORIGINAL_SIZE);
     }
 }

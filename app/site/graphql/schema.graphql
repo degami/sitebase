@@ -11,6 +11,11 @@ type Query {
   medias(input: SearchCriteriaInput): [MediaElement]
   websites(input: SearchCriteriaInput): [Website]
   links(input: SearchCriteriaInput): [LinkExchange]
+  rewrites(input: SearchCriteriaInput): [Rewrite]
+  pageRegions(rewrite_id: Int!): PageRegions
+  Configuration: [ConfigsResult]
+  menuTree(menu_name: String!, website_id: Int!): [Menu]
+  taxonomy(input: SearchCriteriaInput): [Taxonomy]
 }
 
 #type Mutation {
@@ -79,6 +84,8 @@ type MediaElement {
   filesize: Int!
   lazyload: Boolean
   website: Website
+  getImageUrl: String!
+  getThumbUrl_300x200: String!
 }
 
 type Page {
@@ -135,4 +142,52 @@ type LinkExchange {
   owner: User
   website: Website
   active: Boolean
+}
+
+type Menu {
+  menu_id: Int!
+  website: Website
+  parent_id: Int
+  rewrite_id: Int
+  title: String!
+  locale: String
+  href: String
+  target: String
+  internal: String
+  breadcrumb: String
+  level: Int
+  children: [Menu]
+}
+
+type Rewrite {
+  id: Int!
+  website: Website
+  owner: User
+  url: String
+  route: String
+  locale: String
+}
+
+type PageRegions {
+  after_body_open: String
+  before_body_close: String
+  pre_menu: String
+  post_menu: String
+  pre_header: String
+  post_header: String
+  pre_content: String
+  post_content: String
+  pre_footer: String
+  post_footer: String
+}
+
+type ConfigsResult {
+  website: Website!
+  locale: String
+  configs: [ConfigEntry]
+}
+
+type ConfigEntry {
+  path: String!
+  value: String
 }

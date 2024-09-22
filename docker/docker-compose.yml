@@ -70,9 +70,12 @@ services:
         ipv4_address: ${IPV4_CLASS}.0.5
     restart: unless-stopped
   supervisor:
+    user: "${UID}:${GID}"
     build:
       context: ./supervisor
     volumes:
+      - ./php-fpm/passwd:/etc/passwd
+      - ./php-fpm/group:/etc/group
       - ./supervisor/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ./supervisor/supervisord.conf:/etc/supervisord.conf
       - ..:/var/www/html

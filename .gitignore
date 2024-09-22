@@ -31,6 +31,7 @@ pub/css/*
 pub/js/*
 pub/images/*
 pub/thumbs/*
+pub/vue_theme
 !pub/css/.gitkeep
 !pub/js/.gitkeep
 !pub/images/.gitkeep

@@ -148,9 +148,9 @@ class SiteBase implements ExtensionInterface
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function translate(string $string): string
+    public function translate(string $string, array $params = []): string
     {
-        return $this->getUtils()->translate($string, locale: $this->getCurrentLocale());
+        return $this->getUtils()->translate($string, params: $params, locale: $this->getCurrentLocale());
     }
 
     /**

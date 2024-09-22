@@ -572,20 +572,20 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getSiteMenu(string $menu_name, int $website_id, string $locale, $menu_element = null): array
+    public function getSiteMenu(string $menu_name, int $website_id, string $locale, $menu_element = null, $absoluteLinks = true): array
     {
         $out = [];
         if ($menu_element instanceof Menu) {
-            $out = $this->menuElementToArray($menu_element);
+            $out = $this->menuElementToArray($menu_element, $absoluteLinks);
 
             foreach ($menu_element->getChildren($locale) as $child) {
-                $out['children'][] = $this->getSiteMenu($menu_name, $website_id, $locale, $child);
+                $out['children'][] = $this->getSiteMenu($menu_name, $website_id, $locale, $child, $absoluteLinks);
             }
         } else {
             $out = array_map(
-                function ($menu_model) use ($menu_name, $website_id, $locale) {
+                function ($menu_model) use ($menu_name, $website_id, $locale, $absoluteLinks) {
                     /** @var Menu $menu_model */
-                    return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model);
+                    return $this->getSiteMenu($menu_name, $website_id, $locale, $menu_model, $absoluteLinks);
                 },
                 Menu::getCollection()->where(['menu_name' => $menu_name, 'website_id' => $website_id, 'parent_id' => null, 'locale' => [$locale, null]], ['position' => 'asc'])->getItems()
             );
@@ -601,23 +601,23 @@ class SiteData extends ContainerAwareObject
      * @return array
      * @throws BasicException
      */
-    public function buildSiteMenu(array $menu_items, $menu_element = null): array
+    public function buildSiteMenu(array $menu_items, $menu_element = null, $absoluteLinks = true): array
     {
         $out = [];
         if ($menu_element instanceof Menu) {
-            $out = $this->menuElementToArray($menu_element);
+            $out = $this->menuElementToArray($menu_element, $absoluteLinks);
 
             foreach ($menu_items as $child) {
                 /** @var Menu $child */
                 if ($child->getParentId() == $menu_element->getId()) {
-                    $out['children'][] = $this->buildSiteMenu($menu_items, $child);
+                    $out['children'][] = $this->buildSiteMenu($menu_items, $child, $absoluteLinks);
                 }
             }
         } else {
             foreach ($menu_items as $item) {
                 /** @var Menu $item */
                 if ($item->getParentId() == null) {
-                    $out[] = $this->buildSiteMenu($menu_items, $item);
+                    $out[] = $this->buildSiteMenu($menu_items, $item, $absoluteLinks);
                 }
             }
         }
@@ -628,17 +628,23 @@ class SiteData extends ContainerAwareObject
      * converts a menu element to array
      *
      * @param Menu $menu_element
+     * @param boolean $absolute
      * @return array
      * @throws BasicException
      */
-    protected function menuElementToArray(Menu $menu_element): array
+    protected function menuElementToArray(Menu $menu_element, bool $absolute = true): array
     {
         return [
             'menu_id' => $menu_element->getId(),
+            'parent_id' => $menu_element->getParentId(),
             'title' => $menu_element->getTitle(),
-            'href' => $menu_element->getLinkUrl(),
+            'href' => $menu_element->getLinkUrl($absolute),
             'target' => $menu_element->getTarget(),
+            'internal' => $menu_element->getInternalRoute(),
             'breadcrumb' => $menu_element->getBreadcrumb(),
+            'rewrite_id' => $menu_element->getRewriteId(),
+            'locale' => $menu_element->getLocale(),
+            'level' => $menu_element->getLevel(),
             'children' => [],
         ];
     }

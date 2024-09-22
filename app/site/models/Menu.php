@@ -63,7 +63,7 @@ class Menu extends ModelWithChildren
      * @return string
      * @throws BasicException
      */
-    public function getLinkUrl(): string
+    public function getLinkUrl(bool $absolute = true): string
     {
         if (trim($this->getHref()) != '') {
             return $this->getHref();
@@ -74,10 +74,28 @@ class Menu extends ModelWithChildren
              * @var Rewrite $rewrite
              */
             $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
-            return $this->getWebRouter()->getUrl('/') . '/' . ltrim($rewrite->getUrl(), '/');
+            return ($absolute ? $this->getWebRouter()->getUrl('/') : '') . '/' . ltrim($rewrite->getUrl(), '/');
         }
 
         return "#";
+    }
+
+    /**
+     * gets internal route
+     * 
+     * @return string|null
+     */
+    public function getInternalRoute() : ?string 
+    {    
+        if ($this->getRewriteId()) {
+            /**
+             * @var Rewrite $rewrite
+             */
+            $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
+            return $rewrite->getRoute();
+        }
+
+        return null;
     }
 
     /**

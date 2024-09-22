@@ -14,3 +14,4 @@ RUN chmod 775 /usr/local/bin/phpdoc
 RUN wget https://getcomposer.org/download/latest-stable/composer.phar -O  /usr/local/bin/composer
 RUN chmod 775 /usr/local/bin/composer
 
+USER sitebase

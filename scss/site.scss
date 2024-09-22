@@ -85,6 +85,10 @@ ul.breadcrumbs {
     justify-content: space-around;
     background-color: $color-almostwhite2 !important;
 
+    & > * {
+        align-self: center;
+    }
+
     .navbar {
         width: 100%;
     }

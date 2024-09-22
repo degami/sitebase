@@ -19,6 +19,19 @@ class Entrypoint extends BasePage
 {
     public function renderPage(RouteInfo $route_info = null, $route_data = []) : JsonResponse
     {
+        return $this->process($route_info, $route_data);
+    }
+
+    /**
+     * {@inheritdocs}
+     * this is only for compatibility
+     *
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
+     * @return Response
+     */
+    public function process(?RouteInfo $route_info = null, $route_data = []): Response
+    {
         if ($this->getRouteInfo()->getVar('lang') != null) {
             $this->getApp()->setCurrentLocale($this->getRouteInfo()->getVar('lang'));
         }
@@ -69,6 +82,10 @@ class Entrypoint extends BasePage
                 return $this->containerCall([$source, $fieldName]);
             }
 
+            if (preg_match_all("/(.*?)(\_.+)+/", $fieldName, $matches, PREG_PATTERN_ORDER) && method_exists($source, reset($matches[1]))) {
+                return $this->containerCall([$source, reset($matches[1])], array_map(fn ($el) => ltrim($el, "_"), $matches[2]));
+            }
+
             if (($foundMethod = $this->classHasMethodReturningType($source, $returnType)) !== false) {
                 return $this->containerCall([$source, $foundMethod]);
             }
@@ -80,6 +97,18 @@ class Entrypoint extends BasePage
             }
 
             return $source->getData($fieldName);
+        }
+
+        if (class_exists("App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName)) && is_callable(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'])) {
+            return $this->containerCall(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'], ['args' => $args + ['locale' => $this->getApp()->getCurrentLocale()]]);
+        }
+
+        if (is_object($source) && property_exists($source, $fieldName)) {
+            return $source->$fieldName;
+        }
+
+        if (is_array($source) && isset($source[$fieldName])) {
+            return $source[$fieldName];
         }
 
         if (preg_match("/^\[(.*?)\]$/", $returnType, $matches)) {
@@ -117,10 +146,6 @@ class Entrypoint extends BasePage
 
                 return $collection->getItems();
             }
-        }
-
-        if (class_exists("App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName)) && is_callable(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'])) {
-            return $this->containerCall(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'], ['args' => $args]);
         }
 
         if ($mandatory) {
@@ -165,19 +190,5 @@ class Entrypoint extends BasePage
         } catch (Exception $e) {}    
 
         return false;
-    }
-
-
-    /**
-     * {@inheritdocs}
-     * this is only for compatibility
-     *
-     * @param RouteInfo|null $route_info
-     * @param array $route_data
-     * @return Response
-     */
-    public function process(?RouteInfo $route_info = null, $route_data = []): Response
-    {
-        return $this->renderPage($route_info, $route_data);
     }
 }

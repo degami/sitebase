@@ -101,7 +101,7 @@ class Config extends AdminManageModelsPage
                 'configs' => $data['items'],
                 'total' => $data['total'],
                 'current_page' => $data['page'],
-                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $data['page_size']),
             ];
         }
         return $this->template_data;

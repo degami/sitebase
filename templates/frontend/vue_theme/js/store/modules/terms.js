@@ -10,12 +10,21 @@ query Taxonomy ($termId: String!) {
             orderBy: [{ field: "id", direction: ASC }]
         }
     ) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            rewrite {
+                id
+                url
+                route
+                locale
+            }
+        }
+        count
     }
 }
 `
@@ -23,18 +32,28 @@ query Taxonomy ($termId: String!) {
 const TERMS_LIST_QUERY = gql`
 query Taxonomy ($input: SearchCriteriaInput) {
     taxonomy(input: $input) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            rewrite {
+                id
+                url
+                route
+                locale
+            }
+        }
+        count
     }
 }
 `
 
 const state = () => ({
     terms: {},
+    totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
@@ -44,9 +63,16 @@ const mutations = {
             state.terms = { ...state.terms, [element.id]: element };
         });
     },
+    setTotalCount(state, totalCount) {
+        state.totalCount = totalCount;
+    },
     setLoading(state, loading) {
         state.loading = loading;
     },
+    flushTerms(state) {
+        state.terms = {};
+        state.totalCount = 0;
+    }
 };
   
 const actions = {
@@ -70,7 +96,8 @@ const actions = {
                 query: TERM_QUERY,
                 variables: TERM_VARIABLES,
             });
-            commit('setTerms', data.taxonomy);
+            commit('setTerms', data.taxonomy.items);
+            commit('setTotalCount', data.taxonomy.count);
         } catch (error) {
             console.error('Errore durante il fetch del termine di tassonomia:', error);
         } finally {
@@ -92,7 +119,8 @@ const actions = {
                 query: TERMS_LIST_QUERY,
                 variables: TERMS_VARIABLES,
             });
-            commit('setTerms', data.taxonomy);
+            commit('setTerms', data.taxonomy.items);
+            commit('setTotalCount', data.taxonomy.count);
         } catch (error) {
             console.error('Errore durante il fetch dei termini di tassonoia:', error);
         } finally {

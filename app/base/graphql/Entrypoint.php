@@ -111,7 +111,7 @@ class Entrypoint extends BasePage
             return $source[$fieldName];
         }
 
-        if (preg_match("/^\[(.*?)\]$/", $returnType, $matches)) {
+        if (preg_match("/^\[(.*?)\]$/", $returnType, $matches) || preg_match("/(.*?)Collection$/", $returnType, $matches)) {
             if (class_exists("\\App\\Site\\Models\\".$matches[1])) {
                 /** @var BaseCollection $collection */
                 $collection = $this->containerCall(["\\App\\Site\\Models\\".$matches[1], "getCollection"]);
@@ -144,6 +144,12 @@ class Entrypoint extends BasePage
                     }
                 }
 
+                if (preg_match("/Collection$/", $returnType)) {
+                    return [
+                        'items' => $collection->getItems(),
+                        'count' => $collection->count(),
+                    ];
+                }
                 return $collection->getItems();
             }
         }

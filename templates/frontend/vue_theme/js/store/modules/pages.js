@@ -10,20 +10,29 @@ query Pages ($pageId: String!) {
             orderBy: [{ field: "id", direction: ASC }]
         }
     ) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
-        gallery {
-            getImageUrl
-            getThumbUrl_300x200
-            lazyload
-            mimetype
-            filesize
-            filename
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            gallery {
+                getImageUrl
+                getThumbUrl_300x200
+                lazyload
+                mimetype
+                filesize
+                filename
+            }
+            rewrite {
+                id
+                url
+                route
+                locale
+            }
         }
+        count
     }
 }
 `
@@ -31,26 +40,36 @@ query Pages ($pageId: String!) {
 const PAGES_LIST_QUERY = gql`
 query Pages ($input: SearchCriteriaInput) {
     pages(input: $input) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
-        gallery {
-            getImageUrl
-            getThumbUrl_300x200
-            lazyload
-            mimetype
-            filesize
-            filename
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            gallery {
+                getImageUrl
+                getThumbUrl_300x200
+                lazyload
+                mimetype
+                filesize
+                filename
+            }
+            rewrite {
+                id
+                url
+                route
+                locale
+            }
         }
+        count
     }
 }
 `
 
 const state = () => ({
     pages: {},
+    totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
@@ -60,9 +79,16 @@ const mutations = {
             state.pages = { ...state.pages, [element.id]: element };
         });
     },
+    setTotalCount(state, totalCount) {
+        state.totalCount = totalCount;
+    },
     setLoading(state, loading) {
         state.loading = loading;
     },
+    flushPages(state) {
+        state.pages = {};
+        state.totalCount = 0;
+    }
 };
   
 const actions = {
@@ -86,7 +112,8 @@ const actions = {
                 query: PAGE_QUERY,
                 variables: PAGE_VARIABLES,
             });
-            commit('setPages', data.pages);
+            commit('setPages', data.pages.items);
+            commit('setTotalCount', data.pages.count);
         } catch (error) {
             console.error('Errore durante il fetch della pagina:', error);
         } finally {
@@ -108,7 +135,8 @@ const actions = {
                 query: PAGES_LIST_QUERY,
                 variables: PAGE_VARIABLES,
             });
-            commit('setPages', data.pages);
+            commit('setPages', data.pages.items);
+            commit('setTotalCount', data.pages.count);
         } catch (error) {
             console.error('Errore durante il fetch della pagina:', error);
         } finally {

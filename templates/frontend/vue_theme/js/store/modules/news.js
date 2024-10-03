@@ -10,13 +10,22 @@ query News ($newsId: String!) {
             orderBy: [{ field: "id", direction: ASC }]
         }
     ) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
-        date
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            date
+            rewrite {
+                id
+                url
+                route
+                locale
+            }
+        }
+        count
     }
 }
 `
@@ -24,19 +33,29 @@ query News ($newsId: String!) {
 const NEWS_LIST_QUERY = gql`
 query News ($input: SearchCriteriaInput) {
     news(input: $input) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
-        date
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            date
+            rewrite {
+                id
+                url
+                route
+                locale
+            }
+        }
+        count
     }
 }
 `
 
 const state = () => ({
     news: {},
+    totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
@@ -46,9 +65,16 @@ const mutations = {
             state.news = { ...state.news, [element.id]: element };
         });
     },
+    setTotalCount(state, totalCount) {
+        state.totalCount = totalCount;
+    },
     setLoading(state, loading) {
         state.loading = loading;
     },
+    flushNews(state) {
+        state.news = {};
+        state.totalCount = 0;
+    }
 };
   
 const actions = {
@@ -72,14 +98,15 @@ const actions = {
                 query: NEWS_QUERY,
                 variables: NEWS_VARIABLES,
             });
-            commit('setNews', data.news);
+            commit('setNews', data.news.items);
+            commit('setTotalCount', data.news.count);
         } catch (error) {
             console.error('Errore durante il fetch della news:', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
     },
-    async fetchAllNews({ commit, dispatch }, filters = nul) {
+    async fetchAllNews({ commit, dispatch }, filters = null) {
         const NEWS_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
@@ -94,13 +121,19 @@ const actions = {
                 query: NEWS_LIST_QUERY,
                 variables: NEWS_VARIABLES,
             });
-            commit('setNews', data.news);
+            commit('setNews', data.news.items);
+            commit('setTotalCount', data.news.count);
         } catch (error) {
             console.error('Errore durante il fetch delle news:', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
     },
+    flushNews({commit}) {
+        commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
+        commit('flushNews');
+        commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
+    }
 };
   
 export default {

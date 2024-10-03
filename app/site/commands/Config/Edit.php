@@ -36,6 +36,8 @@ class Edit extends BaseCommand
                 new InputDefinition(
                     [
                         new InputOption('id', 'i', InputOption::VALUE_OPTIONAL),
+                        new InputOption('path', 'p', InputOption::VALUE_OPTIONAL),
+                        new InputOption('locale', 'l', InputOption::VALUE_OPTIONAL, 'Locale', null),
                         new InputOption('value', null, InputOption::VALUE_OPTIONAL),
                     ]
                 )
@@ -53,8 +55,28 @@ class Edit extends BaseCommand
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
-            $this->getIo()->error('Invalid config id');
-            return;
+            $configuration = null;
+            $path = $input->getOption('path') ?? null;
+
+            if ($path) {
+                $condition = ['path' => $path];
+                $locale = $input->getOption('locale');
+                if ($locale) {
+                    $condition['locale'] = $locale;
+                }
+                $website = $input->getOption('website');
+                if (is_numeric($website)) {
+                    $condition['website_id'] = $website;
+                }
+                $configuration = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => $condition]);
+            }
+
+            if (!$configuration || !$configuration->getId()) {
+                $this->getIo()->error('Invalid config id');
+                return;    
+            }
+
+            $id = $configuration->getId();
         }
 
         /** @var Configuration $configuration */

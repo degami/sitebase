@@ -1,5 +1,6 @@
 // js/store/index.js
 import { createStore } from 'vuex';
+import appState from './modules/appState';
 import apolloClient  from './modules/apolloClient';
 import configuration from './modules/configuration';
 import menuTree from './modules/menuTree';
@@ -12,6 +13,7 @@ import terms from './modules/terms';
 
 const store = createStore({
   modules: {
+    appState,
     apolloClient,
     configuration,
     menuTree,

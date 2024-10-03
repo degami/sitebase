@@ -85,3 +85,11 @@ In the .env file you can change the basic informations (eg. the administration l
 ## Help Wanted
 
 If you think that this project can be useful, contributing in any way is welcome. Just fork and drop me a merge request!
+
+## If you wish to use vue theme
+
+bin/docker sh php-fpm
+cd templates/frontend/vue_theme/
+npm install
+npm run build
+bin/console config:edit -p app/frontend/themename --value vue_theme --no-interaction

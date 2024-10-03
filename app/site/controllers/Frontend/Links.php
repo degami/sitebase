@@ -86,7 +86,7 @@ class Links extends FormPage
             'links' => $data['items'],
             'total' => $data['total'],
             'current_page' => $data['page'],
-            'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+            'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $data['page_size']),
         ];
     }
 

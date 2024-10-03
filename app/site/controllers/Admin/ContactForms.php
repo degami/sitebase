@@ -85,7 +85,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
                 'current_page' => $data['page'],
-                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this),
+                'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $data['page_size']),
             ];
         } elseif ($this->template_data['action'] == 'view_submission') {
             $this->addBackButton();

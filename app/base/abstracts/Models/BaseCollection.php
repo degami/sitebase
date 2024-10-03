@@ -415,7 +415,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     public function count() : int
     {
         $stmt = $this->getSelect();
-        return (clone $stmt)->count();
+        return (clone $stmt)->removePart('limitCount')->removePart('limitOffset')->count();
     }
 
     /**
@@ -450,7 +450,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
             $this->items[$item->getId()] = $item;
         }
 
-        $out = ['items' => $this->getItems(), 'page' => $page, 'total' => $total];
+        $out = ['items' => $this->getItems(), 'page' => $page, 'total' => $total, 'page_size' => $page_size];
 
         if (getenv('DEBUG')) {
             $debugbar['time']->stopMeasure($measure_key);

@@ -43,7 +43,6 @@ export default {
   },
   data() {
     return {
-      website_id: null,
       primary_menu: null,
       currentRewrite: null,
     };
@@ -51,11 +50,18 @@ export default {
   async created() {
   },
   computed: {
+    locale() {
+      return this.$store.getters['appState/locale'];
+    },
+    website_id() {
+      return this.$store.getters['appState/website_id'];
+    }
   },
   async mounted() {
+    this.$store.dispatch('appState/updateWebsiteId', await this.getWebsiteId(this.currentRewrite?.locale));
+    this.$store.dispatch('appState/updateLocale', 'en');
     this.primary_menu = await this.getConfigValue('app/frontend/main_menu', this.currentRewrite?.locale);
-    this.website_id = await this.getWebsiteId(this.currentRewrite?.locale);
-    this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', this.website_id);
+    this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', this.$store.getters['appState/website_id']);
   },
   methods: {
     async getConfigValue(path, locale = null) {
@@ -75,8 +81,9 @@ export default {
       if ('Rewrite' == data.__typename) {
         this.currentRewrite = data;
       } else {
-        this.currentRewrite = await this.$store.dispatch('rewrites/findRewriteById', {rewriteId: data.rewrite_id, websiteId: this.website_id});
+        this.currentRewrite = await this.$store.dispatch('rewrites/findRewriteById', {rewriteId: data.rewrite_id, websiteId: this.$store.getters['appState/website_id']});
       }
+      this.$store.dispatch('appState/updateLocale', this.currentRewrite?.locale || 'en');
       this.$store.dispatch('apolloClient/updateLocale', this.currentRewrite?.locale);
       let menuName = await this.getConfigValue('app/frontend/main_menu', this.currentRewrite?.locale);
       if (menuName) {
@@ -84,8 +91,8 @@ export default {
       }
     },
     async handleViewData(data) {
-      if (null == this.website_id) {
-        this.website_id = await this.getWebsiteId();
+      if (null == this.$store.getters['appState/website_id']) {
+        this.$store.dispatch('appstate/updateWebsiteId', await this.getWebsiteId());
       }
 
       if (data.rewrite_id) {
@@ -93,16 +100,16 @@ export default {
       }
       let foundMenuItem = null;
       if (data.page_id) {
-        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/page/'+data.page_id, websiteId: this.website_id});
+        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/page/'+data.page_id, websiteId: this.$store.getters['appState/website_id']});
       }
       if (data.news_id) {
-        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/news/'+data.news_id, websiteId: this.website_id});
+        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/news/'+data.news_id, websiteId: this.$store.getters['appState/website_id']});
       }
       if (data.event_id) {
-        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/event/'+data.event_id, websiteId: this.website_id});
+        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/event/'+data.event_id, websiteId: this.$store.getters['appState/website_id']});
       }
       if (data.term_id) {
-        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/taxonomy/'+data.term_id, websiteId: this.website_id});
+        foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/taxonomy/'+data.term_id, websiteId: this.$store.getters['appState/website_id']});
       }
 
       if (null != foundMenuItem) {

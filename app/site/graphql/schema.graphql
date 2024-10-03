@@ -5,9 +5,9 @@ schema {
 
 type Query {
   greetings(firstName: String!, lastName: String!): String!
-  pages(input: SearchCriteriaInput): [Page]
-  news(input: SearchCriteriaInput): [News]
-  events(input: SearchCriteriaInput): [Event]
+  pages(input: SearchCriteriaInput): PageCollection
+  news(input: SearchCriteriaInput): NewsCollection
+  events(input: SearchCriteriaInput): EventCollection
   medias(input: SearchCriteriaInput): [MediaElement]
   websites(input: SearchCriteriaInput): [Website]
   links(input: SearchCriteriaInput): [LinkExchange]
@@ -15,7 +15,7 @@ type Query {
   pageRegions(rewrite_id: Int!): PageRegions
   Configuration: [ConfigsResult]
   menuTree(menu_name: String!, website_id: Int!): [Menu]
-  taxonomy(input: SearchCriteriaInput): [Taxonomy]
+  taxonomy(input: SearchCriteriaInput): TaxonomyCollection
 }
 
 #type Mutation {
@@ -74,6 +74,12 @@ type Taxonomy {
   meta_keywords: String
   meta_description: String
   meta_title: String
+  rewrite: Rewrite
+}
+
+type TaxonomyCollection {
+  items: [Taxonomy]
+  count: Int!
 }
 
 type MediaElement {
@@ -101,6 +107,12 @@ type Page {
   meta_keywords: String
   meta_description: String
   meta_title: String
+  rewrite: Rewrite
+}
+
+type PageCollection {
+  items: [Page]
+  count: Int!
 }
 
 type News {
@@ -115,6 +127,12 @@ type News {
   meta_keywords: String
   meta_description: String
   meta_title: String
+  rewrite: Rewrite
+}
+
+type NewsCollection {
+  items: [News]
+  count: Int!
 }
 
 type Event {
@@ -131,6 +149,12 @@ type Event {
   meta_keywords: String
   meta_description: String
   meta_title: String
+  rewrite: Rewrite
+}
+
+type EventCollection {
+  items: [Event]
+  count: Int!
 }
 
 type LinkExchange {

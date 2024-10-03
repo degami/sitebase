@@ -234,6 +234,9 @@ class BaseCommand extends SymfonyCommand
      */
     protected function confirmSave(string $confirmation_message): bool
     {
+        if ($this->input->getOption('no-interaction')) {
+            return true;
+        }
         return $this->confirmMessage($confirmation_message, 'Not Saving');
     }
 

@@ -10,15 +10,24 @@ query Events ($eventId: String!) {
             orderBy: [{ field: "id", direction: ASC }]
         }
     ) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
-        date
-        latitude
-        longitude
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            date
+            latitude
+            longitude
+            rewrite {
+                id
+                url
+                route
+                locale
+            }        
+        }
+        count
     }
 }
 `
@@ -26,21 +35,31 @@ query Events ($eventId: String!) {
 const EVENTS_LIST_QUERY = gql`
 query Events ($input: SearchCriteriaInput) {
     events(input: $input) {
-        id
-        title
-        content
-        locale
-        url
-        meta_title
-        date
-        latitude
-        longitude
+        items {
+            id
+            title
+            content
+            locale
+            url
+            meta_title
+            date
+            latitude
+            longitude
+            rewrite {
+                id
+                url
+                route
+                locale
+            }
+        }
+        count
     }
 }
 `
 
 const state = () => ({
     events: {},
+    totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
@@ -50,9 +69,16 @@ const mutations = {
             state.events = { ...state.events, [element.id]: element };
         });
     },
+    setTotalCount(state, totalCount) {
+        state.totalCount = totalCount;
+    },
     setLoading(state, loading) {
         state.loading = loading;
     },
+    flushEvents(state) {
+        state.events = {};
+        state.totalCount = 0;
+    }
 };
   
 const actions = {
@@ -76,7 +102,8 @@ const actions = {
                 query: EVENT_QUERY,
                 variables: EVENT_VARIABLES,
             });
-            commit('setEvents', data.events);
+            commit('setEvents', data.events.items);
+            commit('setTotalCount', data.events.count);
         } catch (error) {
             console.error('Errore durante il fetch dell\'evento :', error);
         } finally {
@@ -98,13 +125,19 @@ const actions = {
                 query: EVENTES_LIST_QUERY,
                 variables: EVENTS_VARIABLES,
             });
-            commit('setEvents', data.events);
+            commit('setEvents', data.events.items);
+            commit('setTotalCount', data.events.count);
         } catch (error) {
             console.error('Errore durante il fetch degli eventi:', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
     },
+    flushEvents({commit}) {
+        commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
+        commit('flushEvents');
+        commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
+    }
 };
   
 export default {

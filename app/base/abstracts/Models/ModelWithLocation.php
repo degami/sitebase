@@ -79,7 +79,7 @@ abstract class ModelWithLocation extends FrontendModel
             'tag' => 'div',
             'id' => $id.'-map',
             'attributes' => [
-                'class' => 'mao-details',
+                'class' => 'map-details',
             ],
             'text' => '',
         ]]);

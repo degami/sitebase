@@ -1,6 +1,6 @@
 <template>
     <div v-if="pageregionsLoading">
-      <Loader text="Loading page region..." />
+      <Loader :text="loadingText" />
     </div>
     <div v-else v-html="pageRegion"></div>
 </template>
@@ -28,9 +28,11 @@
       return {
         pageRegion: null,
         pageregionsLoading: false,
+        loadingText: '',
       };
     },
     async created() {
+      this.setLoadingText();
       await this.loadPageRegion();
     },
     computed: {
@@ -40,6 +42,9 @@
       region: 'loadPageRegion',
     },
     methods: {
+      async setLoadingText() {
+        this.loadingText = await this.translate('Loading page region %s ...', this.region);
+      },
       async loadPageRegion() {
         this.pageregionsLoading = true;
 
@@ -59,6 +64,9 @@
         } finally {
           this.pageregionsLoading = false;
         }
+      },
+      async translate(text, ...parameters) {
+        return this.$store.dispatch('appState/translate', {text, parameters});
       }
     }
   };

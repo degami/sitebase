@@ -85,13 +85,14 @@ const actions = {
     async fetchEvent({ commit, dispatch }, eventId) {
         if (undefined !== state.events && undefined !== state.events[eventId]) {
             console.log("got events "+eventId);
-            return;
+            return state.events[eventId];
         }
 
         const EVENT_VARIABLES = {"eventId": eventId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 
+        let returnEvent = null;
         try {
             const client = await dispatch('apolloClient/getApolloClient', null, { root: true });  // Usa il root per accedere a un modulo Vuex diverso
             if (!client) {
@@ -104,13 +105,16 @@ const actions = {
             });
             commit('setEvents', data.events.items);
             commit('setTotalCount', data.events.count);
+            returnEvent = data.events.items[0];
         } catch (error) {
             console.error('Errore durante il fetch dell\'evento :', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
+
+        return returnEvent;
     },
-    async fetchAllEvents({ commit, dispatch }, filters = nul) {
+    async fetchAllEvents({ commit, dispatch }, filters = null) {
         const EVENTS_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
@@ -122,7 +126,7 @@ const actions = {
             }
 
             const { data } = await client.query({
-                query: EVENTES_LIST_QUERY,
+                query: EVENTS_LIST_QUERY,
                 variables: EVENTS_VARIABLES,
             });
             commit('setEvents', data.events.items);

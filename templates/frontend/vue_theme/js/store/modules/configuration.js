@@ -54,6 +54,9 @@ const actions = {
         }
     },
     async getConfigurationByPath({ state, dispatch }, { path, locale, websiteId = null, siteDomain = null }) {
+        if (locale == 'en') {
+            locale = null;
+        }
         if (!state.configuration.length) {
             await dispatch('fetchConfiguration');
         }

@@ -42,6 +42,9 @@ class Entrypoint extends BasePage
 
         $rawInput = file_get_contents('php://input');
         $input = json_decode($rawInput, true);
+        if (!is_array($input)) {
+            throw new \App\Base\Exceptions\InvalidValueException("Missing request body");
+        }
         $query = $input['query'];
         $variableValues = isset($input['variables']) ? $input['variables'] : null;
         $rootValue = null;

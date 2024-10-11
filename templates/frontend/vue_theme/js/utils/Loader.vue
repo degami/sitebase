@@ -25,7 +25,7 @@
       repeatCount="indefinite" 
       begin="0.3"/>     
   </circle>
-</svg> {{ text }}
+</svg> {{ loadingText }}
 </template>
 
 <script>
@@ -40,6 +40,24 @@ export default {
             required: false,
             default: '#666',
         }
+    },
+    data() {
+      return {
+        loadingText: '',
+      }
+    },
+    created() {
+      this.setLoadingText();
+    },
+    methods: {
+      async setLoadingText() {
+        if (this.text) {
+          this.loadingText = await this.translate(this.text);
+        }
+      },
+      async translate(text) {
+        return this.$store.dispatch('appState/translate', {text});
+      }
     }
 }
 </script>

@@ -1,19 +1,19 @@
 <template>
 
-  <div v-if="newsLoading">
-    <Loader text="Loading news..." />
+  <div v-if="eventsLoading">
+    <Loader text="Loading events..." />
   </div>
   <div v-else>
     <h1 class="page-title">{{ title }}</h1>
     <div class="row">
         <div class="col-md-12">
-            <ul class="news-list">
-                <li v-for="newsItem in news" :key="newsItem.id">
-                    <div class="news-detail">
-                        <router-link :to="newsItem.rewrite.url" class="news-title">{{ newsItem.title }}</router-link>
-                        &nbsp;<span class="news-date">{{ newsItem.date }}</span>
+            <ul class="event-list">
+                <li v-for="eventsItem in events" :key="eventsItem.id">
+                    <div class="event-detail">
+                        <router-link :to="eventsItem.rewrite.url" class="news-title">{{ eventsItem.title }}</router-link>
+                        &nbsp;<span class="event-date">{{ eventsItem.date }}</span>
                     </div>
-                    <div class="news-description">{{ summarize(newsItem.content, 20) }}</div>
+                    <div class="event-description">{{ summarize(eventsItem.content, 20) }}</div>
                 </li>
             </ul>
             <Paginator :current_page="currentPage" :total="totalCount" :page_size="pageSize" />        
@@ -42,7 +42,7 @@ export default {
   },
   created() {
     this.$store.dispatch('configuration/fetchConfiguration');
-    this.fetchNewsList(this.currentPage);
+    this.fetchEventsList(this.currentPage);
     this.setTitle();
   },
   computed: {
@@ -50,9 +50,9 @@ export default {
       configLoading: 'loading', // loading per configuration
       configuration: 'configuration'
     }),
-    ...mapState('news', {
-      newsLoading: 'loading', // loading per news
-      news: 'news',
+    ...mapState('events', {
+      eventsLoading: 'loading', // loading per events
+      events: 'events',
       totalCount: 'totalCount'
     })
   },
@@ -60,16 +60,16 @@ export default {
     '$route.query.page': function(newPage) {
       // Aggiorna currentPage e fetch
       this.currentPage = parseInt(newPage) || 0;
-      this.fetchNewsList(this.currentPage);
+      this.fetchEventsList(this.currentPage);
     }
   },
   methods: {
     async setTitle() {
-      this.title = await this.translate('News'); // Attendi la traduzione e aggiorna il titolo
+      this.title = await this.translate('Events'); // Attendi la traduzione e aggiorna il titolo
     },
-    fetchNewsList(page = 0) {
-        this.$store.dispatch('news/flushNews');
-        this.$store.dispatch('news/fetchAllNews', {
+    fetchEventsList(page = 0) {
+        this.$store.dispatch('events/flushEvents');
+        this.$store.dispatch('events/fetchAllEvents', {
             criteria: [
               {key: 'website_id', value: ""+this.$store.getters['appState/website_id']}, 
               {key: 'locale', value: ""+this.$store.getters['appState/locale']}
@@ -93,7 +93,7 @@ export default {
   beforeRouteUpdate(to, from, next) {
     // Aggiorna currentPage se cambia la pagina nella query string
     this.currentPage = parseInt(to.query.page) || 0;
-    this.fetchNewsList(this.currentPage);
+    this.fetchEventsList(this.currentPage);
     next();
   }
 }

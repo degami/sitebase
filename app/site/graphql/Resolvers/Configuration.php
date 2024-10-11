@@ -39,6 +39,10 @@ class Configuration implements ResolverInterface
                     }
                 }
 
+                
+                $configs[] = ['path' => 'app/mapbox/api_key', 'value' => $app->getEnv('MAPBOX_API_KEY')];
+                $configs[] = ['path' => 'app/googlemaps/api_key', 'value' => $app->getEnv('GOOGLE_API_KEY')];
+
                 $out[] = [
                     'website' => $website,
                     'locale' => $locale,

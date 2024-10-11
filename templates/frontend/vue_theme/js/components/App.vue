@@ -58,9 +58,10 @@ export default {
     }
   },
   async mounted() {
-    this.$store.dispatch('appState/updateWebsiteId', await this.getWebsiteId(this.currentRewrite?.locale));
-    this.$store.dispatch('appState/updateLocale', 'en');
-    this.primary_menu = await this.getConfigValue('app/frontend/main_menu', this.currentRewrite?.locale);
+    this.$store.dispatch('appState/updateLocale', this.$route.params.locale || this.currentRewrite?.locale);
+    this.$store.dispatch('appState/updateWebsiteId', await this.getWebsiteId(this.$store.getters['appState/locale']));
+    this.$store.dispatch('appState/fetchTranslations');
+    this.primary_menu = await this.getConfigValue('app/frontend/main_menu', this.currentRewrite?.locale || this.$store.getters['appState/locale']);
     this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', this.$store.getters['appState/website_id']);
   },
   methods: {
@@ -83,9 +84,12 @@ export default {
       } else {
         this.currentRewrite = await this.$store.dispatch('rewrites/findRewriteById', {rewriteId: data.rewrite_id, websiteId: this.$store.getters['appState/website_id']});
       }
-      this.$store.dispatch('appState/updateLocale', this.currentRewrite?.locale || 'en');
-      this.$store.dispatch('apolloClient/updateLocale', this.currentRewrite?.locale);
-      let menuName = await this.getConfigValue('app/frontend/main_menu', this.currentRewrite?.locale);
+      let newLocale = this.currentRewrite?.locale || this.$store.getters['appState/locale'];
+      if (this.$store.getters['locale'] != newLocale) {
+        this.$store.dispatch('appState/updateLocale', newLocale);
+        this.$store.dispatch('appState/fetchTranslations');
+      }
+      let menuName = await this.getConfigValue('app/frontend/main_menu', newLocale);
       if (menuName) {
         this.primary_menu = menuName;
       }

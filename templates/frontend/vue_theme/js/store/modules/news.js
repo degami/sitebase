@@ -81,7 +81,7 @@ const actions = {
     async fetchNews({ commit, dispatch }, newsId) {
         if (undefined !== state.news && undefined !== state.news[newsId]) {
             console.log("got news "+newsId);
-            return;
+            return state.news[newsId];
         }
 
         const NEWS_VARIABLES = {"newsId": newsId};
@@ -105,6 +105,8 @@ const actions = {
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
+
+        return state.news[newsId];
     },
     async fetchAllNews({ commit, dispatch }, filters = null) {
         const NEWS_VARIABLES = {"input": filters};

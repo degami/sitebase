@@ -15,7 +15,8 @@ type Query {
   pageRegions(rewrite_id: Int!): PageRegions
   Configuration: [ConfigsResult]
   menuTree(menu_name: String!, website_id: Int!): [Menu]
-  taxonomy(input: SearchCriteriaInput): TaxonomyCollection
+  taxonomy(input: SearchCriteriaInput): TaxonomyCollection,
+  Translations: [TranslationEntry],
 }
 
 #type Mutation {
@@ -214,4 +215,9 @@ type ConfigsResult {
 type ConfigEntry {
   path: String!
   value: String
+}
+
+type TranslationEntry {
+  key: String!
+  value: String!
 }

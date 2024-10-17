@@ -59,8 +59,31 @@ export default {
           // Carica dinamicamente il componente risolto
           const resolvedComponent = await componentLoader();
           this.resolvedComponent = resolvedComponent.default;
+
+          const idValue = rewrite.route.split('/').pop();
+
+          let dataToEmit = null;
+          switch (componentType) {
+            case 'event':
+              dataToEmit = {event_id: idValue};
+              break;
+            case 'news':
+              dataToEmit = {news_id: idValue};
+              break;
+            case 'page':
+              dataToEmit = {page_id: idValue};
+              break;
+            case 'taxonomy':
+              dataToEmit = {term_id: idValue};
+              break;
+          }
+          
+          if (dataToEmit) {
+            this.$emit('data-sent', dataToEmit);
+          }
+
           this.componentProps = {
-            id: rewrite.route.split('/').pop(),  // Ottieni l'ID dalla route
+            id: idValue,  // Ottieni l'ID dalla route
             locale: rewrite.locale,
           };
 

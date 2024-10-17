@@ -95,6 +95,7 @@ export default {
   methods: {
     async updateEventContent(id) {
       this.$data.currentEvent = await this.$store.dispatch('events/fetchEvent', id);
+      this.$emit('data-sent', {event_id: this.$data.currentEvent.id});
     },
     async updateMap() {
       let event = this.currentEvent || await this.$store.dispatch('events/fetchEvent', this.id);

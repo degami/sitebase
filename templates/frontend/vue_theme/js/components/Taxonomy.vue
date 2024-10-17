@@ -52,7 +52,8 @@
     },
     methods: {
       updateTaxonomyContent(id) {
-        this.$store.dispatch('terms/fetchTerm', id);
+        const termItem = this.$store.dispatch('terms/fetchTerm', id);
+        this.$emit('data-sent', {term_id: termItem.id});
       },
     }
   };

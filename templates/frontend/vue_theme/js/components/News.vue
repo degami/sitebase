@@ -53,7 +53,8 @@ export default {
   },
   methods: {
     updateNewsContent(id) {
-      this.$store.dispatch('news/fetchNews', id);
+      const newsItem = this.$store.dispatch('news/fetchNews', id);
+      this.$emit('data-sent', {news_id: newsItem.id});
     },
   }
 };

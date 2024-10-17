@@ -137,19 +137,25 @@ abstract class BaseHtmlPage extends BasePage
         }
     }
 
+    protected function normalizeCacheKey($key) : string
+    {
+        return preg_replace("/\.+/", '.', str_replace([':','/'], '.', $key));
+    }
+
     /**
      * gets cache key
      */
     public function getCacheKey() : string
     {
         if ($this->getRewriteObject() == null) {
-            return 'site.' . $this->getSiteData()->getCurrentWebsiteId() . '.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
+            return $this->normalizeCacheKey('site.' . $this->getSiteData()->getCurrentWebsiteId() . '.' . trim($this->getRouteInfo()->getRoute(), '.'));            
         }
 
-        return 
+        return $this->normalizeCacheKey(
             'site.'.$this->getRewriteObject()?->getWebsiteId().
             '.' . $this->getRewriteObject()?->getLocale() . 
-            '.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
+            '.' . trim($this->getRouteInfo()->getRouteName(), '.')
+        );
     }
 
     /**

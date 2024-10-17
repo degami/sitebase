@@ -90,7 +90,7 @@ abstract class FrontendPageWithObject extends FrontendPage
     {
 
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
-        $locale = $this->getSiteData()->getDefaultLocale();
+        $locale = $this->getRewrite()?->getLocale() ?? $this->getSiteData()->getDefaultLocale();
 
         $prefix = 'site.'.$website_id.'.'.$locale.'.';
 
@@ -104,10 +104,10 @@ abstract class FrontendPageWithObject extends FrontendPage
         $prefix .= trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
 
         if ($this->getObject() instanceof FrontendModel) {
-            return $prefix . '.' . $this->getUtils()->slugify($this->getObject()->getUrl(), false);
+            return $this->normalizeCacheKey($prefix . '.' . $this->getUtils()->slugify($this->getObject()->getUrl(), false));
         }
 
-        return $prefix . '.id.'. $this->getObject()->getId();
+        return $this->normalizeCacheKey($prefix . '.id.'. $this->getObject()->getId());
     }
 
     /**

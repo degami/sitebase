@@ -59,11 +59,12 @@
     },
     methods: {
       updatePageContent(id) {
-        this.$store.dispatch('pages/fetchPage', id).then(() => {
+        const pageItem = this.$store.dispatch('pages/fetchPage', id).then(() => {
           this.$nextTick(() => {
             this.initializeGallery();
           });
         });
+        this.$emit('data-sent', {page_id: pageItem.id});
       },
       initializeGallery() 
       {

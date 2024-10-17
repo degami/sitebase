@@ -88,6 +88,7 @@ export default {
         this.currentRewrite = await this.$store.dispatch('rewrites/findRewriteById', {rewriteId: data.rewrite_id, websiteId: this.$store.getters['appState/website_id']});
       }
       const rewriteId = this.currentRewrite.id;
+      console.log('fetch pageregions for rewrite ' + rewriteId);
       this.$store.dispatch('pageregions/fetchPageregions', {rewriteId});
       let newLocale = this.currentRewrite?.locale || this.$store.getters['appState/locale'];
       if (this.$store.getters['locale'] != newLocale) {
@@ -100,6 +101,7 @@ export default {
       }
     },
     async handleViewData(data) {
+      console.log('handleViewData', data);
       if (null == this.$store.getters['appState/website_id']) {
         this.$store.dispatch('appstate/updateWebsiteId', await this.getWebsiteId());
       }
@@ -121,6 +123,7 @@ export default {
         foundMenuItem = await this.$store.dispatch('rewrites/findRewriteByRoute', {route: '/taxonomy/'+data.term_id, websiteId: this.$store.getters['appState/website_id']});
       }
 
+      console.log('foundMenuItem', foundMenuItem);
       if (null != foundMenuItem) {
         this.handleMenuData(foundMenuItem);
       } else {

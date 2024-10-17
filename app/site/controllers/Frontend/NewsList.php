@@ -73,7 +73,7 @@ class NewsList extends FrontendPage
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
         $collection = $this->containerCall([News::class, 'getCollection']);
         $collection->addCondition(['locale' => $this->getCurrentLocale()])->addOrder(['date' => 'DESC']);
-        $data = $this->containerCall([$collection, 'paginate']);
+    $data = $this->containerCall([$collection, 'paginate'] /*, ['page_size' => 10]*/);
         return $this->template_data += [
             'page_title' => $this->getUtils()->translate('News', locale: $this->getCurrentLocale()),
             'news' => $data['items'],

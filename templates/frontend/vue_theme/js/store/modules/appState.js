@@ -13,6 +13,7 @@ const state = {
     website_id: null,
     locale: null,
     translations: {},
+    primary_menu: null,
 };
 
 const mutations = {
@@ -32,13 +33,19 @@ const mutations = {
     },
     FLUSH_TRANSLATIONS(state) {
         state.translations = {};
-    }
+    },
+    SET_PRIMARY_MENU(state, primary_menu) {
+        state.primary_menu = primary_menu;
+    },    
 };
 
 const actions = {
-    updateLocale({ commit, dispatch }, locale) {
+    async updateLocale({ commit, dispatch }, locale) {
         commit('SET_LOCALE', locale);
-        dispatch('apolloClient/updateLocale', locale);
+        await dispatch('apolloClient/updateLocale', locale);
+
+        const menu_name = await dispatch('getConfigValue', {path: 'app/frontend/main_menu', locale});
+        commit('SET_PRIMARY_MENU', menu_name);
     },
     updateWebsiteId({ commit }, website_id) {
         commit('SET_WEBSITE_ID', website_id);
@@ -90,13 +97,21 @@ const actions = {
         }
 
         return sprintf(text, ...parameters);
-    }
+    },
+    async getConfigValue({dispatch}, {path, locale = null}) {
+        return await dispatch('configuration/getConfigurationByPath', { 
+          path, 
+          locale, 
+          siteDomain: window.location.hostname 
+        }, { root: true });
+    },
 };
 
 const getters = {
     website_id: (state) => state.website_id,
     locale: (state) => state.locale,
     translations: (state) => state.translations,
+    primary_menu: (state) => state.primary_menu,
 };
 
 export default {

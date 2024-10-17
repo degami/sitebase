@@ -18,6 +18,7 @@ class PageRegions implements ResolverInterface
         $currentPage = null;
         if (isset($args['rewrite_id'])) {
             $rewrite = Rewrite::load($args['rewrite_id']);
+            $locale = $rewrite->getLocale();
             $handler = $rewrite->getRouteInfo()->getHandler();
 
             $handlerType = reset($handler); $handlerMethod = end($handler);
@@ -42,7 +43,7 @@ class PageRegions implements ResolverInterface
             }
         }
 
-        return [
+        return ['locale' => $locale, 'regions' => [
             'after_body_open' => $regionsHtml['after_body_open'] ?? null,
             'before_body_close' => $regionsHtml['before_body_close'] ?? null,
             'pre_menu' => $regionsHtml['pre_menu'] ?? null,
@@ -53,6 +54,6 @@ class PageRegions implements ResolverInterface
             'post_content' => $regionsHtml['post_content'] ?? null,
             'pre_footer' => $regionsHtml['pre_footer'] ?? null,
             'post_footer' => $regionsHtml['post_footer'] ?? null,
-        ];
+        ]];
     }
 }

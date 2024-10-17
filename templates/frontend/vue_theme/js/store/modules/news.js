@@ -88,6 +88,7 @@ const actions = {
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 
+        let returnElement = null;
         try {
             const client = await dispatch('apolloClient/getApolloClient', null, { root: true });  // Usa il root per accedere a un modulo Vuex diverso
             if (!client) {
@@ -100,13 +101,14 @@ const actions = {
             });
             commit('setNews', data.news.items);
             commit('setTotalCount', data.news.count);
+            returnElement = data.news.items[0];
         } catch (error) {
             console.error('Errore durante il fetch della news:', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
 
-        return state.news[newsId];
+        return returnElement;
     },
     async fetchAllNews({ commit, dispatch }, filters = null) {
         const NEWS_VARIABLES = {"input": filters};

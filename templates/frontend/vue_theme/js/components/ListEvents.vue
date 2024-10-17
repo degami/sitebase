@@ -45,6 +45,8 @@ export default {
     this.fetchEventsList(this.currentPage);
     this.setTitle();
   },
+  mounted() {
+  },
   computed: {
     ...mapState('configuration', {
       configLoading: 'loading', // loading per configuration

@@ -55,13 +55,16 @@ export default {
     },
     website_id() {
       return this.$store.getters['appState/website_id'];
+    },
+    primary_menu() {
+      return this.$store.getters['appState/primary_menu'];
     }
   },
   async mounted() {
-    this.$store.dispatch('appState/updateLocale', this.$route.params.locale || this.currentRewrite?.locale);
-    this.$store.dispatch('appState/updateWebsiteId', await this.getWebsiteId(this.$store.getters['appState/locale']));
+    let locale = this.$route.params.locale || this.currentRewrite?.locale || this.$store.getters['appState/locale'];
+    this.$store.dispatch('appState/updateLocale', locale);
+    this.$store.dispatch('appState/updateWebsiteId', await this.getWebsiteId(locale));
     this.$store.dispatch('appState/fetchTranslations');
-    this.primary_menu = await this.getConfigValue('app/frontend/main_menu', this.currentRewrite?.locale || this.$store.getters['appState/locale']);
     this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', this.$store.getters['appState/website_id']);
   },
   methods: {
@@ -84,6 +87,8 @@ export default {
       } else {
         this.currentRewrite = await this.$store.dispatch('rewrites/findRewriteById', {rewriteId: data.rewrite_id, websiteId: this.$store.getters['appState/website_id']});
       }
+      const rewriteId = this.currentRewrite.id;
+      this.$store.dispatch('pageregions/fetchPageregions', {rewriteId});
       let newLocale = this.currentRewrite?.locale || this.$store.getters['appState/locale'];
       if (this.$store.getters['locale'] != newLocale) {
         this.$store.dispatch('appState/updateLocale', newLocale);

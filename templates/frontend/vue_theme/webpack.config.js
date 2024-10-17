@@ -48,6 +48,7 @@ module.exports = {
   ],
   resolve: {
     alias: {
+      '@': path.resolve(__dirname, 'js'), // Definisce l'alias @ come src
       'vue$': 'vue/dist/vue.esm-bundler.js', // Usa il bundle compatibile con Vue 3
       react: false, // Indica a Webpack di non cercare React
       'react-dom': false,

@@ -63,6 +63,8 @@ export default {
       this.fetchNewsList(this.currentPage);
     }
   },
+  mounted() {
+  },
   methods: {
     async setTitle() {
       this.title = await this.translate('News'); // Attendi la traduzione e aggiorna il titolo

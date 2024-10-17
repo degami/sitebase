@@ -14,17 +14,24 @@ import { mapState } from 'vuex';
 import Loader from '../utils/Loader.vue';
 
 export default {
+  props: {
+    id: {
+      type: Number,
+      required: true
+    },
+    locale: {
+      type: String,
+      required: true
+    }
+  },
   components: {
     Loader
   },
   data() {
-    return {
-      id: this.$route.params.id, // Imposta l'id iniziale dai parametri della rotta
-    };
   },
   created() {
     this.$store.dispatch('configuration/fetchConfiguration');
-    this.updateNewsContent(this.$route.params.id);
+    this.updateNewsContent(this.id);
   },
   computed: {
     ...mapState('configuration', {
@@ -37,7 +44,7 @@ export default {
     })
   },
   mounted() {
-    this.$emit('data-sent', {news_id: this.$route.params.id});
+    this.$emit('data-sent', {news_id: this.id});
   },
   watch: {
     '$route.params.id': function (newId) {
@@ -46,8 +53,7 @@ export default {
   },
   methods: {
     updateNewsContent(id) {
-      this.$data.id = id;
-      this.$store.dispatch('news/fetchNews', this.$data.id);
+      this.$store.dispatch('news/fetchNews', id);
     },
   }
 };

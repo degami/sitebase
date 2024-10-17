@@ -58,6 +58,7 @@ const actions = {
             locale = null;
         }
         if (!state.configuration.length) {
+            console.log('getting configuration');
             await dispatch('fetchConfiguration');
         }
 
@@ -71,7 +72,6 @@ const actions = {
                 config.website.domain === siteDomain && config.locale === locale
             );
         }
-
         if (configSite) {
             const configEntry = configSite.configs.find(entry => entry.path === path);
             return configEntry ? configEntry.value : null;

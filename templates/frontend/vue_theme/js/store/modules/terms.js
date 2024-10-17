@@ -86,6 +86,7 @@ const actions = {
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 
+        let returnElement = null;
         try {
             const client = await dispatch('apolloClient/getApolloClient', null, { root: true });  // Usa il root per accedere a un modulo Vuex diverso
             if (!client) {
@@ -98,11 +99,14 @@ const actions = {
             });
             commit('setTerms', data.taxonomy.items);
             commit('setTotalCount', data.taxonomy.count);
+            returnElement = data.taxonomy.items[0];
         } catch (error) {
             console.error('Errore durante il fetch del termine di tassonomia:', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
+
+        return returnElement;
     },
     async fetchAllTerms({ commit, dispatch }, filters = nul) {
         const TERMS_VARIABLES = {"input": filters};

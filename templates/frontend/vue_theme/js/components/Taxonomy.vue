@@ -16,14 +16,21 @@
     components: {
       Loader
     },
+    props: {
+      id: {
+        type: Number,
+        required: true
+      },
+      locale: {
+        type: String,
+        required: true
+      }
+    },
     data() {
-      return {
-        id: this.$route.params.id, // Imposta l'id iniziale dai parametri della rotta
-      };
     },
     created() {
       this.$store.dispatch('configuration/fetchConfiguration');
-      this.updateTaxonomyContent(this.$route.params.id);
+      this.updateTaxonomyContent(this.id);
     },
     computed: {
       ...mapState('configuration', {
@@ -36,7 +43,7 @@
       })
     },
     mounted() {
-      this.$emit('data-sent', {term_id: this.$route.params.id});
+      this.$emit('data-sent', {term_id: this.id});
     },
     watch: {
       '$route.params.id': function (newId) {
@@ -45,8 +52,7 @@
     },
     methods: {
       updateTaxonomyContent(id) {
-        this.$data.id = id;
-        this.$store.dispatch('terms/fetchTerm', this.$data.id);
+        this.$store.dispatch('terms/fetchTerm', id);
       },
     }
   };

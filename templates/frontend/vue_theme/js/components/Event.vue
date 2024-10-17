@@ -20,9 +20,18 @@ export default {
   components: {
     Loader
   },
+  props: {
+    id: {
+      type: Number,
+      required: true
+    },
+    locale: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
-      id: this.$route.params.id, // Imposta l'id iniziale dai parametri della rotta
       currentEvent: null,
       mapBoxKey: null,
       googleMapsKey: null,
@@ -31,7 +40,7 @@ export default {
   async created() {
     await this.$store.dispatch('configuration/fetchConfiguration');
 
-    this.updateEventContent(this.$route.params.id);
+    this.updateEventContent(this.id);
   },
   computed: {
     ...mapState('configuration', {
@@ -44,7 +53,7 @@ export default {
     })
   },
   async mounted() {
-    this.$emit('data-sent', {event_id: this.$route.params.id});
+    this.$emit('data-sent', {event_id: this.id});
 
     this.$data.mapBoxKey = await this.$store.dispatch('configuration/getConfigurationByPath', { 
       path: 'app/mapbox/api_key', 
@@ -85,11 +94,10 @@ export default {
   },
   methods: {
     async updateEventContent(id) {
-      this.$data.id = id;
-      this.$data.currentEvent = await this.$store.dispatch('events/fetchEvent', this.$data.id);
+      this.$data.currentEvent = await this.$store.dispatch('events/fetchEvent', id);
     },
     async updateMap() {
-      let event = this.$data.currentEvent || await this.$store.dispatch('events/fetchEvent', this.$data.id);
+      let event = this.currentEvent || await this.$store.dispatch('events/fetchEvent', this.id);
       if (this.$data.currentEvent == null) {
         this.$data.currentEvent = event;
       }
@@ -99,7 +107,7 @@ export default {
             lat: event.latitude,
             lng: event.longitude
         };
-        var map = L.map('mapElement'+this.$data.id+'-map').setView([latlng.lat,latlng.lng],10);
+        var map = L.map('mapElement'+this.id+'-map').setView([latlng.lat,latlng.lng],10);
         L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token='+this.$data.mapBoxKey, {
             attribution:
                 'Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors,'+
@@ -114,15 +122,15 @@ export default {
             draggable: false
         }).addTo(map);
 
-        $.data( $('#mapElement'+this.$data.id+'-map')[0] , 'map_obj', map);
-        $.data( $('#mapElement'+this.$data.id+'-map')[0] , 'marker_obj', marker);
+        $.data( $('#mapElement'+this.id+'-map')[0] , 'map_obj', map);
+        $.data( $('#mapElement'+this.id+'-map')[0] , 'marker_obj', marker);
       } else if (this.$data.googleMapsKey) {
         var latlng = {
             lat: event.latitude,
             lng: event.longitude
         };
 
-        var map = new google.maps.Map(document.getElementById('{$id}-map'), {
+        var map = new google.maps.Map(document.getElementById('#mapElement'+this.id+'-map'), {
           center: latlng,
           mapTypeId: 'google.maps.MapTypeId.ROADMAP',
           scrollwheel: true,
@@ -137,8 +145,8 @@ export default {
                     "lat: " + event.latitude + ", lng: " + event.longitude :
                     event.title
         });
-        $.data( $('#mapElement'+this.$data.id+'-map')[0] , 'map_obj', map);
-        $.data( $('#mapElement'+this.$data.id+'-map')[0] , 'marker_obj', marker);
+        $.data( $('#mapElement'+this.id+'-map')[0] , 'map_obj', map);
+        $.data( $('#mapElement'+this.id+'-map')[0] , 'marker_obj', marker);
       }
     }
   }

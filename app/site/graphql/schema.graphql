@@ -12,7 +12,7 @@ type Query {
   websites(input: SearchCriteriaInput): [Website]
   links(input: SearchCriteriaInput): [LinkExchange]
   rewrites(input: SearchCriteriaInput): [Rewrite]
-  pageRegions(rewrite_id: Int!): PageRegions
+  pageRegions(rewrite_id: Int!): PageRegionsResponse
   Configuration: [ConfigsResult]
   menuTree(menu_name: String!, website_id: Int!): [Menu]
   taxonomy(input: SearchCriteriaInput): TaxonomyCollection,
@@ -191,6 +191,11 @@ type Rewrite {
   url: String
   route: String
   locale: String
+}
+
+type PageRegionsResponse {
+  locale: String
+  regions: PageRegions
 }
 
 type PageRegions {

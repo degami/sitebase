@@ -35,6 +35,8 @@
       this.setLoadingText();
       await this.loadPageRegion();
     },
+    mounted() {
+    },
     computed: {
     },
     watch: {

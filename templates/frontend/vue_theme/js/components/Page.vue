@@ -23,14 +23,21 @@
     components: {
       Loader
     },
+    props: {
+      id: {
+        type: Number,
+        required: true
+      },
+      locale: {
+        type: String,
+        required: true
+      }
+    },
     data() {
-      return {
-        id: this.$route.params.id, // Imposta l'id iniziale dai parametri della rotta
-      };
     },
     created() {
       this.$store.dispatch('configuration/fetchConfiguration');
-      this.updatePageContent(this.$route.params.id);
+      this.updatePageContent(this.id);
     },
     computed: {
       ...mapState('configuration', {
@@ -43,7 +50,7 @@
       })
     },
     mounted() {
-      this.$emit('data-sent', {page_id: this.$route.params.id});
+      this.$emit('data-sent', {page_id: this.id});
     },
     watch: {
       '$route.params.id': function (newId) {
@@ -52,8 +59,7 @@
     },
     methods: {
       updatePageContent(id) {
-        this.$data.id = id;
-        this.$store.dispatch('pages/fetchPage', this.$data.id).then(() => {
+        this.$store.dispatch('pages/fetchPage', id).then(() => {
           this.$nextTick(() => {
             this.initializeGallery();
           });

@@ -15,10 +15,33 @@
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" v-for="treeItem in menuTree" :key="treeItem.menu_id">
         <a v-if="treeItem.children.length" :id="'navbarDropdown-' + treeItem.menu_id" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" :href="treeItem.href">{{ treeItem.title }}</a>
-        <router-link v-else  @click.native="sendData" :data-rewrite_id="treeItem.rewrite_id" :to="treeItem.href" class="nav-link">{{ treeItem.title }}</router-link>
+
+        <component v-else  :is="isRouteValid(treeItem.internal) ? 'router-link' : 'a'" 
+          @click.native="sendData" 
+          :data-rewrite_id="isRouteValid(treeItem.internal) ? treeItem.rewrite_id : null" 
+          :to="isRouteValid(treeItem.internal) ? treeItem.href : null"
+          :href="!isRouteValid(treeItem.internal) ? treeItem.href : null"
+          class="nav-link">
+          {{ treeItem.title }}
+        </component>
+
         <div v-if="treeItem.children.length" class="dropdown-menu" :aria-labelledby="'navbarDropdown-' + treeItem.menu_id">
-          <router-link @click.native="sendData" :data-rewrite_id="treeItem.rewrite_id" :to="treeItem.href" class="nav-link">{{ treeItem.title }}</router-link>
-          <router-link v-for="childLink in treeItem.children" @click.native="sendData" :data-rewrite_id="treeItem.rewrite_id" :to="childLink.href" class="nav-link">{{ childLink.title }}</router-link>
+          <component :is="isRouteValid(treeItem.internal) ? 'router-link' : 'a'" 
+            @click.native="sendData" 
+            :data-rewrite_id="isRouteValid(treeItem.internal) ? treeItem.rewrite_id : null" 
+            :to="isRouteValid(treeItem.internal) ? treeItem.href : null"
+            :href="!isRouteValid(treeItem.internal) ? treeItem.href : null"
+            class="nav-link">
+            {{ treeItem.title }}
+          </component>
+          <component v-for="childLink in treeItem.children" :is="isRouteValid(treeItem.internal) ? 'router-link' : 'a'" 
+            @click.native="sendData" 
+            :data-rewrite_id="childLink.rewrite_id" 
+            :to="isRouteValid(treeItem.internal) ? childLink.href : null"
+            :href="!isRouteValid(childLink.internal) ? childLink.href : null"
+            class="nav-link">
+            {{ childLink.title }}
+          </component>
         </div>
       </li>
     </ul>
@@ -29,6 +52,7 @@
 import { mapState } from 'vuex';
 import $ from 'jquery';
 import Loader from '../utils/Loader.vue';
+import { getComponentMap } from '../router';
 
 export default {
   components: {
@@ -86,7 +110,9 @@ export default {
         rewrite_id: $(clickedLink).data('rewrite_id'),
         website_id: this.websiteId,
       }
-      this.$emit('data-sent', data);
+      if (data.rewrite_id) {
+        this.$emit('data-sent', data);
+      }
     },
     updateMenuData() {
       this.$store.dispatch('menuTree/fetchMenuTree', {
@@ -98,10 +124,23 @@ export default {
       $(function () {
         $('[data-toggle="dropdown"]').dropdown();
       });
+    },
+    // Metodo per verificare se una rotta esiste nel router
+    isRouteValid(route) {
+      const componentMap = getComponentMap();
+      let componentType = route.split('/')[1];
+      if (route.split('/').length === 2 && componentMap[componentType + 'list']) {
+        componentType += 'list';
+      }
+
+      // Verifica se esiste un componente corrispondente per la rotta
+      return !!componentMap[componentType];
     }
   }
 };
 </script>
-<style lang="scss">
-
+<style lang="scss" scoped>
+  .nav-link {
+    cursor: pointer;
+  }
 </style>

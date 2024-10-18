@@ -39,4 +39,15 @@ router.beforeEach(async (to, from, next) => {
   next(); // Procedi senza redirect
 });
 
+export function getComponentMap() {
+  return {
+    'event': () => import('@/components/Event.vue'),
+    'news': () => import('@/components/News.vue'),
+    'page': () => import('@/components/Page.vue'),
+    'taxonomy': () => import('@/components/Taxonomy.vue'),
+    'newslist': () => import('@/components/ListNews.vue'),
+    'eventslist': () => import('@/components/ListEvents.vue'),
+  };
+}
+
 export default router;

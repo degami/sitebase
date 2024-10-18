@@ -27,7 +27,7 @@ $this->layout('frontend::layout', ['title' => 'Links'] + get_defined_vars()) ?>
     </div>
     <div class="col-md-4">
         <div class="contact-form">
-            <h2><?= $this->sitebase()->translate('Add your link', $locale); ?></h2>
+            <h2><?= $this->sitebase()->translate('Add your link'); ?></h2>
             <?php echo $form;?>
         </div>
     </div>

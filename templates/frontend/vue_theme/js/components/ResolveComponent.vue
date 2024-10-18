@@ -4,6 +4,8 @@
 </template>
 
 <script>
+import { getComponentMap } from '../router';
+
 export default {
   data() {
     return {
@@ -38,14 +40,7 @@ export default {
         store.dispatch('apolloClient/updateLocale', rewrite.locale);
 
         // Mappa che collega le rotte interne ai componenti
-        const componentMap = {
-          'event': () => import('@/components/Event.vue'),
-          'news': () => import('@/components/News.vue'),
-          'page': () => import('@/components/Page.vue'),
-          'taxonomy': () => import('@/components/Taxonomy.vue'),
-          'newslist': () => import('@/components/ListNews.vue'),
-          'eventslist': () => import('@/components/ListEvents.vue'),
-        };
+        const componentMap = getComponentMap();
 
         // Estrai il tipo di componente (ad esempio, 'event', 'news', ecc.) dalla rotta riscritta
         let componentType = rewrite.route.split('/')[1];
@@ -77,7 +72,7 @@ export default {
               dataToEmit = {term_id: idValue};
               break;
           }
-          
+
           if (dataToEmit) {
             this.$emit('data-sent', dataToEmit);
           }

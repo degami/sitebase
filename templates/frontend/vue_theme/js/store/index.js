@@ -10,6 +10,8 @@ import rewrites from './modules/rewrites';
 import news from './modules/news';
 import events from './modules/events';
 import terms from './modules/terms';
+import medias from './modules/medias';
+import links from './modules/links'
 
 const store = createStore({
   modules: {
@@ -23,6 +25,8 @@ const store = createStore({
     news,
     events,
     terms,
+    links,
+    medias,
   },
 });
 

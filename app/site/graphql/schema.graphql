@@ -10,12 +10,12 @@ type Query {
   events(input: SearchCriteriaInput): EventCollection
   medias(input: SearchCriteriaInput): [MediaElement]
   websites(input: SearchCriteriaInput): [Website]
-  links(input: SearchCriteriaInput): [LinkExchange]
+  links(input: SearchCriteriaInput): LinkExchangeCollection
   rewrites(input: SearchCriteriaInput): [Rewrite]
+  terms(input: SearchCriteriaInput): TaxonomyCollection,
   pageRegions(rewrite_id: Int!): PageRegionsResponse
-  Configuration: [ConfigsResult]
   menuTree(menu_name: String!, website_id: Int!): [Menu]
-  taxonomy(input: SearchCriteriaInput): TaxonomyCollection,
+  Configuration: [ConfigsResult]
   Translations: [TranslationEntry],
 }
 
@@ -92,7 +92,10 @@ type MediaElement {
   lazyload: Boolean
   website: Website
   getImageUrl: String!
+  getThumbUrl_200x200: String!
   getThumbUrl_300x200: String!
+  getThumbUrl_640x480: String!
+  getThumbUrl_800x600: String!
 }
 
 type Page {
@@ -167,6 +170,11 @@ type LinkExchange {
   owner: User
   website: Website
   active: Boolean
+}
+
+type LinkExchangeCollection {
+  items: [LinkExchange]
+  count: Int!
 }
 
 type Menu {

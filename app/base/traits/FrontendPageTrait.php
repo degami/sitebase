@@ -130,6 +130,15 @@ trait FrontendPageTrait
         return $this->getApp()->setCurrentLocale(parent::getCurrentLocale())->getCurrentLocale();
     }
 
+    protected function check2FA(): bool
+    {
+        if ($this->getEnv('USE2FA_USERS') && !in_array($this->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && ($this->current_user?->passed2fa ?? false) != true) {
+            return false;
+        }
+
+        return true;
+    }
+
     /**
      *
      * checks user credentials
@@ -143,7 +152,7 @@ trait FrontendPageTrait
             if ($this->getTokenData()) {
                 $this->current_user_model = $this->getCurrentUser();
 
-                if ($this->getEnv('USE2FA_USERS') && !in_array($this->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && ($this->current_user?->passed2fa ?? false) != true) {
+                if (!$this->check2FA()) {
                     return false;
                 }
 

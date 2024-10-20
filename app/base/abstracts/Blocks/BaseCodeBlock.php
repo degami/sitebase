@@ -31,4 +31,14 @@ abstract class BaseCodeBlock extends ContainerAwareObject
      * @return string
      */
     abstract public function renderHTML(BasePage $current_page): string;
+
+    /**
+     * block content can be stored in cache
+     * 
+     * @return bool
+     */
+    public function isCachable() : bool
+    {
+        return true;
+    }
 }

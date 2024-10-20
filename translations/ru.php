@@ -139,4 +139,5 @@ return [
     'Exports' => 'Экспорт',
     'Imports' => 'Импорт',
     'by: <strong>%s</strong> on: %s' => 'от: <strong>%s</strong> на: %s',
+    'Profile' => 'Профиль',
 ];

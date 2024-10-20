@@ -59,6 +59,22 @@
           if (this.pageRegion && this.pageRegion.includes('cycle-slideshow')) {
             this.$nextTick(() => {
               $('.cycle-slideshow').cycle();
+
+              $('.uncachable-block').each(function(){
+                  var $this = $(this);
+                  if (!$this.hasClass('processed')) {
+                      $.ajax('/crud/uncachableblock', {
+                          method: 'POST',
+                          cache: false,
+                          contentType: 'application/json',
+                          data: JSON.stringify($this.data('uncachable')),
+                      }).done(function(data) {
+                          $this.html(data.html);
+                          $this.addClass('processed');
+                      });
+                  }
+              });
+
             });
           }
         } catch (error) {

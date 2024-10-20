@@ -141,4 +141,5 @@ return [
     'Exports' => 'রপ্তানি',
     'Imports' => 'আমদানি',
     'by: <strong>%s</strong> on: %s' => 'দ্বারা: <strong>%s</strong> এ: %s',
+    'Profile' => 'প্রোফাইল',
 ];

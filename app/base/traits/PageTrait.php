@@ -14,6 +14,7 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Site\Controllers\Frontend\Page;
 use App\Site\Models\Page as PageModel;
 use App\Base\Abstracts\Models\AccountModel;
@@ -162,7 +163,11 @@ trait PageTrait
      */
     public function hasLoggedUser(): bool
     {
-        return is_object($this->getCurrentUser()) && isset($this->getCurrentUser()->id) && $this->getCurrentUser()->id > 0;
+        $out = is_object($this->getCurrentUser()) && isset($this->getCurrentUser()->id) && $this->getCurrentUser()->id > 0;
+        if ($this instanceof FrontendPage) {
+            $out &= $this->check2FA();
+        }
+        return $out;
     }
 
     /**

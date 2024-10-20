@@ -139,4 +139,5 @@ return [
     'Exports' => 'Xuất khẩu',
     'Imports' => 'Nhập khẩu',
     'by: <strong>%s</strong> on: %s' => 'bởi: <strong>%s</strong> vào: %s',
+    'Profile' => 'Hồ sơ',
 ];

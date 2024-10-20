@@ -139,4 +139,5 @@ return [
     'Exports' => 'الصادرات',
     'Imports' => 'الواردات',
     'by: <strong>%s</strong> on: %s' => 'بواسطة: <strong>%s</strong> في: %s',
+    'Profile' => 'الملف الشخصي',
 ];

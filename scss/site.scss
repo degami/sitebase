@@ -85,6 +85,11 @@ ul.breadcrumbs {
     justify-content: space-around;
     background-color: $color-almostwhite2 !important;
 
+    & > div {
+        display: flex;
+        align-items: center;
+    }
+
     & > * {
         align-self: center;
     }
@@ -108,8 +113,11 @@ ul.breadcrumbs {
     }
 }
 
-
-
 .footer {
     margin-top: 20px;
+}
+
+.user-area-link{
+    white-space: nowrap;
+    padding: 5px 10px;
 }

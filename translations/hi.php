@@ -139,4 +139,5 @@ return [
     'Exports' => 'निर्यात',
     'Imports' => 'आयात',
     'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> द्वारा: %s',
+    'Profile' => 'प्रोफ़ाइल',
 ];

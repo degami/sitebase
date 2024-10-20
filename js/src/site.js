@@ -9,5 +9,20 @@
 (function($){
     $(document).ready(function(){
         $('img[data-src]').Lazy();
+
+        $('.uncachable-block').each(function(){
+            var $this = $(this);
+            if (!$this.hasClass('processed')) {
+                $.ajax('/crud/uncachableblock', {
+                    method: 'POST',
+                    cache: false,
+                    contentType: 'application/json',
+                    data: JSON.stringify($this.data('uncachable')),
+                }).done(function(data) {
+                    $this.html(data.html);
+                    $this.addClass('processed');
+                });
+            }
+        });
     });
 })(jQuery);

@@ -139,4 +139,5 @@ return [
     'Exports' => 'İhracatlar',
     'Imports' => 'İthalatlar',
     'by: <strong>%s</strong> on: %s' => 'tarafından: <strong>%s</strong> tarihinde: %s',
+    'Profile' => 'Profil',
 ];

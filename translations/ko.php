@@ -139,4 +139,5 @@ return [
     'Exports' => '수출',
     'Imports' => '수입',
     'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> 작성일: %s',
+    'Profile' => '프로필',
 ];

@@ -139,4 +139,5 @@ return [
     'Exports' => '出口',
     'Imports' => '进口',
     'by: <strong>%s</strong> on: %s' => '由: <strong>%s</strong> 于: %s',
+    'Profile' => '个人资料',
 ];

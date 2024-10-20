@@ -139,4 +139,5 @@ return [
     'Exports' => '輸出',
     'Imports' => '輸入',
     'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> による %s',
+    'Profile' => 'プロフィール',
 ];

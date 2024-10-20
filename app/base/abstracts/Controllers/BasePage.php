@@ -146,13 +146,25 @@ abstract class BasePage extends ContainerAwareObject
     }
 
     /**
-     * get route_info array
+     * get route_info
      *
      * @return RouteInfo|null
      */
     public function getRouteInfo(): ?RouteInfo
     {
         return $this->route_info;
+    }
+
+    /**
+     * set route info
+     * 
+     * @param RouteInfo $routeInfo
+     * @return BasePage
+     */
+    public function setRouteInfo(RouteInfo $routeInfo) : BasePage
+    {
+        $this->route_info = $routeInfo;
+        return $this;
     }
 
     /**

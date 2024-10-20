@@ -30,6 +30,7 @@ use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use App\App;
 use App\Base\Abstracts\Models\BaseCollection;
+use App\Site\Models\Block;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
 
@@ -353,13 +354,36 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 if ((!$block->isCodeBlock() && $locale != $block->locale) || (!is_null($current_rewrite) && !$block->checkValidRewrite($current_rewrite))) {
                     continue;
                 }
-                $out .= $block->render($current_page);
+                if (is_callable([$block->getRealInstance(), 'isCachable']) && !$block->getRealInstance()->isCachable()) {
+                    $out .= $this->renderUncachableBlockTag($block, $current_page);
+                } else {
+                    $out .= $block->render($current_page);
+                }
             }
         }
         if (!empty($cache_key)) {
             $this->getCache()->set($cache_key, $out);
         }
         return $out;
+    }
+
+    public function renderUncachableBlockTag(Block $block, BasePage $current_page) : string
+    {
+        $out = $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'div',
+            'attributes' => [
+                'class' => 'uncachable-block',
+                'data-uncachable' => json_encode([
+                    'block_id' => $block->getId(),
+                    'url' => $current_page->getControllerUrl(), 
+                    'route' => $current_page->getRouteInfo()->getRouteName(),
+                    'rewrite' => $current_page->getRouteInfo()->getRewrite(),
+                    'route_vars' => $current_page->getRouteInfo()->getVars(),
+                    'locale' => $this->getApp()->getCurrentLocale(),
+                ]),
+            ],
+        ]]);
+        return (string) $out;
     }
 
     /**

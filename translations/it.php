@@ -139,4 +139,5 @@ return [
     'Exports' => 'Esportazioni',
     'Imports' => 'Importazioni',
     'by: <strong>%s</strong> on: %s' => 'di: <strong>%s</strong> il: %s',
+    'Profile' => 'Profilo',
 ];

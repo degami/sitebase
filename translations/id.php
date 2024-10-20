@@ -139,4 +139,5 @@ return [
     'Exports' => 'Ekspor',
     'Imports' => 'Impor',
     'by: <strong>%s</strong> on: %s' => 'oleh: <strong>%s</strong> pada: %s',
+    'Profile' => 'Profil',
 ];

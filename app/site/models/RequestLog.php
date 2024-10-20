@@ -62,7 +62,7 @@ class RequestLog extends BaseModel
         $this->setUserAgent($_SERVER['HTTP_USER_AGENT']);
         $this->setWebsiteId($this->matchWebsite($request->getHost()));
 
-        if ($controller instanceof BasePage && $controller->hasLoggedUser()) {
+        if ($controller instanceof BasePage && method_exists($controller, 'hasLoggedUser') && $controller->hasLoggedUser()) {
             $this->setUserId($controller->getCurrentUser()->id);
         }
 

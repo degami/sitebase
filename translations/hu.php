@@ -139,4 +139,5 @@ return [
     'Exports' => 'Exportok',
     'Imports' => 'Importok',
     'by: <strong>%s</strong> on: %s' => 'által: <strong>%s</strong> ekkor: %s',
+    'Profile' => 'Profil',
 ];

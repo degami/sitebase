@@ -71,14 +71,14 @@ export default {
     },
     fetchEventsList(page = 0) {
         this.$store.dispatch('events/flushEvents');
-        this.$store.dispatch('events/fetchAllEvents', {
+        this.$store.dispatch('events/fetchAllEvents', {filters: {
             criteria: [
               {key: 'website_id', value: ""+this.$store.getters['appState/website_id']}, 
               {key: 'locale', value: ""+this.$store.getters['appState/locale']}
             ],
             offset: page * this.pageSize,
             limit: this.pageSize,
-        });
+        }});
     },
     summarize(text, maxWords = 10) {
         maxWords = Math.abs(parseInt(maxWords, 10));

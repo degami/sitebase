@@ -78,7 +78,7 @@ const mutations = {
 };
   
 const actions = {
-    async fetchNews({ commit, dispatch }, newsId) {
+    async fetchNews({ commit, dispatch }, {newsId}) {
         if (undefined !== state.news && undefined !== state.news[newsId]) {
             console.log("got news "+newsId);
             return state.news[newsId];
@@ -110,7 +110,7 @@ const actions = {
 
         return returnElement;
     },
-    async fetchAllNews({ commit, dispatch }, filters = null) {
+    async fetchAllNews({ commit, dispatch }, {filters = null}) {
         const NEWS_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch

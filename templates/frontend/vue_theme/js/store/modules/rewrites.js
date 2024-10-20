@@ -34,7 +34,7 @@ const mutations = {
 };
   
 const actions = {
-    async fetchRewrites({ commit, dispatch }, websiteId) {
+    async fetchRewrites({ commit, dispatch }, {websiteId}) {
         const REWRITES_VARIABLES = {"websiteId": ""+websiteId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
@@ -63,7 +63,7 @@ const actions = {
                 return null;
             }
 
-            await dispatch('fetchRewrites', websiteId);
+            await dispatch('fetchRewrites', {websiteId});
         }
 
         for (let rewrite of state.rewrites) {
@@ -81,7 +81,7 @@ const actions = {
                 return null;
             }
 
-            await dispatch('fetchRewrites', websiteId);
+            await dispatch('fetchRewrites', {websiteId});
         }
 
         for (let rewrite of state.rewrites) {
@@ -99,7 +99,7 @@ const actions = {
                 return null;
             }
 
-            await dispatch('fetchRewrites', websiteId);
+            await dispatch('fetchRewrites', {websiteId});
         }
 
         for (let rewrite of state.rewrites) {

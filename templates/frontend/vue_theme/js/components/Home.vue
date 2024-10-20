@@ -29,7 +29,7 @@
     },
     async created() {
       this.id = await this.getConfigValue('app/frontend/homepage');
-      this.$store.dispatch('pages/fetchPage', this.id);
+      this.$store.dispatch('pages/fetchPage', {pageId: this.id});
       const website = await this.$store.dispatch('configuration/getWebsite', { 
             siteDomain: window.location.hostname,
         });

@@ -16,7 +16,7 @@ const router = createRouter({
 });
 
 // Ottenere l'ID del sito web al caricamento del router
-const websiteId = await store.dispatch('configuration/getWebsiteId', { 
+const defaultWebsiteId = await store.dispatch('configuration/getWebsiteId', { 
   siteDomain: window.location.hostname 
 });
 
@@ -24,7 +24,7 @@ router.beforeEach(async (to, from, next) => {
   const appInstance = router.app;
   if (appInstance) {
     const locale = store.getters['appState/locale'] || 'en';
-    const website_id = store.getters['appState/website_id'] || websiteId;
+    const website_id = store.getters['appState/website_id'] || defaultWebsiteId;
 
     // Imposta i parametri locali e website_id sulla rotta
     to.params.locale = locale;
@@ -33,7 +33,7 @@ router.beforeEach(async (to, from, next) => {
 
   // Controlla se le riscritture sono già caricate
   if (!store.state.rewrites) {
-    await store.dispatch('rewrites/fetchRewrites', websiteId);
+    await store.dispatch('rewrites/fetchRewrites', {websiteId : website_id});
   }
 
   next(); // Procedi senza redirect

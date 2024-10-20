@@ -74,7 +74,7 @@ const mutations = {
 };
   
 const actions = {
-    async fetchMedia({ commit, dispatch }, mediaId) {
+    async fetchMedia({ commit, dispatch }, {mediaId}) {
         if (undefined !== state.medias && undefined !== state.medias[mediaId]) {
             console.log("got media "+mediaId);
             return state.medias[mediaId];
@@ -106,7 +106,7 @@ const actions = {
 
         return returnElement;
     },
-    async fetchAllMedias({ commit, dispatch }, filters = null) {
+    async fetchAllMedias({ commit, dispatch }, {filters = null}) {
         const MEDIA_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch

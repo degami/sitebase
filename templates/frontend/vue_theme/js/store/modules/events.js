@@ -82,7 +82,7 @@ const mutations = {
 };
   
 const actions = {
-    async fetchEvent({ commit, dispatch }, eventId) {
+    async fetchEvent({ commit, dispatch }, {eventId}) {
         if (undefined !== state.events && undefined !== state.events[eventId]) {
             console.log("got events "+eventId);
             return state.events[eventId];
@@ -114,7 +114,7 @@ const actions = {
 
         return returnElement;
     },
-    async fetchAllEvents({ commit, dispatch }, filters = null) {
+    async fetchAllEvents({ commit, dispatch }, {filters = null}) {
         const EVENTS_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch

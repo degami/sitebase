@@ -92,7 +92,7 @@ const mutations = {
 };
   
 const actions = {
-    async fetchPage({ commit, dispatch }, pageId) {
+    async fetchPage({ commit, dispatch }, {pageId}) {
         if (undefined !== state.pages && undefined !== state.pages[pageId]) {
             console.log("got page "+pageId);
             return;
@@ -124,7 +124,7 @@ const actions = {
 
         return returnElement;
     },
-    async fetchAllPages({ commit, dispatch }, filters = nul) {
+    async fetchAllPages({ commit, dispatch }, {filters = null}) {
         const PAGE_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch

@@ -155,6 +155,10 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'title' => 'Content',
                     'default_value' => $term_content,
                     'rows' => 2,
+                ])->addField('parent_id', [
+                    'type' => 'textfield',
+                    'title' => 'Parent Id',
+                    'default_value' => $term_parent,
                 ])->addField('position', [
                     'type' => 'number',
                     'title' => 'Position',
@@ -284,27 +288,33 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     $term->setHtmlTitle($values['seo']['html_title']);
                 }
                 $term->setWebsiteId($values['frontend']['website_id']);
-                //$term->parent_id = $values['parent_id'];
+                if (!empty($values['parent_id'])) {
+                    $term->setParentId((int) $values['parent_id']);
+                } else {
+                    $term->setParentId(null);
+                    $term->setLevel(0);
+                }
                 $term->setPosition($values['position']);
 
                 $this->setAdminActionLogData($term->getChangedData());
 
                 $term->persist();
                 if ($values['page_id'] != null) {
-                    $this
-                        ->getContainer()
-                        ->call([Page::class, 'load'], ['id' => $values['page_id']])
-                        ->addTerm($term);
+                    /** @var Page $page */
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
+                    $page->addTerm($term);
                 }
                 break;
             case 'deassoc':
                 if ($values['page_id']) {
+                    /** @var Page $page */
                     $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->removeTerm($term);
                 }
                 break;
             case 'page_assoc':
                 if ($values['page_id']) {
+                    /** @var Page $page */
                     $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->addTerm($term);
                 }

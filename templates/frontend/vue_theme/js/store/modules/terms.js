@@ -1,55 +1,22 @@
 import gql from 'graphql-tag';
 
-const TERM_QUERY = gql`
-query Terms ($termId: String!) {
-    terms(
-        input: {
-            criteria: [{ key: "id", value: $termId }]
-            limit: 1
-            offset: 0
-            orderBy: [{ field: "id", direction: ASC }]
-        }
-    ) {
-        items {
-            id
-            title
-            content
-            locale
-            url
-            meta_title
-            rewrite {
-                id
-                url
-                route
-                locale
-            }
-        }
-        count
+const TERM_ITEM_FRAGMENT = `fragment TermItemFields on Taxonomy {
+    id
+    title
+    content
+    locale
+    url
+    path
+    level
+    position
+    meta_title
+    rewrite {
+        id
+        url
+        route
+        locale
     }
-}
-`
-
-const TERMS_LIST_QUERY = gql`
-query Terms ($input: SearchCriteriaInput) {
-    terms(input: $input) {
-        items {
-            id
-            title
-            content
-            locale
-            url
-            meta_title
-            rewrite {
-                id
-                url
-                route
-                locale
-            }
-        }
-        count
-    }
-}
-`
+}`
 
 const state = () => ({
     terms: {},
@@ -76,11 +43,42 @@ const mutations = {
 };
   
 const actions = {
-    async fetchTerm({ commit, dispatch }, termId) {
-        if (undefined !== state.news && undefined !== state.news[newsId]) {
+    async fetchTerm({ commit, dispatch }, {termId, maxLevels = 3}) {
+        if (undefined !== state.terms && undefined !== state.terms[termId]) {
             console.log("got term "+termId);
-            return;
+            return state.terms[termId];
         }
+
+        let queryLevels = "...TermItemFields";
+        for ( let i=0; i < Math.abs(maxLevels); i++) {
+            queryLevels = `
+                ...TermItemFields
+                children {
+                    `+queryLevels+`
+                }
+`;
+        }
+
+        let completeQuery = `
+        query Terms ($termId: String!) {
+            terms(
+                input: {
+                    criteria: [{ key: "id", value: $termId }]
+                    limit: 1
+                    offset: 0
+                    orderBy: [{ field: "id", direction: ASC }]
+                }
+            ) {
+                items {
+                    `+queryLevels+`
+                }
+                count
+            }
+        }
+
+` + TERM_ITEM_FRAGMENT;
+
+        const TERM_QUERY = gql(completeQuery);
 
         const TERM_VARIABLES = {"termId": termId};
 
@@ -108,7 +106,32 @@ const actions = {
 
         return returnElement;
     },
-    async fetchAllTerms({ commit, dispatch }, filters = nul) {
+    async fetchAllTerms({ commit, dispatch }, {filters = null, maxLevels = 3}) {
+
+        let queryLevels = "...TermItemFields";
+        for ( let i=0; i < Math.abs(maxLevels); i++) {
+            queryLevels = `
+                ...TermItemFields
+                children {
+                    `+queryLevels+`
+                }
+`;
+        }
+
+        let completeQuery = `
+        query Terms ($input: SearchCriteriaInput) {
+            terms(input: $input) {
+                items {
+                    `+queryLevels+`
+                }
+                count
+            }
+        }
+
+` + TERM_ITEM_FRAGMENT;        
+
+        const TERMS_LIST_QUERY = gql(completeQuery);
+
         const TERMS_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch

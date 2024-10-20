@@ -65,7 +65,7 @@ export default {
     this.$store.dispatch('appState/updateLocale', locale);
     this.$store.dispatch('appState/updateWebsiteId', await this.getWebsiteId(locale));
     this.$store.dispatch('appState/fetchTranslations');
-    this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', this.$store.getters['appState/website_id']);
+    this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', {websiteId: this.$store.getters['appState/website_id']});
   },
   methods: {
     async getConfigValue(path, locale = null) {

@@ -59,7 +59,7 @@
     },
     methods: {
       updatePageContent(id) {
-        const pageItem = this.$store.dispatch('pages/fetchPage', id).then(() => {
+        const pageItem = this.$store.dispatch('pages/fetchPage', {pageId: id}).then(() => {
           this.$nextTick(() => {
             this.initializeGallery();
           });

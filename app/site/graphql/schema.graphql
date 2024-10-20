@@ -76,6 +76,7 @@ type Taxonomy {
   meta_description: String
   meta_title: String
   rewrite: Rewrite
+  children: [Taxonomy]
 }
 
 type TaxonomyCollection {

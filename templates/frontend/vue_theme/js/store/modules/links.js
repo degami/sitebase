@@ -70,7 +70,7 @@ const mutations = {
 };
   
 const actions = {
-    async fetchLink({ commit, dispatch }, linkId) {
+    async fetchLink({ commit, dispatch }, {linkId}) {
         if (undefined !== state.links && undefined !== state.links[linkId]) {
             console.log("got link "+linkId);
             return state.links[linkId];
@@ -102,7 +102,7 @@ const actions = {
 
         return returnElement;
     },
-    async fetchAllLinks({ commit, dispatch }, filters = null) {
+    async fetchAllLinks({ commit, dispatch }, {filters = null}) {
         const LINKS_VARIABLES = {"input": filters};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch

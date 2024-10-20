@@ -71,14 +71,14 @@ export default {
     },
     fetchNewsList(page = 0) {
         this.$store.dispatch('news/flushNews');
-        this.$store.dispatch('news/fetchAllNews', {
+        this.$store.dispatch('news/fetchAllNews', {filters: {
             criteria: [
               {key: 'website_id', value: ""+this.$store.getters['appState/website_id']}, 
               {key: 'locale', value: ""+this.$store.getters['appState/locale']}
             ],
             offset: page * this.pageSize,
             limit: this.pageSize,
-        });
+        }});
     },
     summarize(text, maxWords = 10) {
         maxWords = Math.abs(parseInt(maxWords, 10));

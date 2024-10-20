@@ -104,4 +104,18 @@ class Taxonomy extends FrontendModelWithChildren
         $this->setLevel(max(count(explode("/", $this->path)) - 1, 0));
         return parent::prePersist();
     }
+
+    public function persist(bool $recursive = true): BaseModel
+    {
+        $alsoChildren = array_key_exists('parent_id', $this->getChangedData()) || array_key_exists('level', $this->getChangedData());
+        $out = parent::persist($recursive);
+
+        if ($recursive && $alsoChildren) {
+            foreach($this->getChildren() as $child) {
+                $child->persist();
+            }
+        }
+
+        return $out;
+    }
 }

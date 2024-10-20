@@ -355,7 +355,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     continue;
                 }
                 if (is_callable([$block->getRealInstance(), 'isCachable']) && !$block->getRealInstance()->isCachable()) {
-                    $out .= $this->renderUncachableBlockTag($block, $current_page);
+                    $out .= $this->renderUncachableBlockTag($block, $current_page, $locale);
                 } else {
                     $out .= $block->render($current_page);
                 }
@@ -367,7 +367,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return $out;
     }
 
-    public function renderUncachableBlockTag(Block $block, BasePage $current_page) : string
+    public function renderUncachableBlockTag(Block $block, BasePage $current_page, ?string $locale = null) : string
     {
         $out = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'div',
@@ -379,7 +379,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     'route' => $current_page->getRouteInfo()->getRouteName(),
                     'rewrite' => $current_page->getRouteInfo()->getRewrite(),
                     'route_vars' => $current_page->getRouteInfo()->getVars(),
-                    'locale' => $this->getApp()->getCurrentLocale(),
+                    'locale' => $locale ?? $this->getApp()->getCurrentLocale(),
                 ]),
             ],
         ]]);

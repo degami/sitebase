@@ -6,6 +6,7 @@ use App\App;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Base\GraphQl\ResolverInterface;
 use App\Site\Models\Rewrite;
+use App\Site\Routing\RouteInfo;
 
 class PageRegions implements ResolverInterface
 {
@@ -18,19 +19,32 @@ class PageRegions implements ResolverInterface
         $currentPage = null;
         if (isset($args['rewrite_id'])) {
             $rewrite = Rewrite::load($args['rewrite_id']);
+
+            /** @var RouteInfo $routeInfo */
+            $routeInfo = $rewrite->getRouteInfo();
             $locale = $rewrite->getLocale();
             $handler = $rewrite->getRouteInfo()->getHandler();
 
             $handlerType = reset($handler); $handlerMethod = end($handler);
             $currentPage = $app->containerMake($handlerType);
+
+            $vars = $routeInfo->getVars();
+
+            // inject container into vars
+            //$vars['container'] = $this->getContainer();
+    
+            // inject request object into vars
+            //$vars['request'] = $this->getRequest();
+    
+            // inject routeInfo
+            $vars['route_info'] = $routeInfo;
+    
+            // add route collected data
+            $vars['route_data'] = $routeInfo->getVars();
+
+            $currentPage->setRouteInfo($routeInfo);
+
             if ($currentPage instanceof FrontendPageWithObject) {
-
-                // inject routeInfo
-                $vars['route_info'] = $rewrite->getRouteInfo();
-
-                // add route collected data
-                $vars['route_data'] = $rewrite->getRouteInfo()->getVars();
-
                 $app->containerCall([$currentPage, $handlerMethod], $vars);
             }
         }

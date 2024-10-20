@@ -35,6 +35,14 @@ class LinkToUserArea extends BaseCodeBlock
         try {
 //            $website = $this->containerCall([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);
 
+            if (in_array($current_page->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login'])) {
+                return "";
+            }
+
+            if (strpos($current_page->getRouteInfo()->getRouteName(), 'frontend.users') === 0) {
+                return '';
+            }
+
             $class = 'block user';
 
             $locale = $current_page->getRouteInfo()->getVar('locale');

@@ -77,6 +77,10 @@ abstract class FrontendPage extends BaseHtmlPage
 
         if (!$this->getTemplates()->getFolders()->exists('theme') && $this->getSiteData()->getThemeName() != null) {
             $this->getTemplates()->addFolder('theme', App::getDir(App::TEMPLATES) . DS . 'frontend' . DS . $this->getSiteData()->getThemeName(), true);
+            $themeFile = $this->getTemplates()->getFolders()->get('theme')->getPath() . DS . 'theme.php';
+            if (file_exists($themeFile)) {
+                @include_once($themeFile);
+            }
         }
 
         foreach ($this->getSiteData()->getPageRegions() as $region) {
@@ -161,11 +165,13 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     protected function prepareTemplate(): Template
     {
+        $templateName = $this->alterTemplateName($this->getTemplateName());
+
         if ($this->getTemplates()->getFolders()->exists('theme')) {
-            $template = $this->getTemplates()->make('theme::' . $this->getTemplateName());
+            $template = $this->getTemplates()->make('theme::' . $templateName);
         } else {
             // fallback to "frontend"
-            $template = $this->getTemplates()->make('frontend::' . $this->getTemplateName());
+            $template = $this->getTemplates()->make('frontend::' . $templateName);
         }
 
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());

@@ -51,12 +51,6 @@ class Taxonomy extends FrontendPageWithObject
      */
     protected function getTemplateName(): string
     {
-        if ($this->getObject() instanceof TaxonomyModel && $this->getObject()->isLoaded()) {
-            if (!empty($this->getObject()->getTemplateName())) {
-                return $this->getObject()->getTemplateName();
-            }
-        }
-
         return 'taxonomy';
     }
 

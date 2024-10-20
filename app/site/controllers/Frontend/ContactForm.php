@@ -70,10 +70,6 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     protected function getTemplateName(): string
     {
-        if ($this->template_data['object']->getTemplateName()) {
-            return $this->template_data['object']->getTemplateName();
-        }
-
         return 'contact_form';
     }
 

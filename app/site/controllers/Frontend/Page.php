@@ -65,10 +65,6 @@ class Page extends FrontendPageWithObject
             return 'homepage';
         }
 
-        if ($this->getObject() && $this->getObject()->getTemplateName()) {
-            return $this->getObject()->getTemplateName();
-        }
-
         return 'page';
     }
 

@@ -69,6 +69,30 @@ trait FrontendPageTrait
         return $this->template_data['object'] ?? null;
     }
 
+    /**
+     * eventually alters template name
+     *
+     * @return string
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws PhpfastcacheSimpleCacheException
+     */
+    protected function alterTemplateName(string $templateName): string
+    {        
+        $alterFunction = '\theme_alterTemplateName'; // to avoid vscode intelephense warning about non existing function
+        if (function_exists($alterFunction)) {
+            return $alterFunction($templateName, $this);
+        }
+
+        if ($this->getObject()?->isLoaded()) {
+            if (is_callable([$this->getObject(), 'getTemplateName']) && !empty($this->getObject()->getTemplateName())) {
+                return $this->getObject()->getTemplateName();
+            }
+        }
+
+        return $templateName;
+    }
 
     /**
      * {@inheritdocs}

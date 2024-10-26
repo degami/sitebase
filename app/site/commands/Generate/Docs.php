@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Generate Documentation Command
@@ -43,7 +44,7 @@ class Docs extends BaseExecCommand
      * @return void
      * @throws NotFoundException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $output->writeln("<info>Generating Documentation</info>");
 
@@ -58,12 +59,14 @@ class Docs extends BaseExecCommand
             $question = new ConfirmationQuestion('Do you want to publish docs also on website? ', false);
             if (!$this->getQuestionHelper()->ask($input, $output, $question)) {
                 $output->writeln('<info>Not Publishing</info>');
-                return;
+                return Command::SUCCESS;
             }
 
             symlink(App::getDir(App::ROOT) . DS . "docs", App::getDir(App::WEBROOT) . DS . "docs");
         }
 
         $this->getIo()->success('Task completed');
+
+        return Command::SUCCESS;
     }
 }

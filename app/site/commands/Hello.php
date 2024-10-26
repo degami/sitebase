@@ -49,12 +49,14 @@ class Hello extends Command
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         if ($input->hasArgument('username')) {
             $output->writeln('<info>Hello ' . $input->getArgument('username') . '</info>');
         } else {
             $output->writeln('<info>Hello</info>');
         }
+
+        return Command::SUCCESS;
     }
 }

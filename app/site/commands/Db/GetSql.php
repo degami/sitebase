@@ -17,6 +17,7 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Migrate Database Command
@@ -39,7 +40,7 @@ class GetSql extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         foreach ($this->getSchema()->preload()->getTables() as $key => $table) {
             $output->writeln("");
@@ -48,5 +49,7 @@ class GetSql extends BaseCommand
 
             $output->writeln($table->showCreate());
         }
+
+        return Command::SUCCESS;
     }
 }

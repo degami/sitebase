@@ -280,7 +280,7 @@ abstract class BasePage extends ContainerAwareObject
      */
     protected function doRedirect($url, $additional_headers = []): RedirectResponse
     {
-        return RedirectResponse::create(
+        return new RedirectResponse(
             $url,
             302,
             array_merge(

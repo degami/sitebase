@@ -25,6 +25,7 @@ use App\Site\Models\QueueMessage;
 use App\Base\Abstracts\Queues\BaseQueueWorker;
 use App\Base\Exceptions\InvalidValueException;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Process Queue Command
@@ -64,7 +65,7 @@ class Process extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $queue = $input->getOption('queue') ?? null;
         $lock_path = App::getDir(App::TMP) . DS . self::LOCKFILE_NAME;
@@ -109,6 +110,8 @@ class Process extends BaseCommand
             }
 
             fclose($fp);
+
+            return Command::SUCCESS;
         }
     }
 }

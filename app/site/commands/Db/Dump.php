@@ -21,6 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Compressors\GzipCompressor;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Dump Database Command
@@ -42,7 +43,7 @@ class Dump extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         try {
             MySql::create()
@@ -56,5 +57,7 @@ class Dump extends BaseCommand
         } catch (CannotStartDump $e) {
         } catch (DumpFailed $e) {
         }
+
+        return Command::SUCCESS;
     }
 }

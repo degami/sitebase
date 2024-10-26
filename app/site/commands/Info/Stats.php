@@ -29,6 +29,7 @@ use App\Site\Models\Taxonomy;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Information Statistics Command
@@ -51,7 +52,7 @@ class Stats extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $tables = [
             Website::class => 'Websites',
@@ -82,5 +83,7 @@ class Stats extends BaseCommand
 
         $this->renderTitle('App stats');
         $this->renderTable([], $tableContents);
+
+        return Command::SUCCESS;
     }
 }

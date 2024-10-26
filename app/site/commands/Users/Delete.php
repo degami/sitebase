@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\User;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Delete User Command
@@ -47,31 +48,33 @@ class Delete extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid user id');
-            return;
+            return Command::FAILURE;
         }
 
         $user = $this->containerCall([User::class, 'load'], ['id' => $id]);
 
         if (!$user->isLoaded()) {
             $this->getIo()->error('User does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         if ($id == 1) {
             $this->getIo()->error('User "' . $user->username . '" can\'t be deleted');
-            return;
+            return Command::FAILURE;
         }
 
         if (!$this->confirmDelete('Delete User "' . $user->getUsername() . '"? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         $user->delete();
         $this->getIo()->success('User deleted');
+
+        return Command::SUCCESS;
     }
 }

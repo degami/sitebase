@@ -17,6 +17,7 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Restart Queue Command
@@ -41,7 +42,7 @@ class Restart extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $kill_flag = App::getDir(App::TMP) . DS . self::KILLFILE_NAME;
         if (!file_exists($kill_flag)) {
@@ -52,5 +53,7 @@ class Restart extends BaseCommand
             usleep(self::POLL_TIMEOUT);
         }
         $this->getIo()->success('Queue restarted');
+
+        return Command::SUCCESS;
     }
 }

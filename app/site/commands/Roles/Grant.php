@@ -23,6 +23,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use App\Site\Models\Role;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Grant Permission to Role Command
@@ -54,12 +55,12 @@ class Grant extends BaseCommand
      * @throws BasicException
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid role id');
-            return;
+            return Command::FAILURE;
         }
 
         /** @var Role $role */
@@ -67,7 +68,7 @@ class Grant extends BaseCommand
 
         if (!$role->isLoaded()) {
             $this->getIo()->error('Role does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         $permissions_available = array_filter(
@@ -85,7 +86,7 @@ class Grant extends BaseCommand
 
         if (empty($permissions_available)) {
             $this->getIo()->error('No permission available to add');
-            return;
+            return Command::FAILURE;
         }
 
         $permission = $input->getOption('permission');
@@ -100,10 +101,12 @@ class Grant extends BaseCommand
         }
 
         if (!$this->confirmSave('Add permission "' . $permission . '" to role "' . $role->getName() . '"? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         $role->grantPermission($permission);
         $this->getIo()->success('Role saved');
+
+        return Command::SUCCESS;
     }
 }

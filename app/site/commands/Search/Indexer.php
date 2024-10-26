@@ -23,6 +23,7 @@ use DI\NotFoundException;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Index data for search engine
@@ -50,7 +51,7 @@ class Indexer extends BaseCommand
      * @throws NotFoundException
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $client = $this->getElasticsearch();
 
@@ -99,5 +100,7 @@ class Indexer extends BaseCommand
 
         $this->renderTitle('Indexer results');
         $this->renderTable(array_keys($results), [$results]);
+        
+        return Command::SUCCESS;
     }
 }

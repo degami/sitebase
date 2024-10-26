@@ -17,6 +17,7 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\Role;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Show Roles Command
@@ -39,7 +40,7 @@ class Show extends BaseCommand
      * @return void
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->renderTitle('Roles');
         $this->renderTable(['ID', 'Name', 'Permissions'], array_map(function($role) {
@@ -57,5 +58,7 @@ class Show extends BaseCommand
                 ),
             ];
         }, Role::getCollection()->getItems()));
+
+        return Command::SUCCESS;
     }
 }

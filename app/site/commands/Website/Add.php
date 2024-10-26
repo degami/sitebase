@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Add Website Command
@@ -50,13 +51,13 @@ class Add extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $name = $this->keepAskingForOption('name', 'Name? ');
         $domain = $this->keepAskingForOption('domain', 'Domain? ');
 
         if (!$this->confirmSave('Save Website? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         try {
@@ -86,5 +87,7 @@ class Add extends BaseCommand
         } catch (Exception $e) {
             $this->getIo()->error($e->getMessage());
         }
+
+        return Command::SUCCESS;
     }
 }

@@ -17,6 +17,7 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Site Online Command
@@ -38,9 +39,11 @@ class Online extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         @unlink(App::getDir(App::APP) . DS . 'offline.flag');
         $this->getIo()->success('Maintenance mode OFF');
+
+        return Command::SUCCESS;
     }
 }

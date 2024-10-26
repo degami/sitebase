@@ -101,7 +101,7 @@ class Taxonomy extends FrontendModelWithChildren
     public function prePersist(): BaseModel
     {
         $this->setPath($this->getParentIds());
-        $this->setLevel(max(count(explode("/", $this->path)) - 1, 0));
+        $this->setLevel(max(count(explode("/", (string) $this->path)) - 1, 0));
         return parent::prePersist();
     }
 

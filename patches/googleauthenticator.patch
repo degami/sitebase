@@ -1,0 +1,11 @@
+--- a/PHPGangsta/GoogleAuthenticator.php	2024-10-26 10:52:15.420539853 +0200
++++ b/PHPGangsta/GoogleAuthenticator.php	2024-10-26 10:52:45.075967696 +0200
+@@ -109,7 +109,7 @@
+             $urlencoded .= urlencode('&issuer='.urlencode($title));
+         }
+ 
+-        return "https://api.qrserver.com/v1/create-qr-code/?data=$urlencoded&size=${width}x${height}&ecc=$level";
++        return "https://api.qrserver.com/v1/create-qr-code/?data=$urlencoded&size=" . $width . "x" . $height . "&ecc=$level";
+     }
+ 
+     /**

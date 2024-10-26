@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\Role;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Delete Role Command
@@ -47,31 +48,33 @@ class Delete extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid role id');
-            return;
+            return Command::FAILURE;
         }
 
         $role = $this->containerCall([Role::class, 'load'], ['id' => $id]);
 
         if (!$role->isLoaded()) {
             $this->getIo()->error('Role does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         if ($role->getName() == 'admin') {
             $this->getIo()->error('Role "' . $role->getName() . '" can\'t be deleted');
-            return;
+            return Command::FAILURE;
         }
 
         if (!$this->confirmDelete('Delete Role "' . $role->getName() . '"? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         $role->delete();
         $this->getIo()->success('Role deleted');
+
+        return Command::SUCCESS;
     }
 }

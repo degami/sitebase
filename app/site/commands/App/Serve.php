@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\Website;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Http Server Command
@@ -50,7 +51,7 @@ class Serve extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $port = $input->getOption('port');
         if (!is_numeric($port) || $port < 1024) {
@@ -62,5 +63,7 @@ class Serve extends BaseCommand
 
         $this->getIo()->title("Serving [" . $website->getDomain() . "] pages on http://localhost:" . $port );
         system("website_id=" . $website->getId() . " php -S localhost:" . $port . " " . App::getDir('root') . DS . 'php_server' . DS . 'router.php');
+
+        return Command::SUCCESS;
     }
 }

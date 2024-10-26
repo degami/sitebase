@@ -27,6 +27,7 @@ use App\Base\Overrides\Migrations\Factory;
 use Genkgo\Migrations\Adapters\PdoMysqlAdapter;
 use Genkgo\Migrations\MigrationInterface;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Migrate Database Command
@@ -97,7 +98,7 @@ class Migrate extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $direction = $input->getOption('direction');
         if ($direction == 'down') {
@@ -116,5 +117,7 @@ class Migrate extends BaseCommand
         $this->getIo()->listing($migrations);
 
         $this->getIo()->success('Migration done.');
+
+        return Command::SUCCESS;
     }
 }

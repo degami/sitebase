@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Delete Configuration Command
@@ -47,31 +48,33 @@ class Delete extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid config id');
-            return;
+            return Command::FAILURE;
         }
 
         $configuration = $this->containerCall([Configuration::class, 'load'], ['id' => $id]);
 
         if (!$configuration->isLoaded()) {
             $this->getIo()->error('Config does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         if ($configuration->is_system == true) {
             $this->getIo()->error('User "' . $configuration->getPath() . '" can\'t be deleted');
-            return;
+            return Command::FAILURE;
         }
 
         if (!$this->confirmDelete('Delete Config "' . $configuration->getPath() . '"? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         $configuration->delete();
         $this->getIo()->success('User deleted');
+
+        return Command::SUCCESS;
     }
 }

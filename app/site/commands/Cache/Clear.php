@@ -18,6 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Cache Clear Command
@@ -41,9 +42,11 @@ class Clear extends BaseCommand
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->getCache()->clear();
         $this->getIo()->success('Cache flushed.');
+
+        return Command::SUCCESS;
     }
 }

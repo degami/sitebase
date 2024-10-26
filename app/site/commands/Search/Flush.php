@@ -20,6 +20,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Index data for search engine
@@ -45,7 +46,7 @@ class Flush extends BaseCommand
      * @throws NotFoundException
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $client = $this->getElasticsearch();
 
@@ -61,5 +62,7 @@ class Flush extends BaseCommand
         ]);
 
         $this->getIo()->success('Data flushed');
+
+        return Command::SUCCESS;
     }
 }

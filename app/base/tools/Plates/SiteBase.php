@@ -45,6 +45,8 @@ class SiteBase implements ExtensionInterface
      */
     protected static $currentWebsite = null;
 
+    public $template;
+
     /**
      * constructor
      *

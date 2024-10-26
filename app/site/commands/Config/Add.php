@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Add Configuration Command
@@ -49,13 +50,13 @@ class Add extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $path = $this->keepAskingForOption('path', 'Path? ');
         $value = $this->keepAskingForOption('value', 'Value? ');
 
         if (!$this->confirmSave('Save Config? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         try {
@@ -69,5 +70,7 @@ class Add extends BaseCommand
         } catch (Exception $e) {
             $this->getIo()->error($e->getMessage());
         }
+
+        return Command::SUCCESS;
     }
 }

@@ -1,4 +1,21 @@
-FROM php:8.0-fpm-alpine
+FROM php:8.3-fpm-alpine
+
+ENV USER=sitebase
+ENV GROUPNAME=$USER
+ENV UID=1000
+ENV GID=1000
+
+RUN addgroup \
+    --gid "$GID" \
+    "$GROUPNAME" \
+&&  adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "$(pwd)" \
+    --ingroup "$GROUPNAME" \
+    --no-create-home \
+    --uid "$UID" \
+    $USER
 
 RUN apk add zlib zlib-dev libpng libpng-dev git bash libffi libffi-dev libxml2 libxml2-dev libsodium libsodium-dev
 RUN docker-php-ext-install pdo_mysql gd pdo fileinfo simplexml sodium
@@ -13,5 +30,8 @@ RUN wget https://phpdoc.org/phpDocumentor.phar -O /usr/local/bin/phpdoc
 RUN chmod 775 /usr/local/bin/phpdoc
 RUN wget https://getcomposer.org/download/latest-stable/composer.phar -O  /usr/local/bin/composer
 RUN chmod 775 /usr/local/bin/composer
+
+RUN composer global require maglnet/composer-require-checker
+RUN composer global require ergebnis/composer-normalize
 
 USER sitebase

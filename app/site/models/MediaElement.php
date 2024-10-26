@@ -95,7 +95,7 @@ class MediaElement extends BaseModel
             'attributes' => [
                     'src' => boolval($this->getLazyload()) && !isset($img_attributes['for_admin']) ? static::TRANSPARENT_PIXEL : $this->getThumbUrl($size, $mode),
                     'class' => $class,
-                    'style' => preg_match('/img-fluid/i', $class) ? '' : "max-width:{$w}px;max-height:{$h}px;",
+                    'style' => preg_match('/img-fluid/i', (string) $class) ? '' : "max-width:{$w}px;max-height:{$h}px;",
                     'border' => 0,
                 ] + $img_attributes,
         ]]);

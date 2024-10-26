@@ -18,6 +18,7 @@ use App\Base\Exceptions\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Generate RSA Key Command
@@ -40,7 +41,7 @@ class RsaKey extends BaseExecCommand
      * @return void
      * @throws NotFoundException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->renderTitle('Generating RSA key');
 /*
@@ -66,6 +67,8 @@ class RsaKey extends BaseExecCommand
         );
 
         $this->getIo()->success('Key created');
+
+        return Command::SUCCESS;
     }
 
     protected function generateCSR($country, $state, $locality, $organization, $commonName)

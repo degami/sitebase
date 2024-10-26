@@ -18,6 +18,7 @@ use App\Site\Models\Configuration;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Show Config Command
@@ -46,7 +47,7 @@ class Show extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $website = $input->getOption('website');
 
@@ -65,5 +66,7 @@ class Show extends BaseCommand
 
         $this->renderTitle('Configurations');
         $this->renderTable(['ID', 'Website', 'Path', 'Value', 'System'], $tableContents);
+
+        return Command::SUCCESS;
     }
 }

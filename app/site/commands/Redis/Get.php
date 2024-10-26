@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Information Statistics Command
@@ -48,22 +49,24 @@ class Get extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         if (getenv('REDIS_CACHE', 0) == 0) {
             $this->getIo()->error('Redis cache is not enabled');
-            return;
+            return Command::FAILURE;
         }
 
         try {
             $client = $this->getRedis();
         } catch (\Exception $e) {
             $this->getIo()->error('Can\'t connect to redis server');
-            return;
+            return Command::FAILURE;
         }
         
         $key = $this->keepAskingForOption('key', 'Cache item key? ');
 
         $output->writeln($client->get($key));
+
+        return Command::SUCCESS;
     }
 }

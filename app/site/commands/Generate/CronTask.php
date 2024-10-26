@@ -18,6 +18,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Generate CronTask Command
@@ -48,13 +49,13 @@ class CronTask extends CodeGeneratorCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $classname = $this->keepAskingForOption('classname', 'Class Name (starting from ' . static::BASE_NAMESPACE . ')? ');
         $this->addClass(static::BASE_NAMESPACE . $classname, $this->getFileContents($classname));
 
         if (!$this->confirmSave('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         list($files_written, $errors) = array_values($this->doWrite());
@@ -65,6 +66,8 @@ class CronTask extends CodeGeneratorCommand
         } else {
             $this->getIo()->success(count($files_written) . ' File(s) saved');
         }
+
+        return Command::SUCCESS;
     }
 
     /**

@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Edit Website Command
@@ -50,12 +51,12 @@ class Edit extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid website id');
-            return;
+            return Command::FAILURE;
         }
 
         /** @var Website $website */
@@ -63,14 +64,14 @@ class Edit extends BaseCommand
 
         if (!$website->isLoaded()) {
             $this->getIo()->error('Website does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         $name = $this->keepAskingForOption('name', 'Name? ');
         $domain = $this->keepAskingForOption('domain', 'Domain? ');
 
         if (!$this->confirmSave('Save Website? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         try {
@@ -83,5 +84,7 @@ class Edit extends BaseCommand
         } catch (Exception $e) {
             $this->getIo()->error($e->getMessage());
         }
+
+        return Command::SUCCESS;
     }
 }

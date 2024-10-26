@@ -286,7 +286,7 @@ class InitialDataMigration extends BaseMigration
             'app/backend/log_requests' => ['locale' => null, 'value' => 1],
             'app/frontend/log_requests' => ['locale' => null, 'value' => 1],
             'app/frontend/themename' => ['locale' => null, 'value' => 'theme'],
-            'app/frontend/assets_domain' => ['locale' => null, 'value' => 'http://' . $website_model->getDomain()],
+            'app/frontend/assets_domain' => ['locale' => null, 'value' => 'https://' . $website_model->getDomain()],
             'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
             'app/frontend/date_time_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d H:i'],
         ];

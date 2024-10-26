@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Cache Get Element Command
@@ -51,7 +52,7 @@ class Get extends BaseCommand
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $key = $this->keepAskingForOption('key', 'Cache item key? ');
 
@@ -68,5 +69,7 @@ class Get extends BaseCommand
         }
 
         $output->writeln($callback($this->getCache()->get($key)));
+
+        return Command::SUCCESS;
     }
 }

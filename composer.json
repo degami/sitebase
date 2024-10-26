@@ -6,6 +6,8 @@
       "homepage": "https://github.com/degami/sitebase"
     }
     ],
+    "name": "degami/sitebase",
+    "description": "Sitebase",
     "minimum-stability": "dev",
     "require": {
         "php": "^8.0",
@@ -18,7 +20,7 @@
         "degami/lessql": "dev-master",
         "degami/basics": "dev-master",
         "nikic/fast-route": "^1.3",
-        "symfony/http-foundation": "^3.4",
+        "symfony/http-foundation": "^7.1",
         "league/plates": "^3.3",
         "vlucas/phpdotenv": "^3.3",
         "lcobucci/jwt": "^4.1",
@@ -26,7 +28,7 @@
         "mashape/unirest-php": "^3.0",
         "genkgo/migrations": "^1.0",
         "fisharebest/localization": "^1.13",
-        "symfony/console": "^3.4",
+        "symfony/console": "^7.1",
         "haydenpierce/class-finder": "^0.3.1",
         "imagine/imagine": "^1.2",
         "components/bootstrap": "^4.1",
@@ -38,9 +40,9 @@
         "swiftmailer/swiftmailer": "^6.2",
         "phpfastcache/phpfastcache": "^8.0.7",
         "nadar/php-composer-reader": "^1.3",
-        "spatie/db-dumper": "^2.13",
+        "spatie/db-dumper": "^3.7",
         "stidges/country-flags": "^2.0",
-        "spatie/array-to-xml": "^2.11",
+        "spatie/array-to-xml": "^3.3",
         "elasticsearch/elasticsearch": "~7.0",
         "mathiasverraes/classfunctions": "^1.1@dev",
         "phpgangsta/googleauthenticator": "dev-master",
@@ -88,6 +90,9 @@
       "patches": {
           "maximebf/debugbar": {
               "fixes sql queries not shown due to js errors": "patches/debugbar_sql.patch"
+          },
+          "phpgangsta/googleauthenticator": {
+              "fixes Using var in strings is deprecated": "patches/googleauthenticator.patch"
           }
       }
   }

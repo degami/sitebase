@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\User;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Unlock User Command
@@ -49,12 +50,12 @@ class Unlock extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid user id');
-            return;
+            return Command::FAILURE;
         }
 
         /** @var User $user */
@@ -62,12 +63,14 @@ class Unlock extends BaseCommand
 
         if (!$user->isLoaded()) {
             $this->getIo()->error('User does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         $user->unlock();
         $user->persist();
 
         $this->getIo()->success('User unlocked');
+
+        return Command::SUCCESS;
     }
 }

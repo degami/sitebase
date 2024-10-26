@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * App Deploy Command
@@ -45,7 +46,7 @@ class Deploy extends BaseCommand
      * @throws BasicException
      * @throws GuzzleException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         system("npm install && gulp");
 
@@ -90,5 +91,7 @@ class Deploy extends BaseCommand
                 symlink($from, $to);
             }
         }
+
+        return Command::SUCCESS;
     }
 }

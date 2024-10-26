@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Edit Configuration Command
@@ -51,7 +52,7 @@ class Edit extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
@@ -73,7 +74,7 @@ class Edit extends BaseCommand
 
             if (!$configuration || !$configuration->getId()) {
                 $this->getIo()->error('Invalid config id');
-                return;    
+                return Command::FAILURE;    
             }
 
             $id = $configuration->getId();
@@ -83,13 +84,13 @@ class Edit extends BaseCommand
         $configuration = $this->containerCall([Configuration::class, 'load'], ['id' => $id]);
         if (!$configuration->isLoaded()) {
             $this->getIo()->error('Config does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         $value = $this->keepAskingForOption('value', 'Value? ');
 
         if (!$this->confirmSave('Save Config? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         try {
@@ -100,5 +101,7 @@ class Edit extends BaseCommand
         } catch (Exception $e) {
             $this->getIo()->error($e->getMessage());
         }
+
+        return Command::SUCCESS;
     }
 }

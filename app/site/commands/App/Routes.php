@@ -19,6 +19,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Show Routes Command
@@ -43,7 +44,7 @@ class Routes extends BaseCommand
      * @throws InvalidValueException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $tableContents = [];
 
@@ -59,5 +60,7 @@ class Routes extends BaseCommand
 
         $this->renderTitle('Routes');
         $this->renderTable(['Name', 'Group', 'Path', 'Callable'], $tableContents);
+
+        return Command::SUCCESS;
     }
 }

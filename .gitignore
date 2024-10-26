@@ -52,3 +52,5 @@ assets/rsa_private.csr
 assets/rsa_private.pem
 docker/database/data
 docker/elasticsearch/data
+docker/data/*
+!docker/data/.gitkeep

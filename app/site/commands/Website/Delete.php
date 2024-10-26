@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Delete Website Command
@@ -47,26 +48,28 @@ class Delete extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid website id');
-            return;
+            return Command::FAILURE;
         }
 
         $website = $this->containerCall([Website::class, 'load'], ['id' => $id]);
 
         if (!$website->isLoaded()) {
             $this->getIo()->error('Website does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         if (!$this->confirmDelete('Delete Website "' . $website->getSiteName() . '"? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         $website->delete();
         $this->getIo()->success('Website deleted');
+
+        return Command::SUCCESS;
     }
 }

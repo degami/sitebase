@@ -19,6 +19,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Modify Env Command
@@ -63,7 +64,7 @@ class ModEnv extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $dotenv = parse_ini_file('.env.sample');
         if (file_exists('.env')) {
@@ -92,7 +93,7 @@ class ModEnv extends BaseCommand
                     }
                 } else {
                     $question = new Question($key . ' value? defaults to [' . $old_value . ']');
-                    $value = $this->getQuestionHelper()->ask($input, $output, $question);
+                    $value = (string) $this->getQuestionHelper()->ask($input, $output, $question);
                     if (trim($value) == '' && in_array($key, ['ADMIN_EMAIL', 'ADMIN_PASS', 'ADMIN_USER'])) {
                         $value = $this->keepAsking($key . " can't be empty. ".$key.' value?');
                     }
@@ -126,11 +127,13 @@ class ModEnv extends BaseCommand
             $output->writeln($dotenv);
     
             if (!$this->confirmSave('Save Config? ')) {
-                return;
+                return Command::SUCCESS;
             }    
         }
 
         file_put_contents('.env', trim($dotenv) . "\n", LOCK_EX);
         $this->getIo()->success('Config saved');
+
+        return Command::SUCCESS;
     }
 }

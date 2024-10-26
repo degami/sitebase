@@ -615,7 +615,7 @@ class Globals extends ContainerAwareObject
     public function getTokenHeader(): ?string
     {
         $token = $this->getRequest()->headers->get('Authorization');
-        return str_replace("Bearer ", "", $token ?: $this->getRequest()->cookies->get('Authorization'));
+        return str_replace("Bearer ", "", (string) ($token ?: $this->getRequest()->cookies->get('Authorization')));
     }
 
     /**

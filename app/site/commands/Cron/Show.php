@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\CronTask;
 use DateTime;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Show Cron Command
@@ -42,7 +43,7 @@ class Show extends BaseCommand
      * @return void
      * @throws Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $tableContents = array_map(fn($cron) => [
             '<info>' . $cron->getId() . '</info>',
@@ -55,6 +56,8 @@ class Show extends BaseCommand
 
         $this->renderTitle('Crons');
         $this->renderTable(['ID', 'Title', 'Callable', 'Schedule', 'Active'], $tableContents);
+
+        return Command::SUCCESS;
     }
 
     /**

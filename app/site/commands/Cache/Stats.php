@@ -18,6 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Base\Tools\Cache\Manager as CacheManager;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Cache Statistics Command
@@ -40,7 +41,7 @@ class Stats extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $tableContents = [
             [$this->getCache()->getStats()->getInfo() . "\n" .
@@ -57,5 +58,7 @@ class Stats extends BaseCommand
 
         $this->renderTitle('Cache stats');
         $this->renderTable([], $tableContents);
+
+        return Command::SUCCESS;
     }
 }

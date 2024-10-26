@@ -57,7 +57,7 @@ class BreadCrumbs extends BaseCodeBlock
         $route_info = $current_page?->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
-        if ($current_page?->getRouteGroup() == AdminTrait::getRouteGroup() || $route_info?->isAdminRoute()) {
+        if ($current_page?->getRouteGroup() == static::getRouteGroup() || $route_info?->isAdminRoute()) {
             return '';
         }
 
@@ -275,5 +275,15 @@ class BreadCrumbs extends BaseCodeBlock
         ]);
 
         return $config_fields;
+    }
+
+    /**
+     * gets route group
+     *
+     * @return string|null
+     */
+    public static function getRouteGroup(): ?string
+    {
+        return (trim(getenv('ADMINPAGES_GROUP')) != null) ? '/' . getenv('ADMINPAGES_GROUP') : null;
     }
 }

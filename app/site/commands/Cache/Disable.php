@@ -19,6 +19,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Cache Disable Command
@@ -42,7 +43,7 @@ class Disable extends BaseCommand
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $argInput = new ArrayInput([
             // the command name is passed as first argument
@@ -52,5 +53,7 @@ class Disable extends BaseCommand
         ]);
 
         $this->getApplication()->run($argInput, $output);
+
+        return Command::SUCCESS;
     }
 }

@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Generate Model Command
@@ -60,7 +61,7 @@ class Model extends CodeGeneratorCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $modelClassName = $this->keepAskingForOption('classname', 'Class Name (starting from ' . static::BASE_MODEL_NAMESPACE . ')? ');
 
@@ -89,7 +90,7 @@ class Model extends CodeGeneratorCommand
         $this->addClass(static::BASE_MIGRATION_NAMESPACE . $migrationClassName, $this->getMigrationFileContents($migrationClassName, $modelClassName, $migration_order));
 
         if (!$this->confirmSave('Save File(s) in ' . implode(", ", array_keys($this->filesToDump)) . '? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         list($files_written, $errors) = array_values($this->doWrite());
@@ -100,6 +101,8 @@ class Model extends CodeGeneratorCommand
         } else {
             $this->getIo()->success(count($files_written) . ' File(s) saved');
         }
+
+        return Command::SUCCESS;
     }
 
     /**

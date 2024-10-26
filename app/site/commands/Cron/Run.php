@@ -24,6 +24,7 @@ use App\Site\Models\CronTask;
 use App\Site\Models\CronLog;
 use Exception;
 use DateTime;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Run Cron Command
@@ -48,7 +49,7 @@ class Run extends BaseCommand
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $start_mtime = microtime(true);
         $start_time = new DateTime();
@@ -75,5 +76,7 @@ class Run extends BaseCommand
             $cron_log->persist();
         }
         $this->getLog()->info('Cron end. executed tasks: '.count($cron_executed));
+
+        return Command::SUCCESS;
     }
 }

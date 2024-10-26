@@ -22,6 +22,7 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Information Statistics Command
@@ -56,7 +57,7 @@ class Test extends BaseCommand
      * @throws PhpfastcacheSimpleCacheException
      * @throws \Throwable
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $to = $this->keepAskingForOption('mail_to', 'Send mail to? ');
 
@@ -89,5 +90,7 @@ class Test extends BaseCommand
         } else {
             $this->getIo()->error('Mail not sent.');
         }
+
+        return Command::SUCCESS;
     }
 }

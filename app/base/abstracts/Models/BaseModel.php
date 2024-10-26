@@ -108,8 +108,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     protected function getTableName(): string
     {
-        if (trim($this->table_name) != '') {
-            return $this->table_name;
+        if (trim((string) $this->table_name) != '') {
+            return (string) $this->table_name;
         }
         return static::defaultTableName();
     }

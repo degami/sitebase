@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use App\Site\Models\Role;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Revoke Permission from Role Command
@@ -50,12 +51,12 @@ class Revoke extends BaseCommand
      * @return void
      * @throws \Exception
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $id = $input->getOption('id');
         if (!is_numeric($id)) {
             $this->getIo()->error('Invalid role id');
-            return;
+            return Command::FAILURE;
         }
 
         /** @var Role $role */
@@ -63,7 +64,7 @@ class Revoke extends BaseCommand
 
         if (!$role->isLoaded()) {
             $this->getIo()->error('Role does not exists');
-            return;
+            return Command::FAILURE;
         }
 
         $permissions_available = array_map(
@@ -75,7 +76,7 @@ class Revoke extends BaseCommand
 
         if (empty($permissions_available)) {
             $this->getIo()->error('No permission available to revoke');
-            return;
+            return Command::FAILURE;
         }
 
         $permission = $input->getOption('permission');
@@ -90,10 +91,12 @@ class Revoke extends BaseCommand
         }
 
         if (!$this->confirmSave('Revoke permission "' . $permission . '" to role "' . $role->getName() . '"? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         $role->revokePermission($permission);
         $this->getIo()->success('Role saved');
+
+        return Command::SUCCESS;
     }
 }

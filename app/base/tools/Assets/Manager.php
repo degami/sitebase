@@ -111,7 +111,7 @@ class Manager extends ContainerAwareObject
         }
 
         $target = 'js';
-        if (strtolower(trim($position)) == 'head') {
+        if (strtolower(trim((string) $position)) == 'head') {
             $target = 'head_js';
         }
 

@@ -1,9 +1,23 @@
-FROM php:8.0-cli-alpine
+FROM php:8.3-cli-alpine
 
 USER root
 
-COPY ./group /etc/group
-COPY ./passwd /etc/passwd
+ENV USER=sitebase
+ENV GROUPNAME=$USER
+ENV UID=1000
+ENV GID=1000
+
+RUN addgroup \
+    --gid "$GID" \
+    "$GROUPNAME" \
+&&  adduser \
+    --disabled-password \
+    --gecos "" \
+    --home "$(pwd)" \
+    --ingroup "$GROUPNAME" \
+    --no-create-home \
+    --uid "$UID" \
+    $USER
 
 RUN apk add zlib zlib-dev libpng libpng-dev git bash libffi libffi-dev libxml2 libxml2-dev libsodium libsodium-dev
 RUN docker-php-ext-install pdo_mysql gd pdo fileinfo simplexml sodium

@@ -409,7 +409,7 @@ class RouteInfo
      */
     public function isAdminRoute(): bool
     {
-        return $this->getRouteName() == 'admin.login' || preg_match("/^admin/", $this->getRouteName());
+        return $this->getRouteName() == 'admin.login' || preg_match("/^admin/", (string) $this->getRouteName());
     }
 
     /**

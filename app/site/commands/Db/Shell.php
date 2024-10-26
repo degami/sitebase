@@ -18,6 +18,7 @@ use PDO;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Database Shell Command
@@ -39,7 +40,7 @@ class Shell extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $helper = $this->getHelper('question');
 
@@ -99,5 +100,7 @@ class Shell extends BaseCommand
             }
         } while ($command != 'exit');
         $output->writeln('bye.');
+
+        return Command::SUCCESS;
     }
 }

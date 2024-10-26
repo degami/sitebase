@@ -65,7 +65,7 @@ class Menu extends ModelWithChildren
      */
     public function getLinkUrl(bool $absolute = true): string
     {
-        if (trim($this->getHref()) != '') {
+        if (trim((string) $this->getHref()) != '') {
             return $this->getHref();
         }
 
@@ -123,7 +123,7 @@ class Menu extends ModelWithChildren
     public function prePersist(): BaseModel
     {
         $this->setBreadcrumb($this->getParentIds());
-        $this->setLevel(max(count(explode("/", $this->breadcrumb)) - 1, 0));
+        $this->setLevel(max(count(explode("/", (string) $this->breadcrumb)) - 1, 0));
         return parent::prePersist();
     }
 }

@@ -24,6 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use App\Site\Models\User;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Add User Command
@@ -58,7 +59,7 @@ class Add extends BaseCommand
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $helper = $this->getQuestionHelper();
 
@@ -101,7 +102,7 @@ class Add extends BaseCommand
         }
 
         if (!$this->confirmSave('Save User? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         try {
@@ -119,5 +120,7 @@ class Add extends BaseCommand
         } catch (Exception $e) {
             $this->getIo()->error($e->getMessage());
         }
+
+        return Command::SUCCESS;
     }
 }

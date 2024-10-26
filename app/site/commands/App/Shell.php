@@ -19,6 +19,7 @@ use DI\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Application Shell Command
@@ -42,7 +43,7 @@ class Shell extends BaseCommand
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->getIo()->title('Welcome.');
 
@@ -69,5 +70,7 @@ class Shell extends BaseCommand
             }
         } while ($command != 'exit');
         $output->writeln('bye.');
+
+        return Command::SUCCESS;
     }
 }

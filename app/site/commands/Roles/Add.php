@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\Role;
 use Exception;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Add Role Command
@@ -48,12 +49,12 @@ class Add extends BaseCommand
      * @param OutputInterface $output
      * @return void
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $name = $this->keepAskingForOption('name', 'Name? ');
 
         if (!$this->confirmSave('Save Role? ')) {
-            return;
+            return Command::SUCCESS;
         }
 
         try {
@@ -66,5 +67,7 @@ class Add extends BaseCommand
         } catch (Exception $e) {
             $this->getIo()->error($e->getMessage());
         }
+
+        return Command::SUCCESS;
     }
 }

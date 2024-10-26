@@ -20,6 +20,7 @@ use DI\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\User;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Show Users Command
@@ -44,7 +45,7 @@ class Show extends BaseCommand
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->renderTitle('Users');
         $this->renderTable(['ID', 'Username', 'Email', 'Roles'], array_map(fn($user) => [
@@ -53,5 +54,7 @@ class Show extends BaseCommand
             $user->getEmail(),
             $user->getRole()->getName(),
         ], User::getCollection()->getItems()));
+
+        return Command::SUCCESS;
     }
 }

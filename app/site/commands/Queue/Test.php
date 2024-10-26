@@ -17,6 +17,7 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Test Queue Command
@@ -49,9 +50,11 @@ class Test extends BaseCommand
      * @return void
      * @throws BasicException
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : void
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         $this->getUtils()->addQueueMessage('test', []);
         $this->getIo()->success('Queued');
+
+        return Command::SUCCESS;
     }
 }

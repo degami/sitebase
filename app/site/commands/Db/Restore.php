@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Restore Dump Command
@@ -44,7 +45,7 @@ class Restore extends BaseExecCommand
      * @return void
      * @throws NotFoundException
      */
-    protected function execute(InputInterface $input, OutputInterface $output)
+    protected function execute(InputInterface $input, OutputInterface $output) : int
     {
         try {
             if (!$this->commandExist('zcat') || !$this->commandExist('mysql')) {
@@ -72,6 +73,8 @@ class Restore extends BaseExecCommand
         }
 
         $this->getIo()->writeln("dump restored");
+
+        return Command::SUCCESS;
     }
 
     private function restore($filename)

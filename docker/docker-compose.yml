@@ -12,8 +12,6 @@ services:
     build:
       context: ./php-fpm
     volumes:
-      - ./php-fpm/passwd:/etc/passwd
-      - ./php-fpm/group:/etc/group
       - ./php-fpm/www.conf:/usr/local/etc/php-fpm.d/www.conf
       - ./php-fpm/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ..:/var/www/html
@@ -38,7 +36,7 @@ services:
     volumes:
       - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql
       - ./database/docker.cnf:/etc/mysql/conf.d/docker.cnf:ro
-      - ./database/data:/var/lib/mysql
+      - ./data/database/mysql:/var/lib/mysql
       - ..:/var/www/html
     networks:
       sitebasenet:
@@ -60,7 +58,7 @@ services:
   elasticsearch:
     image: blacktop/elasticsearch
     volumes:
-      - ./elasticsearch/data:/usr/share/elasticsearch/data
+      - ./data/elasticsearch/data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
     networks:
@@ -72,8 +70,6 @@ services:
     build:
       context: ./supervisor
     volumes:
-      - ./php-fpm/passwd:/etc/passwd
-      - ./php-fpm/group:/etc/group
       - ./supervisor/docker-php-ext-xdebug.ini:/usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
       - ./supervisor/supervisord.conf:/etc/supervisord.conf
       - ..:/var/www/html
@@ -108,8 +104,6 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./nginx/sites/:/etc/nginx/sites-available
       - ./nginx/conf.d/:/etc/nginx/conf.d
-      - ./nginx/passwd:/etc/passwd
-      - ./nginx/group:/etc/group
     depends_on:
       - php-fpm
     ports:

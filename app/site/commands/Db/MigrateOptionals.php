@@ -18,6 +18,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Psr\Container\ContainerInterface;
 use App\App;
+use Symfony\Component\Console\Command\Command;
 
 /**
  * Migrate Database Optionals Command

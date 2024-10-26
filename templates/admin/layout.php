@@ -43,7 +43,7 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
 
 <div id="admin" class="container-fluid">
     <div class="row">
-        <nav id="sidebar" class="col-md-2 bg-light sidebar<?= ($controller->getRequest()->cookies->get('sidebar_size') == 'minimized') ? ' collapsed' : ''; ?>">
+        <nav id="sidebar" class="col-md-2 bg-light sidebar<?= ($controller->getSidebarSize() == 'minimized') ? ' collapsed' : ''; ?>">
             <div class="sidebar-sticky">
                 <a href="#" class="closebtn d-sm-block d-md-none">&times;</a>
                 <?php $this->insert('admin::partials/sidemenu', ['controller' => $controller]); ?>

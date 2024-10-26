@@ -254,6 +254,25 @@ abstract class AdminPage extends BaseHtmlPage
     }
 
     /**
+     * get sidebar size
+     * 
+     * @return string
+     */
+    public function getSidebarSize() : string 
+    {
+        /** @var User $user */
+        $user = $this->getCurrentUser();
+
+        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
+
+        if (is_array($uiSettings) && isset($uiSettings['sidebar_size'])) {
+            return $uiSettings['sidebar_size'];
+        }
+
+        return '';
+    }
+
+    /**
      * {@inheritdocs}
      *
      * @return array

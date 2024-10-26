@@ -3,14 +3,12 @@
   "version": "0.0.1",
   "description": "",
   "main": "Gulpfile.js",
+  "type": "module",
   "dependencies": {
     "gallery": "^1.0.2",
-    "gulp": "^4.0.2",
-    "gulp-compass": "^2.1.0",
     "gulp-header": "^2.0.9",
     "gulp-include": "^2.4.1",
     "gulp-minify": "^3.1.0",
-    "gulp-size": "^3.0.0",
     "gulp-uglify": "^3.0.2",
     "highlightjs": "^9.16.2",
     "is-in-viewport": "^3.0.4",
@@ -19,11 +17,15 @@
     "jquery.cycle2": "^2.1.7",
     "moment": "^2.24.0",
     "pretty-checkbox": "^3.0.3",
-    "select2": "^4.0.10",
-    "terser": "^4.3.1"
+    "select2": "^4.1.0-rc.0"
   },
   "devDependencies": {
-    "del": "^5.1.0"
+    "del": "^8.0.0",
+    "gulp": "^5.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-size": "^5.0.0",
+    "sass": "^1.80.4",
+    "terser": "^5.36.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

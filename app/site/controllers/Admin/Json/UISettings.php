@@ -44,27 +44,39 @@ class UISettings extends AdminJsonPage
      */
     protected function getJsonData(): array
     {
-        $settings = $this->getSettingsData($this->getRequest());
-        if (empty($settings) || !isset($settings['currentRoute'])) {
-            throw new Exception("Missing settings content");
-        }
-    
-        $currentRoute = $settings['currentRoute'];
-        // remove unuseful element
-        unset($settings['currentRoute']);
-
         /** @var User $user */
         $user = $this->getCurrentUser();
-        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings') ?? [];
 
-        // merge incoming data into existing
-        $uiSettings[$currentRoute] = array_merge(
-            $uiSettings[$currentRoute] ?? [],
-            $settings
-        );
-
-        // save data
-        $user->getUserSession()->addSessionData('uiSettings', $uiSettings)->persist();
+        if ($this->getRequest()->getMethod() == 'POST') {
+            $settings = $this->getSettingsData($this->getRequest());
+            if (empty($settings)) {
+                throw new Exception("Missing settings content");
+            }
+        
+            $currentRoute = $settings['currentRoute'] ?? null;
+            // remove unuseful element
+            unset($settings['currentRoute']);
+    
+            $uiSettings = $user->getUserSession()->getSessionKey('uiSettings') ?? [];
+    
+            if (!empty($currentRoute)) {
+                // if setting is route specific
+                // merge incoming data into existing
+                $uiSettings[$currentRoute] = array_merge(
+                    $uiSettings[$currentRoute] ?? [],
+                    $settings
+                );
+            } else {
+                // if setting is global
+                $uiSettings = array_merge(
+                    $uiSettings,
+                    $settings
+                );    
+            }
+    
+            // save data
+            $user->getUserSession()->addSessionData('uiSettings', $uiSettings)->persist();    
+        }
 
         return ['success' => true, 'settings' => $user->getUserSession()->getSessionKey('uiSettings')];
     }

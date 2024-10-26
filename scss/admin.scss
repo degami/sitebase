@@ -1,16 +1,11 @@
-/* Welcome to Compass.
-* In this file you should write your main styles. (or centralize your imports)
-* Import this file using the following HTML or equivalent:
-* <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet" type="text/css" /> */
+@use "partials/colors" as *;
+@use "partials/forms" as *;
+@use "../node_modules/select2/src/scss/core";
+//@use "compass/reset";
+//@use "rgbapng";
+//@use '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
 @CHARSET "UTF-8";
-
-//@import "compass/reset";
-@import "rgbapng";
-@import "partials/colors";
-@import "partials/forms";
-@import "../node_modules/select2/src/scss/core";
-@import '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
 body {
     font-size: .875rem;
@@ -323,7 +318,7 @@ body {
 }
 
 #overlay {
-    @include rgba-background(rgba(0,0,0,0.75));
+    background: rgba(0,0,0,0.75);
     height: 100vh;
     width: 100vw;
     z-index: 2000;

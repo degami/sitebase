@@ -29,8 +29,8 @@
 
                 $elem.data('appAdmin', instance);
 
-                $('select:not(".select2-processed")', $elem).each(function(index, select){
-                    $(select).select2({'width': $(select).css('width') ? $(select).css('width') : '100%'}).addClass('select2-processed');
+                $('select:not(".select-processed")', $elem).each(function(index, select){
+                    $(select).select2({'width': $(select).css('width') ? $(select).css('width') : '100%'}).addClass('select-processed');
                 });
 
                 $('select.paginator-items-choice').on('change', function(){
@@ -54,15 +54,30 @@
 
                 $('#sidebar-minimize-btn').on('click', function() {
                     if ($('.sidebar').hasClass('collapsed')) {
-                        $.removeCookie('sidebar_size');
+                        //$.removeCookie('sidebar_size');
+                        $elem.appAdmin('updateUserUiSettings', 
+                            {'sidebar_size': ''},
+                            function (data) { }
+                        );
                     } else {
-                        $.cookie('sidebar_size','minimized');
+                        //$.cookie('sidebar_size','minimized');
+                        $elem.appAdmin('updateUserUiSettings', 
+                            {'sidebar_size': 'minimized'},
+                            function (data) { }
+                        );
                     }
                     $('.sidebar').toggleClass('collapsed');
                 });
 
+                $elem.appAdmin('getUserUiSettings', function(data) {
+                    if (data.sidebar_size == 'minimized') {
+                        $('.sidebar').addClass('collapsed');                        
+                    }
+                });
+
+
                 if ($.cookie('sidebar_size') == 'minimized') {
-                    $('.sidebar').addClass('collapsed');
+                    //$('.sidebar').addClass('collapsed');
                 }
 
                 $('#sidebarCollapse').on('click', function () {
@@ -124,10 +139,10 @@
                 $('.sidepanel', that).find('.card-block').html(response.html || '');
 
                 // add behaviours
-                $('.sidepanel select:not(".select2-processed")', that).select2({
+                $('.sidepanel select:not(".select-processed")', that).select2({
                     dropdownCssClass: "in_sidepanel",
                     'width':'100%'
-                }).addClass('select2-processed');
+                }).addClass('select-processed');
                 $('.sidepanel form', that).submit(function(evt){
                     evt.preventDefault();
                     var formData = new FormData(this);
@@ -239,6 +254,17 @@
                 type: "POST",
                 url: uIsettingsUrl,
                 data: JSON.stringify(settings),
+                processData: false,
+                contentType: 'application/json',
+                success: succesCallback,
+                error: function(xhr, ajaxOptions, thrownError) {}
+            });
+        },
+        getUserUiSettings: function(succesCallback) {
+            var uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
+            $.ajax({
+                type: "GET",
+                url: uIsettingsUrl,
                 processData: false,
                 contentType: 'application/json',
                 success: succesCallback,

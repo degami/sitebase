@@ -1,11 +1,11 @@
-@import "partials/colors";
-@import "partials/forms";
-@import "partials/lightbox";
+@use "partials/colors" as *;
+@use "partials/forms" as *;
+@use "partials/lightbox" as *;
+@use "../node_modules/select2/src/scss/core";
+//@use '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
 // Fonts
 @import url("https://fonts.googleapis.com/css?family=Raleway:100,300,400,600");
-@import "../node_modules/select2/src/scss/core";
-@import '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
 body {
     padding: 10px;

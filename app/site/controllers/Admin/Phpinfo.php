@@ -87,7 +87,7 @@ class Phpinfo extends AdminPage
             $style = $matches[1];
         }
 
-        $style = preg_replace("/body {.*?}/msi","",$style);
+        $style = preg_replace("/body {(.*?)}/msi","",$style);
         $style = implode("\n", array_map(function($line) {
             $line = trim ($line);
             if (str_starts_with($line, "table")) {
@@ -96,12 +96,29 @@ class Phpinfo extends AdminPage
             if (str_starts_with($line, "td")) {
                 $line = preg_replace("/font-size: .*?;/", "font-size: 100%;", $line);
             }
+            if (str_starts_with($line, ".e ")) {
+                $line = preg_replace("/}/", "; color: #fff;}", $line);
+            }
+            if (str_starts_with($line, ".h ")) {
+                $line = preg_replace("/}/", "; color: #fff;}", $line);
+            }
+            if (str_starts_with($line, "th ")) {
+                $line = preg_replace("/}/", "; color: #fff;}", $line);
+            }
+            if (str_starts_with($line, "h2 ")) {
+                $line = preg_replace("/}/", "; font-weight: bolder;}", $line);
+            }
+            if (str_starts_with($line, "h1 ")) {
+                $line = preg_replace("/}/", "; font-weight: bolder;}", $line);
+            }
             return ".phpinfo ".$line;
         } , array_filter(explode("\n", $style))));
 
         $this->template_data = [
             'php_info' => '<div class="phpinfo">'.$phpinfo.'</div>',
-            'style' => $style,
+            'style' => $style.':root {
+  --php-dark-blue: #4F5D95;
+}',
         ];
 
         return $this->template_data;

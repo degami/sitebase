@@ -267,7 +267,7 @@ class Links extends AdminManageFrontendModelsPage
                 break;
         }
         if ($this->getRequest()->request->get('term_id') != null) {
-            return JsonResponse::create(['success' => true]);
+            return new JsonResponse(['success' => true]);
         }
         return $this->doRedirect($this->getControllerUrl());
     }

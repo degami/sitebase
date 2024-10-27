@@ -199,7 +199,7 @@ class BaseCommand extends SymfonyCommand
         }
 
         $value = $this->input->getOption($option_name);
-        while (trim($value) == '') {
+        while (trim((string) $value) == '') {
             $question = new Question($question_message);
             $value = $this->getQuestionHelper()->ask($this->input, $this->output, $question);
 

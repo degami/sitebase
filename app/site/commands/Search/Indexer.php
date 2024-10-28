@@ -20,6 +20,7 @@ use App\Site\Controllers\Frontend\Search;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -53,6 +54,10 @@ class Indexer extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
+        if (!$this->ensureIndex()) {
+            $this->getIo()->error("Errors during index check");
+            return Command::FAILURE;
+        }
         $client = $this->getElasticsearch();
 
         $results = [];
@@ -102,5 +107,25 @@ class Indexer extends BaseCommand
         $this->renderTable(array_keys($results), [$results]);
         
         return Command::SUCCESS;
+    }
+
+    protected function ensureIndex() : bool
+    {
+        $client = $this->getElasticsearch();
+        $params = [
+            'index' => Search::INDEX_NAME,
+        ];
+
+        if (@$client->indices()->exists($params)) {
+            return true;
+        }
+
+        try {
+            @$client->indices()->create($params);
+        } catch (Exception $e) {
+            return false;
+        }
+
+        return true;
     }
 }

@@ -16,6 +16,16 @@ const TERM_ITEM_FRAGMENT = `fragment TermItemFields on Taxonomy {
         route
         locale
     }
+    pages {
+        id
+        url
+        title
+        locale
+        rewrite {
+            route
+            url
+        }
+    }
 }`
 
 const state = () => ({

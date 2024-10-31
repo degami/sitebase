@@ -5,6 +5,14 @@
     <div v-else>
       <h1 class="taxonomy-title">{{ terms[id]?.title }}</h1>
       <div class="taxonomy-content" v-html="terms[id]?.content"></div>
+
+      <div v-if="terms[id].pages" class="taxonomy-pages">
+          <ul class="list">
+            <li v-for="pagesItem in terms[id].pages" key="pagesItem.id">
+              <router-link :to="pagesItem.rewrite.url">{{ pagesItem.title }}</router-link>
+            </li>
+          </ul>
+      </div>
     </div>
 </template>
   

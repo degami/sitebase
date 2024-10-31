@@ -56,6 +56,9 @@ class PageRegions implements ResolverInterface
                 $regionsHtml[$pageRegion] = $app->getHtmlRenderer()->renderBlocks($pageRegion, $locale, $currentPage);
             }
         }
+        foreach(['after_body_open', 'before_body_close'] as $pageRegion) {
+            $regionsHtml[$pageRegion] = $app->getHtmlRenderer()->renderBlocks($pageRegion, $locale, $currentPage);
+        }
 
         return ['locale' => $locale, 'regions' => [
             'after_body_open' => $regionsHtml['after_body_open'] ?? null,

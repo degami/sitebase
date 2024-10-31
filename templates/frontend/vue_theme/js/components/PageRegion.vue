@@ -8,6 +8,7 @@
 <script>
   import 'jquery';
   import 'jquery.cycle2';
+  import 'jquery.cookie'; 
   import Loader from '../utils/Loader.vue';
 
   export default {
@@ -77,6 +78,21 @@
 
             });
           }
+
+          if (this.pageRegion && this.pageRegion.includes('cookie-notice')) {
+            this.$nextTick(() => {
+              $('.cookie-notice .close-btn').click(function(evt) {
+                evt.preventDefault();
+                $('.cookie-notice').fadeOut();
+                $.cookie('cookie-accepted',1, { expires: 365, path: '/' });
+                $('body').removeClass('cookie-notice-visible').addClass('cookie-notice-hidden');
+              });
+              if ($.cookie('cookie-accepted') != 1) {
+                  $('.cookie-notice').fadeIn();
+                  $('body').addClass('cookie-notice-visible');
+              }
+            });
+          }
         } catch (error) {
           console.error('Errore durante il caricamento della pagina:', error);
         } finally {
@@ -88,4 +104,18 @@
       }
     }
   };
-  </script>
+</script>
+
+<style lang="scss">
+  .cookie-notice {
+      position: fixed;
+      left: 0;
+      width:100%;
+      z-index: 100000;
+      padding: 10px;
+  }
+  
+  .cookie-notice a {
+      color: inherit;
+  }
+</style>

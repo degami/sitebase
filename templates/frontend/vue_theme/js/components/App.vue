@@ -21,6 +21,7 @@
     <PageRegion v-if="currentRewrite" region="post_footer" :rewriteId="currentRewrite.id"/>
   </div>
 
+  <PageRegion v-if="currentRewrite" region="before_body_close" :rewriteId="currentRewrite.id"/>
 <!--
 <OtherComponent />
 -->  

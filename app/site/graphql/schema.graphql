@@ -17,6 +17,7 @@ type Query {
   menuTree(menu_name: String!, website_id: Int!): [Menu]
   Configuration: [ConfigsResult]
   Translations: [TranslationEntry],
+  search(input: String!, page: Int): SearchResult
 }
 
 #type Mutation {
@@ -235,4 +236,17 @@ type ConfigEntry {
 type TranslationEntry {
   key: String!
   value: String!
+}
+
+type SearchResult {
+  search_query: String!
+  search_result: [ResultItem]
+  total: Int!
+  page: Int!
+}
+
+type ResultItem {
+  frontend_url: String!
+  title: String!
+  excerpt: String!
 }

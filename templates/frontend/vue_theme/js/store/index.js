@@ -12,6 +12,7 @@ import events from './modules/events';
 import terms from './modules/terms';
 import medias from './modules/medias';
 import links from './modules/links'
+import search from './modules/search';
 
 const store = createStore({
   modules: {
@@ -27,6 +28,7 @@ const store = createStore({
     terms,
     links,
     medias,
+    search,
   },
 });
 

@@ -258,7 +258,10 @@ class InitialDataMigration extends BaseMigration
         $page_model->setUrl('homepage');
         $page_model->setTitle($this->getEnv('APPNAME') . ' home');
         $page_model->setLocale($website_model->getDefaultLocale());
-        $page_model->setContent('');
+        $page_model->setContent('<p>Welcome to '.$this->getEnv('APPNAME').' - Empower Your Digital Presence</p>
+<p>'.$this->getEnv('APPNAME').' provides the tools you need to effortlessly create, manage, and grow your online presence. Whether you\'re building a personal blog, a business website, or a robust e-commerce platform, '.$this->getEnv('APPNAME').' is designed with simplicity, flexibility, and performance in mind.</p>
+<p>With '.$this->getEnv('APPNAME').', you’ll enjoy a user-friendly interface, powerful customization options, and seamless integrations to enhance your website’s functionality. No coding skills? No problem. Our intuitive tools let you focus on what matters most: engaging your audience and achieving your goals.</p>
+<p>Get '.$this->getEnv('APPNAME').' to bring their ideas to life. Start building your future online today!</p>');
         $page_model->setUserId($owner_model->getId());
 
         $page_model->persist();

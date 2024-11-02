@@ -14,6 +14,7 @@
 namespace App\Site\Blocks;
 
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Controllers\FrontendPage;
 use Degami\PHPFormsApi as FAPI;
@@ -57,7 +58,7 @@ class BreadCrumbs extends BaseCodeBlock
         $route_info = $current_page?->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
-        if ($current_page?->getRouteGroup() == static::getRouteGroup() || $route_info?->isAdminRoute()) {
+        if ($current_page?->getRouteGroup() == AdminPage::getRouteGroup() || $route_info?->isAdminRoute()) {
             return '';
         }
 

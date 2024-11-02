@@ -14,6 +14,7 @@
 namespace App\Site\Blocks;
 
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
+use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Controllers\BasePage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
@@ -55,7 +56,7 @@ class AuthorInfo extends BaseCodeBlock
         $route_info = $current_page?->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
-        if ($current_page?->getRouteGroup() == AdminTrait::getRouteGroup() || $route_info?->isAdminRoute()) {
+        if ($current_page?->getRouteGroup() == AdminPage::getRouteGroup() || $route_info?->isAdminRoute()) {
             return '';
         }
 

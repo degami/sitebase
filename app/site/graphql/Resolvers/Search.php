@@ -15,7 +15,9 @@ class Search implements ResolverInterface
         $input = $args['input'];
         $page = $args['page'] ?? 0;
 
-        $search_result = static::getSearchResult($input, $page);
+        $locale = $args['locale'];
+
+        $search_result = static::getSearchResult($input, $locale, $page);
 
         $total = $search_result['hits']['total']['value'] ?? 0;
         $hits = $search_result['hits']['hits'] ?? [];
@@ -45,12 +47,16 @@ class Search implements ResolverInterface
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function getSearchResult($search_query = null, $page = 0): array
+    public static function getSearchResult($search_query = null, $locale = null, $page = 0): array
     {
         $app = App::getInstance();
 
         if ($search_query == null) {
             return [];
+        }
+
+        if ($locale == null) {
+            $locale = $app->getCurrentLocale();
         }
 
         $client = $app->getElasticsearch();
@@ -70,7 +76,7 @@ class Search implements ResolverInterface
                         ],
                         "filter" => [
                             ["term" => ["website_id" => $app->getSiteData()->getCurrentWebsiteId()]],
-                            ["term" => ["locale" => $app->getCurrentLocale()]],
+                            ["term" => ["locale" => $locale]],
                         ],
                     ],
                 ],

@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 const SEARCH_QUERY = gql`
-query Search ($input: String!, $page: Int) {
-    search(input: $input, page: $page) {
+query Search ($input: String!, $locale: String, $page: Int) {
+    search(input: $input, locale: $locale, page: $page) {
         search_query
         total
         page
@@ -38,9 +38,13 @@ const mutations = {
 };
   
 const actions = {
-    async doSearch({ commit, dispatch }, {searchString, page = 0}) {
+    async doSearch({ commit, dispatch }, {searchString, locale, page = 0}) {
 
-        const SEARCH_VARIABLES = {"input": searchString, "page": page};
+        const SEARCH_VARIABLES = {
+            "input": searchString, 
+            "locale": locale,
+            "page": page
+        };
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 
@@ -57,7 +61,7 @@ const actions = {
             });
             commit('setResults', data.search.search_result);
             commit('setTotalCount', data.search.total);
-            returnElement = data.news.items[0];
+            returnElement = data.search.search_result;
         } catch (error) {
             console.error('Errore durante il fetch della ricerca:', error);
         } finally {

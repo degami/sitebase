@@ -33,6 +33,41 @@ export default {
         websiteId: store.getters['appState/website_id'],
       });
 
+      if (!rewrite) {
+        // Mappa che collega le rotte interne ai componenti
+        const componentMap = getComponentMap();
+
+        let locale = route.path.split('/')[1];
+        let componentType = route.path.split('/')[2];
+
+        console.log("componentType: " + componentType);
+
+
+        if (componentMap[componentType]) {
+          const componentLoader = componentMap[componentType];
+          if (componentLoader) {
+            // Carica dinamicamente il componente risolto
+            const resolvedComponent = await componentLoader();
+            this.resolvedComponent = resolvedComponent.default;
+
+            this.componentProps = {
+              "locale": locale,
+            };
+
+            store.dispatch('appState/updateLocale', locale);
+
+            const defaultWebsiteId = await store.dispatch('configuration/getWebsiteId', { 
+              siteDomain: window.location.hostname 
+            });
+
+            store.dispatch('appState/updateWebsiteId', defaultWebsiteId);
+            store.dispatch('apolloClient/updateLocale', locale);
+
+            this.componentKey = `${componentType}-${this.componentProps.locale}`;
+          }
+        }
+      }
+
       if (rewrite) {
         // Aggiorna lo stato dell'app
         store.dispatch('appState/updateLocale', rewrite.locale);

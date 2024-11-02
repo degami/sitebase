@@ -17,7 +17,7 @@ type Query {
   menuTree(menu_name: String!, website_id: Int!): [Menu]
   Configuration: [ConfigsResult]
   Translations: [TranslationEntry],
-  search(input: String!, page: Int): SearchResult
+  search(input: String!, locale: String, page: Int): SearchResult
 }
 
 #type Mutation {

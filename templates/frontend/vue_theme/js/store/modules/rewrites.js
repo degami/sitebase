@@ -76,6 +76,7 @@ const actions = {
     },
 
     async findRewriteByUrl({state, dispatch}, {url, websiteId = null}) {
+        console.log("find rewrite by url: "+url);
         if (!state.rewrites.length) {
             if (null == websiteId) {
                 return null;

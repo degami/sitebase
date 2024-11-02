@@ -9,7 +9,7 @@
       <img :src="assetsDomain + '/sitebase_logo.png'" />
     </router-link>
     <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigatopm">
-      <soan class="navbar-toggler-icon"></soan>
+      <span class="navbar-toggler-icon"></span>
     </button>
     <div id="navbarSupportedContent" class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto">

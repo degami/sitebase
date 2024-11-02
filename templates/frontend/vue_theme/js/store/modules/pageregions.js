@@ -1,7 +1,7 @@
 import gql from 'graphql-tag';
 
 const PAGEREGIONS_QUERY = gql`
-query PageRegions ($rewriteId: Int!) {
+query PageRegions ($rewriteId: Int) {
     pageRegions(rewrite_id: $rewriteId) {
         locale
         regions {

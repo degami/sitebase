@@ -42,7 +42,7 @@ const mutations = {
 const actions = {
     async updateLocale({ commit, dispatch }, locale) {
         commit('SET_LOCALE', locale);
-        await dispatch('apolloClient/updateLocale', locale);
+        await dispatch('apolloClient/updateLocale', locale, { root: true });
 
         const menu_name = await dispatch('getConfigValue', {path: 'app/frontend/main_menu', locale});
         commit('SET_PRIMARY_MENU', menu_name);

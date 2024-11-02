@@ -13,10 +13,12 @@ import terms from './modules/terms';
 import medias from './modules/medias';
 import links from './modules/links'
 import search from './modules/search';
+import website from './modules/website';
 
 const store = createStore({
   modules: {
     apolloClient,
+    website,
     configuration,
     appState,
     menuTree,

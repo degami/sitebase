@@ -63,6 +63,7 @@
       }),
     },
     mounted() {
+      this.$emit('data-sent', {});
     },
     watch: {
       '$route.query.q': function (inputQuery) {

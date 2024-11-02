@@ -7,6 +7,16 @@
 import { getComponentMap } from '../router';
 
 export default {
+  props: {
+    locale: {
+        type: String,
+        required: true
+    },
+    customUrl: {
+        type: String,
+        required: true
+    },
+  },
   data() {
     return {
       resolvedComponent: null,
@@ -24,49 +34,26 @@ export default {
     next();
   },
   methods: {
+    async getWebsite() {
+      return await this.$store.dispatch('website/getWebsite', { 
+          siteDomain: window.location.hostname 
+        }, { root: true });
+    },
     async resolveRoute(route) {
       const store = this.$store;
+
+
+      let websiteId = store.getters['appState/website_id'];
+      if (null === websiteId) {
+        const website = await this.getWebsite();
+        websiteId = website.id;
+      }
 
       // Recupera la riscrittura dalla store Vuex
       const rewrite = await store.dispatch('rewrites/findRewriteByUrl', {
         url: route.path,
-        websiteId: store.getters['appState/website_id'],
+        websiteId:  websiteId,
       });
-
-      if (!rewrite) {
-        // Mappa che collega le rotte interne ai componenti
-        const componentMap = getComponentMap();
-
-        let locale = route.path.split('/')[1];
-        let componentType = route.path.split('/')[2];
-
-        console.log("componentType: " + componentType);
-
-
-        if (componentMap[componentType]) {
-          const componentLoader = componentMap[componentType];
-          if (componentLoader) {
-            // Carica dinamicamente il componente risolto
-            const resolvedComponent = await componentLoader();
-            this.resolvedComponent = resolvedComponent.default;
-
-            this.componentProps = {
-              "locale": locale,
-            };
-
-            store.dispatch('appState/updateLocale', locale);
-
-            const defaultWebsiteId = await store.dispatch('configuration/getWebsiteId', { 
-              siteDomain: window.location.hostname 
-            });
-
-            store.dispatch('appState/updateWebsiteId', defaultWebsiteId);
-            store.dispatch('apolloClient/updateLocale', locale);
-
-            this.componentKey = `${componentType}-${this.componentProps.locale}`;
-          }
-        }
-      }
 
       if (rewrite) {
         // Aggiorna lo stato dell'app
@@ -121,6 +108,39 @@ export default {
           this.componentKey = `${componentType}-${this.componentProps.id}`;
         } else {
           console.error(`Componente per "${componentType}" non trovato`);
+        }
+      } else {
+        // Mappa che collega le rotte interne ai componenti
+        const componentMap = getComponentMap();
+
+        let locale = route.path.split('/')[1];
+        let componentType = route.path.split('/')[2];
+
+        console.log("componentType: " + componentType);
+
+
+        if (componentMap[componentType]) {
+          const componentLoader = componentMap[componentType];
+          if (componentLoader) {
+            // Carica dinamicamente il componente risolto
+            const resolvedComponent = await componentLoader();
+            this.resolvedComponent = resolvedComponent.default;
+
+            this.componentProps = {
+              "locale": locale,
+            };
+
+            store.dispatch('appState/updateLocale', locale);
+
+            const defaultWebsiteId = await store.dispatch('configuration/getWebsiteId', { 
+              siteDomain: window.location.hostname 
+            });
+
+            store.dispatch('appState/updateWebsiteId', defaultWebsiteId);
+            store.dispatch('apolloClient/updateLocale', locale);
+
+            this.componentKey = `${componentType}-${this.componentProps.locale}`;
+          }
         }
       }
     },

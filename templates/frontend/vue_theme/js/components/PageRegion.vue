@@ -22,7 +22,7 @@
         },
         rewriteId: {
             type: Number,
-            required: true
+            required: false
         },
     },
     data() {

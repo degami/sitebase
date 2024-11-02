@@ -9,11 +9,11 @@ type Query {
   news(input: SearchCriteriaInput): NewsCollection
   events(input: SearchCriteriaInput): EventCollection
   medias(input: SearchCriteriaInput): [MediaElement]
-  websites(input: SearchCriteriaInput): [Website]
+  websites(input: SearchCriteriaInput): WebsiteCollection
   links(input: SearchCriteriaInput): LinkExchangeCollection
   rewrites(input: SearchCriteriaInput): [Rewrite]
   terms(input: SearchCriteriaInput): TaxonomyCollection,
-  pageRegions(rewrite_id: Int!): PageRegionsResponse
+  pageRegions(rewrite_id: Int): PageRegionsResponse
   menuTree(menu_name: String!, website_id: Int!): [Menu]
   Configuration: [ConfigsResult]
   Translations: [TranslationEntry],
@@ -60,6 +60,11 @@ type Website {
   domain: String!
   aliases: String
   default_locale: String
+}
+
+type WebsiteCollection {
+  items: [Website]
+  count: Int!
 }
 
 type Taxonomy {

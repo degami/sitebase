@@ -681,7 +681,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             //$style="max-width:100%;font-size: 9px;line-height: 11px;min-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
             foreach ($header as $k => $v) {
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
-                    $searchqueryparam = (is_array($current_page->getRequest()->query->get('search')) && isset($current_page->getRequest()->query->get('search')[$v['search']])) ? $current_page->getRequest()->query->get('search')[$v['search']] : '';
+                    $searchqueryparam = (is_array($current_page->getRequest()->query->all('search')) && isset($current_page->getRequest()->query->all('search')[$v['search']])) ? $current_page->getRequest()->query->all('search')[$v['search']] : '';
 
                     if ($v['search'] == 'locale') {
                         $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'] + $this->getUtils()->getSiteLanguagesSelectOptions();
@@ -711,7 +711,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     }
                     $add_searchrow = true;
                 } else if (is_array($v) && isset($v['foreign']) && boolval($v['foreign']) == true) {
-                    $foreignqueryparam = (is_array($current_page->getRequest()->query->get('foreign')) && isset($current_page->getRequest()->query->get('foreign')[$v['foreign']])) ? $current_page->getRequest()->query->get('foreign')[$v['foreign']] : '';
+                    $foreignqueryparam = (is_array($current_page->getRequest()->query->all('foreign')) && isset($current_page->getRequest()->query->all('foreign')[$v['foreign']])) ? $current_page->getRequest()->query->all('foreign')[$v['foreign']] : '';
 
                     $dbtable = $this->getSchema()->getTable($v['table']);
                     $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'];

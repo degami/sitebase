@@ -138,8 +138,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
     protected function getSearchParameters(): ?array
     {
         $out = array_filter([
-            'like' => $this->getRequest()->query->get('search'),
-            'eq' => $this->getRequest()->query->get('foreign'),
+            'like' => $this->getRequest()->query->all('search'),
+            'eq' => $this->getRequest()->query->all('foreign'),
         ]);
         return !empty($out) ? $out : null;
     }

@@ -4,7 +4,7 @@
     <Loader text="Loading news..." />
   </div>
   <div v-else>
-    <h1 class="page-title">{{ title }}</h1>
+    <h1 class="page-title" v-html="title"></h1>
     <div class="row">
         <div class="col-md-12">
             <ul class="news-list">
@@ -32,6 +32,12 @@ export default {
   components: {
     Loader,
     Paginator
+  },
+  props: {
+    locale: {
+        type: String,
+        required: false
+      }
   },
   data() {
     return {

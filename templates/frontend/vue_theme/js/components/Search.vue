@@ -3,7 +3,7 @@
       <Loader text="Loading search results ..." />
     </div>
     <div v-else>
-      <h1 class="page-title">{{ title }}</h1>
+      <h1 class="page-title" v-html="title"></h1>
       <div v-if="searchResult" class="page-content">
         <ul>
             <li v-for="searchResultItem in searchResult">
@@ -33,6 +33,10 @@
       Paginator
     },
     props: {
+      locale: {
+          type: String,
+          required: false
+        }
     },
     data() {
       return {

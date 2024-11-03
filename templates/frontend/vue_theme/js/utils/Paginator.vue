@@ -2,11 +2,11 @@
   <nav class="d-flex justify-content-end" aria-label="Paginator" v-if="total_pages >= 1">
     <ul class="pagination">
       <li :class="['page-item', (parseInt(current_page) <= 0 ? 'disabled' : '')]">
-        <router-link class="page-link" :to="'?page=0' + extraQueryParamsString">First</router-link>
+        <router-link class="page-link" :to="'?page=0' + extraQueryParamsString">{{ First }}</router-link>
       </li>
       <li class="page-item" v-if="parseInt(current_page) > 0">
         <router-link class="page-link" :to="'?page=' + (parseInt(current_page) - 1) + extraQueryParamsString">
-          <span aria-hidden="true">«</span><span class="sr-only">Previous</span>
+          <span aria-hidden="true">«</span><span class="sr-only">{{ Previous }}</span>
         </router-link>
       </li>
       <li class="page-item disabled" v-if="Math.max(0, parseInt(current_page) - parseInt(visible_links)) > 0">
@@ -20,11 +20,11 @@
       </li>
       <li class="page-item" v-if="parseInt(current_page) < parseInt(total_pages)">
         <router-link class="page-link" :to="'?page=' + (parseInt(current_page) + 1) + extraQueryParamsString">
-          <span aria-hidden="true">»</span><span class="sr-only">Next</span>
+          <span aria-hidden="true">»</span><span class="sr-only">{{ Next }}</span>
         </router-link>
       </li>
       <li :class="['page-item', (parseInt(current_page) >= parseInt(total_pages) ? ' disabled' : '')]">
-        <router-link class="page-link" :to="'?page=' + (total_pages) + extraQueryParamsString">Last</router-link>
+        <router-link class="page-link" :to="'?page=' + (total_pages) + extraQueryParamsString">{{ Last }}</router-link>
       </li>
     </ul>
   </nav>
@@ -57,6 +57,17 @@ export default {
           default: null,
         }
     },
+    data() {
+      return {
+        'First': null,
+        'Last' : null,
+        'Previous': null,
+        'Next': null,
+      };
+    },
+    created() {
+      this.setTranslations();
+    },
     computed: {
       total_pages() {
         return Math.ceil(this.total / this.page_size) - 1;
@@ -75,6 +86,17 @@ export default {
           
         return queryParams ? '&' + queryParams : '';
       }
+    },
+    methods: {
+      async translate(text) {
+        return this.$store.dispatch('appState/translate', {text});
+      },
+      async setTranslations() {
+        this.First = await this.translate('First');
+        this.Last = await this.translate('Last');
+        this.Previous = await this.translate('Previous');
+        this.Next = await this.translate('Next');
+      },
     }
 }
 </script>

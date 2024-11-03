@@ -19,6 +19,12 @@
   import Loader from '../utils/Loader.vue';
 
   export default {
+    props: {
+      locale: {
+        type: String,
+        required: false
+      }
+    },
     components: {
       Loader
     },

@@ -465,6 +465,9 @@ abstract class BaseRouter extends ContainerAwareObject
             $domain = $this->getSiteData()->currentServerName();
         }
 
+        // remove multiple "/" on request uri if present
+        $request_uri = preg_replace("/^\/+/", "/", $request_uri);
+
         // Fetch method and URI from somewhere
         $parsed = parse_url($request_uri);
 

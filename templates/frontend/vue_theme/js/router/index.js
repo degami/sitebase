@@ -1,11 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import Home from '../components/Home.vue';
-import ResolveComponent from '../components/ResolveComponent.vue'; // Nuovo componente per risolvere le rotte dinamiche
+import ResolveComponent from '../utils/ResolveComponent.vue'; // Nuovo componente per risolvere le rotte dinamiche
 import store from '../store';
 
 const routes = [
   // Route Home
   { path: '/', component: Home, props: true },
+  { path: '/:locale/', component: Home, props: true },
   // Rotte dinamiche per le riscritture, indipendentemente dal tipo di contenuto
   { path: '/:locale/:customUrl', component: ResolveComponent, props: true },
 ];

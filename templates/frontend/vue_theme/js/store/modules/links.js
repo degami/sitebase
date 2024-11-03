@@ -76,7 +76,7 @@ const actions = {
             return state.links[linkId];
         }
 
-        const LINKS_VARIABLES = {"linkId": linkId};
+        const LINKS_VARIABLES = {"linkId": ""+linkId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 

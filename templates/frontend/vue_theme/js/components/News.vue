@@ -14,6 +14,7 @@ import { mapState } from 'vuex';
 import Loader from '../utils/Loader.vue';
 
 export default {
+  emits: ['dataSent'],
   props: {
     id: {
       type: Number,

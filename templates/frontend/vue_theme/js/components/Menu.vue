@@ -55,6 +55,7 @@ import Loader from '../utils/Loader.vue';
 import { getComponentMap } from '../router';
 
 export default {
+  emits: ['dataSent'],
   components: {
     Loader,
   },

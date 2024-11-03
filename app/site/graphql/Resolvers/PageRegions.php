@@ -19,33 +19,19 @@ class PageRegions implements ResolverInterface
         $currentPage = null;
         if (isset($args['rewrite_id'])) {
             $rewrite = Rewrite::load($args['rewrite_id']);
-
-            /** @var RouteInfo $routeInfo */
-            $routeInfo = $rewrite->getRouteInfo();
             $locale = $rewrite->getLocale();
-            $handler = $rewrite->getRouteInfo()->getHandler();
 
-            $handlerType = reset($handler); $handlerMethod = end($handler);
-            $currentPage = $app->containerMake($handlerType);
-
-            $vars = $routeInfo->getVars();
-
-            // inject container into vars
-            //$vars['container'] = $this->getContainer();
-    
-            // inject request object into vars
-            //$vars['request'] = $this->getRequest();
-    
-            // inject routeInfo
-            $vars['route_info'] = $routeInfo;
-    
-            // add route collected data
-            $vars['route_data'] = $routeInfo->getVars();
-
-            $currentPage->setRouteInfo($routeInfo);
-
-            if ($currentPage instanceof FrontendPageWithObject) {
-                $app->containerCall([$currentPage, $handlerMethod], $vars);
+            $currentPage = static::getControllerByRewrite($rewrite, $app);
+        } else if (isset($args['route_path'])) {
+            $rewrite = Rewrite::getCollection()->where(['route' => $args['route_path'], 'locale' => $locale])->getFirst();
+            if ($rewrite) {
+                $currentPage = static::getControllerByRewrite($rewrite, $app);
+            } else {
+                $webRouter = $app->getWebRouter();
+                $routeInfo = $webRouter->getRequestInfo('GET', $args['route_path']);
+                if ($routeInfo) {
+                    $currentPage = static::getControllerByRouteInfo($routeInfo, $app);
+                }
             }
         }
 
@@ -72,5 +58,42 @@ class PageRegions implements ResolverInterface
             'pre_footer' => $regionsHtml['pre_footer'] ?? null,
             'post_footer' => $regionsHtml['post_footer'] ?? null,
         ]];
+    }
+
+    protected static function getControllerByRewrite(Rewrite $rewrite, App $app)
+    {
+        /** @var RouteInfo $routeInfo */
+        $routeInfo = $rewrite->getRouteInfo();
+        return static::getControllerByRouteInfo($routeInfo, $app);
+    }
+
+    protected static function getControllerByRouteInfo(RouteInfo $routeInfo, App $app)
+    {
+        $handler = $routeInfo->getHandler();
+
+        $handlerType = reset($handler); $handlerMethod = end($handler);
+        $currentPage = $app->containerMake($handlerType);
+
+        $vars = $routeInfo->getVars();
+
+        // inject container into vars
+        //$vars['container'] = $this->getContainer();
+
+        // inject request object into vars
+        //$vars['request'] = $this->getRequest();
+
+        // inject routeInfo
+        $vars['route_info'] = $routeInfo;
+
+        // add route collected data
+        $vars['route_data'] = $routeInfo->getVars();
+
+        $currentPage->setRouteInfo($routeInfo);
+
+        if ($currentPage instanceof FrontendPageWithObject) {
+            $app->containerCall([$currentPage, $handlerMethod], $vars);
+        }
+
+        return $currentPage;
     }
 }

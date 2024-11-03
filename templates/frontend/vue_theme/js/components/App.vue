@@ -1,29 +1,29 @@
 <template>
-  <PageRegion region="after_body_open" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+  <PageRegion region="after_body_open" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
 
   <div class="menu">
-    <PageRegion region="pre_menu" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+    <PageRegion region="pre_menu" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
     <Menu v-if="primary_menu && website_id" :menuName="primary_menu" :websiteId="website_id" @data-sent="handleMenuData"></Menu>
-    <PageRegion region="post_menu" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+    <PageRegion region="post_menu" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
   </div>
 
   <div class="header">
-    <PageRegion region="pre_header" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
-    <PageRegion region="post_header" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+    <PageRegion region="pre_header" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
+    <PageRegion region="post_header" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
   </div>
 
   <div class="content">
-    <PageRegion region="pre_content" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+    <PageRegion region="pre_content" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
     <router-view @data-sent="handleViewData"></router-view>
-    <PageRegion region="post_content" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+    <PageRegion region="post_content" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
   </div>
 
   <div class="footer">
-    <PageRegion region="pre_footer" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
-    <PageRegion region="post_footer" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+    <PageRegion region="pre_footer" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
+    <PageRegion region="post_footer" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
   </div>
 
-  <PageRegion region="before_body_close" :rewriteId="currentRewrite ? currentRewrite.id : null"/>
+  <PageRegion region="before_body_close" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
 </template>
 
 <script>
@@ -43,6 +43,7 @@ export default {
     return {
       primary_menu: null,
       currentRewrite: null,
+      currentPath: null,
     };
   },
   async created() {
@@ -79,14 +80,18 @@ export default {
           siteDomain: window.location.hostname 
         }, { root: true });
     },
+    async handleRoutePath(routePath) {
+      this.currentPath = routePath;
+      this.$store.dispatch('pageregions/fetchPageregions', {param: routePath}, { root: true });
+    },
     async handleMenuData(data) {
       if ('Rewrite' == data.__typename) {
         this.currentRewrite = data;
       } else {
         this.currentRewrite = await this.$store.dispatch('rewrites/findRewriteById', {rewriteId: data.rewrite_id, websiteId: this.$store.getters['appState/website_id']}, { root: true });
       }
-      const rewriteId = this.currentRewrite ? this.currentRewrite.id : null;
-      this.$store.dispatch('pageregions/fetchPageregions', {rewriteId}, { root: true });
+      const rewriteId = this.currentRewrite ? this.currentRewrite.id : this.$route.path;
+      this.$store.dispatch('pageregions/fetchPageregions', {param: rewriteId}, { root: true });
       let newLocale = this.currentRewrite?.locale || this.$store.getters['appState/locale'];
       if (this.$store.getters['locale'] != newLocale) {
         this.$store.dispatch('appState/updateLocale', newLocale, { root: true });
@@ -124,6 +129,10 @@ export default {
         this.handleMenuData(foundMenuItem);
       } else {
         this.currentRewrite = null;
+      }
+
+      if (data.route_path) {
+        this.handleRoutePath(data.route_path);
       }
     }
   }

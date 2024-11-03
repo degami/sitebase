@@ -7,6 +7,7 @@
 import { getComponentMap } from '../router';
 
 export default {
+  emits: ['dataSent'],
   props: {
     locale: {
         type: String,
@@ -93,6 +94,9 @@ export default {
             case 'taxonomy':
               dataToEmit = {term_id: idValue};
               break;
+            default:
+              dataToEmit = {rewrite_id: rewrite.id};
+              break;
           }
 
           if (dataToEmit) {
@@ -116,15 +120,17 @@ export default {
         let locale = route.path.split('/')[1];
         let componentType = route.path.split('/')[2];
 
-        console.log("componentType: " + componentType);
-
-
         if (componentMap[componentType]) {
           const componentLoader = componentMap[componentType];
           if (componentLoader) {
             // Carica dinamicamente il componente risolto
             const resolvedComponent = await componentLoader();
             this.resolvedComponent = resolvedComponent.default;
+
+            const dataToEmit = {route_path: route.path};
+            if (dataToEmit) {
+              this.$emit('data-sent', dataToEmit);
+            }
 
             this.componentProps = {
               "locale": locale,

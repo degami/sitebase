@@ -24,17 +24,21 @@
             type: Number,
             required: false
         },
+        routePath: {
+            type: String,
+            required: false
+        },
     },
     data() {
       return {
-        pageRegion: null,
         pageregionsLoading: false,
         loadingText: '',
+        pageRegion: null,
       };
     },
     async created() {
       this.setLoadingText();
-      await this.loadPageRegion();
+      this.loadPageRegion();
     },
     mounted() {
     },
@@ -52,8 +56,19 @@
         this.pageregionsLoading = true;
 
         try {
+          let key;
+          if (this.rewriteId) {
+            key = this.rewriteId;
+          } else if (this.routePath) {
+            key = this.routePath;
+          }
+
+          if (!key) {
+            return null;
+          }
+
           this.pageRegion = await this.$store.dispatch('pageregions/getPageregion', {
-            rewriteId: this.rewriteId,
+            param: key,
             region: this.region
           });
 
@@ -75,7 +90,6 @@
                       });
                   }
               });
-
             });
           }
 
@@ -98,6 +112,8 @@
         } finally {
           this.pageregionsLoading = false;
         }
+
+        return this.pageRegion;
       },
       async translate(text, ...parameters) {
         return this.$store.dispatch('appState/translate', {text, parameters});

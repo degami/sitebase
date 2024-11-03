@@ -19,6 +19,7 @@
   import Loader from '../utils/Loader.vue';
 
   export default {
+    emits: ['dataSent'],
     props: {
       locale: {
         type: String,

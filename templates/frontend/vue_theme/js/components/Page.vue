@@ -20,6 +20,7 @@
   import Loader from '../utils/Loader.vue';
 
   export default {
+    emits: ['dataSent'],
     components: {
       Loader
     },

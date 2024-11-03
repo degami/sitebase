@@ -17,6 +17,7 @@ import Loader from '../utils/Loader.vue';
 import $ from 'jquery';
 
 export default {
+  emits: ['dataSent'],
   components: {
     Loader
   },

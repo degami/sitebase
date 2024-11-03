@@ -367,8 +367,11 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return $out;
     }
 
-    public function renderUncachableBlockTag(Block $block, BasePage $current_page, ?string $locale = null) : string
+    public function renderUncachableBlockTag(Block $block, ?BasePage $current_page, ?string $locale = null) : string
     {
+        if (!$current_page) {
+            return "";
+        }
         $out = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'div',
             'attributes' => [

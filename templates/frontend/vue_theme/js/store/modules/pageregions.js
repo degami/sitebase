@@ -55,7 +55,7 @@ const actions = {
             return;
         }
         */
-        const PAGEREGIONS_VARIABLES = {"rewriteId": rewriteId};
+        const PAGEREGIONS_VARIABLES = {"rewriteId": parseInt(rewriteId)};
 
         commit('setLoading', {rewriteId, loading: true});
 
@@ -79,6 +79,10 @@ const actions = {
         if (!state.pageregions[rewriteId]) {
             await dispatch('fetchPageregions', {rewriteId});
         }
+
+//        if (!state.pageRegions || !state.pageRegions[rewriteId]) {
+//            return null;
+//        }
 
         return state.pageregions[rewriteId][region] || null;
     },

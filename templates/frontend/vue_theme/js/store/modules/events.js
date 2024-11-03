@@ -88,7 +88,7 @@ const actions = {
             return state.events[eventId];
         }
 
-        const EVENT_VARIABLES = {"eventId": eventId};
+        const EVENT_VARIABLES = {"eventId": ""+eventId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 

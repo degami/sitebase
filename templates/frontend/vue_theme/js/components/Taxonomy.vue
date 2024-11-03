@@ -34,8 +34,6 @@
         required: true
       }
     },
-    data() {
-    },
     created() {
       this.$store.dispatch('configuration/fetchConfiguration');
       this.updateTaxonomyContent(this.id);

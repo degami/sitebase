@@ -33,8 +33,6 @@
         required: true
       }
     },
-    data() {
-    },
     created() {
       this.$store.dispatch('configuration/fetchConfiguration');
       this.updatePageContent(this.id);

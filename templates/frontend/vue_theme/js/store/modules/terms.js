@@ -90,7 +90,7 @@ const actions = {
 
         const TERM_QUERY = gql(completeQuery);
 
-        const TERM_VARIABLES = {"termId": termId};
+        const TERM_VARIABLES = {"termId": ""+termId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 

@@ -27,8 +27,6 @@ export default {
   components: {
     Loader
   },
-  data() {
-  },
   created() {
     this.$store.dispatch('configuration/fetchConfiguration');
     this.updateNewsContent(this.id);

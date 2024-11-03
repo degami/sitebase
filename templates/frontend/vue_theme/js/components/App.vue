@@ -100,7 +100,7 @@ export default {
     async handleViewData(data) {
       if (null == this.$store.getters['appState/website_id']) {
         const website = await this.getWebsite();
-        this.$store.dispatch('appstate/updateWebsiteId', website.id, { root: true });
+        this.$store.dispatch('appState/updateWebsiteId', website.id, { root: true });
       }
 
       if (data.rewrite_id) {

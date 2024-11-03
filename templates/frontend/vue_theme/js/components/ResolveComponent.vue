@@ -77,7 +77,7 @@ export default {
           const resolvedComponent = await componentLoader();
           this.resolvedComponent = resolvedComponent.default;
 
-          const idValue = rewrite.route.split('/').pop();
+          const idValue = parseInt(rewrite.route.split('/').pop());
 
           let dataToEmit = null;
           switch (componentType) {

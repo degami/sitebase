@@ -98,7 +98,7 @@ const actions = {
             return;
         }
 
-        const PAGE_VARIABLES = {"pageId": pageId};
+        const PAGE_VARIABLES = {"pageId": ""+pageId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 

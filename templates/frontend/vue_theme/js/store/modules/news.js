@@ -84,7 +84,7 @@ const actions = {
             return state.news[newsId];
         }
 
-        const NEWS_VARIABLES = {"newsId": newsId};
+        const NEWS_VARIABLES = {"newsId": ""+newsId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 

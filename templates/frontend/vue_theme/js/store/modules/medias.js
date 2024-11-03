@@ -80,7 +80,7 @@ const actions = {
             return state.medias[mediaId];
         }
 
-        const MEDIA_VARIABLES = {"mediaId": mediaId};
+        const MEDIA_VARIABLES = {"mediaId": ""+mediaId};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 

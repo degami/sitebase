@@ -42,7 +42,7 @@
       });
 
       this.redirectsToLocale = await this.getConfigValue('app/frontend/homepage_redirects_to_language');
-      if (this.$route.path == '/' && this.redirectsToLocale) {
+      if (this.$route.path == '/' && parseInt(this.redirectsToLocale) == 1) {
         let locale = this.$store.getters['appState/locale'];
         if (!locale) {
           locale = website.default_locale; 

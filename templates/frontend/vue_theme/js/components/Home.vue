@@ -31,15 +31,28 @@
     data() {
       return {
         id: null,
+        redirectsToLocale: false,
       };
     },
     async created() {
       this.id = await this.getConfigValue('app/frontend/homepage');
-      this.$store.dispatch('pages/fetchPage', {pageId: this.id});
+
       const website = await this.$store.dispatch('configuration/getWebsite', { 
-            siteDomain: window.location.hostname,
-        });
-        this.siteName = website.site_name
+          siteDomain: window.location.hostname,
+      });
+
+      this.redirectsToLocale = await this.getConfigValue('app/frontend/homepage_redirects_to_language');
+      if (this.$route.path == '/' && this.redirectsToLocale) {
+        let locale = this.$store.getters['appState/locale'];
+        if (!locale) {
+          locale = website.default_locale; 
+        }
+
+        this.$router.push('/'+locale+'/');
+      } 
+
+      this.$store.dispatch('pages/fetchPage', {pageId: this.id});
+      this.siteName = website.site_name
     },
     computed: {
       ...mapState('pages', {

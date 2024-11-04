@@ -138,10 +138,6 @@ const actions = {
             await dispatch('fetchPageregions', { param: param });
         }
 
-//        if (!state.pageRegions || !state.pageRegions[rewriteId]) {
-//            return null;
-//        }
-
         return state.pageregions[""+param][region] || null;
     },
 };

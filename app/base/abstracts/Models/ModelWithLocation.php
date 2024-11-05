@@ -50,7 +50,7 @@ abstract class ModelWithLocation extends FrontendModel
     {
         if (!static::$headDependenciesAdded) {
             if (App::getInstance()->getEnv('GOOGLE_API_KEY')) {
-                App::getInstance()->getAssets()->addHeadJs('https://maps.googleapis.com/maps/api/js?v=3.exp&amp&amp;libraries=geometry,places&amp;key='. $this->getEnv('GOOGLE_API_KEY'));
+                App::getInstance()->getAssets()->addHeadJs('https://maps.googleapis.com/maps/api/js?v=3.exp&amp&amp;libraries=geometry,places&amp;key='. App::getInstance()->getEnv('GOOGLE_API_KEY'));
             } else if (App::getInstance()->getEnv('MAPBOX_API_KEY')) {
                 App::getInstance()->getAssets()->addHeadJs('https://unpkg.com/leaflet@1.3.4/dist/leaflet.js', [
                     'integrity' => "sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==",

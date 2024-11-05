@@ -58,6 +58,7 @@ services:
   elasticsearch:
     image: blacktop/elasticsearch
     volumes:
+      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - ./data/elasticsearch/data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200

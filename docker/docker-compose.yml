@@ -56,10 +56,13 @@ services:
         ipv4_address: ${IPV4_CLASS}.0.4
     restart: unless-stopped
   elasticsearch:
-    image: blacktop/elasticsearch
+    #image: blacktop/elasticsearch
+    user: "${UID}:${GID}"
+    build:
+      context: ./elasticsearch
     volumes:
-      - ./elasticsearch/elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
-      - ./data/elasticsearch/data:/usr/share/elasticsearch/data
+      - ./elasticsearch/opensearch.yml:/usr/share/opensearch/config/opensearch.yml
+      - ./data/elasticsearch/data:/usr/share/opensearch/data
     ports:
       - 9200:9200
     networks:

@@ -360,4 +360,9 @@ class SiteBase implements ExtensionInterface
     {
         return $this->getSiteData()->getAdminSidebarVisibleLinks($controller);
     }
+
+    public function renderAdminTable(array $elements, $header = null, BasePage $current_page = null) : string
+    {
+        return $this->getHtmlRenderer()->renderAdminTable($elements, $header, $current_page);    
+    }
 }

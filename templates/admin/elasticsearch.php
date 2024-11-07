@@ -5,8 +5,9 @@
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
-<div>
-<?= $this->sitebase()->renderAdminTable($table_contents, $table_header); ?>
+<div class="row">
+    <div class="col-12">
+        <?= $this->sitebase()->renderAdminTable($table_contents, $table_header); ?>
+        <div><?= $total; ?></div>
+    </div>
 </div>
-
-<div><?= $total; ?></div>

@@ -85,9 +85,10 @@ class Deploy extends BaseCommand
             ];
         }
 
+        chdir(App::getDir(App::WEBROOT));
         foreach ($symlinks as $from => $to) {
             if (!file_exists($to) && file_exists($from)) {
-                echo "symlink " . $from . " to " . $to . "\n";
+                $output->writeln("symlink <info>$from</info> to <info>$to</info>");
                 symlink($from, $to);
             }
         }

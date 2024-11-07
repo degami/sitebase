@@ -13,20 +13,20 @@
 
 namespace App\Site\Commands\App;
 
-use App\Base\Abstracts\Commands\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\Website;
 use App\App;
+use App\Base\Abstracts\Commands\BaseExecCommand;
 use Symfony\Component\Console\Command\Command;
 
 /**
  * Http Server Command
  * @package App\Site\Commands\App
  */
-class Serve extends BaseCommand
+class Serve extends BaseExecCommand
 {
     /**
      * {@inheritdoc}
@@ -62,7 +62,7 @@ class Serve extends BaseCommand
         $website = $this->getAppWebsite();
 
         $this->getIo()->title("Serving [" . $website->getDomain() . "] pages on http://localhost:" . $port );
-        system("website_id=" . $website->getId() . " php -S localhost:" . $port . " " . App::getDir('root') . DS . 'php_server' . DS . 'router.php');
+        $this->executeCommand("website_id=" . $website->getId() . " php -S localhost:" . $port . " " . App::getDir('root') . DS . 'php_server' . DS . 'router.php');
 
         return Command::SUCCESS;
     }

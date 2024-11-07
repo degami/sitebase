@@ -13,19 +13,19 @@
 
 namespace App\Site\Commands\App;
 
-use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use GuzzleHttp\Exception\GuzzleException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
+use App\Base\Abstracts\Commands\BaseExecCommand;
 use Symfony\Component\Console\Command\Command;
 
 /**
  * App Deploy Command
  */
-class Deploy extends BaseCommand
+class Deploy extends BaseExecCommand
 {
     /**
      * {@inheritdoc}
@@ -48,7 +48,7 @@ class Deploy extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        system("npm install && gulp 2> /dev/null");
+        $this->executeCommand("npm install && gulp 2> /dev/null");
 
         if ($nestable_js = $this->getUtils()->httpRequest('https://raw.githubusercontent.com/degami/Nestable/master/jquery.nestable.js')) {
             @mkdir(App::getDir(App::WEBROOT) . DS . 'js' . DS . 'jquery-nestable', 0755, true);

@@ -52,8 +52,8 @@ class Docs extends BaseExecCommand
             throw new NotFoundException('phpdoc command is missing!');
         }
 
-        $commandline = "phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --sourcecode --ignore=vendor/* --template=clean --setting=\"graphs.enabled=true\" >/dev/null 2>&1";
-        system($commandline);
+        $commandline = "phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --sourcecode --ignore=vendor/* --template=clean --setting=\"graphs.enabled=true\" --force >/dev/null 2>&1";
+        $this->executeCommand($commandline);
 
         if (!file_exists(App::getDir(App::WEBROOT) . DS . "docs")) {
             $question = new ConfirmationQuestion('Do you want to publish docs also on website? ', false);

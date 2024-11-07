@@ -53,7 +53,8 @@ class Restore extends BaseExecCommand
             }
 
             $commandline = "zcat " . $input->getArgument('filename') . " | mysql -u" . $this->getEnv('DATABASE_USER') . " -p" . $this->getEnv('DATABASE_PASS') . " " . $this->getEnv('DATABASE_NAME');
-            system($commandline);
+
+            $this->executeCommand($commandline);
         } catch (NotFoundException $e) {
             if (!$this->commandExist('gunzip')) {
                 throw new NotFoundException('necessary commands (gunzip) missing!');
@@ -63,7 +64,7 @@ class Restore extends BaseExecCommand
             @copy($input->getArgument('filename'), $temporary_name.'.gz');
             @unlink($temporary_name);
             $commandline = "gunzip $temporary_name.gz";
-            system($commandline);
+            $this->executeCommand($commandline);
 
             $this->restore($temporary_name);
             //unlink($temporary_name);

@@ -16,10 +16,7 @@ namespace App\Site\Controllers\Admin;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\AdminPage;
-use Degami\PHPFormsApi as FAPI;
-use App\Site\Models\Configuration;
 use App\Site\Controllers\Frontend\Search;
 
 /**
@@ -124,63 +121,18 @@ class Elasticsearch extends AdminPage
             $tableContents[] = ['Type' => $type, 'Count' => $count, 'actions' => null];
         }
 
+        $clientInfo = $client->info();
+
         $this->template_data += [
             'table_header' => ['Type' => '', 'Count' => '', 'actions' => null],
             'table_contents' => $tableContents,
             'total' => "Total documents: " . $count_result,
+            'info' => implode("\n", [
+                $clientInfo['tagline'],
+                $clientInfo['cluster_name'] . ' ' . $clientInfo['version']['number'],
+            ]),
         ];
 
         return $this->template_data;
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @return array
-     */
-    protected function getTableHeader(): ?array
-    {
-        return [
-            'ID' => 'id',
-            'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
-            'Locale' => ['order' => 'locale', 'search' => 'locale'],
-            'Path' => ['order' => 'path', 'search' => 'path'],
-            'Value' => null,
-            'Is System' => 'is_system',
-            'actions' => null,
-        ];
-    }
-
-    /**
-     * {@inheritdocs}
-     *
-     * @param array $data
-     * @return array
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    protected function getTableElements(array $data): array
-    {
-        return array_map(
-            function ($config) {
-                return [
-                    'ID' => $config->id,
-                    'Website' => $config->getWebsiteId() == null ? $this->getUtils()->translate('All websites', locale: $this->getCurrentLocale()) : $config->getWebsite()->domain,
-                    'Locale' => $config->getLocale() == null ? $this->getUtils()->translate('All languages', locale: $this->getCurrentLocale()) : $config->getLocale(),
-                    'Path' => $config->path,
-                    'Value' => $config->value,
-                    'Is System' => $config->is_system ? $this->getHtmlRenderer()->getIcon('check') : '&nbsp;',
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($config->id),
-                            (!$config->getIsSystem()) ? $this->getDeleteButton($config->id) : '',
-                        ]
-                    ),
-                ];
-            },
-            $data
-        );
     }
 }

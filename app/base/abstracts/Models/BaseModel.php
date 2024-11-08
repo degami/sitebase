@@ -522,7 +522,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             throw new Exception("No row loaded", 1);
         }
 
-        if ($name != 'getData') {
+        if ($name != 'getData' && $name != 'setData') {
             $method_name = static::pascalCaseToSnakeCase($name);
             if (in_array($method = strtolower(substr($method_name, 0, 4)), ['get_', 'has_', 'set_'])) {
                 $prop = substr($method_name, 4);
@@ -559,6 +559,19 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         }
 
         return $data;
+    }
+
+    /**
+     * sets model's data
+     *
+     * @param array $data
+     * @return self
+     */
+    public function setData(array $data) : static
+    {
+        $this->getDbRow()->setData($data);
+
+        return $this;
     }
 
     /**

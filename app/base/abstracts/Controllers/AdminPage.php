@@ -157,6 +157,8 @@ abstract class AdminPage extends BaseHtmlPage
                     'chatGPTUrl' => $this->getUrl('crud.app.site.controllers.admin.json.chatgpt'),
                     'googleGeminiUrl' => $this->getUrl('crud.app.site.controllers.admin.json.googlegemini'),
                     'uIsettingsUrl' => $this->getUrl('crud.app.site.controllers.admin.json.uisettings'),
+                    'notificationsUrl' => $this->getUrl('crud.app.site.controllers.admin.json.fetchnotifications'),
+                    'notificationCrudUrl' => $this->getCrudRouter()->getUrl('crud.admin.usernotifications'),
                 ]
             ) . ");"
         );

@@ -94,6 +94,7 @@
                 });
 
                 $elem.appAdmin('checkLoggedStatus');
+                $elem.appAdmin('fetchNotifications');
 
                 $('#search-btn').click(function(evt){
                     evt.preventDefault();
@@ -271,6 +272,69 @@
                 error: function(xhr, ajaxOptions, thrownError) {}
             });
         },
+        fetchNotifications: function() {
+            var that = this;
+        
+            var notificationsUrl = $(this).appAdmin('getSettings').notificationsUrl;
+            var notificationDismissUrl = $(this).appAdmin('getSettings').notificationCrudUrl;
+
+            $.ajax({
+                type: "GET",
+                url: notificationsUrl,
+                data: null,
+                processData: false,
+                contentType: 'application/json',
+                success: function(data) {
+                    if (Array.isArray(data.notifications) && data.notifications.length > 0) {
+                        data.notifications.forEach(function(notification, index) {
+                            var notificationId = 'notificationDialog_' + index;
+        
+                            if ($('#' + notificationId).length === 0) {
+                                $('body').append(`
+                                    <div id="${notificationId}" class="position-fixed" style="display: none;bottom: ${20 + index * 50}px; right: 20px; z-index: 1050; max-width: 300px;">
+                                        <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                            <span>${notification.message}</span>
+                                            <button type="button" class="close closeNotification" data-dialogid="${notificationId}" data-id="${notification.id}" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                    </div>
+                                `);
+                                $('#' + notificationId).fadeIn();
+                            }
+                        });
+        
+                        $('.closeNotification').on('click', function() {
+                            var dialogId = $(this).data('dialogid');
+                            var notificationId = $(this).data('id');                            
+        
+                            $.ajax({
+                                type: "PUT",
+                                url: notificationDismissUrl.replace('{id:\\d+}', notificationId),
+                                data: JSON.stringify({ id: notificationId, read: true }),
+                                contentType: 'application/json',
+                                success: function(response) {
+                                    console.log(response, "we can remove #"+dialogId);
+                                    $('#' + dialogId).fadeOut(function(){
+                                        $(this).remove();
+                                    });
+                                },
+                                error: function(xhr) {
+                                    console.error('Errore durante la chiusura della notifica:', dialogId);
+                                }
+                            });
+                        });
+                    }
+                },
+                error: function(xhr, ajaxOptions, thrownError) {
+                    console.error('Errore AJAX:', thrownError);
+                }
+            });
+
+            window.setTimeout(function() {
+                $(that).appAdmin('fetchNotifications');
+            }, 30000);
+        },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD
         update : function( content ) {  }// !!!
@@ -283,5 +347,7 @@
         'googleGeminiUrl': null,
         'uIsettingsUrl': null,
         'currentRoute': null,
+        'notificationsUrl': null,
+        'notificationCrudUrl': null,
     }
 })(jQuery);

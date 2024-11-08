@@ -140,4 +140,10 @@ return [
     'Imports' => 'Impor',
     'by: <strong>%s</strong> on: %s' => 'oleh: <strong>%s</strong> pada: %s',
     'Profile' => 'Profil',
+    'User To' => 'Pengguna Tujuan',
+    'User From' => 'Pengguna Pengirim',
+    'Message' => 'Pesan',
+    'Read' => 'Dibaca',
+    'Mark all as read' => 'Tandai semua sebagai telah dibaca',
+    'Notifications' => 'Pemberitahuan',
 ];

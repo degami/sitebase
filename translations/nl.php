@@ -140,4 +140,10 @@ return [
     'Imports' => 'Importen',
     'by: <strong>%s</strong> on: %s' => 'door: <strong>%s</strong> op: %s',
     'Profile' => 'Profiel',
+    'User To' => 'Gebruiker naar',
+    'User From' => 'Gebruiker van',
+    'Message' => 'Bericht',
+    'Read' => 'Gelezen',
+    'Mark all as read' => 'Alles als gelezen markeren',
+    'Notifications' => 'Meldingen',
 ];

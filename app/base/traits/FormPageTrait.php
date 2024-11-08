@@ -65,19 +65,20 @@ trait FormPageTrait
      * @return FAPI\Form
      * @throws FAPI\Exceptions\FormException
      */
-    protected function addSubmitButton(FAPI\Form $form, $inline_button = false): FAPI\Form
+    protected function addSubmitButton(FAPI\Form $form, $inline_button = false, $isConfirmation = false): FAPI\Form
     {
         if ($inline_button) {
             $form
                 ->addField(
                     'button',
                     [
-                        'type' => 'submit',
+                        'type' => 'button',
                         'container_tag' => null,
                         'prefix' => '&nbsp;',
                         'value' => 'Ok',
                         'attributes' => ['class' => 'btn btn-primary btn-sm'],
                         'weight' => 100,
+                        'label' => $this->getHtmlRenderer()->getIcon($isConfirmation ? 'check' : 'save', ['style' => 'zoom: 1.5']) . '&nbsp' . __('Ok'),
                     ]
                 );
         } else {
@@ -85,11 +86,12 @@ trait FormPageTrait
                 ->addField(
                     'button',
                     [
-                        'type' => 'submit',
+                        'type' => 'button',
                         'value' => 'Ok',
                         'container_class' => 'form-item mt-3',
                         'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
                         'weight' => 110,
+                        'label' => $this->getHtmlRenderer()->getIcon($isConfirmation ? 'check' : 'save', ['style' => 'zoom: 1.5']) . '&nbsp' . __('Ok'),
                     ]
                 );
         }
@@ -119,8 +121,8 @@ trait FormPageTrait
                 'weight' => -100,
             ]
         )
-            ->addMarkup('<a class="btn btn-danger btn-sm" href="' . ($cancel_url ?: $this->getControllerUrl()) . '">' . $this->getUtils()->translate('Cancel', locale: $this->getCurrentLocale()) . '</a>');
-        $this->addSubmitButton($form, true);
+            ->addMarkup('<a class="btn btn-danger btn-sm" href="' . ($cancel_url ?: $this->getControllerUrl()) . '">' . $this->getHtmlRenderer()->getIcon('x', ['style' => 'zoom: 1.5']) . '&nbsp' . $this->getUtils()->translate('Cancel', locale: $this->getCurrentLocale()) . '</a>');
+        $this->addSubmitButton($form, true, true);
         return $form;
     }
 

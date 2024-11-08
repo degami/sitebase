@@ -140,4 +140,10 @@ return [
     'Imports' => 'Εισαγωγές',
     'by: <strong>%s</strong> on: %s' => 'από: <strong>%s</strong> στις: %s',
     'Profile' => 'Προφίλ',
+    'User To' => 'Χρήστης προς',
+    'User From' => 'Χρήστης από',
+    'Message' => 'Μήνυμα',
+    'Read' => 'Διαβασμένο',
+    'Mark all as read' => 'Σήμανση όλων ως αναγνωσμένα',
+    'Notifications' => 'Ειδοποιήσεις',
 ];

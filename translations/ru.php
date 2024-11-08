@@ -140,4 +140,10 @@ return [
     'Imports' => 'Импорт',
     'by: <strong>%s</strong> on: %s' => 'от: <strong>%s</strong> на: %s',
     'Profile' => 'Профиль',
+    'User To' => 'Пользователь кому',
+    'User From' => 'Пользователь от',
+    'Message' => 'Сообщение',
+    'Read' => 'Прочитано',
+    'Mark all as read' => 'Отметить все как прочитанные',
+    'Notifications' => 'Уведомления',
 ];

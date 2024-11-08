@@ -140,4 +140,10 @@ return [
     'Imports' => 'आयात',
     'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> द्वारा: %s',
     'Profile' => 'प्रोफ़ाइल',
+    'User To' => 'प्रेषित उपयोगकर्ता',
+    'User From' => 'प्रेषक उपयोगकर्ता',
+    'Message' => 'संदेश',
+    'Read' => 'पढ़ा हुआ',
+    'Mark all as read' => 'सभी को पढ़ा हुआ चिह्नित करें',
+    'Notifications' => 'सूचनाएं',
 ];

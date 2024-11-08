@@ -140,4 +140,10 @@ return [
     'Imports' => '수입',
     'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> 작성일: %s',
     'Profile' => '프로필',
+    'User To' => '수신 사용자',
+    'User From' => '발신 사용자',
+    'Message' => '메시지',
+    'Read' => '읽음',
+    'Mark all as read' => '모두 읽음으로 표시',
+    'Notifications' => '알림',
 ];

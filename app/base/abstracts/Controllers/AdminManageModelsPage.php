@@ -67,37 +67,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
             $this->addPaginationSizeSelector();
             $this->addNewButton();
 
-            $paginate_params = [
-                'order' => $this->getRequest()->query->get('order'),
-                'condition' => $this->getSearchParameters(),
-            ];
-
-            if (is_array($paginate_params['condition'])) {
-                $conditions = [];
-                if (isset($paginate_params['condition']['like'])) {
-                    foreach ($paginate_params['condition']['like'] as $col => $search) {
-                        if (trim($search) == '') {
-                            continue;
-                        }
-                        $conditions['`' . $col . '` LIKE ?'] = ['%' . $search . '%'];
-                    }
-                }
-                if (isset($paginate_params['condition']['eq'])) {
-                    foreach ($paginate_params['condition']['eq'] as $col => $search) {
-                        if (trim($search) == '') {
-                            continue;
-                        }
-                        $conditions['`' . $col . '` = ?'] = [$search];
-                    }
-                }
-
-                $paginate_params['condition'] = array_filter($conditions);
-            }
-
             $itemsPerPage = $this->getItemsPerPage();
-            /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-            $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
-            $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+            $collection = $this->getCollection();
             $data = $this->containerCall([$collection, 'paginate'], ['page_size' => $itemsPerPage]);
             $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
@@ -106,6 +77,42 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
             ];
         }
+    }
+
+    protected function getCollection() : BaseCollection
+    {
+        $paginate_params = [
+            'order' => $this->getRequest()->query->all('order'),
+            'condition' => $this->getSearchParameters(),
+        ];
+
+        if (is_array($paginate_params['condition'])) {
+            $conditions = [];
+            if (isset($paginate_params['condition']['like'])) {
+                foreach ($paginate_params['condition']['like'] as $col => $search) {
+                    if (trim($search) == '') {
+                        continue;
+                    }
+                    $conditions['`' . $col . '` LIKE ?'] = ['%' . $search . '%'];
+                }
+            }
+            if (isset($paginate_params['condition']['eq'])) {
+                foreach ($paginate_params['condition']['eq'] as $col => $search) {
+                    if (trim($search) == '') {
+                        continue;
+                    }
+                    $conditions['`' . $col . '` = ?'] = [$search];
+                }
+            }
+
+            $paginate_params['condition'] = array_filter($conditions);
+        }
+
+        /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+        $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
+        $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+
+        return $collection;
     }
 
     /**

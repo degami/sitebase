@@ -140,4 +140,10 @@ return [
     'Imports' => '进口',
     'by: <strong>%s</strong> on: %s' => '由: <strong>%s</strong> 于: %s',
     'Profile' => '个人资料',
+    'User To' => '收件用户',
+    'User From' => '发件用户',
+    'Message' => '消息',
+    'Read' => '已读',
+    'Mark all as read' => '标记所有为已读',
+    'Notifications' => '通知',
 ];

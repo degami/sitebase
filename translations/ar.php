@@ -140,4 +140,10 @@ return [
     'Imports' => 'الواردات',
     'by: <strong>%s</strong> on: %s' => 'بواسطة: <strong>%s</strong> في: %s',
     'Profile' => 'الملف الشخصي',
+    'User To' => 'المستخدم إلى',
+    'User From' => 'المستخدم من',
+    'Message' => 'رسالة',
+    'Read' => 'مقروء',
+    'Mark all as read' => 'وضع علامة كمقروء على الكل',
+    'Notifications' => 'الإشعارات',
 ];

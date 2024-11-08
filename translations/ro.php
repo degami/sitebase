@@ -140,4 +140,10 @@ return [
     'Imports' => 'Importuri',
     'by: <strong>%s</strong> on: %s' => 'de: <strong>%s</strong> pe: %s',
     'Profile' => 'Profil',
+    'User To' => 'Utilizator către',
+    'User From' => 'Utilizator de la',
+    'Message' => 'Mesaj',
+    'Read' => 'Citit',
+    'Mark all as read' => 'Marchează totul ca citit',
+    'Notifications' => 'Notificări',
 ];

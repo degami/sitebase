@@ -140,4 +140,10 @@ return [
     'Imports' => 'İthalatlar',
     'by: <strong>%s</strong> on: %s' => 'tarafından: <strong>%s</strong> tarihinde: %s',
     'Profile' => 'Profil',
+    'User To' => 'Kullanıcıya',
+    'User From' => 'Kullanıcıdan',
+    'Message' => 'Mesaj',
+    'Read' => 'Okundu',
+    'Mark all as read' => 'Tümünü okundu olarak işaretle',
+    'Notifications' => 'Bildirimler',
 ];

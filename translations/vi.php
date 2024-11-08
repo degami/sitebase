@@ -140,4 +140,10 @@ return [
     'Imports' => 'Nhập khẩu',
     'by: <strong>%s</strong> on: %s' => 'bởi: <strong>%s</strong> vào: %s',
     'Profile' => 'Hồ sơ',
+    'User To' => 'Người nhận',
+    'User From' => 'Người gửi',
+    'Message' => 'Tin nhắn',
+    'Read' => 'Đã đọc',
+    'Mark all as read' => 'Đánh dấu tất cả là đã đọc',
+    'Notifications' => 'Thông báo',
 ];

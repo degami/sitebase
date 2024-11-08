@@ -94,7 +94,11 @@
                 });
 
                 $elem.appAdmin('checkLoggedStatus');
-                $elem.appAdmin('fetchNotifications');
+
+                // no need to fetch notifications in notification page
+                if ($elem.appAdmin('getSettings').currentRoute != 'admin.usernotifications') {
+                    $elem.appAdmin('fetchNotifications');
+                }
 
                 $('#search-btn').click(function(evt){
                     evt.preventDefault();
@@ -311,7 +315,7 @@
                             $.ajax({
                                 type: "PUT",
                                 url: notificationDismissUrl.replace('{id:\\d+}', notificationId),
-                                data: JSON.stringify({ id: notificationId, read: true }),
+                                data: JSON.stringify({ id: notificationId, read: true, read_at: new DateTime() }),
                                 contentType: 'application/json',
                                 success: function(response) {
                                     console.log(response, "we can remove #"+dialogId);

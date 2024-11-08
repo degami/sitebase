@@ -140,4 +140,10 @@ return [
     'Imports' => 'Importy',
     'by: <strong>%s</strong> on: %s' => 'przez: <strong>%s</strong> w dniu: %s',
     'Profile' => 'Profil',
+    'User To' => 'Użytkownik do',
+    'User From' => 'Użytkownik od',
+    'Message' => 'Wiadomość',
+    'Read' => 'Przeczytane',
+    'Mark all as read' => 'Oznacz wszystkie jako przeczytane',
+    'Notifications' => 'Powiadomienia',
 ];

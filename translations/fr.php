@@ -140,4 +140,10 @@ return [
     'Imports' => 'Importations',
     'by: <strong>%s</strong> on: %s' => 'par: <strong>%s</strong> le: %s',
     'Profile' => 'Profil',
+    'User To' => 'Utilisateur vers',
+    'User From' => 'Utilisateur de',
+    'Message' => 'Message',
+    'Read' => 'Lu',
+    'Mark all as read' => 'Marquer tout comme lu',
+    'Notifications' => 'Notifications',
 ];

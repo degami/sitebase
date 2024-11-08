@@ -140,4 +140,10 @@ return [
     'Imports' => '輸入',
     'by: <strong>%s</strong> on: %s' => '<strong>%s</strong> による %s',
     'Profile' => 'プロフィール',
+    'User To' => '宛先ユーザー',
+    'User From' => '送信者ユーザー',
+    'Message' => 'メッセージ',
+    'Read' => '既読',
+    'Mark all as read' => 'すべて既読にする',
+    'Notifications' => '通知',
 ];

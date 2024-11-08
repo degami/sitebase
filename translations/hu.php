@@ -140,4 +140,10 @@ return [
     'Imports' => 'Importok',
     'by: <strong>%s</strong> on: %s' => 'által: <strong>%s</strong> ekkor: %s',
     'Profile' => 'Profil',
+    'User To' => 'Felhasználó számára',
+    'User From' => 'Felhasználótól',
+    'Message' => 'Üzenet',
+    'Read' => 'Olvasott',
+    'Mark all as read' => 'Mindet olvasottként jelöl',
+    'Notifications' => 'Értesítések',
 ];

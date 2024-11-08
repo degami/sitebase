@@ -142,4 +142,10 @@ return [
     'Imports' => 'আমদানি',
     'by: <strong>%s</strong> on: %s' => 'দ্বারা: <strong>%s</strong> এ: %s',
     'Profile' => 'প্রোফাইল',
+    'User To' => 'প্রাপক ব্যবহারকারী',
+    'User From' => 'প্রেরক ব্যবহারকারী',
+    'Message' => 'বার্তা',
+    'Read' => 'পড়া হয়েছে',
+    'Mark all as read' => 'সবগুলোকে পড়া হয়েছে চিহ্নিত করুন',
+    'Notifications' => 'বিজ্ঞপ্তি',
 ];

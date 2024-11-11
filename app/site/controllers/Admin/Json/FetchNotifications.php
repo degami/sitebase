@@ -51,7 +51,9 @@ class FetchNotifications extends AdminJsonPage
             ['created_at' => 'ASC']
         )->getItems() as $notification) {
             /** @var UserNotification $notification */
-            $notifications[] = json_decode($notification->toJson(), true);
+            $notificationArr = json_decode($notification->toJson(), true);
+            $notificationArr['sender'] = $notification->getSender()->getNickname();
+            $notifications[] = $notificationArr;
         }
 
         return ['notifications' => $notifications];

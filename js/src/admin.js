@@ -297,7 +297,7 @@
                                 $('body').append(`
                                     <div id="${notificationId}" class="position-fixed" style="display: none;bottom: ${20 + index * 50}px; right: 20px; z-index: 1050; max-width: 300px;">
                                         <div class="alert alert-info alert-dismissible fade show" role="alert">
-                                            <span>${notification.message}</span>
+                                            <span>${notification.sender}</span>: <span>${notification.message}</span>
                                             <button type="button" class="close closeNotification" data-dialogid="${notificationId}" data-id="${notification.id}" aria-label="Close">
                                                 <span aria-hidden="true">&times;</span>
                                             </button>

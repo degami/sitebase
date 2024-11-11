@@ -1,6 +1,7 @@
 //=include ../../node_modules/select2/dist/js/select2.full.js
 //=include ../../node_modules/jquery.cookie/jquery.cookie.js
 //=include ../../node_modules/highlightjs/highlight.pack.js
+//=include ../../node_modules/moment/min/moment-with-locales.min.js
 
 (function($){
     $.fn.appAdmin = function (methodOrOptions) {
@@ -308,14 +309,14 @@
                             }
                         });
         
-                        $('.closeNotification').on('click', function() {
+                        $('body').on('click', '.closeNotification', function() {
                             var dialogId = $(this).data('dialogid');
                             var notificationId = $(this).data('id');                            
         
                             $.ajax({
                                 type: "PUT",
                                 url: notificationDismissUrl.replace('{id:\\d+}', notificationId),
-                                data: JSON.stringify({ id: notificationId, read: true, read_at: new DateTime() }),
+                                data: JSON.stringify({ id: notificationId, read: true, read_at: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') }),
                                 contentType: 'application/json',
                                 success: function(response) {
                                     console.log(response, "we can remove #"+dialogId);

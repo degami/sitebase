@@ -52,7 +52,7 @@ class FetchNotifications extends AdminJsonPage
         )->getItems() as $notification) {
             /** @var UserNotification $notification */
             $notificationArr = json_decode($notification->toJson(), true);
-            $notificationArr['sender'] = $notification->getSender()->getNickname();
+            $notificationArr['sender'] = $notification->getSender()?->getNickname() ?? __('System');
             $notifications[] = $notificationArr;
         }
 

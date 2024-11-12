@@ -19,9 +19,9 @@ use Degami\SqlSchema\Exceptions\EmptyException;
 use Degami\SqlSchema\Table;
 
 /**
- * add "read at" and "sender" to user notification table migration
+ * add "reply to" to user notification table migration
  */
-class AddReadAtSenderToUserNotifications extends DBMigration
+class AddReplyToToUserNotifications extends DBMigration
 {
     /**
      * @var string table name
@@ -49,9 +49,8 @@ class AddReadAtSenderToUserNotifications extends DBMigration
     public function addDBTableDefinition(Table $table): Table
     {
         $table
-            ->addColumn('read_at', 'TIMESTAMP', null, [], true, null)
-            ->addColumn('sender_id', 'INT', null, ['UNSIGNED'])
-            ->addForeignKey('fk_usernotification_sender', ['sender_id'], 'user', ['id']);
+            ->addColumn('reply_to', 'INT', null, ['UNSIGNED'])
+            ->addForeignKey('fk_usernotification_reply_to', ['reply_to'], $this->tableName, ['id']);
         
         return $table;
     }

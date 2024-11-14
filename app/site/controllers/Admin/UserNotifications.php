@@ -137,15 +137,27 @@ class UserNotifications extends AdminManageFrontendModelsPage
             'value' => $type,
         ]);
 
+        $message = $user_id = $notification_id = '';
+        if ($notification->isLoaded()) {
+            $message = $notification->message;
+            if ($type == 'reply') {
+                $message = "\n\n\n>>>> " . $message;
+            }
+            $user_id = $notification->user_id;
+            $notification_id = $notification->getId();
+        }
+
         switch ($type) {
+            case 'reply':
+                $form->addField('reply_to', [
+                    'type' => 'hidden',
+                    'default_value' => $notification_id,
+                ]);
+            // intentional fall-trough
+            // no break
             case 'new':
                 $this->addBackButton();
 
-                $message = $user_id = '';
-                if ($notification->isLoaded()) {
-                    $message = $notification->message;
-                    $user_id = $notification->user_id;
-                }
                 $usersOptions = [];
 
                 foreach(User::getCollection()->where(['id:not' => $this->getCurrentUser()->getId()]) as $userTo) {
@@ -236,6 +248,13 @@ class UserNotifications extends AdminManageFrontendModelsPage
         $values = $form->values();
 
         switch ($values['action']) {
+            case 'reply':
+                // this is a reply, create a new object , as ->getObject() loads original notification
+                $notification = $this->newEmptyObject();
+                $notification->setReplyTo($values['reply_to']);
+
+            // intentional fall-trough
+            // no break
             case 'new':
                 $notification->setSenderId($this->getCurrentUser()->getId());
                 $notification->setUserId($values['user_id']);
@@ -297,6 +316,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
                     'actions' => implode(
                         " ",
                         [
+                            $this->getActionButton('reply', $notification->id, 'secondary', 'corner-down-left', 'Reply'),
                             $this->getDeleteButton($notification->id),
                         ]
                     ),

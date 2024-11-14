@@ -150,6 +150,8 @@ class Elasticsearch extends AdminPage
             ];
         }
 
+        usort($tableContents, fn ($a, $b) => $a['Type'] <=> $b['Type']);
+
         $clientInfo = $client->info();
 
         $this->template_data += [

@@ -260,7 +260,7 @@ class Users extends AdminManageModelsPage
 
                 $this->setAdminActionLogData('Locked user ' . $user->getId());
 
-                return $this->doRedirect($this->getControllerUrl());
+                return $this->refreshPage();
                 break;
 
             case 'unlock':
@@ -268,7 +268,7 @@ class Users extends AdminManageModelsPage
 
                 $this->setAdminActionLogData('Unlocked user ' . $user->getId());
 
-                return $this->doRedirect($this->getControllerUrl());
+                return $this->refreshPage();
                 break;
                 
             case 'delete':
@@ -279,7 +279,7 @@ class Users extends AdminManageModelsPage
                 break;
         }
 
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

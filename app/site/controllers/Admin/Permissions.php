@@ -193,7 +193,7 @@ class Permissions extends AdminFormPage
             }
         }
 
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

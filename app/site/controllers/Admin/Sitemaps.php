@@ -91,12 +91,12 @@ class Sitemaps extends AdminManageModelsPage
     protected function beforeRender() : BasePage|Response
     {
         if ($this->getRequest()->get('action') == 'generate') {
-            $this->addFlashMessage('success', 'Sitemap Generated.');
+            $this->addSuccessFlashMessage('Sitemap Generated.');
             /** @var Sitemap $sitemap */
             $sitemap = $this->getObject();
             $sitemap->generate();
 
-            return $this->doRedirect($this->getControllerUrl());
+            return $this->refreshPage();
         }
 
         return parent::beforeRender();
@@ -384,12 +384,12 @@ class Sitemaps extends AdminManageModelsPage
                 }
 
                 if ($values['action'] == 'new') {
-                    $this->addFlashMessage('success', 'Sitemap Saved. Now you can add urls.');
+                    $this->addSuccessFlashMessage('Sitemap Saved. Now you can add urls.');
                     return $this->doRedirect($this->getControllerUrl() . '?action=edit&sitemap_id=' . $sitemap->id);
                 }
 
                 if ($form->getTriggeringElement()->getName() == 'save_publish') {
-                    $this->addFlashMessage('success', 'Sitemap Generated.');
+                    $this->addSuccessFlashMessage('Sitemap Generated.');
                     $sitemap->generate();
                 }
 
@@ -398,7 +398,7 @@ class Sitemaps extends AdminManageModelsPage
                 $sitemap->delete();
                 break;
         }
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

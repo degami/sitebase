@@ -329,7 +329,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
         if ($this->getRequest()->request->get('page_id') != null) {
             return JsonResponse::create(['success' => true]);
         }
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

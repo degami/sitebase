@@ -286,9 +286,9 @@ class Cron extends AdminManageModelsPage
                     $this->containerCall(json_decode($task->getCronTaskCallable()));
                     $cron_executed[] = $task->getTitle();
 
-                    $this->addFlashMessage('success', "Task executed: " . $task->getTitle());
+                    $this->addSuccessFlashMessage("Task executed: " . $task->getTitle());
                 } catch (Exception $e) {
-                    $this->addFlashMessage('error', $e->getMessage());
+                    $this->addErrorFlashMessage($e->getMessage());
                     $this->getLog()->critical($e->getMessage() . "\n" . $e->getTraceAsString());
                 }
                 break;
@@ -300,7 +300,7 @@ class Cron extends AdminManageModelsPage
                 break;
         }
 
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

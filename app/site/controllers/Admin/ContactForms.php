@@ -450,7 +450,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                 }
 
                 if ($values['action'] == 'new') {
-                    $this->addFlashMessage('success', 'Contact Saved. Now you can add components.');
+                    $this->addSuccessFlashMessage('Contact Saved. Now you can add components.');
                     return $this->doRedirect($this->getControllerUrl() . '?action=edit&contact_id=' . $contact->id);
                 }
 
@@ -460,7 +460,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                 break;
         }
 
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

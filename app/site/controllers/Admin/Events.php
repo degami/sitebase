@@ -250,7 +250,7 @@ class Events extends AdminManageFrontendModelsPage
 
                 break;
         }
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

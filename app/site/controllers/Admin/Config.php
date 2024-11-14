@@ -250,7 +250,7 @@ class Config extends AdminManageModelsPage
                 break;
         }
 
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

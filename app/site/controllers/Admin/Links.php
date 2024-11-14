@@ -269,7 +269,7 @@ class Links extends AdminManageFrontendModelsPage
         if ($this->getRequest()->request->get('term_id') != null) {
             return new JsonResponse(['success' => true]);
         }
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

@@ -236,8 +236,8 @@ class UserNotifications extends AdminManageFrontendModelsPage
                 } catch (Exception $e) {}
             }
 
-            $this->addFlashMessage('success', $this->getUtils()->translate('%d Notifications has been set as read.', params: [$total], locale: $this->getCurrentLocale()));
-            return $this->doRedirect($this->getControllerUrl());
+            $this->addSuccessFlashMessage($this->getUtils()->translate('%d Notifications has been set as read.', params: [$total], locale: $this->getCurrentLocale()));
+            return $this->refreshPage();
         }
 
         /**
@@ -272,7 +272,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
 
                 break;
         }
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

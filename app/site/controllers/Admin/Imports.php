@@ -199,6 +199,6 @@ class Imports extends AdminFormPage
 
         unlink($csvFile);
 
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 }

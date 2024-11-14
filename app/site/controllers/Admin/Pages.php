@@ -296,7 +296,7 @@ class Pages extends AdminManageFrontendModelsPage
         if ($this->getRequest()->request->get('media_id') != null || $this->getRequest()->request->get('term_id') != null) {
             return JsonResponse::create(['success' => true]);
         }
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->refreshPage();
     }
 
     /**

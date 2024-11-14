@@ -48,7 +48,7 @@ class BanIP extends AdminFormPage
     protected function beforeRender() : BasePage|Response
     {
         if ($this->getRequest()->get('ip') == null) {
-            $this->addFlashMessage('warning', 'Missing IP address');
+            $this->addWarningFlashMessage('Missing IP address');
             return $this->doRedirect($this->getUrl('admin.dashboard'));
         }
 
@@ -151,7 +151,7 @@ class BanIP extends AdminFormPage
         $this->blocked_ips = array_unique($this->blocked_ips);
         file_put_contents($this->getBanFileName(), $this->getBanFileContents());
 
-        $this->addFlashMessage('info', 'IP: ' . $values->ip . ' has been banned!');
+        $this->addInfoFlashMessage('IP: ' . $values->ip . ' has been banned!');
         return $this->doRedirect($this->getUrl('admin.dashboard'));
     }
 

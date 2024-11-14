@@ -29,6 +29,7 @@ use League\Plates\Template\Template;
 use App\Site\Routing\RouteInfo;
 use App\Base\Traits\PageTrait;
 use App\Site\Models\Rewrite;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Throwable;
 
 /**
@@ -37,6 +38,12 @@ use Throwable;
 abstract class BaseHtmlPage extends BasePage
 {
     use PageTrait;
+
+    public const FLASHMESSAGE_INFO = 'info';
+    public const FLASHMESSAGE_SUCCESS = 'success';
+    public const FLASHMESSAGE_WARNING = 'warning';
+    public const FLASHMESSAGE_ERROR = 'error';
+
 
     /**
      * @var Template|null template object
@@ -265,6 +272,58 @@ abstract class BaseHtmlPage extends BasePage
     }
 
     /**
+     * adds a success flash message
+     * 
+     * @param string $message
+     * @return self
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function addSuccessFlashMessage(string $message) : BaseHtmlPage
+    {
+        return $this->addFlashMessage(self::FLASHMESSAGE_SUCCESS, $message);
+    }
+
+    /**
+     * adds a warning flash message
+     * 
+     * @param string $message
+     * @return self
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function addWarningFlashMessage(string $message) : BaseHtmlPage
+    {
+        return $this->addFlashMessage(self::FLASHMESSAGE_WARNING, $message);
+    }
+
+    /**
+     * adds a error flash message
+     * 
+     * @param string $message
+     * @return self
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function addErrorFlashMessage(string $message) : BaseHtmlPage
+    {
+        return $this->addFlashMessage(self::FLASHMESSAGE_ERROR, $message);
+    }
+
+    /**
+     * adds an info flash message
+     * 
+     * @param string $message
+     * @return self
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function addInfoFlashMessage(string $message) : BaseHtmlPage
+    {
+        return $this->addFlashMessage(self::FLASHMESSAGE_INFO, $message);
+    }
+
+    /**
      * removes all currently stored flash messages
      *
      * @return self
@@ -296,6 +355,16 @@ abstract class BaseHtmlPage extends BasePage
         $route_name = str_replace("/", ".", trim($path, "/"));
 
         return $route_name;
+    }
+
+    /**
+     * returns a redirect object to same page
+     *
+     * @return RedirectResponse
+     */
+    protected function refreshPage() : RedirectResponse 
+    {
+        return $this->doRedirect($this->getControllerUrl());
     }
 
     /**

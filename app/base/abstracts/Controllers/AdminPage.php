@@ -194,7 +194,7 @@ abstract class AdminPage extends BaseHtmlPage
     {
         $out = parent::getBaseTemplateData();
         $out['current_user'] = $this->getCurrentUser();
-        $out['body_class'] = 'admin-page ' . str_replace('.', '-', $this->getRouteName());
+        $out['body_class'] = $this->getHtmlRenderer()->getHtmlAdminClasses($this);
         $out['icon'] = 'box';
         if (method_exists($this, 'getAdminPageLink')) {
             $pageLink = $this->getAdminPageLink();

@@ -43,6 +43,16 @@
                     );
                 });
 
+                $('#darkmode-selector').on('change', function () {
+                    $elem.appAdmin('updateUserUiSettings', 
+                        {'darkMode': $(this).is(':checked')},
+                        function (data) {
+                            //document.location.reload();
+                            $('body').toggleClass('dark-mode');
+                        }
+                    );
+                });
+
                 $('a.inToolSidePanel[href]', $elem).click(function(evt){
                     if($(this).attr('href') != '#') {
                        evt.preventDefault();

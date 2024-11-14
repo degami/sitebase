@@ -30,8 +30,9 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
             </button>
         </li>
         <li class="nav-item px-1">
-            <div class="text-nowrap px-1">
-                <?php echo $this->sitebase()->getGravatar($current_user->email, 30);?>
+            <div class="text-nowrap px-1 d-flex align-items-center">
+                <?= $this->sitebase()->getDarkModeSwitch($controller); ?>
+                <?= $this->sitebase()->getGravatar($current_user->email, 30, class: 'rounded-circle mr-2');?>
                 <?= $this->sitebase()->translate('Hello');?>  <?= $current_user->username; ?>
                 <a class="btn btn-light btn-sm ml-2" href="<?= $this->sitebase()->getUrl('admin.logout');?>" title="<?= $this->sitebase()->translate('Sign out');?>">
                     <span class="d-none d-md-inline-block"><?= $this->sitebase()->translate('Sign out');?></span> <?php $this->sitebase()->drawIcon('log-out'); ?>

@@ -27,6 +27,7 @@ use League\Plates\Extension\ExtensionInterface;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\App;
 use App\Base\Abstracts\Controllers\AdminPage;
+use Degami\Basics\Html\TagElement;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 
@@ -364,5 +365,44 @@ class SiteBase implements ExtensionInterface
     public function renderAdminTable(array $elements, $header = null, BasePage $current_page = null) : string
     {
         return $this->getHtmlRenderer()->renderAdminTable($elements, $header, $current_page);    
+    }
+
+    public function getDarkModeSwitch(AdminPage $controller) : string
+    {
+        $user = $controller->getCurrentUser();
+        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
+        $isDarkMode = $uiSettings['darkMode'] ?? false;
+
+        $checkbox = $this->getApp()->containerMake(TagElement::class, ['options' => [
+            'tag' => 'input',
+            'id' => 'darkmode-selector',
+            'type' => 'checkbox',
+            'attributes' => [
+                'class' => 'paginator-items-choice',
+                'style' => 'width: 50px',
+                'checked' => $isDarkMode ? 'checked' : '',
+            ],
+        ]]);
+        $span = $this->getApp()->containerMake(TagElement::class, ['options' => [
+            'tag' => 'span',
+            'attributes' => [
+                'class' => 'slider',
+            ],
+        ]]);
+
+        $label = $this->getApp()->containerMake(TagElement::class, ['options' => [
+            'tag' => 'label',
+            'attributes' => [
+                'class' => 'switch',
+            ],
+            'children' => [
+                $checkbox,
+                $span,
+            ],
+        ]]);
+
+        return "<div class=\"darkmode-switch\">" . __('Dark Mode') . ' ' . $label."</div>";
+
+        //return "<label for='darkmode-selector'>".__('Dark Mode').'</label>' . $checkbox;
     }
 }

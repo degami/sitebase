@@ -1,0 +1,175 @@
+@use "colors" as *;
+
+body.dark-mode {
+    background-color: $color-darkgrey;
+    color: $color-almostwhite;
+
+    pre {
+        color: inherit;
+    }
+
+    .jumbotron {
+        background-color: $color-darkgrey2 !important;
+        color: $color-almostwhite;
+
+        * {
+            color: inherit;
+        }
+    }
+
+    .sidebar {
+        background-color: $color-darkgrey2 !important;
+        box-shadow: 3px 3px 15px $color-darkgrey3;
+        color: $color-almostwhite !important;
+
+        .nav-link {
+            color: $color-almostwhite;
+        }
+    }
+
+    .card {
+        background-color: $color-darkgrey2 !important;
+        color: $color-almostwhite3;
+
+        .card-header {
+            color:inherit;
+            background-color: inherit;
+            border: none;
+    
+            svg {
+                color: $color-almostwhite3;
+            }
+
+            .btn {
+                color: $color-almostwhite;
+            }
+        }
+    }
+
+    .form-control {
+        background-color: $color-darkgrey2 !important;
+        color: $color-almostwhite !important;
+        border-color: $color-darkgrey;
+    }
+    fieldset.form-control {
+        background-color: inherit !important;
+        border-color: $color-darkgrey2;
+    }
+    .select2-results,
+    .select2-dropdown,
+    .select2-selection--single,
+    .select2-selection__rendered,
+    .select2-selection--multiple,
+    .select2-container {
+        background-color: inherit !important;
+        border-color: $color-darkgrey2;
+        color: $color-almostwhite !important;
+    }
+
+    .select2-results__option--selected {
+        color: $color-darkgrey !important;
+    }
+
+    .select2-selection__choice__display {
+        color: $color-darkgrey !important;
+    }
+
+    .select2-search__field {
+        background-color: $color-darkgrey;
+        color: $color-almostwhite;
+        border: solid 1px $color-darkgrey3;
+
+        &:focus, &:focus-visible {
+            border: solid 1px $color-darkgrey3;
+        }
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: solid 1px $color-darkgrey3;
+    }
+
+    .btn {
+        &.btn-light {
+            background-color: $color-darkgrey3 !important;
+            color: $color-almostwhite3 !important;
+            border: $color-darkgrey2;
+
+            &:hover {
+                background-color: $color-lightgray3 !important;
+            }
+        }
+    }
+
+    .table {
+        td, th {
+            border-top: solid 1px $color-darkgrey2;
+            border-bottom: solid 1px $color-darkgrey2;
+        }
+
+        &.table-striped {
+            color: $color-almostwhite3;
+
+            tr.even {
+                background-color: $color-darkgrey3;
+                td {
+                    border-top: solid 1px $color-darkgrey2;
+                    border-bottom: solid 1px $color-darkgrey2;
+                }
+            }
+        }
+    }
+
+    .pagination {
+        .page-link {
+            background-color: $color-darkgrey3;
+            border: $color-darkgrey4;
+        }
+    }
+
+    .ui-widget-content {
+        border: $color-darkgrey4;
+    }
+
+    .label-switch {
+        &.ui-state-default {
+            background: $color-darkgrey3;
+            border: $color-darkgrey4;
+            color: $color-lightergray;
+        }
+
+        &.ui-state-active {
+            background-color: $color-blue;
+        }
+    }
+
+    .nav-tabs {
+        border-bottom: solid 1px $color-gray;
+        .nav-link {
+            &:hover {
+                border: solid 1px $color-gray;
+            }
+            &.active {
+                background-color: $color-blue;
+                border: $color-darkblue;
+                color: $color-almostwhite;
+            }
+        }
+    }
+
+    .border-bottom {
+        border-bottom: solid 1px $color-gray !important;
+    }
+
+    .dd-panel {
+        border: solid 1px $color-darkgrey;
+
+        .dd-handle:before {
+            color: $color-almostblack;
+        }
+        .dd-content {
+            background: $color-darkgrey3;
+            color: $color-almostwhite;
+            border: 0;
+        }
+    }
+
+}

@@ -84,6 +84,6 @@ class AdminActionLog extends RequestLog
      */
     public function getLogData(): mixed
     {
-        return unserialize($this->getData('log_data'));
+        return unserialize($this->getData('log_data') ?? "a:0:{}");
     }
 }

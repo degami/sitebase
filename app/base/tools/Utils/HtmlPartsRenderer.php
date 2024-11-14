@@ -29,6 +29,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Models\Rewrite;
 use App\Site\Routing\RouteInfo;
 use App\App;
+use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Site\Models\Block;
 use Degami\Basics\Html\TagElement;
@@ -767,6 +768,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         // tbody
 
         if (count($elements)) {
+            $rownum = 0;
             foreach ($elements as $key => $elem) {
                 // ensure all header cols are in row cols
                 $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
@@ -774,7 +776,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     TagElement::class,
                     ['options' => [
                         'tag' => 'tr',
-                        'attributes' => ['class' => $key % 2 == 0 ? 'odd' : 'even'],
+                        'attributes' => ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'],
                     ]]
                 );
 
@@ -1153,5 +1155,28 @@ class HtmlPartsRenderer extends ContainerAwareObject
     public function getIcon(string $icon_name, $attributes = []): string
     {
         return $this->getIcons()->get($icon_name, $attributes, false);
+    }
+
+    /**
+     * returns body_classes array based on controller
+     */
+    public function getHtmlAdminClasses(AdminPage $controller) : string
+    {
+        $htmlClasses = [
+            'admin-page ' . str_replace('.', '-', $controller->getRouteName())
+        ];
+        $user = $controller->getCurrentUser();
+        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
+        $isDarkMode = $uiSettings['darkMode'] ?? false;
+
+        if ($user->getId() && $controller->hasLoggedUser()) {
+            $htmlClasses[] = 'logged-in';
+        }
+
+        if ($isDarkMode) {
+            $htmlClasses[] = 'dark-mode';
+        }
+
+        return trim(implode(" ", $htmlClasses));    
     }
 }

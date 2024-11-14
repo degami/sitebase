@@ -35,12 +35,12 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Sear
     <form action="" method="get">
         <div class="form-group">
         <div class="searchbar input-group">
-            <input type="text" name="q" value="" class="form-control">
+            <input type="text" name="q" value="" class="form-control" />
             <div class="input-group-append">
                 <button type="submit" value="<?= $this->sitebase()->translate('Search');?>" class="btn searchbtn">
                     <?php $this->sitebase()->drawIcon('search');?>
                 </button>
-            </div
+            </div>
         </div>
         </div>
     </form>

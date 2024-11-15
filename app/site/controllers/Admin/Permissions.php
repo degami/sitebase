@@ -134,10 +134,13 @@ class Permissions extends AdminFormPage
                 $table->addField(
                     $permission_model->getName() . '|' . $role_model->getName() . '|enabled',
                     [
-                        'title' => '',
+                        'title' => '<span class="slider"></span>',
                         'type' => 'checkbox',
                         'default_value' => 1,
                         'value' => $role_model->checkPermission($permission_model->getName()),
+                        'attributes' => [                            
+                        ],
+                        'label_class' => 'switch',
                     ],
                     $permission_num
                 );

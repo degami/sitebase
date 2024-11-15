@@ -201,12 +201,14 @@ class Websites extends AdminManageModelsPage
 
                 $website->persist();
 
-                $this->addSuccessFlashMessage("Website Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Website Saved."));
                 break;
             case 'delete':
                 $website->delete();
 
                 $this->setAdminActionLogData('Deleted website ' . $website->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Website Deleted."));
 
                 break;
         }

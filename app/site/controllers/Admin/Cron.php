@@ -93,11 +93,27 @@ class Cron extends AdminManageModelsPage
                     $cron_task->persist();
                 }
             }
+
+            $lastBeat = $this->getLastHeartBeat();
+
+            if (!$lastBeat) {
+                $this->addErrorFlashMessage($this->getUtils()->translate('No heart beat run yet'), true);
+            } else {
+                $lasbeat_date = new DateTime($lastBeat['run_time']);
+                $now = new DateTime();
+    
+                $interval = date_diff($lasbeat_date, $now);
+                $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
+    
+                $beatMessage = $this->getUtils()->translate('Last Beat on %s (%s ago)', [$lastBeat['run_time'], $interval->format($differenceFormat)]);
+                if (abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN) {
+                    $this->addSuccessFlashMessage($beatMessage, true);
+                } else {
+                    $this->addWarningFlashMessage($beatMessage, true);
+                }
+            }
         }
         parent::__construct($container, $request, $route_info);
-        $this->template_data += [
-            'last_beat' => $this->getLastHeartBeat(),
-        ];
     }
 
     /**
@@ -279,7 +295,7 @@ class Cron extends AdminManageModelsPage
 
                 $this->setAdminActionLogData($task->getChangedData());
 
-                $this->addSuccessFlashMessage("Task Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Task Saved."));
                 $task->persist();
                 break;
             case 'run':
@@ -287,7 +303,7 @@ class Cron extends AdminManageModelsPage
                     $this->containerCall(json_decode($task->getCronTaskCallable()));
                     $cron_executed[] = $task->getTitle();
 
-                    $this->addSuccessFlashMessage("Task executed: " . $task->getTitle());
+                    $this->addSuccessFlashMessage($this->getUtils()->translate("Task executed: %s", [$task->getTitle()]));
                 } catch (Exception $e) {
                     $this->addErrorFlashMessage($e->getMessage());
                     $this->getLog()->critical($e->getMessage() . "\n" . $e->getTraceAsString());
@@ -298,6 +314,8 @@ class Cron extends AdminManageModelsPage
 
                 $this->setAdminActionLogData('Deleted cron task ' . $task->getId());
 
+                $this->addInfoFlashMessage($this->getUtils()->translate("Task Deleted."));
+
                 break;
         }
 
@@ -307,23 +325,34 @@ class Cron extends AdminManageModelsPage
     /**
      * gets last heart beat
      *
-     * @return string
+     * @return array|null
      * @throws Exception
      */
-    protected function getLastHeartBeat(): string
+    protected function getLastHeartBeat(): ?array
+    {
+        $lastBeat = $this->containerCall([CronLog::class, 'select'], ['options' => ['where' => ["1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0"], 'orderBy' => ['run_time DESC'], 'limitCount' => 1]])->fetch();
+        if (!is_array($lastBeat)) {
+            return null;
+        }
+
+        return $lastBeat;
+    }
+
+    /**
+     * renders last heart beat
+     *
+     * @return string
+     */
+    public function renderLastBeat(?array $lastBeat) : string
     {
         $out = '<div class="alert alert-danger" role="alert">No heart beat run yet</div>';
-        // SELECT * FROM `cron_log` WHERE 1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0 ORDER BY run_time DESC LIMIT 1
-        /** @var CronLog $last_beat */
-        $last_beat = $this->containerCall([CronLog::class, 'select'], ['options' => ['where' => ["1 AND FIND_IN_SET('heartbeat_pulse', tasks) > 0"], 'orderBy' => ['run_time DESC'], 'limitCount' => 1]])->fetch();
-
-        if ($last_beat != null) {
-            $lasbeat_date = new DateTime($last_beat['run_time']);
+        if ($lastBeat != null) {
+            $lasbeat_date = new DateTime($lastBeat['run_time']);
             $now = new DateTime();
 
             $interval = date_diff($lasbeat_date, $now);
             $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
-            $out = '<div class="alert alert-' . (abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN ? 'success' : 'warning') . '" role="alert">Last Beat on ' . $last_beat['run_time'] . ' (' . $interval->format($differenceFormat) . ' ago)</div>';
+            $out = '<div class="alert alert-' . (abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN ? 'success' : 'warning') . '" role="alert">Last Beat on ' . $lastBeat['run_time'] . ' (' . $interval->format($differenceFormat) . ' ago)</div>';
         }
         return $out;
     }

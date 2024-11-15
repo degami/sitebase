@@ -274,12 +274,14 @@ class Pages extends AdminManageFrontendModelsPage
 
                 $page->persist();
 
-                $this->addSuccessFlashMessage("Page Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Page Saved."));
                 break;
             case 'delete':
                 $page->delete();
 
                 $this->setAdminActionLogData('Deleted page ' . $page->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Page Deleted."));
 
                 break;
             case 'media_deassoc':
@@ -296,7 +298,7 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
         }
         if ($this->getRequest()->request->get('media_id') != null || $this->getRequest()->request->get('term_id') != null) {
-            return JsonResponse::create(['success' => true]);
+            return new JsonResponse(['success' => true]);
         }
         return $this->refreshPage();
     }

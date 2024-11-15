@@ -63,7 +63,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
         protected ?RouteInfo $route_info = null
     ) {
         parent::__construct($container, $request, $route_info);
-        if ($this->template_data['action'] == 'list') {
+        if (($this->template_data['action'] ?? 'list') == 'list') {
             $this->addPaginationSizeSelector();
             $this->addNewButton();
 

@@ -197,12 +197,14 @@ class News extends AdminManageFrontendModelsPage
 
                 $news->persist();
 
-                $this->addSuccessFlashMessage("News Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("News Saved."));
                 break;
             case 'delete':
                 $news->delete();
 
                 $this->setAdminActionLogData('Deleted news ' . $news->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("News Deleted."));
 
                 break;
         }

@@ -376,12 +376,14 @@ class Blocks extends AdminManageModelsPage
                     }
                 }
 
-                $this->addSuccessFlashMessage("Block Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Block Saved."));
                 break;
             case 'delete':
                 $block->delete();
 
                 $this->setAdminActionLogData('Deleted block ' . $block->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Block Deleted."));
 
                 break;
         }

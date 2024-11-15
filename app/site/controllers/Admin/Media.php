@@ -336,12 +336,9 @@ class Media extends AdminManageModelsPage
                 $media->persist();
 
                 if ($values['page_id'] != null) {
-                    $this
-                        ->getContainer()
-                        ->call([Page::class, 'load'], ['id' => $values['page_id']])
-                        ->addMedia($media);
+                    $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']])->addMedia($media);
                 } else {
-                    $this->addSuccessFlashMessage("Media Saved.");
+                    $this->addSuccessFlashMessage($this->getUtils()->translate("Media Saved."));
                 }
                 break;
             case 'deassoc':
@@ -361,10 +358,12 @@ class Media extends AdminManageModelsPage
 
                 $this->setAdminActionLogData('Deleted media ' . $media->getId());
 
+                $this->addInfoFlashMessage($this->getUtils()->translate("Media Deleted."));
+
                 break;
         }
         if ($this->getRequest()->request->get('page_id') != null) {
-            return JsonResponse::create(['success' => true]);
+            return new JsonResponse(['success' => true]);
         }
         return $this->refreshPage();
     }

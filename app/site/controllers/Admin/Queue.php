@@ -13,12 +13,17 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use App\Site\Commands\Queue\Process;
 use App\Site\Models\QueueMessage;
 use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
+use App\Site\Routing\RouteInfo;
 
 /**
  * "Queue" Admin Page
@@ -81,6 +86,22 @@ class Queue extends AdminManageModelsPage
             'section' => 'system',
             'order' => 7,
         ];
+    }
+
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
+        parent::__construct($container, $request, $route_info);
+
+        if ($this->getRequest()->get('action') == null || $this->getRequest()->get('action') == 'list') {
+            if ($this->checkQueueIsRunning()) {
+                $this->addInfoFlashMessage($this->getUtils()->translate('Queue is running.'), true);
+            } else {
+                $this->addWarningFlashMessage($this->getUtils()->translate('Queue is NOT running.'), true);
+            }
+        }
     }
 
     /**
@@ -181,6 +202,8 @@ class Queue extends AdminManageModelsPage
 
                 $this->setAdminActionLogData('Deleted queue ' . $queue->getId());
 
+                $this->addInfoFlashMessage($this->getUtils()->translate("Message Deleted."));
+                
                 break;
         }
 
@@ -236,5 +259,21 @@ class Queue extends AdminManageModelsPage
             },
             $data
         );
+    }
+
+    protected function checkQueueIsRunning() : bool
+    {
+        $lock_path = App::getDir(App::TMP) . DS . Process::LOCKFILE_NAME;
+        if (!file_exists($lock_path)) {
+            return false;
+        }
+
+        if ($fp = fopen($lock_path, "r+")) {
+            if (flock($fp, LOCK_EX | LOCK_NB)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

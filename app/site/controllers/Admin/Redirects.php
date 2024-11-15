@@ -203,12 +203,14 @@ class Redirects extends AdminManageModelsPage
 
                 $redirect->persist();
 
-                $this->addSuccessFlashMessage("Redirect Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Redirect Saved."));
                 break;
             case 'delete':
                 $redirect->delete();
 
                 $this->setAdminActionLogData('Deleted rewrite ' . $redirect->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Redirect Deleted."));
 
                 break;
         }

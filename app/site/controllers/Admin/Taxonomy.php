@@ -304,7 +304,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->addTerm($term);
                 } else {
-                    $this->addSuccessFlashMessage("Term Saved.");
+                    $this->addSuccessFlashMessage($this->getUtils()->translate("Term Saved."));
                 }
                 break;
             case 'deassoc':
@@ -326,10 +326,12 @@ class Taxonomy extends AdminManageFrontendModelsPage
 
                 $this->setAdminActionLogData('Deleted term ' . $term->getId());
 
+                $this->addInfoFlashMessage($this->getUtils()->translate("Term Deleted."));
+
                 break;
         }
         if ($this->getRequest()->request->get('page_id') != null) {
-            return JsonResponse::create(['success' => true]);
+            return new JsonResponse(['success' => true]);
         }
         return $this->refreshPage();
     }

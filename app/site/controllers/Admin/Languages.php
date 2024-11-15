@@ -205,13 +205,15 @@ class Languages extends AdminManageModelsPage
 
                 $this->setAdminActionLogData($language->getChangedData());
 
-                $this->addSuccessFlashMessage("Language Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Language Saved."));
                 $language->persist();
                 break;
             case 'delete':
                 $language->delete();
 
                 $this->setAdminActionLogData('Deleted language ' . $language->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Language Deleted."));
 
                 break;
         }

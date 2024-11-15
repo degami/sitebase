@@ -450,15 +450,18 @@ class ContactForms extends AdminManageFrontendModelsPage
                 }
 
                 if ($values['action'] == 'new') {
-                    $this->addSuccessFlashMessage('Contact Saved. Now you can add components.');
+                    $this->addSuccessFlashMessage($this->getUtils()->translate('Contact Saved. Now you can add components.'));
                     return $this->doRedirect($this->getControllerUrl() . '?action=edit&contact_id=' . $contact->id);
                 } else {
-                    $this->addSuccessFlashMessage("Contact Saved.");
+                    $this->addSuccessFlashMessage($this->getUtils()->translate("Contact Saved."));
                 }
 
                 break;
             case 'delete':
                 $contact->delete();
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Contact Deleted."));
+
                 break;
         }
 

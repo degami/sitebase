@@ -313,10 +313,13 @@ class Menus extends AdminManageModelsPage
 
                 $menu->persist();
 
-                $this->addSuccessFlashMessage("Menu Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Menu Saved."));
                 break;
             case 'delete':
                 $menu->delete();
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Menu Deleted."));
+
                 break;
         }
 

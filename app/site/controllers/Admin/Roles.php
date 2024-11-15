@@ -152,12 +152,14 @@ class Roles extends AdminManageModelsPage
 
                 $role->persist();
 
-                $this->addSuccessFlashMessage("Role Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Role Saved."));
                 break;
             case 'delete':
                 $role->delete();
 
                 $this->setAdminActionLogData('Deleted role ' . $role->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Role Deleted."));
 
                 break;
         }

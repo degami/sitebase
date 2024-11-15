@@ -229,7 +229,7 @@ class Rewrites extends AdminManageModelsPage
 
                 $rewrite->persist();
 
-                $this->addSuccessFlashMessage("Rewrite Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Rewrite Saved."));
                 break;
             case 'translations':
                 foreach ($values as $key => $value) {
@@ -260,6 +260,8 @@ class Rewrites extends AdminManageModelsPage
                 $rewrite->delete();
 
                 $this->setAdminActionLogData('Deleted rewrite ' . $rewrite->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Rewrite Deleted."));
 
                 break;
         }

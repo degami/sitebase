@@ -217,10 +217,13 @@ class MediaRewrites extends AdminManageModelsPage
                 $media_rewrite->setMediaElementId($values['media_id']);
                 $media_rewrite->persist();
 
-                $this->addSuccessFlashMessage("Media Rewrite Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Media Rewrite Saved."));
                 break;
             case 'delete':
                 $media_rewrite->delete();
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Media Rewrite Deleted."));
+
                 break;
         }
 

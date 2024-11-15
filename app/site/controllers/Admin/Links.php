@@ -253,12 +253,14 @@ class Links extends AdminManageFrontendModelsPage
 
                 $link->persist();
 
-                $this->addSuccessFlashMessage("Link Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Link Saved."));
                 break;
             case 'delete':
                 $link->delete();
 
                 $this->setAdminActionLogData('Deleted link ' . $link->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Link Deleted."));
 
                 break;
             case 'term_deassoc':

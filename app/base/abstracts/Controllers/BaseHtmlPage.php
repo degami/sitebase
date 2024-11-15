@@ -42,8 +42,12 @@ abstract class BaseHtmlPage extends BasePage
     public const FLASHMESSAGE_INFO = 'info';
     public const FLASHMESSAGE_SUCCESS = 'success';
     public const FLASHMESSAGE_WARNING = 'warning';
-    public const FLASHMESSAGE_ERROR = 'error';
+    public const FLASHMESSAGE_ERROR = 'danger';
 
+    public const FLASHMESSAGE_PRIMARY = 'primary';
+    public const FLASHMESSAGE_SECONDARY = 'secondary';
+    public const FLASHMESSAGE_LIGHT = 'light';
+    public const FLASHMESSAGE_DARK = 'dark';
 
     /**
      * @var Template|null template object
@@ -250,23 +254,29 @@ abstract class BaseHtmlPage extends BasePage
      *
      * @param string $type
      * @param string $message
+     * @param bool $direct store message in session
      * @return self
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addFlashMessage(string $type, string $message): BaseHtmlPage
+    public function addFlashMessage(string $type, string $message, bool $direct = false): BaseHtmlPage
     {
-        $flash_messages = $this->getFlashMessages();
+        $flash_messages = $this->getFlashMessages($direct);
         $flash_messages[$type][] = $message;
 
-        $cookie = $this->containerMake(Cookie::class, [
-            'name' => 'flash_messages',
-            'value' => json_encode($flash_messages),
-            'expire' => time() + 3600,
-            'path' => '/',
-            'sameSite' => Cookie::SAMESITE_LAX,
-        ]);
-        $this->getResponse()->headers->setCookie($cookie);
+        // store flash messages in cookie - direct stores in session
+        if (!$direct) {
+            $cookie = $this->containerMake(Cookie::class, [
+                'name' => 'flash_messages',
+                'value' => json_encode($flash_messages),
+                'expire' => time() + 3600,
+                'path' => '/',
+                'sameSite' => Cookie::SAMESITE_LAX,
+            ]);
+            $this->getResponse()->headers->setCookie($cookie);    
+        } else {
+            $_SESSION['flash_messages'] = json_encode($flash_messages);
+        }
 
         return $this;
     }
@@ -275,52 +285,56 @@ abstract class BaseHtmlPage extends BasePage
      * adds a success flash message
      * 
      * @param string $message
+     * @param bool $direct store message in session
      * @return self
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addSuccessFlashMessage(string $message) : BaseHtmlPage
+    public function addSuccessFlashMessage(string $message, bool $direct = false) : BaseHtmlPage
     {
-        return $this->addFlashMessage(self::FLASHMESSAGE_SUCCESS, $message);
+        return $this->addFlashMessage(self::FLASHMESSAGE_SUCCESS, $message, $direct);
     }
 
     /**
      * adds a warning flash message
      * 
      * @param string $message
+     * @param bool $direct store message in session
      * @return self
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addWarningFlashMessage(string $message) : BaseHtmlPage
+    public function addWarningFlashMessage(string $message, bool $direct = false) : BaseHtmlPage
     {
-        return $this->addFlashMessage(self::FLASHMESSAGE_WARNING, $message);
+        return $this->addFlashMessage(self::FLASHMESSAGE_WARNING, $message, $direct);
     }
 
     /**
      * adds a error flash message
      * 
      * @param string $message
+     * @param bool $direct store message in session
      * @return self
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addErrorFlashMessage(string $message) : BaseHtmlPage
+    public function addErrorFlashMessage(string $message, bool $direct = false) : BaseHtmlPage
     {
-        return $this->addFlashMessage(self::FLASHMESSAGE_ERROR, $message);
+        return $this->addFlashMessage(self::FLASHMESSAGE_ERROR, $message, $direct);
     }
 
     /**
      * adds an info flash message
      * 
      * @param string $message
+     * @param bool $direct store message in session
      * @return self
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addInfoFlashMessage(string $message) : BaseHtmlPage
+    public function addInfoFlashMessage(string $message, bool $direct = false) : BaseHtmlPage
     {
-        return $this->addFlashMessage(self::FLASHMESSAGE_INFO, $message);
+        return $this->addFlashMessage(self::FLASHMESSAGE_INFO, $message, $direct);
     }
 
     /**
@@ -330,6 +344,7 @@ abstract class BaseHtmlPage extends BasePage
      */
     public function dropFlashMessages(): BaseHtmlPage
     {
+        unset($_SESSION['flash_messages']);
         $this->getResponse()->headers->clearCookie('flash_messages');
 
         return $this;
@@ -338,10 +353,15 @@ abstract class BaseHtmlPage extends BasePage
     /**
      * gets currently stored flash messages
      *
+     * @param bool $direct session stored flash messages
      * @return array|null
      */
-    public function getFlashMessages(): ?array
+    public function getFlashMessages(bool $direct = false): ?array
     {
+        if ($direct) {
+            return json_decode((string) ($_SESSION['flash_messages'] ?? null), true);
+        }
+
         return json_decode((string) $this->getRequest()->cookies->get('flash_messages'), true);
     }
 

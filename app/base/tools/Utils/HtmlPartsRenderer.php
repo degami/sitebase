@@ -50,12 +50,15 @@ class HtmlPartsRenderer extends ContainerAwareObject
      */
     public function renderFlashMessages(BasePage $controller): TagList
     {
-        $flash_messages = $controller->getFlashMessages();
+        $cookie_flash_messages = (array)$controller->getFlashMessages();
+        $direct_flash_messages = (array)$controller->getFlashMessages(true);
+        $flash_messages = array_merge_recursive($cookie_flash_messages, $direct_flash_messages);
+
         $controller->dropFlashMessages();
 
         $messages_container = $this->containerMake(TagList::class);
 
-        foreach ((array)$flash_messages as $type => $messages) {
+        foreach ($flash_messages as $type => $messages) {
             $messages_list = $this->containerMake(TagList::class);
 
             foreach ($messages as $message) {

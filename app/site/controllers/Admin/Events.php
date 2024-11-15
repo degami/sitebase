@@ -243,12 +243,14 @@ class Events extends AdminManageFrontendModelsPage
 
                 $event->persist();
 
-                $this->addSuccessFlashMessage("Event Saved.");
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Event Saved."));
                 break;
             case 'delete':
                 $event->delete();
 
                 $this->setAdminActionLogData('Deleted event ' . $event->getId());
+
+                $this->addInfoFlashMessage($this->getUtils()->translate("Event Deleted."));
 
                 break;
         }

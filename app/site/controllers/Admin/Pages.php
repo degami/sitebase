@@ -273,6 +273,8 @@ class Pages extends AdminManageFrontendModelsPage
                 $this->setAdminActionLogData($page->getChangedData());
 
                 $page->persist();
+
+                $this->addSuccessFlashMessage("Page Saved.");
                 break;
             case 'delete':
                 $page->delete();

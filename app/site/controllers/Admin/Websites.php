@@ -200,6 +200,8 @@ class Websites extends AdminManageModelsPage
                 $this->setAdminActionLogData($website->getChangedData());
 
                 $website->persist();
+
+                $this->addSuccessFlashMessage("Website Saved.");
                 break;
             case 'delete':
                 $website->delete();

@@ -241,6 +241,7 @@ class Config extends AdminManageModelsPage
 
                 $configuration->persist();
 
+                $this->addSuccessFlashMessage("Configuration Saved.");
                 break;
             case 'delete':
                 $configuration->delete();

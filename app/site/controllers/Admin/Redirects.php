@@ -202,6 +202,8 @@ class Redirects extends AdminManageModelsPage
                 $this->setAdminActionLogData($redirect->getChangedData());
 
                 $redirect->persist();
+
+                $this->addSuccessFlashMessage("Redirect Saved.");
                 break;
             case 'delete':
                 $redirect->delete();

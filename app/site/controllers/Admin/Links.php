@@ -252,6 +252,8 @@ class Links extends AdminManageFrontendModelsPage
                 $this->setAdminActionLogData($link->getChangedData());
 
                 $link->persist();
+
+                $this->addSuccessFlashMessage("Link Saved.");
                 break;
             case 'delete':
                 $link->delete();

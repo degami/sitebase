@@ -452,6 +452,8 @@ class ContactForms extends AdminManageFrontendModelsPage
                 if ($values['action'] == 'new') {
                     $this->addSuccessFlashMessage('Contact Saved. Now you can add components.');
                     return $this->doRedirect($this->getControllerUrl() . '?action=edit&contact_id=' . $contact->id);
+                } else {
+                    $this->addSuccessFlashMessage("Contact Saved.");
                 }
 
                 break;

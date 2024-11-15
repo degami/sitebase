@@ -376,6 +376,7 @@ class Blocks extends AdminManageModelsPage
                     }
                 }
 
+                $this->addSuccessFlashMessage("Block Saved.");
                 break;
             case 'delete':
                 $block->delete();

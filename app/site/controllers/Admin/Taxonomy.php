@@ -303,6 +303,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     /** @var Page $page */
                     $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->addTerm($term);
+                } else {
+                    $this->addSuccessFlashMessage("Term Saved.");
                 }
                 break;
             case 'deassoc':

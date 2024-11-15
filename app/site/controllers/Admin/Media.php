@@ -340,6 +340,8 @@ class Media extends AdminManageModelsPage
                         ->getContainer()
                         ->call([Page::class, 'load'], ['id' => $values['page_id']])
                         ->addMedia($media);
+                } else {
+                    $this->addSuccessFlashMessage("Media Saved.");
                 }
                 break;
             case 'deassoc':

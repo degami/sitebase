@@ -228,6 +228,8 @@ class Rewrites extends AdminManageModelsPage
                 $this->setAdminActionLogData($rewrite->getChangedData());
 
                 $rewrite->persist();
+
+                $this->addSuccessFlashMessage("Rewrite Saved.");
                 break;
             case 'translations':
                 foreach ($values as $key => $value) {

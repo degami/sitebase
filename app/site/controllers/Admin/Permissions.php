@@ -196,6 +196,8 @@ class Permissions extends AdminFormPage
             }
         }
 
+        $this->addInfoFlashMessage("Permissions Updated.");
+
         return $this->refreshPage();
     }
 

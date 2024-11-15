@@ -312,6 +312,8 @@ class Menus extends AdminManageModelsPage
                 $menu->setBreadcrumb($values['breadcrumb']);
 
                 $menu->persist();
+
+                $this->addSuccessFlashMessage("Menu Saved.");
                 break;
             case 'delete':
                 $menu->delete();

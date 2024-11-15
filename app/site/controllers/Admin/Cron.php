@@ -279,6 +279,7 @@ class Cron extends AdminManageModelsPage
 
                 $this->setAdminActionLogData($task->getChangedData());
 
+                $this->addSuccessFlashMessage("Task Saved.");
                 $task->persist();
                 break;
             case 'run':

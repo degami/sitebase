@@ -28,7 +28,9 @@ use Degami\PHPFormsApi as FAPI;
 use HaydenPierce\ClassFinder\ClassFinder;
 use App\Site\Models\CronTask;
 use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Controllers\BasePage;
 use DateTime;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "Cron" Admin Page
@@ -57,62 +59,7 @@ class Cron extends AdminManageModelsPage
     ) {
         AdminFormPage::__construct($container, $request, $route_info);
         $this->page_title = 'Cron Tasks';
-        if (($this->getRequest()->get('action') ?? 'list') == 'list') {
-            $taskClasses = ClassFinder::getClassesInNamespace('App\Site\Cron\Tasks');
-            foreach ($taskClasses as $taskClass) {
-                foreach (get_class_methods($taskClass) as $key => $method_name) {
-                    $cron_task_callable = json_encode([$taskClass, $method_name]);
-
-                    $cron_task_name = ltrim(
-                        strtolower(
-                            str_replace("App\\Site\\Cron\\Tasks", "", $taskClass)
-                        ) . "_" .
-                        strtolower($method_name),
-                        "\\"
-                    );
-
-                    if (preg_match("/^__/i", $method_name)) {
-                        continue;
-                    }
-                    if (in_array($method_name, get_class_methods(ContainerAwareObject::class))) {
-                        continue;
-                    }
-
-                    $existing_tasks = CronTask::getCollection()->where('title = "' . $cron_task_name . '"')->getItems();
-                    if (count($existing_tasks) > 0) {
-                        continue;
-                    }
-
-                    $cron_task = $this->containerCall([CronTask::class, 'new'], ['initial_data' => [
-                        'title' => $cron_task_name,
-                        'cron_task_callable' => $cron_task_callable,
-                        'schedule' => defined($taskClass . '::DEFAULT_SCHEDULE') ? $taskClass::DEFAULT_SCHEDULE : null,
-                        'active' => 0,
-                    ]]);
-
-                    $cron_task->persist();
-                }
-            }
-
-            $lastBeat = $this->getLastHeartBeat();
-
-            if (!$lastBeat) {
-                $this->addErrorFlashMessage($this->getUtils()->translate('No heart beat run yet'), true);
-            } else {
-                $lasbeat_date = new DateTime($lastBeat['run_time']);
-                $now = new DateTime();
-    
-                $interval = date_diff($lasbeat_date, $now);
-                $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
-    
-                $beatMessage = $this->getUtils()->translate('Last Beat on %s (%s ago)', [$lastBeat['run_time'], $interval->format($differenceFormat)]);
-                if (abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN) {
-                    $this->addSuccessFlashMessage($beatMessage, true);
-                } else {
-                    $this->addWarningFlashMessage($beatMessage, true);
-                }
-            }
-        }
+        
         parent::__construct($container, $request, $route_info);
     }
 
@@ -171,6 +118,68 @@ class Cron extends AdminManageModelsPage
             'section' => 'system',
             'order' => 8,
         ];
+    }
+
+    public function beforeRender() : BasePage|Response
+    {
+        if (($this->getRequest()->get('action') ?? 'list') == 'list') {
+            $taskClasses = ClassFinder::getClassesInNamespace('App\Site\Cron\Tasks');
+            foreach ($taskClasses as $taskClass) {
+                foreach (get_class_methods($taskClass) as $key => $method_name) {
+                    $cron_task_callable = json_encode([$taskClass, $method_name]);
+
+                    $cron_task_name = ltrim(
+                        strtolower(
+                            str_replace("App\\Site\\Cron\\Tasks", "", $taskClass)
+                        ) . "_" .
+                        strtolower($method_name),
+                        "\\"
+                    );
+
+                    if (preg_match("/^__/i", $method_name)) {
+                        continue;
+                    }
+                    if (in_array($method_name, get_class_methods(ContainerAwareObject::class))) {
+                        continue;
+                    }
+
+                    $existing_tasks = CronTask::getCollection()->where('title = "' . $cron_task_name . '"')->getItems();
+                    if (count($existing_tasks) > 0) {
+                        continue;
+                    }
+
+                    $cron_task = $this->containerCall([CronTask::class, 'new'], ['initial_data' => [
+                        'title' => $cron_task_name,
+                        'cron_task_callable' => $cron_task_callable,
+                        'schedule' => defined($taskClass . '::DEFAULT_SCHEDULE') ? $taskClass::DEFAULT_SCHEDULE : null,
+                        'active' => 0,
+                    ]]);
+
+                    $cron_task->persist();
+                }
+            }
+
+            $lastBeat = $this->getLastHeartBeat();
+
+            if (!$lastBeat) {
+                $this->addErrorFlashMessage($this->getUtils()->translate('No heart beat run yet'), true);
+            } else {
+                $lasbeat_date = new DateTime($lastBeat['run_time']);
+                $now = new DateTime();
+    
+                $interval = date_diff($lasbeat_date, $now);
+                $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
+    
+                $beatMessage = $this->getUtils()->translate('Last Beat on %s (%s ago)', [$lastBeat['run_time'], $interval->format($differenceFormat)]);
+                if (abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN) {
+                    $this->addSuccessFlashMessage($beatMessage, true);
+                } else {
+                    $this->addWarningFlashMessage($beatMessage, true);
+                }
+            }
+        }
+        
+        return parent::beforeRender();
     }
 
     /**

@@ -47,9 +47,12 @@ class LinkToUserArea extends BaseCodeBlock
 
             $locale = $current_page->getRouteInfo()->getVar('locale');
 
-            $targetHref = $this->getWebRouter()->getUrl("frontend.users.profile");
-            if (!$current_page->hasLoggedUser()) {
-                $targetHref = $this->getWebRouter()->getUrl("frontend.users.login");
+            $targetHref = $this->getWebRouter()->getUrl("frontend.users.login");
+            $linkText = $this->getUtils()->translate('Profile', locale: $locale);
+            if ($current_page->hasLoggedUser()) {
+                $current_user = $current_page->getCurrentUser();
+                $targetHref = $this->getWebRouter()->getUrl("frontend.users.profile");
+                $linkText = $this->getUtils()->translate('Hello', locale: $locale) . ' ' . $current_user?->getNickname() . ' !';
             }
             
 
@@ -65,7 +68,7 @@ class LinkToUserArea extends BaseCodeBlock
                             'class' => 'user-area-link',
                             'href' => $targetHref, 
                         ],
-                        'text' => $this->getIcons()->get('user', echo: false) . ' ' .$this->getUtils()->translate('Profile', locale: $locale),
+                        'text' => $this->getIcons()->get('user', echo: false) . ' ' .$linkText,
                     ]]),
                 ],
             ]]);

@@ -75,7 +75,7 @@ class ContactForms extends AdminManageFrontendModelsPage
             }
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
             $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
-            $collection->addOrder($this->getRequest()->query->get('order'));
+            $collection->addOrder($this->getRequest()->query->all('order'));
             if ($this->template_data['action'] == 'submissions') {
                 $collection->addCondition(['contact_id' => $this->getRequest()->get('contact_id')]);
             }

@@ -101,7 +101,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
         parent::__construct($container, $request, $route_info);
         $this->page_title = 'Notifications';
         if ($this->getCollection()->count() > 0) {
-            if ($this->getRequest()->query->get('action') == null || $this->getRequest()->query->get('action') == 'list') {
+            if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
                 $this->addActionLink('readall-btn', 'readall-btn', $this->getHtmlRenderer()->getIcon('user-check') . $this->getUtils()->translate('Mark all as read', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=markallasread', 'btn btn-sm btn-warning');
             }    
         }

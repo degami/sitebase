@@ -79,7 +79,7 @@ class Elasticsearch extends AdminPage
 
     ) {
         parent::__construct($container, $request, $route_info);
-        if ($this->getRequest()->query->get('action') == null || $this->getRequest()->query->get('action') == 'list') {
+        if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
             $this->addActionLink('reindex-btn', 'reindex-btn', $this->getHtmlRenderer()->getIcon('refresh-cw') . ' ' . $this->getUtils()->translate('Reindex', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=reindex', 'btn btn-sm btn-warning');
         }    
     }

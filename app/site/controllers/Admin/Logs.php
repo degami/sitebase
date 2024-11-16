@@ -92,7 +92,7 @@ class Logs extends AdminPage
             }
 
             $paginate_params = [
-                'order' => $this->getRequest()->query->get('order') ?? ['created_at' => 'DESC'],
+                'order' => $this->getRequest()->query->all('order') ?? ['created_at' => 'DESC'],
                 'condition' => $this->getSearchParameters(),
             ];
 
@@ -206,8 +206,8 @@ class Logs extends AdminPage
     protected function getSearchParameters(): ?array
     {
         $out = array_filter([
-            'like' => $this->getRequest()->query->get('search'),
-            'eq' => $this->getRequest()->query->get('foreign'),
+            'like' => $this->getRequest()->query->all('search'),
+            'eq' => $this->getRequest()->query->all('foreign'),
         ]);
         return !empty($out) ? $out : null;
     }

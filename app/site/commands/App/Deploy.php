@@ -77,7 +77,7 @@ class Deploy extends BaseExecCommand
                 '..' . DS . 'vendor' . DS . 'components' . DS . 'jqueryui' => App::getDir('pub') . DS . 'jqueryui',
                 '..' . DS . 'vendor' . DS . 'components' . DS . 'jquery' => App::getDir('pub') . DS . 'jquery',
                 '..' . DS . 'vendor' . DS . 'tinymce' . DS . 'tinymce' => App::getDir('pub') . DS . 'tinymce',
-                '..' . DS . 'node_modules' . DS . 'highlightjs' . DS . 'styles' . DS . 'default.css' => App::getDir('pub') . DS . 'css' . DS . 'highlight.css',
+                '..' . DS . '..' . DS . 'node_modules' . DS . 'highlightjs' . DS . 'styles' . DS . 'default.css' => App::getDir('pub') . DS . 'css' . DS . 'highlight.css',
 
                 '..' . DS . 'assets' . DS . 'flags' => App::getDir('pub') . DS . 'flags',
                 '..' . DS . 'assets' . DS . 'sitebase_logo.png' => App::getDir('pub') . DS . 'sitebase_logo.png',
@@ -87,7 +87,18 @@ class Deploy extends BaseExecCommand
 
         chdir(App::getDir(App::WEBROOT));
         foreach ($symlinks as $from => $to) {
-            if (!file_exists($to) && file_exists($from)) {
+            $to_check = file_exists($to);
+            $from_check = file_exists($from);
+            if (!$absolute_symlinks && !$from_check) {
+                $oldCWD = getcwd();
+
+                chdir(dirname($to));
+                $from_check = file_exists($from);
+
+                chdir($oldCWD);
+            }
+            
+            if (!$to_check && $from_check) {
                 $output->writeln("symlink <info>$from</info> to <info>$to</info>");
                 symlink($from, $to);
             }

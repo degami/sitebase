@@ -92,6 +92,7 @@ class Queue extends AdminManageModelsPage
 
     public function beforeRender() : BasePage|Response
     {
+        $this->removeAction('new-btn');
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
             if ($this->checkQueueIsRunning()) {
                 $this->addInfoFlashMessage($this->getUtils()->translate('Queue is running.'), true);

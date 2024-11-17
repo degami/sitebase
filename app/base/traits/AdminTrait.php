@@ -142,7 +142,7 @@ trait AdminTrait
      * @param string $button_class
      * @return self
      */
-    protected function addActionButton(string $key, string $button_id, string $button_text, $button_class = 'btn btn-sm btn-light') : static
+    public function addActionButton(string $key, string $button_id, string $button_text, $button_class = 'btn btn-sm btn-light') : static
     {
         $button = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'button',
@@ -186,6 +186,21 @@ trait AdminTrait
         ]]);
 
         $this->action_buttons[$key] = $button;
+        return $this;
+    }
+
+    /**
+     * removes an action link / button
+     *
+     * @param $key
+     * @return self
+     */
+    public function removeAction($key) : static
+    {
+        if (((string)$key) == "") {
+            return $this;
+        }
+        unset($this->action_buttons[$key]);
         return $this;
     }
 

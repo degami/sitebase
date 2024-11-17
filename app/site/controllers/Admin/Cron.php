@@ -169,6 +169,13 @@ class Cron extends AdminManageModelsPage
     
                 $interval = date_diff($lasbeat_date, $now);
                 $differenceFormat = '%y Year %m Month %d Day, %h Hours %i Minutes %s Seconds';
+
+                $differenceFormat = '%y ' . $this->getUtils()->translate('Year') . ' ' . 
+                                    '%m ' . $this->getUtils()->translate('Month') . ' ' .
+                                    '%d ' . $this->getUtils()->translate('Day') . ', ' .
+                                    '%h ' . $this->getUtils()->translate('Hours') . ' ' .
+                                    '%i ' . $this->getUtils()->translate('Minutes'). ' ' .
+                                    '%s ' . $this->getUtils()->translate('Seconds');
     
                 $beatMessage = $this->getUtils()->translate('Last Beat on %s (%s ago)', [$lastBeat['run_time'], $interval->format($differenceFormat)]);
                 if (abs($lasbeat_date->getTimestamp() - $now->getTimestamp()) < self::ATTENTION_SPAN) {

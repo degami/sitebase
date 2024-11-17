@@ -26,6 +26,7 @@ RUN apk add --no-cache $PHPIZE_DEPS && pecl install redis && docker-php-ext-enab
 RUN docker-php-ext-enable xdebug pdo_mysql gd fileinfo sodium
 RUN npm install -g gulp
 #RUN gem install compass compass-rgbapng
+RUN apk add graphviz plantuml
 RUN wget https://phpdoc.org/phpDocumentor.phar -O /usr/local/bin/phpdoc
 RUN chmod 775 /usr/local/bin/phpdoc
 RUN wget https://getcomposer.org/download/latest-stable/composer.phar -O  /usr/local/bin/composer

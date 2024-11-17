@@ -153,7 +153,9 @@
                 }
                 $('.sidepanel', that).find('.card-title').html(title);
                 $('.sidepanel', that).find('.card-block').html(response.html || '');
-
+                $('.sidepanel', that).find('.card').css({'height': '95%'});
+                $('.sidepanel', that).find('.card-block').css({'height': '100%'});
+                
                 // add behaviours
                 $('.sidepanel select:not(".select-processed")', that).select2({
                     dropdownCssClass: "in_sidepanel",

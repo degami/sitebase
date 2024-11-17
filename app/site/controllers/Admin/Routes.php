@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminPage;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
@@ -21,6 +22,7 @@ use DI\NotFoundException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Site\Routing\RouteInfo;
+use Degami\Basics\Html\TagElement;
 
 /**
  * "Routes" Admin Page
@@ -91,12 +93,30 @@ class Routes extends AdminPage
             $router = $this->getService($routerName);
             foreach ($router->getRoutes() as $group => $routes) {
                 foreach ($routes as $route) {
+                    $routeName = $route['name'];
+                    $routePath = $route['path'];
+                    $callable = $route['class'] . '::' . $route['method'];
+
+                    if (is_file(App::getDir(App::WEBROOT) . DS . 'docs' . DS . 'classes' . DS . str_replace("\\", "-", $route['class']) . ".html")) {
+                        $linkTo = $this->getUrl('crud.app.site.controllers.admin.json.readdocs') . "?docpage=".urlencode("/docs/classes/". str_replace("\\", "-", $route['class']) . ".html#method_".$route['method']);
+                        $callable = $this->containerMake(TagElement::class, [
+                            'options' => [
+                                'tag' => 'a',
+                                'attributes' => [
+                                    'href' => $linkTo,
+                                    'class' => 'inToolSidePanel',
+                                ],
+                                'text' => $callable
+                            ]
+                            ]);
+                    }
+
                     $tableContents[] = [
                         'Router' => $routerName,
-                        'Name' => $route['name'], 
+                        'Name' => $routeName, 
                         'Group' => $group, 
-                        'Path' => $route['path'], 
-                        'Callable' => $route['class'] . '::' . $route['method'],
+                        'Path' => $routePath, 
+                        'Callable' => $callable,
                     ];
                 }
             }    

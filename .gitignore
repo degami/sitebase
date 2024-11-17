@@ -4,6 +4,7 @@
 .composer
 .rnd
 .ash_history
+.java
 composer.lock
 package-lock.json
 patches.lock.json

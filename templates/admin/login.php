@@ -6,6 +6,7 @@ $this->layout('frontend::layout', ['title' => 'Login'] + get_defined_vars()) ?>
 <?php $this->start('menu') ?><?php $this->stop() ?>
 
 <?php $this->start('head') ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/admin.css');?>">
 <?php $this->stop() ?>
 
 

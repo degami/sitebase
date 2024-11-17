@@ -371,7 +371,7 @@ class SiteBase implements ExtensionInterface
     {
         $user = $controller->getCurrentUser();
         $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
-        $isDarkMode = $uiSettings['darkMode'] ?? false;
+        $isDarkMode = $uiSettings['darkMode'] ?? $this->getUtils()->getEnv('ADMIN_DARK_MODE', false);
 
         $checkbox = $this->getApp()->containerMake(TagElement::class, ['options' => [
             'tag' => 'input',

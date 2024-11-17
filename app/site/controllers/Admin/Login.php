@@ -125,6 +125,20 @@ class Login extends FormPage
     }
 
     /**
+     * {@inheritdocs}
+     *
+     * @return array
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getBaseTemplateData(): array
+    {
+        $out = parent::getBaseTemplateData();
+        $out['body_class'] = $this->getHtmlRenderer()->getHtmlAdminClasses($this);
+        return $out;
+    }
+
+    /**
      * {@inheritfocs}
      *
      * @return Template

@@ -31,6 +31,7 @@ use App\Site\Routing\RouteInfo;
 use App\App;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;
+use App\Site\Controllers\Admin\Login;
 use App\Site\Models\Block;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
@@ -1163,18 +1164,23 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * returns body_classes array based on controller
      */
-    public function getHtmlAdminClasses(AdminPage $controller) : string
+    public function getHtmlAdminClasses(AdminPage|Login $controller) : string
     {
         $htmlClasses = [
             'admin-page ' . str_replace('.', '-', $controller->getRouteName())
         ];
-        $user = $controller->getCurrentUser();
-        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
-        $isDarkMode = $uiSettings['darkMode'] ?? false;
 
-        if ($user->getId() && $controller->hasLoggedUser()) {
-            $htmlClasses[] = 'logged-in';
+        $uiSettings = null;
+        if ($controller instanceof AdminPage) {
+            $user = $controller->getCurrentUser();
+            $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');    
+
+            if ($user->getId() && $controller->hasLoggedUser()) {
+                $htmlClasses[] = 'logged-in';
+            }    
         }
+        $isDarkMode = $uiSettings['darkMode'] ?? $this->getEnv('ADMIN_DARK_MODE', false);
+
 
         if ($isDarkMode) {
             $htmlClasses[] = 'dark-mode';

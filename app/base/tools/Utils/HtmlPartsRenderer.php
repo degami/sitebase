@@ -814,7 +814,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $tbody->addChild($row);
             }
         } else {
-            $text = 'No elements found !';
+            $text = 'No elements found!';
             if (($current_page instanceof BasePage)) {
                 $text = $this->getUtils()->translate($text, locale: $current_page?->getCurrentLocale());
             }

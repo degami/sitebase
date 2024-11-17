@@ -186,4 +186,8 @@ return [
     'Hours' => 'Часы',
     'Minutes' => 'Минуты',
     'Seconds' => 'Секунды',
+    'Rewrites' => 'Переписывания',
+    'Submissions' => 'Подания',
+    'Sitemaps' => 'Карты сайта',
+    'Rewrites Media' => 'Медиа для переписывания',
 ];

@@ -186,4 +186,8 @@ return [
     'Hours' => 'Giờ',
     'Minutes' => 'Phút',
     'Seconds' => 'Giây',
+    'Rewrites' => 'Viết lại',
+    'Submissions' => 'Gửi bài',
+    'Sitemaps' => 'Sơ đồ trang web',
+    'Rewrites Media' => 'Phương tiện để viết lại',
 ];

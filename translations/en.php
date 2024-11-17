@@ -186,4 +186,8 @@ return [
     'Hours' => 'Hours',
     'Minutes' => 'Minutes',
     'Seconds' => 'Seconds',
+    'Rewrites' => 'Rewrites',
+    'Submissions' => 'Submissions',
+    'Sitemaps' => 'Sitemaps',
+    'Rewrites Media' => 'Media for Rewrite',
 ];

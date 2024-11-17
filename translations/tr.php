@@ -186,4 +186,8 @@ return [
     'Hours' => 'Saatler',
     'Minutes' => 'Dakikalar',
     'Seconds' => 'Saniyeler',
+    'Rewrites' => 'Yeniden Yazmalar',
+    'Submissions' => 'Başvurular',
+    'Sitemaps' => 'Site Haritaları',
+    'Rewrites Media' => 'Yeniden yazma için medya',
 ];

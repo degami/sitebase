@@ -186,4 +186,8 @@ return [
     'Hours' => 'Jam',
     'Minutes' => 'Menit',
     'Seconds' => 'Detik',
+    'Rewrites' => 'Penulisan Kembali',
+    'Submissions' => 'Pengajuan',
+    'Sitemaps' => 'Peta situs',
+    'Rewrites Media' => 'Media untuk penulisan ulang',
 ];

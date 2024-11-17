@@ -186,4 +186,8 @@ return [
     'Hours' => '小时',
     'Minutes' => '分钟',
     'Seconds' => '秒',
+    'Rewrites' => '重写',
+    'Submissions' => '提交',
+    'Sitemaps' => '网站地图',
+    'Rewrites Media' => '待重写的媒体',
 ];

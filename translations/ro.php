@@ -186,4 +186,8 @@ return [
     'Hours' => 'Ore',
     'Minutes' => 'Minute',
     'Seconds' => 'Secunde',
+    'Rewrites' => 'Rescriere',
+    'Submissions' => 'Trimiteri',
+    'Sitemaps' => 'Hărți site',
+    'Rewrites Media' => 'Media pentru rescriere',
 ];

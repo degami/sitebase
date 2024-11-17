@@ -186,4 +186,8 @@ return [
     'Hours' => 'Ώρες',
     'Minutes' => 'Λεπτά',
     'Seconds' => 'Δευτερόλεπτα',
+    'Rewrites' => 'Επαναγραφές',
+    'Submissions' => 'Υποβολές',
+    'Sitemaps' => 'Χάρτες ιστοτόπων',
+    'Rewrites Media' => 'Μέσα για επαναγραφή',
 ];

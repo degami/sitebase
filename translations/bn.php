@@ -188,4 +188,8 @@ return [
     'Hours' => 'ঘণ্টা',
     'Minutes' => 'মিনিট',
     'Seconds' => 'সেকেন্ড',
+    'Rewrites' => 'পুনঃলিখন',
+    'Submissions' => 'জমা',
+    'Sitemaps' => 'সাইটম্যাপ',
+    'Rewrites Media' => 'পুনঃলিখনের জন্য মিডিয়া',
 ];

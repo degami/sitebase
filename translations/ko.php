@@ -186,4 +186,8 @@ return [
     'Hours' => '시간',
     'Minutes' => '분',
     'Seconds' => '초',
+    'Rewrites' => '재작성',
+    'Submissions' => '제출물',
+    'Sitemaps' => '사이트맵',
+    'Rewrites Media' => '재작성용 미디어',
 ];

@@ -186,4 +186,8 @@ return [
     'Hours' => 'Órák',
     'Minutes' => 'Pillanatok',
     'Seconds' => 'Másodpercek',
+    'Rewrites' => 'Átírások',
+    'Submissions' => 'Beküldések',
+    'Sitemaps' => 'Webhelytérképek',
+    'Rewrites Media' => 'Média újraírásra',
 ];

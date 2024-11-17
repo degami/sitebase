@@ -186,4 +186,8 @@ return [
     'Hours' => '時間',
     'Minutes' => '分',
     'Seconds' => '秒',
+    'Rewrites' => '書き直し',
+    'Submissions' => '提出',
+    'Sitemaps' => 'サイトマップ',
+    'Rewrites Media' => '書き直し用メディア',
 ];

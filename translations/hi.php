@@ -186,4 +186,8 @@ return [
     'Hours' => 'घंटे',
     'Minutes' => 'मिनट',
     'Seconds' => 'सेकंड',
+    'Rewrites' => 'पुनःलेखन',
+    'Submissions' => 'प्रस्तावना',
+    'Sitemaps' => 'साइटमैप',
+    'Rewrites Media' => 'पुनःलेखन के लिए मीडिया',
 ];

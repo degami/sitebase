@@ -186,4 +186,8 @@ return [
     'Hours' => 'ساعات',
     'Minutes' => 'دقائق',
     'Seconds' => 'ثواني',
+    'Rewrites' => 'إعادة كتابة',
+    'Submissions' => 'التقديمات',
+    'Sitemaps' => 'خرائط المواقع',
+    'Rewrites Media' => 'الوسائط لإعادة الكتابة',
 ];

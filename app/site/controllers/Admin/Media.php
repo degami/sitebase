@@ -168,12 +168,21 @@ class Media extends AdminManageModelsPage
                 unset($elem_data['id']);
                 unset($elem_data['user_id']);
 
+                $box = $media->getImageBox();
+                if ($box) {
+                    $elem_data += [
+                        'width' => $box->getWidth() . ' px',
+                        'height' => $box->getHeight() . ' px',
+                    ];    
+                }
+
                 array_walk(
                     $elem_data,
                     function (&$el, $key) {
                         $el = '<strong>' . $key . '</strong>: ' . $el;
                     }
                 );
+
 
                 $this->addActionLink(
                     'pages-btn',
@@ -382,6 +391,8 @@ class Media extends AdminManageModelsPage
             'Mimetype' => ['order' => 'mimetype', 'search' => 'mimetype'],
             'Filesize' => ['order' => 'filesize', 'search' => 'filesize'],
             'Owner' => 'user_id',
+            'Height' => null,
+            'Width' => null,
             'Lazyload' => null,
             'actions' => null,
         ];
@@ -407,6 +418,8 @@ class Media extends AdminManageModelsPage
                     'Mimetype' => $elem->getMimetype(),
                     'Filesize' => $this->formatBytes($elem->getFilesize()),
                     'Owner' => $elem->getOwner()->username,
+                    'Height' => $elem->getImageBox()->getHeight() . ' px',
+                    'Width' => $elem->getImageBox()->getWidth() . ' px',
                     'Lazyload' => $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
                     'actions' => implode(
                         " ",

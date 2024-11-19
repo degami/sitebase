@@ -6,9 +6,12 @@
 </template>
   
 <script>
-  import 'jquery';
+  import $ from 'jquery';
+  window.$ = $;
+  window.jQuery = $;
   import 'jquery.cycle2';
   import 'jquery.cookie'; 
+  import 'jquery-lazy';
   import Loader from '../utils/Loader.vue';
 
   export default {
@@ -74,6 +77,11 @@
 
           if (this.pageRegion && this.pageRegion.includes('cycle-slideshow')) {
             this.$nextTick(() => {
+              if (typeof $ !== 'undefined') {
+                $('img[data-src]').Lazy();
+              } else {
+                console.error('jQuery non è definito');
+              }
               $('.cycle-slideshow').cycle();
 
               $('.uncachable-block').each(function(){

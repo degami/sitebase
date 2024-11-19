@@ -183,6 +183,22 @@ class MediaElement extends BaseModel
     }
 
     /**
+     * gets Image Box
+     */
+    public function getImageBox() : ?Box
+    {
+        if (empty($this->getPath())) {
+            return null;
+        }
+        $image = $this->getImagine()->open($this->getPath());
+        $sizes = $image->getSize();
+        $w = $sizes->getWidth();
+        $h = $sizes->getHeight();
+
+        return new Box($w, $h);
+    }
+
+    /**
      * gets original image img tag
      *
      * @param string $class

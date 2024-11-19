@@ -46,16 +46,28 @@ class RewriteMedia extends BaseCodeBlock
             $rewrite_id = null;
         }
 
+        $maxHeight = 0; $hasLazy = false;
         $images = array_map(
-            function ($media_rewrite) {
+            function ($media_rewrite) use (&$maxHeight, &$hasLazy) {
                 /** @var MediaElementRewrite $media_rewrite */
-                return $media_rewrite->getMediaElement()->getImage();
+
+                $mediaElement = $media_rewrite->getMediaElement();
+                if ($mediaElement->getImageBox()?->getHeight() > $maxHeight) {
+                    $maxHeight = $mediaElement->getImageBox()->getHeight();
+                }
+                if ($mediaElement->getLazyload()) {
+                    $hasLazy = true;
+                }
+                
+                return $mediaElement->getImage();
             },
             MediaElementRewrite::getCollection()->where(['rewrite_id' => $rewrite_id])->getItems()
         );
 
-
         $tag_attributes = ['class' => 'block-rewritemedia cycle-slideshow'];
+        if ($hasLazy) {
+            $tag_attributes['style'] = 'min-height: '.$maxHeight.'px';
+        }
         $config = array_filter(json_decode($data['config'] ?? '{}', true));
         if (!empty($config)) {
             foreach ($config as $k => $v) {

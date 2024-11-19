@@ -14,6 +14,13 @@ module.exports = {
   module: {
     rules: [
       {
+        test: require.resolve('jquery'),
+        loader: 'expose-loader',
+        options: {
+          exposes: ['$', 'jQuery'],
+        },
+      },
+      {
         test: /\.vue$/,
         loader: 'vue-loader',
       },
@@ -53,6 +60,7 @@ module.exports = {
       'vue$': 'vue/dist/vue.esm-bundler.js', // Usa il bundle compatibile con Vue 3
       react: false, // Indica a Webpack di non cercare React
       'react-dom': false,
+      jquery: require.resolve('jquery'),
     },
     extensions: ['.js', '.vue', '.json'],
   },

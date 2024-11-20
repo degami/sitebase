@@ -21,8 +21,7 @@ function dockerps {
 }
 
 function dockerexec {
-  args=$@
-  $docker_compose_bin exec $args
+  $docker_compose_bin exec "$@"
 }
 
 function dockershell {
@@ -33,24 +32,37 @@ function dockershell {
 function dockerstart {
   echo "starting docker"
 
+  args=""
   no_detach=0
   for arg in "$@"; do
       if [[ "$arg" == "--no-detach" ]]; then
           no_detach=1
           break
+      else
+        args="$args $arg"
       fi
   done
 
   if [[ $no_detach -eq 1 ]]; then
-    $docker_compose_bin up
+    $docker_compose_bin up $args
   else
-    $docker_compose_bin up -d
+    $docker_compose_bin up -d $args
   fi
 }
 
 function  dockerstop {
   echo "stopping docker"
-  $docker_compose_bin stop
+
+  args=""
+  for arg in "$@"; do
+      if [[ "$arg" == "--no-detach" ]]; then
+        break
+      else
+        args="$args $arg"
+      fi
+  done
+
+  $docker_compose_bin stop $args
 }
 
 function  dockerbuild {
@@ -85,6 +97,8 @@ case "$1" in
       fi
       ;;
   start|go|up)
+      shift
+
       if [[ $(dockerps web) = 1 ]]; then
         echo "docker is up"
       else
@@ -92,8 +106,10 @@ case "$1" in
       fi
       ;;
   stop|k|down)
+      shift
+
       if [[ $(dockerps web) = 1 ]]; then
-        dockerstop
+        dockerstop $@
       else
         echo "docker is not running"
       fi
@@ -106,8 +122,10 @@ case "$1" in
       fi
       ;;
   restart|r)
-      dockerstop
-      dockerstart
+      shift
+
+      dockerstop $@
+      dockerstart $@
       ;;
   shell|sh)
       if [[ -n $2 ]]; then
@@ -126,7 +144,7 @@ case "$1" in
   console)
       if [[ $(dockerps php-fpm) = 1 ]]; then
         shift
-        dockerexec php-fpm /var/www/html/bin/console $@
+        dockerexec php-fpm /var/www/html/bin/console "$@"
       else
         echo "container php-fpm is down"
       fi

@@ -190,4 +190,7 @@ return [
     'Submissions' => 'Başvurular',
     'Sitemaps' => 'Site Haritaları',
     'Rewrites Media' => 'Yeniden yazma için medya',
+    'Page' => 'Sayfa',
+    'Event' => 'Etkinlik',
+    'Contact Us' => 'Bize Ulaşın',
 ];

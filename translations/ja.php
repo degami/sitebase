@@ -190,4 +190,7 @@ return [
     'Submissions' => '提出',
     'Sitemaps' => 'サイトマップ',
     'Rewrites Media' => '書き直し用メディア',
+    'Page' => 'ページ',
+    'Event' => 'イベント',
+    'Contact Us' => 'お問い合わせ',
 ];

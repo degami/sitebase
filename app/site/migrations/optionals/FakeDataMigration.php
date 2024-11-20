@@ -112,8 +112,8 @@ class FakeDataMigration extends BaseMigration
         for ($i = 1; $i <= 3; $i++) {
             foreach ($this->locales as $locale) {
                 $terms[$locale][] = $this->addTerm(
-                    "Term" . $i,
-                    str_repeat($this->lorem_ipsum_p, rand(1, 3)),
+                    $this->getUtils()->translate("Term", locale: $locale). ' ' . $i,
+                    strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(1, 3)),
                     $locale,
                     $adminUser
                 );
@@ -127,8 +127,8 @@ class FakeDataMigration extends BaseMigration
         for ($i = 1; $i <= 5; $i++) {
             foreach ($this->locales as $locale) {
                 $pages[$locale][] = $this->addPage(
-                    'Page ' . $i,
-                    str_repeat($this->lorem_ipsum_p, rand(2, 6)),
+                    $this->getUtils()->translate('Page', locale: $locale) . ' ' . $i,
+                    strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $locale,
                     array_intersect_key($terms[$locale], array_flip(array_rand($terms[$locale], rand(2, count($terms[$locale]) - 1)))),
                     $adminUser,
@@ -186,8 +186,8 @@ class FakeDataMigration extends BaseMigration
             $date = $now->add(new DateInterval($interval_spec));
             foreach ($this->locales as $locale) {
                 $news[$locale][] = $this->addNews(
-                    'News ' . $i,
-                    str_repeat($this->lorem_ipsum_p, rand(2, 6)),
+                    $this->getUtils()->translate('News', locale: $locale) . ' ' . $i,
+                    strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $date,
                     $locale,
                     $adminUser
@@ -198,8 +198,8 @@ class FakeDataMigration extends BaseMigration
             $date = $now->add(new DateInterval($interval_spec));
             foreach ($this->locales as $locale) {
                 $events[$locale][] = $this->addEvent(
-                    'Event ' . $i,
-                    str_repeat($this->lorem_ipsum_p, rand(2, 6)),
+                    $this->getUtils()->translate('Event', locale: $locale) . ' ' . $i,
+                    strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $date,
                     $location['latitude'],
                     $location['longitude'],
@@ -224,8 +224,8 @@ class FakeDataMigration extends BaseMigration
 
         foreach ($this->locales as $locale) {
             $contacts[$locale][] = $this->addContactForm(
-                'Contact Us',
-                str_repeat($this->lorem_ipsum_p, rand(2, 6)),
+                $this->getUtils()->translate('Contact Us', locale: $locale),
+                strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                 $locale,
                 [
                     [
@@ -347,19 +347,19 @@ class FakeDataMigration extends BaseMigration
                 }
             }
             $this->addMenuItem(
-                'News',
+                $this->getUtils()->translate('News', locale: $locale),
                 $this->menu_names[$locale],
                 $news_list_rewrites[$locale],
                 $locale
             );
             $this->addMenuItem(
-                'Events',
+                $this->getUtils()->translate('Events', locale: $locale),
                 $this->menu_names[$locale],
                 $events_list_rewrites[$locale],
                 $locale
             );
             $this->addMenuItem(
-                'Links Exchange',
+                $this->getUtils()->translate('Links Exchange', locale: $locale),
                 $this->menu_names[$locale],
                 $links_exchange_rewrites[$locale],
                 $locale

@@ -190,4 +190,7 @@ return [
     'Submissions' => 'Gửi bài',
     'Sitemaps' => 'Sơ đồ trang web',
     'Rewrites Media' => 'Phương tiện để viết lại',
+    'Page' => 'Trang',
+    'Event' => 'Sự kiện',
+    'Contact Us' => 'Liên hệ với chúng tôi',
 ];

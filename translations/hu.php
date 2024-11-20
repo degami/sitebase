@@ -190,4 +190,7 @@ return [
     'Submissions' => 'Beküldések',
     'Sitemaps' => 'Webhelytérképek',
     'Rewrites Media' => 'Média újraírásra',
+    'Page' => 'Oldal',
+    'Event' => 'Esemény',
+    'Contact Us' => 'Kapcsolat',
 ];

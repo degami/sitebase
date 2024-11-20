@@ -190,4 +190,7 @@ return [
     'Submissions' => 'Zgłoszenia',
     'Sitemaps' => 'Mapy witryn',
     'Rewrites Media' => 'Media do przepisania',
+    'Page' => 'Strona',
+    'Event' => 'Wydarzenie',
+    'Contact Us' => 'Skontaktuj się z nami',
 ];

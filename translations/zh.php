@@ -190,4 +190,7 @@ return [
     'Submissions' => '提交',
     'Sitemaps' => '网站地图',
     'Rewrites Media' => '待重写的媒体',
+    'Page' => '页面',
+    'Event' => '事件',
+    'Contact Us' => '联系我们',
 ];

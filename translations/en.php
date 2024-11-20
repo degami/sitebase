@@ -190,4 +190,7 @@ return [
     'Submissions' => 'Submissions',
     'Sitemaps' => 'Sitemaps',
     'Rewrites Media' => 'Media for Rewrite',
+    'Page' => 'Page',
+    'Event' => 'Event',
+    'Contact Us' => 'Contact Us',
 ];

@@ -190,4 +190,7 @@ return [
     'Submissions' => '제출물',
     'Sitemaps' => '사이트맵',
     'Rewrites Media' => '재작성용 미디어',
+    'Page' => '페이지',
+    'Event' => '이벤트',
+    'Contact Us' => '문의하기',
 ];

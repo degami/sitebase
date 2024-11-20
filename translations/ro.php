@@ -190,4 +190,7 @@ return [
     'Submissions' => 'Trimiteri',
     'Sitemaps' => 'Hărți site',
     'Rewrites Media' => 'Media pentru rescriere',
+    'Page' => 'Pagină',
+    'Event' => 'Eveniment',
+    'Contact Us' => 'Contactați-ne',
 ];

@@ -190,4 +190,7 @@ return [
     'Submissions' => 'Pengajuan',
     'Sitemaps' => 'Peta situs',
     'Rewrites Media' => 'Media untuk penulisan ulang',
+    'Page' => 'Halaman',
+    'Event' => 'Acara',
+    'Contact Us' => 'Hubungi Kami',
 ];

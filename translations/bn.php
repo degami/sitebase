@@ -192,4 +192,7 @@ return [
     'Submissions' => 'জমা',
     'Sitemaps' => 'সাইটম্যাপ',
     'Rewrites Media' => 'পুনঃলিখনের জন্য মিডিয়া',
+    'Page' => 'পৃষ্ঠা',
+    'Event' => 'ইভেন্ট',
+    'Contact Us' => 'যোগাযোগ করুন',
 ];

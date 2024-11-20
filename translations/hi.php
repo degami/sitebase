@@ -190,4 +190,7 @@ return [
     'Submissions' => 'प्रस्तावना',
     'Sitemaps' => 'साइटमैप',
     'Rewrites Media' => 'पुनःलेखन के लिए मीडिया',
+    'Page' => 'पृष्ठ',
+    'Event' => 'घटना',
+    'Contact Us' => 'संपर्क करें',
 ];

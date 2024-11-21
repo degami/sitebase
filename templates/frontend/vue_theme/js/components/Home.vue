@@ -52,7 +52,7 @@
       }
 
       let matches = window.location.pathname.match(new RegExp("/([a-z]{2})/?"));
-      if (undefined != matches[1]) {
+      if (matches != null && undefined != matches[1]) {
         locale = matches[1];
       }
       this.id = await this.getConfigValue('app/frontend/homepage', locale);

@@ -120,8 +120,12 @@ class Page extends FrontendPageWithObject
 
             if ($homepage_id) {
                 /** @var PageModel $page_model */
-                $page_model = $this->containerCall([PageModel::class, 'load'], ['id' => $homepage_id]);
-                return $this->doRedirect($page_model->getFrontendUrl());
+                if (isset($route_vars['lang'])) {
+                    return $this->showPage($homepage_id, $route_info);
+                } else {
+                    $page_model = $this->containerCall([PageModel::class, 'load'], ['id' => $homepage_id]);
+                    return $this->doRedirect("/".$page_model->getLocale()."/");    
+                }
             }
         } else {
             $homepage_id = $this->getSiteData()->getHomePageId($website_id, $route_vars['lang'] ?? null);

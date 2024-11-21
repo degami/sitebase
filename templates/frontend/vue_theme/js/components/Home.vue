@@ -36,21 +36,26 @@
       };
     },
     async created() {
-      this.id = await this.getConfigValue('app/frontend/homepage');
-
       const website = await this.$store.dispatch('configuration/getWebsite', { 
           siteDomain: window.location.hostname,
       });
 
+      let locale = null;
       this.redirectsToLocale = await this.getConfigValue('app/frontend/homepage_redirects_to_language');
       if (this.$route.path == '/' && parseInt(this.redirectsToLocale) == 1) {
-        let locale = this.$store.getters['appState/locale'];
+        locale = this.$store.getters['appState/locale'];
         if (!locale) {
           locale = website.default_locale; 
         }
 
         this.$router.push('/'+locale+'/');
-      } 
+      }
+
+      let matches = window.location.pathname.match(new RegExp("/([a-z]{2})/?"));
+      if (undefined != matches[1]) {
+        locale = matches[1];
+      }
+      this.id = await this.getConfigValue('app/frontend/homepage', locale);
 
       this.$store.dispatch('pages/fetchPage', {pageId: this.id});
       this.siteName = website.site_name

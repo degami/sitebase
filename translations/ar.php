@@ -193,4 +193,5 @@ return [
     'Page' => 'صفحة',
     'Event' => 'حدث',
     'Contact Us' => 'اتصل بنا',
+    'Links Exchange' => 'تبادل الروابط',
 ];

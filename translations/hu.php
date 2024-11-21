@@ -193,4 +193,5 @@ return [
     'Page' => 'Oldal',
     'Event' => 'Esemény',
     'Contact Us' => 'Kapcsolat',
+    'Links Exchange' => 'Linkcsere',
 ];

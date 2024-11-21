@@ -56,13 +56,13 @@ class InitialDataMigration extends BaseMigration
      */
     public function up()
     {
-        $this->addRolesPermissions();
-        $this->addLanguages();
+        static::addRolesPermissions();
+        static::addLanguages();
 
-        $website = $this->addWebsite();
-        $admin = $this->addAdmin();
-        $home_page = $this->addHomePage($website, $admin);
-        $this->addVariables($website, $home_page);
+        $website = static::addWebsite();
+        $admin = static::addAdmin();
+        $home_page = static::addHomePage($website, $website->getDefaultLocale(), $admin);
+        static::addVariables($website, $home_page);
     }
 
     /**
@@ -72,12 +72,12 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addWebsite(): Website
+    public static function addWebsite(): Website
     {
         $website_model = Website::new();
-        $website_model->setSiteName($this->getEnv('APPNAME'));
+        $website_model->setSiteName(App::getInstance()->getEnv('APPNAME'));
 
-        $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim($this->getEnv('APPDOMAIN')))), 'www.');
+        $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim(App::getInstance()->getEnv('APPDOMAIN')))), 'www.');
         $website_model->setDomain($site_domain);
         $website_model->setAliases('www.' . $site_domain);
         $website_model->setDefaultLocale('en');
@@ -94,13 +94,13 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addAdmin(): BaseModel
+    public static function addAdmin(): BaseModel
     {
         $admin_model = User::new();
-        $admin_model->setUsername($this->getEnv('ADMIN_USER'));
-        $admin_model->setNickname($this->getEnv('ADMIN_USER'));
-        $admin_model->setPassword($this->getUtils()->getEncodedPass($this->getEnv('ADMIN_PASS')));
-        $admin_model->setEmail($this->getEnv('ADMIN_EMAIL'));
+        $admin_model->setUsername(App::getInstance()->getEnv('ADMIN_USER'));
+        $admin_model->setNickname(App::getInstance()->getEnv('ADMIN_USER'));
+        $admin_model->setPassword(App::getInstance()->getUtils()->getEncodedPass(App::getInstance()->getEnv('ADMIN_PASS')));
+        $admin_model->setEmail(App::getInstance()->getEnv('ADMIN_EMAIL'));
         $admin_model->setLocale('en');
 
         $admin_model->setRole('admin');
@@ -131,14 +131,14 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addPermission(Role $role_model, string $permission_name)
+    public static function addPermission(Role $role_model, string $permission_name)
     {
         /** @var Permission $permission_model */
         $permission_model = null;
         try {
-            $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+            $permission_model = App::getInstance()->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
         } catch (\Exception $e) {
-            $permission_model = $this->containerCall([Permission::class, 'new'], ['initial_data' => ['name' => $permission_name]]);
+            $permission_model = App::getInstance()->containerCall([Permission::class, 'new'], ['initial_data' => ['name' => $permission_name]]);
             $permission_model->persist();
         }
 
@@ -154,33 +154,33 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addRolesPermissions()
+    public static function addRolesPermissions()
     {
-        $guest_role_model = $this->containerCall([Role::class, 'new']);
+        $guest_role_model = App::getInstance()->containerCall([Role::class, 'new']);
         $guest_role_model->setName('guest');
         $guest_role_model->persist();
 
-        $logged_role_model = $this->containerCall([Role::class, 'new']);
+        $logged_role_model = App::getInstance()->containerCall([Role::class, 'new']);
         $logged_role_model->setName('logged_user');
         $logged_role_model->persist();
 
-        $admin_role_model = $this->containerCall([Role::class, 'new']);
+        $admin_role_model = App::getInstance()->containerCall([Role::class, 'new']);
         $admin_role_model->setName('admin');
         $admin_role_model->persist();
 
         // base permissions
         $permissions = ['view_site'];
         foreach ($permissions as $permission_name) {
-            $this->addPermission($guest_role_model, $permission_name);
-            $this->addPermission($logged_role_model, $permission_name);
-            $this->addPermission($admin_role_model, $permission_name);
+            static::addPermission($guest_role_model, $permission_name);
+            static::addPermission($logged_role_model, $permission_name);
+            static::addPermission($admin_role_model, $permission_name);
         }
 
         // base logged permissions
         $permissions = ['view_logged_site'];
         foreach ($permissions as $permission_name) {
-            $this->addPermission($logged_role_model, $permission_name);
-            $this->addPermission($admin_role_model, $permission_name);
+            static::addPermission($logged_role_model, $permission_name);
+            static::addPermission($admin_role_model, $permission_name);
         }
 
         // admin only permissions
@@ -208,7 +208,7 @@ class InitialDataMigration extends BaseMigration
             'system_info',
         ];
         foreach ($permissions as $permission_name) {
-            $this->addPermission($admin_role_model, $permission_name);
+            static::addPermission($admin_role_model, $permission_name);
         }
     }
 
@@ -218,7 +218,7 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addLanguages()
+    public static function addLanguages()
     {
         $fd = fopen("app/base/tools/iso_639-1.csv", "r");
         $header = null;
@@ -226,7 +226,7 @@ class InitialDataMigration extends BaseMigration
             if ($header == null) {
                 $header = $row;
             } else {
-                $lang = array_combine($header, $row);
+                $lang = array_combine((array)$header, $row);
 
                 $lang_model = Language::new();
                 $lang_model->setLocale($lang['639-1']);
@@ -249,19 +249,19 @@ class InitialDataMigration extends BaseMigration
      * @return Page
      * @throws BasicException
      */
-    private function addHomePage(Website $website_model, User $owner_model): Page
+    public static function addHomePage(Website $website_model, string $locale, User $owner_model): Page
     {
         /** @var Page $page_model */
-        $page_model = $this->containerCall([Page::class, 'new']);
+        $page_model = App::getInstance()->containerCall([Page::class, 'new']);
 
         $page_model->setWebsiteId($website_model->getId());
         $page_model->setUrl('homepage');
-        $page_model->setTitle($this->getEnv('APPNAME') . ' home');
-        $page_model->setLocale($website_model->getDefaultLocale());
-        $page_model->setContent('<p>Welcome to '.$this->getEnv('APPNAME').' - Empower Your Digital Presence</p>
-<p>'.$this->getEnv('APPNAME').' provides the tools you need to effortlessly create, manage, and grow your online presence. Whether you\'re building a personal blog, a business website, or a robust e-commerce platform, '.$this->getEnv('APPNAME').' is designed with simplicity, flexibility, and performance in mind.</p>
-<p>With '.$this->getEnv('APPNAME').', you’ll enjoy a user-friendly interface, powerful customization options, and seamless integrations to enhance your website’s functionality. No coding skills? No problem. Our intuitive tools let you focus on what matters most: engaging your audience and achieving your goals.</p>
-<p>Get '.$this->getEnv('APPNAME').' to bring their ideas to life. Start building your future online today!</p>');
+        $page_model->setTitle(App::getInstance()->getEnv('APPNAME') . ' home');
+        $page_model->setLocale($locale);
+        $page_model->setContent('<p>Welcome to '.App::getInstance()->getEnv('APPNAME').' - Empower Your Digital Presence</p>
+<p>'.App::getInstance()->getEnv('APPNAME').' provides the tools you need to effortlessly create, manage, and grow your online presence. Whether you\'re building a personal blog, a business website, or a robust e-commerce platform, '.App::getInstance()->getEnv('APPNAME').' is designed with simplicity, flexibility, and performance in mind.</p>
+<p>With '.App::getInstance()->getEnv('APPNAME').', you’ll enjoy a user-friendly interface, powerful customization options, and seamless integrations to enhance your website’s functionality. No coding skills? No problem. Our intuitive tools let you focus on what matters most: engaging your audience and achieving your goals.</p>
+<p>Get '.App::getInstance()->getEnv('APPNAME').' to bring their ideas to life. Start building your future online today!</p>');
         $page_model->setUserId($owner_model->getId());
 
         $page_model->persist();
@@ -276,7 +276,7 @@ class InitialDataMigration extends BaseMigration
      * @throws BasicException
      * @throws InvalidValueException
      */
-    private function addVariables(Website $website_model, Page $homePage)
+    public static function addVariables(Website $website_model, Page $homePage)
     {
         $variables = [
             'app/frontend/homepage' => ['locale' => $website_model->getDefaultLocale(), 'value' => $homePage->getId()],
@@ -294,7 +294,7 @@ class InitialDataMigration extends BaseMigration
             'app/frontend/date_time_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d H:i'],
         ];
         foreach ($variables as $path => $info) {
-            $configuration_model = $this->containerCall([Configuration::class, 'new']);
+            $configuration_model = App::getInstance()->containerCall([Configuration::class, 'new']);
             $configuration_model->setWebsiteId($website_model->getId());
             $configuration_model->setLocale($info['locale']);
             $configuration_model->setPath($path);

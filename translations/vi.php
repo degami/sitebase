@@ -193,4 +193,5 @@ return [
     'Page' => 'Trang',
     'Event' => 'Sự kiện',
     'Contact Us' => 'Liên hệ với chúng tôi',
+    'Links Exchange' => 'Trao đổi liên kết',
 ];

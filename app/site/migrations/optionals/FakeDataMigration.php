@@ -28,6 +28,7 @@ use App\Site\Models\Page;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Taxonomy;
 use App\Site\Models\User;
+use App\Site\Models\Website;
 use DateInterval;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -104,6 +105,21 @@ class FakeDataMigration extends BaseMigration
         $links_exchange_rewrites = [];
         $news_list_rewrites = [];
         $events_list_rewrites = [];
+
+
+        /** @var Website $website */
+        $website = $this->containerCall([Website::class, 'load'], ['id' => $this->website_id]);
+
+        /** @var Page $home_page */
+        $home_page = $this->containerCall([Page::class, 'load'], ['id' => 1]);
+        $homePages[$home_page->getLocale()] = $home_page;
+        foreach ($this->locales as $locale) {
+            if ($locale == $website->getDefaultLocale()) {
+                continue;
+            }
+
+            $homePages[$locale] = InitialDataMigration::addHomePage($home_page->getWebsite(), $locale, $home_page->getOwner());
+        }
 
         foreach ($this->locales as $locale) {
             $this->menu_names[$locale] = 'primary-menu_' . $locale;
@@ -390,6 +406,23 @@ class FakeDataMigration extends BaseMigration
                     ->setIsSystem(1)
                     ->persist();
             }
+
+            if ($locale != $website->getDefaultLocale()) {
+                $path = 'app/frontend/homepage';
+                try {
+                    $config = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path]]);
+                } catch (Exception $e) {
+                    $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
+                        'website_id' => $this->website_id,
+                        'locale' => $locale,
+                        'path' => $path,
+                    ]]);
+                }
+
+                $config
+                    ->setValue($homePages[$locale]->getId())
+                    ->persist();
+            }
         }
 
         // locale independent configuration
@@ -416,7 +449,6 @@ class FakeDataMigration extends BaseMigration
                 ->persist();
         }
 
-        $home_page = $this->containerCall([Page::class, 'load'], ['id' => 1]);
         foreach ($this->locales as $locale) {
             $rewrites = [];
             $rewrites[] = $home_page->getRewrite();

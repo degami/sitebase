@@ -195,4 +195,5 @@ return [
     'Page' => 'পৃষ্ঠা',
     'Event' => 'ইভেন্ট',
     'Contact Us' => 'যোগাযোগ করুন',
+    'Links Exchange' => 'লিঙ্ক বিনিময়',
 ];

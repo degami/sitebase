@@ -14,15 +14,14 @@
     <div id="navbarSupportedContent" class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" v-for="treeItem in menuTree" :key="treeItem.menu_id">
-        <a v-if="treeItem.children.length" :id="'navbarDropdown-' + treeItem.menu_id" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" :href="treeItem.href">{{ treeItem.title }}</a>
+        <a v-if="treeItem.children.length" :id="'navbarDropdown-' + treeItem.menu_id" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" :href="treeItem.href" v-html="treeItem.title"></a>
 
         <component v-else  :is="isRouteValid(treeItem.internal) ? 'router-link' : 'a'" 
           @click.native="sendData" 
           :data-rewrite_id="isRouteValid(treeItem.internal) ? treeItem.rewrite_id : null" 
           :to="isRouteValid(treeItem.internal) ? treeItem.href : null"
           :href="!isRouteValid(treeItem.internal) ? treeItem.href : null"
-          class="nav-link">
-          {{ treeItem.title }}
+          class="nav-link" v-html="treeItem.title">
         </component>
 
         <div v-if="treeItem.children.length" class="dropdown-menu" :aria-labelledby="'navbarDropdown-' + treeItem.menu_id">
@@ -31,16 +30,14 @@
             :data-rewrite_id="isRouteValid(treeItem.internal) ? treeItem.rewrite_id : null" 
             :to="isRouteValid(treeItem.internal) ? treeItem.href : null"
             :href="!isRouteValid(treeItem.internal) ? treeItem.href : null"
-            class="nav-link">
-            {{ treeItem.title }}
+            class="nav-link" v-html="treeItem.title">
           </component>
           <component v-for="childLink in treeItem.children" :is="isRouteValid(treeItem.internal) ? 'router-link' : 'a'" 
             @click.native="sendData" 
             :data-rewrite_id="childLink.rewrite_id" 
             :to="isRouteValid(treeItem.internal) ? childLink.href : null"
             :href="!isRouteValid(childLink.internal) ? childLink.href : null"
-            class="nav-link">
-            {{ childLink.title }}
+            class="nav-link" v-html="childLink.title">
           </component>
         </div>
       </li>

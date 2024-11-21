@@ -193,4 +193,5 @@ return [
     'Page' => 'Sayfa',
     'Event' => 'Etkinlik',
     'Contact Us' => 'Bize Ulaşın',
+    'Links Exchange' => 'Bağlantı Değişimi',
 ];

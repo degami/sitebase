@@ -193,4 +193,5 @@ return [
     'Page' => 'ページ',
     'Event' => 'イベント',
     'Contact Us' => 'お問い合わせ',
+    'Links Exchange' => 'リンク交換',
 ];

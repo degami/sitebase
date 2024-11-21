@@ -119,6 +119,14 @@ abstract class FrontendPageWithObject extends FrontendPage
     }
 
     /**
+     * {@inheritdocs}
+     */
+    public function getInfo() : array
+    {
+        return parent::getInfo() + ['object_id' => $this->getObject()->getId()];
+    }
+
+    /**
      * author info are available
      * 
      * @return bool

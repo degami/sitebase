@@ -193,4 +193,5 @@ return [
     'Page' => 'Halaman',
     'Event' => 'Acara',
     'Contact Us' => 'Hubungi Kami',
+    'Links Exchange' => 'Pertukaran Tautan',
 ];

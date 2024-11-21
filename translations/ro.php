@@ -193,4 +193,5 @@ return [
     'Page' => 'Pagină',
     'Event' => 'Eveniment',
     'Contact Us' => 'Contactați-ne',
+    'Links Exchange' => 'Schimb de linkuri',
 ];

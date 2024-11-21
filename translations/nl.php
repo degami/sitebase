@@ -193,4 +193,5 @@ return [
     'Page' => 'Pagina',
     'Event' => 'Evenement',
     'Contact Us' => 'Neem contact op',
+    'Links Exchange' => 'Linkruil',
 ];

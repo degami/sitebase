@@ -194,4 +194,5 @@ return [
     'Event' => 'Acara',
     'Contact Us' => 'Hubungi Kami',
     'Links Exchange' => 'Pertukaran Tautan',
+    'Term' => 'Istilah taksonomi',
 ];

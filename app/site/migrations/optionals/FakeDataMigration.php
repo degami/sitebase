@@ -516,7 +516,9 @@ class FakeDataMigration extends BaseMigration
         $this->getDb()->query('UPDATE `block` SET `region` = \'before_body_close\', `config` = \'{"rewrite_en":"1","rewrite_fr":"1","rewrite_it":"1","rewrite_ro":"1","background-color":"#CECECE","color":"#000000","sticky":"bottom"}\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\CookieNotice\' LIMIT 1;');
         $this->getDb()->query('UPDATE `block` SET `region` = \'pre_content\', `config` = \'{"fx":"","speed":"","timeout":""}\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\RewriteMedia\' LIMIT 1;');
         $this->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\Search\' LIMIT 1;'); 
-        $this->getDb()->query('UPDATE `block` SET `region` = \'post_content\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\YearCopy\' LIMIT 1;'); 
+        $this->getDb()->query('UPDATE `block` SET `region` = \'post_footer\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\YearCopy\' LIMIT 1;'); 
+        $this->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 1 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\LinkToUserArea\' LIMIT 1;'); 
+        $this->getDb()->query('UPDATE `block` SET `region` = \'post_content\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\AuthorInfo\' LIMIT 1;'); 
     }
 
     /**

@@ -194,4 +194,5 @@ return [
     'Event' => 'Événement',
     'Contact Us' => 'Contactez-nous',
     'Links Exchange' => 'Échange de liens',
+    'Term' => 'Terme de taxonomie',
 ];

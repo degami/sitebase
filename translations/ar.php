@@ -194,4 +194,5 @@ return [
     'Event' => 'حدث',
     'Contact Us' => 'اتصل بنا',
     'Links Exchange' => 'تبادل الروابط',
+    'Term' => 'مصطلح تصنيفي',
 ];

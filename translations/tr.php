@@ -194,4 +194,5 @@ return [
     'Event' => 'Etkinlik',
     'Contact Us' => 'Bize Ulaşın',
     'Links Exchange' => 'Bağlantı Değişimi',
+    'Term' => 'Taksonomi terimi',
 ];

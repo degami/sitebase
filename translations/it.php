@@ -97,7 +97,7 @@ return [
     'Queue' => 'Coda',
     'Show Language' => 'Mostra Lingua',
     'Show Flag' => 'Mostra Bandiera',
-    'News' => 'Novit&agrave;',
+    'News' => 'Novità',
     'Date' => 'Data',
     'Search' => 'Cerca',
     'Edit' => 'Modifica',
@@ -194,4 +194,5 @@ return [
     'Event' => 'Evento',
     'Contact Us' => 'Contattaci',
     'Links Exchange' => 'Scambio di link',
+    'Term' => 'Termine di tassonomia',
 ];

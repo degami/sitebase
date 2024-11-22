@@ -194,4 +194,5 @@ return [
     'Event' => 'Esemény',
     'Contact Us' => 'Kapcsolat',
     'Links Exchange' => 'Linkcsere',
+    'Term' => 'Taxonómiai kifejezés',
 ];

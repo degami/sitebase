@@ -194,4 +194,5 @@ return [
     'Event' => 'イベント',
     'Contact Us' => 'お問い合わせ',
     'Links Exchange' => 'リンク交換',
+    'Term' => '分類用語',
 ];

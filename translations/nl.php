@@ -194,4 +194,5 @@ return [
     'Event' => 'Evenement',
     'Contact Us' => 'Neem contact op',
     'Links Exchange' => 'Linkruil',
+    'Term' => 'Taxonomie-term',
 ];

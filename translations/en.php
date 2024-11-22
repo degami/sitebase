@@ -194,4 +194,5 @@ return [
     'Event' => 'Event',
     'Contact Us' => 'Contact Us',
     'Links Exchange' => 'Links Exchange',
+    'Term' => 'Term',
 ];

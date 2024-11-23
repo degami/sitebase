@@ -20,19 +20,21 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\Site\Models\User;
+use App\Site\Models\User2Fa;
 use Symfony\Component\Console\Command\Command;
 
 /**
- * Unlock User Command
+ * Clear2Fa User Command
  */
-class Unlock extends BaseCommand
+class Clear2Fa extends BaseCommand
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setDescription('Unlock user')
+        $this->setName('users:clear_2fa');
+        $this->setDescription('Clear user 2fa secret')
             ->setDefinition(
                 new InputDefinition(
                     [
@@ -66,10 +68,17 @@ class Unlock extends BaseCommand
             return Command::FAILURE;
         }
 
-        $user->unlock();
-        $user->persist();
+        if ($user->getUser2Fa() == null) {
+            $this->getIo()->error('User does not have 2Fa secret');
+            return Command::FAILURE;
+        }
 
-        $this->getIo()->success('User unlocked');
+        $collection = User2Fa::getCollection()->where(['user_id' => $user->getId()]);
+        foreach($collection as $item) {
+            $item->delete();
+        }
+
+        $this->getIo()->success('User 2Fa secret removed');
 
         return Command::SUCCESS;
     }

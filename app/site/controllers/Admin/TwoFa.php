@@ -23,12 +23,15 @@ use Symfony\Component\HttpFoundation\Request;
 use Psr\Container\ContainerInterface;
 use Degami\PHPFormsApi as FAPI;
 use App\App;
+use App\Base\Abstracts\Models\AccountModel;
 
 /**
  * "2Fa" Page
  */
 class TwoFa extends AdminFormPage
 {
+    public const ADMIN_WEBSITE_ID = 0;
+
     /**
      * {@inheritdocs}
      *
@@ -46,6 +49,7 @@ class TwoFa extends AdminFormPage
         protected ?Request $request = null, 
         protected ?RouteInfo $route_info = null
     ) {
+        session_start(); // session is needed
         parent::__construct($container, $request, $route_info);
         if (!$this->getTemplates()->getFolders()->exists('frontend')) {
             $this->getTemplates()->addFolder('frontend', App::getDir(App::TEMPLATES) . DS . 'frontend');
@@ -178,21 +182,40 @@ class TwoFa extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
-        $secret = $this->getSecret($this->getCurrentUser());
+        $userHasPassed2Fa = ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
+        $secret = $form->getSessionBag()?->googleAuthenticatorSecret ?? null;
+        if (!$secret) {
+            $secret = $this->getSecret($this->getCurrentUser());
+        }
+        $form->getSessionBag()->googleAuthenticatorSecret = $secret;
+
         $qrCodeUrl = $this->getGoogleAuthenticator()->getQRCodeGoogleUrl($this->getEnv('APPNAME'). ' '.$this->getEnv('ADMINPAGES_GROUP'), $secret);
 
         $table = new FAPI\Containers\TableContainer([], 'otp_table');
+        $form->addCss("#twofa table tbody, #twofa table tr {display: flex; width: 100%;}");
+        $form->addCss("#twofa table td {width: 100%;}");
 
-        $table->addRow()
-        ->addMarkup('<div>'.$this->getUtils()->translate('Add to your Google Authenticator App with QR-Code:', locale: $this->getCurrentLocale()).'</div><br /><img src="'.$qrCodeUrl.'" />')
+        $tableRow = $table->addRow();
+
+        if (!$userHasPassed2Fa) {
+            // show qrcode only if user has not a secret code in db table
+            $tableRow->addMarkup('<div>'.$this->getUtils()->translate('Add to your Google Authenticator App with QR-Code:', locale: $this->getCurrentLocale()).'</div><br /><img src="'.$qrCodeUrl.'" />');
+        }
+
+        $tableRow
         ->addField('otp', [
             'type' => 'textfield',
             'title' => 'Enter your OTP',
             'default_value' => '',
             'validate' => ['required'],
-        ]);
+        ] + (!$userHasPassed2Fa ? [] : ['description' => $this->getUtils()->translate('2 Factor authentication is already configured - enter the "'.$this->getEnv('APPNAME'). ' '.$this->getEnv('ADMINPAGES_GROUP').'" OTP code')]));
 
         $form->addField($table->getName(), $table);
+
+        $form->addField('secret', [
+            'type' => 'value',
+            'value' => $secret,
+        ]);
 
         $this->addSubmitButton($form);
 
@@ -209,13 +232,28 @@ class TwoFa extends AdminFormPage
     public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
         $values = $form->values();
-        $secret = $this->getSecret($this->getCurrentUser());
+        //$secret = $this->getSecret($this->getCurrentUser());
+
+        $secret = $this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID)?->getSecret() ?? $values['secret'];
+
         $isValid = $this->getGoogleAuthenticator()->verifyCode($secret, $values['otp_table']['otp'], 2);   // 2 = 2*30sec clock tolerance
         if ($isValid) {
             //@todo inject passed2fa = true into userdata jwt claim
             //@see \App\Site\Models\User::getJWT
             //@see \App\Base\Traits\PageTrait::getToken
+
+            if ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) == null) {
+                //store new User2Fa to database
+                $user2Fa = User2Fa::new();
+                $user2Fa->setUserId($this->getCurrentUser()->getId());
+                $user2Fa->setWebsiteId(null); // as created in admin, can't tell which is the website_id
+                $user2Fa->setSecret($secret);
+                $user2Fa->persist();
+            }
+
+            unset($form->getSessionBag()->googleAuthenticatorSecret);
         }
+
         return $isValid ?: $this->getUtils()->translate('Otp Code is invalid', locale: $this->getCurrentLocale()); 
     }
 
@@ -249,10 +287,10 @@ class TwoFa extends AdminFormPage
         ]);
     }
 
-    protected function getSecret(User $user) : string
+    protected function getSecret(AccountModel $user) : string
     {
-            /** @var User2Fa $user2Fa */
-        $user2Fa = User2Fa::getCollection()->where(['user_id' => $user->getId(), 'website_id' => null])->getFirst();
+        /** @var User2Fa $user2Fa */
+        /*$user2Fa = User2Fa::getCollection()->where(['user_id' => $user->getId(), 'website_id' => null])->getFirst();
 
         if (!$user2Fa) {
             $user2Fa = User2Fa::new();
@@ -266,6 +304,13 @@ class TwoFa extends AdminFormPage
             $secret = $this->getGoogleAuthenticator()->createSecret();
             $user2Fa->setSecret($secret);
             $user2Fa->persist();
+        }*/
+
+        $secret = null;
+        if ($user->getUser2Fa(self::ADMIN_WEBSITE_ID)?->getSecret()) {
+            $secret = $user->getUser2Fa(0)->getSecret();
+        } else {
+            $secret = $this->getGoogleAuthenticator()->createSecret();
         }
 
         return $secret;

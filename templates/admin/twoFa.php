@@ -3,6 +3,7 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->env('APPNAME')]
 <?php $this->start('menu') ?><?php $this->stop() ?>
 
 <?php $this->start('head') ?>
+<link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/admin.css');?>">
 <?php $this->stop() ?>
 
 <div class="page-content">        

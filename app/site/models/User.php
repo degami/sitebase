@@ -305,4 +305,27 @@ class User extends AccountModel
     {
         return $this->getNickname() ?? 'anonymous';
     }
+
+    public function getUser2Fa(?int $websiteId = null) : ?User2Fa
+    {
+        $this->checkLoaded();
+
+        if (is_null($websiteId)) {
+            // if not passed - get current website_id
+            $websiteId = $this->getSiteData()->getCurrentWebsiteId();
+        }
+        if ($websiteId == 0) {
+            // if 0 is passed - means admin - set to null
+            $websiteId = null;
+        }
+
+        /** @var User2Fa $user2Fa */
+        $user2Fa = User2Fa::getCollection()->where(['user_id' => $this->getId(), 'website_id' => $websiteId])->getFirst();
+
+        if ($user2Fa) {
+            return $user2Fa;
+        }
+
+        return null;
+    }
 }

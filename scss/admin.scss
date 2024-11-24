@@ -260,6 +260,9 @@ body {
 
         &.collapsed {
             max-width: $max-width-collapsed;
+            @media (max-width: 768px) {
+                max-width: 100%;
+            }
             padding-left: 5px;
             padding-right: 5px;
 
@@ -269,6 +272,16 @@ body {
 
             .logo-image-small {
                 display: inline;
+            }
+
+            @media (max-width: 768px) { 
+                .logo-image {
+                    display: inline;
+                }
+    
+                .logo-image-small {
+                    display: none;
+                }    
             }
         }
     }

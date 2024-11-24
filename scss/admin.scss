@@ -4,7 +4,7 @@
 @use "../node_modules/select2/src/scss/core";
 @use '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
-$max-width-collapsed: 75px;
+$max-width-collapsed: 50px;
 
 @CHARSET "UTF-8";
 
@@ -260,8 +260,8 @@ body {
 
         &.collapsed {
             max-width: $max-width-collapsed;
-            padding-left: 0;
-            padding-right: 0;
+            padding-left: 5px;
+            padding-right: 5px;
 
             .logo-image {
                 display: none;

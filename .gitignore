@@ -46,6 +46,7 @@ pub/flags
 pub/tinymce
 pub/debugbar
 pub/sitebase_logo.png
+pub/sitebase_logo_small.png
 pub/favicon.ico
 js/dest/*
 assets/rsa_private.key

@@ -15,9 +15,10 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
 
 <!-- Content -->
 <nav class="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
-    <div class="navbar-brand col-sm-3 col-md-2 mr-0">
+    <div class="navbar-brand col-sm-3 col-md-2 mr-0<?= ($controller->getSidebarSize() == 'minimized') ? ' collapsed' : ''; ?>">
         <a class="" href="/">
             <img class="img-fluid logo-image" title="<?= $this->sitebase()->env('APPNAME');?>" src="<?php echo $this->sitebase()->assetUrl('/sitebase_logo.png');?>" />
+            <img class="img-fluid logo-image-small" title="<?= $this->sitebase()->env('APPNAME');?>" src="<?php echo $this->sitebase()->assetUrl('/sitebase_logo_small.png');?>" />
         </a>
     </div>
     <!-- <input class="form-control form-control-dark w-100" type="text" placeholder="Search" aria-label="Search"> -->

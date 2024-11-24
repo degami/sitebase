@@ -78,6 +78,7 @@
                         );
                     }
                     $('.sidebar').toggleClass('collapsed');
+                    $('.navbar-brand').toggleClass('collapsed');
                 });
 
                 $elem.appAdmin('getUserUiSettings', function(data) {

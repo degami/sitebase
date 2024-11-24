@@ -4,6 +4,8 @@
 @use "../node_modules/select2/src/scss/core";
 @use '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
+$max-width-collapsed: 50px;
+
 @CHARSET "UTF-8";
 
 body {
@@ -139,7 +141,7 @@ body {
     }
 
     &.collapsed {
-        max-width: 50px;
+        max-width: $max-width-collapsed;
 
         & + main {
             min-width: 100% !important;
@@ -220,6 +222,26 @@ body {
         background-color: rgba(0, 0, 0, .25);
         box-shadow: inset -1px 0 0 rgba(0, 0, 0, .25);
         text-align: center;
+
+        .logo-image {
+            display: inline;
+        }
+        .logo-image-small {
+            display: none;
+        }
+
+        &.collapsed {
+            max-width: $max-width-collapsed;
+            padding: 0;
+
+            .logo-image {
+                display: none;
+            }
+
+            .logo-image-small {
+                display: inline;
+            }
+        }
     }
 
     .form-control {

@@ -68,6 +68,7 @@ class Deploy extends BaseExecCommand
 
                 App::getDir(App::FLAGS) => App::getDir('pub') . DS . 'flags',
                 App::getDir(App::ASSETS) . DS . 'sitebase_logo.png' => App::getDir('pub') . DS . 'sitebase_logo.png',
+                App::getDir(App::ASSETS) . DS . 'sitebase_logo_small.png' => App::getDir('pub') . DS . 'sitebase_logo_small.png',
                 App::getDir(App::ASSETS) . DS . 'favicon.ico' => App::getDir('pub') . DS . 'favicon.ico',
             ];
         } else {
@@ -81,6 +82,7 @@ class Deploy extends BaseExecCommand
 
                 '..' . DS . 'assets' . DS . 'flags' => App::getDir('pub') . DS . 'flags',
                 '..' . DS . 'assets' . DS . 'sitebase_logo.png' => App::getDir('pub') . DS . 'sitebase_logo.png',
+                '..' . DS . 'assets' . DS . 'sitebase_logo_small.png' => App::getDir('pub') . DS . 'sitebase_logo_small.png',
                 '..' . DS . 'assets' . DS . 'favicon.ico' => App::getDir('pub') . DS . 'favicon.ico',
             ];
         }

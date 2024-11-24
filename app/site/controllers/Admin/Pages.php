@@ -82,7 +82,7 @@ class Pages extends AdminManageFrontendModelsPage
         return [
             'permission_name' => $this->getAccessPermission(),
             'route_name' => static::getPageRouteName(),
-            'icon' => 'file-text',
+            'icon' => 'book-open',
             'text' => 'Pages',
             'section' => 'cms',
             'order' => 10,

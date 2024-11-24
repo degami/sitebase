@@ -102,7 +102,7 @@ class Events extends AdminManageFrontendModelsPage
         return [
             'permission_name' => $this->getAccessPermission(),
             'route_name' => static::getPageRouteName(),
-            'icon' => 'file-text',
+            'icon' => 'calendar',
             'text' => 'Events',
             'section' => 'cms',
             'order' => 20,

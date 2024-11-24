@@ -4,7 +4,7 @@
 @use "../node_modules/select2/src/scss/core";
 @use '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
-$max-width-collapsed: 50px;
+$max-width-collapsed: 75px;
 
 @CHARSET "UTF-8";
 
@@ -145,7 +145,7 @@ body {
 
         & + main {
             min-width: 100% !important;
-            padding-left: 70px !important;
+            padding-left: ($max-width-collapsed + 20px) !important;
         }
 
         @media (max-width: 768px) {
@@ -165,8 +165,34 @@ body {
             }
         }
 
+        h5 {
+            text-align: center !important;
+            padding-left: 0;
+            padding-right: 0;
+            margin: auto !important; 
+            button {
+                text-align: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                margin: auto !important; 
+
+                svg {
+                    margin: 0 !important;
+                }
+            }
+        }
+
         .nav-item {
             .nav-link {
+                text-align: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                margin: auto !important; 
+
+                svg {
+                    margin: 0 !important;
+                }
+    
                 .text {
                     display: none;
                     @media (max-width: 768px) {
@@ -216,6 +242,8 @@ body {
     }
 
     .navbar-brand {
+        transition: all 0.3s;
+
         padding-top: .75rem;
         padding-bottom: .75rem;
         font-size: 1rem;
@@ -232,7 +260,8 @@ body {
 
         &.collapsed {
             max-width: $max-width-collapsed;
-            padding: 0;
+            padding-left: 0;
+            padding-right: 0;
 
             .logo-image {
                 display: none;

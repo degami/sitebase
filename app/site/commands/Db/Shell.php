@@ -50,6 +50,11 @@ class Shell extends BaseCommand
         do {
             $command = rtrim(trim($this->keepAsking("\n> ")), ';');
 
+            if (empty($command)) {
+                $this->getIo()->warning("Empty command.");
+                continue;
+            }
+
             switch ($command) {
                 case 'history':
                     $this->renderTitle('History');
@@ -67,6 +72,7 @@ class Shell extends BaseCommand
                         $statement->execute();
                         switch ($query_type) {
                             case 'SELECT':
+                            case 'SHOW':
                                 $tableContents = [];
                                 $tableHeader = [];
                                 $count = 0;
@@ -94,7 +100,7 @@ class Shell extends BaseCommand
 
                         $history[] = $command;
                     } catch (Exception $e) {
-                        $output->writeln($e->getMessage());
+                        $this->getIo()->error($e->getMessage());
                     }
                     break;
             }

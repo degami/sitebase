@@ -168,7 +168,7 @@ class BaseCommand extends SymfonyCommand
     protected function keepAsking(string $question_message)
     {
         $value = "";
-        while (trim($value) == '') {
+        while (trim((string)$value) == '') {
             $question = new Question($question_message);
             $value = $this->getQuestionHelper()->ask($this->input, $this->output, $question);
         }

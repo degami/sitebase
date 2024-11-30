@@ -21,6 +21,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
 use App\Base\Abstracts\Commands\BaseExecCommand;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 
 /**
  * App Deploy Command
@@ -48,6 +49,33 @@ class Deploy extends BaseExecCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
+        if (App::getInstance()->getEnv('SALT') == "") {
+            $this->getIo()->info("Missing SALT in .env, adding a random value");
+            $application = $this->getApplication();
+
+            if ($application === null) {
+                $output->writeln('<error>Errors loading Application!</error>');
+                return Command::FAILURE;
+            }
+    
+            // Recupera il secondo comando
+            $command = $application->find('app:update_salt');
+    
+            // Crea l'input per il secondo comando
+            $arguments = [
+                'command' => 'app:update_salt',
+            ];
+            $arrayInput = new ArrayInput($arguments);
+    
+            // Esegui il secondo comando
+            $returnCode = $command->run($arrayInput, $output);
+    
+            if ($returnCode !== Command::SUCCESS) {
+                $output->writeln('<error>Errors executing updateSalt command!</error>');
+                return Command::FAILURE;
+            }
+        }
+
         $this->executeCommand("npm install && gulp 2> /dev/null");
 
         if ($nestable_js = $this->getUtils()->httpRequest('https://raw.githubusercontent.com/degami/Nestable/master/jquery.nestable.js')) {

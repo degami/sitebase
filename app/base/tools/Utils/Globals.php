@@ -467,9 +467,13 @@ class Globals extends ContainerAwareObject
      * @return string
      * @throws BasicException
      */
-    public function getEncodedPass(string $pass): string
+    public function getEncodedPass(string $pass, ?string $salt = null): string
     {
-        return sha1($this->getEnv('SALT') . $pass) . ':' . $this->getEnv('SALT');
+        if (is_null($salt)) {
+            $salt = $this->getEnv('SALT');
+        }
+
+        return sha1($salt . $pass) . ':' . $salt;
     }
 
     /**

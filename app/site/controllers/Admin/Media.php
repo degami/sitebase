@@ -168,12 +168,14 @@ class Media extends AdminManageModelsPage
                 unset($elem_data['id']);
                 unset($elem_data['user_id']);
 
-                $box = $media->getImageBox();
-                if ($box) {
-                    $elem_data += [
-                        'width' => $box->getWidth() . ' px',
-                        'height' => $box->getHeight() . ' px',
-                    ];    
+                if ($media->isImage()) {
+                    $box = $media->getImageBox();
+                    if ($box) {
+                        $elem_data += [
+                            'width' => $box->getWidth() . ' px',
+                            'height' => $box->getHeight() . ' px',
+                        ];    
+                    }
                 }
 
                 array_walk(
@@ -183,6 +185,18 @@ class Media extends AdminManageModelsPage
                     }
                 );
 
+
+                if ($media->isImage()) {
+                    $linkTo = $this->getUrl('admin.minipaint', ['path' => '']) . "?media_id=".$media->getId()."&imageUrl=".urlencode($media->getImageUrl())."&ts=".microtime();
+
+                    $this->addActionLink(
+                        'minipaint',
+                        'minipaint',
+                        $this->getHtmlRenderer()->getIcon('edit') . ' ' . 'Image Editor',
+                        $linkTo,
+                        'btn btn-sm btn-light'
+                    );    
+                }
 
                 $this->addActionLink(
                     'pages-btn',

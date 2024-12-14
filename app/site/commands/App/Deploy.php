@@ -83,6 +83,39 @@ class Deploy extends BaseExecCommand
             file_put_contents(App::getDir(App::WEBROOT) . DS . 'js' . DS . 'jquery-nestable' . DS . 'jquery.nestable.js', $nestable_js);
         }
 
+        if (!is_dir(App::getDir(App::ASSETS) . DS . 'minipaint') || empty(glob(App::getDir(App::ASSETS) . DS . 'minipaint/*'))) {
+            if ($minipaint_zip = $this->getUtils()->httpRequest('https://github.com/viliusle/miniPaint/archive/refs/heads/master.zip')) {
+                @mkdir(App::getDir(App::ASSETS) . DS . 'minipaint', 0755, true);
+                file_put_contents(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'minipaint.zip', $minipaint_zip);
+                $oldCWD = getcwd();
+                chdir(App::getDir(App::ASSETS) . DS . 'minipaint');
+                $this->executeCommand('unzip minipaint.zip');
+                
+                $fd = opendir("miniPaint-master");
+                while ($dirent = readdir($fd)) {
+                    if ($dirent == '.' || $dirent == '..') {
+                        continue;
+                    }
+                    rename("miniPaint-master" . DS . $dirent, basename($dirent));
+                }
+                closedir($fd);
+    
+                $this->delTree('miniPaint-master');
+                $this->delTree('examples');
+                $this->delTree('src');
+                $this->delTree('tools');
+
+                @unlink(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . '.babelrc');
+                @unlink(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . '.gitignore');
+                @unlink(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'package-lock.json');
+                @unlink(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'package.json');
+                @unlink(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'webpack.config.js');
+
+                chdir($oldCWD);
+                @unlink(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'minipaint.zip');
+            }    
+        }
+        
         $absolute_symlinks = $input->getOption('absolute_symlink') ?? false;
 
         if ($absolute_symlinks) {
@@ -135,5 +168,30 @@ class Deploy extends BaseExecCommand
         }
 
         return Command::SUCCESS;
+    }
+
+    protected function delTree(string $path) : bool
+    {
+        if (!file_exists($path)) {
+            return false;
+        }
+
+        if (is_dir($path)) {
+            if (($dir = opendir($path)) !== false) {
+                while ($dirent = readdir($dir)) {
+                    if ($dirent == '.' || $dirent == '..') {
+                        continue;
+                    }
+
+                    $this->delTree($path . DS . $dirent);
+                }
+                closedir($dir);
+            }
+            @rmdir($path);
+        } else {
+            @unlink($path);
+        }
+
+        return true;
     }
 }

@@ -113,7 +113,9 @@ class TwoFa extends LoggedUserFormPage
         }
         $form->getSessionBag()->googleAuthenticatorSecret = $secret;
 
-        $qrCodeUrl = $this->getGoogleAuthenticator()->getQRCodeGoogleUrl($this->getEnv('APPNAME'), $secret);
+        $qrCodeIdentifier = $this->getEnv('APPNAME') . ': ' . $this->getCurrentUser()?->getUsername();
+
+        $qrCodeUrl = $this->getGoogleAuthenticator()->getQRCodeGoogleUrl($qrCodeIdentifier, $secret);
 
         $table = new FAPI\Containers\TableContainer([], 'otp_table');
 
@@ -131,7 +133,7 @@ class TwoFa extends LoggedUserFormPage
             'title' => 'Enter your OTP',
             'default_value' => '',
             'validate' => ['required'],
-        ] + (!$userHasPassed2Fa ? [] : ['description' => $this->getUtils()->translate('2 Factor authentication is already configured - enter the "'.$this->getEnv('APPNAME').'" OTP code')]));
+        ] + (!$userHasPassed2Fa ? [] : ['description' => $this->getUtils()->translate('2 Factor authentication is already configured - enter the "%s" OTP code', [$qrCodeIdentifier])]));
 
         $form->addField($table->getName(), $table);
         $form->addField('secret', [

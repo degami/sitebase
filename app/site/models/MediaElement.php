@@ -183,6 +183,35 @@ class MediaElement extends BaseModel
     }
 
     /**
+     * deletes mediaElement thumbnails
+     * 
+     * @return void
+     */
+    public function clearThumbs() : void
+    {
+        if (!$this->isImage()) {
+            return;
+        }
+
+        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs';
+        if ($dir = opendir($thumb_path)) {
+
+            while($dirent = readdir($dir)) {
+                if ($dirent == '.' || $dirent == '..') {
+                    continue;
+                }
+                if (is_dir($thumb_path . DS . $dirent)) {
+                    if (is_file($thumb_path . DS . $dirent . DS . $this->getFilename())) {
+                        @unlink($thumb_path . DS . $dirent . DS . $this->getFilename());
+                    }
+                }
+            }
+
+            closedir($dir);
+        }
+    }
+
+    /**
      * gets Image Box
      */
     public function getImageBox() : ?Box
@@ -190,6 +219,10 @@ class MediaElement extends BaseModel
         if (empty($this->getPath())) {
             return null;
         }
+        if (!$this->isImage()) {
+            return null;
+        }
+
         $image = $this->getImagine()->open($this->getPath());
         $sizes = $image->getSize();
         $w = $sizes->getWidth();
@@ -221,5 +254,15 @@ class MediaElement extends BaseModel
     public function getImageUrl(): string
     {
         return $this->getThumbUrl(self::ORIGINAL_SIZE);
+    }
+
+    /**
+     * check if media is an image
+     * 
+     * @return bool
+     */
+    public function isImage() : bool
+    {
+        return preg_match("/^image\/.*?/", $this->getMimetype());
     }
 }

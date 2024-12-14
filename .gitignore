@@ -52,6 +52,7 @@ js/dest/*
 assets/rsa_private.key
 assets/rsa_private.csr
 assets/rsa_private.pem
+assets/minipaint
 docker/database/data
 docker/elasticsearch/data
 docker/data/*

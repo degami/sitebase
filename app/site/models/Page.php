@@ -55,6 +55,11 @@ class Page extends FrontendModel
      */
     protected array $gallery = [];
 
+        /**
+     * @var array page media elements
+     */
+    protected array $medias = [];
+
     /**
      * @var array page terms
      */
@@ -72,14 +77,39 @@ class Page extends FrontendModel
         $this->checkLoaded();
 
         if (!(is_array($this->gallery) && !empty($this->gallery)) || $reset == true) {
-            $this->gallery = array_map(
+            $this->gallery = array_filter(array_map(
+                function ($el) {
+                    /** @var MediaElement $mediaElement */
+                    $mediaElement = $this->containerMake(MediaElement::class, ['db_row' => $el]);
+
+                    return $mediaElement->isImage() ? $mediaElement : null;
+                },
+                $this->page_media_elementList()->media_element()->fetchAll()
+            ));
+        }
+        return $this->gallery;
+    }
+
+        /**
+     * gets page gallery
+     *
+     * @param bool $reset
+     * @return array
+     * @throws Exception
+     */
+    public function getMedias(bool $reset = false): array
+    {
+        $this->checkLoaded();
+
+        if (!(is_array($this->medias) && !empty($this->medias)) || $reset == true) {
+            $this->medias = array_filter(array_map(
                 function ($el) {
                     return $this->containerMake(MediaElement::class, ['db_row' => $el]);
                 },
                 $this->page_media_elementList()->media_element()->fetchAll()
-            );
+            ));
         }
-        return $this->gallery;
+        return $this->medias;
     }
 
     /**

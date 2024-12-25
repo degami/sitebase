@@ -32,7 +32,7 @@ class ChatGPT extends AdminJsonPage
     protected string $endpoint = 'https://api.openai.com/v1/engines/gpt-3.5-turbo/completions';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -42,7 +42,7 @@ class ChatGPT extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws DependencyException

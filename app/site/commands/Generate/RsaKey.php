@@ -34,7 +34,7 @@ class RsaKey extends BaseExecCommand
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

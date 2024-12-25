@@ -31,7 +31,7 @@ abstract class FormPage extends FrontendPage
     use FormPageTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request

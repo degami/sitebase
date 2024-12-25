@@ -30,7 +30,7 @@ class CreateSitemapsTableMigration extends DBMigration
     protected string $tableName = 'sitemap';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateSitemapsTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

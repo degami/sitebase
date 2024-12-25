@@ -29,7 +29,7 @@ abstract class DBMigration extends BaseMigration
     protected string $tableName;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @throws Exception
      */
     public function up() : void
@@ -63,7 +63,7 @@ abstract class DBMigration extends BaseMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @throws BasicException
      */
     public function down() : void

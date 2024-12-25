@@ -30,7 +30,7 @@ class CreateContactSubmissionTableMigration extends DBMigration
     protected string $tableName = 'contact_submission';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateContactSubmissionTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

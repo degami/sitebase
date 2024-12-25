@@ -30,7 +30,7 @@ use Exception;
 abstract class BaseXMLPage extends BasePage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request
@@ -49,7 +49,7 @@ abstract class BaseXMLPage extends BasePage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data

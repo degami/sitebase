@@ -30,7 +30,7 @@ class CreateNewsTableMigration extends DBMigration
     protected string $tableName = 'news';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateNewsTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

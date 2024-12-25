@@ -116,7 +116,7 @@ class Sitemap extends FrontendModel
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -126,7 +126,7 @@ class Sitemap extends FrontendModel
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      * @throws BasicException

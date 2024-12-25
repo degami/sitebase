@@ -30,7 +30,7 @@ class CreateRequestLogTableMigration extends DBMigration
     protected string $tableName = 'request_log';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateRequestLogTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

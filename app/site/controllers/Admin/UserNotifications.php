@@ -35,7 +35,7 @@ use DateTime;
 class UserNotifications extends AdminManageFrontendModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -45,7 +45,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -55,7 +55,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -66,7 +66,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -76,7 +76,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -117,7 +117,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -195,7 +195,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -209,7 +209,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -276,7 +276,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -294,7 +294,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

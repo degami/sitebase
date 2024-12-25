@@ -26,7 +26,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Logout extends LoggedUserPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -46,7 +46,7 @@ class Logout extends LoggedUserPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -56,7 +56,7 @@ class Logout extends LoggedUserPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -66,7 +66,7 @@ class Logout extends LoggedUserPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return BasePage|Response
      * @throws BasicException

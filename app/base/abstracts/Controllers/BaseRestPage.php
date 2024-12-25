@@ -33,7 +33,7 @@ use Throwable;
 abstract class BaseRestPage extends BasePage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request
@@ -107,7 +107,7 @@ abstract class BaseRestPage extends BasePage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data

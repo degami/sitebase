@@ -76,7 +76,7 @@ class FakeDataMigration extends BaseMigration
     protected int $website_id = 1;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -86,7 +86,7 @@ class FakeDataMigration extends BaseMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @throws BasicException
      * @throws Exception
      */
@@ -838,7 +838,7 @@ class FakeDataMigration extends BaseMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return void
      */

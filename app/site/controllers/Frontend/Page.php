@@ -51,7 +51,7 @@ class Page extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      * @throws BasicException
@@ -162,7 +162,7 @@ class Page extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -177,7 +177,7 @@ class Page extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

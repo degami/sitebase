@@ -57,7 +57,7 @@ class BanIP extends AdminFormPage
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -67,7 +67,7 @@ class BanIP extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

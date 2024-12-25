@@ -30,7 +30,7 @@ class CreateRewritesTableMigration extends DBMigration
     protected string $tableName = 'rewrite';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateRewritesTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

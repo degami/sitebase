@@ -29,7 +29,7 @@ use App\Site\Models\Taxonomy;
 class Links extends AdminManageFrontendModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -39,7 +39,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -59,7 +59,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -85,7 +85,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -204,7 +204,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -218,7 +218,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -277,7 +277,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -295,7 +295,7 @@ class Links extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

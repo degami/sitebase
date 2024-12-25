@@ -26,7 +26,7 @@ use App\Site\Models\User;
 class UISettings extends AdminJsonPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -36,7 +36,7 @@ class UISettings extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws DependencyException

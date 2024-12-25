@@ -37,7 +37,7 @@ class Website extends BaseModel
     protected $aliases;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return self
      */
@@ -49,7 +49,7 @@ class Website extends BaseModel
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return self
      */

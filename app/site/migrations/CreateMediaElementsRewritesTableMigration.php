@@ -30,7 +30,7 @@ class CreateMediaElementsRewritesTableMigration extends DBMigration
     protected string $tableName = 'media_element_rewrite';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateMediaElementsRewritesTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

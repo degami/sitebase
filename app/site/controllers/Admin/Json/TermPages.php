@@ -37,7 +37,7 @@ class TermPages extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -47,7 +47,7 @@ class TermPages extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException

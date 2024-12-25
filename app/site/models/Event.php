@@ -60,7 +60,7 @@ class Event extends ModelWithLocation
     use FrontendModelTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -70,7 +70,7 @@ class Event extends ModelWithLocation
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string[]
      */

@@ -109,7 +109,7 @@ abstract class BaseHtmlPage extends BasePage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data

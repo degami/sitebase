@@ -27,7 +27,7 @@ use App\Site\Models\RolePermission;
 class Permissions extends AdminFormPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -37,7 +37,7 @@ class Permissions extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -47,7 +47,7 @@ class Permissions extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -61,7 +61,7 @@ class Permissions extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -78,7 +78,7 @@ class Permissions extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -153,7 +153,7 @@ class Permissions extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -166,7 +166,7 @@ class Permissions extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state

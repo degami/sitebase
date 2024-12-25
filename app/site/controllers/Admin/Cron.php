@@ -40,7 +40,7 @@ class Cron extends AdminManageModelsPage
     public const ATTENTION_SPAN = 1800;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request|null $request
@@ -64,7 +64,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -74,7 +74,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -84,7 +84,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -104,7 +104,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -190,7 +190,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -267,7 +267,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -281,7 +281,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -374,7 +374,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -391,7 +391,7 @@ class Cron extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

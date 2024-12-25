@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Sitemaps extends AdminManageModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -43,7 +43,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -53,7 +53,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -63,7 +63,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -73,7 +73,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -103,7 +103,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -319,7 +319,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -332,7 +332,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -405,7 +405,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -422,7 +422,7 @@ class Sitemaps extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

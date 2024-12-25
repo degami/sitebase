@@ -30,7 +30,7 @@ class CreateTaxonomyTableMigration extends DBMigration
     protected string $tableName = 'taxonomy';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateTaxonomyTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

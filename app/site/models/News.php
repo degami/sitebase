@@ -43,7 +43,7 @@ use Exception;
 class News extends FrontendModel
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -53,7 +53,7 @@ class News extends FrontendModel
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string[]
      */

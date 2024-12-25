@@ -27,7 +27,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 class Rewrites extends AdminManageModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -37,7 +37,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -47,7 +47,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -67,7 +67,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -83,7 +83,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -187,7 +187,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -200,7 +200,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -270,7 +270,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -287,7 +287,7 @@ class Rewrites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

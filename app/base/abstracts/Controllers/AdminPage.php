@@ -42,7 +42,7 @@ abstract class AdminPage extends BaseHtmlPage
     protected string $page_title;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request
@@ -102,7 +102,7 @@ abstract class AdminPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -184,7 +184,7 @@ abstract class AdminPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws DependencyException
@@ -214,7 +214,7 @@ abstract class AdminPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string|null
      * @throws BasicException
@@ -275,7 +275,7 @@ abstract class AdminPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */

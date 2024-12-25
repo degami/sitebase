@@ -42,7 +42,7 @@ class Login extends FormPage
     use AdminTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request|null $request
@@ -65,7 +65,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -95,7 +95,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -105,7 +105,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -115,7 +115,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -125,7 +125,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws DependencyException
@@ -187,7 +187,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return Login|RedirectResponse|Response
      * @throws BasicException
@@ -228,7 +228,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -261,7 +261,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -352,7 +352,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -370,7 +370,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      * @throws BasicException

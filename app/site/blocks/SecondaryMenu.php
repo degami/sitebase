@@ -28,7 +28,7 @@ use Degami\Basics\Html\TagElement;
 class SecondaryMenu extends BaseCodeBlock
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @param array $data

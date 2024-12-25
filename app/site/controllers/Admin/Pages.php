@@ -32,7 +32,7 @@ use App\App;
 class Pages extends AdminManageFrontendModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -42,7 +42,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -52,7 +52,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -63,7 +63,7 @@ class Pages extends AdminManageFrontendModelsPage
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -73,7 +73,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -90,7 +90,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -222,7 +222,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -236,7 +236,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -304,7 +304,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -321,7 +321,7 @@ class Pages extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

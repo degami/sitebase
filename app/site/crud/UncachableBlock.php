@@ -37,7 +37,7 @@ class UncachableBlock extends BaseRestPage
 {
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -47,7 +47,7 @@ class UncachableBlock extends BaseRestPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data

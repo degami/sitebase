@@ -29,7 +29,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 class Menus extends AdminManageModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -39,7 +39,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -59,7 +59,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -84,7 +84,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -149,7 +149,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -261,7 +261,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -274,7 +274,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -364,7 +364,7 @@ class Menus extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

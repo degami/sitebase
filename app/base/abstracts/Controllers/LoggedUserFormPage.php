@@ -32,7 +32,7 @@ abstract class LoggedUserFormPage extends LoggedUserPage
     use FormPageTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request

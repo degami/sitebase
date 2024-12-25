@@ -209,7 +209,7 @@ class Page extends FrontendModel
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

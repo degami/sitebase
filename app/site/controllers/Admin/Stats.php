@@ -25,7 +25,7 @@ use App\Base\Abstracts\Controllers\AdminPage;
 class Stats extends AdminPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -35,7 +35,7 @@ class Stats extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -45,7 +45,7 @@ class Stats extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException

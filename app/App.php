@@ -442,7 +442,7 @@ class App extends ContainerAwareObject
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param string $name
      * @param mixed $arguments

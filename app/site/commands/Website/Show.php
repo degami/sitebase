@@ -33,7 +33,7 @@ class Show extends BaseCommand
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

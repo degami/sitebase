@@ -28,7 +28,7 @@ class AddPathAndLevelToTaxonomyTableMigration extends DBMigration
     protected string $tableName = 'taxonomy';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -38,7 +38,7 @@ class AddPathAndLevelToTaxonomyTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

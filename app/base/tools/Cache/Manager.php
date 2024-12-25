@@ -317,7 +317,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param string $name
      * @param mixed $arguments

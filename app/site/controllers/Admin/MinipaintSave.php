@@ -23,7 +23,7 @@ use Degami\Basics\Exceptions\BasicException;
 class MinipaintSave extends AdminJsonPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

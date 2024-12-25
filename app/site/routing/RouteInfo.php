@@ -413,7 +413,7 @@ class RouteInfo
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

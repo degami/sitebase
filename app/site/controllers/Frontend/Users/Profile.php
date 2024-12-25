@@ -29,7 +29,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 class Profile extends LoggedUserFormPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -49,7 +49,7 @@ class Profile extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -59,7 +59,7 @@ class Profile extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws DependencyException
@@ -74,7 +74,7 @@ class Profile extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state
@@ -154,7 +154,7 @@ class Profile extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state
@@ -167,7 +167,7 @@ class Profile extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state

@@ -27,7 +27,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 class Websites extends AdminManageModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -37,7 +37,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -47,7 +47,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -67,7 +67,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -84,7 +84,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -157,7 +157,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -170,7 +170,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -216,7 +216,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -233,7 +233,7 @@ class Websites extends AdminManageModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

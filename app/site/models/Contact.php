@@ -55,7 +55,7 @@ use Exception;
 class Contact extends FrontendModel
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -146,7 +146,7 @@ class Contact extends FrontendModel
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return FrontendModel
      * @throws Exception

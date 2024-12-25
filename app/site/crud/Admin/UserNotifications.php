@@ -32,7 +32,7 @@ class UserNotifications extends AdminRestPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -42,7 +42,7 @@ class UserNotifications extends AdminRestPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

@@ -28,7 +28,7 @@ use Psr\Container\ContainerInterface;
 class TwoFa extends LoggedUserFormPage
 {
         /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request|null $request
@@ -49,7 +49,7 @@ class TwoFa extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -69,7 +69,7 @@ class TwoFa extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -79,7 +79,7 @@ class TwoFa extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -94,7 +94,7 @@ class TwoFa extends LoggedUserFormPage
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state
@@ -149,7 +149,7 @@ class TwoFa extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state
@@ -183,7 +183,7 @@ class TwoFa extends LoggedUserFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state

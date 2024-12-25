@@ -28,7 +28,7 @@ class AddNavigatorToRequestLogTableMigration extends DBMigration
     protected string $tableName = 'request_log';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -38,7 +38,7 @@ class AddNavigatorToRequestLogTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

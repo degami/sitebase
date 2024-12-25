@@ -50,7 +50,7 @@ class EventDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -60,7 +60,7 @@ class EventDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return Response|self
      * @throws PermissionDeniedException
@@ -74,7 +74,7 @@ class EventDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -93,7 +93,7 @@ class EventDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -106,7 +106,7 @@ class EventDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

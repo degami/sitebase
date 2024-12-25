@@ -35,7 +35,7 @@ abstract class CodeGeneratorCommand extends BaseCommand
     protected $composer_reader;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param string|null $name
      * @param ContainerInterface|null $container

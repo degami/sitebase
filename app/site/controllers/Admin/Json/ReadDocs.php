@@ -24,7 +24,7 @@ use DI\NotFoundException;
 class ReadDocs extends AdminJsonPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -34,7 +34,7 @@ class ReadDocs extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws DependencyException

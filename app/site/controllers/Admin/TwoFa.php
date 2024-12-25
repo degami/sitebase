@@ -33,7 +33,7 @@ class TwoFa extends AdminFormPage
     public const ADMIN_WEBSITE_ID = 0;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request|null $request
@@ -57,7 +57,7 @@ class TwoFa extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -77,7 +77,7 @@ class TwoFa extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -87,7 +87,7 @@ class TwoFa extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -102,7 +102,7 @@ class TwoFa extends AdminFormPage
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -112,7 +112,7 @@ class TwoFa extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -170,7 +170,7 @@ class TwoFa extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state
@@ -225,7 +225,7 @@ class TwoFa extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state
@@ -260,7 +260,7 @@ class TwoFa extends AdminFormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array $form_state

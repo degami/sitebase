@@ -51,7 +51,7 @@ class NewsList extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -61,7 +61,7 @@ class NewsList extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -84,7 +84,7 @@ class NewsList extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      * @throws BasicException

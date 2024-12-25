@@ -30,7 +30,7 @@ class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
     protected string $tableName = 'link_exchange_taxonomy';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

@@ -31,7 +31,7 @@ use App\App;
 class Taxonomy extends AdminManageFrontendModelsPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -41,7 +41,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -51,7 +51,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -61,7 +61,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -71,7 +71,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -88,7 +88,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -240,7 +240,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -254,7 +254,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -337,7 +337,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -354,7 +354,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $data
      * @return array

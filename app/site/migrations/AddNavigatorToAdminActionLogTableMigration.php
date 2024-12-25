@@ -28,7 +28,7 @@ class AddNavigatorToAdminActionLogTableMigration extends DBMigration
     protected string $tableName = 'admin_action_log';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -38,7 +38,7 @@ class AddNavigatorToAdminActionLogTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

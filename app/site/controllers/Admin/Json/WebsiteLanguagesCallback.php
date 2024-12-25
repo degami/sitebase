@@ -60,7 +60,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -89,7 +89,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -122,7 +122,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
     //not used on this class
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */

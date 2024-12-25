@@ -27,7 +27,7 @@ class GoogleGemini extends AdminJsonPage
     public const GEMINI_TOKEN_PATH = 'app/gemini/token';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -37,7 +37,7 @@ class GoogleGemini extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws DependencyException

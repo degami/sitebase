@@ -24,7 +24,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class Hello extends Command
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param string|null $name
      */
@@ -34,7 +34,7 @@ class Hello extends Command
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     protected function configure()
     {
@@ -43,7 +43,7 @@ class Hello extends Command
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

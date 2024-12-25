@@ -49,7 +49,7 @@ class Sitemap extends BaseXMLPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -88,7 +88,7 @@ class Sitemap extends BaseXMLPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * dummy. is not used
      *
      * @return array

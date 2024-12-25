@@ -30,7 +30,7 @@ class CreateCronLogTableMigration extends DBMigration
     protected string $tableName = 'cron_log';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateCronLogTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

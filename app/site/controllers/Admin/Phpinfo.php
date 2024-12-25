@@ -25,7 +25,7 @@ use DI\NotFoundException;
 class Phpinfo extends AdminPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -35,7 +35,7 @@ class Phpinfo extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -45,7 +45,7 @@ class Phpinfo extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -62,7 +62,7 @@ class Phpinfo extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException

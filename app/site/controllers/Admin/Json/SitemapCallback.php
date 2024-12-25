@@ -41,7 +41,7 @@ class SitemapCallback extends AdminJsonPage
     protected ?Contact $contact = null;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -63,7 +63,7 @@ class SitemapCallback extends AdminJsonPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -107,7 +107,7 @@ class SitemapCallback extends AdminJsonPage
     //not used on this class
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */

@@ -36,7 +36,7 @@ abstract class BaseWebhookPage extends BasePage
     use PageTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request
@@ -55,7 +55,7 @@ abstract class BaseWebhookPage extends BasePage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data

@@ -26,7 +26,7 @@ abstract class AdminJsonPage extends BaseJsonPage
     use AdminTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return Response|self
      * @throws PermissionDeniedException

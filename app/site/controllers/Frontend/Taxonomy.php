@@ -45,7 +45,7 @@ class Taxonomy extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -55,7 +55,7 @@ class Taxonomy extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -70,7 +70,7 @@ class Taxonomy extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

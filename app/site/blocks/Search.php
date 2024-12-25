@@ -26,7 +26,7 @@ use Exception;
 class Search extends BaseCodeBlock
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @return string

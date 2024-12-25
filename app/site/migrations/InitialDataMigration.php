@@ -36,7 +36,7 @@ use DI\NotFoundException;
 class InitialDataMigration extends BaseMigration
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -46,7 +46,7 @@ class InitialDataMigration extends BaseMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return void
      * @throws BasicException
@@ -305,7 +305,7 @@ class InitialDataMigration extends BaseMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return void
      */

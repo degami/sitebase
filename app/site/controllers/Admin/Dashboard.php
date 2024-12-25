@@ -34,7 +34,7 @@ use App\Site\Models\Event;
 class Dashboard extends AdminPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -44,7 +44,7 @@ class Dashboard extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -54,7 +54,7 @@ class Dashboard extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -70,7 +70,7 @@ class Dashboard extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */

@@ -38,7 +38,7 @@ trait FrontendPageTrait
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -95,7 +95,7 @@ trait FrontendPageTrait
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -112,7 +112,7 @@ trait FrontendPageTrait
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      * @throws BasicException

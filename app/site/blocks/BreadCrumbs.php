@@ -34,7 +34,7 @@ use Degami\Basics\Html\TagElement;
 class BreadCrumbs extends BaseCodeBlock
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @param array $data

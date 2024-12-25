@@ -32,7 +32,7 @@ class Taxonomy extends AdminRestPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -43,7 +43,7 @@ class Taxonomy extends AdminRestPage
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

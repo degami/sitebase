@@ -49,7 +49,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @return string

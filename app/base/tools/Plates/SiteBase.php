@@ -58,7 +58,7 @@ class SiteBase implements ExtensionInterface
     ) { }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Engine $engine [description]
      * @return void

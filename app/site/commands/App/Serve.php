@@ -45,7 +45,7 @@ class Serve extends BaseExecCommand
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

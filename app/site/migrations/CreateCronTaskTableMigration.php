@@ -30,7 +30,7 @@ class CreateCronTaskTableMigration extends DBMigration
     protected string $tableName = 'cron_task';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateCronTaskTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

@@ -41,7 +41,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     use FrontendPageTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request
@@ -64,7 +64,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
 
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -94,7 +94,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return ContactForm|Response
      * @throws BasicException
@@ -119,7 +119,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -140,7 +140,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -155,7 +155,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -193,7 +193,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -229,7 +229,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -284,7 +284,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

@@ -70,7 +70,7 @@ class Block extends BaseModel
     protected ?BaseCodeBlock $codeBlockInstance = null;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage $current_page
      * @return string

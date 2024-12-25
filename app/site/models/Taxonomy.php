@@ -67,7 +67,7 @@ class Taxonomy extends FrontendModelWithChildren
     protected array $pages = [];
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

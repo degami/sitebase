@@ -21,7 +21,7 @@ use App\Base\Abstracts\Controllers\BaseHtmlPage;
 class NullPage extends BaseHtmlPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     protected function getTemplateName(): string
     {
@@ -29,7 +29,7 @@ class NullPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     protected function getTemplateData(): array
     {

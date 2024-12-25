@@ -32,7 +32,7 @@ abstract class FrontendPageWithObject extends FrontendPage
     use FrontendPageTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return Response|self
      * @throws PermissionDeniedException
@@ -50,7 +50,7 @@ abstract class FrontendPageWithObject extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -119,7 +119,7 @@ abstract class FrontendPageWithObject extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function getInfo() : array
     {

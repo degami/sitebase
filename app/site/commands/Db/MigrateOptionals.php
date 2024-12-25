@@ -26,7 +26,7 @@ use Symfony\Component\Console\Command\Command;
 class MigrateOptionals extends Migrate
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param string|null $name
      * @param ContainerInterface|null $container

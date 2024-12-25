@@ -38,7 +38,7 @@ abstract class ContainerAwareObject
     ) { }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param string $name
      * @param mixed $arguments

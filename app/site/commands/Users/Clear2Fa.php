@@ -45,7 +45,7 @@ class Clear2Fa extends BaseCommand
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

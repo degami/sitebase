@@ -30,7 +30,7 @@ class CreateBlocksRewritesTableMigration extends DBMigration
     protected string $tableName = 'block_rewrite';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateBlocksRewritesTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

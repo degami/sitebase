@@ -62,7 +62,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     protected static string|array $keyField = 'id';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Row|null $db_row
@@ -469,7 +469,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $key
      * @return mixed
      */
@@ -479,7 +479,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $key
      * @param $value
      * @return void
@@ -490,7 +490,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $name
      * @return bool
      */
@@ -500,7 +500,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $name
      * @return void
      */
@@ -510,7 +510,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param string $name
      * @param $arguments
      * @return mixed
@@ -599,7 +599,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function getIterator(): \Traversable|\ArrayIterator
     {
@@ -607,7 +607,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $offset
      * @param $value
      * @return void
@@ -618,7 +618,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $offset
      * @return bool
      */
@@ -628,7 +628,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $offset
      * @return void
      */
@@ -638,7 +638,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * @param $offset
      * @return mixed
      */
@@ -648,7 +648,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function current()
     {
@@ -656,7 +656,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function key()
     {
@@ -664,7 +664,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function next()
     {
@@ -672,7 +672,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function rewind()
     {
@@ -680,7 +680,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     public function valid()
     {

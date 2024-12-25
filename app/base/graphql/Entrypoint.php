@@ -23,7 +23,7 @@ class Entrypoint extends BasePage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      * this is only for compatibility
      *
      * @param RouteInfo|null $route_info

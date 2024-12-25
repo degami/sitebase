@@ -34,7 +34,7 @@ class AuthorInfo extends BaseCodeBlock
     public const DATE_FORMAT = 'M j, Y - H:i';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @param array $data

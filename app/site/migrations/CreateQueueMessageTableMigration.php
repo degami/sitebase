@@ -30,7 +30,7 @@ class CreateQueueMessageTableMigration extends DBMigration
     protected string $tableName = 'queue_message';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateQueueMessageTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

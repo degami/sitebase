@@ -25,7 +25,7 @@ use App\Base\Abstracts\Queues\BaseQueueWorker;
 class Worker extends BaseQueueWorker
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param array $message_data
      * @return bool

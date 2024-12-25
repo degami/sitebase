@@ -48,7 +48,7 @@ class NewsDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -58,7 +58,7 @@ class NewsDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -77,7 +77,7 @@ class NewsDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -90,7 +90,7 @@ class NewsDetail extends FrontendPageWithObject
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */

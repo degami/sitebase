@@ -68,7 +68,7 @@ class CookieNotice extends BaseCodeBlock
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @param array $data

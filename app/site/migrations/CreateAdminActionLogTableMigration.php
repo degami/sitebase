@@ -30,7 +30,7 @@ class CreateAdminActionLogTableMigration extends DBMigration
     protected string $tableName = 'admin_action_log';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreateAdminActionLogTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

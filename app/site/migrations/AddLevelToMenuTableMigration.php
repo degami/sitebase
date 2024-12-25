@@ -28,7 +28,7 @@ class AddLevelToMenuTableMigration extends DBMigration
     protected string $tableName = 'menu';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -38,7 +38,7 @@ class AddLevelToMenuTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

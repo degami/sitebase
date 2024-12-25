@@ -30,7 +30,7 @@ class CreatePagesTaxonomyTableMigration extends DBMigration
     protected string $tableName = 'page_taxonomy';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreatePagesTaxonomyTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

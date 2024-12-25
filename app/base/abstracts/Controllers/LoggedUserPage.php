@@ -37,7 +37,7 @@ abstract class LoggedUserPage extends FrontendPage
     protected string $page_title;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request
@@ -98,7 +98,7 @@ abstract class LoggedUserPage extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */

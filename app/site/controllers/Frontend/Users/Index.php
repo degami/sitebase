@@ -27,7 +27,7 @@ use Symfony\Component\HttpFoundation\Response;
 class Index extends LoggedUserPage
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -47,7 +47,7 @@ class Index extends LoggedUserPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -57,7 +57,7 @@ class Index extends LoggedUserPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -67,7 +67,7 @@ class Index extends LoggedUserPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return BasePage|Response
      * @throws BasicException
@@ -83,7 +83,7 @@ class Index extends LoggedUserPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data

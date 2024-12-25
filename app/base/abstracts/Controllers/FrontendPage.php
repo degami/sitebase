@@ -52,7 +52,7 @@ abstract class FrontendPage extends BaseHtmlPage
     protected array $regions = [];
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request
@@ -92,7 +92,7 @@ abstract class FrontendPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException
@@ -155,7 +155,7 @@ abstract class FrontendPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return Template
      * @throws BasicException
@@ -207,7 +207,7 @@ abstract class FrontendPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return Response|self
      * @throws BasicException
@@ -223,7 +223,7 @@ abstract class FrontendPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
@@ -387,7 +387,7 @@ abstract class FrontendPage extends BaseHtmlPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return bool
      */

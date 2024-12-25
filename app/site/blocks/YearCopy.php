@@ -25,7 +25,7 @@ use Exception;
 class YearCopy extends BaseCodeBlock
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @return string

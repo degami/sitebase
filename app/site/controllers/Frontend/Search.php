@@ -30,7 +30,7 @@ class Search extends FrontendPage
     public const RESULTS_PER_PAGE = 10;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -40,7 +40,7 @@ class Search extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -50,7 +50,7 @@ class Search extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -60,7 +60,7 @@ class Search extends FrontendPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      */
     protected function beforeRender() : BasePage|Response
     {

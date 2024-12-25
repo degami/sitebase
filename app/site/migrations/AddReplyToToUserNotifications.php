@@ -29,7 +29,7 @@ class AddReplyToToUserNotifications extends DBMigration
     protected string $tableName = 'user_notification';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -39,7 +39,7 @@ class AddReplyToToUserNotifications extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

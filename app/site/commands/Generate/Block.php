@@ -43,7 +43,7 @@ class Block extends CodeGeneratorCommand
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

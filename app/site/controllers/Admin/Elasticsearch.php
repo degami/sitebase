@@ -36,7 +36,7 @@ class Elasticsearch extends AdminPage
     public const SUMMARIZE_MAX_WORDS = 50;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -46,7 +46,7 @@ class Elasticsearch extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -56,7 +56,7 @@ class Elasticsearch extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array|null
      */
@@ -85,7 +85,7 @@ class Elasticsearch extends AdminPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      * @throws BasicException

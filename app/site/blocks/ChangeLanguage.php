@@ -27,7 +27,7 @@ use Degami\Basics\Html\TagElement;
 class ChangeLanguage extends BaseCodeBlock
 {
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param BasePage|null $current_page
      * @param array $data

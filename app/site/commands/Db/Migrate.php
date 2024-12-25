@@ -50,7 +50,7 @@ class Migrate extends BaseCommand
     protected $directory;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param string|null $name
      * @param ContainerInterface|null $container
@@ -92,7 +92,7 @@ class Migrate extends BaseCommand
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

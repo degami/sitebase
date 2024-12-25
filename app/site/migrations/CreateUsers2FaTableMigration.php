@@ -29,7 +29,7 @@ class CreateUsers2FaTableMigration extends DBMigration
     protected string $tableName = 'users_2fa';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -39,7 +39,7 @@ class CreateUsers2FaTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

@@ -34,7 +34,7 @@ class Login extends FormPage
     use FrontendPageTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -74,7 +74,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return array
      */
@@ -84,7 +84,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -94,7 +94,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return bool
      */
@@ -104,7 +104,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return BasePage|Response
      * @throws BasicException
@@ -150,7 +150,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -181,7 +181,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state
@@ -264,7 +264,7 @@ class Login extends FormPage
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param FAPI\Form $form
      * @param array     &$form_state

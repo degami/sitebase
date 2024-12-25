@@ -30,7 +30,7 @@ class CreatePermissionsTableMigration extends DBMigration
     protected string $tableName = 'permission';
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @return string
      */
@@ -40,7 +40,7 @@ class CreatePermissionsTableMigration extends DBMigration
     }
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param Table $table
      * @return Table

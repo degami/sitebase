@@ -31,7 +31,7 @@ abstract class AdminFormPage extends AdminPage
     use FormPageTrait;
 
     /**
-     * {@inheritdocs}
+     * {@inheritdoc}
      *
      * @param ContainerInterface $container
      * @param Request $request

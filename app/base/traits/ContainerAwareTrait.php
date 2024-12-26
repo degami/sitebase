@@ -21,6 +21,7 @@ use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
+use App\Base\Tools\Utils\Zip;
 use App\Site\Models\Website;
 use App\Site\Routing\Crud;
 use App\Site\Routing\RouteInfo;
@@ -377,6 +378,17 @@ trait ContainerAwareTrait
     public function getRedis(): RedisManager
     {
         return $this->getService('redis');
+    }
+
+    /**
+     * gets zip service
+     * 
+     * @return Zip
+     * @throws BasicException
+     */
+    public function getZip(): Zip
+    {
+        return $this->getService('zip');
     }
 
     /**

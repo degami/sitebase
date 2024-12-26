@@ -209,6 +209,9 @@ return [
     \PHPGangsta_GoogleAuthenticator::class => DI\create(PHPGangsta_GoogleAuthenticator::class),
     'googleauthenticator' => DI\get(\PHPGangsta_GoogleAuthenticator::class),
 
+    \App\Base\Tools\Utils\Zip::class => DI\autowire(\App\Base\Tools\Utils\Zip::class),
+    'zip' => DI\get(\App\Base\Tools\Utils\Zip::class),
+
     // 'request'
     \Symfony\Component\HttpFoundation\Request::class => DI\factory(function(){
         return \Symfony\Component\HttpFoundation\Request::createFromGlobals();

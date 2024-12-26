@@ -58,16 +58,13 @@ class Deploy extends BaseExecCommand
                 return Command::FAILURE;
             }
     
-            // Recupera il secondo comando
             $command = $application->find('app:update_salt');
     
-            // Crea l'input per il secondo comando
             $arguments = [
                 'command' => 'app:update_salt',
             ];
             $arrayInput = new ArrayInput($arguments);
     
-            // Esegui il secondo comando
             $returnCode = $command->run($arrayInput, $output);
     
             if ($returnCode !== Command::SUCCESS) {
@@ -87,9 +84,15 @@ class Deploy extends BaseExecCommand
             if ($minipaint_zip = $this->getUtils()->httpRequest('https://github.com/viliusle/miniPaint/archive/refs/heads/master.zip')) {
                 @mkdir(App::getDir(App::ASSETS) . DS . 'minipaint', 0755, true);
                 file_put_contents(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'minipaint.zip', $minipaint_zip);
+
+                $this->getZip()->extract(
+                    App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'minipaint.zip',
+                    App::getDir(App::ASSETS) . DS . 'minipaint'
+                );
+
                 $oldCWD = getcwd();
                 chdir(App::getDir(App::ASSETS) . DS . 'minipaint');
-                $this->executeCommand('unzip minipaint.zip');
+//                $this->executeCommand('unzip minipaint.zip');
                 
                 $fd = opendir("miniPaint-master");
                 while ($dirent = readdir($fd)) {
@@ -113,7 +116,7 @@ class Deploy extends BaseExecCommand
 
                 chdir($oldCWD);
                 @unlink(App::getDir(App::ASSETS) . DS . 'minipaint' . DS . 'minipaint.zip');
-            }    
+            }  
         }
         
         $absolute_symlinks = $input->getOption('absolute_symlink') ?? false;

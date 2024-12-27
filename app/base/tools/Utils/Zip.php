@@ -24,6 +24,10 @@ class Zip extends ContainerAwareObject
 {
     /**
      * extract zip file to directory
+     * 
+     * @param string $zipPath
+     * @param string $targetDirectory
+     * @return void
      */
     public function extract(string $zipPath, string $targetDirectory) : void
     {
@@ -49,5 +53,29 @@ class Zip extends ContainerAwareObject
         } else {
             throw new Exception("Unable to open ZIP file: $zipPath");
         }
+    }
+
+    /**
+     * compress a list of files
+     * 
+     * @param array $paths
+     * @return ZipArchive
+     */
+    public function compress(array $paths) : ZipArchive
+    {
+        if (empty($paths)) {
+            throw new Exception("Missing files list.");
+        }
+
+        $zip = new ZipArchive();
+
+        foreach ($paths as $path) {
+            if (!file_exists($path)) {
+                continue;
+            }
+            $zip->addFile($path);
+        }
+
+        return $zip;
     }
 }

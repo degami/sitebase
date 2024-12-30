@@ -17,7 +17,7 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use PDO;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
+use Throwable;
 use Symfony\Component\Console\Command\Command;
 
 /**
@@ -64,6 +64,9 @@ class Shell extends BaseCommand
                 case 'exit':
                     $command = 'exit';
                     break;
+                case 'help':
+                    $this->renderHelp();
+                    break;    
                 default:
                     try {
                         $statement = $this->getDb()->query($command);
@@ -99,7 +102,7 @@ class Shell extends BaseCommand
                         }
 
                         $history[] = $command;
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $this->getIo()->error($e->getMessage());
                     }
                     break;
@@ -108,5 +111,23 @@ class Shell extends BaseCommand
         $output->writeln('bye.');
 
         return Command::SUCCESS;
+    }
+
+    protected function renderHelp()
+    {
+        $this->getIo()->writeln(
+            "    ===============================================\n" .
+            "                    DB Interactive Shell\n" .
+            "    ===============================================\n\n" .
+            "    Welcome to the Database Interactive Shell.\n\n" .
+            "    - You can execute any valid SQL queries directly.\n" .
+            "    - Use 'history' to view the list of previously executed queries.\n" .
+            "    - Use 'quit' or 'exit' to leave the shell.\n" .
+            "    - Use 'help' to display this message again.\n\n" .
+            "    Supported Queries:\n" .
+            "    - SELECT, SHOW: Results will be displayed in a table.\n" .
+            "    - INSERT, UPDATE, DELETE, etc.: The number of affected rows will be shown.\n" .
+            "    ==============================================="
+        );
     }
 }

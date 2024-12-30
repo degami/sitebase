@@ -13,12 +13,13 @@
 
 namespace App\Site\Commands\App;
 
+use App\App;
 use App\Base\Abstracts\Commands\BaseCommand;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Exception;
+use Throwable;
 use Symfony\Component\Console\Command\Command;
 
 /**
@@ -47,6 +48,8 @@ class Shell extends BaseCommand
     {
         $this->getIo()->title('Welcome.');
 
+        $app = App::getInstance();
+
         $history = [];
         do {
             $command = rtrim(trim($this->keepAsking("\n> ")), ';'); 
@@ -59,11 +62,14 @@ class Shell extends BaseCommand
                 case 'exit':
                     $command = 'exit';
                     break;
+                case 'help':
+                    $this->renderHelp();
+                    break;
                 default:
                     try {
                         eval($command . ';');
                         $history[] = $command;
-                    } catch (Exception $e) {
+                    } catch (Throwable $e) {
                         $output->writeln($e->getMessage());
                     }
                     break;
@@ -72,5 +78,25 @@ class Shell extends BaseCommand
         $output->writeln('bye.');
 
         return Command::SUCCESS;
+    }
+
+    protected function renderHelp()
+    {
+        $this->getIo()->writeln(
+            "    ===============================================\n" .
+            "                    PHP Interactive Shell\n" .
+            "    ===============================================\n\n" .
+            "    Welcome to the Interactive Shell.\n\n" .
+            "    - You can execute any valid PHP code directly.\n" .
+            "    - Use 'history' to view the list of previously executed commands.\n" .
+            "    - Use 'quit' or 'exit' to leave the shell.\n" .
+            "    - Use 'help' to display this message again.\n\n" .
+            "    Current Variables:\n" .
+            "    - \$this: The current command instance.\n" .
+            "    - \$output: The output interface for writing messages.\n" .
+            "    - \$input: The input interface for reading user input.\n" .
+            "    - \$app: An application reference.\n" .
+            "    ==============================================="
+        );
     }
 }

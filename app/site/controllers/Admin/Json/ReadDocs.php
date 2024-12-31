@@ -15,8 +15,6 @@ namespace App\Site\Controllers\Admin\Json;
 
 use App\App;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
-use DI\DependencyException;
-use DI\NotFoundException;
 
 /**
  * ReadDocs Admin
@@ -37,8 +35,6 @@ class ReadDocs extends AdminJsonPage
      * {@inheritdoc}
      *
      * @return array
-     * @throws DependencyException
-     * @throws NotFoundException)
      */
     protected function getJsonData(): array
     {

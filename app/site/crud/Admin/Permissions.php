@@ -36,7 +36,7 @@ class Permissions extends AdminRestPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_permissions';
     }

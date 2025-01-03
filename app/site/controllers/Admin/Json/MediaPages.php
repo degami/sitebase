@@ -41,7 +41,7 @@ class MediaPages extends AdminJsonPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_medias';
     }

@@ -46,7 +46,7 @@ class Pages extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_pages';
     }
@@ -80,7 +80,7 @@ class Pages extends AdminManageFrontendModelsPage
     public Function getAdminPageLink() : array|null
     {
         return [
-            'permission_name' => $this->getAccessPermission(),
+            'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'book-open',
             'text' => 'Pages',

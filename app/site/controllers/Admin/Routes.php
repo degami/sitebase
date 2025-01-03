@@ -44,7 +44,7 @@ class Routes extends AdminPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'system_info';
     }
@@ -57,7 +57,7 @@ class Routes extends AdminPage
     public Function getAdminPageLink() : array|null
     {
         return [
-            'permission_name' => $this->getAccessPermission(),
+            'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'target',
             'text' => 'App Routes',

@@ -51,7 +51,7 @@ class Index extends LoggedUserPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'view_logged_site';
     }
@@ -75,7 +75,7 @@ class Index extends LoggedUserPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
+        if (!$this->checkCredentials() || !$this->checkPermission(static::getAccessPermission())) {
             return $this->doRedirect($this->getUrl('frontend.users.login'));
         }
 

@@ -94,7 +94,7 @@ class Media extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_medias';
     }
@@ -127,7 +127,7 @@ class Media extends AdminManageModelsPage
     public Function getAdminPageLink() : array|null
     {
         return [
-            'permission_name' => $this->getAccessPermission(),
+            'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'image',
             'text' => 'Media',

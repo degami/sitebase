@@ -73,7 +73,7 @@ class TwoFa extends LoggedUserFormPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'view_logged_site';
     }

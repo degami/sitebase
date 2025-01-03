@@ -94,7 +94,7 @@ abstract class AdminPage extends BaseHtmlPage
      */
     protected function beforeRender(): BasePage|Response
     {
-        if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
+        if (!$this->checkCredentials() || !$this->checkPermission(static::getAccessPermission())) {
             throw new PermissionDeniedException();
         }
 
@@ -289,5 +289,5 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return string
      */
-    abstract protected function getAccessPermission(): string;
+    abstract public static function getAccessPermission(): string;
 }

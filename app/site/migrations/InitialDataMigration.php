@@ -28,6 +28,7 @@ use App\Site\Models\Website;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
+use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * basic data migration
@@ -142,6 +143,15 @@ class InitialDataMigration extends BaseMigration
             $permission_model->persist();
         }
 
+        $existingPivot = RolePermission::getCollection()->where([
+            'permission_id' => $permission_model->getId(),
+            'role_id' => $role_model->getId(),
+        ])->getFirst();
+
+        if ($existingPivot) {
+            return;
+        }
+
         $pivot_model = RolePermission::new();
         $pivot_model->setPermissionId($permission_model->getId());
         $pivot_model->setRoleId($role_model->getId());
@@ -184,7 +194,7 @@ class InitialDataMigration extends BaseMigration
         }
 
         // admin only permissions
-        $permissions = [
+        /*$permissions = [
             'administer_site',
             'administer_configuration',
             'administer_websites',
@@ -206,7 +216,8 @@ class InitialDataMigration extends BaseMigration
             'administer_events',
             'administer_sitemaps',
             'system_info',
-        ];
+        ];*/
+        $permissions = static::getAdminPermissionsArray();
         foreach ($permissions as $permission_name) {
             static::addPermission($admin_role_model, $permission_name);
         }
@@ -311,5 +322,19 @@ class InitialDataMigration extends BaseMigration
      */
     public function down()
     {
+    }
+
+    public static function getAdminPermissionsArray() : array 
+    {
+        $permissionsArray = [];
+        $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers\Admin', ClassFinder::RECURSIVE_MODE);
+        foreach ($controllerClasses as $controllerClass) {
+            if (is_callable([$controllerClass, 'getAccessPermission'])) {
+                $permissionsArray[] = App::getInstance()->containerCall([$controllerClass, 'getAccessPermission']);
+                $permissionsArray = array_unique($permissionsArray);
+            }
+        }
+
+        return $permissionsArray;
     }
 }

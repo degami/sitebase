@@ -43,7 +43,7 @@ class Exports extends AdminFormPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_configuration';
     }
@@ -56,7 +56,7 @@ class Exports extends AdminFormPage
     public Function getAdminPageLink() : array|null
     {
         return [
-            'permission_name' => $this->getAccessPermission(),
+            'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'archive',
             'text' => 'Exports',

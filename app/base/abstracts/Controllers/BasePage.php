@@ -113,11 +113,11 @@ abstract class BasePage extends ContainerAwareObject
     protected function beforeRender(): BasePage|Response
     {
         if (
-            method_exists($this, 'getAccessPermission') &&
+            method_exists(get_class($this), 'getAccessPermission') &&
             method_exists($this, 'checkPermission') &&
             method_exists($this, 'getCurrentUser')
         ) {
-            if (!$this->checkPermission($this->getAccessPermission())) {
+            if (!$this->checkPermission(static::getAccessPermission())) {
                 throw new PermissionDeniedException();
             }
         }

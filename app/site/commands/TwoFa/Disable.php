@@ -69,6 +69,14 @@ class Disable extends BaseCommand
 
         $this->getApplication()->run($argInput, $output);
 
+        $argInput = new ArrayInput([
+            // the command name is passed as first argument
+            'command' => 'cache:clear',
+        ]);
+
+        $this->getApplication()->run($argInput, $output);
+
+
         return Command::SUCCESS;
     }
 }

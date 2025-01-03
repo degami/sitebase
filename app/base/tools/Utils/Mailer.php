@@ -113,7 +113,7 @@ class Mailer extends ContainerAwareObject
             }
 
             // Create a message
-            $message = $this->containerMake(Swift_Message::class)
+            $message = @$this->containerMake(Swift_Message::class)
                 ->setFrom($from)
                 ->setTo($to)
                 ->setContentType($content_type)
@@ -121,7 +121,7 @@ class Mailer extends ContainerAwareObject
                 ->setBody($body);
 
             // Send the message
-            return $this->getSmtpMailer()->send($message);
+            return @$this->getSmtpMailer()->send($message);
         } catch (Swift_TransportException $e) {
             $this->getUtils()->logException($e, "Error sending SMTP mail");
         }

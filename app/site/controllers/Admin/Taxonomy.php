@@ -45,7 +45,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_taxonomy';
     }
@@ -78,7 +78,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
     public Function getAdminPageLink() : array|null
     {
         return [
-            'permission_name' => $this->getAccessPermission(),
+            'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'list',
             'text' => 'Taxonomy',

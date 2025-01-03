@@ -41,7 +41,7 @@ class Index extends AdminPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -65,7 +65,7 @@ class Index extends AdminPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if (!$this->checkCredentials() || !$this->checkPermission($this->getAccessPermission())) {
+        if (!$this->checkCredentials() || !$this->checkPermission(static::getAccessPermission())) {
             return $this->doRedirect($this->getUrl('admin.login'));
         }
 

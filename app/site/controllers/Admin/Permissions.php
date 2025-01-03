@@ -41,7 +41,7 @@ class Permissions extends AdminFormPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_permissions';
     }
@@ -68,7 +68,7 @@ class Permissions extends AdminFormPage
     public Function getAdminPageLink() : array|null
     {
         return [
-            'permission_name' => $this->getAccessPermission(),
+            'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'key',
             'text' => 'Permissions',

@@ -49,7 +49,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getAccessPermission(): string
+    public static function getAccessPermission(): string
     {
         return 'administer_site';
     }
@@ -83,7 +83,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     public Function getAdminPageLink() : array|null
     {
         return [
-            'permission_name' => $this->getAccessPermission(),
+            'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'bell',
             'text' => 'Notifications',

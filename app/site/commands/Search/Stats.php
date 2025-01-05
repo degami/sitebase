@@ -43,6 +43,11 @@ class Stats extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
+        if (getenv('ELASTICSEARCH', 0) == 0) {
+            $this->getIo()->error('Elasticsearch is not enabled');
+            return Command::FAILURE;
+        }
+
         $client = $this->getElasticsearch();
 
         $count_result = $client->count([

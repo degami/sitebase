@@ -231,11 +231,7 @@ class App extends ContainerAwareObject
 
                 foreach ($this->getRouters() as $router) {
 
-                    if ($router == 'webhooks_router' && !$this->getEnv('WEBHOOKS')) {
-                        continue;
-                    }
-
-                    if ($router == 'graphql_router' && !$this->getEnv('GRAPHQL')) {
+                    if (!$this->containerCall([$this->getService($router), 'isEnabled'])) {
                         continue;
                     }
 

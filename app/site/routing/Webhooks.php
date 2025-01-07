@@ -32,6 +32,16 @@ class Webhooks extends BaseRouter
     /**
      * {@inheritdoc}
      *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('WEBHOOKS'));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string[]
      */
     protected function getHttpVerbs(): array

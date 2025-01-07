@@ -98,6 +98,16 @@ abstract class BaseRouter extends ContainerAwareObject
     }
 
     /**
+     * determines if router is available
+     * 
+     * @return bool
+     */
+    public static function isEnabled() : bool 
+    {
+        return true;
+    }
+
+    /**
      * gets Router name
      *
      * @return string

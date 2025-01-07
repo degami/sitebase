@@ -30,6 +30,16 @@ class Graphql extends BaseRouter
     /**
      * {@inheritdoc}
      *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('GRAPHQL'));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string[]
      */
     protected function getHttpVerbs(): array

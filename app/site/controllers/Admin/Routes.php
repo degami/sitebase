@@ -91,6 +91,11 @@ class Routes extends AdminPage
 
         foreach ($this->getRouters() as $routerName) {
             $router = $this->getService($routerName);
+
+            if (!$this->containerCall([$router, 'isEnabled'])) {
+                continue;
+            }
+
             foreach ($router->getRoutes() as $group => $routes) {
                 foreach ($routes as $route) {
                     $routeName = $route['name'];

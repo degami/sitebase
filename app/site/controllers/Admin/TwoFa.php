@@ -59,6 +59,16 @@ class TwoFa extends AdminFormPage
     /**
      * {@inheritdoc}
      *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('USE2FA_ADMIN'));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string
      */
     protected function getTemplateName(): string

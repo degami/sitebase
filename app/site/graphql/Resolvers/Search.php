@@ -3,6 +3,7 @@
 namespace App\Site\GraphQL\Resolvers;
 
 use App\App;
+use App\Base\Exceptions\NotFoundException;
 use App\Base\GraphQl\ResolverInterface;
 
 class Search implements ResolverInterface
@@ -16,6 +17,10 @@ class Search implements ResolverInterface
         $page = $args['page'] ?? 0;
 
         $locale = $args['locale'];
+
+        if (!\App\App::getInstance()->getEnv('ELASTICSEARCH')) {
+            throw new NotFoundException();
+        }
 
         $search_result = static::getSearchResult($input, $locale, $page);
 

@@ -64,6 +64,16 @@ abstract class BasePage extends ContainerAwareObject
     }
 
     /**
+     * determines if route is available for router
+     * 
+     * @return bool
+     */
+    public static function isEnabled() : bool 
+    {
+        return true;
+    }
+
+    /**
      * controller entrypoint
      *
      * @param RouteInfo|null $route_info

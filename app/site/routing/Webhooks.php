@@ -58,6 +58,11 @@ class Webhooks extends BaseRouter
                 $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Webhooks', ClassFinder::RECURSIVE_MODE);
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BaseWebhookPage::class)) {
+
+                        if (!$this->containerCall([$controllerClass, 'isEnabled'])) {
+                            continue;
+                        }
+
                         $group = "/webhooks";
                         $path = str_replace("app/site/webhooks/", "", str_replace("\\", "/", strtolower($controllerClass)));
                         $route_name = 'webhooks.' . str_replace("/", ".", trim($path, "/"));

@@ -32,6 +32,16 @@ class Search extends FrontendPage
     /**
      * {@inheritdoc}
      *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('ELASTICSEARCH'));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return array
      */
     public static function getRoutePath(): array

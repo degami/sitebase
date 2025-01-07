@@ -38,6 +38,16 @@ class Elasticsearch extends AdminPage
     /**
      * {@inheritdoc}
      *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('ELASTICSEARCH'));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string
      */
     protected function getTemplateName(): string
@@ -62,6 +72,10 @@ class Elasticsearch extends AdminPage
      */
     public Function getAdminPageLink() : array|null
     {
+        if (!$this->getEnv('ELASTICSEARCH')) {
+            return null;
+        }
+
         return [
             'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),

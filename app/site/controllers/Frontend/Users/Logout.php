@@ -28,6 +28,16 @@ class Logout extends LoggedUserPage
     /**
      * {@inheritdoc}
      *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('ENABLE_LOGGEDPAGES'));
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string
      */
     protected function getTemplateName(): string

@@ -55,7 +55,7 @@ class TwoFa extends LoggedUserFormPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('USE2FA_USERS'));
+        return boolval(\App\App::getInstance()->getEnv('ENABLE_LOGGEDPAGES')) && boolval(\App\App::getInstance()->getEnv('USE2FA_USERS'));
     }
 
     /**

@@ -28,6 +28,17 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
  */
 class Profile extends LoggedUserFormPage
 {
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('ENABLE_LOGGEDPAGES'));
+    }
+
     /**
      * {@inheritdoc}
      *

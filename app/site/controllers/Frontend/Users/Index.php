@@ -26,6 +26,17 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Index extends LoggedUserPage
 {
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return boolval(\App\App::getInstance()->getEnv('ENABLE_LOGGEDPAGES'));
+    }
+
     /**
      * {@inheritdoc}
      *

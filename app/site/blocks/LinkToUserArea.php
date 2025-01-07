@@ -35,6 +35,10 @@ class LinkToUserArea extends BaseCodeBlock
         try {
 //            $website = $this->containerCall([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);
 
+            if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+                return "";
+            }
+
             if (in_array($current_page->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login'])) {
                 return "";
             }

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -16,7 +16,7 @@ namespace App\Site\Controllers\Frontend;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Site\Models\News;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use DI\DependencyException;
 use DI\NotFoundException;
 
@@ -55,7 +55,7 @@ class NewsList extends FrontendPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'news_list';
     }
@@ -68,7 +68,7 @@ class NewsList extends FrontendPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
         $collection = $this->containerCall([News::class, 'getCollection']);

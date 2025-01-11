@@ -3,7 +3,7 @@
 namespace App\Site\GraphQL\Resolvers;
 
 use App\App;
-use App\Base\GraphQl\ResolverInterface;
+use App\Base\Interfaces\GraphQl\ResolverInterface;
 
 class MenuTree implements ResolverInterface
 {

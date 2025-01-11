@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -16,7 +16,7 @@ namespace App\Base\Tools\Utils;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Site\Models\Language;
 use App\Site\Models\Website;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;

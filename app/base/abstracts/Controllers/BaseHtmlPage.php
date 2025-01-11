@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,10 +13,14 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Base\Routing\RouteInfo;
+use App\Base\Traits\PageTrait;
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Interfaces\Controller\HtmlPageInterface;
 use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Tools\DataCollector\RedisDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
+use App\Site\Models\Rewrite;
 use DebugBar\DebugBar;
 use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;
@@ -26,28 +30,15 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Cookie;
 use League\Plates\Template\Template;
-use App\Site\Routing\RouteInfo;
-use App\Base\Traits\PageTrait;
-use App\Site\Models\Rewrite;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Throwable;
 
 /**
  * Base for pages rendering an html response
  */
-abstract class BaseHtmlPage extends BasePage
+abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
 {
     use PageTrait;
-
-    public const FLASHMESSAGE_INFO = 'info';
-    public const FLASHMESSAGE_SUCCESS = 'success';
-    public const FLASHMESSAGE_WARNING = 'warning';
-    public const FLASHMESSAGE_ERROR = 'danger';
-
-    public const FLASHMESSAGE_PRIMARY = 'primary';
-    public const FLASHMESSAGE_SECONDARY = 'secondary';
-    public const FLASHMESSAGE_LIGHT = 'light';
-    public const FLASHMESSAGE_DARK = 'dark';
 
     /**
      * @var Template|null template object
@@ -386,18 +377,4 @@ abstract class BaseHtmlPage extends BasePage
     {
         return $this->doRedirect($this->getControllerUrl());
     }
-
-    /**
-     * gets current page template name
-     *
-     * @return string
-     */
-    abstract protected function getTemplateName(): string;
-
-    /**
-     * gets current page template data
-     *
-     * @return array
-     */
-    abstract protected function getTemplateData(): array;
 }

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -17,7 +17,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Site\Models\News;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Exceptions\NotFoundException;
 use Throwable;
@@ -52,7 +52,7 @@ class NewsDetail extends FrontendPageWithObject
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'news_detail';
     }

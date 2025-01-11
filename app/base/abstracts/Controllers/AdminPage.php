@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,6 +13,11 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\App;
+use App\Base\Traits\AdminTrait;
+use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Routing\RouteInfo;
+use App\Site\Models\AdminActionLog;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -22,11 +27,6 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Container\ContainerInterface;
-use App\Base\Traits\AdminTrait;
-use App\Base\Exceptions\PermissionDeniedException;
-use App\Site\Routing\RouteInfo;
-use App\Site\Models\AdminActionLog;
-use App\App;
 use Throwable;
 
 /**
@@ -279,7 +279,7 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @return array
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         return $this->template_data;
     }

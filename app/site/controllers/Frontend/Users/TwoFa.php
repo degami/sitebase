@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -18,7 +18,7 @@ use App\Site\Models\User2Fa;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\LoggedUserFormPage;
 use Degami\PHPFormsApi as FAPI;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Container\ContainerInterface;
 
@@ -63,7 +63,7 @@ class TwoFa extends LoggedUserFormPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'twoFa';
     }
@@ -93,7 +93,7 @@ class TwoFa extends LoggedUserFormPage
      *
      * @return array
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         $this->template_data += [
             'pageIntro' => $this->getUtils()->translate('2 Factor Authentication needed', locale: $this->getCurrentLocale()),

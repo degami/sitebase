@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -49,7 +49,7 @@ class Taxonomy extends FrontendPageWithObject
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'taxonomy';
     }

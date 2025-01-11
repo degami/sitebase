@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,6 +13,10 @@
 
 namespace App\Base\Abstracts\Models;
 
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Exceptions\InvalidValueException;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Tools\DataCollector\CollectionDataCollector;
 use ArrayAccess;
 use DebugBar\DebugBar;
 use DI\DependencyException;
@@ -21,10 +25,6 @@ use IteratorAggregate;
 use LessQL\Result;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Base\Abstracts\ContainerAwareObject;
-use App\Base\Exceptions\InvalidValueException;
-use App\Base\Abstracts\Models\BaseModel;
-use App\Base\Tools\DataCollector\CollectionDataCollector;
 
 /**
  * A LessQL Collection

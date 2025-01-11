@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -27,7 +27,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Models\Rewrite;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use App\App;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;

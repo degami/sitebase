@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -33,7 +33,7 @@ class Links extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'base_admin_page';
     }

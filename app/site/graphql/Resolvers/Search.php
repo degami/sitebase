@@ -4,7 +4,7 @@ namespace App\Site\GraphQL\Resolvers;
 
 use App\App;
 use App\Base\Exceptions\NotFoundException;
-use App\Base\GraphQl\ResolverInterface;
+use App\Base\Interfaces\GraphQl\ResolverInterface;
 
 class Search implements ResolverInterface
 {

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -14,8 +14,8 @@
 namespace App\Base\Abstracts\Blocks;
 
 use App\Base\Abstracts\ContainerAwareObject;
-use App\Base\Traits\BlockTrait;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Traits\BlockTrait;
 
 /**
  * Base for code blocks

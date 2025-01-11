@@ -4,9 +4,9 @@ namespace App\Site\GraphQL\Resolvers;
 
 use App\App;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use App\Base\GraphQl\ResolverInterface;
+use App\Base\Interfaces\GraphQl\ResolverInterface;
 use App\Site\Models\Rewrite;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 
 class PageRegions implements ResolverInterface
 {

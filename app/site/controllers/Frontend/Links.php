@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -62,7 +62,7 @@ class Links extends FormPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'links';
     }
@@ -75,7 +75,7 @@ class Links extends FormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
         $collection = $this->containerCall([LinkExchange::class, 'getCollection']);

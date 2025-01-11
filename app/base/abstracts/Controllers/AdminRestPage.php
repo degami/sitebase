@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,12 +13,12 @@
 
 namespace App\Base\Abstracts\Controllers;
 
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
+use App\Base\Traits\AdminTrait;
+use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
-use App\Base\Traits\AdminTrait;
-use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for rest endpoints

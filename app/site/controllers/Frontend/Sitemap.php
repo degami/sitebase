@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -18,7 +18,7 @@ use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\BaseXMLPage;
 use App\Site\Models\Sitemap as SitemapModel;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
 use App\Base\Exceptions\NotFoundException;

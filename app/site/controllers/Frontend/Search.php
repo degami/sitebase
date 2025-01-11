@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -64,7 +64,7 @@ class Search extends FrontendPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'search';
     }
@@ -90,7 +90,7 @@ class Search extends FrontendPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         $page = $this->getRequest()->get('page') ?? 0;
         $search_result = $this->getSearchResult($this->getSearchQuery(), $page);

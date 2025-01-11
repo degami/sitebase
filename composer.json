@@ -57,6 +57,8 @@
     "psr-4": {
       "App\\": "app",
       "App\\Base\\": "app/base",
+      "App\\Base\\Interfaces\\": "app/base/interfaces",
+      "App\\Base\\Routing\\": "app/base/routing",
       "App\\Base\\Abstracts\\": "app/base/abstracts",
       "App\\Base\\Traits\\": "app/base/traits",
       "App\\Base\\Exceptions\\": "app/base/exceptions",

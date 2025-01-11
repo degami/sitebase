@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -15,8 +15,9 @@ namespace App\Base\Abstracts\Routing;
 
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
+use App\Base\Interfaces\Router\RouterInterface;
 use App\Site\Models\Rewrite;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -31,11 +32,8 @@ use function FastRoute\simpleDispatcher;
 /**
  * Base Router Class
  */
-abstract class BaseRouter extends ContainerAwareObject
+abstract class BaseRouter extends ContainerAwareObject implements RouterInterface 
 {
-    public const REGEXP_ROUTE_VARIABLE_EXPRESSION = "(:([^{}]*|\{([^{}]*|\{[^{}]*\})*\})*)?";
-    public const CLASS_METHOD = 'renderPage';
-
     /**
      * @var Dispatcher dispatcher
      */
@@ -569,11 +567,4 @@ abstract class BaseRouter extends ContainerAwareObject
 
         return $this->getHttpVerbs();
     }
-
-    /**
-     * defines http default verbs
-     *
-     * @return array
-     */
-    abstract protected function getHttpVerbs(): array;
 }

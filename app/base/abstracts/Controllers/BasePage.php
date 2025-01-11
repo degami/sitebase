@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,7 +13,11 @@
 
 namespace App\Base\Abstracts\Controllers;
 
-use App\Site\Routing\Web;
+use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Routing\RouteInfo;
+use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Interfaces\Controller\PageInterface;
+use App\Base\Interfaces\Router\WebRouterInterface;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -22,14 +26,11 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\RedirectResponse;
-use App\Base\Abstracts\ContainerAwareObject;
-use App\Site\Routing\RouteInfo;
-use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for all controllers
  */
-abstract class BasePage extends ContainerAwareObject
+abstract class BasePage extends ContainerAwareObject implements PageInterface
 {
     /**
      * @var Response response object
@@ -245,7 +246,7 @@ abstract class BasePage extends ContainerAwareObject
             }
 
             foreach ($route_vars as $var_name => $value) {
-                $regexp = "/\{" . $var_name . Web::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
+                $regexp = "/\{" . $var_name . WebRouterInterface::REGEXP_ROUTEVAR_EXPRESSION . "\}/i";
                 $path = preg_replace($regexp, $value, $path);
             }
 
@@ -299,13 +300,4 @@ abstract class BasePage extends ContainerAwareObject
             )
         );
     }
-
-    /**
-     * controller action
-     *
-     * @param RouteInfo|null $route_info
-     * @param array $route_data
-     * @return Response
-     */
-    abstract public function process(RouteInfo $route_info = null, $route_data = []): Response;
 }

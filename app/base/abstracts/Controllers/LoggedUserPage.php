@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,7 +13,9 @@
 
 namespace App\Base\Abstracts\Controllers;
 
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
+use App\Base\Traits\FrontendPageTrait;
+use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -21,8 +23,6 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Psr\Container\ContainerInterface;
-use App\Base\Traits\FrontendPageTrait;
-use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Base for admin pages
@@ -102,7 +102,7 @@ abstract class LoggedUserPage extends FrontendPage
      *
      * @return array
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         return $this->template_data;
     }

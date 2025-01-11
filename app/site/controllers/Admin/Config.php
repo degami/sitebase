@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -31,7 +31,7 @@ class Config extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'base_admin_page';
     }
@@ -91,7 +91,7 @@ class Config extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         if ($this->template_data['action'] == 'list') {
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */

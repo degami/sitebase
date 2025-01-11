@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -14,7 +14,7 @@
 namespace App\Base\Traits;
 
 use App\Site\Routing\Crud;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use App\Site\Routing\Web;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\Basics\Html\TagElement;

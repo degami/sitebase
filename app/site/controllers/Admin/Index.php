@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -17,7 +17,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminPage;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -31,7 +31,7 @@ class Index extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'index';
     }
@@ -51,7 +51,7 @@ class Index extends AdminPage
      *
      * @return array
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         return [];
     }

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,41 +13,42 @@
 
 namespace App\Base\Abstracts\Queues;
 
-use App\Site\Models\QueueMessage;
 use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Interfaces\Queue\QueueMessageInterface;
+use App\Base\Interfaces\Queue\QueueWorkerInterface;
 use Degami\Basics\Exceptions\BasicException;
 
 /**
  * Base for queue workers
  */
-abstract class BaseQueueWorker extends ContainerAwareObject
+abstract class BaseQueueWorker extends ContainerAwareObject implements QueueWorkerInterface
 {
     /**
-     * @var QueueMessage message to work
+     * @var QueueMessageInterface message to work
      */
-    private QueueMessage $message;
+    private QueueMessageInterface $message;
 
     /**
      * process message
      *
-     * @param QueueMessage $message
+     * @param QueueMessageInterface $message
      * @return mixed
      * @throws BasicException
      */
-    public function process(QueueMessage $message): mixed
+    public function process(QueueMessageInterface $message): mixed
     {
         $this->setMessage($message);
         $result = $this->processMessage($this->getMessage()->getMessageData());
-        $this->getMessage()->setResult(boolval($result) == true ? QueueMessage::ENDED_OK : QueueMessage::ENDED_KO)->persist();
+        $this->getMessage()->setResult(boolval($result) == true ? QueueMessageInterface::ENDED_OK : QueueMessageInterface::ENDED_KO)->persist();
         return $result;
     }
 
     /**
      * gets message
      *
-     * @return QueueMessage
+     * @return QueueMessageInterface
      */
-    public function getMessage(): QueueMessage
+    public function getMessage(): QueueMessageInterface
     {
         return $this->message;
     }
@@ -55,21 +56,13 @@ abstract class BaseQueueWorker extends ContainerAwareObject
     /**
      * set message
      *
-     * @param QueueMessage $message
+     * @param QueueMessageInterface $message
      * @return self
      */
-    public function setMessage(QueueMessage $message): BaseQueueWorker
+    public function setMessage(QueueMessageInterface $message): BaseQueueWorker
     {
         $this->message = $message;
 
         return $this;
     }
-
-    /**
-     * do message work phase
-     *
-     * @param array $message_data
-     * @return mixed
-     */
-    abstract protected function processMessage(array $message_data): mixed;
 }

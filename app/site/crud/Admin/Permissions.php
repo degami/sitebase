@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -21,6 +21,16 @@ use App\Site\Models\Permission as PermissionModel;
  */
 class Permissions extends AdminRestPage
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public static function isEnabled() : bool
+    {
+        return \App\App::getInstance()->getEnv('CRUD');
+    }
+
     /**
      * return route path
      *

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -17,7 +17,7 @@ use App\App;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Exceptions\NotFoundException;
 use App\Site\Models\MediaElement;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -30,7 +30,7 @@ class Minipaint extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'minipaint';
     }
@@ -60,7 +60,7 @@ class Minipaint extends AdminPage
      *
      * @return array
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         return [];
     }

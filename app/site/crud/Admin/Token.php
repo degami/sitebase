@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -23,6 +23,16 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class Token extends BaseJsonPage
 {
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public static function isEnabled() : bool
+    {
+        return \App\App::getInstance()->getEnv('CRUD');
+    }
+
     /**
      * return route path
      *

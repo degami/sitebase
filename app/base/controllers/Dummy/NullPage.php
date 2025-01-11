@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -23,7 +23,7 @@ class NullPage extends BaseHtmlPage
     /**
      * {@inheritdoc}
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return '';
     }
@@ -31,7 +31,7 @@ class NullPage extends BaseHtmlPage
     /**
      * {@inheritdoc}
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         return [];
     }

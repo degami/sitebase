@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -20,7 +20,7 @@ use App\Site\Models\Page as PageModel;
 use App\Base\Abstracts\Models\AccountModel;
 use App\Site\Models\GuestUser;
 use App\Site\Models\User;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;

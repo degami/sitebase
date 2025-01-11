@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -15,7 +15,7 @@ namespace App\Site\Controllers\Admin;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -57,7 +57,7 @@ class Events extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'base_admin_page';
     }

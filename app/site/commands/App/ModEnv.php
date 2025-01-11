@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -41,6 +41,7 @@ class ModEnv extends BaseCommand
         'Redis Info' => ['REDIS_CACHE','REDIS_HOST','REDIS_PORT','REDIS_PASSWORD','REDIS_DATABASE'],
         'GraphQL Info' => ['GRAPHQL'],
         'WebHooks Info' => ['WEBHOOKS'],
+        'Crud Info' => ['CRUD'],
     ];
 
     /**
@@ -50,12 +51,10 @@ class ModEnv extends BaseCommand
     {
         $this->setDescription('Edit .env file')
             ->setDefinition(
-                new InputDefinition(
-                    [
-                        new InputOption('key', null, InputOption::VALUE_OPTIONAL,'', null),
-                        new InputOption('value', null, InputOption::VALUE_OPTIONAL,'', null),
-                    ]
-                )
+                new InputDefinition([
+                    new InputOption('key', null, InputOption::VALUE_OPTIONAL,'', null),
+                    new InputOption('value', null, InputOption::VALUE_OPTIONAL,'', null),
+                ])
             );
     }
 

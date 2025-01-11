@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -24,24 +24,23 @@ use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Interfaces\Router\WebRouterInterface;
 use App\Site\Controllers\Frontend\Page;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 
 /**
  * Web Router Class
  */
-class Web extends BaseRouter
+class Web extends BaseRouter implements WebRouterInterface
 {
     public const ROUTER_TYPE = 'web';
-
-    public const REGEXP_ROUTEVAR_EXPRESSION = ':[^}]+';
 
     /**
      * {@inheritdoc}
      *
      * @return string[]
      */
-    protected function getHttpVerbs(): array
+    public function getHttpVerbs(): array
     {
         return ['GET', 'POST'];
     }

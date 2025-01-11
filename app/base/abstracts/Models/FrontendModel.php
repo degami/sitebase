@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -19,7 +19,6 @@ use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
 use App\Base\Traits\WithRewriteTrait;
 use App\App;
-use League\Plates\Template\Func;
 
 /**
  * A model that will be shown on frontend

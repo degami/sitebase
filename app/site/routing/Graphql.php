@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -18,7 +18,7 @@ use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 
 /**
  * Graphql Router Class
@@ -42,7 +42,7 @@ class Graphql extends BaseRouter
      *
      * @return string[]
      */
-    protected function getHttpVerbs(): array
+    public function getHttpVerbs(): array
     {
         return ['POST'];
     }

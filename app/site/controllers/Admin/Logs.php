@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -33,7 +33,7 @@ class Logs extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'logs';
     }
@@ -74,7 +74,7 @@ class Logs extends AdminPage
      * @throws NotFoundException
      * @throws OutOfRangeException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         $this->template_data = [
             'logtype' => $this->getRequest()->get('logtype') ?? null,

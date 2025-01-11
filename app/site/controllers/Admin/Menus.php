@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -33,7 +33,7 @@ class Menus extends AdminManageModelsPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'menus';
     }
@@ -73,7 +73,7 @@ class Menus extends AdminManageModelsPage
      *
      * @return array
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         if ($this->template_data['action'] == 'list') {
             $this->template_data += [

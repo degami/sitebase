@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -18,7 +18,7 @@ use Exception;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Base\Abstracts\Models\ModelWithLocation;
 use App\Site\Models\Event;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Exceptions\NotFoundException;
 use App\Base\Abstracts\Controllers\BasePage;
@@ -54,7 +54,7 @@ class EventDetail extends FrontendPageWithObject
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'event_detail';
     }

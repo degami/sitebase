@@ -2,7 +2,7 @@
 
 namespace App\Site\GraphQL\Resolvers;
 
-use App\Base\GraphQl\ResolverInterface;
+use App\Base\Interfaces\GraphQl\ResolverInterface;
 
 class Greetings implements ResolverInterface
 {

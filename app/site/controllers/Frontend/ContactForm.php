@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -25,7 +25,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
@@ -68,7 +68,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'contact_form';
     }

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -20,7 +20,7 @@ use App\Base\Abstracts\Controllers\AdminPage;
 use App\Site\Controllers\Frontend\Search;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Tools\Plates\SiteBase;
@@ -50,7 +50,7 @@ class Elasticsearch extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'elasticsearch';
     }
@@ -106,7 +106,7 @@ class Elasticsearch extends AdminPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         $client = $this->getElasticsearch();
 

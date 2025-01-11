@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -19,6 +19,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use Psr\Container\ContainerInterface;
 use App\App;
+use App\Base\Interfaces\Queue\QueueMessageInterface;
 use PDO;
 
 /**
@@ -41,14 +42,9 @@ use PDO;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
-class QueueMessage extends BaseModel
+class QueueMessage extends BaseModel implements QueueMessageInterface
 {
     use WithWebsiteTrait;
-
-    public const STATUS_PENDING = 'pending';
-    public const STATUS_PROCESSED = 'processed';
-    public const ENDED_OK = 1;
-    public const ENDED_KO = 0;
 
     /**
      * gets decoded message data

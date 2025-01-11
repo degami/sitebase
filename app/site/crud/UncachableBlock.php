@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -21,7 +21,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Container\ContainerInterface;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use App\Site\Models\RequestLog;
 use Exception;
 use App\Base\Exceptions\PermissionDeniedException;

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -21,7 +21,7 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Site\Models\Page as PageModel;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use Throwable;
 
@@ -59,7 +59,7 @@ class Page extends FrontendPageWithObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         if ($this->isHomePage()) {
             return 'homepage';

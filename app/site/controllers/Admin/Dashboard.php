@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -38,7 +38,7 @@ class Dashboard extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'dashboard';
     }
@@ -74,7 +74,7 @@ class Dashboard extends AdminPage
      *
      * @return array
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         $this->template_data = [
             'websites' => Website::getCollection()->count(),

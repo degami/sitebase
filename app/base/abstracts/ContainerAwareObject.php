@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -14,10 +14,10 @@
 namespace App\Base\Abstracts;
 
 use App\Base\Exceptions\InvalidValueException;
-use Psr\Container\ContainerInterface;
 use App\Base\Traits\ToolsTrait;
 use App\Base\Traits\ContainerAwareTrait;
 use App\Base\Traits\TranslatorsTrait;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base for objects that are aware of Container

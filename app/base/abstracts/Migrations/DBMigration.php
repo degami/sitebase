@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -14,9 +14,9 @@
 namespace App\Base\Abstracts\Migrations;
 
 use Degami\Basics\Exceptions\BasicException;
-use Exception;
 use Degami\SqlSchema\Schema;
 use Degami\SqlSchema\Table;
+use Exception;
 
 /**
  * Base for database migrations

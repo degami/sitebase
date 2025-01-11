@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -44,7 +44,7 @@ class Profile extends LoggedUserFormPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'users/profile';
     }
@@ -76,7 +76,7 @@ class Profile extends LoggedUserFormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         $this->template_data += [
             'current_user' => $this->getCurrentUser(),

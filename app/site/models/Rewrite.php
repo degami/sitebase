@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -16,7 +16,7 @@ namespace App\Site\Models;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;

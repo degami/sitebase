@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -20,7 +20,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use App\Site\Routing\RouteInfo;
+use App\Base\Routing\RouteInfo;
 
 /**
  * Webhooks Router Class
@@ -44,7 +44,7 @@ class Webhooks extends BaseRouter
      *
      * @return string[]
      */
-    protected function getHttpVerbs(): array
+    public function getHttpVerbs(): array
     {
         return ['POST'];
     }

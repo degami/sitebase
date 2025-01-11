@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -29,7 +29,7 @@ class Phpinfo extends AdminPage
      *
      * @return string
      */
-    protected function getTemplateName(): string
+    public function getTemplateName(): string
     {
         return 'php_info';
     }
@@ -70,7 +70,7 @@ class Phpinfo extends AdminPage
      * @throws NotFoundException
      * @throws OutOfRangeException
      */
-    protected function getTemplateData(): array
+    public function getTemplateData(): array
     {
         ob_start();
         phpinfo();

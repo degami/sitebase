@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.0
+ * PHP Version 8.3
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,6 +13,9 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\App;
+use App\Site\Models\RequestLog;
+use App\Base\Routing\RouteInfo;
 use App\Base\Traits\FrontendPageTrait;
 use App\Site\Models\Menu;
 use App\Site\Models\Rewrite;
@@ -26,9 +29,6 @@ use League\Plates\Template\Template;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use App\App;
-use App\Site\Models\RequestLog;
-use App\Site\Routing\RouteInfo;
 use Degami\Basics\Html\TagElement;
 use App\Base\Exceptions\PermissionDeniedException;
 use Symfony\Component\HttpFoundation\Response;

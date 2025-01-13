@@ -28,7 +28,7 @@ class Media extends AdminRestPage
      */
     public static function isEnabled() : bool
     {
-        return \App\App::getInstance()->getEnv('CRUD');
+        return boolval(\App\App::getInstance()->getEnv('CRUD'));
     }
 
     /**

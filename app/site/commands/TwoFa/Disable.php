@@ -24,7 +24,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Command\Command;
 
 /**
- * Cache Disable Command
+ * 2FA Disable Command
  */
 class Disable extends BaseCommand
 {

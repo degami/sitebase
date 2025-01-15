@@ -17,7 +17,6 @@ use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use App\Site\Controllers\Frontend\Search;
 use Symfony\Component\Console\Command\Command;
 
 /**
@@ -43,44 +42,17 @@ class Stats extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('ELASTICSEARCH', 0) == 0) {
+        if (!$this->getSearch()->isEnabled()) {
             $this->getIo()->error('Elasticsearch is not enabled');
             return Command::FAILURE;
         }
 
-        $client = $this->getElasticsearch();
-
-        $count_result = $client->count([
-            'index' => Search::INDEX_NAME,
-            'body' => [
-                "query" => [
-                    "query_string" => [
-                        "query" => "*",
-                    ],
-                ],
-            ],
-        ])['count'];
+        $count_result = $this->getSearch()->countAll();
 
         $types = [];
 
-        for ($i=0; $i<(intval($count_result / 1000)+1); $i++) {
-            $search_result = $client->search([
-                'index' => Search::INDEX_NAME,
-                'body' => [
-                    'from' => $i * 1000,
-                    'size' => 1000,
-                    "query" => [
-                        "query_string" => [
-                            "query" => "*",
-                        ],
-                    ],
-                ],
-            ]);
-    
-            $hits = $search_result['hits']['hits'] ?? [];
-            $docs = array_map(function ($el) {
-                return $el['_source'];
-            }, $hits);
+        for ($i=0; $i < (intval($count_result / 1000)+1); $i++) {
+            $docs = $this->getSearch()->search('*', $i, 1000)['docs'];
     
             foreach($docs as $doc) {
                 $type = $doc['type'];

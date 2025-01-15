@@ -38,7 +38,7 @@ class Search extends BaseCodeBlock
             return '';
         }
 
-        if (!$this->getEnv('ELASTICSEARCH')) {
+        if (!$this->getSearch()->isEnabled()) {
             return '';
         }
 

@@ -8,9 +8,6 @@ use App\Base\Interfaces\GraphQl\ResolverInterface;
 
 class Search implements ResolverInterface
 {
-    public const INDEX_NAME = 'sitebase_index';
-    public const RESULTS_PER_PAGE = 10;
-
     public static function resolve(array $args): mixed
     {
         $input = $args['input'];
@@ -18,25 +15,23 @@ class Search implements ResolverInterface
 
         $locale = $args['locale'];
 
-        if (!\App\App::getInstance()->getEnv('ELASTICSEARCH')) {
+        if (!\App\App::getInstance()->getSearch()->isEnabled()) {
             throw new NotFoundException();
         }
 
         $search_result = static::getSearchResult($input, $locale, $page);
-
-        $total = $search_result['hits']['total']['value'] ?? 0;
-        $hits = $search_result['hits']['hits'] ?? [];
-
+        $docs = $search_result['docs'];
+        $total = $search_result['total'];
 
         return [
             'search_query' => $input,
             'search_result' => array_map(function ($el) {
                 return [
-                    'frontend_url' => $el['_source']['frontend_url'],
-                    'title' => $el['_source']['title'],
-                    'excerpt' => $el['_source']['excerpt'],
+                    'frontend_url' => $el['frontend_url'],
+                    'title' => $el['title'],
+                    'excerpt' => $el['excerpt'],
                 ];
-            }, $hits),
+            }, $docs),
             'total' => $total,
             'page' => $page,
         ];
@@ -57,37 +52,26 @@ class Search implements ResolverInterface
         $app = App::getInstance();
 
         if ($search_query == null) {
-            return [];
+            return ['total' => 0, 'docs' => []];
         }
 
         if ($locale == null) {
             $locale = $app->getCurrentLocale();
         }
 
-        $client = $app->getElasticsearch();
-
-        $params = [
-            'index' => self::INDEX_NAME,
-            'body' => [
-                'from' => $page * self::RESULTS_PER_PAGE,
-                'size' => self::RESULTS_PER_PAGE,
-                'query' => [
-                    "bool" => [
-                        'minimum_should_match' => 1,
-                        "should" => [
-                            ['match' => ['content' => $search_query]],
-                            ['match' => ['title' => $search_query]],
-                            ['match' => ['date' => $search_query]],
-                        ],
-                        "filter" => [
-                            ["term" => ["website_id" => $app->getSiteData()->getCurrentWebsiteId()]],
-                            ["term" => ["locale" => $locale]],
-                        ],
-                    ],
+        return $app->getSearch()->search([
+            "bool" => [
+                'minimum_should_match' => 1,
+                "should" => [
+                    ['match' => ['content' => $search_query]],
+                    ['match' => ['title' => $search_query]],
+                    ['match' => ['date' => $search_query]],
                 ],
-            ]
-        ];
-
-        return $client->search($params);
+                "filter" => [
+                    ["term" => ["website_id" => $app->getSiteData()->getCurrentWebsiteId()]],
+                    ["term" => ["locale" => $locale]],
+                ],
+            ],
+        ], $page);
     }
 }

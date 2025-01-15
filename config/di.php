@@ -188,23 +188,11 @@ return [
     \GuzzleHttp\Client::class => DI\create(\GuzzleHttp\Client::class),
     'guzzle' => DI\get(\GuzzleHttp\Client::class),
 
-    // 'elasticsearch'
-    \Elasticsearch\Client::class => DI\factory(function() {
-        $host = getenv('ELASTICSEARCH_HOST') ?? 'localhost';
-        $port = getenv('ELASTICSEARCH_PORT') ?? '9200';
-
-        $hosts = [
-            $host.':'.$port,
-        ];
-
-        return \Elasticsearch\ClientBuilder::create()
-            ->setHosts($hosts)
-            ->build();
-    }),
-    'elasticsearch' => DI\get(\Elasticsearch\Client::class),
-
     \App\Base\Tools\Redis\Manager::class => DI\autowire(\App\Base\Tools\Redis\Manager::class),
     'redis' => DI\get(\App\Base\Tools\Redis\Manager::class),
+
+    \App\Base\Tools\Search\Manager::class => DI\autowire(\App\Base\Tools\Search\Manager::class),
+    'search' => DI\get(\App\Base\Tools\Search\Manager::class),
 
     \PHPGangsta_GoogleAuthenticator::class => DI\create(PHPGangsta_GoogleAuthenticator::class),
     'googleauthenticator' => DI\get(\PHPGangsta_GoogleAuthenticator::class),

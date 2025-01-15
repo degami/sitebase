@@ -42,7 +42,7 @@ class Keys extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('REDIS_CACHE', 0) == 0) {
+        if (!$this->getRedis()->isEnabled()) {
             $this->getIo()->error('Redis cache is not enabled');
             return Command::FAILURE;
         }

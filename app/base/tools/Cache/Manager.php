@@ -65,7 +65,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
         parent::__construct($container);
 
         if (self::$internalCacheInstance == null) {
-            if ($this->getEnv('REDIS_CACHE')) {
+            if ($this->getRedis()->isEnabled()) {
                 $config = new \Phpfastcache\Drivers\Redis\Config([
                     'host' => $this->getEnv('REDIS_HOST', '127.0.0.1'),
                     'port' => intval($this->getEnv('REDIS_PORT', 6379)),

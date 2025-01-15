@@ -20,15 +20,13 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
+use App\Base\Tools\Search\Manager as SearchManager;
 
 /**
  * Search page
  */
 class Search extends FrontendPage
 {
-    public const INDEX_NAME = 'sitebase_index';
-    public const RESULTS_PER_PAGE = 10;
-
     /**
      * {@inheritdoc}
      *
@@ -36,7 +34,7 @@ class Search extends FrontendPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('ELASTICSEARCH'));
+        return boolval(\App\App::getInstance()->getSearch()->isEnabled());
     }
 
     /**
@@ -95,17 +93,12 @@ class Search extends FrontendPage
         $page = $this->getRequest()->get('page') ?? 0;
         $search_result = $this->getSearchResult($this->getSearchQuery(), $page);
 
-        $total = $search_result['hits']['total']['value'] ?? 0;
-        $hits = $search_result['hits']['hits'] ?? [];
-
         return [
             'search_query' => $this->getSearchQuery(),
-            'search_result' => array_map(function ($el) {
-                return $el['_source'];
-            }, $hits),
-            'total' => $total,
+            'search_result' => $search_result['docs'],
+            'total' => $search_result['total'],
             'page' => $page,
-            'paginator' => $this->getHtmlRenderer()->renderPaginator($page, $total, $this, self::RESULTS_PER_PAGE),
+            'paginator' => $this->getHtmlRenderer()->renderPaginator($page, $search_result['total'], $this, SearchManager::RESULTS_PER_PAGE),
         ];
     }
 
@@ -132,34 +125,23 @@ class Search extends FrontendPage
     protected function getSearchResult($search_query = null, $page = 0): array
     {
         if ($search_query == null) {
-            return [];
+            return ['total' => 0, 'docs' => []];
         }
 
-        $client = $this->getElasticsearch();
-
-        $params = [
-            'index' => self::INDEX_NAME,
-            'body' => [
-                'from' => $page * self::RESULTS_PER_PAGE,
-                'size' => self::RESULTS_PER_PAGE,
-                'query' => [
-                    "bool" => [
-                        'minimum_should_match' => 1,
-                        "should" => [
-                            ['match' => ['content' => $search_query]],
-                            ['match' => ['title' => $search_query]],
-                            ['match' => ['date' => $search_query]],
-                        ],
-                        "filter" => [
-                            ["term" => ["website_id" => $this->getCurrentWebsiteId()]],
-                            ["term" => ["locale" => $this->getCurrentLocale()]],
-                        ],
-                    ],
+        return $this->getSearch()->search([
+            "bool" => [
+                'minimum_should_match' => 1,
+                "should" => [
+                    ['match' => ['content' => $search_query]],
+                    ['match' => ['title' => $search_query]],
+                    ['match' => ['date' => $search_query]],
                 ],
-            ]
-        ];
-
-        return $client->search($params);
+                "filter" => [
+                    ["term" => ["website_id" => $this->getCurrentWebsiteId()]],
+                    ["term" => ["locale" => $this->getCurrentLocale()]],
+                ],
+            ],
+        ]);
     }
 
     /**

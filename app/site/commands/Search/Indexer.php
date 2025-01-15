@@ -54,16 +54,15 @@ class Indexer extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('ELASTICSEARCH', 0) == 0) {
+        if (!$this->getSearch()->isEnabled()) {
             $this->getIo()->error('Elasticsearch is not enabled');
             return Command::FAILURE;
         }
 
-        if (!$this->ensureIndex()) {
+        if (!$this->getSearch()->ensureIndex()) {
             $this->getIo()->error("Errors during index check");
             return Command::FAILURE;
         }
-        $client = $this->getElasticsearch();
 
         $results = [];
         $classes = ClassFinder::getClassesInNamespace('App\Site\Models', ClassFinder::RECURSIVE_MODE);
@@ -93,13 +92,7 @@ class Indexer extends BaseCommand
                         $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
                     }
 
-                    $params = [
-                        'index' => Search::INDEX_NAME,
-                        'id' => $type . '_' . $object->getId(),
-                        'body' => array_merge($body, $body_additional),
-                    ];
-
-                    $response = $client->index($params);
+                    $response = $this->getSearch()->indexData($type . '_' . $object->getId(), array_merge($body, $body_additional));
                     if (!isset($results[$response['result']])) {
                         $results[$response['result']] = 0;
                     }
@@ -114,23 +107,5 @@ class Indexer extends BaseCommand
         return Command::SUCCESS;
     }
 
-    protected function ensureIndex() : bool
-    {
-        $client = $this->getElasticsearch();
-        $params = [
-            'index' => Search::INDEX_NAME,
-        ];
 
-        if (@$client->indices()->exists($params)) {
-            return true;
-        }
-
-        try {
-            @$client->indices()->create($params);
-        } catch (Exception $e) {
-            return false;
-        }
-
-        return true;
-    }
 }

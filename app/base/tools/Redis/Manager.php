@@ -23,6 +23,7 @@ use Redis as RedisClient;
  */
 class Manager extends ContainerAwareObject
 {
+    public const REDIS_TIMEOUT = 5;
     protected ?RedisClient $client = null;
     protected bool $connected = false;
 
@@ -33,15 +34,24 @@ class Manager extends ContainerAwareObject
         parent::__construct($container);
 
         $this->client = new RedisClient();
-        $this->connected = $this->client->connect(getenv('REDIS_HOST'), getenv('REDIS_PORT'), 5);
+        $this->connected = $this->client->connect(
+            $this->getEnv('REDIS_HOST'), 
+            $this->getEnv('REDIS_PORT'), 
+            self::REDIS_TIMEOUT
+        );
         if (!$this->connected) {
             throw new BasicException("Redis client is not connected");
         }
 
-        if (!empty(getenv('REDIS_PASSWORD', ''))) {
-            $this->client->auth(getenv('REDIS_PASSWORD',''));
+        if (!empty($this->getEnv('REDIS_PASSWORD', ''))) {
+            $this->client->auth($this->getEnv('REDIS_PASSWORD',''));
         }
-        $this->client->select(getenv('REDIS_DATABASE'));
+        $this->client->select($this->getEnv('REDIS_DATABASE'));
+    }
+
+    public function isEnabled() : bool
+    {
+        return $this->getEnv('REDIS_CACHE', 0) != 0;
     }
 
     public function isConnected() : bool

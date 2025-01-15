@@ -48,23 +48,12 @@ class Flush extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (getenv('ELASTICSEARCH', 0) == 0) {
+        if (!$this->getSearch()->isEnabled()) {
             $this->getIo()->error('Elasticsearch is not enabled');
             return Command::FAILURE;
         }
 
-        $client = $this->getElasticsearch();
-
-        $client->deleteByQuery([
-            'index' => Search::INDEX_NAME,
-            'body' => [
-                "query" => [
-                    "query_string" => [
-                        "query" => "*",
-                    ],
-                ],
-            ],
-        ]);
+        $this->getSearch()->flush();
 
         $this->getIo()->success('Data flushed');
 

@@ -17,7 +17,6 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use App\Base\Abstracts\Controllers\AdminPage;
-use App\Site\Controllers\Frontend\Search;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Base\Routing\RouteInfo;
@@ -42,7 +41,7 @@ class Elasticsearch extends AdminPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('ELASTICSEARCH'));
+        return boolval(\App\App::getInstance()->getSearch()->isEnabled());
     }
 
     /**
@@ -72,7 +71,7 @@ class Elasticsearch extends AdminPage
      */
     public Function getAdminPageLink() : array|null
     {
-        if (!$this->getEnv('ELASTICSEARCH')) {
+        if (!$this->getSearch()->isEnabled()) {
             return null;
         }
 
@@ -108,40 +107,14 @@ class Elasticsearch extends AdminPage
      */
     public function getTemplateData(): array
     {
-        $client = $this->getElasticsearch();
-
-        $count_result = $client->count([
-            'index' => Search::INDEX_NAME,
-            'body' => [
-                "query" => [
-                    "query_string" => [
-                        "query" => "*",
-                    ],
-                ],
-            ],
-        ])['count'];
+        $count_result = $this->getSearch()->countAll();
 
         $types = [];
 
-        for ($i=0; $i<(intval($count_result / 1000)+1); $i++) {
-            $search_result = $client->search([
-                'index' => Search::INDEX_NAME,
-                'body' => [
-                    'from' => $i * 1000,
-                    'size' => 1000,
-                    "query" => [
-                        "query_string" => [
-                            "query" => "*",
-                        ],
-                    ],
-                ],
-            ]);
-    
-            $hits = $search_result['hits']['hits'] ?? [];
-            $docs = array_map(function ($el) {
-                return $el['_source'];
-            }, $hits);
-    
+        for ($i=0; $i<(intval($count_result / 1000)+1); $i++) {    
+            $search_result = $this->getSearch()->search('*', $i, 1000);
+            $docs = $search_result['docs'];
+
             foreach($docs as $doc) {
                 $type = $doc['type'];
                 if (!isset($types[$type])) {
@@ -166,7 +139,7 @@ class Elasticsearch extends AdminPage
 
         usort($tableContents, fn ($a, $b) => $a['Type'] <=> $b['Type']);
 
-        $clientInfo = $client->info();
+        $clientInfo = $this->getSearch()->clientInfo();
 
         $this->template_data += [
             'table_header' => ['Type' => '', 'Count' => '', 'actions' => null],
@@ -227,8 +200,6 @@ class Elasticsearch extends AdminPage
 
     protected function reindexModels(string $modelClass)
     {
-        $client = $this->getElasticsearch();
-
         $results = [];
         if (is_subclass_of($modelClass, FrontendModel::class)) {
             /** @var FrontendModel $object */
@@ -255,13 +226,7 @@ class Elasticsearch extends AdminPage
                     $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
                 }
 
-                $params = [
-                    'index' => Search::INDEX_NAME,
-                    'id' => $type . '_' . $object->getId(),
-                    'body' => array_merge($body, $body_additional),
-                ];
-
-                $response = $client->index($params);
+                $response = $this->getSearch()->indexData($type . '_' . $object->getId(), array_merge($body, $body_additional));
                 if (!isset($results[$response['result']])) {
                     $results[$response['result']] = 0;
                 }

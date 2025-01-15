@@ -16,7 +16,6 @@ namespace App\Site\Cron\Tasks;
 use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Tools\Plates\SiteBase;
 use App\Site\Commands\Search\Indexer;
-use App\Site\Controllers\Frontend\Search;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -41,7 +40,9 @@ class SearchManager extends ContainerAwareObject
      */
     public function updateSearchDB(): ?string
     {
-        $client = $this->getElasticsearch();
+        if (!$this->getSearch()->isEnabled()) {
+            return null;
+        }
 
         $classes = ClassFinder::getClassesInNamespace('App\Site\Models', ClassFinder::RECURSIVE_MODE);
         foreach ($classes as $modelClass) {
@@ -70,13 +71,10 @@ class SearchManager extends ContainerAwareObject
                         $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), Indexer::SUMMARIZE_MAX_WORDS);
                     }
 
-                    $params = [
-                        'index' => Search::INDEX_NAME,
-                        'id' => $type . '_' . $object->getId(),
-                        'body' => array_merge($body, $body_additional),
-                    ];
-
-                    return $client->index($params);
+                    $this->getSearch()->indexData(
+                        $type . '_' . $object->getId(),
+                        array_merge($body, $body_additional)
+                    );
                 }
             }
         }

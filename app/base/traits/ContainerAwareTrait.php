@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Cache\Manager as CacheManager;
 use App\Base\Tools\Redis\Manager as RedisManager;
+use App\Base\Tools\Search\Manager as SearchManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
@@ -30,7 +31,6 @@ use App\Site\Routing\Webhooks;
 use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
-use ElasticSearch\Client as ElasticSearchClient;
 use Feather\Icons;
 use Gplanchat\EventManager\SharedEventEmitter;
 use GuzzleHttp\Client as GuzzleHttpClient;
@@ -359,17 +359,6 @@ trait ContainerAwareTrait
     }
 
     /**
-     * gets elasticsearch service
-     *
-     * @return ElasticSearchClient
-     * @throws BasicException
-     */
-    public function getElasticsearch(): ElasticSearchClient
-    {
-        return $this->getService('elasticsearch');
-    }
-
-    /**
      * gets redis service
      * 
      * @return RedisManager
@@ -378,6 +367,17 @@ trait ContainerAwareTrait
     public function getRedis(): RedisManager
     {
         return $this->getService('redis');
+    }
+
+    /**
+     * gets search service
+     * 
+     * @return SearchManager
+     * @throws BasicException
+     */
+    public function getSearch(): SearchManager
+    {
+        return $this->getService('search');
     }
 
     /**

@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Commands\TwoFa;
+namespace App\Site\Commands\Redis;
 
 use App\Base\Abstracts\Commands\BaseCommand;
 use Degami\Basics\Exceptions\BasicException;
@@ -19,12 +19,10 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputDefinition;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Command\Command;
 
 /**
- * 2FA Enable Command
+ * Redis Enable Command
  */
 class Enable extends BaseCommand
 {
@@ -33,14 +31,7 @@ class Enable extends BaseCommand
      */
     protected function configure()
     {
-        $this->setDescription('Enable 2 Factory Authentication')
-        ->setDefinition(
-            new InputDefinition(
-                [
-                    new InputOption('type', 't', InputOption::VALUE_OPTIONAL, 'Type: admin/frontend', 'admin'),
-                ]
-            )
-        );
+        $this->setDescription('Enable Redis');
     }
 
     /**
@@ -54,15 +45,10 @@ class Enable extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        $key = match($input->getOption('type')) {
-            'frontend' => 'USE2FA_USERS',
-            default => 'USE2FA_ADMIN',
-        };
-
         $argInput = new ArrayInput([
             // the command name is passed as first argument
             'command' => 'app:mod_env',
-            '--key'  => $key,
+            '--key'  => 'REDIS_CACHE',
             '--value' => 1,
         ]);
 

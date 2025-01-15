@@ -52,7 +52,7 @@ class Stats extends BaseCommand
         $types = [];
 
         for ($i=0; $i < (intval($count_result / 1000)+1); $i++) {
-            $docs = $this->getSearch()->search('*', $i, 1000)['docs'];
+            $docs = $this->getSearch()->searchData('*', $i, 1000)['docs'];
     
             foreach($docs as $doc) {
                 $type = $doc['type'];

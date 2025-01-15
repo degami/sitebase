@@ -128,7 +128,7 @@ class Search extends FrontendPage
             return ['total' => 0, 'docs' => []];
         }
 
-        return $this->getSearch()->search([
+        return $this->getSearch()->searchData([
             "bool" => [
                 'minimum_should_match' => 1,
                 "should" => [

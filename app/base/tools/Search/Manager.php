@@ -33,7 +33,7 @@ class Manager extends ContainerAwareObject
 
     protected function getClient() : ElasticSearchClient
     {
-        if (!$this->client) {
+        if (is_null($this->client)) {
             $host = $this->getEnv('ELASTICSEARCH_HOST', 'localhost');
             $port = $this->getEnv('ELASTICSEARCH_PORT', '9200');
     
@@ -80,7 +80,7 @@ class Manager extends ContainerAwareObject
         return $this->getClient()->index($params);
     }
 
-    public function flush() : array 
+    public function flushIndex() : array 
     {
         return $this->getClient()->deleteByQuery([
             'index' => self::INDEX_NAME,
@@ -112,7 +112,7 @@ class Manager extends ContainerAwareObject
         ])['count'];
     }
 
-    public function search($query, $page = 0, $pageSize = self::RESULTS_PER_PAGE) : array
+    public function searchData($query, $page = 0, $pageSize = self::RESULTS_PER_PAGE) : array
     {
         if (is_string($query)) {
             $query = [
@@ -143,5 +143,10 @@ class Manager extends ContainerAwareObject
     public function clientInfo() : array
     {
         return $this->getClient()->info();
+    }
+
+    public function __call(string $name, mixed $arguments) : mixed
+    {
+        return call_user_func_array([$this->getClient(), $name], $arguments);
     }
 }

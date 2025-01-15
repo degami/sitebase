@@ -59,7 +59,7 @@ class Search implements ResolverInterface
             $locale = $app->getCurrentLocale();
         }
 
-        return $app->getSearch()->search([
+        return $app->getSearch()->searchData([
             "bool" => [
                 'minimum_should_match' => 1,
                 "should" => [

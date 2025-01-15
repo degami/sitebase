@@ -14,7 +14,6 @@
 namespace App\Site\Commands\Search;
 
 use App\Base\Abstracts\Commands\BaseCommand;
-use App\Site\Controllers\Frontend\Search;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -53,7 +52,7 @@ class Flush extends BaseCommand
             return Command::FAILURE;
         }
 
-        $this->getSearch()->flush();
+        $this->getSearch()->flushIndex();
 
         $this->getIo()->success('Data flushed');
 

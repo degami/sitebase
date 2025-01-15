@@ -14,6 +14,7 @@
 namespace App\Base\Traits;
 
 use App\App;
+use App\Base\Abstracts\Routing\BaseRouter;
 use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Cache\Manager as CacheManager;
 use App\Base\Tools\Redis\Manager as RedisManager;
@@ -41,6 +42,7 @@ use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 use Degami\Basics\Exceptions\BasicException;
+use HaydenPierce\ClassFinder\ClassFinder;
 use PHPGangsta_GoogleAuthenticator;
 use Swift_Mailer;
 use Symfony\Component\HttpFoundation\Request;
@@ -234,6 +236,17 @@ trait ContainerAwareTrait
      */
     public function getRouters(): array
     {
+        if (!$this->getContainer()->has('routers')) {
+            $out = [];
+            foreach (ClassFinder::getClassesInNamespace('App\Site\Routing', ClassFinder::RECURSIVE_MODE) as $className) {
+                if (is_subclass_of($className, BaseRouter::class)) {
+                    $out[] = strtolower(basename(str_replace("\\","/", $className)) . '_router');
+                }
+            }
+
+            $this->getContainer()->set('routers', $out);
+        }
+
         return $this->getService('routers');
     }
 

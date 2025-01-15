@@ -121,14 +121,6 @@ return [
     \App\Site\Routing\Graphql::class => DI\autowire(\App\Site\Routing\Graphql::class),
     'graphql_router' => DI\get(\App\Site\Routing\Graphql::class),
 
-    // 'routers'
-    'routers' => [
-        'web_router',
-        'crud_router',
-        'webhooks_router',
-        'graphql_router',
-    ],
-
     // 'site_data'
     \App\Base\Tools\Utils\SiteData::class => DI\autowire(\App\Base\Tools\Utils\SiteData::class),
     'site_data' => DI\get(\App\Base\Tools\Utils\SiteData::class),

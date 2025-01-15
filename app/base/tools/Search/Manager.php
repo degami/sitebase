@@ -94,16 +94,20 @@ class Manager extends ContainerAwareObject
         ]);
     }
 
-    public function countAll() : int
+    public function countAll($query = '*') : int
     {
+        if (is_string($query)) {
+            $query = [
+                "query_string" => [
+                    "query" => $query,
+                ],
+            ];
+        }
+
         return $this->getClient()->count([
             'index' => self::INDEX_NAME,
             'body' => [
-                "query" => [
-                    "query_string" => [
-                        "query" => "*",
-                    ],
-                ],
+                "query" => $query,
             ],
         ])['count'];
     }

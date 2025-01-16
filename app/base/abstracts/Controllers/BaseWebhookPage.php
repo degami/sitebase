@@ -127,7 +127,7 @@ abstract class BaseWebhookPage extends BasePage
             empty(array_diff($required, array_keys($json)) && 
             empty(array_diff(array_keys($json), $required)))
         ) {
-            if (!empty($this->getWebhookEventTypes()) && !in_array($json['event_type'], $this->getWebhookEventTypes())) {
+            if (!empty($this->getWebhookEventTypes()) && !in_array($json['event_type'] ?? null, $this->getWebhookEventTypes())) {
                 return false;
             }
 

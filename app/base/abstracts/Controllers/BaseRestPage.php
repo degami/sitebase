@@ -74,7 +74,7 @@ abstract class BaseRestPage extends BasePage
             return $return;
         }
 
-        if ($this->getRequest()->headers->get('Content-Type') != 'application/json' && $this->getRequest()->getContentType() != 'json') {
+        if ($this->getRequest()->headers->get('Content-Type') != 'application/json' && $this->getRequest()->getContentTypeFormat() != 'json') {
             throw new PermissionDeniedException();
         }
 

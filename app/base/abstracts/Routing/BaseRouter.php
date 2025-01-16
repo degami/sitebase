@@ -242,7 +242,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
      * @param string[] $verbs
      * @return self
      */
-    public function addRoute(string $group, string $name, string $path, string $class, string $method = 'renderPage', array $verbs = ['GET', 'POST']): BaseRouter
+    public function addRoute(string $group, string $name, string $path, string $class, string $method = self::CLASS_METHOD, array $verbs = ['GET', 'POST']): BaseRouter
     {
         $this->routes[$group][] = [
             'path' => $path,

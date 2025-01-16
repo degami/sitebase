@@ -11,13 +11,16 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Base\Abstracts\Models;
+namespace App\Base\Interfaces\Model;
 
-use App\Base\Interfaces\Model\AccountInterface;
+use App\Site\Models\Role;
 
-/**
- * A account model
- */
-abstract class AccountModel extends BaseModel implements AccountInterface
+interface AccountInterface
 {
+    /**
+     * gets user role
+     *
+     * @return Role
+     */
+    public function getRole(): Role;
 }

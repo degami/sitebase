@@ -47,11 +47,15 @@ class RewriteMedia extends BaseCodeBlock
         }
 
         $maxHeight = 0; $hasLazy = false;
-        $images = array_map(
+        $images = array_filter(array_map(
             function ($media_rewrite) use (&$maxHeight, &$hasLazy) {
                 /** @var MediaElementRewrite $media_rewrite */
-
                 $mediaElement = $media_rewrite->getMediaElement();
+
+                if (!$mediaElement->isImage()) {
+                    return null;
+                }
+
                 if ($mediaElement->getImageBox()?->getHeight() > $maxHeight) {
                     $maxHeight = $mediaElement->getImageBox()->getHeight();
                 }
@@ -62,7 +66,11 @@ class RewriteMedia extends BaseCodeBlock
                 return $mediaElement->getImage();
             },
             MediaElementRewrite::getCollection()->where(['rewrite_id' => $rewrite_id])->getItems()
-        );
+        ));
+
+        if (empty($images)) {
+            return '';
+        }
 
         $tag_attributes = ['class' => 'block-rewritemedia cycle-slideshow'];
         if ($hasLazy) {

@@ -48,6 +48,7 @@ pub/debugbar
 pub/sitebase_logo.png
 pub/sitebase_logo_small.png
 pub/favicon.ico
+pub/webfonts
 js/dest/*
 assets/rsa_private.key
 assets/rsa_private.csr

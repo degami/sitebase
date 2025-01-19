@@ -27,6 +27,9 @@ use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\MediaElement;
 use App\Site\Models\Page;
 use App\App;
+use App\Base\Abstracts\Models\BaseCollection;
+use Degami\Basics\Html\TagElement;
+use League\Plates\Template\Func;
 
 /**
  * "Media" Admin Page
@@ -53,6 +56,30 @@ class Media extends AdminManageModelsPage
         AdminFormPage::__construct($container, $request, $route_info);
         if ($this->template_data['action'] == 'list') {
             parent::__construct($container, $request, $route_info);
+
+            $this->addActionLink(
+                'make_folder', 
+                'make_folder', 
+                $this->getHtmlRenderer()->getIcon('folder-plus') . '&nbsp;' .$this->getUtils()->translate('Create Folder'),
+                $this->getControllerUrl().'?action=addfolder&parent_id='.$this->getRequest()->get('parent_id'),
+                'btn btn-sm btn-warning',
+            );
+
+            if ($this->getRequest()->get('parent_id')) {
+                $parent_id = $this->getRequest()->get('parent_id');
+                if (is_numeric($parent_id)) {
+                    $parentObj = MediaElement::load($parent_id);
+
+                    $this->addActionLink(
+                        'go-up',
+                        'go-up',
+                        $this->getHtmlRenderer()->getIcon('corner-left-up') . ' ' . __('Up'),
+                        $this->getControllerUrl().'?parent_id='.$parentObj->parent_id,
+                        'btn btn-sm btn-light'
+                    );
+                }
+            }
+
         } elseif ($this->template_data['action'] == 'usage') {
             $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
             $elem_data = $media->getData();
@@ -136,6 +163,25 @@ class Media extends AdminManageModelsPage
         ];
     }
 
+    protected function getCollection(): BaseCollection
+    {
+        $collection = parent::getCollection();
+
+        if ($this->getRequest()->get('parent_id')) {
+            $parent_id = $this->getRequest()->get('parent_id');
+            if (is_numeric($parent_id)) {
+                $collection->addCondition(['parent_id' => $parent_id]);
+            }
+        } else {
+            $collection->addCondition(['parent_id' => null]);
+        }
+
+        $collection->addSelect('*')->addSelect('IF(mimetype =\'inode/directory\', 1, 0) AS is_dir');
+        $collection->addOrder(['is_dir' => 'DESC'], 'start');
+
+        return $collection;
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -159,6 +205,30 @@ class Media extends AdminManageModelsPage
         ]);
         //        $form->addMarkup('<pre>'.var_export($type, true)."\n".var_export($_POST, true)."\n".var_export($_FILES, true).'</pre>');
         switch ($type) {
+            case 'addfolder':
+                $this->addBackButton();
+
+                $parentName = 'Root Folder';
+                $parent_id = $this->getRequest()->get('parent_id');
+                if (is_numeric($parent_id)) {
+                    $parentObj = MediaElement::load($parent_id);
+
+                    $parentName = $parentObj->getFilename();
+
+                    $form->addField('parent_id', [
+                        'type' => 'hidden',
+                        'default_value' => $parentObj->getId(),
+                    ]);    
+                }
+                $form
+                ->addMarkup('<h3>'.__('Add folder into "%s"', [$parentName]).'</h3>')
+                ->addField('name', [
+                    'type' => 'textfield',
+                    'title' => 'Folder name',
+                ]);
+
+                $this->addSubmitButton($form);
+                break;
             case 'edit':
                 $elem_data = $media->getData();
                 try {
@@ -216,9 +286,23 @@ class Media extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
+                $destinationDir = App::getDir(App::MEDIA);
+                if ($this->getRequest()->get('parent_id')) {
+                    $parent_id = $this->getRequest()->get('parent_id');
+                    if (is_numeric($parent_id)) {
+                        $parentFolder = MediaElement::load($parent_id);
+                        $destinationDir = $parentFolder->getPath();
+
+                        $form->addField('parent_id', [
+                            'type' => 'hidden',
+                            'default_value' => $parentFolder->getId(),
+                        ]);  
+                    }
+                }
+
                 $form->addField('upload_file', [
                     'type' => 'file',
-                    'destination' => App::getDir(App::MEDIA),
+                    'destination' => $destinationDir,
                     'title' => 'Upload new file',
                 ])
                 ->addField('lazyload', [
@@ -271,7 +355,7 @@ class Media extends AdminManageModelsPage
                 $pages = array_filter(
                     array_map(
                         function ($page) use ($not_in) {
-                            /** @var Page $page */
+                            /* .' '.* @var Page $page */
                             if (in_array($page->getId(), $not_in)) {
                                 return null;
                             }
@@ -296,7 +380,11 @@ class Media extends AdminManageModelsPage
                 $this->addSubmitButton($form, true);
                 break;
             case 'delete':
-                $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
+                $confirmMessage = 'Do you confirm the deletion of the selected element?';
+                if ($media->isDirectory()) {
+                    $confirmMessage = 'Do you confirm the deletion of the selected folder and any included element or folder?';
+                }
+                $this->fillConfirmationForm($confirmMessage, $form);
                 break;
         }
 
@@ -335,8 +423,32 @@ class Media extends AdminManageModelsPage
 
         $values = $form->values();
         switch ($values['action']) {
+            case 'addfolder':
+                $folder = $this->newEmptyObject();
+                $folder->setParentId($values['parent_id'] ?? null);
+                $folder->setFilename($values['name']);
+
+                if ($folder->getParentId()) {
+                    $parentFolder = MediaElement::load($folder->getParentId());
+                    $folder->setPath($parentFolder->getPath() . DS . $folder->getFilename());
+                } else {
+                    $folder->setPath(App::getDir(App::MEDIA) . DS . $folder->getFilename());
+                }
+                @mkdir($folder->getPath(), 0755, true);
+                
+                $folder->setFilesize(0);
+                $folder->setMimetype('inode/directory');
+
+                $this->setAdminActionLogData($folder->getChangedData());
+
+                $folder->persist();
+
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Folder Created."));
+
+                break;
             case 'new':
                 $media->setUserId($this->getCurrentUser()->getId());
+                $media->setParentId($values->parent_id ?? null);
             // intentional fall trough
             // no break
             case 'edit':
@@ -377,11 +489,20 @@ class Media extends AdminManageModelsPage
                 }
                 break;
             case 'delete':
-                $media->delete();
+                if ($media->isDirectory()) {
+                    $deletedElements = $this->deleteMediaFolder($media);
 
-                $this->setAdminActionLogData('Deleted media ' . $media->getId());
+                    $this->setAdminActionLogData('Deleted media Folder ' . $media->getId());
+    
+                    $this->addInfoFlashMessage($this->getUtils()->translate("Media Folder Deleted. %d total elements removed.", [$deletedElements]));    
 
-                $this->addInfoFlashMessage($this->getUtils()->translate("Media Deleted."));
+                } else {
+                    $media->delete();
+
+                    $this->setAdminActionLogData('Deleted media ' . $media->getId());
+    
+                    $this->addInfoFlashMessage($this->getUtils()->translate("Media Deleted."));    
+                }
 
                 break;
         }
@@ -389,6 +510,35 @@ class Media extends AdminManageModelsPage
             return new JsonResponse(['success' => true]);
         }
         return $this->refreshPage();
+    }
+
+    protected function deleteMediaFolder(MediaElement $folder) : int
+    {
+        if (!$folder->isDirectory()) {
+            return 0;
+        }
+
+        $childrenCollection = $this->containerCall([$this->getObjectClass(), 'getCollection']);   
+        $childrenCollection->addCondition(['parent_id' => $folder->getId()]);
+        $childrenCollection->addSelect('*')->addSelect('IF(mimetype =\'inode/directory\', 1, 0) AS is_dir');
+        $childrenCollection->addOrder(['is_dir' => 'DESC'], 'start');
+
+        $deleted = 0;
+        foreach ($childrenCollection as $child) {
+            /** @var MediaElement $child  */
+            if ($child->isDirectory()) {
+                $deleted += $this->deleteMediaFolder($child);
+            } else {
+                $child->delete();
+                $deleted++;
+            }
+        }
+        
+        $folder->delete();
+
+        $deleted++;
+
+        return $deleted;
     }
 
     /**
@@ -412,6 +562,14 @@ class Media extends AdminManageModelsPage
         ];
     }
 
+    protected function getMediaPreview(MediaElement $elem) : string
+    {
+        if ($elem->isDirectory()) {
+            return '<h2>'.$elem->getMimeIcon('solid').'</h2>';
+        }
+        return $elem->isImage() ? $elem->getThumb('50x50', null, null, ['for_admin' => '']) : '';
+    }
+
     /**
      * {@inheritdoc}
      *
@@ -424,28 +582,68 @@ class Media extends AdminManageModelsPage
     protected function getTableElements(array $data): array
     {
         return array_map(
-            function ($elem) {
+            function (MediaElement $elem) {
+                $actions = match($elem->isDirectory()) {
+                    true => [
+                        $this->getChangeDirButton($elem->id),
+                        $this->getDeleteButton($elem->id),
+                    ],
+                    default => [
+                        $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
+                        $this->getEditButton($elem->id),
+                        $this->getDeleteButton($elem->id),
+                    ]
+                };
                 return [
                     'ID' => $elem->getId(),
-                    'Preview' => $elem->getThumb('100x100', null, null, ['for_admin' => '']),
+                    'Preview' => $this->getMediaPreview($elem),
                     'Filename - Path' => $elem->getFilename() . '<br /><abbr style="font-size: 0.6rem;">' . $elem->getPath() . '</abbr>',
                     'Mimetype' => $elem->getMimetype(),
-                    'Filesize' => $this->formatBytes($elem->getFilesize()),
+                    'Filesize' => $elem->isDirectory() ? '' : $this->formatBytes($elem->getFilesize()),
                     'Owner' => $elem->getOwner()->username,
-                    'Height' => $elem->getImageBox()->getHeight() . ' px',
-                    'Width' => $elem->getImageBox()->getWidth() . ' px',
-                    'Lazyload' => $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
+                    'Height' => $elem->isImage() ? $elem->getImageBox()?->getHeight() . ' px' : '',
+                    'Width' => $elem->isImage() ? $elem->getImageBox()?->getWidth() . ' px' : '',
+                    'Lazyload' => $elem->isImage() ? $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', locale: $this->getCurrentLocale()) : '',
                     'actions' => implode(
                         " ",
-                        [
-                            $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
-                            $this->getEditButton($elem->id),
-                            $this->getDeleteButton($elem->id),
-                        ]
+                        $actions
                     ),
                 ];
             },
             $data
         );
+    }
+
+    /**
+     * adds a "new" button
+     *
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function addNewButton()
+    {
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new' . ($this->getRequest()->get('parent_id') ? '&parent_id='.$this->getRequest()->get('parent_id') : ''), 'btn btn-sm btn-success');
+    }
+
+
+    public function getChangeDirButton(int $object_id): string
+    {
+        try {
+            $button = $this->containerMake(TagElement::class, ['options' => [
+                'tag' => 'a',
+                'attributes' => [
+                    'class' => 'btn btn-sm btn-info',
+                    'href' => $this->getControllerUrl() . '?parent_id=' .$object_id,
+                    'title' => $this->getUtils()->translate('Get into folder', locale: $this->getCurrentLocale()),
+                ],
+                'text' => $this->getHtmlRenderer()->getIcon('corner-left-down'),
+            ]]);
+
+            return (string)$button;
+        } catch (BasicException $e) {
+        }
+
+        return '';
     }
 }

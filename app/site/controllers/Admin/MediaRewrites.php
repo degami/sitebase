@@ -145,6 +145,9 @@ class MediaRewrites extends AdminManageModelsPage
                 $medias = ['' => ''];
                 foreach (MediaElement::getCollection() as $media) {
                     /** @var MediaElement $media */
+                    if ($media->isDirectory()) {
+                        comtinue:
+                    }
                     $medias[$media->getId()] = $media->getFilename();
                 }
 

@@ -34,6 +34,7 @@ use Imagine\Image\ImageInterface;
  * @method int getFilesize()
  * @method int getUserId()
  * @method bool getLazyload()
+ * @method int getParentId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -43,6 +44,7 @@ use Imagine\Image\ImageInterface;
  * @method self setFilesize(int $filesize)
  * @method self setUserId(int $user_id)
  * @method self setLazyload(bool $lazyload)
+ * @method self setParentId(int $parent_id)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
@@ -80,6 +82,12 @@ class MediaElement extends BaseModel
      */
     public function getThumb(string $size, $mode = null, $class = null, $img_attributes = []): string
     {
+        $this->checkLoaded();
+
+        if (!$this->isImage()) {
+            throw new BasicException('Not an image');
+        }
+
         $w = $h = null;
         if (preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
             $w = $thumb_sizes[1];
@@ -115,6 +123,10 @@ class MediaElement extends BaseModel
     {
         $this->checkLoaded();
 
+        if (!$this->isImage()) {
+            throw new BasicException('Not an image');
+        }
+
         $thumb_sizes = null;
         if ($size != self::ORIGINAL_SIZE) {
             if (!preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
@@ -126,7 +138,7 @@ class MediaElement extends BaseModel
             $this->setPath(rtrim($this->getPath(), DS) . DS . $this->getFilename());
         }
 
-        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . $this->getFilename();
+        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath());
         if (!preg_match("/^image\/(.*?)/", $this->getMimetype())) {
             $thumb_path .= '.svg';
         }
@@ -170,7 +182,9 @@ class MediaElement extends BaseModel
                         // @todo thumb in base a mimetype
                         $type = explode('/', $this->getMimetype());
                         if (is_array($type)) {
-                            return $this->getHtmlRenderer()->getIcon(array_pop($type));
+                            return $this->getHtmlRenderer()->getFAIcon('file-'. array_pop($type));
+                        } else {
+                            return $this->getHtmlRenderer()->getIcon('file');
                         }
                     }
                 }
@@ -189,6 +203,8 @@ class MediaElement extends BaseModel
      */
     public function clearThumbs() : void
     {
+        $this->checkLoaded();
+
         if (!$this->isImage()) {
             return;
         }
@@ -201,8 +217,8 @@ class MediaElement extends BaseModel
                     continue;
                 }
                 if (is_dir($thumb_path . DS . $dirent)) {
-                    if (is_file($thumb_path . DS . $dirent . DS . $this->getFilename())) {
-                        @unlink($thumb_path . DS . $dirent . DS . $this->getFilename());
+                    if (is_file($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()))) {
+                        @unlink($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()));
                     }
                 }
             }
@@ -216,9 +232,12 @@ class MediaElement extends BaseModel
      */
     public function getImageBox() : ?Box
     {
+        $this->checkLoaded();
+
         if (empty($this->getPath())) {
             return null;
         }
+
         if (!$this->isImage()) {
             return null;
         }
@@ -241,6 +260,12 @@ class MediaElement extends BaseModel
      */
     public function getImage(string $class = 'img-fluid'): string
     {
+        $this->checkLoaded();
+
+        if (!$this->isImage()) {
+            throw new BasicException('Not an image');
+        }
+
         return $this->getThumb(self::ORIGINAL_SIZE, null, $class);
     }
 
@@ -253,6 +278,12 @@ class MediaElement extends BaseModel
      */
     public function getImageUrl(): string
     {
+        $this->checkLoaded();
+
+        if (!$this->isImage()) {
+            throw new BasicException('Not an image');
+        }
+
         return $this->getThumbUrl(self::ORIGINAL_SIZE);
     }
 
@@ -263,6 +294,69 @@ class MediaElement extends BaseModel
      */
     public function isImage() : bool
     {
+        $this->checkLoaded();
+
         return preg_match("/^image\/.*?/", $this->getMimetype());
+    }
+
+    /**
+     * check if media is a directory
+     * 
+     * @return bool
+     */
+    public function isDirectory() : bool
+    {
+        $this->checkLoaded();
+
+        return $this->getMimetype() == 'inode/directory';
+    }
+
+    public function getMimeIcon($theme = 'regular') : string
+    {
+        $type = explode('/', $this->getMimetype());
+        if (is_array($type)) {
+            $type = 'file-' . array_pop($type);
+
+            if ($this->isDirectory()) {
+                $type = 'folder';
+            }
+
+            return $this->getHtmlRenderer()->getFAIcon($type, $theme);
+        }
+        
+        return $this->getHtmlRenderer()->getIcon('file');
+    }
+
+    public function preRemove() : BaseModel
+    {
+        if ($this->isDirectory()) {
+
+            // try removing directory also under thumbs directory
+            $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs';
+            if ($dir = opendir($thumb_path)) {
+                while($dirent = readdir($dir)) {
+                    if ($dirent == '.' || $dirent == '..') {
+                        continue;
+                    }
+                    if (is_dir($thumb_path . DS . $dirent)) {
+                        if (is_dir($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()))) {
+                            @rmdir($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()));
+                        }
+                    }
+                }
+    
+                closedir($dir);
+            }
+
+            @rmdir($this->getPath());
+        } else {
+            if ($this->isImage()) {
+                $this->clearThumbs();
+            }
+
+            @unlink($this->getPath());
+        }
+
+        return $this;
     }
 }

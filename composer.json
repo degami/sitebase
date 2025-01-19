@@ -49,7 +49,8 @@
         "mathiasverraes/classfunctions": "^1.1@dev",
         "phpgangsta/googleauthenticator": "dev-master",
         "cweagans/composer-patches": "dev-main",
-        "webonyx/graphql-php": "dev-master"
+        "webonyx/graphql-php": "dev-master",
+        "components/font-awesome": "dev-master"
     },
   "autoload": {
     "files": [

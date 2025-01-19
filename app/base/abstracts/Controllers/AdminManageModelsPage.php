@@ -68,8 +68,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
             $this->addNewButton();
 
             $itemsPerPage = $this->getItemsPerPage();
-            $collection = $this->getCollection();
-            $data = $this->containerCall([$collection, 'paginate'], ['page_size' => $itemsPerPage]);
+            $data = $this->getTableItems($itemsPerPage);
+            
             $this->template_data += [
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
                 'total' => $data['total'],
@@ -77,6 +77,14 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
             ];
         }
+    }
+
+    protected function getTableItems(int $itemsPerPage) : array
+    {
+        $collection = $this->getCollection();
+        $data = $this->containerCall([$collection, 'paginate'], ['page_size' => $itemsPerPage]);
+
+        return $data;
     }
 
     protected function getCollection() : BaseCollection

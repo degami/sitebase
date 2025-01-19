@@ -159,7 +159,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
      * @param array|string $order
      * @return static
      */
-    public function addOrder($order = []) : static 
+    public function addOrder($order = [], $position = 'end') : static 
     {
         $tableColumns = $this->containerCall([$this->className, 'getTableColumns']);
         if (!empty($order) && is_array($order)) {
@@ -167,26 +167,26 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
                 if (!in_array(strtoupper(trim($direction)), ['ASC', 'DESC'])) {
                     // not a direction, maybe not in form <columnaname> => <direction>, use direction as column
                     if (in_array($direction, $tableColumns)) {
-                        $this->stmt = $this->getSelect()->orderBy($direction);
+                        $this->stmt = $this->getSelect()->orderBy($direction, position: $position);
                     } else {
-                        $this->stmt = $this->getSelect()->orderBy($direction, true);
+                        $this->stmt = $this->getSelect()->orderBy($direction, position: $position);
                     }
                 } else {
                     if (in_array($column, $tableColumns)) {
-                        $this->stmt = $this->getSelect()->orderBy($column, strtoupper(trim($direction)));
+                        $this->stmt = $this->getSelect()->orderBy($column, strtoupper(trim($direction)), position: $position);
                     } else {
-                        $this->stmt = $this->getSelect()->orderBy($column .' '. strtoupper(trim($direction)), true);
+                        $this->stmt = $this->getSelect()->orderBy($column, strtoupper(trim($direction)), position: $position);
                     }
                 }
             }
         } else if (is_string($order) && !empty($order)) {
             if (in_array($order, $tableColumns)) {
-                $this->stmt = $this->getSelect()->orderBy($order);
+                $this->stmt = $this->getSelect()->orderBy($order, position: $position);
             } else {
-                $this->stmt = $this->getSelect()->orderBy($order, true);
+                $this->stmt = $this->getSelect()->orderBy($order, true, position: $position);
             }
         } else {
-            $this->stmt = $this->getSelect()->orderBy($this->containerCall([$this->className, 'getKeyField']));
+            $this->stmt = $this->getSelect()->orderBy($this->containerCall([$this->className, 'getKeyField']), position: $position);
         }
 
         return $this;
@@ -415,7 +415,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     public function count() : int
     {
         $stmt = $this->getSelect();
-        return (clone $stmt)->removePart('limitCount')->removePart('limitOffset')->count();
+        return (clone $stmt)->removePart('orderBy')->removePart('limitCount')->removePart('limitOffset')->count();
     }
 
     /**

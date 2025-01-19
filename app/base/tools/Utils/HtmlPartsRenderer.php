@@ -1162,6 +1162,24 @@ class HtmlPartsRenderer extends ContainerAwareObject
     }
 
     /**
+     * gets an Font Awesome icon
+     *
+     * @param string $icon_name
+     * @param string $theme
+     * @return string
+     * @throws BasicException
+     */
+    public function getFAIcon(string $icon_name, string $theme) : string 
+    {
+        return $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'i',
+            'attributes' => [
+                'class' => 'fa-' . $theme . ' fa-' . $icon_name,
+            ],
+        ]]);
+    }
+
+    /**
      * returns body_classes array based on controller
      */
     public function getHtmlAdminClasses(AdminPage|Login $controller) : string

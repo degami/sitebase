@@ -107,12 +107,12 @@ class Elasticsearch extends AdminPage
      */
     public function getTemplateData(): array
     {
-        $count_result = $this->getSearch()->countAll();
+        $count_result = $this->getSearch()->setQuery('*')->countAll();
 
         $types = [];
 
         for ($i=0; $i<(intval($count_result / 1000)+1); $i++) {    
-            $search_result = $this->getSearch()->searchData('*', $i, 1000);
+            $search_result = $this->getSearch()->setQuery('*')->searchData($i, 1000);
             $docs = $search_result['docs'];
 
             foreach($docs as $doc) {

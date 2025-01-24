@@ -92,6 +92,10 @@ class Indexer extends BaseCommand
                         $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
                     }
 
+                    if (method_exists($object, 'additionalDataForIndexer')) {
+                        $body_additional += $object->additionalDataForIndexer();
+                    }
+
                     $response = $this->getSearch()->indexData($type . '_' . $object->getId(), array_merge($body, $body_additional));
                     if (!isset($results[$response['result']])) {
                         $results[$response['result']] = 0;

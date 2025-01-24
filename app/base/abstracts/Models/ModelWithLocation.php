@@ -168,5 +168,10 @@ abstract class ModelWithLocation extends FrontendModel
         }
 
         return (string)$map.(string)$css.(string)$script;
-    }    
+    }
+    
+    public function additionalDataForIndexer() : array
+    {
+        return ['location' => ['lat' => $this->getLatitude(), 'lon' => $this->getLongitude()]];
+    }
 }

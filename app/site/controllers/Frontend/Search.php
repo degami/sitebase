@@ -128,20 +128,15 @@ class Search extends FrontendPage
             return ['total' => 0, 'docs' => []];
         }
 
-        return $this->getSearch()->searchData([
-            "bool" => [
-                'minimum_should_match' => 1,
-                "should" => [
-                    ['match' => ['content' => $search_query]],
-                    ['match' => ['title' => $search_query]],
-                    ['match' => ['date' => $search_query]],
-                ],
-                "filter" => [
-                    ["term" => ["website_id" => $this->getCurrentWebsiteId()]],
-                    ["term" => ["locale" => $this->getCurrentLocale()]],
-                ],
-            ],
-        ]);
+        return $this->getSearch()
+            ->addAndCondition('website_id', $this->getSiteData()->getCurrentWebsiteId())
+            ->addAndCondition('locale', $this->getCurrentLocale())
+            ->addOrCondition('content', ':match|'.$search_query)
+            ->addOrCondition('title', ':match|'.$search_query)
+            //->addOrCondition('date', ':match|'.$search_query) // cannot search on date field as format must be yyyy-MM-dd HH:mm:ss
+            ->addSort('created_at', 'desc')
+            ->addSort('id', 'asc')
+            ->searchData($page);
     }
 
     /**

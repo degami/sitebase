@@ -238,15 +238,17 @@ class Media extends AdminManageModelsPage
                 unset($elem_data['id']);
                 unset($elem_data['user_id']);
 
-                if ($media->isImage()) {
-                    $box = $media->getImageBox();
-                    if ($box) {
-                        $elem_data += [
-                            'width' => $box->getWidth() . ' px',
-                            'height' => $box->getHeight() . ' px',
-                        ];    
-                    }
-                }
+                try {
+                    if ($media->isImage()) {
+                        $box = $media->getImageBox();
+                        if ($box) {
+                            $elem_data += [
+                                'width' => $box->getWidth() . ' px',
+                                'height' => $box->getHeight() . ' px',
+                            ];    
+                        }
+                    }    
+                } catch (\Exception $e) {}
 
                 array_walk(
                     $elem_data,
@@ -256,17 +258,19 @@ class Media extends AdminManageModelsPage
                 );
 
 
-                if ($media->isImage()) {
-                    $linkTo = $this->getUrl('admin.minipaint', ['path' => '']) . "?media_id=".$media->getId()."&imageUrl=".urlencode($media->getImageUrl())."&ts=".microtime();
-
-                    $this->addActionLink(
-                        'minipaint',
-                        'minipaint',
-                        $this->getHtmlRenderer()->getIcon('edit') . ' ' . 'Image Editor',
-                        $linkTo,
-                        'btn btn-sm btn-light'
-                    );    
-                }
+                try {
+                    if ($media->isImage()) {
+                        $linkTo = $this->getUrl('admin.minipaint', ['path' => '']) . "?media_id=".$media->getId()."&imageUrl=".urlencode($media->getImageUrl())."&ts=".microtime();
+    
+                        $this->addActionLink(
+                            'minipaint',
+                            'minipaint',
+                            $this->getHtmlRenderer()->getIcon('edit') . ' ' . 'Image Editor',
+                            $linkTo,
+                            'btn btn-sm btn-light'
+                        );    
+                    }    
+                } catch (\Exception $e) {}
 
                 $this->addActionLink(
                     'pages-btn',

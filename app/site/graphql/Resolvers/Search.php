@@ -59,19 +59,14 @@ class Search implements ResolverInterface
             $locale = $app->getCurrentLocale();
         }
 
-        return $app->getSearch()->searchData([
-            "bool" => [
-                'minimum_should_match' => 1,
-                "should" => [
-                    ['match' => ['content' => $search_query]],
-                    ['match' => ['title' => $search_query]],
-                    ['match' => ['date' => $search_query]],
-                ],
-                "filter" => [
-                    ["term" => ["website_id" => $app->getSiteData()->getCurrentWebsiteId()]],
-                    ["term" => ["locale" => $locale]],
-                ],
-            ],
-        ], $page);
+        return $app->getSearch()
+            ->addAndCondition('website_id', $app->getSiteData()->getCurrentWebsiteId())
+            ->addAndCondition('locale', $locale)
+            ->addOrCondition('content', ':match|'.$search_query)
+            ->addOrCondition('title', ':match|'.$search_query)
+            //->addOrCondition('date', ':match|'.$search_query) // cannot search on date field as format must be yyyy-MM-dd HH:mm:ss
+            ->addSort('created_at', 'desc')
+            ->addSort('id', 'asc')
+            ->searchData($page);
     }
 }

@@ -47,12 +47,12 @@ class Stats extends BaseCommand
             return Command::FAILURE;
         }
 
-        $count_result = $this->getSearch()->countAll();
+        $count_result = $this->getSearch()->setQuery('*')->countAll();
 
         $types = [];
 
         for ($i=0; $i < (intval($count_result / 1000)+1); $i++) {
-            $docs = $this->getSearch()->searchData('*', $i, 1000)['docs'];
+            $docs = $this->getSearch()->setQuery('*')->searchData($i, 1000)['docs'];
     
             foreach($docs as $doc) {
                 $type = $doc['type'];

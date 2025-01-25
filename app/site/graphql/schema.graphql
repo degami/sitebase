@@ -1,6 +1,6 @@
 schema {
   query: Query
-  mutation: Mutation
+#  mutation: Mutation
 }
 
 type Query {
@@ -18,14 +18,6 @@ type Query {
   configuration: [ConfigsResult]
   translations: [TranslationEntry],
   search(input: String!, locale: String, page: Int): SearchResult
-}
-
-type Mutation {
-  test(input: String): mutationResult
-}
-
-type mutationResult {
-  field: String!
 }
 
 input SearchCriteriaInput {

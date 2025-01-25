@@ -1,6 +1,6 @@
 schema {
   query: Query
-#  mutation: Mutation
+  mutation: Mutation
 }
 
 type Query {
@@ -15,13 +15,18 @@ type Query {
   terms(input: SearchCriteriaInput): TaxonomyCollection,
   pageRegions(rewrite_id: Int, route_path: String): PageRegionsResponse
   menuTree(menu_name: String!, website_id: Int!): [Menu]
-  Configuration: [ConfigsResult]
-  Translations: [TranslationEntry],
+  configuration: [ConfigsResult]
+  translations: [TranslationEntry],
   search(input: String!, locale: String, page: Int): SearchResult
 }
 
-#type Mutation {
-#}
+type Mutation {
+  test(input: String): mutationResult
+}
+
+type mutationResult {
+  field: String!
+}
 
 input SearchCriteriaInput {
   criteria: [SearchCriterionInput]

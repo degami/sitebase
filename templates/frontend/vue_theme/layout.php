@@ -6,6 +6,7 @@ $this->layout('base::html', ['title' => 'Sitebase'] + get_defined_vars()) ?>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/site.css');?>">
+<link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/fa.css');?>">
 <?= $this->section('head'); ?>
 <?php $this->stop() ?>
 

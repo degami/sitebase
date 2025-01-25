@@ -7,6 +7,7 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars()) ?>
 
 <?php $this->start('head') ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/site.css');?>">
+<link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/fa.css');?>">
 <?= $this->section('head'); ?>
 <?php $this->stop() ?>
 

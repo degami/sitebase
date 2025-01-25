@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 const TRANSLATIONS_QUERY = gql`
 query Translations {
-    Translations {
+    translations {
         key
         value
     }
@@ -62,7 +62,7 @@ const actions = {
             const { data } = await client.query({
                 query: TRANSLATIONS_QUERY,
             });
-            commit('SET_TRANSLATIONS', data.Translations);
+            commit('SET_TRANSLATIONS', data.translations);
         } catch (error) {
             console.error('Errore durante il fetch delle traduzioni:', error);
         } finally {

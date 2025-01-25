@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use GraphQL\Utils\BuildSchema;
+use GraphQL\Type\Definition\ResolveInfo;
 use ReflectionNamedType;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -46,7 +47,8 @@ class Entrypoint extends BasePage
             throw new \App\Base\Exceptions\InvalidValueException("Missing request body");
         }
         $query = $input['query'];
-        $variableValues = isset($input['variables']) ? $input['variables'] : null;
+        $variableValues = $input['variables'] ?? null;
+        $operationName = $input['operationName'] ?? null;
         $rootValue = null;
         $context = null;
 
@@ -60,7 +62,7 @@ class Entrypoint extends BasePage
             $rootValue,
             $context,   // custom context
             $variableValues,    // this was grabbed from the HTTP post data
-            null,
+            $operationName,
             $fieldResolver // HERE, custom field resolver
         );
 
@@ -69,12 +71,7 @@ class Entrypoint extends BasePage
         return $this->containerMake(JsonResponse::class)->setData($output);
     }
 
-    private function defaultFieldResolver(
-        $source,
-        $args,
-        $context,
-        \GraphQL\Type\Definition\ResolveInfo $info
-    ) : mixed 
+    private function defaultFieldResolver(mixed $source, array $args, mixed $context, ResolveInfo $info) : mixed 
     {
         $fieldName = $info->fieldName;
         $mandatory = str_ends_with($info->returnType->toString(), '!');

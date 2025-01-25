@@ -2,7 +2,7 @@ import gql from 'graphql-tag';
 
 const CONFIGURATION_QUERY = gql`
 query Configuration {
-    Configuration {
+    configuration {
         locale
         website {
             id
@@ -46,7 +46,7 @@ const actions = {
             const { data } = await client.query({
                 query: CONFIGURATION_QUERY
             });
-            commit('setConfiguration', data.Configuration);
+            commit('setConfiguration', data.configuration);
         } catch (error) {
             console.error('Errore durante il fetch della configurazione:', error);
         } finally {

@@ -27,7 +27,6 @@ use App\App;
 
 /**
  * Class BanIP
- * @package App\Site\Controllers\Admin
  */
 class BanIP extends AdminFormPage
 {

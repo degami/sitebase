@@ -15,7 +15,6 @@ namespace App\Base\Abstracts\Models;
 
 /**
  * A LessQL Collection
- * @package App\Base\Abstracts\Models
  */
 class ModelWithLocationCollection extends BaseCollection
 {

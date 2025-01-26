@@ -32,7 +32,6 @@ use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * basic data migration
- * @package App\Site\Migrations
  */
 class InitialDataMigration extends BaseMigration
 {

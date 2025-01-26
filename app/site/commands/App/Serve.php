@@ -24,7 +24,6 @@ use Symfony\Component\Console\Command\Command;
 
 /**
  * Http Server Command
- * @package App\Site\Commands\App
  */
 class Serve extends BaseExecCommand
 {

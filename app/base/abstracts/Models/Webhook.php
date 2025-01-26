@@ -17,7 +17,6 @@ use Degami\Basics\DataElement;
 
 /**
  * Webhook class
- * @package App\Base\Abstracts\Models
  * 
  * @method string getEventType()
  * @method string getTimestamp()

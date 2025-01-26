@@ -30,7 +30,6 @@ use Exception;
 
 /**
  * A wrapper for LessQL Row
- * @package App\Base\Abstracts\Models
  */
 abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, IteratorAggregate
 {

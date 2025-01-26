@@ -28,7 +28,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  * A LessQL Collection
- * @package App\Base\Abstracts\Models
  */
 class BaseCollection extends ContainerAwareObject implements ArrayAccess, IteratorAggregate
 {

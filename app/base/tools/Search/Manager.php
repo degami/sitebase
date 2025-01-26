@@ -17,7 +17,6 @@ use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Models\FrontendModel;
 use Elasticsearch\Client as ElasticSearchClient;
 use App\Base\Tools\Plates\SiteBase;
-use App\Site\Commands\Search\Indexer;
 
 /**
  * Search Manager
@@ -40,11 +39,21 @@ class Manager extends ContainerAwareObject
      */
     protected ?array $sort = null;
 
+    /**
+     * Checks if Elasticsearch is enabled.
+     *
+     * @return bool Returns true if Elasticsearch is enabled, otherwise false.
+     */
     public function isEnabled() : bool
     {
         return $this->getEnv('ELASTICSEARCH', 0) != 0;
     }
 
+    /**
+     * Retrieves the Elasticsearch client instance.
+     *
+     * @return ElasticSearchClient Returns an instance of the Elasticsearch client.
+     */
     protected function getClient() : ElasticSearchClient
     {
         if (is_null($this->client)) {
@@ -63,17 +72,35 @@ class Manager extends ContainerAwareObject
         return $this->client;
     }
 
+    /**
+     * Gets the current query.
+     *
+     * @return string|array|null The current query, or null if no query is set.
+     */
     public function getQuery() : string|array|null
     {
         return $this->query;
     }
 
+    /**
+     * Resets the query to null.
+     *
+     * @return static Returns the current instance.
+     */
     public function resetQuery() : static
     {
         $this->query = null;
         return $this;
     }
 
+    /**
+     * Sets a query.
+     *
+     * @param string|array $query The query to set.
+     * 
+     * @throws InvalidArgumentException If the query format is invalid.
+     * @return static Returns the current instance.
+     */
     public function setQuery(string|array $query) : static
     {
         if (is_array($query) && !isset($query['query_string']) && !isset($query['bool'])) {
@@ -84,6 +111,11 @@ class Manager extends ContainerAwareObject
         return $this;
     }
 
+    /**
+     * Converts the query into an array format.
+     *
+     * @return array Returns the query as an array.
+     */
     protected function getQueryArray() : array
     {
         if (is_string($this->query)) {
@@ -105,6 +137,11 @@ class Manager extends ContainerAwareObject
         ];
     }
 
+    /**
+     * Ensures the Elasticsearch index exists, creating it if necessary.
+     *
+     * @return bool Returns true if the index exists or was created successfully, otherwise false.
+     */
     public function ensureIndex(): bool
     {
         $client = $this->getClient();
@@ -148,6 +185,13 @@ class Manager extends ContainerAwareObject
         return true;
     }
 
+    /**
+     * Prepares data from a frontend model to be indexed in Elasticsearch.
+     *
+     * @param FrontendModel $object The model instance containing the data to index.
+     * 
+     * @return array The data to be indexed.
+     */
     public function getIndexDataForFrontendModel(FrontendModel $object) : array
     {
         $modelClass = get_class($object);
@@ -182,6 +226,14 @@ class Manager extends ContainerAwareObject
         return ['id' => $type . '_' . $object->getId(), 'data' => array_merge($body, $body_additional)];
     }
 
+    /**
+     * Indexes data into Elasticsearch.
+     *
+     * @param string $idx The index ID.
+     * @param array $data The data to index.
+     * 
+     * @return array The response from Elasticsearch after indexing.
+     */
     public function indexData(string $idx, array $data) : array
     {
         $params = [
@@ -193,6 +245,16 @@ class Manager extends ContainerAwareObject
         return $this->getClient()->index($params);
     }
 
+    /**
+     * Indexes multiple data items in bulk.
+     *
+     * @param array $items An array of items to index, each containing 'id' and 'data' keys.
+     * 
+     * @throws InvalidArgumentException If an item is missing an 'id' or 'data' key.
+     * @throws RuntimeException If the bulk indexing fails.
+     * 
+     * @return array The response from Elasticsearch after the bulk indexing operation.
+     */
     public function bulkIndexData(array $items): array
     {
         if (empty($items)) {
@@ -234,6 +296,11 @@ class Manager extends ContainerAwareObject
         }
     }    
 
+    /**
+     * Flushes all data in the Elasticsearch index.
+     *
+     * @return array The response from Elasticsearch after flushing the index.
+     */
     public function flushIndex() : array 
     {
         return $this->getClient()->deleteByQuery([
@@ -248,6 +315,11 @@ class Manager extends ContainerAwareObject
         ]);
     }
 
+    /**
+     * Counts the total number of documents matching the current query.
+     *
+     * @return int The count of documents matching the query.
+     */
     public function countAll() : int
     {
         return $this->getClient()->count([
@@ -258,6 +330,14 @@ class Manager extends ContainerAwareObject
         ])['count'];
     }
 
+    /**
+     * Performs a search query on the Elasticsearch index.
+     *
+     * @param int $page The page number to retrieve.
+     * @param int $pageSize The number of results per page.
+     * 
+     * @return array An array containing the total count and the documents found.
+     */
     public function searchData($page = 0, $pageSize = self::RESULTS_PER_PAGE) : array
     {
         $searchParams = [
@@ -284,16 +364,40 @@ class Manager extends ContainerAwareObject
         return ['total' => $total, 'docs' => $docs];
     }
 
+    /**
+     * Adds a condition for the "filter" clause of the Elasticsearch query.
+     *
+     * @param string $field The field to apply the condition to.
+     * @param mixed $value The value to match.
+     * 
+     * @return static Returns the current instance.
+     */
     public function addAndCondition(string $field, mixed $value): static
     {
         return $this->addCondition($field, $value, 'filter');
     }
     
+    /**
+     * Adds a condition for the "must_not" clause of the Elasticsearch query.
+     *
+     * @param string $field The field to apply the condition to.
+     * @param mixed $value The value to exclude.
+     * 
+     * @return static Returns the current instance.
+     */
     public function addNotCondition(string $field, mixed $value): static
     {
         return $this->addCondition($field, $value, 'must_not');
     }
 
+    /**
+     * Adds a condition for the "should" clause of the Elasticsearch query.
+     *
+     * @param string $field The field to apply the condition to.
+     * @param mixed $value The value to match.
+     * 
+     * @return static Returns the current instance.
+     */
     public function addOrCondition(string $field, mixed $value): static
     {
         if (!is_array($this->query)) {
@@ -305,6 +409,14 @@ class Manager extends ContainerAwareObject
         return $this->addCondition($field, $value, 'should');
     }
 
+    /**
+     * Adds a generic condition to the query with a specified boolean type.
+     *
+     * @param array $condition The condition to add.
+     * @param string $boolType The boolean type ('filter', 'must', 'must_not', 'should').
+     * 
+     * @return static Returns the current instance.
+     */
     public function addGenericCondition(array $condition, string $boolType) : static
     {
         $boolType = $this->getAdjustedBoolType($boolType, $condition);
@@ -313,12 +425,27 @@ class Manager extends ContainerAwareObject
         return $this;
     }
 
+    /**
+     * Resets the sorting for the query.
+     *
+     * @return static Returns the current instance.
+     */
     public function resetSort() : static
     {
         $this->sort = null;
         return $this;
     }
 
+    /**
+     * Adds sorting to the query.
+     *
+     * @param string $field The field to sort by.
+     * @param string $order The order of sorting ('asc' or 'desc').
+     * 
+     * @throws InvalidArgumentException If the order is invalid.
+     * 
+     * @return static Returns the current instance.
+     */
     public function addSort(string $field, string $order = 'asc'): static
     {
         if (!in_array(strtolower($order), ['asc', 'desc'])) {
@@ -338,6 +465,16 @@ class Manager extends ContainerAwareObject
         return $this;
     }
 
+    /**
+     * Adjusts the boolean type of a condition based on its contents.
+     *
+     * @param string $boolType The boolean type ('filter', 'must', 'must_not', 'should').
+     * @param array $condition The condition to adjust.
+     * 
+     * @throws InvalidArgumentException If the boolean type is invalid.
+     * 
+     * @return string The adjusted boolean type.
+     */
     protected function getAdjustedBoolType(string $boolType, array $condition) : string
     {
         if (!in_array($boolType, ['filter', 'must', 'must_not', 'should'])) {
@@ -351,6 +488,15 @@ class Manager extends ContainerAwareObject
         return $boolType;
     }
     
+    /**
+     * Adds a condition to the query.
+     *
+     * @param string $field The field to apply the condition to.
+     * @param mixed $value The value to match.
+     * @param string $boolType The boolean type ('filter', 'must', 'must_not', 'should').
+     * 
+     * @return static Returns the current instance.
+     */
     protected function addCondition(string $field, mixed $value, string $boolType): static
     {
         $condition = $this->buildCondition($field, $value);
@@ -374,11 +520,47 @@ class Manager extends ContainerAwareObject
         return $this;
     }
 
+    /**
+     * Checks if a value is a spatial value (latitude and longitude).
+     *
+     * @param mixed $value The value to check.
+     * 
+     * @return bool Returns true if the value is a valid spatial value, otherwise false.
+     */
     protected function isSpatialValue($value) : bool
     {
         return is_array($value) && isset($value['lat']) && isset($value['lon']) && is_numeric($value['lat']) && is_numeric($value['lon']);
     }
 
+    /**
+     * Build a condition for an Elasticsearch query based on a field and its value.
+     *
+     * The `$value` can have different formats depending on the type of query to be built:
+     *
+     * - **Array**:
+     *     - **Spatial Queries**: If `$value` is an array containing `lat`, `lon`, and `distance`, a **geo_distance** query is built.
+     *     - **Bounding Box**: If `$value` contains `top_left` and `bottom_right` (both of which must be spatial values), a **geo_bounding_box** query is built.
+     *     - **Terms Query**: If `$value` is an array of scalars, a **terms** query is built.
+     *
+     * - **String**:
+     *     - `:isNull`: A query to match documents where the field does not exist.
+     *     - `:isNotNull`: A query to match documents where the field exists.
+     *     - `:range(min-max)`: A range query where the field value must fall within the specified `min` and `max` range.
+     *     - `:lte(value)`: A range query where the field value must be less than or equal to the specified `value`.
+     *     - `:gte(value)`: A range query where the field value must be greater than or equal to the specified `value`.
+     *     - `prefix(value%)`: A prefix query for values that begin with `value`.
+     *     - `wildcard(%value%)`: A wildcard query for values matching the pattern `value`, with `%` as a wildcard character.
+     *     - `:fuzzy|value`: A fuzzy query for a term with a tolerance for misspellings or variations.
+     *     - `:match|value`: A match query for exact or analyzed text search.
+     *
+     * - **Other types (e.g., integers, booleans)**:
+     *     - A **term** query is built for the field and the exact value.
+     *
+     * @param string $field The field to build the condition for.
+     * @param mixed $value The value that will be used in the condition. The type and structure of `$value` determine the type of query to build.
+     *
+     * @return array|null The Elasticsearch query condition for the field, or `null` if the value is not recognized.
+     */
     protected function buildCondition(string $field, mixed $value): ?array
     {
         if (is_array($value)) {
@@ -504,11 +686,129 @@ class Manager extends ContainerAwareObject
         ];
     }
     
+    /**
+     * Creates a group of conditions with an OR logic between the conditions.
+     *
+     * The `$conditions` parameter is an array of conditions that will be joined with an OR logical operator.
+     * Each condition should be an associative array with the following format:
+     * - `'field' => '<field_name>'`: The name of the field.
+     * - `'value' => '<valid_value_for_buildCondition_value_parameter>'`: A value that is valid for the `$value` parameter of `buildCondition`.
+     * 
+     * If any condition in the array is true, the entire group will match.
+     *
+     * Format of `$conditions`:
+     * - An array where each element is an associative array with keys:
+     *   - `'field'`: A string representing the field name.
+     *   - `'value'`: A value that matches the expected `$value` format for `buildCondition`.
+     *
+     * @param array $conditions An array of conditions that will be linked with an OR operator.
+     * 
+     * @return array An array representing the group of conditions with the OR logical operator.
+     */
+    public function buildOrGroup(array $conditions)
+    {
+        $orGroup = ['bool' => ['should' => []]];
+
+        foreach ($conditions as $condition) {
+            $field = $condition['field'] ?? null;
+            $value = $condition['value'] ?? null;
+
+            if ($field && $value) {
+                $orGroup['bool']['should'][] = $this->buildCondition($field, $value);
+            }
+        }
+
+        return $orGroup;
+    }
+
+    /**
+     * Creates a group of conditions with an AND logic between the conditions.
+     *
+     * The `$conditions` parameter is an array of conditions that will be joined with an AND logical operator.
+     * Each condition should be an associative array with the following format:
+     * - `'field' => '<field_name>'`: The name of the field.
+     * - `'value' => '<valid_value_for_buildCondition_value_parameter>'`: A value that is valid for the `$value` parameter of `buildCondition`.
+     * 
+     * All conditions in the array must be true for the group to match.
+     *
+     * Format of `$conditions`:
+     * - An array where each element is an associative array with keys:
+     *   - `'field'`: A string representing the field name.
+     *   - `'value'`: A value that matches the expected `$value` format for `buildCondition`.
+     *
+     * @param array $conditions An array of conditions that will be linked with an AND operator.
+     * 
+     * @return array An array representing the group of conditions with the AND logical operator.
+     */
+    public function buildAndGroup(array $conditions)
+    {
+        $mustGroup = ['bool' => ['must' => []]];
+
+        foreach ($conditions as $condition) {
+            $field = $condition['field'] ?? null;
+            $value = $condition['value'] ?? null;
+
+            if ($field && $value) {
+                $mustGroup['bool']['must'][] = $this->buildCondition($field, $value);
+            }
+        }
+
+        return $mustGroup;
+    }
+
+    /**
+     * Creates a group of conditions with a NOT logic to exclude documents matching the condition.
+     *
+     * The `$conditions` parameter is an array of conditions that will be negated (applying a NOT logical operator).
+     * Each condition should be an associative array with the following format:
+     * - `'field' => '<field_name>'`: The name of the field.
+     * - `'value' => '<valid_value_for_buildCondition_value_parameter>'`: A value that is valid for the `$value` parameter of `buildCondition`.
+     * 
+     * The group will return all documents that do **not** match any of the conditions in the array.
+     *
+     * Format of `$conditions`:
+     * - An array where each element is an associative array with keys:
+     *   - `'field'`: A string representing the field name.
+     *   - `'value'`: A value that matches the expected `$value` format for `buildCondition`.
+     *
+     * @param array $conditions An array of conditions that will be linked with a NOT operator.
+     * 
+     * @return array An array representing the group of conditions with the NOT logical operator.
+     */
+    public function buildNotGroup(array $conditions)
+    {
+        $notGroup = ['bool' => ['must_not' => []]];
+
+        foreach ($conditions as $condition) {
+            $field = $condition['field'] ?? null;
+            $value = $condition['value'] ?? null;
+
+            if ($field && $value) {
+                $notGroup['bool']['must_not'][] = $this->buildCondition($field, $value);
+            }
+        }
+
+        return $notGroup;
+    }
+
+    /**
+     * Retrieves information about the Elasticsearch client.
+     *
+     * @return array The information returned by the Elasticsearch client.
+     */
     public function clientInfo() : array
     {
         return $this->getClient()->info();
     }
 
+    /**
+     * Handles dynamic method calls to the Elasticsearch client.
+     *
+     * @param string $name The name of the method being called.
+     * @param mixed $arguments The arguments passed to the method.
+     * 
+     * @return mixed The result of the method call.
+     */
     public function __call(string $name, mixed $arguments) : mixed
     {
         return call_user_func_array([$this->getClient(), $name], $arguments);

@@ -46,6 +46,11 @@ abstract class FrontendModel extends BaseModel
         return true;
     }
 
+    public static function isIndexable() : bool
+    {
+        return true;
+    }
+
     public static function getExportHeader() : array
     {
         $class = new \ReflectionClass(static::class);

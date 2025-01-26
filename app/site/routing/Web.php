@@ -13,6 +13,7 @@
 
 namespace App\Site\Routing;
 
+use App\App;
 use App\Base\Abstracts\Routing\BaseRouter;
 use App\Site\Models\Rewrite;
 use App\Site\Models\Website;
@@ -61,7 +62,7 @@ class Web extends BaseRouter implements WebRouterInterface
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
+                $controllerClasses = ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {
 

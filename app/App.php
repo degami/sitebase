@@ -65,6 +65,18 @@ class App extends ContainerAwareObject
     public const TRANSLATIONS = 'translations';
     public const GRAPHQL = 'graphql';
 
+    public const ROUTING_NAMESPACE = 'App\Site\Routing';
+    public const CONTROLLERS_NAMESPACE = 'App\Site\Controllers';
+    public const CRUD_NAMESPACE = 'App\Site\Crud';
+    public const WEBHOOKS_NAMESPACE = 'App\Site\Webhooks';
+    public const BLOCKS_NAMESPACE = 'App\Site\Blocks';
+    public const MODELS_NAMESPACE = 'App\Site\Models';
+    public const COMMANDS_NAMESPACE = 'App\Site\Commands';
+    public const MIGRATIONS_NAMESPACE = 'App\Site\Migrations';
+    public const CRON_TASKS_NAMESPACE = 'App\Site\Cron\Tasks';
+    public const QUEUES_NAMESPACE = 'App\Site\Queues';
+    public const GRAPHQL_RESOLVERS_NAMESPACE = 'App\Site\GraphQL\Resolvers';
+
     /**
      * @var string|null current locale
      */

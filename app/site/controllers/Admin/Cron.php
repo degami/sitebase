@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\App;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Models\CronLog;
 use App\Base\Routing\RouteInfo;
@@ -123,7 +124,7 @@ class Cron extends AdminManageModelsPage
     public function beforeRender() : BasePage|Response
     {
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
-            $taskClasses = ClassFinder::getClassesInNamespace('App\Site\Cron\Tasks');
+            $taskClasses = ClassFinder::getClassesInNamespace(App::CRON_TASKS_NAMESPACE);
             foreach ($taskClasses as $taskClass) {
                 foreach (get_class_methods($taskClass) as $key => $method_name) {
                     $cron_task_callable = json_encode([$taskClass, $method_name]);

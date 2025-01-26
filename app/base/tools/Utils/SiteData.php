@@ -13,6 +13,7 @@
 
 namespace App\Base\Tools\Utils;
 
+use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Controllers\BasePage;
@@ -655,7 +656,7 @@ class SiteData extends ContainerAwareObject
 
         $admin_links_key = "admin.links";
         if (!$this->getCache()->has($admin_links_key) || $reset) {
-            $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers', ClassFinder::RECURSIVE_MODE);
+            $controllerClasses = ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
             foreach ($controllerClasses as $controllerClass) {
                 if (method_exists($controllerClass, 'getAdminPageLink')) {
                     $adminLink = $this->containerCall([$controllerClass, 'getAdminPageLink']) ?? null;

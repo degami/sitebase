@@ -13,6 +13,7 @@
 
 namespace App\Site\Routing;
 
+use App\App;
 use App\Base\Abstracts\Controllers\BaseWebhookPage;
 use App\Base\Abstracts\Routing\BaseRouter;
 use App\Base\Exceptions\InvalidValueException;
@@ -65,7 +66,7 @@ class Webhooks extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Webhooks', ClassFinder::RECURSIVE_MODE);
+                $controllerClasses = ClassFinder::getClassesInNamespace(App::WEBHOOKS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BaseWebhookPage::class)) {
 

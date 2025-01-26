@@ -120,6 +120,16 @@ class Sitemap extends FrontendModel
      *
      * @return string
      */
+    public static function isIndexable() : bool
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
     public function getRewritePrefix(): string
     {
         return 'sitemap';

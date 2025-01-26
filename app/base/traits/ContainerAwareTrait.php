@@ -238,7 +238,7 @@ trait ContainerAwareTrait
     {
         if (!$this->getContainer()->has('routers')) {
             $out = [];
-            foreach (ClassFinder::getClassesInNamespace('App\Site\Routing', ClassFinder::RECURSIVE_MODE) as $className) {
+            foreach (ClassFinder::getClassesInNamespace(App::ROUTING_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
                 if (is_subclass_of($className, BaseRouter::class)) {
                     $out[] = strtolower(basename(str_replace("\\","/", $className)) . '_router');
                 }

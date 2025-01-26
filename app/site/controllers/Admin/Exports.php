@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminFormPage;
 use Degami\PHPFormsApi as FAPI;
@@ -78,7 +79,7 @@ class Exports extends AdminFormPage
     public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
     {
         $exportableClasses = [];
-        $modelClasses = ClassFinder::getClassesInNamespace('App\Site\Models');
+        $modelClasses = ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE);
         foreach ($modelClasses as $modelClass) {
             if (is_callable([$modelClass, 'isExportable']) && $this->containerCall([$modelClass, 'isExportable']) == true) {
                 $className = str_replace("App\\Site\\Models\\", "", $modelClass);

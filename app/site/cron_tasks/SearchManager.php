@@ -13,9 +13,8 @@
 
 namespace App\Site\Cron\Tasks;
 
+use App\App;
 use App\Base\Abstracts\Models\FrontendModel;
-use App\Base\Tools\Plates\SiteBase;
-use App\Site\Commands\Search\Indexer;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -44,38 +43,15 @@ class SearchManager extends ContainerAwareObject
             return null;
         }
 
-        $classes = ClassFinder::getClassesInNamespace('App\Site\Models', ClassFinder::RECURSIVE_MODE);
-        foreach ($classes as $modelClass) {
-            if (is_subclass_of($modelClass, FrontendModel::class)) {
-                /** @var FrontendModel $object */
-                $type = basename(str_replace("\\", "/", strtolower($modelClass)));
-
-                $fields_to_index = ['title', 'content'];
-                if (method_exists($modelClass, 'exposeToIndexer')) {
-                    $fields_to_index = $this->containerCall([$modelClass, 'exposeToIndexer']);
-                }
-
-                foreach ($this->containerCall([$modelClass, 'getCollection']) as $object) {
-                    $body = [];
-
-                    foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
-                        $body[$field_name] = $object->getData($field_name);
-                    }
-
-                    $body_additional = [
-                        'type' => $type,
-                        'frontend_url' => $object->getFrontendUrl()
-                    ];
-
-                    if (in_array('content', $fields_to_index)) {
-                        $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), Indexer::SUMMARIZE_MAX_WORDS);
-                    }
-
-                    $this->getSearch()->indexData(
-                        $type . '_' . $object->getId(),
-                        array_merge($body, $body_additional)
-                    );
-                }
+        $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class));
+        foreach ($classes as $className) {
+            if (!$this->containerCall([$className, 'isIndexable'])) {
+                continue;
+            }
+            /** @var FrontendModel $object */
+            foreach ($this->containerCall([$className, 'getCollection']) as $object) {
+                $indexData = $this->getSearch()->getIndexDataForFrontendModel($object);
+                $this->getSearch()->indexData($indexData['id'], $indexData['data']);
             }
         }
         return null;

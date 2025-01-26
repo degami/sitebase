@@ -13,6 +13,7 @@
 
 namespace App\Site\Routing;
 
+use App\App;
 use App\Base\Abstracts\Controllers\BaseJsonPage;
 use App\Base\Abstracts\Controllers\BaseRestPage;
 use App\Base\Abstracts\Routing\BaseRouter;
@@ -56,7 +57,7 @@ class Crud extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Crud', ClassFinder::RECURSIVE_MODE);
+                $controllerClasses = ClassFinder::getClassesInNamespace(App::CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE);
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BaseRestPage::class) || is_subclass_of($controllerClass, BaseJsonPage::class)) {
 

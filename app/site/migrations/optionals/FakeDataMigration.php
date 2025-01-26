@@ -491,7 +491,7 @@ class FakeDataMigration extends BaseMigration
 
 
         // add all blocks
-        $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');
+        $blockClasses = ClassFinder::getClassesInNamespace(App::BLOCKS_NAMESPACE);
 
         foreach ($blockClasses as $blockClass) {
             $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();

@@ -13,10 +13,9 @@
 
 namespace App\Site\Commands\Search;
 
+use App\App;
 use App\Base\Abstracts\Commands\BaseCommand;
 use App\Base\Abstracts\Models\FrontendModel;
-use App\Base\Tools\Plates\SiteBase;
-use App\Site\Controllers\Frontend\Search;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -31,8 +30,6 @@ use Symfony\Component\Console\Command\Command;
  */
 class Indexer extends BaseCommand
 {
-    public const SUMMARIZE_MAX_WORDS = 50;
-
     /**
      * {@inheritdoc}
      */
@@ -65,43 +62,20 @@ class Indexer extends BaseCommand
         }
 
         $results = [];
-        $classes = ClassFinder::getClassesInNamespace('App\Site\Models', ClassFinder::RECURSIVE_MODE);
-        foreach ($classes as $modelClass) {
-            if (is_subclass_of($modelClass, FrontendModel::class)) {
+        $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class));
+        foreach ($classes as $className) {
+            if (!$this->containerCall([$className, 'isIndexable'])) {
+                continue;
+            }
+            foreach ($this->containerCall([$className, 'getCollection']) as $object) {
                 /** @var FrontendModel $object */
-                $type = basename(str_replace("\\", "/", strtolower($modelClass)));
+                $indexData = $this->getSearch()->getIndexDataForFrontendModel($object);
+                $response = $this->getSearch()->indexData($indexData['id'], $indexData['data']);
 
-                $fields_to_index = ['title', 'content'];
-                if (method_exists($modelClass, 'exposeToIndexer')) {
-                    $fields_to_index = $this->containerCall([$modelClass, 'exposeToIndexer']);
+                if (!isset($results[$response['result']])) {
+                    $results[$response['result']] = 0;
                 }
-
-                foreach ($this->containerCall([$modelClass, 'getCollection']) as $object) {
-                    $body = [];
-
-                    foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
-                        $body[$field_name] = $object->getData($field_name);
-                    }
-
-                    $body_additional = [
-                        'type' => $type,
-                        'frontend_url' => $object->getFrontendUrl()
-                    ];
-
-                    if (in_array('content', $fields_to_index)) {
-                        $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
-                    }
-
-                    if (method_exists($object, 'additionalDataForIndexer')) {
-                        $body_additional += $object->additionalDataForIndexer();
-                    }
-
-                    $response = $this->getSearch()->indexData($type . '_' . $object->getId(), array_merge($body, $body_additional));
-                    if (!isset($results[$response['result']])) {
-                        $results[$response['result']] = 0;
-                    }
-                    $results[$response['result']]++;
-                }
+                $results[$response['result']]++;
             }
         }
 

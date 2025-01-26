@@ -14,7 +14,10 @@
 namespace App\Base\Tools\Search;
 
 use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Models\FrontendModel;
 use Elasticsearch\Client as ElasticSearchClient;
+use App\Base\Tools\Plates\SiteBase;
+use App\Site\Commands\Search\Indexer;
 
 /**
  * Search Manager
@@ -23,6 +26,7 @@ class Manager extends ContainerAwareObject
 {
     public const INDEX_NAME = 'sitebase_index';
     public const RESULTS_PER_PAGE = 10;
+    public const SUMMARIZE_MAX_WORDS = 50;
 
     protected ?ElasticSearchClient $client = null;
 
@@ -144,6 +148,40 @@ class Manager extends ContainerAwareObject
         return true;
     }
 
+    public function getIndexDataForFrontendModel(FrontendModel $object) : array
+    {
+        $modelClass = get_class($object);
+ 
+        $type = basename(str_replace("\\", "/", strtolower($modelClass)));
+
+        $fields_to_index = ['title', 'content'];
+        if (method_exists($modelClass, 'exposeToIndexer')) {
+            $fields_to_index = $this->containerCall([$modelClass, 'exposeToIndexer']);
+        }
+
+        $body = [];
+
+        foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
+            $body[$field_name] = $object->getData($field_name);
+        }
+
+        $body_additional = [
+            'type' => $type,
+            'frontend_url' => $object->getFrontendUrl()
+        ];
+
+        if (in_array('content', $fields_to_index)) {
+            $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
+        }
+
+
+        if (method_exists($object, 'additionalDataForIndexer')) {
+            $body_additional += $object->additionalDataForIndexer();
+        }
+
+        return ['id' => $type . '_' . $object->getId(), 'data' => array_merge($body, $body_additional)];
+    }
+
     public function indexData(string $idx, array $data) : array
     {
         $params = [
@@ -154,6 +192,47 @@ class Manager extends ContainerAwareObject
 
         return $this->getClient()->index($params);
     }
+
+    public function bulkIndexData(array $items): array
+    {
+        if (empty($items)) {
+            throw new \InvalidArgumentException('The items array cannot be empty.');
+        }
+    
+        $params = ['body' => []];
+    
+        foreach ($items as $item) {
+            if (!isset($item['id'], $item['data']) || !is_array($item['data'])) {
+                throw new \InvalidArgumentException('Each item must have an "id" and "data" array.');
+            }
+    
+            $params['body'][] = [
+                'index' => [
+                    '_index' => self::INDEX_NAME,
+                    '_id' => $item['id'],
+                ],
+            ];
+    
+            $params['body'][] = $item['data'];
+        }
+    
+        try {
+            $response = $this->getClient()->bulk($params);
+    
+            // Handle errors in the response, if any
+            if (isset($response['errors']) && $response['errors']) {
+                foreach ($response['items'] as $item) {
+                    if (isset($item['index']['error'])) {
+                        error_log('Error indexing item: ' . json_encode($item['index']['error']));
+                    }
+                }
+            }
+    
+            return $response;
+        } catch (\Throwable $e) {
+            throw new \RuntimeException('Failed to perform bulk indexing: ' . $e->getMessage(), 0, $e);
+        }
+    }    
 
     public function flushIndex() : array 
     {

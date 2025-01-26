@@ -327,7 +327,7 @@ class InitialDataMigration extends BaseMigration
     public static function getAdminPermissionsArray() : array 
     {
         $permissionsArray = [];
-        $controllerClasses = ClassFinder::getClassesInNamespace('App\Site\Controllers\Admin', ClassFinder::RECURSIVE_MODE);
+        $controllerClasses = ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE.'\Admin', ClassFinder::RECURSIVE_MODE);
         foreach ($controllerClasses as $controllerClass) {
             if (is_callable([$controllerClass, 'getAccessPermission'])) {
                 $permissionsArray[] = App::getInstance()->containerCall([$controllerClass, 'getAccessPermission']);

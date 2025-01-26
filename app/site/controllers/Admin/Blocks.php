@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\App;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Traits\AdminFormTrait;
 use App\Site\Models\Rewrite;
@@ -58,7 +59,7 @@ class Blocks extends AdminManageModelsPage
     ) {
         AdminFormPage::__construct($container, $request, $route_info);
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
-            $blockClasses = ClassFinder::getClassesInNamespace('App\Site\Blocks');
+            $blockClasses = ClassFinder::getClassesInNamespace(App::BLOCKS_NAMESPACE);
 
             foreach ($blockClasses as $blockClass) {
                 $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();

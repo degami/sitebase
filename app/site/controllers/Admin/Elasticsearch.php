@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -22,7 +23,6 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Base\Routing\RouteInfo;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\FrontendModel;
-use App\Base\Tools\Plates\SiteBase;
 use Degami\Basics\Html\TagElement;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\HttpFoundation\Response;
@@ -32,8 +32,6 @@ use Symfony\Component\HttpFoundation\Response;
  */
 class Elasticsearch extends AdminPage
 {
-    public const SUMMARIZE_MAX_WORDS = 50;
-
     /**
      * {@inheritdoc}
      *
@@ -127,14 +125,27 @@ class Elasticsearch extends AdminPage
 
         $tableContents = [];
 
-        foreach ($types as $type => $count) {
+        $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class));
+        foreach ($classes as $className) {
+            if (!$this->containerCall([$className, 'isIndexable'])) {
+                continue;
+            }
+            $type = strtolower(basename(str_replace("\\", DS, $className)));
             $tableContents[] = [
                 'Type' => $type, 
-                'Count' => $count, 
+                'Count' => 0, 
                 'actions' => implode("", [
                     $this->getActionButton('reindex', $type, 'secondary', 'refresh-cw', 'Reindex'),
                 ])
             ];
+        }
+
+        foreach ($types as $type => $count) {
+            array_walk($tableContents, function(&$tableRow) use ($type, $count) {
+                if ($tableRow['Type'] == $type) {
+                    $tableRow['Count'] = $count;
+                }
+            });
         }
 
         usort($tableContents, fn ($a, $b) => $a['Type'] <=> $b['Type']);
@@ -168,9 +179,8 @@ class Elasticsearch extends AdminPage
         if ($this->getRequest()->get('action') == 'reindex') {
             $results = [];
 
-            $classes = ClassFinder::getClassesInNamespace('App\Site\Models', ClassFinder::RECURSIVE_MODE);
+            $classes = ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
             foreach ($classes as $modelClass) {
-
                 $type = basename(str_replace("\\", "/", strtolower($modelClass)));
                 if ($this->getRequest()->get('type') && $type != $this->getRequest()->get('type')) {
                     continue;
@@ -202,31 +212,11 @@ class Elasticsearch extends AdminPage
     {
         $results = [];
         if (is_subclass_of($modelClass, FrontendModel::class)) {
-            /** @var FrontendModel $object */
-            $type = basename(str_replace("\\", "/", strtolower($modelClass)));
-
-            $fields_to_index = ['title', 'content'];
-            if (method_exists($modelClass, 'exposeToIndexer')) {
-                $fields_to_index = $this->containerCall([$modelClass, 'exposeToIndexer']);
-            }
-
             foreach ($this->containerCall([$modelClass, 'getCollection']) as $object) {
-                $body = [];
+                /** @var FrontendModel $object */
+                $indexData = $this->getSearch()->getIndexDataForFrontendModel($object);
+                $response = $this->getSearch()->indexData($indexData['id'], $indexData['data']);
 
-                foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
-                    $body[$field_name] = $object->getData($field_name);
-                }
-
-                $body_additional = [
-                    'type' => $type,
-                    'frontend_url' => $object->getFrontendUrl()
-                ];
-
-                if (in_array('content', $fields_to_index)) {
-                    $body_additional['excerpt'] = $this->containerMake(SiteBase::class)->summarize($object->getContent(), self::SUMMARIZE_MAX_WORDS);
-                }
-
-                $response = $this->getSearch()->indexData($type . '_' . $object->getId(), array_merge($body, $body_additional));
                 if (!isset($results[$response['result']])) {
                     $results[$response['result']] = 0;
                 }

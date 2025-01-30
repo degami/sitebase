@@ -26,6 +26,7 @@ class Manager extends ContainerAwareObject
     public const INDEX_NAME = 'sitebase_index';
     public const RESULTS_PER_PAGE = 10;
     public const SUMMARIZE_MAX_WORDS = 50;
+    public const MAX_ELEMENTS_PER_QUERY = 10000;
 
     protected ?ElasticSearchClient $client = null;
 
@@ -223,7 +224,7 @@ class Manager extends ContainerAwareObject
             $body_additional += $object->additionalDataForIndexer();
         }
 
-        return ['id' => $type . '_' . $object->getId(), 'data' => array_merge($body, $body_additional)];
+        return ['_id' => $type . '_' . $object->getId(), '_data' => array_merge($body, $body_additional)];
     }
 
     /**
@@ -248,9 +249,9 @@ class Manager extends ContainerAwareObject
     /**
      * Indexes multiple data items in bulk.
      *
-     * @param array $items An array of items to index, each containing 'id' and 'data' keys.
+     * @param array $items An array of items to index, each containing '_id' and '_data' keys.
      * 
-     * @throws InvalidArgumentException If an item is missing an 'id' or 'data' key.
+     * @throws InvalidArgumentException If an item is missing an '_id' or '_data' key.
      * @throws RuntimeException If the bulk indexing fails.
      * 
      * @return array The response from Elasticsearch after the bulk indexing operation.
@@ -264,18 +265,18 @@ class Manager extends ContainerAwareObject
         $params = ['body' => []];
     
         foreach ($items as $item) {
-            if (!isset($item['id'], $item['data']) || !is_array($item['data'])) {
-                throw new \InvalidArgumentException('Each item must have an "id" and "data" array.');
+            if (!isset($item['_id'], $item['_data']) || !is_array($item['_data'])) {
+                throw new \InvalidArgumentException('Each item must have an "_id" and "_data" array.');
             }
     
             $params['body'][] = [
                 'index' => [
                     '_index' => self::INDEX_NAME,
-                    '_id' => $item['id'],
+                    '_id' => $item['_id'],
                 ],
             ];
     
-            $params['body'][] = $item['data'];
+            $params['body'][] = $item['_data'];
         }
     
         try {
@@ -367,38 +368,44 @@ class Manager extends ContainerAwareObject
     /**
      * Adds a condition for the "filter" clause of the Elasticsearch query.
      *
-     * @param string $field The field to apply the condition to.
+     * @param string|array $field The field to apply the condition to. if value is an array, value will be parsed as a condition and value is ignored
      * @param mixed $value The value to match.
      * 
      * @return static Returns the current instance.
      */
-    public function addAndCondition(string $field, mixed $value): static
+    public function addAndCondition(string|array $field, mixed $value = null): static
     {
+        if (is_array($field)) {
+            return $this->addGenericCondition($this->parseCondition($field), 'filter');
+        }
         return $this->addCondition($field, $value, 'filter');
     }
     
     /**
      * Adds a condition for the "must_not" clause of the Elasticsearch query.
      *
-     * @param string $field The field to apply the condition to.
+     * @param string|array $field The field to apply the condition to. if value is an array, value will be parsed as a condition and value is ignored
      * @param mixed $value The value to exclude.
      * 
      * @return static Returns the current instance.
      */
-    public function addNotCondition(string $field, mixed $value): static
+    public function addNotCondition(string|array $field, mixed $value = null): static
     {
+        if (is_array($field)) {
+            return $this->addGenericCondition($this->parseCondition($field), 'filter');
+        }
         return $this->addCondition($field, $value, 'must_not');
     }
 
     /**
      * Adds a condition for the "should" clause of the Elasticsearch query.
      *
-     * @param string $field The field to apply the condition to.
+     * @param string|array $field The field to apply the condition to. if value is an array, value will be parsed as a condition and value is ignored
      * @param mixed $value The value to match.
      * 
      * @return static Returns the current instance.
      */
-    public function addOrCondition(string $field, mixed $value): static
+    public function addOrCondition(string|array $field, mixed $value = null): static
     {
         if (!is_array($this->query)) {
             $this->query = ['bool' => []];
@@ -406,6 +413,9 @@ class Manager extends ContainerAwareObject
 
         $this->query['bool']['minimum_should_match'] = 1;
 
+        if (is_array($field)) {
+            return $this->addGenericCondition($this->parseCondition($field), 'filter');
+        }
         return $this->addCondition($field, $value, 'should');
     }
 
@@ -687,108 +697,98 @@ class Manager extends ContainerAwareObject
     }
     
     /**
-     * Creates a group of conditions with an OR logic between the conditions.
+     * Builds a script-based condition for Elasticsearch queries.
      *
-     * The `$conditions` parameter is an array of conditions that will be joined with an OR logical operator.
-     * Each condition should be an associative array with the following format:
-     * - `'field' => '<field_name>'`: The name of the field.
-     * - `'value' => '<valid_value_for_buildCondition_value_parameter>'`: A value that is valid for the `$value` parameter of `buildCondition`.
-     * 
-     * If any condition in the array is true, the entire group will match.
-     *
-     * Format of `$conditions`:
-     * - An array where each element is an associative array with keys:
-     *   - `'field'`: A string representing the field name.
-     *   - `'value'`: A value that matches the expected `$value` format for `buildCondition`.
-     *
-     * @param array $conditions An array of conditions that will be linked with an OR operator.
-     * 
-     * @return array An array representing the group of conditions with the OR logical operator.
+     * @param string $script The script source code.
+     * @param array $params Optional parameters for the script.
+     * @return array The Elasticsearch script condition array.
      */
-    public function buildOrGroup(array $conditions)
+    protected function buildScriptCondition(string $script, array $params = []): array
     {
-        $orGroup = ['bool' => ['should' => []]];
-
-        foreach ($conditions as $condition) {
-            $field = $condition['field'] ?? null;
-            $value = $condition['value'] ?? null;
-
-            if ($field && $value) {
-                $orGroup['bool']['should'][] = $this->buildCondition($field, $value);
-            }
-        }
-
-        return $orGroup;
+        return [
+            'script' => [
+                'script' => [
+                    'source' => $script,
+                    'params' => $params
+                ]
+            ]
+        ];
     }
 
     /**
-     * Creates a group of conditions with an AND logic between the conditions.
+     * Parses a condition and determines whether it should be processed as a normal or script condition.
      *
-     * The `$conditions` parameter is an array of conditions that will be joined with an AND logical operator.
-     * Each condition should be an associative array with the following format:
-     * - `'field' => '<field_name>'`: The name of the field.
-     * - `'value' => '<valid_value_for_buildCondition_value_parameter>'`: A value that is valid for the `$value` parameter of `buildCondition`.
-     * 
-     * All conditions in the array must be true for the group to match.
-     *
-     * Format of `$conditions`:
-     * - An array where each element is an associative array with keys:
-     *   - `'field'`: A string representing the field name.
-     *   - `'value'`: A value that matches the expected `$value` format for `buildCondition`.
-     *
-     * @param array $conditions An array of conditions that will be linked with an AND operator.
-     * 
-     * @return array An array representing the group of conditions with the AND logical operator.
+     * @param array $condition The condition to parse.
+     * @return array The Elasticsearch condition array.
+     * @throws InvalidArgumentException If the condition format is invalid.
      */
-    public function buildAndGroup(array $conditions)
+    protected function parseCondition(array $condition): array
     {
-        $mustGroup = ['bool' => ['must' => []]];
-
-        foreach ($conditions as $condition) {
-            $field = $condition['field'] ?? null;
-            $value = $condition['value'] ?? null;
-
-            if ($field && $value) {
-                $mustGroup['bool']['must'][] = $this->buildCondition($field, $value);
-            }
+        if (isset($condition['script'])) {
+            return $this->buildScriptCondition($condition['script'], $condition['params'] ?? []);
+        } elseif (isset($condition['field']) && array_key_exists('value', $condition)) {
+            return $this->buildCondition($condition['field'], $condition['value']);
         }
 
-        return $mustGroup;
+        throw new InvalidArgumentException("Invalid condition format");
     }
 
     /**
-     * Creates a group of conditions with a NOT logic to exclude documents matching the condition.
+     * Builds an OR group for Elasticsearch queries.
      *
-     * The `$conditions` parameter is an array of conditions that will be negated (applying a NOT logical operator).
-     * Each condition should be an associative array with the following format:
-     * - `'field' => '<field_name>'`: The name of the field.
-     * - `'value' => '<valid_value_for_buildCondition_value_parameter>'`: A value that is valid for the `$value` parameter of `buildCondition`.
-     * 
-     * The group will return all documents that do **not** match any of the conditions in the array.
+     * Each condition must be an array in the format:
+     * ['field' => '<field_name>', 'value' => 'a valid value for $value in buildCondition']
+     * or a script condition array returned by buildScriptCondition().
      *
-     * Format of `$conditions`:
-     * - An array where each element is an associative array with keys:
-     *   - `'field'`: A string representing the field name.
-     *   - `'value'`: A value that matches the expected `$value` format for `buildCondition`.
-     *
-     * @param array $conditions An array of conditions that will be linked with a NOT operator.
-     * 
-     * @return array An array representing the group of conditions with the NOT logical operator.
+     * @param array $conditions Array of conditions to be combined with OR.
+     * @return array The Elasticsearch OR condition array.
      */
-    public function buildNotGroup(array $conditions)
+    protected function buildOrGroup(array $conditions): array
     {
-        $notGroup = ['bool' => ['must_not' => []]];
+        return [
+            'bool' => [
+                'should' => array_map([$this, 'parseCondition'], $conditions),
+                'minimum_should_match' => 1
+            ]
+        ];
+    }
 
-        foreach ($conditions as $condition) {
-            $field = $condition['field'] ?? null;
-            $value = $condition['value'] ?? null;
+    /**
+     * Builds an AND group for Elasticsearch queries.
+     *
+     * Each condition must be an array in the format:
+     * ['field' => '<field_name>', 'value' => 'a valid value for $value in buildCondition']
+     * or a script condition array returned by buildScriptCondition().
+     *
+     * @param array $conditions Array of conditions to be combined with AND.
+     * @return array The Elasticsearch AND condition array.
+     */
+    protected function buildAndGroup(array $conditions): array
+    {
+        return [
+            'bool' => [
+                'must' => array_map([$this, 'parseCondition'], $conditions)
+            ]
+        ];
+    }
 
-            if ($field && $value) {
-                $notGroup['bool']['must_not'][] = $this->buildCondition($field, $value);
-            }
-        }
-
-        return $notGroup;
+    /**
+     * Builds a NOT group for Elasticsearch queries.
+     *
+     * Each condition must be an array in the format:
+     * ['field' => '<field_name>', 'value' => 'a valid value for $value in buildCondition']
+     * or a script condition array returned by buildScriptCondition().
+     *
+     * @param array $conditions Array of conditions to be negated.
+     * @return array The Elasticsearch NOT condition array.
+     */
+    protected function buildNotGroup(array $conditions): array
+    {
+        return [
+            'bool' => [
+                'must_not' => array_map([$this, 'parseCondition'], $conditions)
+            ]
+        ];
     }
 
     /**

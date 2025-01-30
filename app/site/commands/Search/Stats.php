@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 use HaydenPierce\ClassFinder\ClassFinder;
+use App\Base\Tools\Search\Manager as SearchManager;
 
 /**
  * Cache Statistics Command
@@ -63,8 +64,8 @@ class Stats extends BaseCommand
             $types[$type] = 0;
         }
 
-        for ($i=0; $i < (intval($count_result / 1000)+1); $i++) {
-            $docs = $this->getSearch()->setQuery('*')->searchData($i, 1000)['docs'];
+        for ($i=0; $i < (intval($count_result / SearchManager::MAX_ELEMENTS_PER_QUERY)+1); $i++) {
+            $docs = $this->getSearch()->setQuery('*')->searchData($i, SearchManager::MAX_ELEMENTS_PER_QUERY)['docs'];
     
             foreach($docs as $doc) {
                 $type = $doc['type'];

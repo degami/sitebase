@@ -51,7 +51,7 @@ class SearchManager extends ContainerAwareObject
             /** @var FrontendModel $object */
             foreach ($this->containerCall([$className, 'getCollection']) as $object) {
                 $indexData = $this->getSearch()->getIndexDataForFrontendModel($object);
-                $this->getSearch()->indexData($indexData['id'], $indexData['data']);
+                $this->getSearch()->indexData($indexData['_id'], $indexData['_data']);
             }
         }
         return null;

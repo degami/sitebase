@@ -70,7 +70,7 @@ class Indexer extends BaseCommand
             foreach ($this->containerCall([$className, 'getCollection']) as $object) {
                 /** @var FrontendModel $object */
                 $indexData = $this->getSearch()->getIndexDataForFrontendModel($object);
-                $response = $this->getSearch()->indexData($indexData['id'], $indexData['data']);
+                $response = $this->getSearch()->indexData($indexData['_id'], $indexData['_data']);
 
                 if (!isset($results[$response['result']])) {
                     $results[$response['result']] = 0;

@@ -71,6 +71,7 @@ class Shell extends BaseCommand
                         $history[] = $command;
                     } catch (Throwable $e) {
                         $output->writeln($e->getMessage());
+                        $output->writeln($e->getTraceAsString());
                     }
                     break;
             }

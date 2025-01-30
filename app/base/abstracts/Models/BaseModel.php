@@ -26,6 +26,7 @@ use PDOStatement;
 use Psr\Container\ContainerInterface;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
+use App\Base\Tools\Search\Manager as SearchManager;
 use Exception;
 
 /**
@@ -148,10 +149,42 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         );
     }
 
+    /**
+     * returns a Model collection
+     */
     public static function getCollection() : BaseCollection
     {
         $container = App::getInstance()->getContainer();
         return $container->make(BaseCollection::class, ['className' => static::class]);
+    }
+
+    /**
+     * returns a Model collection using SearchManager for finding elements
+     */
+    public static function getSearchCollection(array $conditions = []) : BaseCollection
+    {
+        if (static::getKeyField() !== 'id') {
+            throw new InvalidValueException('Cannot load elements using key "id" with keyfield '.implode("|", (array) static::getKeyField()));
+        }
+
+        /** @var SearchManager $search */
+        $search = \App\App::getInstance()->getSearch();
+        foreach($conditions as $condition) {
+            $search->addAndCondition($condition);
+        }
+
+        $type = basename(str_replace("\\", "/", strtolower(static::class)));
+        $search->addAndCondition('type', $type);
+
+        $count_result = $search->countAll();
+        for ($page = 0; $page < intval($count_result / SearchManager::MAX_ELEMENTS_PER_QUERY)+1; $page++) {
+            $result = $search->searchData($page, SearchManager::MAX_ELEMENTS_PER_QUERY);
+            $ids = array_map(function($el) {
+                return $el['id'];
+            }, $result['docs']);
+        }
+
+        return static::getCollection()->where(['id' => $ids]);
     }
 
     /**

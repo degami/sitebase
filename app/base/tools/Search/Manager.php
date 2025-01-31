@@ -392,7 +392,7 @@ class Manager extends ContainerAwareObject
     public function addNotCondition(string|array $field, mixed $value = null): static
     {
         if (is_array($field)) {
-            return $this->addGenericCondition($this->parseCondition($field), 'filter');
+            return $this->addGenericCondition($this->parseCondition($field), 'must_not');
         }
         return $this->addCondition($field, $value, 'must_not');
     }
@@ -414,7 +414,7 @@ class Manager extends ContainerAwareObject
         $this->query['bool']['minimum_should_match'] = 1;
 
         if (is_array($field)) {
-            return $this->addGenericCondition($this->parseCondition($field), 'filter');
+            return $this->addGenericCondition($this->parseCondition($field), 'should');
         }
         return $this->addCondition($field, $value, 'should');
     }

@@ -451,12 +451,13 @@ class Manager extends ContainerAwareObject
      *
      * @param string $field The field to sort by.
      * @param string $order The order of sorting ('asc' or 'desc').
+     * @param array $additionalSortParams additional parameters
      * 
      * @throws InvalidArgumentException If the order is invalid.
      * 
      * @return static Returns the current instance.
      */
-    public function addSort(string $field, string $order = 'asc'): static
+    public function addSort(string $field, string $order = 'asc', array $additionalSortParams = []): static
     {
         if (!in_array(strtolower($order), ['asc', 'desc'])) {
             throw new \InvalidArgumentException("Sort order must be 'asc' or 'desc'.");
@@ -469,7 +470,7 @@ class Manager extends ContainerAwareObject
         $this->sort[] = [
             $field => [
                 'order' => $order
-            ]
+            ] + $additionalSortParams
         ];
     
         return $this;
@@ -720,7 +721,7 @@ class Manager extends ContainerAwareObject
      *
      * @param array $condition The condition to parse.
      * @return array The Elasticsearch condition array.
-     * @throws InvalidArgumentException If the condition format is invalid.
+     * @throws \InvalidArgumentException If the condition format is invalid.
      */
     protected function parseCondition(array $condition): array
     {
@@ -730,7 +731,7 @@ class Manager extends ContainerAwareObject
             return $this->buildCondition($condition['field'], $condition['value']);
         }
 
-        throw new InvalidArgumentException("Invalid condition format");
+        throw new \InvalidArgumentException("Invalid condition format");
     }
 
     /**

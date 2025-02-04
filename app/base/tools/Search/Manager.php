@@ -548,6 +548,18 @@ class Manager extends ContainerAwareObject
     }
 
     /**
+     * Checks if a value is a range value (from and to).
+     *
+     * @param mixed $value The value to check.
+     * 
+     * @return bool Returns true if the value is a valid range value, otherwise false.
+     */
+    protected function isRangeValue($value) : bool
+    {
+        return is_array($value) && (isset($value['from']) || isset($value['to']));
+    }
+
+    /**
      * Build a condition for an Elasticsearch query based on a field and its value.
      *
      * The `$value` can have different formats depending on the type of query to be built:
@@ -585,6 +597,31 @@ class Manager extends ContainerAwareObject
         }
 
         if (is_array($value)) {
+            if ($this->isRangeValue($value)) {
+                $range = [];
+                if (isset($value['from']) && ($value['from'] instanceof \DateTime)) {
+                    $value['from'] = $value['from']->format('Y-m-d H:i:s');
+                    $range['format'] = 'yyyy-MM-dd HH:mm:ss||epoch_millis';
+                }
+                if (isset($value['to']) && ($value['to'] instanceof \DateTime)) {
+                    $value['to'] = $value['to']->format('Y-m-d H:i:s');
+                    $range['format'] = 'yyyy-MM-dd HH:mm:ss||epoch_millis';
+                }
+
+                if (isset($value['from'])) {
+                    $range['gte'] = $value['from'];
+                }
+                if (isset($value['to'])) {
+                    $range['lte'] = $value['to'];
+                }
+
+                return [
+                    'range' => [
+                        $field => $range,
+                    ],
+                ];
+            }
+
             if ($this->isSpatialValue($value) && isset($value['distance']) && $value['distance'] !== null) {
                 return [
                     'geo_distance' => [
@@ -667,6 +704,46 @@ class Manager extends ContainerAwareObject
                         'range' => [
                             $field => [
                                 'gte' => (float)$matches[1],
+                            ],
+                        ],
+                    ];
+
+                case preg_match('/^:lastDays\|(\d+)$/', $value, $matches):
+                    return [
+                        'range' => [
+                            $field => [
+                                'gte' => 'now-'.$matches[1].'d/d',
+                                'lte' => 'now/d',
+                            ],
+                        ],
+                    ];
+                
+                case preg_match('/^:lastHours\|(\d+)$/', $value, $matches):
+                    return [
+                        'range' => [
+                            $field => [
+                                'gte' => 'now-'.$matches[1].'h/h',
+                                'lte' => 'now/h',
+                            ],
+                        ],
+                    ];
+
+                case preg_match('/^:nextDays\|(\d+)$/', $value, $matches):
+                    return [
+                        'range' => [
+                            $field => [
+                                'gte' => 'now/d',
+                                'lte' => 'now+'.$matches[1].'d/d',
+                            ],
+                        ],
+                    ];
+                
+                case preg_match('/^:nextHours\|(\d+)$/', $value, $matches):
+                    return [
+                        'range' => [
+                            $field => [
+                                'gte' => 'now/h',
+                                'lte' => 'now+'.$matches[1].'h/h',
                             ],
                         ],
                     ];

@@ -138,6 +138,11 @@ class Manager extends ContainerAwareObject
         ];
     }
 
+    /**
+     * returns index name
+     * 
+     * @return string index name
+     */
     protected function getIndexName() : string
     {
         return self::INDEX_NAME;

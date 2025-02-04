@@ -368,7 +368,7 @@ class Manager extends ContainerAwareObject
     /**
      * Adds a condition for the "filter" clause of the Elasticsearch query.
      *
-     * @param string|array $field The field to apply the condition to. if value is an array, value will be parsed as a condition and value is ignored
+     * @param string|array $field The field to apply the condition to. if field parameter is an array, its value will be parsed as a condition and value parameter is ignored
      * @param mixed $value The value to match.
      * 
      * @return static Returns the current instance.
@@ -384,7 +384,7 @@ class Manager extends ContainerAwareObject
     /**
      * Adds a condition for the "must_not" clause of the Elasticsearch query.
      *
-     * @param string|array $field The field to apply the condition to. if value is an array, value will be parsed as a condition and value is ignored
+     * @param string|array $field The field to apply the condition to. if field parameter is an array, its value will be parsed as a condition and value parameter is ignored
      * @param mixed $value The value to exclude.
      * 
      * @return static Returns the current instance.
@@ -400,7 +400,7 @@ class Manager extends ContainerAwareObject
     /**
      * Adds a condition for the "should" clause of the Elasticsearch query.
      *
-     * @param string|array $field The field to apply the condition to. if value is an array, value will be parsed as a condition and value is ignored
+     * @param string|array $field The field to apply the condition to. if field parameter is an array, its value will be parsed as a condition and value parameter is ignored
      * @param mixed $value The value to match.
      * 
      * @return static Returns the current instance.
@@ -570,10 +570,16 @@ class Manager extends ContainerAwareObject
      * @param string $field The field to build the condition for.
      * @param mixed $value The value that will be used in the condition. The type and structure of `$value` determine the type of query to build.
      *
+     * @throws InvalidArgumentException If the value type is invalid.
+     * 
      * @return array|null The Elasticsearch query condition for the field, or `null` if the value is not recognized.
      */
     protected function buildCondition(string $field, mixed $value): ?array
     {
+        if (is_object($value) && !($value instanceof \DateTime)) {
+            throw new \InvalidArgumentException("value can't be an object");
+        }
+
         if (is_array($value)) {
             if ($this->isSpatialValue($value) && isset($value['distance']) && $value['distance'] !== null) {
                 return [
@@ -688,6 +694,10 @@ class Manager extends ContainerAwareObject
                         ],
                     ];
             }
+        }
+
+        if ($value instanceof \DateTime) {
+            $value = $value->format('Y-m-d H:i:s');
         }
 
         return [

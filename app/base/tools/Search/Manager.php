@@ -138,6 +138,11 @@ class Manager extends ContainerAwareObject
         ];
     }
 
+    protected function getIndexName() : string
+    {
+        return self::INDEX_NAME;
+    }
+
     /**
      * Ensures the Elasticsearch index exists, creating it if necessary.
      *
@@ -148,7 +153,7 @@ class Manager extends ContainerAwareObject
         $client = $this->getClient();
 
         $params = [
-            'index' => self::INDEX_NAME,
+            'index' => $this->getIndexName(),
             'body'  => [
                 'mappings' => [
                     'properties' => [
@@ -173,13 +178,12 @@ class Manager extends ContainerAwareObject
         ];
 
         try {
-            if (@$client->indices()->exists(['index' => self::INDEX_NAME])) {
+            if (@$client->indices()->exists(['index' => $this->getIndexName()])) {
                 return true;
             }    
 
             @$client->indices()->create($params);
         } catch (\Throwable $e) {
-            var_dump($e->getMessage());
             return false;
         }
 
@@ -238,7 +242,7 @@ class Manager extends ContainerAwareObject
     public function indexData(string $idx, array $data) : array
     {
         $params = [
-            'index' => self::INDEX_NAME,
+            'index' => $this->getIndexName(),
             'id' => $idx,
             'body' => $data,
         ];
@@ -271,7 +275,7 @@ class Manager extends ContainerAwareObject
     
             $params['body'][] = [
                 'index' => [
-                    '_index' => self::INDEX_NAME,
+                    '_index' => $this->getIndexName(),
                     '_id' => $item['_id'],
                 ],
             ];
@@ -305,7 +309,7 @@ class Manager extends ContainerAwareObject
     public function flushIndex() : array 
     {
         return $this->getClient()->deleteByQuery([
-            'index' => self::INDEX_NAME,
+            'index' => $this->getIndexName(),
             'body' => [
                 "query" => [
                     "query_string" => [
@@ -324,7 +328,7 @@ class Manager extends ContainerAwareObject
     public function countAll() : int
     {
         return $this->getClient()->count([
-            'index' => self::INDEX_NAME,
+            'index' => $this->getIndexName(),
             'body' => [
                 "query" => $this->getQueryArray(),
             ],
@@ -342,7 +346,7 @@ class Manager extends ContainerAwareObject
     public function searchData($page = 0, $pageSize = self::RESULTS_PER_PAGE) : array
     {
         $searchParams = [
-            'index' => self::INDEX_NAME,
+            'index' => $this->getIndexName(),
             'body' => [
                 'from' => $page * $pageSize,
                 'size' => $pageSize,

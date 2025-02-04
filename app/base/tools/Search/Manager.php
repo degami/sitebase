@@ -31,6 +31,11 @@ class Manager extends ContainerAwareObject
     protected ?ElasticSearchClient $client = null;
 
     /**
+     * @var string|null
+     */
+    protected ?string $index = null;
+
+    /**
      * @var string|array|null $query 
      */
     protected $query = null;
@@ -138,6 +143,12 @@ class Manager extends ContainerAwareObject
         ];
     }
 
+    protected function setIndexName(string $indexName) : static
+    {
+        $this->index = $indexName;
+        return $this;
+    }
+
     /**
      * returns index name
      * 
@@ -145,7 +156,7 @@ class Manager extends ContainerAwareObject
      */
     protected function getIndexName() : string
     {
-        return self::INDEX_NAME;
+        return $this->index ?? self::INDEX_NAME;
     }
 
     /**
@@ -234,6 +245,19 @@ class Manager extends ContainerAwareObject
         }
 
         return ['_id' => $type . '_' . $object->getId(), '_data' => array_merge($body, $body_additional)];
+    }
+
+    /**
+     * indexes a frontend object
+     * 
+     * @param FrontendModel $object objet to index
+     * 
+     * @return array The response from Elasticsearch after indexing.
+     */
+    public function indexFrontendModel(FrontendModel $object) : array
+    {
+        $indexData = $this->getIndexDataForFrontendModel($object);
+        return $this->indexData($indexData['_id'], $indexData['_data']);
     }
 
     /**

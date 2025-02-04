@@ -215,8 +215,7 @@ class Elasticsearch extends AdminPage
         if (is_subclass_of($modelClass, FrontendModel::class)) {
             foreach ($this->containerCall([$modelClass, 'getCollection']) as $object) {
                 /** @var FrontendModel $object */
-                $indexData = $this->getSearch()->getIndexDataForFrontendModel($object);
-                $response = $this->getSearch()->indexData($indexData['_id'], $indexData['_data']);
+                $response = $this->getSearch()->indexFrontendModel($object);
 
                 if (!isset($results[$response['result']])) {
                     $results[$response['result']] = 0;

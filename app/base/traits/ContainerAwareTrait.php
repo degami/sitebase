@@ -19,6 +19,7 @@ use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Cache\Manager as CacheManager;
 use App\Base\Tools\Redis\Manager as RedisManager;
 use App\Base\Tools\Search\Manager as SearchManager;
+use App\Base\Tools\ApplicationLogger\Manager as ApplicationLoggerManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
@@ -413,6 +414,17 @@ trait ContainerAwareTrait
     public function getGoogleAuthenticator(): PHPGangsta_GoogleAuthenticator
     {
         return $this->getService('googleauthenticator');
+    }
+
+    /**
+     * gets application_logger service
+     * 
+     * @return ApplicationLoggerManager
+     * @throws BasicException
+     */
+    public function getApplicationLogger(): ApplicationLoggerManager
+    {
+        return $this->getService('application_logger');
     }
 
     /**

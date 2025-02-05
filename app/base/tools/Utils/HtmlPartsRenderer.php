@@ -18,6 +18,7 @@ use App\Site\Models\CronLog;
 use App\Site\Models\MailLog;
 use App\Site\Models\Menu;
 use App\Site\Models\QueueMessage;
+use App\Site\Models\ApplicationLog;
 use App\Site\Models\RequestLog;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
@@ -1083,6 +1084,21 @@ class HtmlPartsRenderer extends ContainerAwareObject
             //nl2br(htmlentities($data['body']));
             //highlight_string($data['body'], true);
         }
+
+        return $this->renderArrayOnTable($data, false);
+    }
+
+    /**
+     * renders application log
+     *
+     * @param ApplicationLog $log
+     * @return mixed
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function renderApplicationLog(ApplicationLog $log): mixed
+    {
+        $data = $log->getData();
 
         return $this->renderArrayOnTable($data, false);
     }

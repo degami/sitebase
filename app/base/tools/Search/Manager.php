@@ -17,6 +17,7 @@ use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Models\FrontendModel;
 use Elasticsearch\Client as ElasticSearchClient;
 use App\Base\Tools\Plates\SiteBase;
+use League\Plates\Template\Func;
 
 /**
  * Search Manager
@@ -44,6 +45,16 @@ class Manager extends ContainerAwareObject
      * @var array|null
      */
     protected ?array $sort = null;
+
+    /**
+     * @var array|null
+     */
+    protected ?array $aggregations = null;
+
+    /**
+     * @var array|null
+     */
+    protected ?array $source = null;
 
     /**
      * Checks if Elasticsearch is enabled.
@@ -143,6 +154,21 @@ class Manager extends ContainerAwareObject
         ];
     }
 
+    /**
+     * returns aggregations array
+     * 
+     * @return array
+     */
+    protected function getAggregationsArray() : array
+    {
+        return $this->aggregations ?? [];
+    }
+
+    /**
+     * Sets index name
+     * 
+     * @return static Returns the current instance.
+     */
     protected function setIndexName(string $indexName) : static
     {
         $this->index = $indexName;
@@ -150,13 +176,35 @@ class Manager extends ContainerAwareObject
     }
 
     /**
-     * returns index name
+     * Returns index name
      * 
      * @return string index name
      */
     protected function getIndexName() : string
     {
         return $this->index ?? self::INDEX_NAME;
+    }
+
+    /**
+     * Gets source part for search query
+     * 
+     * @return array|null
+     */
+    protected function getSource() : ?array
+    {
+        return $this->source;
+    }
+
+    /**
+     * Sets source part for search query
+     * 
+     * @param array $source
+     * @return static
+     */
+    public Function setSource(array $source) : static
+    {
+        $this->source = $source;
+        return $this;
     }
 
     /**
@@ -354,8 +402,23 @@ class Manager extends ContainerAwareObject
      *
      * @return int The count of documents matching the query.
      */
-    public function countAll() : int
+    public function countAll(?string $aggregationName) : int
     {
+        if (!empty($this->aggregations)) {
+            $searchParams = [
+                'index' => $this->getIndexName(),
+                'body' => [
+                    'size' => 0,
+                    "query" => $this->getQueryArray(),
+                    'aggs' => $this->getAggregationsArray(),
+                ],
+            ];
+
+            $search_result = $this->getClient()->search($searchParams);
+
+            return $search_result['aggregations'][$aggregationName]['value'] ?? 0;
+        }
+
         return $this->getClient()->count([
             'index' => $this->getIndexName(),
             'body' => [
@@ -369,10 +432,11 @@ class Manager extends ContainerAwareObject
      *
      * @param int $page The page number to retrieve.
      * @param int $pageSize The number of results per page.
+     * @param bool $onlyAggregations Return only aggregations
      * 
      * @return array An array containing the total count and the documents found.
      */
-    public function searchData($page = 0, $pageSize = self::RESULTS_PER_PAGE) : array
+    public function searchData($page = 0, $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false) : array
     {
         $searchParams = [
             'index' => $this->getIndexName(),
@@ -383,8 +447,16 @@ class Manager extends ContainerAwareObject
             ],
         ];
 
-        if (is_array($this->sort)) {
-            $searchParams['body']['sort'] = $this->sort;
+        if ($onlyAggregations) {
+            $searchParams['body']['size'] = 0;
+        } else {
+            if (is_array($this->source)) {
+                $searchParams['body']['_source'] = $this->source;            
+            }
+    
+            if (is_array($this->sort)) {
+                $searchParams['body']['sort'] = $this->sort;
+            }    
         }
 
         $search_result = $this->getClient()->search($searchParams);
@@ -510,6 +582,41 @@ class Manager extends ContainerAwareObject
     }
 
     /**
+     * Adds an aggregation 
+     *
+     * @param string $name Aggregation name
+     * @param array $aggregation Aggregation definition
+     * 
+     * @return static Returns the current instance.
+     */
+    public function addAggregation(string $name, array $aggregation): static
+    {
+        if (empty($aggregation)) {
+            return $this;
+        }
+
+        if (!is_array($this->aggregations)) {
+            $this->aggregations = [];
+        }
+
+        $this->aggregations[$name] = $aggregation;
+
+        return $this;
+    }
+
+    /**
+     * Resets aggregations
+     * 
+     * @return static Returns the current instance.
+     */
+    public function resetAggregations() : static
+    {
+        $this->aggregations = null;
+
+        return $this;
+    }
+
+    /**
      * Adjusts the boolean type of a condition based on its contents.
      *
      * @param string $boolType The boolean type ('filter', 'must', 'must_not', 'should').
@@ -544,8 +651,8 @@ class Manager extends ContainerAwareObject
     protected function addCondition(string $field, mixed $value, string $boolType): static
     {
         $condition = $this->buildCondition($field, $value);
-    
-        if (!$condition) {
+
+        if (empty($condition)) {
             return $this;
         }
 
@@ -617,9 +724,9 @@ class Manager extends ContainerAwareObject
      *
      * @throws InvalidArgumentException If the value type is invalid.
      * 
-     * @return array|null The Elasticsearch query condition for the field, or `null` if the value is not recognized.
+     * @return array The Elasticsearch query condition for the field.
      */
-    protected function buildCondition(string $field, mixed $value): ?array
+    protected function buildCondition(string $field, mixed $value): array
     {
         if (is_object($value) && !($value instanceof \DateTime)) {
             throw new \InvalidArgumentException("value can't be an object");
@@ -910,6 +1017,48 @@ class Manager extends ContainerAwareObject
                 'must_not' => array_map([$this, 'parseCondition'], $conditions)
             ]
         ];
+    }
+
+    /**
+     * Builds an aggregation.
+     *
+     * @param string $type Type of aggregation (eg. "terms", "avg", "sum", "min", "max", "value_count", "cardinality")
+     * @param string|array|null $fields Field(s) to aggregeate on
+     * @param string|null $script Optional script for aggregation
+     * @return array Aggregation definition
+     */
+    public function buildAggregation(string $type, $fields = null, ?string $script = null, ?array $scriptParams = null): array
+    {
+        $validAggregations = [
+            'avg', 'sum', 'min', 'max', 'value_count', 'cardinality', 'percentiles',
+            'terms', 'multi_terms', 'histogram', 'date_histogram', 'range', 'date_range',
+            'filters', 'nested', 'reverse_nested'
+        ];
+
+        if (!in_array($type, $validAggregations, true)) {
+            throw new \InvalidArgumentException("Invalid aggregation type: '{$type}'.");
+        }
+        
+        $aggregation = [];
+
+        if ($script !== null) {
+            $aggregation[$type] = ['script' => [
+                'source' => $script,
+                'params' => $scriptParams ?? [],
+            ]];
+        } elseif (is_array($fields)) {
+            if ($type === 'terms') {
+                $aggregation['multi_terms'] = ['terms' => array_map(fn($field) => ['field' => $field], $fields)];
+            } else {
+                throw new \InvalidArgumentException("Aggregation '{$type}' does not support multiple fields.");
+            }
+        } elseif ($fields !== null) {
+            $aggregation[$type] = ['field' => $fields];
+        } else {
+            throw new \InvalidArgumentException("You must specify aggregation fields or script");
+        }
+
+        return $aggregation;
     }
 
     /**

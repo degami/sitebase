@@ -255,6 +255,21 @@ class Manager extends ContainerAwareObject
     }
 
     /**
+     * Drops index
+     * 
+     * @return static
+     */
+    public function dropIndex() : static
+    {
+        try {
+            $client = $this->getClient();
+            $client->indices()->delete(['index' => $this->getIndexName()]);
+        } catch (\Throwable $e) {}
+
+        return $this;
+    }
+
+    /**
      * Prepares data from a frontend model to be indexed in Elasticsearch.
      *
      * @param FrontendModel $object The model instance containing the data to index.
@@ -449,17 +464,23 @@ class Manager extends ContainerAwareObject
 
         if ($onlyAggregations) {
             $searchParams['body']['size'] = 0;
+            unset ($http_response_header['body']['from']);
+            $searchParams['body']['aggs'] = $this->getAggregationsArray();
         } else {
-            if (is_array($this->source)) {
-                $searchParams['body']['_source'] = $this->source;            
+            if (is_array($this->getSource())) {
+                $searchParams['body']['_source'] = $this->getSource();            
             }
     
-            if (is_array($this->sort)) {
-                $searchParams['body']['sort'] = $this->sort;
+            if (is_array($this->getSort())) {
+                $searchParams['body']['sort'] = $this->getSort();
             }    
         }
 
         $search_result = $this->getClient()->search($searchParams);
+
+        if ($onlyAggregations) {
+            return $search_result['aggregations'];
+        }
 
         $total = $search_result['hits']['total']['value'] ?? 0;
         $hits = $search_result['hits']['hits'] ?? [];
@@ -468,6 +489,16 @@ class Manager extends ContainerAwareObject
         }, $hits);
 
         return ['total' => $total, 'docs' => $docs];
+    }
+
+    /**
+     * return aggregated data
+     * 
+     * @return array
+     */
+    public function searchAggregatedData() : array
+    {
+        return $this->searchData(onlyAggregations: true);
     }
 
     /**
@@ -538,6 +569,28 @@ class Manager extends ContainerAwareObject
 
         $this->query['bool'][$boolType][] = $condition;
         return $this;
+    }
+
+    /**
+     * Sets sorting array
+     * 
+     * @param array $sort Sort array
+     * @return static
+     */
+    public function setSort(array $sort) : static
+    {
+        $this->sort = $sort;
+        return $this;
+    }
+
+    /**
+     * Gets sorting array
+     * 
+     * @return array|null
+     */
+    public function getSort() : ?array
+    {
+        return $this->sort;
     }
 
     /**

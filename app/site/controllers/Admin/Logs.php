@@ -180,12 +180,11 @@ class Logs extends AdminPage
             if (is_numeric($this->getRequest()->query->get('id'))) {
                 $this->template_data += [
                     'log' => $log,
-                    'logHtml' => $this->getHtmlRenderer()->renderLog($log),
+                    'logHtml' => $this->getHtmlRenderer()->renderLog($log, false),
                 ];
             } else {
                 $this->template_data += [
                     'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items'], $header), $this->getTableHeader($header), $this),
-
                     'header' => $header,
                     'logs' => $data['items'],
                     'total' => $data['total'],
@@ -228,6 +227,9 @@ class Logs extends AdminPage
             $data = $log->getData();
             $out = [];
             foreach ($header as $element) {
+                if ($element == 'url' && isset($data[$element])) {
+                    $data[$element] = '<abbr title="'.htmlentities($data[$element]).'">'.substr($data[$element], 0, 100) . ((strlen($data[$element]) > 100) ? '...' : '') .'</abbr>';
+                }
                 $out[$element] = $data[$element] ?? null;
             }
             $out['actions'] = '<a href="' . $this->getControllerUrl() . '?logtype=' . $this->getRequest()->query->get('logtype') . '&id=' . $log->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in', ['style' => 'vertical-align: middle']) . ' ' . $this->getUtils()->translate('View', locale: $this->getCurrentLocale()) . '</a>';

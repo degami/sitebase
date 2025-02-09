@@ -1050,22 +1050,27 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * renders log
      *
      * @param RequestLog|CronLog|MailLog|AdminActionLog $log
+     * @param bool $nowrap
      * @return mixed
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderLog(RequestLog|CronLog|MailLog|AdminActionLog $log): mixed
+    public function renderLog(RequestLog|CronLog|MailLog|AdminActionLog $log, bool $nowrap = true): mixed
     {
         $data = [];
         foreach (array_keys($log->getData()) as $property) {
             $handler = [$log, 'get' . $this->getUtils()->snakeCaseToPascalCase($property)];
             $value = call_user_func($handler);
 
+            if (!empty($value) && str_contains($value, "\\n")) {
+                $value = '<pre>'. str_replace("\\n", "\n", $value) . '</pre>';
+            }
+
             $data[$property] = $value;
         }
 
-        return $this->renderArrayOnTable($data);
+        return $this->renderArrayOnTable($data, $nowrap);
     }
 
     /**

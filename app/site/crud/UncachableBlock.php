@@ -61,17 +61,19 @@ class UncachableBlock extends BaseRestPage
             throw new \Exception('Missing Data');
         }
 
-        try {
-            /** @var RequestLog $log */
-            $log = $this->containerMake(RequestLog::class);
-            $log->fillWithRequest($this->getRequest(), $this);
-            $log->setResponseCode(200);
-            $log->persist();
-        } catch (Exception $e) {
-            $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
-            if ($this->getEnv('DEBUG')) {
-                return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
-            }
+        if (!isset($route_data['_noLog'])) {
+            try {
+                /** @var RequestLog $log */
+                $log = $this->containerMake(RequestLog::class);
+                $log->fillWithRequest($this->getRequest(), $this);
+                $log->setResponseCode(200);
+                $log->persist();
+            } catch (Exception $e) {
+                $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
+                if ($this->getEnv('DEBUG')) {
+                    return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
+                }
+            }    
         }
 
         if (!isset($data['block_id'])) {

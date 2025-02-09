@@ -18,6 +18,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Routing\RouteInfo;
+use App\Site\Models\RequestLog;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use GraphQL\GraphQL;
@@ -78,6 +79,24 @@ class Entrypoint extends BasePage
         );
 
         $output = $result->toArray();
+
+        if ($this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
+            if (!isset($route_data['_noLog'])) {
+                try {
+                    /** @var RequestLog $log */
+                    $log = $this->containerMake(RequestLog::class);
+                    $log->fillWithRequest($this->getRequest(), $this);
+                    $log->setUrl($log->getUrl() . ' ' . $rawInput);
+                    $log->setResponseCode(200);
+                    $log->persist();
+                } catch (Exception $e) {
+                    $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
+                    if ($this->getEnv('DEBUG')) {
+                        return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
+                    }
+                }
+            }
+        }
 
         return $this->containerMake(JsonResponse::class)->setData($output);
     }

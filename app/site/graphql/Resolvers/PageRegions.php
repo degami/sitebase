@@ -98,6 +98,7 @@ class PageRegions implements ResolverInterface
 
         // add route collected data
         $vars['route_data'] = $routeInfo->getVars();
+        $vars['route_data']['_noLog'] = true;
 
         $currentPage->setRouteInfo($routeInfo);
 

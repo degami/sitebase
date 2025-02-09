@@ -120,14 +120,17 @@ abstract class AdminPage extends BaseHtmlPage
         $return = parent::renderPage($route_info, $route_data);
 
         if ($this->getSiteData()->getConfigValue('app/backend/log_requests') == true) {
-            try {
-                $log = $this->containerMake(AdminActionLog::class);
-                $log->fillWithRequest($this->getRequest(), $this);
-                $log->persist();
-            } catch (Exception $e) {
-                $this->getUtils()->logException($e, "Can't write AdminActionLog", $this->getRequest());
-                if ($this->getEnv('DEBUG')) {
-                    return $this->getUtils()->exceptionPage($e, $this->getRequest());
+            if (!isset($route_data['_noLog'])) {
+                try {
+                    /** @var RequestLog $log */
+                    $log = $this->containerMake(AdminActionLog::class);
+                    $log->fillWithRequest($this->getRequest(), $this);
+                    $log->persist();
+                } catch (Exception $e) {
+                    $this->getUtils()->logException($e, "Can't write AdminActionLog", $this->getRequest());
+                    if ($this->getEnv('DEBUG')) {
+                        return $this->getUtils()->exceptionPage($e, $this->getRequest());
+                    }
                 }
             }
         }

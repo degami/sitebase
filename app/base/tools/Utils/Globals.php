@@ -400,6 +400,8 @@ class Globals extends ContainerAwareObject
         if (!empty($request?->request->all())) {
             $this->getLog()->debug(serialize($request->request->all()));
         }
+
+        $this->getApplicationLogger()->exception($e);
     }
 
     /**

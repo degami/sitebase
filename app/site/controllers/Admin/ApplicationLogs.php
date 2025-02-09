@@ -93,6 +93,15 @@ class ApplicationLogs extends AdminManageModelsPage
         return 'log_id';
     }
 
+    /**
+     * {@inheritdoc}
+     *
+     * @return array
+     */
+    protected function defaultOrder() : array
+    {
+        return ['created_at' => 'DESC'];
+    }
 
     /**
      * {@inheritdoc}

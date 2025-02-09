@@ -180,9 +180,12 @@ class App extends ContainerAwareObject
             }
 
             App::$instance = $this;
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             $response = new Response(
-                'Critical: ' . $e->getMessage(),
+                $this->genericErrorPage(
+                    'Critical Error',
+                    $e->getMessage()
+                ),
                 500
             );
             $response->send();
@@ -324,7 +327,7 @@ class App extends ContainerAwareObject
         } catch (NotAllowedException $e) {
             $allowedMethods = $this->getAppRouteInfo()->getAllowedMethods();
             $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getAppRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
-        } catch (BasicException | Exception $e) {
+        } catch (BasicException | Exception | Throwable $e) {
             $response = $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
         }
 
@@ -485,5 +488,50 @@ class App extends ContainerAwareObject
     public static function getInstance() : ?App
     {
         return App::$instance;
+    }
+
+    protected function genericErrorPage(string $title, string $errorMessage) : string
+    {
+        return <<<HTML
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{$title}</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 40px;
+            background-color: #f8f9fa;
+            color: #333;
+        }
+        .container {
+            max-width: 400px;
+            margin: auto;
+            padding: 20px;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+        p {
+            font-size: 16px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{$title}</h1>
+        <p>{$errorMessage}</p>
+    </div>
+</body>
+</html>
+HTML;
     }
 }

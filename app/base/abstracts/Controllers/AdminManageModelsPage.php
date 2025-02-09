@@ -28,6 +28,7 @@ use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Degami\Basics\Html\TagElement;
+use ReflectionClass;
 
 /**
  * Base for admin page that manages a Model
@@ -79,6 +80,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
         }
     }
 
+    /**
+     * Returns Listing Table Items
+     * 
+     * @return array
+     */
     protected function getTableItems(int $itemsPerPage) : array
     {
         $collection = $this->getCollection();
@@ -87,10 +93,35 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return $data;
     }
 
+    /**
+     * Returns default ordering for listing
+     * 
+     * @return array
+     */
+    protected function defaultOrder() : array
+    {
+        $reflection = new ReflectionClass($this->getObjectClass());
+        $docComment = $reflection->getDocComment();
+        if ($docComment && strpos($docComment, 'getId') !== false) {
+            return ['id' => 'ASC'];
+        }
+
+        if ($docComment && strpos($docComment, 'getCreatedAt') !== false) {
+            return ['created_at' => 'ASC'];
+        }
+
+        return [];
+    }
+
+    /**
+     * Return Object Collection
+     * 
+     * @return BaseCollection
+     */
     protected function getCollection() : BaseCollection
     {
         $paginate_params = [
-            'order' => $this->getRequest()->query->all('order'),
+            'order' => $this->getRequest()->query->all('order') ?: $this->defaultOrder(),
             'condition' => $this->getSearchParameters(),
         ];
 
@@ -159,7 +190,6 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return !empty($out) ? $out : null;
     }
 
-
     /**
      * gets model object (loaded or new)
      *
@@ -211,14 +241,6 @@ abstract class AdminManageModelsPage extends AdminFormPage
     {
         return null;
     }
-
-    /**
-     * defines table rows
-     *
-     * @param array $data
-     * @return array
-     */
-    abstract protected function getTableElements(array $data): array;
 
     /**
      * loads object by id
@@ -427,4 +449,12 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @return string
      */
     abstract protected function getObjectIdQueryParam(): string;
+
+    /**
+     * defines table rows
+     *
+     * @param array $data
+     * @return array
+     */
+    abstract protected function getTableElements(array $data): array;    
 }

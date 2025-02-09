@@ -99,7 +99,7 @@ class ApplicationLog extends BaseModel
             if ($reflection) {
                 $params = [];
                 foreach ($reflection->getParameters() as $param) {
-                    $type = $param->hasType() ? $param->getType()->getName() : 'mixed';
+                    $type = $param->hasType() ? $param->getType() : 'mixed';
                     $params[] = ['name' => $param->getName(), 'type' => $type];
                 }
                 $functionDetails['parameters'] = $params;

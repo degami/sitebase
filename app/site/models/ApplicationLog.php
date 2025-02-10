@@ -19,6 +19,7 @@ use ReflectionMethod;
 use ReflectionFunction;
 use ReflectionException;
 use App\Base\Abstracts\Models\BaseModel;
+use Error;
 
 /**
  * Application Log Model
@@ -62,10 +63,10 @@ class ApplicationLog extends BaseModel
     /**
      * fills log with exception
      *
-     * @param Exception $e
+     * @param Throwable $e
      * @return $this|ApplicationLog
      */
-    public function fillWithException(Exception $e) : static
+    public function fillWithException(Throwable|Exception|Error $e) : static
     {
         $this->setIsException(true);
         $this->setLevel(static::LEVEL_CRITICAL);

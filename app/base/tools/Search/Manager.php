@@ -417,7 +417,7 @@ class Manager extends ContainerAwareObject
      *
      * @return int The count of documents matching the query.
      */
-    public function countAll(?string $aggregationName) : int
+    public function countAll(?string $aggregationName = null) : int
     {
         if (!empty($this->aggregations)) {
             $searchParams = [

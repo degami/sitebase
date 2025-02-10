@@ -15,7 +15,9 @@ namespace App\Base\Tools\ApplicationLogger;
 
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Site\Models\ApplicationLog;
+use Error;
 use Exception;
+use Throwable;
 
 /**
  * Application Logger Manager
@@ -154,11 +156,11 @@ class Manager extends ContainerAwareObject
     /**
      * Logs an exception with details.
      *
-     * @param Exception $e The exception to log.
+     * @param Throwable|Exception|Error $e The exception to log.
      *
      * @return ApplicationLog|null The created log entry, or null on failure.
      */
-    public function exception(Exception $e) : ?ApplicationLog
+    public function exception(Throwable|Exception|Error $e) : ?ApplicationLog
     {
         try {
             /** @var ApplicationLog $log */

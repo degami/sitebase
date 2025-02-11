@@ -448,10 +448,11 @@ class Manager extends ContainerAwareObject
      * @param int $page The page number to retrieve.
      * @param int $pageSize The number of results per page.
      * @param bool $onlyAggregations Return only aggregations
+     * @param bool $withScroll Use Scroll api
      * 
-     * @return array An array containing the total count and the documents found.
+     * @return array An array containing the total count, the documents found and scroll_id if used, if aggregations are used, returns aggragations array
      */
-    public function searchData($page = 0, $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false) : array
+    public function searchData($page = 0, $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, bool $withScroll = false) : array
     {
         $searchParams = [
             'index' => $this->getIndexName(),
@@ -467,13 +468,22 @@ class Manager extends ContainerAwareObject
             unset ($http_response_header['body']['from']);
             $searchParams['body']['aggs'] = $this->getAggregationsArray();
         } else {
+
+            if (($page * $pageSize) + $pageSize > self::MAX_ELEMENTS_PER_QUERY) {
+                throw new Exception('from + size cannot be over '.self::MAX_ELEMENTS_PER_QUERY);
+            }
+
             if (is_array($this->getSource())) {
                 $searchParams['body']['_source'] = $this->getSource();            
             }
     
             if (is_array($this->getSort())) {
                 $searchParams['body']['sort'] = $this->getSort();
-            }    
+            }
+
+            if ($withScroll && $searchParams['body']['size'] > 0) {
+                $searchParams['scroll'] = '1m';
+            }
         }
 
         $search_result = $this->getClient()->search($searchParams);
@@ -488,7 +498,40 @@ class Manager extends ContainerAwareObject
             return $el['_source'];
         }, $hits);
 
-        return ['total' => $total, 'docs' => $docs];
+        $out = ['total' => $total, 'docs' => $docs];
+        if ($withScroll) {
+            $out['scroll_id'] = $search_result['_scroll_id'];
+        }
+        return $out;
+    }
+
+    /**
+     * Continues scroll search
+     * 
+     * @param string $scrollId
+     * 
+     * @return array An array containing the total count, the documents found and scroll_id.
+     */
+    public function continueScroll(string $scrollId) : array
+    {
+        $searchParams = [
+            'scroll' => '1m',
+            'scroll_id' => $scrollId,
+        ];
+
+        $search_result = $this->getClient()->scroll($searchParams);
+
+        if (isset($search_result['error'])) {
+            throw new \Exception('Error in search query: '. json_encode($search_result));
+        }
+
+        $total = $search_result['hits']['total']['value'] ?? 0;
+        $hits = $search_result['hits']['hits'] ?? [];
+        $docs = array_map(function ($el) {
+            return $el['_source'];
+        }, $hits);
+
+        return ['total' => $total, 'docs' => $docs, 'scroll_id' => $search_result['_scroll_id']];
     }
 
     /**

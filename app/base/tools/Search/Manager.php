@@ -17,6 +17,7 @@ use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Models\FrontendModel;
 use Elasticsearch\Client as ElasticSearchClient;
 use App\Base\Tools\Plates\SiteBase;
+use InvalidArgumentException;
 use League\Plates\Template\Func;
 
 /**
@@ -87,6 +88,22 @@ class Manager extends ContainerAwareObject
         }
 
         return $this->client;
+    }
+
+    /**
+     * Checks elasticsearch service
+     * 
+     * @return bool
+     */
+    public function checkService() : bool
+    {
+        try {
+            $client = $this->getClient();
+
+            return @$client->ping();
+        } catch (\Throwable $e) {}
+
+        return false;
     }
 
     /**
@@ -255,7 +272,7 @@ class Manager extends ContainerAwareObject
     }
 
     /**
-     * Drops index
+     * Drops the elasticsearch index
      * 
      * @return static
      */
@@ -263,7 +280,12 @@ class Manager extends ContainerAwareObject
     {
         try {
             $client = $this->getClient();
-            $client->indices()->delete(['index' => $this->getIndexName()]);
+
+            if (!@$client->indices()->exists(['index' => $this->getIndexName()])) {
+                return $this;
+            }    
+
+            @$client->indices()->delete(['index' => $this->getIndexName()]);
         } catch (\Throwable $e) {}
 
         return $this;
@@ -443,16 +465,16 @@ class Manager extends ContainerAwareObject
     }
 
     /**
-     * Performs a search query on the Elasticsearch index.
+     * Returns Search Params array
      *
      * @param int $page The page number to retrieve.
      * @param int $pageSize The number of results per page.
      * @param bool $onlyAggregations Return only aggregations
      * @param bool $withScroll Use Scroll api
      * 
-     * @return array An array containing the total count, the documents found and scroll_id if used, if aggregations are used, returns aggragations array
+     * @return array
      */
-    public function searchData($page = 0, $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, bool $withScroll = false) : array
+    public function getSearchParams(int $page = 0, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, bool $withScroll = false) : array
     {
         $searchParams = [
             'index' => $this->getIndexName(),
@@ -470,7 +492,7 @@ class Manager extends ContainerAwareObject
         } else {
 
             if (($page * $pageSize) + $pageSize > self::MAX_ELEMENTS_PER_QUERY) {
-                throw new Exception('from + size cannot be over '.self::MAX_ELEMENTS_PER_QUERY);
+                throw new InvalidArgumentException('from + size cannot be over '.self::MAX_ELEMENTS_PER_QUERY);
             }
 
             if (is_array($this->getSource())) {
@@ -486,7 +508,22 @@ class Manager extends ContainerAwareObject
             }
         }
 
-        $search_result = $this->getClient()->search($searchParams);
+        return $searchParams;
+    }
+
+    /**
+     * Performs a search query on the Elasticsearch index.
+     *
+     * @param int $page The page number to retrieve.
+     * @param int $pageSize The number of results per page.
+     * @param bool $onlyAggregations Return only aggregations
+     * @param bool $withScroll Use Scroll api
+     * 
+     * @return array An array containing the total count, the documents found and scroll_id if used, if aggregations are used, returns aggragations array
+     */
+    public function searchData(int $page = 0, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, bool $withScroll = false) : array
+    {
+        $search_result = $this->getClient()->search($this->getSearchParams($page, $pageSize, $onlyAggregations, $withScroll));
 
         if ($onlyAggregations) {
             return $search_result['aggregations'];

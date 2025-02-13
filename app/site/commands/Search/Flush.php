@@ -20,6 +20,7 @@ use DI\NotFoundException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
  * Index data for search engine
@@ -32,6 +33,7 @@ class Flush extends BaseCommand
     protected function configure()
     {
         $this->setDescription('Flush data from elasticsearch index');
+        $this->addOption('drop', 'd', InputOption::VALUE_NONE);
     }
 
     /**
@@ -52,7 +54,18 @@ class Flush extends BaseCommand
             return Command::FAILURE;
         }
 
-        $this->getSearch()->flushIndex();
+        if (!$this->getSearch()->checkService()) {
+            $this->getIo()->error('Service is not available');
+
+            return Command::FAILURE;
+        }
+
+        if ($input->getOption('drop')) {
+            $this->getIo()->info('Dropping index');
+            $this->getSearch()->dropIndex();
+        } else {
+            $this->getSearch()->flushIndex();
+        }
 
         $this->getIo()->success('Data flushed');
 

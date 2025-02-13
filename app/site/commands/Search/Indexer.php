@@ -56,6 +56,12 @@ class Indexer extends BaseCommand
             return Command::FAILURE;
         }
 
+        if (!$this->getSearch()->checkService()) {
+            $this->getIo()->error('Service is not available');
+
+            return Command::FAILURE;
+        }
+
         if (!$this->getSearch()->ensureIndex()) {
             $this->getIo()->error("Errors during index check");
             return Command::FAILURE;

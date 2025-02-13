@@ -45,6 +45,12 @@ class Enable extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
+        if (!$this->getSearch()->checkService()) {
+            $this->getIo()->error('Service is not available');
+
+            return Command::FAILURE;
+        }
+
         $argInput = new ArrayInput([
             // the command name is passed as first argument
             'command' => 'app:mod_env',

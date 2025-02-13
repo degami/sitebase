@@ -51,6 +51,12 @@ class Stats extends BaseCommand
             return Command::FAILURE;
         }
 
+        if (!$this->getSearch()->checkService()) {
+            $this->getIo()->error('Service is not available');
+
+            return Command::FAILURE;
+        }
+
         $count_result = $this->getSearch()->setQuery('*')->countAll();
 
         $types = [];

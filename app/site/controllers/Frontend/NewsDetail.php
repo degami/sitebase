@@ -67,7 +67,7 @@ class NewsDetail extends FrontendPageWithObject
      * @throws NotFoundException
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, $route_data = []): Response
     {
         if (!($this->getObject() instanceof News && $this->getObject()->isLoaded())) {
             throw new NotFoundException();

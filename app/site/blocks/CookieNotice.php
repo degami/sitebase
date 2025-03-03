@@ -74,7 +74,7 @@ class CookieNotice extends BaseCodeBlock
      * @param array $data
      * @return string
      */
-    public function renderHTML(BasePage $current_page = null, $data = []): string
+    public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
         if (
             $current_page instanceof BasePage &&

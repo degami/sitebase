@@ -30,7 +30,7 @@ abstract class BaseCodeBlock extends ContainerAwareObject
      * @param BasePage $current_page
      * @return string
      */
-    abstract public function renderHTML(BasePage $current_page): string;
+    abstract public function renderHTML(?BasePage $current_page = null): string;
 
     /**
      * block content can be stored in cache

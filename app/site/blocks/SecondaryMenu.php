@@ -37,7 +37,7 @@ class SecondaryMenu extends BaseCodeBlock
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderHTML(BasePage $current_page = null, $data = []): string
+    public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $locale = $current_page?->getCurrentLocale();

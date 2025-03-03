@@ -82,7 +82,7 @@ class Page extends FrontendPageWithObject
      * @throws Throwable
      * @throws DebugBarException
      */
-    public function showPage($id, RouteInfo $route_info = null): mixed
+    public function showPage($id, ?RouteInfo $route_info = null): mixed
     {
         if ($this->getEnv('DEBUG')) {
             $debugbar = $this->getDebugbar();
@@ -104,7 +104,7 @@ class Page extends FrontendPageWithObject
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException|Throwable
      */
-    public function showFrontPage(RouteInfo $route_info = null): Response
+    public function showFrontPage(?RouteInfo $route_info = null): Response
     {
         $route_vars = $route_info->getVars();
 

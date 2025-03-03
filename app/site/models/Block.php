@@ -137,7 +137,7 @@ class Block extends BaseModel
      * @return string
      * @throws Exception
      */
-    public function render(BasePage $current_page = null): string
+    public function render(?BasePage $current_page = null): string
     {
         return $this->getRealInstance()->renderHTML($current_page, $this->getData());
     }

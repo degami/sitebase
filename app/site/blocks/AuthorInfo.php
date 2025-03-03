@@ -44,7 +44,7 @@ class AuthorInfo extends BaseCodeBlock
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderHTML(BasePage $current_page = null, $data = []): string
+    public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
         $config = array_filter(json_decode($data['config'] ?? '{}', true));
         if (empty($config)) {

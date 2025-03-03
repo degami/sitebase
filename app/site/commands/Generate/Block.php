@@ -87,7 +87,7 @@ use App\\Base\\Abstracts\\Controllers\\BasePage;
 
 class " . $className . " extends BaseCodeBlock
 {
-    public function renderHTML(BasePage \$current_page = null, \$data = []): string
+    public function renderHTML(?BasePage \$current_page = null, array \$data = []): string
     {
         return \"\";
     }

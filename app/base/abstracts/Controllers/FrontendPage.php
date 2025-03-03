@@ -236,7 +236,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @throws Throwable
      * @throws DebugBarException
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = []) : BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, $route_data = []) : BasePage|Response
     {
         $return = parent::renderPage($route_info, $route_data);
 

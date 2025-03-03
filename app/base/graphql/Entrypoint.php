@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Entrypoint extends BasePage
 {
-    public function renderPage(RouteInfo $route_info = null, $route_data = []) : JsonResponse
+    public function renderPage(?RouteInfo $route_info = null, $route_data = []) : JsonResponse
     {
         return $this->process($route_info, $route_data);
     }

@@ -82,7 +82,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      * @return Response|self
      * @throws PermissionDeniedException
      */
-    public function renderPage(RouteInfo $route_info = null, $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, $route_data = []): BasePage|Response
     {
         $this->route_info = $route_info;
 
@@ -128,7 +128,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
             method_exists($this, 'checkPermission') &&
             method_exists($this, 'getCurrentUser')
         ) {
-            if (!$this->checkPermission(static::getAccessPermission())) {
+            if (!$this->containerCall([$this, 'checkPermission'], ['permission_name' => $this->containerCall([get_class($this), 'getAccessPermission'])])) {
                 throw new PermissionDeniedException();
             }
         }

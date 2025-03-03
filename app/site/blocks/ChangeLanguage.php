@@ -33,7 +33,7 @@ class ChangeLanguage extends BaseCodeBlock
      * @param array $data
      * @return string
      */
-    public function renderHTML(BasePage $current_page = null, $data = []): string
+    public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
         try {
             $config = array_filter(json_decode($data['config'] ?? '{}', true));

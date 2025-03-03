@@ -35,7 +35,7 @@ class RewriteMedia extends BaseCodeBlock
      * @throws BasicException
      * @throws PermissionDeniedException
      */
-    public function renderHTML(BasePage $current_page = null, $data = []): string
+    public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
 
         $rewrite_id = [];

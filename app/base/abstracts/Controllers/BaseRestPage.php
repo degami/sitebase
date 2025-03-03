@@ -115,7 +115,7 @@ abstract class BaseRestPage extends BasePage
      * @throws BasicException
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, $route_data = []): Response
     {
         if (!empty($data = json_decode($this->getRequest()->getContent(), true))) {
             if (isset($data['id'])) {

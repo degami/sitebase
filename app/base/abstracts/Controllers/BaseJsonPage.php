@@ -59,7 +59,7 @@ abstract class BaseJsonPage extends BasePage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, $route_data = []): Response
     {
         try {
             return $this

@@ -58,7 +58,7 @@ abstract class FrontendPageWithObject extends FrontendPage
      * @throws Exception
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, $route_data = []): Response
     {
         $return = parent::process($route_info, $route_data);
 

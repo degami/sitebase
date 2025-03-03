@@ -32,7 +32,7 @@ class Search extends BaseCodeBlock
      * @return string
      * @throws BasicException
      */
-    public function renderHTML(BasePage $current_page = null): string
+    public function renderHTML(?BasePage $current_page = null): string
     {
         if ($current_page instanceof SearchController) {
             return '';

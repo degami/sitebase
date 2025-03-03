@@ -57,7 +57,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderHTML(BasePage $current_page = null): string
+    public function renderHTML(?BasePage $current_page = null): string
     {
         /*
         <!-- Google Tag Manager -->

@@ -28,9 +28,10 @@ abstract class BaseCodeBlock extends ContainerAwareObject
      * gets block html
      *
      * @param BasePage $current_page
+     * @param array $data
      * @return string
      */
-    abstract public function renderHTML(?BasePage $current_page = null): string;
+    abstract public function renderHTML(?BasePage $current_page = null, array $data = []): string;
 
     /**
      * block content can be stored in cache

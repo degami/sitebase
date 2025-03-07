@@ -783,7 +783,11 @@ class Manager extends ContainerAwareObject
      */
     protected function addCondition(string $field, mixed $value, string $boolType): static
     {
-        $condition = $this->buildCondition($field, $value);
+        if (preg_match('/\./', $field)) {
+            $condition = $this->buildNestedCondition($field, $value);
+        } else {
+            $condition = $this->buildCondition($field, $value);
+        }
 
         if (empty($condition)) {
             return $this;
@@ -1057,6 +1061,31 @@ class Manager extends ContainerAwareObject
         ];
     }
     
+    protected function buildNestedCondition(string $field, $value): array
+    {
+        $fieldParts = explode('.', $field);
+    
+        if (count($fieldParts) == 1) {
+            return $this->buildCondition($field, $value);
+        }
+    
+        $nestedPath = array_shift($fieldParts);
+        $remainingField = implode('.', $fieldParts);
+    
+        return [
+            'nested' => [
+                'path' => $nestedPath,
+                'query' => [
+                    'bool' => [
+                        'must' => [
+                            $this->buildNestedCondition($remainingField, $value),
+                        ]
+                    ]
+                ]
+            ]
+        ];
+    }
+
     /**
      * Builds a script-based condition for Elasticsearch queries.
      *
@@ -1087,7 +1116,10 @@ class Manager extends ContainerAwareObject
     {
         if (isset($condition['script'])) {
             return $this->buildScriptCondition($condition['script'], $condition['params'] ?? []);
-        } elseif (isset($condition['field']) && array_key_exists('value', $condition)) {
+        } elseif (isset($condition['field']) && is_string($condition['field']) && array_key_exists('value', $condition)) {
+            if (preg_match('/\./', $condition['field'])) {
+                return $this->buildNestedCondition($condition['field'], $condition['value']);
+            }
             return $this->buildCondition($condition['field'], $condition['value']);
         }
 

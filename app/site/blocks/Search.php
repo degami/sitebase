@@ -29,10 +29,11 @@ class Search extends BaseCodeBlock
      * {@inheritdoc}
      *
      * @param BasePage|null $current_page
+     * @param array $data
      * @return string
      * @throws BasicException
      */
-    public function renderHTML(?BasePage $current_page = null): string
+    public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
         if ($current_page instanceof SearchController) {
             return '';

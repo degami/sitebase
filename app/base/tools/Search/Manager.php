@@ -14,6 +14,7 @@
 namespace App\Base\Tools\Search;
 
 use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\FrontendModel;
 use Elasticsearch\Client as ElasticSearchClient;
 use App\Base\Tools\Plates\SiteBase;
@@ -335,7 +336,7 @@ class Manager extends ContainerAwareObject
     /**
      * indexes a frontend object
      * 
-     * @param FrontendModel $object objet to index
+     * @param FrontendModel $object object to index
      * 
      * @return array The response from Elasticsearch after indexing.
      */
@@ -343,6 +344,20 @@ class Manager extends ContainerAwareObject
     {
         $indexData = $this->getIndexDataForFrontendModel($object);
         return $this->indexData($indexData['_id'], $indexData['_data']);
+    }
+
+
+    /**
+     * indexes a frontend objects collection
+     * 
+     * @param BaseCollection $collection collection to index
+     * 
+     * @return array The response from Elasticsearch after indexing.
+     */
+    public function indexFrontendCollection(BaseCollection $collection) : array
+    {
+        $items = array_map(fn($object) => $this->getIndexDataForFrontendModel($object), $collection->getItems());
+        return $this->bulkIndexData($items);
     }
 
     /**

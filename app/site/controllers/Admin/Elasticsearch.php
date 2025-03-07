@@ -187,6 +187,14 @@ class Elasticsearch extends AdminPage
                     continue;
                 }
     
+                if (!is_subclass_of($modelClass, FrontendModel::class)) {
+                    continue;
+                }
+
+                if (!$this->containerCall([$modelClass, 'isIndexable'])) {
+                    continue;
+                }
+
                 $reindexed = $this->reindexModels($modelClass);
                 foreach ($reindexed as $type => $count) {
                     if (isset($results[$type])) {
@@ -212,15 +220,14 @@ class Elasticsearch extends AdminPage
     protected function reindexModels(string $modelClass)
     {
         $results = [];
-        if (is_subclass_of($modelClass, FrontendModel::class)) {
-            foreach ($this->containerCall([$modelClass, 'getCollection']) as $object) {
-                /** @var FrontendModel $object */
-                $response = $this->getSearch()->indexFrontendModel($object);
 
-                if (!isset($results[$response['result']])) {
-                    $results[$response['result']] = 0;
+        $response = $this->getSearch()->indexFrontendCollection($this->containerCall([$modelClass, 'getCollection']));
+        foreach ($response['items'] as $item) {
+            if (isset($item['index']['result'])) {
+                if (!isset($results[$item['index']['result']])) {
+                    $results[$item['index']['result']] = 0;
                 }
-                $results[$response['result']]++;
+                $results[$item['index']['result']]++;
             }
         }
 

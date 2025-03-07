@@ -73,14 +73,14 @@ class Indexer extends BaseCommand
             if (!$this->containerCall([$className, 'isIndexable'])) {
                 continue;
             }
-            foreach ($this->containerCall([$className, 'getCollection']) as $object) {
-                /** @var FrontendModel $object */
-                $response = $this->getSearch()->indexFrontendModel($object);
-
-                if (!isset($results[$response['result']])) {
-                    $results[$response['result']] = 0;
+            $response = $this->getSearch()->indexFrontendCollection($this->containerCall([$className, 'getCollection']));
+            foreach ($response['items'] as $item) {
+                if (isset($item['index']['result'])) {
+                    if (!isset($results[$item['index']['result']])) {
+                        $results[$item['index']['result']] = 0;
+                    }
+                    $results[$item['index']['result']]++;
                 }
-                $results[$response['result']]++;
             }
         }
 

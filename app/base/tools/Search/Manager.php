@@ -1076,6 +1076,17 @@ class Manager extends ContainerAwareObject
         ];
     }
     
+    /**
+     * Builds a nested condition for an Elasticsearch/OpenSearch query.
+     *
+     * If the specified field contains a dot (.), it is treated as a nested field,
+     * and a "nested" query is constructed. If the field is not nested, the condition
+     * is delegated to `buildCondition()`.
+     *
+     * @param string $field The field name, potentially nested (e.g., "user.address.city").
+     * @param mixed $value The value to be used for the condition.
+     * @return array The array structure representing the nested query.
+     */
     protected function buildNestedCondition(string $field, $value): array
     {
         $fieldParts = explode('.', $field);

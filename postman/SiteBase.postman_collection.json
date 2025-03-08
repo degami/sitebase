@@ -1,0 +1,997 @@
+{
+	"info": {
+		"_postman_id": "020ae665-0ba9-4488-bb97-a9573c94829f",
+		"name": "SiteBase",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "7578423"
+	},
+	"item": [
+		{
+			"name": "Crud",
+			"item": [
+				{
+					"name": "GET",
+					"item": [
+						{
+							"name": "Websites List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/websites",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"websites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Website 1 Detail",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/websites/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"websites",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Rewrites List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/rewrites",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"rewrites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Blocks List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/blocks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"blocks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Configs List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/configs",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"configs"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Events List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/events",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"events"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Languages List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/languages",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"languages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Links List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/links",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"links"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Media List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/media",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"media"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Media Revrite List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/mediarewrites",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"mediarewrites"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "News List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/news",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"news"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Pages List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/pages",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"pages"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Permissions List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/permissions",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"permissions"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Roles List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/roles",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"roles"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Taxonomy List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/taxonomy",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"taxonomy"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Notification List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/user_notifications",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"user_notifications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Users List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"users"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "POST",
+					"item": [
+						{
+							"name": "User Notification Create",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"user_id\": 1,\n    \"message\": \"this is a test\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/user_notifications",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"user_notifications"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "PUT",
+					"item": []
+				},
+				{
+					"name": "DELETE",
+					"item": []
+				},
+				{
+					"name": "Token",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"response is ok\",  ()=>{",
+									"    pm.response.to.have.status(200)",
+									"})",
+									"",
+									"let response = pm.response.json();",
+									"pm.environment.set('crud_token', response.token);",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "username",
+									"value": "{{login_user}}",
+									"type": "default"
+								},
+								{
+									"key": "password",
+									"value": "{{login_pwd}}",
+									"type": "default"
+								}
+							]
+						},
+						"url": {
+							"raw": "{{base_url}}/crud/token",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"crud",
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "WebHooks",
+			"item": [
+				{
+					"name": "{{base_url}}/webhooks/test",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"event_type\": \"test\",\n  \"timestamp\": 1705498237,\n  \"payload\": {\n    \"id\": 123,\n    \"name\": \"John Doe\",\n    \"email\": \"john.doe@example.com\"\n  }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/webhooks/test",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"webhooks",
+								"test"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "GraphQL",
+			"item": [
+				{
+					"name": "Queries",
+					"item": [
+						{
+							"name": "Pages",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Pages {\n    pages(\n        input: {\n            criteria: [{ key: \"url\", value: \"page-1\" }, { key: \"locale:not\", value: \"en\" }]\n            limit: 5\n            offset: 0\n            orderBy: [{ field: \"id\", direction: ASC }]\n        }\n    ) {\n        count\n        items {\n            id\n            title\n            locale\n            url\n            meta_title\n            gallery {\n                getImageUrl\n                getThumbUrl_300x200\n                lazyload\n                mimetype\n                path\n                filename\n                filesize\n            }\n            rewrite {\n                id\n                locale\n                route\n                url\n            }\n        }\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Configuration",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Configuration {\n    configuration {\n        locale\n        website {\n            id\n            site_name\n            domain\n            aliases\n            default_locale\n        }\n        configs {\n            path\n            value\n        }\n    }\n    pageRegions(rewrite_id: 12) {\n        locale\n        regions {\n            after_body_open\n            before_body_close\n            pre_menu\n            post_menu\n            pre_header\n            post_header\n            pre_content\n            post_content\n            pre_footer\n            post_footer\n        }\n    }\n    rewrites {\n        id\n        url\n        route\n        locale\n        website {\n            id\n            site_name\n            domain\n            aliases\n            default_locale\n        }\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Translations",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Translations {\n    translations {\n        key\n        value\n    }\n    rewrites {\n        id\n        url\n        route\n        locale\n    }\n    configuration {\n        locale\n        configs {\n            path\n            value\n        }\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Links",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Links {\n    links(\n        input: { criteria: [{ key: \"locale\", value: \"it\" }], limit: 3, offset: 1 }\n    ) {\n        count\n        items {\n            id\n            url\n            title\n            locale\n            description\n            active\n        }\n    }\n    medias {\n        id\n        path\n        filename\n        mimetype\n        filesize\n        lazyload\n        getImageUrl\n        getThumbUrl_300x200\n        getThumbUrl_640x480\n        getThumbUrl_800x600\n        getThumbUrl_200x200\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ManuTree",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Menu_tree {\n    menuTree(menu_name: \"primary-menu_it\", website_id: 1) {\n        menu_id\n        parent_id\n        rewrite_id\n        title\n        locale\n        href\n        target\n        breadcrumb\n        level\n        children {\n            menu_id\n            parent_id\n            rewrite_id\n            title\n            locale\n            href\n            target\n            breadcrumb\n            level\n        }\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql/it",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql",
+										"it"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ManuTree-2",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query menuTree($menu_name: String!, $website_id: Int!) {\n            menuTree(menu_name: $menu_name, website_id: $website_id) {\n               ...MenuItemFields\n                children {\n                    ...MenuItemFields\n                children {\n                    ...MenuItemFields\n                children {\n                    ...MenuItemFields\n\n                }\n\n                }\n\n                }\n\n            }\n        }\n        \n        fragment MenuItemFields on Menu {\n            menu_id\n            parent_id\n            rewrite_id\n            title\n            locale\n            href\n            target\n            internal\n            breadcrumb\n            level\n        }",
+										"variables": "{\n    \"menu_name\": \"primary-menu_it\",\n    \"website_id\": 1\n}"
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql/it",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql",
+										"it"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ManuTree-3",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query menuTree($menu_name: String!, $website_id: Int!) {\n  menuTree(menu_name: $menu_name, website_id: $website_id) {\n    ...MenuItemFields\n    children {\n      ...MenuItemFields\n      children {\n        ...MenuItemFields\n        children {\n          ...MenuItemFields\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment MenuItemFields on Menu {\n  menu_id\n  parent_id\n  rewrite_id\n  title\n  locale\n  href\n  target\n  internal\n  breadcrumb\n  level\n  __typename\n}",
+										"variables": "{\n    \"menu_name\": \"primary-menu_en\",\n    \"website_id\": 1\n}"
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql/en",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql",
+										"en"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Terms",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Terms($termId: String!) {\n    terms(\n        input: {\n            criteria: [{ key: \"id\", value: $termId }]\n            limit: 1\n            offset: 0\n            orderBy: [{ field: \"id\", direction: ASC }]\n        }\n    ) {\n        count\n        items {\n            ...TermItemFields\n            children {\n                ...TermItemFields\n                children {\n                    ...TermItemFields\n                    children {\n                        ...TermItemFields\n                    }\n                }\n            }\n        }\n    }\n}\n                                \nfragment TermItemFields on Taxonomy {\n    id\n    title\n    position\n    locale\n    content\n    url\n    path\n    level\n    meta_keywords\n    meta_description\n    meta_title\n    pages {\n        id\n        url\n        title\n        locale\n        rewrite {\n            route\n            url\n        }\n    }\n}\n",
+										"variables": "{\n    \"termId\" : \"3\"\n}"
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Search",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "graphql",
+									"graphql": {
+										"query": "query Search {\n    search(input: \"lorem\", page: 3) {\n        search_query\n        total\n        page\n        search_result {\n            frontend_url\n            title\n            excerpt\n        }\n    }\n}\n",
+										"variables": ""
+									}
+								},
+								"url": {
+									"raw": "{{base_url}}/graphql/it/",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"graphql",
+										"it",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}

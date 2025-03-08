@@ -86,7 +86,7 @@ class Entrypoint extends BasePage
                     /** @var RequestLog $log */
                     $log = $this->containerMake(RequestLog::class);
                     $log->fillWithRequest($this->getRequest(), $this);
-                    $log->setUrl($log->getUrl() . ' ' . $rawInput);
+                    $log->setUrl(substr($log->getUrl() . ' ' . $rawInput, 0, 1024));
                     $log->setResponseCode(200);
                     $log->persist();
                 } catch (Exception $e) {

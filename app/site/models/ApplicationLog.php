@@ -20,6 +20,7 @@ use ReflectionFunction;
 use ReflectionException;
 use App\Base\Abstracts\Models\BaseModel;
 use Error;
+use Throwable;
 
 /**
  * Application Log Model

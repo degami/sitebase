@@ -48,7 +48,7 @@ class Media extends AdminRestPage
      */
     public static function getAccessPermission(): string
     {
-        return 'administer_media';
+        return 'administer_medias';
     }
 
 

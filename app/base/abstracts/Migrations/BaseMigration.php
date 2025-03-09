@@ -14,8 +14,8 @@
 namespace App\Base\Abstracts\Migrations;
 
 use Genkgo\Migrations\MigrationInterface;
-use Verraes\ClassFunctions\ClassFunctions;
 use App\Base\Abstracts\ContainerAwareObject;
+use function Verraes\ClassFunctions\short;
 
 /**
  * Base for migration objects
@@ -43,6 +43,6 @@ abstract class BaseMigration extends ContainerAwareObject implements MigrationIn
      */
     public function getName(): string
     {
-        return ClassFunctions::short($this);
+        return short($this);
     }
 }

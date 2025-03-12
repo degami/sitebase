@@ -532,7 +532,7 @@ class FakeDataMigration extends BaseMigration
      * @return NewsModel
      * @throws BasicException
      */
-    private function addNews(string $title, string $content, DateTime $date, $locale = 'en', ?User $owner_model = null): NewsModel
+    private function addNews(string $title, string $content, DateTime $date, string $locale = 'en', ?User $owner_model = null): NewsModel
     {
         /** @var NewsModel $news_model */
         $news_model = $this->containerCall([NewsModel::class, 'new'], ['initial_data' => [
@@ -562,7 +562,7 @@ class FakeDataMigration extends BaseMigration
      * @return EventModel
      * @throws BasicException
      */
-    private function addEvent(string $title, string $content, DateTime $date, float $latitude, float $longitude, $locale = 'en', ?User $owner_model = null): EventModel
+    private function addEvent(string $title, string $content, DateTime $date, float $latitude, float $longitude, string $locale = 'en', ?User $owner_model = null): EventModel
     {
         /** @var EventModel $event_model */
         $event_model = $this->containerCall([EventModel::class, 'new'], ['initial_data' => [
@@ -592,7 +592,7 @@ class FakeDataMigration extends BaseMigration
      * @return Page
      * @throws BasicException
      */
-    private function addPage(string $title, string $content, $locale = 'en', array $terms = [], ?User $owner_model = null, $images = []): Page
+    private function addPage(string $title, string $content, $locale = 'en', array $terms = [], ?User $owner_model = null, array $images = []): Page
     {
         /** @var Page $page_model */
         $page_model = $this->containerCall([Page::class, 'new'], ['initial_data' => [
@@ -654,7 +654,7 @@ class FakeDataMigration extends BaseMigration
      * @return LinkExchange
      * @throws BasicException
      */
-    private function addLinkExchange(string $url, string $email, $locale = 'en', $terms = [], ?User $owner_model = null): LinkExchange
+    private function addLinkExchange(string $url, string $email, $locale = 'en', array $terms = [], ?User $owner_model = null): LinkExchange
     {
         /** @var LinkExchange $link_exchange_model */
         $link_exchange_model = $this->containerCall([LinkExchange::class, 'new'], ['initial_data' => [
@@ -687,7 +687,7 @@ class FakeDataMigration extends BaseMigration
      * @return Contact
      * @throws BasicException
      */
-    private function addContactForm(string $title, string $content, $locale = 'en', $fields = [], ?User $owner_model = null): Contact
+    private function addContactForm(string $title, string $content, $locale = 'en', array $fields = [], ?User $owner_model = null): Contact
     {
         /** @var Contact $contact_model */
         $contact_model = $this->containerCall([Contact::class, 'new'], ['initial_data' => [
@@ -727,7 +727,7 @@ class FakeDataMigration extends BaseMigration
      * @return Menu
      * @throws BasicException
      */
-    private function addMenuItem(string $title, string $menu_name, Rewrite $rewrite, $locale = 'en', ?Menu $parent = null): Menu
+    private function addMenuItem(string $title, string $menu_name, Rewrite $rewrite, string $locale = 'en', ?Menu $parent = null): Menu
     {
         /** @var Menu $menu_item_model */
         $menu_item_model = $this->containerCall([Menu::class, 'new'], ['initial_data' => [
@@ -759,7 +759,7 @@ class FakeDataMigration extends BaseMigration
      * @return Block
      * @throws BasicException
      */
-    private function addBlock(string $title, string $content, string $region, $locale = 'en', $rewrites = []): Block
+    private function addBlock(string $title, string $content, string $region, string $locale = 'en', array $rewrites = []): Block
     {
         /** @var Block $block_model */
         $block_model = $this->containerCall([Block::class, 'new'], ['initial_data' => [

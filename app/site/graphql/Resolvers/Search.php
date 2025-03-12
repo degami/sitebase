@@ -52,13 +52,14 @@ class Search implements ResolverInterface
      * gets search results based on query
      *
      * @param string|null $search_query
+     * @param string|null $locale
      * @param int $page
      * @return array
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function getSearchResult($search_query = null, $locale = null, $page = 0): array
+    public static function getSearchResult(?string $search_query = null, ?string $locale = null, int $page = 0): array
     {
         $app = App::getInstance();
 

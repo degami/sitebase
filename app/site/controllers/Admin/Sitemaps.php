@@ -113,7 +113,7 @@ class Sitemaps extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $sitemap = $this->getObject();
@@ -262,7 +262,7 @@ class Sitemaps extends AdminManageModelsPage
      * @param array|null $component
      * @return Element
      */
-    private function addComponent(Element $form_component, int $index, Sitemap $sitemap, $component = null): Element
+    private function addComponent(Element $form_component, int $index, Sitemap $sitemap, ?array $component = null): Element
     {
         if (is_null($component)) {
             $component = [

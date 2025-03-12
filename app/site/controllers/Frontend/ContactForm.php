@@ -128,7 +128,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @throws BasicException
      * @throws Throwable
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         if (!($this->getObject() instanceof BaseModel && is_a($this->getObject(), $this->getObjectClass()) && $this->template_data['object']->isLoaded())) {
             throw new NotFoundException();
@@ -164,7 +164,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      * @throws DependencyException
      * @throws \DI\NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $contact = $this->template_data['object'] ?? null;
         if ($contact instanceof Contact && $contact->isLoaded()) {

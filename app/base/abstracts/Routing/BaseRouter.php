@@ -188,7 +188,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
      * @param string|null $http_method
      * @return array
      */
-    protected function getRouteByClass(string $class, $uri = null, $http_method = null): array
+    protected function getRouteByClass(string $class, ?string $uri = null, ?string $http_method = null): array
     {
         $out = [];
         foreach (array_keys($this->routes) as $group) {

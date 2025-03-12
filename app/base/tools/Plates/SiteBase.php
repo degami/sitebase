@@ -44,7 +44,7 @@ class SiteBase implements ExtensionInterface
     /**
      * @var Website|null current website cached element
      */
-    protected static $currentWebsite = null;
+    protected static ?Website $currentWebsite = null;
 
     public $template;
 
@@ -295,7 +295,7 @@ class SiteBase implements ExtensionInterface
      * @return mixed
      * @throws BasicException
      */
-    public function env(string $variable, $default = null): mixed
+    public function env(string $variable, mixed $default = null): mixed
     {
         return $this->getUtils()->getEnv($variable, $default);
     }
@@ -362,7 +362,7 @@ class SiteBase implements ExtensionInterface
         return $this->getSiteData()->getAdminSidebarVisibleLinks($controller);
     }
 
-    public function renderAdminTable(array $elements, $header = null, BasePage $current_page = null) : string
+    public function renderAdminTable(array $elements, ?array $header = null, ?BasePage $current_page = null) : string
     {
         return $this->getHtmlRenderer()->renderAdminTable($elements, $header, $current_page);    
     }

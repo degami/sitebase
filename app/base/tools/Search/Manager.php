@@ -41,7 +41,7 @@ class Manager extends ContainerAwareObject
     /**
      * @var string|array|null $query 
      */
-    protected $query = null;
+    protected string|array|null $query = null;
 
     /**
      * @var array|null
@@ -1218,7 +1218,7 @@ class Manager extends ContainerAwareObject
      * @param string|null $script Optional script for aggregation
      * @return array Aggregation definition
      */
-    public function buildAggregation(string $type, $fields = null, ?string $script = null, ?array $scriptParams = null): array
+    public function buildAggregation(string $type, string|array|null $fields = null, ?string $script = null, ?array $scriptParams = null): array
     {
         $validAggregations = [
             'avg', 'sum', 'min', 'max', 'value_count', 'cardinality', 'percentiles',

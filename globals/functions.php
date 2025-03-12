@@ -4,10 +4,11 @@
  * translate string
  *
  * @param  string $string
- * @param  string $locale
+ * @param array $params
+ * @param  string|null $locale
  * @return string
  */
-function __($string, $params = [], $locale = null)
+function __(string $string, array $params = [], ?string $locale = null)
 {
     global $app;
 
@@ -38,7 +39,7 @@ function k($variable, $level = 'debug')
  * @param null $params
  * @return bool|PDOStatement
  */
-function dbq($query_string, $params = null)
+function dbq($query_string, mixed $params = null)
 {
     global $app;
 

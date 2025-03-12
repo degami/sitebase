@@ -36,7 +36,7 @@ trait TranslatorsTrait
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getTranslator($locale_code = null): Translator
+    public function getTranslator(?string $locale_code = null): Translator
     {
         if ($locale_code == null) {
             $locale_code = 'en';

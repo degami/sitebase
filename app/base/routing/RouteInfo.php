@@ -90,8 +90,9 @@ class RouteInfo
      * @param string $route
      * @param string|null $route_name
      * @param int|null $rewrite
+     * @param string|null $type
      */
-    public function __construct(array $dispatcher_info, string $http_method, string $uri, string $route, string $route_name = null, $rewrite = null, $type = null)
+    public function __construct(array $dispatcher_info, string $http_method, string $uri, string $route, ?string $route_name = null, ?int $rewrite = null, ?string $type = null)
     {
         $this->dispatcher_info = $dispatcher_info;
         $this->http_method = $http_method;

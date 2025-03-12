@@ -60,7 +60,7 @@ class Sitemap extends BaseXMLPage
      * @throws DependencyException
      * @throws \DI\NotFoundException
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         $sitemap = null;
 

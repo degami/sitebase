@@ -72,7 +72,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      * @throws Throwable
      * @throws DebugBarException
      */
-    public function renderPage(?RouteInfo $route_info = null, $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response
     {
         $this->route_info = $route_info;
 
@@ -109,7 +109,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      * @throws Throwable
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function process(?RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         try {
             $template_html = '';

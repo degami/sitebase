@@ -54,7 +54,7 @@ class RequestLog extends BaseModel
      * @param BasePage|null $controller
      * @return $this
      */
-    public function fillWithRequest(Request $request, BasePage $controller = null): RequestLog
+    public function fillWithRequest(Request $request, ?BasePage $controller = null): RequestLog
     {
         $this->setUrl($request->getUri());
         $this->setMethod($request->getMethod());

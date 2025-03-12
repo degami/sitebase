@@ -82,7 +82,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      * @return Response|self
      * @throws PermissionDeniedException
      */
-    public function renderPage(?RouteInfo $route_info = null, $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response
     {
         $this->route_info = $route_info;
 
@@ -98,10 +98,10 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
     /**
      * gets route data
      *
-     * @param null $var_name
+     * @param mixed|null $var_name
      * @return mixed
      */
-    protected function getRouteData($var_name = null): mixed
+    protected function getRouteData(mixed $var_name = null): mixed
     {
         if (is_null($this->route_info)) {
             return null;
@@ -200,7 +200,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      * @return string
      * @throws BasicException
      */
-    public function getUrl(string $route_name, $route_params = []): string
+    public function getUrl(string $route_name, array $route_params = []): string
     {
         return $this->getWebRouter()->getUrl($route_name, $route_params);
     }
@@ -260,11 +260,11 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
     /**
      * gets the destination param
      *
-     * @param null $destination_url
+     * @param string|null $destination_url
      * @return string
      * @throws BasicException
      */
-    public function getDestParam($destination_url = null): string
+    public function getDestParam(?string $destination_url = null): string
     {
         if (empty($destination_url)) {
             $destination_url = $this->getControllerUrl();
@@ -289,7 +289,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      * @param array $additional_headers
      * @return RedirectResponse
      */
-    protected function doRedirect($url, $additional_headers = []): RedirectResponse
+    protected function doRedirect($url, array $additional_headers = []): RedirectResponse
     {
         return new RedirectResponse(
             $url,

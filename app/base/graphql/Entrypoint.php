@@ -30,7 +30,7 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Entrypoint extends BasePage
 {
-    public function renderPage(?RouteInfo $route_info = null, $route_data = []) : JsonResponse
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []) : JsonResponse
     {
         return $this->process($route_info, $route_data);
     }
@@ -43,7 +43,7 @@ class Entrypoint extends BasePage
      * @param array $route_data
      * @return Response
      */
-    public function process(?RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         if ($this->getRouteInfo()->getVar('lang') != null) {
             $this->getApp()->setCurrentLocale($this->getRouteInfo()->getVar('lang'));

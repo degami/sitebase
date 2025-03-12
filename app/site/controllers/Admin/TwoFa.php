@@ -190,7 +190,7 @@ class TwoFa extends AdminFormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $userHasPassed2Fa = ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
         $secret = $form->getSessionBag()?->googleAuthenticatorSecret ?? null;

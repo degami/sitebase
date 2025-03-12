@@ -29,7 +29,7 @@ final class Psysh extends Command
      * Psysh constructor.
      * @param string|null $name
      */
-    public function __construct($name = null)
+    public function __construct(?string $name = null)
     {
         parent::__construct($name);
         $this->shell = new Shell();

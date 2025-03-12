@@ -78,6 +78,7 @@ class Search extends FrontendPage
         try {
             return parent::beforeRender();
         } catch (PermissionDeniedException | BasicException $e) {
+            return $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
         }
     }
 
@@ -122,7 +123,7 @@ class Search extends FrontendPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getSearchResult($search_query = null, $page = 0): array
+    protected function getSearchResult(?string $search_query = null, int $page = 0): array
     {
         if ($search_query == null) {
             return ['total' => 0, 'docs' => []];

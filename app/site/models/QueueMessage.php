@@ -72,7 +72,7 @@ class QueueMessage extends BaseModel implements QueueMessageInterface
      * @param string|null $queue_name
      * @return self|null
      */
-    public static function nextMessage($queue_name = null): ?QueueMessage
+    public static function nextMessage(?string $queue_name = null): ?QueueMessage
     {
         try {
 

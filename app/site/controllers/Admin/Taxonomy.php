@@ -99,7 +99,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      * @throws PhpfastcacheSimpleCacheException
      * @throws Exception
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $term = $this->getObject();

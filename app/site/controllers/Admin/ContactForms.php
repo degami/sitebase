@@ -168,7 +168,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $contact = $this->getObject();
@@ -316,7 +316,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array|null $component
      * @return Element
      */
-    private function addComponent(Element $form_component, int $index, $component = null): Element
+    private function addComponent(Element $form_component, int $index, ?array $component = null): Element
     {
         if (is_null($component)) {
             $component = [

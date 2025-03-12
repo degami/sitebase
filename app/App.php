@@ -443,7 +443,7 @@ class App extends ContainerAwareObject
      * @param string|null $locale
      * @return self
      */
-    public function setCurrentLocale(string $locale = null): App
+    public function setCurrentLocale(?string $locale = null): App
     {
         $this->current_locale = $locale;
 

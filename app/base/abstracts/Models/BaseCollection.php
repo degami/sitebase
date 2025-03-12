@@ -91,19 +91,19 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
         return $this->stmt;
     }
 
-    public function addSelect($select): static
+    public function addSelect(string $select): static
     {
         $this->stmt = $this->getSelect()->select($select);
         return $this;
     }
 
-    public function addGroupBy($groupBy): static
+    public function addGroupBy(string $groupBy): static
     {
         $this->stmt = $this->getSelect()->groupBy($groupBy);
         return $this;
     }
 
-    public function addHaving($having): static
+    public function addHaving(string $having): static
     {
         $this->stmt = $this->getSelect()->having($having);
         return $this;
@@ -112,10 +112,10 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     /**
      * adds condition to collection
      *
-     * @param array $condition
+     * @param array|string|null $condition
      * @return static
      */
-    public function addCondition($condition = []): static
+    public function addCondition(array|string|null $condition = []): static
     {
         if ($condition == null) {
             $condition = [];
@@ -156,9 +156,10 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
      * adds order to collection
      *
      * @param array|string $order
+     * @param string $position
      * @return static
      */
-    public function addOrder($order = [], $position = 'end') : static 
+    public function addOrder(array $order = [], string $position = 'end') : static 
     {
         $tableColumns = $this->containerCall([$this->className, 'getTableColumns']);
         if (!empty($order) && is_array($order)) {
@@ -422,13 +423,11 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
      *
      * @param Request $request
      * @param int $page_size
-     * @param array $condition
-     * @param array $order
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function paginate(Request $request, $page_size = self::ITEMS_PER_PAGE): array
+    public function paginate(Request $request, int $page_size = self::ITEMS_PER_PAGE): array
     {
         /** @var DebugBar $debugbar */
         $debugbar = $this->getDebugbar();

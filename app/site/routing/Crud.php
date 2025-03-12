@@ -122,7 +122,7 @@ class Crud extends BaseRouter
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getRequestInfo($http_method = null, $request_uri = null, $domain = null): RouteInfo
+    public function getRequestInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
     {
         // set request info type as crud
         return parent::getRequestInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);

@@ -101,7 +101,7 @@ class Index extends LoggedUserPage
      * @return BasePage|RedirectResponse|Response
      * @throws BasicException
      */
-    public function process(RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         return $this->doRedirect($this->getUrl('frontend.users.profile'));
     }

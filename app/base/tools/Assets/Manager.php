@@ -429,7 +429,7 @@ class Manager extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function assetUrl(string $asset_path, $website_id = null, $locale = null): string
+    public function assetUrl(string $asset_path, ?int $website_id = null, ?string $locale = null): string
     {
         static $domain_prefix = null;
 

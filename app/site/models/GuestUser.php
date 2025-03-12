@@ -42,17 +42,17 @@ class GuestUser extends AccountModel
     /**
      * @var null username
      */
-    public $username = null;
+    public ?string $username = null;
 
     /**
      * @var null nickname
      */
-    public $nickname = null;
+    public ?string $nickname = null;
 
     /**
      * @var null email
      */
-    public $email = null;
+    public ?string $email = null;
 
     /**
      * @var array permissions

@@ -71,7 +71,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function __construct(
         protected ContainerInterface $container, 
-        Row $db_row = null
+        ?Row $db_row = null
     ) {
         parent::__construct($container);
 
@@ -193,7 +193,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @param array $options
      * @return PDOStatement
      */
-    public static function select($options = []): PDOStatement
+    public static function select(array $options = []): PDOStatement
     {
         $container = App::getInstance()->getContainer();
         return $container->get('db')->select(static::defaultTableName(), $options);
@@ -202,11 +202,11 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * gets basic where statement for model
      *
-     * @param array $condition
+    * @param array|null $condition
      * @param array $order
      * @return Result
      */
-    protected static function getModelBasicWhere($condition = [], $order = []): Result
+    protected static function getModelBasicWhere(?array $condition = [], array $order = []): Result
     {
         $container = App::getInstance()->getContainer();
         if ($condition == null) {
@@ -278,7 +278,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         return static::$keyField;
     }
 
-    protected static function loadedObjectsIdentifier($id)
+    protected static function loadedObjectsIdentifier(mixed $id) : string
     {
         if (is_array(static::getKeyField())) {
             return implode("|", array_map(function($column, $value) {
@@ -382,11 +382,11 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * loads model by id
      *
-     * @param int $id
+     * @param mixed $id
      * @param bool $reset
      * @return self
      */
-    public static function load($id, $reset = false): BaseModel
+    public static function load(mixed $id, bool $reset = false): BaseModel
     {
         $container = App::getInstance()->getContainer();
 
@@ -466,7 +466,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws InvalidValueException
      * @throws BasicException
      */
-    public static function new($initial_data = []): BaseModel
+    public static function new(array $initial_data = []): BaseModel
     {
         $container = App::getInstance()->getContainer();
 
@@ -485,7 +485,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function loadBy(string $field, $value): BaseModel
+    public static function loadBy(string $field, mixed $value): BaseModel
     {
         return static::loadByCondition([$field => $value]);
     }
@@ -502,41 +502,41 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
     /**
      * {@inheritdoc}
-     * @param $key
+     * @param mixed $key
      * @return mixed
      */
-    public function __get($key): mixed
+    public function __get(mixed $key): mixed
     {
         return $this->db_row[$key];
     }
 
     /**
      * {@inheritdoc}
-     * @param $key
-     * @param $value
+     * @param mixed $key
+     * @param mixed $value
      * @return void
      */
-    public function __set($key, $value): void
+    public function __set(mixed $key, mixed $value): void
     {
         $this->db_row[$key] = $value;
     }
 
     /**
      * {@inheritdoc}
-     * @param $name
+     * @param mixed $name
      * @return bool
      */
-    public function __isset($name): bool
+    public function __isset(mixed $name): bool
     {
         return isset($this->db_row[$name]);
     }
 
     /**
      * {@inheritdoc}
-     * @param $name
+     * @param mixed $name
      * @return void
      */
-    public function __unset($name): void
+    public function __unset(mixed $name): void
     {
         unset($this->db_row[$name]);
     }
@@ -579,10 +579,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * gets model's data
      *
-     * @param null $column
+     * @param mixed|null $column
      * @return mixed
      */
-    public function getData($column = null): mixed
+    public function getData(mixed $column = null): mixed
     {
         $data = $this->getDbRow()->getData();
 
@@ -640,41 +640,41 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
 
     /**
      * {@inheritdoc}
-     * @param $offset
-     * @param $value
+     * @param mixed $offset
+     * @param mixed $value
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $this->__set($offset, $value);
     }
 
     /**
      * {@inheritdoc}
-     * @param $offset
+     * @param mixed $offset
      * @return bool
      */
-    public function offsetExists($offset): bool
+    public function offsetExists(mixed $offset): bool
     {
         return $this->__isset($offset);
     }
 
     /**
      * {@inheritdoc}
-     * @param $offset
+     * @param mixed $offset
      * @return void
      */
-    public function offsetUnset($offset): void
+    public function offsetUnset(mixed $offset): void
     {
         $this->__unset($offset);
     }
 
     /**
      * {@inheritdoc}
-     * @param $offset
+     * @param mixed $offset
      * @return mixed
      */
-    public function offsetGet($offset): mixed
+    public function offsetGet(mixed $offset): mixed
     {
         return $this->__get($offset);
     }
@@ -851,10 +851,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * sets is first save flag
      *
-     * @param $is_first_save
+     * @param bool $is_first_save
      * @return $this
      */
-    public function setIsFirstSave($is_first_save): BaseModel
+    public function setIsFirstSave(bool $is_first_save): BaseModel
     {
         $this->is_first_save = $is_first_save;
         return $this;
@@ -885,10 +885,10 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * gets model's original data
      *
-     * @param null $key
+     * @param mixed|null $key
      * @return mixed
      */
-    protected function getOriginalData($key = null): mixed
+    protected function getOriginalData(mixed $key = null): mixed
     {
         if ($key != null && array_key_exists($key, $this->original_data)) {
             return $this->original_data[$key];
@@ -910,7 +910,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      *
      * @return self
      */
-    public function setDbRow($db_row): BaseModel
+    public function setDbRow(Row $db_row): BaseModel
     {
         $this->db_row = $db_row;
 
@@ -922,7 +922,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      *
      * @return self
      */
-    public function setTableName($table_name): BaseModel
+    public function setTableName(string $table_name): BaseModel
     {
         $this->table_name = $table_name;
 

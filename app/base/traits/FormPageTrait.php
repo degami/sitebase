@@ -62,10 +62,11 @@ trait FormPageTrait
      *
      * @param FAPI\Form $form
      * @param bool $inline_button
+     * @param bool $isConfirmation
      * @return FAPI\Form
      * @throws FAPI\Exceptions\FormException
      */
-    protected function addSubmitButton(FAPI\Form $form, $inline_button = false, $isConfirmation = false): FAPI\Form
+    protected function addSubmitButton(FAPI\Form $form, bool $inline_button = false, bool $isConfirmation = false): FAPI\Form
     {
         if ($inline_button) {
             $form
@@ -104,13 +105,13 @@ trait FormPageTrait
      *
      * @param string $confirm_message
      * @param FAPI\Form $form
-     * @param null $cancel_url
+     * @param string|null $cancel_url
      * @return FAPI\Form
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function fillConfirmationForm(string $confirm_message, FAPI\Form $form, $cancel_url = null): FAPI\Form
+    protected function fillConfirmationForm(string $confirm_message, FAPI\Form $form, ?string $cancel_url = null): FAPI\Form
     {
         $form->addField(
             'confirm',
@@ -149,7 +150,7 @@ trait FormPageTrait
      * @param array     &$form_state
      * @return FAPI\Form
      */
-    abstract public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form;
+    abstract public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form;
 
     /**
      * validates form submission
@@ -158,7 +159,7 @@ trait FormPageTrait
      * @param array     &$form_state
      * @return bool|string
      */
-    abstract public function formValidate(FAPI\Form $form, &$form_state): bool|string;
+    abstract public function formValidate(FAPI\Form $form, array &$form_state): bool|string;
 
     /**
      * handles form submission
@@ -167,5 +168,5 @@ trait FormPageTrait
      * @param array     &$form_state
      * @return mixed
      */
-    abstract public function formSubmitted(FAPI\Form $form, &$form_state): mixed;
+    abstract public function formSubmitted(FAPI\Form $form, array &$form_state): mixed;
 }

@@ -435,7 +435,7 @@ trait ContainerAwareTrait
      * @return mixed
      * @throws BasicException
      */
-    public function getEnv(string $variable, $default = null)
+    public function getEnv(string $variable, mixed $default = null)
     {
         $env = (array)$this->getService('env');
         return $env[$variable] ?? $default;

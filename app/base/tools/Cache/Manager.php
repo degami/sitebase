@@ -89,12 +89,12 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * retrieves element from cache
      *
      * @param mixed $key
-     * @param null $default
+     * @param mixed|null $default
      * @return mixed
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function get(mixed $key, $default = null) : mixed
+    public function get($key, $default = null) : mixed
     {
         if ($this->getEnv('DISABLE_CACHE')) {
             return $default;
@@ -119,7 +119,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @return int|Dateinterval
      * @throws BasicException
      */
-    public function getCacheLifetime($ttl = null): DateInterval|int
+    public function getCacheLifetime(int|DateInterval|null $ttl = null): DateInterval|int
     {
         return (is_int($ttl) || $ttl instanceof DateInterval) ? $ttl : ($this->getEnv('CACHE_LIFETIME') ?? 300);
     }
@@ -134,7 +134,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    public function set(mixed $key, mixed $value, $ttl = null): bool
+    public function set($key, $value, $ttl = null): bool
     {
         if ($this->getEnv('DISABLE_CACHE')) {
             return false;
@@ -224,7 +224,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    public function setMultiple(mixed $values, $ttl = null): bool
+    public function setMultiple($values, $ttl = null): bool
     {
         $ttl = $this->getCacheLifetime($ttl);
 
@@ -277,7 +277,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @throws PhpfastcacheSimpleCacheException
      * @throws BasicException
      */
-    public function has(mixed $key): bool
+    public function has($key): bool
     {
         if ($this->getEnv('DISABLE_CACHE')) {
             return false;

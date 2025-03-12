@@ -182,7 +182,7 @@ class BaseCommand extends SymfonyCommand
      * @param array|null $choices
      * @return mixed
      */
-    protected function keepAskingForOption(string $option_name, string $question_message, array $choices = null): mixed
+    protected function keepAskingForOption(string $option_name, string $question_message, ?array $choices = null): mixed
     {
         if ($this->input == null || $this->output == null) {
             return null;
@@ -214,10 +214,10 @@ class BaseCommand extends SymfonyCommand
 
     /**
      * @param string $confirmation_message
-     * @param $not_confirm_message
+     * @param string $not_confirm_message
      * @return bool
      */
-    protected function confirmMessage(string $confirmation_message, $not_confirm_message): bool
+    protected function confirmMessage(string $confirmation_message, string $not_confirm_message): bool
     {
         $question = new ConfirmationQuestion($confirmation_message, false);
         if (!$this->getQuestionHelper()->ask($this->input, $this->output, $question)) {
@@ -249,7 +249,7 @@ class BaseCommand extends SymfonyCommand
         return $this->confirmMessage($confirmation_message, 'Not deleted');
     }
 
-    protected function renderTable(array $header, array $rows, $compressed = false)
+    protected function renderTable(array $header, array $rows, bool $compressed = false)
     {
         $table = new Table($this->output);
 
@@ -326,7 +326,7 @@ class BaseCommand extends SymfonyCommand
         $table->render();
     }
 
-    protected function renderTitle($title)
+    protected function renderTitle(string $title)
     {
         $this->getIo()->block(implode("\n", [$title, str_repeat('=', strlen($title))]), null, 'fg=green;bg=default', '', false, true);
     }

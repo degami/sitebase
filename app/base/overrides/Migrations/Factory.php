@@ -40,13 +40,13 @@ class Factory
      * @param AdapterInterface $adapter
      * @param Closure|null $classLoader
      */
-    public function __construct(AdapterInterface $adapter, Closure $classLoader = null)
+    public function __construct(AdapterInterface $adapter, ?Closure $classLoader = null)
     {
         $this->adapter = $adapter;
         $this->setClassLoader($classLoader);
     }
 
-    public function setClassLoader(\Closure $classLoader = null): void
+    public function setClassLoader(?Closure $classLoader = null): void
     {
         if (null === $classLoader) {
             $classLoader = fn ($classname) => new $classname;
@@ -61,7 +61,7 @@ class Factory
      * @param string $namespace
      * @return Collection
      */
-    public function newList($namespace = '\\'): Collection
+    public function newList(string $namespace = '\\'): Collection
     {
         if (substr($namespace, -1) !== '\\') {
             throw new InvalidArgumentException('Namespace incorrect, follow psr-4 namespace rules. Do not forget trailing slashes');

@@ -85,7 +85,7 @@ class Permissions extends AdminFormPage
      * @return FAPI\Form
      * @throws \Exception
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $table = $form->addField('table', [
             'type' => 'table_container',

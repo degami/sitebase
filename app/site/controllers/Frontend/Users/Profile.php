@@ -95,7 +95,7 @@ class Profile extends LoggedUserFormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $user = $this->getCurrentUser();
 

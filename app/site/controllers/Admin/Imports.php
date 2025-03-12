@@ -75,7 +75,7 @@ class Imports extends AdminFormPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $exportableClasses = [];
         $modelClasses = ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE);

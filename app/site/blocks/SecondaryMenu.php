@@ -79,7 +79,7 @@ class SecondaryMenu extends BaseCodeBlock
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function renderSiteMenu(array $menu_tree, $parent = null): string
+    protected function renderSiteMenu(array $menu_tree, ?array $parent = null): string
     {
         $menu_list = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'ul',

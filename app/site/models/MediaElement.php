@@ -80,7 +80,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
-    public function getThumb(string $size, $mode = null, $class = null, $img_attributes = []): string
+    public function getThumb(string $size, ?string $mode = null, ?string $class = null, array $img_attributes = []): string
     {
         $this->checkLoaded();
 
@@ -119,7 +119,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws Exception
      */
-    public function getThumbUrl(string $size, $mode = null): string
+    public function getThumbUrl(string $size, ?string $mode = null): string
     {
         $this->checkLoaded();
 

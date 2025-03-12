@@ -54,7 +54,7 @@ class AdminActionLog extends RequestLog
      * @return $this|AdminActionLog
      * @throws BasicException
      */
-    public function fillWithRequest(Request $request, BasePage $controller = null): RequestLog
+    public function fillWithRequest(Request $request, ?BasePage $controller = null): RequestLog
     {
         parent::fillWithRequest($request, $controller);
         if ($controller instanceof BasePage) {

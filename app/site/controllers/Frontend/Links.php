@@ -98,7 +98,7 @@ class Links extends FormPage
      * @return FAPI\Form
      * @throws FAPI\Exceptions\FormException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $form->addField('url', [
             'type' => 'textfield',

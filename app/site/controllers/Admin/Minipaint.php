@@ -71,7 +71,7 @@ class Minipaint extends AdminPage
         return 'minipaint/{path:.*}';    
     }
 
-    public function process(?RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         $filepath = 'index.html';
         if ($route_data['path']) {

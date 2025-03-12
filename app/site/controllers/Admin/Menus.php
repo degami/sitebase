@@ -110,7 +110,7 @@ class Menus extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    private function addLevel($parentFormElement, $menu_name, $menuElement = null): Element
+    private function addLevel(Element $parentFormElement, string $menu_name, ?Menu $menuElement = null): Element
     {
         $parent_id = null;
         $thisFormElement = null;
@@ -159,7 +159,7 @@ class Menus extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         $menu = $this->getObject();

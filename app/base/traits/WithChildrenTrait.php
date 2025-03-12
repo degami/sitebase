@@ -33,7 +33,7 @@ trait WithChildrenTrait
      * @param bool $reset
      * @return array
      */
-    public function getChildren($locale = null, $reset = false): array
+    public function getChildren(?string $locale = null, bool $reset = false): array
     {
         $this->checkLoaded();
 

@@ -250,7 +250,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getConfigValue(string $config_path, $website_id = null, $locale = null): mixed
+    public function getConfigValue(string $config_path, ?int $website_id = null, ?string $locale = null): mixed
     {
         if ($website_id == null) {
             $website_id = $this->getCurrentWebsiteId();
@@ -293,7 +293,7 @@ class SiteData extends ContainerAwareObject
      * @param string|null $locale
      * @return bool
      */
-    public function setConfigValue(string $config_path, mixed $value, $website_id = null, $locale = null) : bool
+    public function setConfigValue(string $config_path, mixed $value, ?int $website_id = null, ?string $locale = null) : bool
     {
         if ($website_id == null) {
             $website_id = $this->getCurrentWebsiteId();
@@ -335,7 +335,7 @@ class SiteData extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getHomePageId($website_id = null, $locale = null): mixed
+    public function getHomePageId(?int $website_id = null, ?string $locale = null): mixed
     {
         if ($locale == null) {
             $locale = static::DEFAULT_LOCALE;
@@ -354,7 +354,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getHomePageRedirectsToLanguage($website_id = null): bool
+    public function getHomePageRedirectsToLanguage(?int $website_id = null): bool
     {
         return boolval($this->getConfigValue(self::HOMEPAGE_REDIRECTS_TO_LANGUAGE_PATH, $website_id));
     }
@@ -369,7 +369,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getShowLogoOnMenu($website_id = null): bool
+    public function getShowLogoOnMenu(?int $website_id = null): bool
     {
         return boolval($this->getConfigValue(self::MENU_LOGO_PATH, $website_id));
     }
@@ -384,7 +384,7 @@ class SiteData extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getSiteEmail($website_id = null): mixed
+    public function getSiteEmail(?int $website_id = null): mixed
     {
         return $this->getConfigValue(self::SITE_EMAIL_PATH, $website_id, null);
     }
@@ -399,7 +399,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getSiteLocales($website_id = null): array|bool
+    public function getSiteLocales(?int $website_id = null): array|bool
     {
         return explode(",", $this->getConfigValue(self::LOCALES_PATH, $website_id, null));
     }
@@ -415,7 +415,7 @@ class SiteData extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getMainMenuName($website_id = null, $locale = null): mixed
+    public function getMainMenuName(?int $website_id = null, ?string $locale = null): mixed
     {
         return $this->getConfigValue(self::MAINMENU_PATH, $website_id, $locale);
     }
@@ -431,7 +431,7 @@ class SiteData extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getThemeName($website_id = null, $locale = null): mixed
+    public function getThemeName(?int $website_id = null, ?string $locale = null): mixed
     {
         return $this->getConfigValue(self::THEMENAME_PATH, $website_id, $locale);
     }
@@ -447,7 +447,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getDateFormat($website_id = null, $locale = null): string
+    public function getDateFormat(?int $website_id = null, ?string $locale = null): string
     {
         $date_format = $this->getSiteData()->getConfigValue(self::DATE_FORMAT_PATH, $website_id, $locale);
         return $date_format ?: 'Y-m-d';
@@ -464,7 +464,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getDateTimeFormat($website_id = null, $locale = null): string
+    public function getDateTimeFormat(?int $website_id = null, ?string $locale = null): string
     {
         $date_format = $this->getSiteData()->getConfigValue(self::DATE_TIME_FORMAT_PATH, $website_id, $locale);
         return $date_format ?: 'Y-m-d H:i';
@@ -540,7 +540,7 @@ class SiteData extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getAllPageBlocks($locale = null): array
+    public function getAllPageBlocks(?string $locale = null): array
     {
         static $pageBlocks = null;
 
@@ -568,12 +568,13 @@ class SiteData extends ContainerAwareObject
      * @param int $website_id
      * @param string $locale
      * @param Menu|null $menu_element
+     * @param bool $absoluteLinks
      * @return array
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getSiteMenu(string $menu_name, int $website_id, string $locale, $menu_element = null, $absoluteLinks = true): array
+    public function getSiteMenu(string $menu_name, int $website_id, string $locale, ?Menu $menu_element = null, bool $absoluteLinks = true): array
     {
         $out = [];
         if ($menu_element instanceof Menu) {
@@ -599,10 +600,11 @@ class SiteData extends ContainerAwareObject
      *
      * @param array $menu_items
      * @param Menu|null $menu_element
+     * @param bool $absoluteLinks
      * @return array
      * @throws BasicException
      */
-    public function buildSiteMenu(array $menu_items, $menu_element = null, $absoluteLinks = true): array
+    public function buildSiteMenu(array $menu_items, ?Menu $menu_element = null, bool $absoluteLinks = true): array
     {
         $out = [];
         if ($menu_element instanceof Menu) {

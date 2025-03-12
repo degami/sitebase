@@ -70,7 +70,7 @@ class Globals extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getSiteLanguagesSelectOptions($website_id = null): array
+    public function getSiteLanguagesSelectOptions(?int $website_id = null): array
     {
         $languages = $this->getSiteData()->getSiteLocales($website_id);
         $languages_on_DB = [];
@@ -102,7 +102,7 @@ class Globals extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function logRequestIfNeeded($status_code, Request $request) : void
+    protected function logRequestIfNeeded(int $status_code, Request $request) : void
     {
         if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
             $route_info = $this->getAppRouteInfo();
@@ -129,7 +129,7 @@ class Globals extends ContainerAwareObject
      * @param Request $request
      * @param RouteInfo|null $route_info
      * @param array $template_data
-     * @param null $template_name
+     * @param string|null $template_name
      * @return Response
      * @throws BasicException
      * @throws DependencyException
@@ -137,7 +137,7 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function errorPage(int $error_code, Request $request, RouteInfo $route_info = null, $template_data = [], $template_name = null): Response
+    public function errorPage(int $error_code, Request $request, ?RouteInfo $route_info = null, array $template_data = [], ?string $template_name = null): Response
     {
         $this->logRequestIfNeeded($error_code, $request);
 
@@ -205,7 +205,7 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function exceptionPage(Throwable $exception, Request $request, RouteInfo $route_info = null): Response
+    public function exceptionPage(Throwable $exception, Request $request, ?RouteInfo $route_info = null): Response
     {
         $this->logException($exception, null, $request);
 
@@ -240,7 +240,7 @@ class Globals extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function blockedIpPage(Request $request, RouteInfo $route_info = null): Response
+    public function blockedIpPage(Request $request, ?RouteInfo $route_info = null): Response
     {
         $template_data = [
             'ip_addr' => $request->getClientIp(),
@@ -377,7 +377,7 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function offlinePage(Request $request, RouteInfo $route_info = null): Response
+    public function offlinePage(Request $request, ?RouteInfo $route_info = null): Response
     {
         if ($route_info == null) {
             $route_info = $this->getEmptyRouteInfo();
@@ -393,7 +393,7 @@ class Globals extends ContainerAwareObject
      * @param Request|null $request
      * @throws BasicException
      */
-    public function logException(Throwable $e, $prefix = null, Request $request = null) : void
+    public function logException(Throwable $e, ?string $prefix = null, ?Request $request = null) : void
     {
         $this->getLog()->error($prefix . ($prefix != null ? ' - ' : '') . $e->getMessage());
         $this->getLog()->debug($e->getTraceAsString());
@@ -438,7 +438,7 @@ class Globals extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function translate(string $string, array $params = [], $locale = null): string
+    public function translate(string $string, array $params = [], ?string $locale = null): string
     {
         if ($locale == null) {
             $locale = $this->getApp()->getCurrentLocale();
@@ -506,7 +506,7 @@ class Globals extends ContainerAwareObject
      * @param int $length
      * @return string
      */
-    public function randString($length = 10): string
+    public function randString(int $length = 10): string
     {
         $characters = implode("", array_merge(range(0, 9), range('a', 'z'), range('A', 'Z')));
         $charactersLength = strlen($characters);
@@ -525,7 +525,7 @@ class Globals extends ContainerAwareObject
      * @throws BasicException
      * @throws Throwable
      */
-    public function getWrappedMailBody(string $subject, string $mail_body, $template_name = 'generic'): string
+    public function getWrappedMailBody(string $subject, string $mail_body, string $template_name = 'generic'): string
     {
         $old_directory = $this->getTemplates()->getDirectory();
 
@@ -678,7 +678,7 @@ class Globals extends ContainerAwareObject
      * @param string $escape_char
      * @return string|false
      */
-    public function array2csv($data, $header = [], $delimiter = ',', $enclosure = '"', $escape_char = "\\") : string|false
+    public function array2csv(array $data, array $header = [], string $delimiter = ',', string $enclosure = '"', string $escape_char = "\\") : string|false
     {
         $f = fopen('php://memory', 'r+');
         if (!empty($header)) {
@@ -706,7 +706,7 @@ class Globals extends ContainerAwareObject
                 if ($csvHeader == null) {
                     $csvHeader = $data;
                 } else {
-                    $out[] = array_combine($csvHeader, $data);
+                    $out[] = array_combine((array) $csvHeader, $data);
                 }
             }
     

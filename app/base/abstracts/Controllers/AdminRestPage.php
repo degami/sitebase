@@ -43,7 +43,7 @@ abstract class AdminRestPage extends BaseRestPage
         return parent::beforeRender();
     }
 
-    public function process(?RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         /** @var JsonResponse $out */
         $out = parent::process($route_info, $route_data);

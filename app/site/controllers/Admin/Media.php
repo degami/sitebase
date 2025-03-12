@@ -193,7 +193,7 @@ class Media extends AdminManageModelsPage
      * @throws NotFoundException
      * @throws \Exception
      */
-    public function getFormDefinition(FAPI\Form $form, &$form_state): FAPI\Form
+    public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
         /** @var MediaElement $media */

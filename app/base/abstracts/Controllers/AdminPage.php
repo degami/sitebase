@@ -115,7 +115,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws Throwable
      * @throws \DebugBar\DebugBarException
      */
-    public function renderPage(?RouteInfo $route_info = null, $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response
     {
         $return = parent::renderPage($route_info, $route_data);
 
@@ -242,7 +242,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addBackButton($query_params = null) : void
+    public function addBackButton(?array $query_params = null) : void
     {
         if (is_array($query_params)) {
             $query_params = http_build_query($query_params);

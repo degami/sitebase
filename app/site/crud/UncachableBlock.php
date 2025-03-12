@@ -55,7 +55,7 @@ class UncachableBlock extends BaseRestPage
      * @throws BasicException
      * @throws Throwable
      */
-    public function process(?RouteInfo $route_info = null, $route_data = []): Response
+    public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         if (empty($data = json_decode($this->getRequest()->getContent(), true))) {
             throw new \Exception('Missing Data');

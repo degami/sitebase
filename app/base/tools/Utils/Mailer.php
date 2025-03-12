@@ -34,10 +34,10 @@ class Mailer extends ContainerAwareObject
     /**
      * send a mail
      *
-     * @param $from
-     * @param $to
-     * @param $subject
-     * @param $body
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param string $body
      * @param string $content_type
      * @param bool $log
      * @return bool
@@ -46,7 +46,7 @@ class Mailer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function sendMail($from, $to, $subject, $body, $content_type = 'text/html', $log = true): bool
+    public function sendMail(string $from, string $to, string $subject, string $body, string $content_type = 'text/html', bool $log = true): bool
     {
         $use_ses = (trim($this->getEnv('SES_REGION')) != '' && trim($this->getSiteData()->getConfigValue('app/mail/ses_sender')) != '');
         if (!$use_ses || ($result = $this->sendSesMail($from, $to, $subject, $body, $content_type)) != true) {
@@ -74,7 +74,7 @@ class Mailer extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function sendTemplateMail(string $from, string $to, string $subject, string $mail_template, $mail_variables = []): bool
+    public function sendTemplateMail(string $from, string $to, string $subject, string $mail_template, array $mail_variables = []): bool
     {
         $this->getTemplates()->addFolder('mails', App::getDir(App::TEMPLATES) . DS . 'mails');
 
@@ -102,7 +102,7 @@ class Mailer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function sendSmtpMail(string $from, string $to, string $subject, string $body, $content_type = 'text/html'): bool
+    protected function sendSmtpMail(string $from, string $to, string $subject, string $body, string $content_type = 'text/html'): bool
     {
         try {
             if (!is_array($from)) {
@@ -143,7 +143,7 @@ class Mailer extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function sendSesMail(string $from, string $to, string $subject, string $body, $content_type = 'text/html'): bool
+    protected function sendSesMail(string $from, string $to, string $subject, string $body, string $content_type = 'text/html'): bool
     {
         // Specify a configuration set. If you do not want to use a configuration
         // set, comment the following variable, and the
@@ -210,7 +210,7 @@ class Mailer extends ContainerAwareObject
      * @return MailLog|bool
      * @throws BasicException
      */
-    protected function logMail(string $from, string $to, string $subject, int $result, $mail_template = null) : MailLog|bool
+    protected function logMail(string $from, string $to, string $subject, int $result, ?string $mail_template = null) : MailLog|bool
     {
         if (is_array($from)) {
             $from = implode(",", array_values($from));

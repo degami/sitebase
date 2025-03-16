@@ -13,7 +13,7 @@
 
 namespace App;
 
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use DI\ContainerBuilder;
 use Symfony\Component\HttpFoundation\RedirectResponse;
@@ -23,7 +23,7 @@ use Psr\Container\ContainerInterface;
 use Gplanchat\EventManager\Event;
 use Dotenv\Dotenv;
 use App\Base\Abstracts\ContainerAwareObject;
-use App\Site\Models\Website;
+use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
 use App\Base\Exceptions\OfflineException;
 use App\Base\Exceptions\BlockedIpException;
@@ -51,6 +51,7 @@ class App extends ContainerAwareObject
     public const CONFIG = 'config';
     public const COMMANDS = 'commands';
     public const CONTROLLERS = 'controllers';
+    public const BASE_MIGRATIONS = 'base_migrations';
     public const MIGRATIONS = 'migrations';
     public const MODELS = 'models';
     public const ROUTING = 'routing';
@@ -66,11 +67,13 @@ class App extends ContainerAwareObject
     public const GRAPHQL = 'graphql';
 
     public const ROUTING_NAMESPACE = 'App\Site\Routing';
+    public const BASE_CONTROLLERS_NAMESPACE = 'App\Base\Controllers';
     public const CONTROLLERS_NAMESPACE = 'App\Site\Controllers';
     public const CRUD_NAMESPACE = 'App\Site\Crud';
     public const WEBHOOKS_NAMESPACE = 'App\Site\Webhooks';
     public const BLOCKS_NAMESPACE = 'App\Site\Blocks';
     public const MODELS_NAMESPACE = 'App\Site\Models';
+    public const BASE_COMMANDS_NAMESPACE = 'App\Base\Commands';
     public const COMMANDS_NAMESPACE = 'App\Site\Commands';
     public const MIGRATIONS_NAMESPACE = 'App\Site\Migrations';
     public const CRON_TASKS_NAMESPACE = 'App\Site\Cron\Tasks';
@@ -405,6 +408,7 @@ class App extends ContainerAwareObject
             self::CONFIG => $rootPath . DS . 'config',
             self::COMMANDS => $appPath . DS . 'site' . DS . 'commands',
             self::CONTROLLERS => $appPath . DS . 'site' . DS . 'controllers',
+            self::BASE_MIGRATIONS => $appPath . DS . 'base' . DS . 'migrations',
             self::MIGRATIONS => $appPath . DS . 'site' . DS . 'migrations',
             self::MODELS => $appPath . DS . 'site' . DS . 'models',
             self::ROUTING => $appPath . DS . 'site' . DS . 'routing',

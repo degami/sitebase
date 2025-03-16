@@ -14,7 +14,7 @@
 namespace App\Base\Tools\DataCollector;
 
 use App\Base\Abstracts\Models\AccountModel;
-use App\Site\Models\GuestUser;
+use App\Base\Models\GuestUser;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;

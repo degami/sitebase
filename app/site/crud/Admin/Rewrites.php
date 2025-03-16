@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\Rewrite as RewriteModel;
+use App\Base\Models\Rewrite as RewriteModel;
 
 /**
  * Rewrites REST endpoint

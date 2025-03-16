@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\Language as LanguageModel;
+use App\Base\Models\Language as LanguageModel;
 
 /**
  * Languages REST endpoint

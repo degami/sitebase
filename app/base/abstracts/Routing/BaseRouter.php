@@ -16,7 +16,7 @@ namespace App\Base\Abstracts\Routing;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Interfaces\Router\RouterInterface;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;

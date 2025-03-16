@@ -17,7 +17,7 @@ use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\SiteData;
-use App\Site\Models\Website;
+use App\Base\Models\Website;
 use DebugBar\StandardDebugBar;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;

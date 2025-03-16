@@ -24,7 +24,7 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Traits\AdminTrait;
 use Degami\Basics\Html\TagElement;
-use App\Site\Models\User;
+use App\Base\Models\User;
 
 /**
  * AuthorInfo Block

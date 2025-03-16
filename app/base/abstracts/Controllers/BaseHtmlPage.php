@@ -20,7 +20,7 @@ use App\Base\Interfaces\Controller\HtmlPageInterface;
 use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Tools\DataCollector\RedisDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use DebugBar\DebugBar;
 use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;
@@ -362,7 +362,9 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     static public function getPageRouteName() : string
     {
         $controllerClass = static::class;
-        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
+        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", 
+            str_replace("app/base/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)))
+        ));
         $route_name = str_replace("/", ".", trim($path, "/"));
 
         return $route_name;

@@ -22,12 +22,12 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Psr\Container\ContainerInterface;
 use App\Base\Routing\RouteInfo;
-use App\Site\Models\RequestLog;
+use App\Base\Models\RequestLog;
 use Exception;
 use App\Base\Exceptions\PermissionDeniedException;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use App\Site\Routing\Web;
-use App\Site\Models\Website;
+use App\Base\Models\Website;
 use Throwable;
 
 /**

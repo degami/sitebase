@@ -70,11 +70,15 @@ try {
     }
 
     // ... register commands
-    $commandsClasses = ClassFinder::getClassesInNamespace(App::COMMANDS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
+    $commandsClasses = array_unique(array_merge(
+        ClassFinder::getClassesInNamespace(App::BASE_COMMANDS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+        ClassFinder::getClassesInNamespace(App::COMMANDS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+    ));
     foreach($commandsClasses as $commandClass){
             $array = explode("\\", $commandClass);
             $classname = array_pop($array);
             $commandname = str_replace("App\\Site\\Commands\\", "", $commandClass);
+            $commandname = str_replace("App\\Base\\Commands\\", "", $commandClass);
             $commandname = preg_replace("/".$classname."$/", "", $commandname) . $container->get('utils')->pascalCaseToSnakeCase($classname);
             $commandname = strtolower(str_replace("\\", ":", $commandname));
             $commandObj = $container->make($commandClass, ['name' => $commandname, 'container' => $container]);

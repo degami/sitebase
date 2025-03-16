@@ -16,7 +16,7 @@ namespace App\Site\Blocks;
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Html\TagElement;
-use App\Site\Models\Website;
+use App\Base\Models\Website;
 use Exception;
 
 /**

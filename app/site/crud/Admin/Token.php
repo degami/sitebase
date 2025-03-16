@@ -15,7 +15,7 @@ namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\BaseJsonPage;
 use App\Base\Exceptions\NotAllowedException;
-use App\Site\Models\User;
+use App\Base\Models\User;
 use Symfony\Component\HttpFoundation\Request;
 
 /**

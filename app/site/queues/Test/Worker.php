@@ -34,7 +34,7 @@ class Worker extends BaseQueueWorker
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function processMessage(array $message_data): bool
+    public function processMessage(array $message_data): bool
     {
         return true;
     }

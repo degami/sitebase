@@ -13,7 +13,7 @@
 
 namespace App\Base\Traits;
 
-use App\Site\Models\User;
+use App\Base\Models\User;
 use DI\DependencyException;
 use DI\NotFoundException;
 

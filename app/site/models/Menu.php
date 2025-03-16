@@ -18,6 +18,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\ModelWithChildren;
 use App\Base\Traits\WithParentTrait;
 use App\Base\Traits\WithWebsiteTrait;
+use App\Base\Models\Rewrite;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Psr\Container\ContainerInterface;

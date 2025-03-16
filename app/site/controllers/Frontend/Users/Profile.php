@@ -13,8 +13,8 @@
 
 namespace App\Site\Controllers\Frontend\Users;
 
-use App\Site\Models\Role;
-use App\Site\Models\User;
+use App\Base\Models\Role;
+use App\Base\Models\User;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Models\AccountModel;
 use App\Base\Abstracts\Controllers\LoggedUserFormPage;

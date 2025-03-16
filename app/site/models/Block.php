@@ -19,6 +19,7 @@ use App\Base\Traits\BlockTrait;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Models\Rewrite;
 use DateTime;
 use Degami\Basics\Html\TagElement;
 use DI\DependencyException;

@@ -111,7 +111,31 @@ class Collection
             function ($item1, $item2) {
                 $class1 = $item1->getName();
                 $class2 = $item2->getName();
-                return strcmp($class1, $class2);
+
+                $class1 = explode("_", $class1);
+                $class2 = explode("_", $class2);
+
+                if (count($class1) < 2) {
+                    $class1 = PHP_INT_MAX;
+                } else {
+                    $class1 = reset($class1);
+                }
+
+                if (count($class2) < 2) {
+                    $class2 = PHP_INT_MAX;
+                } else {
+                    $class2 = reset($class2);
+                }
+
+
+                if (!is_numeric($class1)) {
+                    $class1 = PHP_INT_MAX;
+                }
+                if (!is_numeric($class2)) {
+                    $class2 = PHP_INT_MAX;
+                }
+                
+                return $class1 <=> $class2;
             }
         );
 

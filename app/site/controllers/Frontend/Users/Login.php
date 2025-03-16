@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FormPage;
 use App\Base\Traits\FrontendPageTrait;
-use App\Site\Models\User;
+use App\Base\Models\User;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use DI\DependencyException;

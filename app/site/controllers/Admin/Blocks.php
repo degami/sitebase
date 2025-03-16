@@ -16,7 +16,7 @@ namespace App\Site\Controllers\Admin;
 use App\App;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Traits\AdminFormTrait;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;

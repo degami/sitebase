@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\Configuration as ConfigurationModel;
+use App\Base\Models\Configuration as ConfigurationModel;
 
 /**
  * Configs REST endpoint

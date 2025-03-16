@@ -18,16 +18,17 @@ use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Models\Block;
-use App\Site\Models\Configuration;
+use App\Base\Models\Configuration;
 use App\Site\Models\Menu;
-use App\Site\Models\Redirect;
+use App\Base\Models\Redirect;
+use App\Base\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use App\Site\Models\Website;
+use App\Base\Models\Website;
 
 /**
  * Site Data Helper Class
@@ -658,7 +659,10 @@ class SiteData extends ContainerAwareObject
 
         $admin_links_key = "admin.links";
         if (!$this->getCache()->has($admin_links_key) || $reset) {
-            $controllerClasses = ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
+            $controllerClasses = array_unique(array_merge(
+                ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+            ));
             foreach ($controllerClasses as $controllerClass) {
                 if (method_exists($controllerClass, 'getAdminPageLink')) {
                     $adminLink = $this->containerCall([$controllerClass, 'getAdminPageLink']) ?? null;

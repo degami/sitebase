@@ -18,7 +18,7 @@ use Exception;
 use App\Base\Abstracts\ContainerAwareObject;
 use Spatie\DbDumper\Databases\MySql;
 use Spatie\DbDumper\Compressors\GzipCompressor;
-use App\Site\Models\QueueMessage;
+use App\Base\Models\QueueMessage;
 use App\App;
 
 /**

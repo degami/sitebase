@@ -15,8 +15,8 @@ namespace App\Site\Routing;
 
 use App\App;
 use App\Base\Abstracts\Routing\BaseRouter;
-use App\Site\Models\Rewrite;
-use App\Site\Models\Website;
+use App\Base\Models\Rewrite;
+use App\Base\Models\Website;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -62,7 +62,10 @@ class Web extends BaseRouter implements WebRouterInterface
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
+                $controllerClasses = array_unique(array_merge(
+                    ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                    ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                ));
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {
 
@@ -71,7 +74,9 @@ class Web extends BaseRouter implements WebRouterInterface
                         }
 
                         $group = "";
-                        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)));
+                        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", 
+                            str_replace("app/base/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)))
+                        ));
                         $route_name = str_replace("/", ".", trim($path, "/"));
 
                         if (is_callable([$controllerClass, 'getPageRouteName'])) {

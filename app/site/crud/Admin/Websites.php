@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\Website as WebsiteModel;
+use App\Base\Models\Website as WebsiteModel;
 
 /**
  * Websites REST endpoint

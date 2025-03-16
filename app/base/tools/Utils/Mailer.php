@@ -22,7 +22,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Swift_Message;
 use Exception;
 use Aws\Exception\AwsException;
-use App\Site\Models\MailLog;
+use App\Base\Models\MailLog;
 use Swift_TransportException;
 use Throwable;
 

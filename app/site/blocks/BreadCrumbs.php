@@ -25,7 +25,7 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Site\Models\Menu;
 use App\Base\Traits\AdminTrait;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use Degami\Basics\Html\TagElement;
 
 /**

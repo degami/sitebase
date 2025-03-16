@@ -14,6 +14,7 @@
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Models\Rewrite;
 use App\Base\Traits\WithOwnerTrait;
 use DateTime;
 use Exception;

@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\UserNotification as UserNotificationModel;
+use App\Base\Models\UserNotification as UserNotificationModel;
 
 /**
  * User Notifications REST endpoint

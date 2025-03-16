@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\User as UserModel;
+use App\Base\Models\User as UserModel;
 
 /**
  * Users REST endpoint

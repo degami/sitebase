@@ -22,7 +22,7 @@ use Exception;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\Sitemap;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use App\Site\Controllers\Admin\Json\SitemapCallback;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;

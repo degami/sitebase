@@ -212,7 +212,9 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     public function getRouteName(): string
     {
-        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower(get_class($this))));
+        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", 
+            str_replace("app/base/controllers/", "", str_replace("\\", "/", strtolower(get_class($this)))),
+        ));
         return str_replace("/", ".", trim($path, "/"));
     }
 
@@ -228,7 +230,9 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
             return $this->getUrl($this->getRouteInfo()->getRouteName(), $this->getRouteInfo()->getVars());
         }
 
-        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", strtolower(get_class($this))));
+        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", 
+            str_replace("app/base/controllers/", "", str_replace("\\", "/", strtolower(get_class($this)))),
+        ));
         if (method_exists(static::class, 'getRoutePath')) {
             $path = call_user_func([static::class, 'getRoutePath']);
             if (is_string($path)) {

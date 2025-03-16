@@ -14,8 +14,8 @@
 namespace App\Base\Tools\Utils;
 
 use App\Base\Abstracts\ContainerAwareObject;
-use App\Site\Models\Language;
-use App\Site\Models\Website;
+use App\Base\Models\Language;
+use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -28,8 +28,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Lcobucci\JWT\Parser;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validator;
-use App\Site\Models\RequestLog;
-use App\Site\Models\QueueMessage;
+use App\Base\Models\RequestLog;
+use App\Base\Models\QueueMessage;
 use App\Base\Controllers\Dummy\NullPage;
 use Exception;
 use Spatie\ArrayToXml\ArrayToXml;

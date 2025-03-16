@@ -14,7 +14,7 @@
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Routing\RouteInfo;
-use App\Site\Models\RequestLog;
+use App\Base\Models\RequestLog;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;

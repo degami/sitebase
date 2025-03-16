@@ -18,7 +18,7 @@ use Degami\PHPFormsApi\Abstracts\Base\Element;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\Menu;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;

@@ -16,7 +16,7 @@ namespace App\Site\GraphQL\Resolvers;
 use App\App;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Base\Interfaces\GraphQl\ResolverInterface;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use App\Base\Routing\RouteInfo;
 
 class PageRegions implements ResolverInterface

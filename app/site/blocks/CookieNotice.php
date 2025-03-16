@@ -15,7 +15,7 @@ namespace App\Site\Blocks;
 
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use App\Base\Abstracts\Controllers\BasePage;
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\Basics\Html\TagElement;
 use Degami\PHPFormsApi as FAPI;

@@ -17,7 +17,7 @@ use App\App;
 use App\Base\Traits\AdminTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Routing\RouteInfo;
-use App\Site\Models\AdminActionLog;
+use App\Base\Models\AdminActionLog;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -155,12 +155,12 @@ abstract class AdminPage extends BaseHtmlPage
             "\$('#admin').appAdmin(" . json_encode(
                 [
                     'currentRoute' => $this->getRouteInfo()->getRouteName(),
-                    'checkLoggedUrl' => $this->getUrl('crud.app.site.controllers.admin.json.checksession'),
+                    'checkLoggedUrl' => $this->getUrl('crud.app.base.controllers.admin.json.checksession'),
                     'logoutUrl' => $this->getUrl('admin.logout'),
                     'chatGPTUrl' => $this->getUrl('crud.app.site.controllers.admin.json.chatgpt'),
                     'googleGeminiUrl' => $this->getUrl('crud.app.site.controllers.admin.json.googlegemini'),
-                    'uIsettingsUrl' => $this->getUrl('crud.app.site.controllers.admin.json.uisettings'),
-                    'notificationsUrl' => $this->getUrl('crud.app.site.controllers.admin.json.fetchnotifications'),
+                    'uIsettingsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.uisettings'),
+                    'notificationsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.fetchnotifications'),
                     'notificationCrudUrl' => $this->getCrudRouter()->getUrl('crud.admin.usernotifications'),
                 ]
             ) . ");"

@@ -13,7 +13,7 @@
 
 namespace App\Base\Interfaces\Model;
 
-use App\Site\Models\Role;
+use App\Base\Models\Role;
 
 interface AccountInterface
 {

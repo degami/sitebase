@@ -13,7 +13,7 @@
 
 namespace App\Base\Traits;
 
-use App\Site\Models\Rewrite;
+use App\Base\Models\Rewrite;
 use Exception;
 
 /**

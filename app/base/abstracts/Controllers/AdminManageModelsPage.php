@@ -17,7 +17,7 @@ use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Routing\RouteInfo;
-use App\Site\Models\User;
+use App\Base\Models\User;
 use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Exceptions\FormException;

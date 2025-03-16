@@ -18,7 +18,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Routing\RouteInfo;
-use App\Site\Models\RequestLog;
+use App\Base\Models\RequestLog;
 use Exception;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use GraphQL\GraphQL;
@@ -142,9 +142,15 @@ class Entrypoint extends BasePage
         }
 
         if (preg_match("/^\[(.*?)\]$/", $returnType, $matches) || preg_match("/(.*?)Collection$/", $returnType, $matches)) {
-            if (class_exists("\\App\\Site\\Models\\".$matches[1])) {
+            if (class_exists("\\App\\Base\\Models\\".$matches[1]) || class_exists("\\App\\Site\\Models\\".$matches[1])) {
                 /** @var BaseCollection $collection */
-                $collection = $this->containerCall(["\\App\\Site\\Models\\".$matches[1], "getCollection"]);
+                if (class_exists("\\App\\Base\\Models\\".$matches[1])) {
+                    $modelClass = "\\App\\Base\\Models\\".$matches[1];
+                } else {
+                    $modelClass = "\\App\\Site\\Models\\".$matches[1];
+                }
+
+                $collection = $this->containerCall([$modelClass, "getCollection"]);
                 if (isset($args['input'])) {
                     $searchCriteriaInput = $args['input'];
 
@@ -193,8 +199,8 @@ class Entrypoint extends BasePage
 
     private function classHasMethodReturningType($class, $returnType) : string|bool
     {
-        if (class_exists("App\\Site\\Models\\".$returnType)) {
-            $returnType = "App\\Site\\Models\\".$returnType;
+        if (class_exists("App\\Site\\Models\\".$returnType) || class_exists("App\\Base\\Models\\".$returnType)) {
+            $returnType = class_exists("App\\Base\\Models\\".$returnType) ? "App\\Base\\Models\\".$returnType : "App\\Site\\Models\\".$returnType;
             try {
                 $reflection = new \ReflectionClass($class);
                 foreach ($reflection->getMethods() as $classMethod) {

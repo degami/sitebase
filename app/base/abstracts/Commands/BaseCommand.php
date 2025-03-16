@@ -16,7 +16,7 @@ namespace App\Base\Abstracts\Commands;
 use App\App;
 use App\Base\Routing\RouteInfo;
 use App\Base\Traits\ContainerAwareTrait;
-use App\Site\Models\Website;
+use App\Base\Models\Website;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;

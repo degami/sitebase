@@ -14,7 +14,7 @@
 namespace App\Base\Tools\ApplicationLogger;
 
 use App\Base\Abstracts\ContainerAwareObject;
-use App\Site\Models\ApplicationLog;
+use App\Base\Models\ApplicationLog;
 use Error;
 use Exception;
 use Throwable;

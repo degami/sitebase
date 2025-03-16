@@ -13,8 +13,8 @@
 
 namespace App\Site\Controllers\Frontend\Users;
 
-use App\Site\Models\User;
-use App\Site\Models\User2Fa;
+use App\Base\Models\User;
+use App\Base\Models\User2Fa;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\LoggedUserFormPage;
 use Degami\PHPFormsApi as FAPI;
@@ -175,7 +175,7 @@ class TwoFa extends LoggedUserFormPage
         $isValid = $this->getGoogleAuthenticator()->verifyCode($secret, $values['otp_table']['otp'], 2);   // 2 = 2*30sec clock tolerance
         if ($isValid) {
             //@todo inject passed2fa = true into userdata jwt claim
-            //@see \App\Site\Models\User::getJWT
+            //@see \App\Base\Models\User::getJWT
             //@see \App\Base\Traits\PageTrait::getToken
 
             if ($this->getCurrentUser()->getUser2Fa() == null) {

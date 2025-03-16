@@ -16,7 +16,7 @@ namespace App\Base\Abstracts\Controllers;
 use App\Base\Abstracts\Models\Webhook;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Routing\RouteInfo;
-use App\Site\Models\RequestLog;
+use App\Base\Models\RequestLog;
 use App\Base\Traits\PageTrait;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;

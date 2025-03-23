@@ -18,6 +18,7 @@ use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\FrontendModel;
 use Elasticsearch\Client as ElasticSearchClient;
 use App\Base\Tools\Plates\SiteBase;
+use Degami\Basics\Exceptions\BasicException;
 use InvalidArgumentException;
 use League\Plates\Template\Func;
 
@@ -454,9 +455,13 @@ class Manager extends ContainerAwareObject
      *
      * @return int The count of documents matching the query.
      */
-    public function countAll(?string $aggregationName = null) : int
+    public function countAll(?string $aggregationName = null, $recursionLevel = 0) : int
     {
         if (!empty($this->aggregations)) {
+            if ($recursionLevel == 0 && isset($this->aggregations[$aggregationName]['composite']['after'])) {
+                unset($this->aggregations[$aggregationName]['composite']['after']);
+            }
+
             $searchParams = [
                 'index' => $this->getIndexName(),
                 'body' => [
@@ -467,6 +472,21 @@ class Manager extends ContainerAwareObject
             ];
 
             $search_result = $this->getClient()->search($searchParams);
+
+            if (!isset($search_result['aggregations'][$aggregationName])) {
+                throw new InvalidArgumentException("aggregation $aggregationName not found");
+            }
+
+            if (isset($search_result['aggregations'][$aggregationName]['buckets'])) {
+                $totalElems = count($search_result['aggregations'][$aggregationName]['buckets'] ?? []);
+
+                if (isset($search_result['aggregations'][$aggregationName]['after_key'])) {
+                    $this->aggregations[$aggregationName]['composite']['after'] = $search_result['aggregations'][$aggregationName]['after_key'];
+                    $totalElems += $this->countAll($aggregationName, $recursionLevel + 1);
+                }
+
+                return $totalElems;
+            }
 
             return $search_result['aggregations'][$aggregationName]['value'] ?? 0;
         }
@@ -502,10 +522,9 @@ class Manager extends ContainerAwareObject
 
         if ($onlyAggregations) {
             $searchParams['body']['size'] = 0;
-            unset ($http_response_header['body']['from']);
+            unset($searchParams['body']['from']);
             $searchParams['body']['aggs'] = $this->getAggregationsArray();
         } else {
-
             if (($page * $pageSize) + $pageSize > self::MAX_ELEMENTS_PER_QUERY) {
                 throw new InvalidArgumentException('from + size cannot be over '.self::MAX_ELEMENTS_PER_QUERY);
             }
@@ -541,7 +560,7 @@ class Manager extends ContainerAwareObject
         $search_result = $this->getClient()->search($this->getSearchParams($page, $pageSize, $onlyAggregations, $withScroll));
 
         if ($onlyAggregations) {
-            return $search_result['aggregations'];
+            return $this->normalizeAggregationsResults($search_result['aggregations']);
         }
 
         $total = $search_result['hits']['total']['value'] ?? 0;
@@ -594,6 +613,88 @@ class Manager extends ContainerAwareObject
     public function searchAggregatedData() : array
     {
         return $this->searchData(onlyAggregations: true);
+    }
+
+    /**
+     * Continues aggregation search. only composite aggregations can be continued
+     * 
+     * @param string $aggregationName
+     * @param mixed $after
+     * 
+     * @return array An array containing the total count, the documents found and scroll_id.
+     */
+    public function continueSearchAggregateDate(string $aggregationName, mixed $after) : array
+    {
+        if (!isset($this->aggregations[$aggregationName]['composite'])) {
+            throw new InvalidArgumentException('Only composite aggregations can be continued');
+        }
+
+        $this->aggregations[$aggregationName]['composite']['after'] = $after;
+        
+        return $this->searchData(onlyAggregations: true);
+    }
+
+    /**
+     * Normalizes the aggregation results from OpenSearch into a structured and simplified format.
+     *
+     * This function processes OpenSearch aggregations recursively, flattening nested aggregations
+     * and extracting relevant data (e.g., `top_hits` values, bucket keys, counts, and `after_key`
+     * for composite aggregations) into an easier-to-use structure.
+     *
+     * @param array $aggregations The raw aggregation results from OpenSearch.
+     * @return array A normalized array with structured aggregation data.
+     */
+    protected function normalizeAggregationsResults(array $aggregations)
+    {
+        $structuredAggregations = [];
+
+        foreach ($aggregations as $aggName => $aggData) {
+            if (isset($aggData['buckets'])) {
+                $structuredAggregations[$aggName] = [
+                    'items' => [],
+                    'total' => $aggData['doc_count'] ?? count($aggData['buckets']),
+                ];
+
+                foreach ($aggData['buckets'] as $bucket) {
+                    $key = $bucket['key'];
+                    $entry = [
+                        'key' => $key,
+                        'total' => $bucket['doc_count'] ?? count($bucket['buckets']),
+                    ];
+
+                    // Normalize sub-aggregations recursively
+                    foreach ($bucket as $subAggName => $subAggData) {
+                        if (!in_array($subAggName, ['key', 'doc_count'])) {
+                            $entry[$subAggName] = $this->normalizeAggregationsResults([$subAggName => $subAggData])[$subAggName];
+                        }
+                    }
+
+                    $structuredAggregations[$aggName]['items'][] = $entry;
+                }
+
+                // Include `after_key` for composite aggregations
+                if (isset($aggData['after_key'])) {
+                    $structuredAggregations[$aggName]['after_key'] = $aggData['after_key'];
+                }
+            } elseif (isset($aggData['hits']['hits'])) {
+                // Normalize `top_hits`
+                $structuredAggregations[$aggName] = array_map(
+                    fn($hit) => $hit['_source'],
+                    $aggData['hits']['hits']
+                );
+            } elseif (isset($aggData['value']) && count($aggData) === 1) {
+                $structuredAggregations[$aggName] = $aggData['value'];
+            } elseif (isset($aggData['values'])) {
+                $structuredAggregations[$aggName] = $aggData['values'];
+            } elseif (is_array($aggData)) {
+                // Normalize recursively if it's an array
+                $structuredAggregations[$aggName] = $this->normalizeAggregationsResults($aggData);
+            } else {
+                $structuredAggregations[$aggName] = $aggData;
+            }
+        }
+
+        return $structuredAggregations;
     }
 
     /**

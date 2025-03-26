@@ -13,9 +13,9 @@
 
 namespace App\Base\Traits;
 
-use App\Site\Routing\Crud;
 use App\Base\Routing\RouteInfo;
-use App\Site\Routing\Web;
+use App\Base\Routers\Web;
+use App\Base\Routers\Crud;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\Basics\Html\TagElement;
 use DI\DependencyException;

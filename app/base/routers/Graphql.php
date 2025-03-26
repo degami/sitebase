@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Routing;
+namespace App\Base\Routers;
 
 use App\Base\Abstracts\Routing\BaseRouter;
 use App\Base\Exceptions\InvalidValueException;

@@ -26,10 +26,10 @@ use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
 use App\Base\Tools\Utils\Zip;
 use App\Base\Models\Website;
-use App\Site\Routing\Crud;
 use App\Base\Routing\RouteInfo;
-use App\Site\Routing\Web;
-use App\Site\Routing\Webhooks;
+use App\Base\Routers\Web;
+use App\Base\Routers\Webhooks;
+use App\Base\Routers\Crud;
 use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
@@ -239,7 +239,13 @@ trait ContainerAwareTrait
     {
         if (!$this->getContainer()->has('routers')) {
             $out = [];
-            foreach (ClassFinder::getClassesInNamespace(App::ROUTING_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
+            foreach (ClassFinder::getClassesInNamespace(App::BASE_ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
+                if (is_subclass_of($className, BaseRouter::class)) {
+                    $out[] = strtolower(basename(str_replace("\\","/", $className)) . '_router');
+                }
+            }
+
+            foreach (ClassFinder::getClassesInNamespace(App::ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
                 if (is_subclass_of($className, BaseRouter::class)) {
                     $out[] = strtolower(basename(str_replace("\\","/", $className)) . '_router');
                 }

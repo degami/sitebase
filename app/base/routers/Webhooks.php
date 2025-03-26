@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Routing;
+namespace App\Base\Routers;
 
 use App\App;
 use App\Base\Abstracts\Controllers\BaseWebhookPage;

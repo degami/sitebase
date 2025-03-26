@@ -106,20 +106,20 @@ return [
     'event_manager' => DI\get(\Gplanchat\EventManager\SharedEventEmitter::class),
 
     // 'web_router'
-    \App\Site\Routing\Web::class => DI\autowire(\App\Site\Routing\Web::class),
-    'web_router' => DI\get(\App\Site\Routing\Web::class),
+    \App\Base\Routers\Web::class => DI\autowire(\App\Base\Routers\Web::class),
+    'web_router' => DI\get(\App\Base\Routers\Web::class),
 
     // 'crud_router'
-    \App\Site\Routing\Crud::class => DI\autowire(\App\Site\Routing\Crud::class),
-    'crud_router' => DI\get(\App\Site\Routing\Crud::class),
+    \App\Base\Routers\Crud::class => DI\autowire(\App\Base\Routers\Crud::class),
+    'crud_router' => DI\get(\App\Base\Routers\Crud::class),
 
     // 'webhooks_router'
-    \App\Site\Routing\Webhooks::class => DI\autowire(\App\Site\Routing\Webhooks::class),
-    'webhooks_router' => DI\get(\App\Site\Routing\Webhooks::class),
+    \App\Base\Routers\Webhooks::class => DI\autowire(\App\Base\Routers\Webhooks::class),
+    'webhooks_router' => DI\get(\App\Base\Routers\Webhooks::class),
 
     // 'graphql_router'
-    \App\Site\Routing\Graphql::class => DI\autowire(\App\Site\Routing\Graphql::class),
-    'graphql_router' => DI\get(\App\Site\Routing\Graphql::class),
+    \App\Base\Routers\Graphql::class => DI\autowire(\App\Base\Routers\Graphql::class),
+    'graphql_router' => DI\get(\App\Base\Routers\Graphql::class),
 
     // 'site_data'
     \App\Base\Tools\Utils\SiteData::class => DI\autowire(\App\Base\Tools\Utils\SiteData::class),

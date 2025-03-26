@@ -26,7 +26,7 @@ use App\Base\Models\RequestLog;
 use Exception;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Models\Rewrite;
-use App\Site\Routing\Web;
+use App\Base\Routers\Web;
 use App\Base\Models\Website;
 use Throwable;
 

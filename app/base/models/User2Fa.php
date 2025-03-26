@@ -14,6 +14,8 @@
 namespace App\Base\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Traits\WithOwnerTrait;
+use App\Base\Traits\WithWebsiteTrait;
 use DateTime;
 
 /**
@@ -34,6 +36,9 @@ use DateTime;
  */
 class User2Fa extends BaseModel
 {
+    use WithOwnerTrait;
+    use WithWebsiteTrait;
+
     /**
      * gets model table name
      *

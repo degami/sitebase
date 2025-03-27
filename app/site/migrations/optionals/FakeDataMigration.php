@@ -21,7 +21,7 @@ use App\Site\Models\Contact;
 use App\Site\Models\LinkExchange;
 use App\Site\Models\MediaElement;
 use App\Site\Models\MediaElementRewrite;
-use App\Site\Models\Menu;
+use App\Base\Models\Menu;
 use App\Site\Models\News as NewsModel;
 use App\Site\Models\Event as EventModel;
 use App\Site\Models\Page;

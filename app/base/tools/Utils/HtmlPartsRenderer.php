@@ -16,7 +16,7 @@ namespace App\Base\Tools\Utils;
 use App\Base\Models\AdminActionLog;
 use App\Base\Models\CronLog;
 use App\Base\Models\MailLog;
-use App\Site\Models\Menu;
+use App\Base\Models\Menu;
 use App\Base\Models\QueueMessage;
 use App\Base\Models\ApplicationLog;
 use App\Base\Models\RequestLog;

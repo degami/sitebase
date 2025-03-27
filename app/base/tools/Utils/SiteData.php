@@ -19,7 +19,7 @@ use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Models\Block;
 use App\Base\Models\Configuration;
-use App\Site\Models\Menu;
+use App\Base\Models\Menu;
 use App\Base\Models\Redirect;
 use App\Base\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;

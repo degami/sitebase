@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Blocks;
+namespace App\Base\Blocks;
 
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use App\Base\Abstracts\Controllers\AdminPage;
@@ -23,7 +23,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use App\Site\Models\Menu;
+use App\Base\Models\Menu;
 use App\Base\Traits\AdminTrait;
 use App\Base\Models\Rewrite;
 use Degami\Basics\Html\TagElement;

@@ -17,7 +17,7 @@ use App\App;
 use App\Base\Models\RequestLog;
 use App\Base\Routing\RouteInfo;
 use App\Base\Traits\FrontendPageTrait;
-use App\Site\Models\Menu;
+use App\Base\Models\Menu;
 use App\Base\Models\Rewrite;
 use App\Base\Models\Website;
 use DebugBar\DebugBarException;

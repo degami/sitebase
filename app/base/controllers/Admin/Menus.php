@@ -11,13 +11,13 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Base\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Abstracts\Base\Element;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
-use App\Site\Models\Menu;
+use App\Base\Models\Menu;
 use App\Base\Models\Rewrite;
 use DI\DependencyException;
 use DI\NotFoundException;

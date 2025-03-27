@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Blocks;
+namespace App\Base\Blocks;
 
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use App\Base\Abstracts\Controllers\BasePage;

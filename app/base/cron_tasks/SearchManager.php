@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Cron\Tasks;
+namespace App\Base\Cron\Tasks;
 
 use App\App;
 use App\Base\Abstracts\Models\FrontendModel;

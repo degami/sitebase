@@ -17,7 +17,7 @@ use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Controllers\BasePage;
-use App\Site\Models\Block;
+use App\Base\Models\Block;
 use App\Base\Models\Configuration;
 use App\Site\Models\Menu;
 use App\Base\Models\Redirect;

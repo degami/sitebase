@@ -70,6 +70,8 @@ class App extends ContainerAwareObject
     public const BASE_CONTROLLERS_NAMESPACE = 'App\Base\Controllers';
     public const BASE_CRON_TASKS_NAMESPACE = 'App\Base\Cron\Tasks';
     public const BASE_ROUTERS_NAMESPACE = 'App\Base\Routers';
+    public const BASE_BLOCKS_NAMESPACE = 'App\Base\Blocks';
+    public const BASE_CRUD_NAMESPACE = 'App\Base\Crud';
     public const ROUTERS_NAMESPACE = 'App\Site\Routers';
     public const CONTROLLERS_NAMESPACE = 'App\Site\Controllers';
     public const CRUD_NAMESPACE = 'App\Site\Crud';

@@ -33,7 +33,7 @@ use App\App;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Controllers\Admin\Login;
-use App\Site\Models\Block;
+use App\Base\Models\Block;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
 

@@ -14,7 +14,7 @@
 namespace App\Site\Commands\Info;
 
 use App\Base\Abstracts\Commands\BaseCommand;
-use App\Site\Models\Block;
+use App\Base\Models\Block;
 use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
 use App\Site\Models\LinkExchange;

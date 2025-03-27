@@ -57,7 +57,10 @@ class Crud extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = ClassFinder::getClassesInNamespace(App::CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE);
+                $controllerClasses = array_unique(array_merge(
+                    ClassFinder::getClassesInNamespace(App::BASE_CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                    ClassFinder::getClassesInNamespace(App::CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                ));
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BaseRestPage::class) || is_subclass_of($controllerClass, BaseJsonPage::class)) {
 
@@ -66,7 +69,9 @@ class Crud extends BaseRouter
                         }
 
                         $group = "/crud";
-                        $path = str_replace("app/site/crud/", "", str_replace("\\", "/", strtolower($controllerClass)));
+                        $path = str_replace("app/site/crud/", "", str_replace("\\", "/", 
+                            str_replace("app/base/crud/", "", str_replace("\\", "/", strtolower($controllerClass)))
+                        ));
                         $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
 
                         if (is_callable([$controllerClass, 'getPageRouteName'])) {

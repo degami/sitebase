@@ -124,9 +124,9 @@ class Cron extends AdminManageModelsPage
     public function beforeRender() : BasePage|Response
     {
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
-            $taskClasses = ClassFinder::getClassesInNamespace(App::BASE_CRON_TASKS_NAMESPACE);
-            $taskClasses += ClassFinder::getClassesInNamespace(App::CRON_TASKS_NAMESPACE);
-            foreach ($taskClasses as $taskClass) {
+            $baseTaskClasses = ClassFinder::getClassesInNamespace(App::BASE_CRON_TASKS_NAMESPACE);
+            $taskClasses = ClassFinder::getClassesInNamespace(App::CRON_TASKS_NAMESPACE);
+            foreach (array_merge($baseTaskClasses, $taskClasses) as $taskClass) {
                 foreach (get_class_methods($taskClass) as $key => $method_name) {
                     $cron_task_callable = json_encode([$taskClass, $method_name]);
 

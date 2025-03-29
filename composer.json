@@ -51,7 +51,8 @@
         "cweagans/composer-patches": "dev-main",
         "webonyx/graphql-php": "dev-master",
         "components/font-awesome": "dev-master",
-        "chillerlan/php-qrcode": "dev-main"
+        "chillerlan/php-qrcode": "dev-main",
+        "mpdf/mpdf": "dev-development"
     },
   "autoload": {
     "files": [

@@ -36,6 +36,7 @@ use App\Base\Controllers\Admin\Login;
 use App\Base\Models\Block;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
+use chillerlan\QRCode\QRCode;
 
 /**
  * Html Parts Renderer Helper Class
@@ -1226,5 +1227,29 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         return trim(implode(" ", $htmlClasses));    
+    }
+
+    /**
+     * return data as qrcode image
+     * 
+     * @param string $data
+     * @param int $imageWidth
+     * @return string
+     */
+    public function getQRCode(string $data, int $imageWidth = 150) : string
+    {
+        $qrCode = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'img',
+                'attributes' => [
+                    'class' => '',
+                    'src' => (new QRCode)->render($data),
+                    'width' => $imageWidth,
+                ],
+            ]]
+        );
+
+        return $qrCode;
     }
 }

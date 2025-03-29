@@ -50,7 +50,8 @@
         "phpgangsta/googleauthenticator": "dev-master",
         "cweagans/composer-patches": "dev-main",
         "webonyx/graphql-php": "dev-master",
-        "components/font-awesome": "dev-master"
+        "components/font-awesome": "dev-master",
+        "chillerlan/php-qrcode": "dev-main"
     },
   "autoload": {
     "files": [

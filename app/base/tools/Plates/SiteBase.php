@@ -405,4 +405,14 @@ class SiteBase implements ExtensionInterface
 
         //return "<label for='darkmode-selector'>".__('Dark Mode').'</label>' . $checkbox;
     }
+
+    public function getQrCode($url) : string
+    {
+        return $this->getHtmlRenderer()->getQrCode($url);    
+    }
+
+    public function getCurrentUrl() : string
+    {
+        return $this->getSiteData()->getRequest()->getUri();
+    }
 }

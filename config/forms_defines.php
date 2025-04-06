@@ -20,7 +20,9 @@ define(
     'DEFAULT_TINYMCE_OPTIONS',
     [
     'menubar' => false,
-    'plugins' => "code,link,lists,preview,searchreplace,media,table",
+    'plugins' => "code,link,lists,advlist,preview,searchreplace,media,table,block_plugin",
+    'toolbar_mode' => "wrap",
+    'toolbar' => "undo redo | styles | bold italic | alignleft aligncenter alignright alignjustify | insert_block",
     'relative_urls' => false,
     'remove_script_host' => true,
     'document_base_url' => "",

@@ -154,6 +154,7 @@ abstract class AdminPage extends BaseHtmlPage
         $this->getAssets()->addJs(
             "\$('#admin').appAdmin(" . json_encode(
                 [
+                    'rootUrl' => $this->getUrl('admin.index'),
                     'currentRoute' => $this->getRouteInfo()->getRouteName(),
                     'checkLoggedUrl' => $this->getUrl('crud.app.base.controllers.admin.json.checksession'),
                     'logoutUrl' => $this->getUrl('admin.logout'),

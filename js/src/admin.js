@@ -2,6 +2,7 @@
 //=include ../../node_modules/jquery.cookie/jquery.cookie.js
 //=include ../../node_modules/highlightjs/highlight.pack.js
 //=include ../../node_modules/moment/min/moment-with-locales.min.js
+//=include ./tinymce-plugin-block.js
 
 (function($){
     $.fn.appAdmin = function (methodOrOptions) {
@@ -359,6 +360,7 @@
     };
 
     $.fn.appAdmin.defaults = {
+        'rootUrl': null,
         'checkLoggedUrl': null,
         'logoutUrl': null,
         'chatGPTUrl': null,

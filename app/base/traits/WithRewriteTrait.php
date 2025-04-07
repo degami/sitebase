@@ -14,6 +14,10 @@
 namespace App\Base\Traits;
 
 use App\Base\Models\Rewrite;
+use App\Base\Routing\RouteInfo;
+use App\Base\Abstracts\Controllers\FrontendPageWithObject;
+use App\App;
+use App\Base\Abstracts\Controllers\BasePage;
 use Exception;
 
 /**
@@ -64,6 +68,57 @@ trait WithRewriteTrait
             },
             $this->getRewrite()->getTranslations()
         );
+    }
+
+    /**
+     * return Controller by RouteInfo and App
+     * 
+     * @param App $app
+     * @return BasePage
+     */
+    public function getControllerUsingRewrite(App $app) : BasePage
+    {
+        /** @var RouteInfo $routeInfo */
+        $routeInfo = $this->getRewrite()->getRouteInfo();
+        return $this->getControllerByRouteInfo($routeInfo, $app);
+    }
+
+    /**
+     * return Controller by RouteInfo and App
+     * 
+     * @param RouteInfo $routeinfo
+     * @param App $app
+     * @return BasePage
+     */
+    protected function getControllerByRouteInfo(RouteInfo $routeInfo, App $app) : BasePage
+    {
+        $handler = $routeInfo->getHandler();
+
+        $handlerType = reset($handler); $handlerMethod = end($handler);
+        $currentPage = $app->containerMake($handlerType);
+
+        $vars = $routeInfo->getVars();
+
+        // inject container into vars
+        //$vars['container'] = $this->getContainer();
+
+        // inject request object into vars
+        //$vars['request'] = $this->getRequest();
+
+        // inject routeInfo
+        $vars['route_info'] = $routeInfo;
+
+        // add route collected data
+        $vars['route_data'] = $routeInfo->getVars();
+        $vars['route_data']['_noLog'] = true;
+
+        $currentPage->setRouteInfo($routeInfo);
+
+        if ($currentPage instanceof FrontendPageWithObject) {
+            $app->containerCall([$currentPage, $handlerMethod], $vars);
+        }
+
+        return $currentPage;
     }
 
     /**

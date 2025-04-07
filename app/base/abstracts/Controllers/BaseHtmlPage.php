@@ -89,10 +89,16 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         if ($this->getEnv('DEBUG')) {
             /** @var DebugBar $debugbar */
             $debugbar = $this->getContainer()->get('debugbar');
-            $debugbar->addCollector(new PageDataCollector($this));
-            $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
+            if (!$debugbar->hasCollector("Page Data")) {
+                $debugbar->addCollector(new PageDataCollector($this));
+            }
+            if (!$debugbar->hasCollector("User Data")) {
+                $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
+            }
             if ($this->getRedis()->isEnabled()) {
-                $debugbar->addCollector(new RedisDataCollector($this->getRedis()));
+                if (!$debugbar->hasCollector("Redis Data")) {
+                    $debugbar->addCollector(new RedisDataCollector($this->getRedis()));
+                }
             }
         }
 

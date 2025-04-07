@@ -58,48 +58,9 @@ class GetBlockPreview extends AdminJsonPage
 
         $rewrite = $page->getRewrite();
         if ($rewrite) {
-            $currentPage = static::getControllerByRewrite($rewrite, $app);
+            $currentPage = $page->getControllerUsingRewrite($app);
         }
 
         return ['data' => $block->renderHTML($currentPage)];
-    }
-
-    protected static function getControllerByRewrite(Rewrite $rewrite, App $app)
-    {
-        /** @var RouteInfo $routeInfo */
-        $routeInfo = $rewrite->getRouteInfo();
-        return static::getControllerByRouteInfo($routeInfo, $app);
-    }
-
-
-    protected static function getControllerByRouteInfo(RouteInfo $routeInfo, App $app)
-    {
-        $handler = $routeInfo->getHandler();
-
-        $handlerType = reset($handler); $handlerMethod = end($handler);
-        $currentPage = $app->containerMake($handlerType);
-
-        $vars = $routeInfo->getVars();
-
-        // inject container into vars
-        //$vars['container'] = $this->getContainer();
-
-        // inject request object into vars
-        //$vars['request'] = $this->getRequest();
-
-        // inject routeInfo
-        $vars['route_info'] = $routeInfo;
-
-        // add route collected data
-        $vars['route_data'] = $routeInfo->getVars();
-        $vars['route_data']['_noLog'] = true;
-
-        $currentPage->setRouteInfo($routeInfo);
-
-        if ($currentPage instanceof FrontendPageWithObject) {
-            $app->containerCall([$currentPage, $handlerMethod], $vars);
-        }
-
-        return $currentPage;
     }
 }

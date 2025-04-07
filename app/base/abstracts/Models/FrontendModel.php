@@ -19,6 +19,10 @@ use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
 use App\Base\Traits\WithRewriteTrait;
 use App\App;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Models\Block;
+use Exception;
+use Throwable;
 
 /**
  * A model that will be shown on frontend
@@ -79,5 +83,31 @@ abstract class FrontendModel extends BaseModel
         }
 
         return $out;
+    }
+
+    public function getTitle() : string
+    {
+        return $this->getData('title');
+    }
+
+    public function getContent() : string
+    {
+        $content = $this->getData('content');
+
+        if (preg_match("/\[(Block: (\d+))\]/", $content) && ($currentPage = App::getInstance()?->getAppRouteInfo()?->getControllerObject()) instanceof BasePage) {
+            //$currentPage = $this->getControllerUsingRewrite(App::getInstance());
+
+            $content = preg_replace_callback("/\[(Block: (\d+))\]/", function($matches) use ($currentPage) {
+                $blockId = $matches[2];
+                try {
+                    $block = Block::load($blockId);        
+                    return $block->renderHTML($currentPage);    
+                } catch (Throwable $e) {}
+    
+                return "";
+            }, $content);    
+        }
+
+        return $content;
     }
 }

@@ -126,6 +126,10 @@ class Entrypoint extends BasePage
                 }
             }
 
+            if (method_exists($source, "get".ucfirst($this->getUtils()->snakeCaseToPascalCase($fieldName)))) {
+                return $this->containerCall([$source, "get".ucfirst($this->getUtils()->snakeCaseToPascalCase($fieldName))]);
+            }
+
             return $source->getData($fieldName);
         }
 

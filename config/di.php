@@ -75,7 +75,7 @@ return [
     'schema' => DI\get(\Degami\SqlSchema\Schema::class),
 
     // 'forms'
-    \Degami\PHPFormsApi\FormBuilder::class => DI\create(\Degami\PhpFormApi\FormBuilder::class),
+    \Degami\PHPFormsApi\FormBuilder::class => DI\create(\Degami\PHPFormsApi\FormBuilder::class),
     'forms' => DI\get(\Degami\PHPFormsApi\FormBuilder::class),
 
     // 'icons'

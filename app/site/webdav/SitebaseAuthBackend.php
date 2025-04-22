@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Site\Webdav;
 
 use Sabre\DAV\Auth\Backend\AbstractBasic;
@@ -10,6 +21,9 @@ class SitebaseAuthBackend extends AbstractBasic
 {
     public function __construct(protected App $app, protected ?int $currentUserId = null) {}
 
+    /**
+     * {@inheritdoc}
+     */
     protected function validateUserPass($username, $password): bool
     {
         /** @var User|null $user */

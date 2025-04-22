@@ -1,9 +1,19 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Site\Webdav;
 
 use Sabre\DAV\Collection;
-use Sabre\DAV\Server;
 use App\Site\Models\MediaElement;
 
 class MediaDirectory extends Collection
@@ -12,6 +22,9 @@ class MediaDirectory extends Collection
         protected MediaElement $element,
     ) { }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getChildren(): array
     {
         $collection = MediaElement::getCollection();
@@ -25,6 +38,9 @@ class MediaDirectory extends Collection
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getChild($name)
     {
         $collection = MediaElement::getCollection();
@@ -41,6 +57,9 @@ class MediaDirectory extends Collection
         return $el->isDirectory() ? new MediaDirectory($el) : new MediaFile($el);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createFile($name, $data = null)
     {
         $media = MediaElement::new();
@@ -64,6 +83,9 @@ class MediaDirectory extends Collection
         $media->persist();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createDirectory($name)
     {
         $folder = MediaElement::new();
@@ -83,16 +105,25 @@ class MediaDirectory extends Collection
         $folder->persist();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName() { 
         return $this->element->getFilename(); 
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setName($name)
     {
         $this->element->name = $name;
         $this->element->save();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function delete()
     {
         foreach ($this->element->children as $child) {
@@ -101,6 +132,9 @@ class MediaDirectory extends Collection
         $this->element->delete();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getLastModified()
     {
         return (new \DateTimeImmutable("".$this->element->getUpdatedAt()))->format('U');

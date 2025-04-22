@@ -1,16 +1,29 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Site\Webdav;
 
 use Sabre\DAV\Collection;
 use App\App;
 use App\Site\Models\MediaElement;
-use Sabre\DAV\Server;
 
 class MediaRootDirectory extends Collection
 {
     public function __construct() { }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getChildren(): array
     {
         $collection = MediaElement::getCollection();
@@ -24,6 +37,9 @@ class MediaRootDirectory extends Collection
         );
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getChild($name)
     {
         $collection = MediaElement::getCollection();
@@ -40,6 +56,9 @@ class MediaRootDirectory extends Collection
         return $el->isDirectory() ? new MediaDirectory($el) : new MediaFile($el);
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createFile($name, $data = null)
     {
         /** @var MediaElement $media */
@@ -62,6 +81,9 @@ class MediaRootDirectory extends Collection
         $media->persist();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function createDirectory($name)
     {
         $folder = MediaElement::new();
@@ -81,6 +103,9 @@ class MediaRootDirectory extends Collection
         $folder->persist();
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getName() { 
         return '/'; 
     }

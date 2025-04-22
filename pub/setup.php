@@ -28,6 +28,10 @@ if (isset($_GET['step'])) :
         'Smtp Info' => ['SMTP_HOST','SMTP_PORT','SMTP_USER','SMTP_PASS'],
         'SES Info' => ['SES_REGION','SES_PROFILE'],
         'Redis Info' => ['REDIS_CACHE','REDIS_HOST','REDIS_PORT','REDIS_PASSWORD','REDIS_DATABASE'],
+        'GraphQL Info' => ['GRAPHQL'],
+        'WebHooks Info' => ['WEBHOOKS'],
+        'Crud Info' => ['CRUD'],
+        'Webdav Info' => ['WEBDAV'],
     ];
 
     header('Content-Type: application/json');

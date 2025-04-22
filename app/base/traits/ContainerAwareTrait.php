@@ -47,6 +47,8 @@ use HaydenPierce\ClassFinder\ClassFinder;
 use PHPGangsta_GoogleAuthenticator;
 use Swift_Mailer;
 use Symfony\Component\HttpFoundation\Request;
+use DI\Definition\Helper\AutowireDefinitionHelper;
+use function DI\autowire;
 
 /**
  * Container Aware Object Trait
@@ -239,16 +241,25 @@ trait ContainerAwareTrait
     {
         if (!$this->getContainer()->has('routers')) {
             $out = [];
-            foreach (ClassFinder::getClassesInNamespace(App::BASE_ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
-                if (is_subclass_of($className, BaseRouter::class)) {
-                    $out[] = strtolower(basename(str_replace("\\","/", $className)) . '_router');
-                }
-            }
 
-            foreach (ClassFinder::getClassesInNamespace(App::ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
+            $registerRouter = function (string $className) use (&$out) {
                 if (is_subclass_of($className, BaseRouter::class)) {
-                    $out[] = strtolower(basename(str_replace("\\","/", $className)) . '_router');
+                    $serviceName = strtolower(basename(str_replace("\\", "/", $className)) . '_router');
+                    $out[] = $serviceName;
+    
+                    if (!$this->getContainer()->has($serviceName)) {
+                        $this->getContainer()->set($serviceName, autowire($className));
+                    }
                 }
+            };
+
+
+            foreach (ClassFinder::getClassesInNamespace(App::BASE_ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
+                $registerRouter($className);
+            }
+    
+            foreach (ClassFinder::getClassesInNamespace(App::ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
+                $registerRouter($className);
             }
 
             $this->getContainer()->set('routers', $out);

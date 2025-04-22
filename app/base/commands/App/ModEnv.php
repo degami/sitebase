@@ -42,6 +42,7 @@ class ModEnv extends BaseCommand
         'GraphQL Info' => ['GRAPHQL'],
         'WebHooks Info' => ['WEBHOOKS'],
         'Crud Info' => ['CRUD'],
+        'Webdav Info' => ['WEBDAV'],
     ];
 
     /**

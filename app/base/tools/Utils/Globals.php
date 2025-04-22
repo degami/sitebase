@@ -39,6 +39,7 @@ use App\Base\Exceptions\BlockedIpException;
 use App\Base\Exceptions\NotFoundException as AppNotFoundException;
 use App\Base\Exceptions\NotAllowedException;
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Models\User;
 
 /**
  * Global utils functions Helper Class
@@ -618,10 +619,10 @@ class Globals extends ContainerAwareObject
      *
      * @return string|null
      */
-    public function getTokenHeader(): ?string
+    public function getAuthorizationHeader(): ?string
     {
         $token = $this->getRequest()->headers->get('Authorization');
-        return str_replace("Bearer ", "", (string) ($token ?: $this->getRequest()->cookies->get('Authorization')));
+        return (string) ($token ?: $this->getRequest()->cookies->get('Authorization'));
     }
 
     /**
@@ -631,14 +632,33 @@ class Globals extends ContainerAwareObject
      */
     public function getToken(): ?Token
     {
-        $auth_token = $this->getTokenHeader();
+        $auth_token = $this->getAuthorizationHeader();
+
+        /** @var Parser $parser */
+        $parser = $this->getContainer()->get('jwt:configuration')->parser();
+
+        if (preg_match("/^Bearer /", $auth_token)) {
+            $auth_token = str_replace("Bearer ", "", $auth_token);
+        }
+
+        if (preg_match("/^Basic /", $auth_token)) {
+            $auth_token = explode(":", base64_decode(str_replace("Basic ", "", $auth_token)));
+            if (count($auth_token) == 2) {
+                $user = $this->getUserByCredentials($auth_token[0], $auth_token[1]);
+                if ($user) {
+                    $auth_token = "" . $user->getJWT(getExisting: false);
+                } else {
+                    $auth_token = null;
+                }
+            } else {
+                $auth_token = null;
+            }
+        }
 
         if (!$auth_token) {
             return null;
         }
 
-        /** @var Parser $parser */
-        $parser = $this->getContainer()->get('jwt:configuration')->parser();
         return $parser->parse($auth_token);
     }
 
@@ -666,6 +686,50 @@ class Globals extends ContainerAwareObject
         }
 
         return false;
+    }
+
+    /**
+     * gets user by credentials
+     * 
+     * @param string $username
+     * @param string $password
+     * 
+     * @return User|null
+     */
+    public function getUserByCredentials(string $username, string $password) : ?User
+    {
+        /** @var User $user */
+        $user = User::getCollection()->addCondition([
+            'username' => $username,
+            'password' => $this->getEncodedPass($password),
+        ])->addCondition('locked != 1 OR locked_until < NOW()')->getFirst();
+
+
+        if (!$user) {
+            // salt could be changed
+            $userSalt = $this->getDb()->select('user', [
+                'expr' => ['salt' => 'SUBSTR(password, POSITION(\':\' in password)+1)'],
+                'where' => ['username = ?'],
+                'params' => [$username],
+                'limitCount' => 1,
+            ])->fetchColumn();
+
+            if ($userSalt) {
+                $user = User::getCollection()->addCondition([
+                    'username' => $username,
+                    'password' => $this->getEncodedPass($password, $userSalt),
+                ])->addCondition('locked != 1 OR locked_until < NOW()')->getFirst();
+
+                if ($user) {
+                    // update user encoded password to use new salt
+                    $user->setPassword($this->getEncodedPass($password));
+                } else {
+                    return null;
+                }
+            }
+        }
+
+        return $user;
     }
 
     /**

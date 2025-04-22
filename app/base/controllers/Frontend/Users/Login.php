@@ -205,39 +205,9 @@ class Login extends FormPage
         $values = $form->values();
 
         try {
-            /*
-            $user = $this->containerCall([User::class, 'loadByCondition'], ['condition' => [
-                'username' => $values['username'],
-                'password' => $this->getUtils()->getEncodedPass($values['password']),
-            ]]);
-            */
+            /** @var User|null $user */
+            $user = $this->getUtils()->getUserByCredentials($values['username'], $values['password']);
 
-            /** @var User $user */
-            $user = User::getCollection()->addCondition([
-                'username' => $values['username'],
-                'password' => $this->getUtils()->getEncodedPass($values['password']),
-            ])->addCondition('locked != 1 OR locked_until < NOW()')->getFirst();
-            
-            if (!$user) {
-                // salt could be changed
-                $userSalt = $this->getDb()->select('user', [
-                    'expr' => ['salt' => 'SUBSTR(password, POSITION(\':\' in password)+1)'],
-                    'where' => ['username' => $values['username']],
-                    'limitCount' => 1,
-                ])->fetchColumn();
-
-                if ($userSalt) {
-                    $user = User::getCollection()->addCondition([
-                        'username' => $values['username'],
-                        'password' => $this->getUtils()->getEncodedPass($values['password'], $userSalt),
-                    ])->addCondition('locked != 1 OR locked_until < NOW()')->getFirst();
-    
-                    if ($user) {
-                        // update user encoded password to use new salt
-                        $user->setPassword($this->getUtils()->getEncodedPass($values['password']));
-                    }
-                }
-            }
 
             if (!$user) {
                 throw new ExceptionsNotFoundException('User not found');

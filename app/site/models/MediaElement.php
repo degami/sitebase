@@ -182,7 +182,7 @@ class MediaElement extends BaseModel
                         // @todo thumb in base a mimetype
                         $type = explode('/', $this->getMimetype());
                         if (is_array($type)) {
-                            return $this->getHtmlRenderer()->getFAIcon('file-'. array_pop($type));
+                            return $this->getHtmlRenderer()->getFAIcon('file-'. array_pop($type), 'regular');
                         } else {
                             return $this->getHtmlRenderer()->getIcon('file');
                         }

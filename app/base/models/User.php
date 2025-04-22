@@ -160,14 +160,18 @@ class User extends AccountModel
      * @return string
      * @throws Exception
      */
-    public function getJWT(array $extraData = []): string
+    public function getJWT(array $extraData = [], bool $getExisting = true): string
     {
         $this->checkLoaded();
 
 
-        $tokenData = $this->getUtils()->getTokenUserDataClaim();
-        if (is_object($tokenData)) {
-            $tokenData = (array) $tokenData;
+        if ($getExisting) {
+            $tokenData = $this->getUtils()->getTokenUserDataClaim();
+            if (is_object($tokenData)) {
+                $tokenData = (array) $tokenData;
+            }    
+        } else {
+            $tokenData = null;
         }
 
         /** @var Builder $builder */

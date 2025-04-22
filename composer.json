@@ -52,7 +52,8 @@
         "webonyx/graphql-php": "dev-master",
         "components/font-awesome": "dev-master",
         "chillerlan/php-qrcode": "dev-main",
-        "mpdf/mpdf": "dev-development"
+        "mpdf/mpdf": "dev-development",
+        "sabre/dav": "dev-master"
     },
   "autoload": {
     "files": [
@@ -89,7 +90,8 @@
       "App\\Site\\Migrations\\": "app/site/migrations",
       "App\\Site\\Cron\\Tasks\\": "app/site/cron_tasks",
       "App\\Site\\Queues\\": "app/site/queues",
-      "App\\Site\\GraphQL\\Resolvers\\": "app/site/graphql/Resolvers"
+      "App\\Site\\GraphQL\\Resolvers\\": "app/site/graphql/Resolvers",
+      "App\\Site\\Webdav\\": "app/site/webdav"
     }
   },
     "require-dev": {

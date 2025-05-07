@@ -15,6 +15,7 @@ namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\ModelWithChildren;
+use Throwable;
 
 /**
  * Trait for elements with children
@@ -92,5 +93,28 @@ trait WithChildrenTrait
             $child->setParentId($parent_id)->persist();
         }
         return $this;
+    }
+
+    /**
+     * Gets all descendant objects recursively
+     *
+     * @return static[]
+     */
+    public function getDescendants(): array
+    {
+        $descendants = [];
+
+        try {
+            ///** @var BaseCollection $children */
+            //$children = $this->containerCall([static::class, 'getCollection']);
+            //$children = $children->where(['parent_id' => $this->id]);
+
+            foreach ($this->getChildren() as $child) {
+                $descendants[] = $child;
+                $descendants = array_merge($descendants, $child->getDescendants());
+            }
+        } catch (Throwable $t) {}
+
+        return $descendants;
     }
 }

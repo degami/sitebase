@@ -112,13 +112,38 @@ class Rewrites extends AdminManageModelsPage
             case 'new':
                 $this->addBackButton();
 
-                $rewrite_url = $rewrite_route = $rewrite_website = $rewrite_locale = '';
+                $descendantIds = [];
+                $rewrite_url = $rewrite_route = $rewrite_website = $rewrite_locale = $rewrite_parent = '';
+
+                $other_rewrites = Rewrite::getCollection();
+
                 if ($rewrite instanceof Rewrite) {
                     $rewrite_url = $rewrite->getUrl();
                     $rewrite_route = $rewrite->getRoute();
                     $rewrite_website = $rewrite->getWebsiteId();
                     $rewrite_locale = $rewrite->getLocale();
+                    $rewrite_parent = $rewrite->getParentId();
+
+                    $descendantIds = array_map(fn ($el) => $el->getId(), $rewrite->getDescendants());
+                    $other_rewrites = $other_rewrites->where(['id:not' => $rewrite->getId()]);
                 }
+
+                if (!empty($descendantIds)) {
+                    $other_rewrites = $other_rewrites->where(['id:not' => $descendantIds]);
+                }
+
+                if ($rewrite_locale) {
+                    $other_rewrites = $other_rewrites->where(['locale' => $rewrite_locale]);
+                }
+
+                $parentOptions = ['' => __('- None -')]  + array_combine(
+                    array_map(function ($el) {
+                        return $el->getId();
+                    }, $other_rewrites->getItems()),                     
+                    array_map(function ($el) {
+                        return $el->getRoute() . ': '.$el->getUrl().' (locale: ' . $el->getLocale() . ')';
+                    }, $other_rewrites->getItems())
+                );
 
                 $form->addField('url', [
                     'type' => 'textfield',
@@ -141,6 +166,11 @@ class Rewrites extends AdminManageModelsPage
                     'default_value' => $rewrite_locale,
                     'options' => $languages,
                     'validate' => ['required'],
+                ])->addField('parent_id', [
+                    'type' => 'select',
+                    'title' => 'Parent',
+                    'default_value' => $rewrite_parent,
+                    'options' => $parentOptions,
                 ]);
 
                 $this->addSubmitButton($form);
@@ -224,6 +254,7 @@ class Rewrites extends AdminManageModelsPage
                 $rewrite->setRoute($values['route']);
                 $rewrite->setWebsiteId(empty($values['website_id']) ? null : $values['website_id']);
                 $rewrite->setLocale($values['locale']);
+                $rewrite->setParentId(empty($values['parent_id'] ?? '') ? null : $values['parent_id']);
 
                 $this->setAdminActionLogData($rewrite->getChangedData());
 

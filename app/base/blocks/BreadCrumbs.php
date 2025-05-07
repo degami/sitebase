@@ -27,6 +27,8 @@ use App\Base\Models\Menu;
 use App\Base\Traits\AdminTrait;
 use App\Base\Models\Rewrite;
 use Degami\Basics\Html\TagElement;
+use App\Base\Routing\RouteInfo;
+use App\App;
 
 /**
  * Breadcrumbs Block
@@ -60,6 +62,10 @@ class BreadCrumbs extends BaseCodeBlock
         // $current_page_handler = $route_info->getHandler();
         if ($current_page?->getRouteGroup() == AdminPage::getRouteGroup() || $route_info?->isAdminRoute()) {
             return '';
+        }
+
+        if ($route_info->getRewrite() == null) {
+            $route_info->setRewrite(Rewrite::getCollection()->where(['route' => $route_info->getRoute(), 'locale' => $locale])?->getFirst()?->getId());
         }
 
         $menu_item = Menu::getCollection()->where(['rewrite_id' => $route_info?->getRewrite()])->getFirst();
@@ -145,6 +151,57 @@ class BreadCrumbs extends BaseCodeBlock
                 $li->addChild($atag);
                 $breadcrumbs_links->addChild($li);
             }
+        } else if ($route_info?->getRewrite()) {
+            $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $route_info->getRewrite()]);
+            $parentIds = explode("/", $rewrite?->getParentIds());
+            array_pop($parentIds);
+
+            $atags = array_map(
+                function ($id) use ($homepageid, $locale) {
+                    /**
+                     * @var Rewrite $rewrite
+                     */
+                    $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $id]);
+
+                    /**
+                     * @var MenuItem $menuItem
+                     */
+                    $menuItem = Menu::getCollection()->where(['rewrite_id' => $id])->getFirst();
+
+                    if ($menuItem instanceof Menu) {
+                        $title = $menuItem->getTitle();
+                    } else {
+                        /** 
+                         * @var FrontendPage $currentPage 
+                         */
+                        $currentPage = static::getControllerByRewrite($rewrite, App::getInstance());
+                        $title = $currentPage->getRouteName();
+                    }
+
+                    if ($rewrite->getRoute() == '/page/' . $homepageid) {
+                        $title = $this->getUtils()->translate('Home', locale: $locale);
+                    }
+
+                    $leaf = [
+                        'title' => $title,
+                        'href' => $rewrite->getUrl(),
+                    ];
+                    return $this->renderLink($leaf);
+                },
+                array_filter($parentIds)
+            );
+            foreach ($atags as $atag) {
+                $li = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'li',
+                        'attributes' => ['class' => 'breadcrumb-item'],
+                    ]]
+                );
+
+                $li->addChild($atag);
+                $breadcrumbs_links->addChild($li);
+            }
         }
 
         if (
@@ -160,7 +217,20 @@ class BreadCrumbs extends BaseCodeBlock
             );
 
             $atag = null;
-            if ($current_page instanceof FrontendPageWithObject && $current_page->getRewrite()) {
+            if ($current_page->isHomePage()) {
+                $atag = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'a',
+                        'attributes' => [
+                            'class' => 'breadcrumb-link',
+                            'href' => $home_url,
+                            'title' => $this->getUtils()->translate('Home', locale: $locale),
+                        ],
+                        'text' => $this->getUtils()->translate('Home', locale: $locale),
+                    ]]
+                );    
+            } else if ($current_page instanceof FrontendPageWithObject && $current_page->getRewrite()) {
                 $atag = $this->containerMake(
                     TagElement::class,
                     ['options' => [
@@ -243,7 +313,7 @@ class BreadCrumbs extends BaseCodeBlock
             'text' => $leaf['title'],
         ];
 
-        if ($leaf['target']) {
+        if ($leaf['target'] ?? null) {
             $link_options['attributes']['target'] = $leaf['target'];
         }
 
@@ -286,5 +356,44 @@ class BreadCrumbs extends BaseCodeBlock
     public static function getRouteGroup(): ?string
     {
         return (trim(getenv('ADMINPAGES_GROUP')) != null) ? '/' . getenv('ADMINPAGES_GROUP') : null;
+    }
+
+
+    protected static function getControllerByRewrite(Rewrite $rewrite, App $app)
+    {
+        /** @var RouteInfo $routeInfo */
+        $routeInfo = $rewrite->getRouteInfo();
+        return static::getControllerByRouteInfo($routeInfo, $app);
+    }
+
+    protected static function getControllerByRouteInfo(RouteInfo $routeInfo, App $app)
+    {
+        $handler = $routeInfo->getHandler();
+
+        $handlerType = reset($handler); $handlerMethod = end($handler);
+        $currentPage = $app->containerMake($handlerType);
+
+        $vars = $routeInfo->getVars();
+
+        // inject container into vars
+        //$vars['container'] = $this->getContainer();
+
+        // inject request object into vars
+        //$vars['request'] = $this->getRequest();
+
+        // inject routeInfo
+        $vars['route_info'] = $routeInfo;
+
+        // add route collected data
+        $vars['route_data'] = $routeInfo->getVars();
+        $vars['route_data']['_noLog'] = true;
+
+        $currentPage->setRouteInfo($routeInfo);
+
+        if ($currentPage instanceof FrontendPageWithObject) {
+            $app->containerCall([$currentPage, $handlerMethod], $vars);
+        }
+
+        return $currentPage;
     }
 }

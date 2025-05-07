@@ -13,6 +13,9 @@
 
 namespace App\Base\Traits;
 
+use Throwable;
+use App\Base\Abstracts\Models\BaseCollection;
+
 /**
  * Trait for elements with parent
  */

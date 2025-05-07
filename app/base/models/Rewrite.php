@@ -17,6 +17,8 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
 use App\Base\Routing\RouteInfo;
+use App\Base\Traits\WithChildrenTrait;
+use App\Base\Traits\WithParentTrait;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -33,6 +35,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
  * @method string getRoute()
  * @method string getLocale()
  * @method int getUserId()
+ * @method int!null getParentId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -41,6 +44,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
  * @method self setRoute(string $route)
  * @method self setLocale(string $locale)
  * @method self setUserId(int $user_id)
+ * @method self setParentId(int!null $parent_id)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
@@ -48,6 +52,8 @@ class Rewrite extends BaseModel
 {
     use WithOwnerTrait;
     use WithWebsiteTrait;
+    use WithParentTrait;
+    use WithChildrenTrait;
 
     /**
      * @var array rewrite translations

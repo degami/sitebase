@@ -186,6 +186,39 @@ class FakeDataMigration extends BaseMigration
             ['name' => 'Dubai', 'latitude' => 25.276987, 'longitude' => 55.296249]
         ];
         
+        foreach ($this->locales as $locale) {
+            $rewrite_model = $this->containerMake(Rewrite::class);
+            $rewrite_model->url = '/' . $locale . '/links.html';
+            $rewrite_model->route = '/links';
+            $rewrite_model->locale = $locale;
+            $rewrite_model->website_id = $this->website_id;
+
+            $rewrite_model->persist();
+            $links_exchange_rewrites[$locale] = $rewrite_model;
+        }
+
+        foreach ($this->locales as $locale) {
+            $rewrite_model = $this->containerMake(Rewrite::class);
+            $rewrite_model->url = '/' . $locale . '/news.html';
+            $rewrite_model->route = '/news';
+            $rewrite_model->locale = $locale;
+            $rewrite_model->website_id = $this->website_id;
+
+            $rewrite_model->persist();
+            $news_list_rewrites[$locale] = $rewrite_model;
+        }
+
+        foreach ($this->locales as $locale) {
+            $rewrite_model = $this->containerMake(Rewrite::class);
+            $rewrite_model->url = '/' . $locale . '/events.html';
+            $rewrite_model->route = '/events';
+            $rewrite_model->locale = $locale;
+            $rewrite_model->website_id = $this->website_id;
+
+            $rewrite_model->persist();
+            $events_list_rewrites[$locale] = $rewrite_model;
+        }
+
         for ($i = 1; $i <= 15; $i++) {
             $now = new DateTime();
 
@@ -206,7 +239,8 @@ class FakeDataMigration extends BaseMigration
                     strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $date,
                     $locale,
-                    $adminUser
+                    $adminUser,
+                    $news_list_rewrites[$locale] ?? null
                 );
             }
 
@@ -221,6 +255,7 @@ class FakeDataMigration extends BaseMigration
                     $location['longitude'],
                     $locale,
                     $adminUser,
+                    $events_list_rewrites[$locale] ?? null
                 );
             }
         }
@@ -270,39 +305,6 @@ class FakeDataMigration extends BaseMigration
                 ],
                 $adminUser
             );
-        }
-
-        foreach ($this->locales as $locale) {
-            $rewrite_model = $this->containerMake(Rewrite::class);
-            $rewrite_model->url = '/' . $locale . '/links.html';
-            $rewrite_model->route = '/links';
-            $rewrite_model->locale = $locale;
-            $rewrite_model->website_id = $this->website_id;
-
-            $rewrite_model->persist();
-            $links_exchange_rewrites[$locale] = $rewrite_model;
-        }
-
-        foreach ($this->locales as $locale) {
-            $rewrite_model = $this->containerMake(Rewrite::class);
-            $rewrite_model->url = '/' . $locale . '/news.html';
-            $rewrite_model->route = '/news';
-            $rewrite_model->locale = $locale;
-            $rewrite_model->website_id = $this->website_id;
-
-            $rewrite_model->persist();
-            $news_list_rewrites[$locale] = $rewrite_model;
-        }
-
-        foreach ($this->locales as $locale) {
-            $rewrite_model = $this->containerMake(Rewrite::class);
-            $rewrite_model->url = '/' . $locale . '/events.html';
-            $rewrite_model->route = '/events';
-            $rewrite_model->locale = $locale;
-            $rewrite_model->website_id = $this->website_id;
-
-            $rewrite_model->persist();
-            $events_list_rewrites[$locale] = $rewrite_model;
         }
 
         foreach ($this->locales as $locale) {
@@ -535,7 +537,7 @@ class FakeDataMigration extends BaseMigration
      * @return NewsModel
      * @throws BasicException
      */
-    private function addNews(string $title, string $content, DateTime $date, string $locale = 'en', ?User $owner_model = null): NewsModel
+    private function addNews(string $title, string $content, DateTime $date, string $locale = 'en', ?User $owner_model = null, ?Rewrite $parentRewrite = null): NewsModel
     {
         /** @var NewsModel $news_model */
         $news_model = $this->containerCall([NewsModel::class, 'new'], ['initial_data' => [
@@ -548,6 +550,11 @@ class FakeDataMigration extends BaseMigration
             'user_id' => $owner_model ? $owner_model->getId() : 0,
         ]]);
         $news_model->persist();
+
+        if ($parentRewrite) {
+            // update parent rewrite for created element
+            $news_model->getRewrite()?->setParentId($parentRewrite->getId())->persist();
+        }
 
         return $news_model;
     }
@@ -565,7 +572,7 @@ class FakeDataMigration extends BaseMigration
      * @return EventModel
      * @throws BasicException
      */
-    private function addEvent(string $title, string $content, DateTime $date, float $latitude, float $longitude, string $locale = 'en', ?User $owner_model = null): EventModel
+    private function addEvent(string $title, string $content, DateTime $date, float $latitude, float $longitude, string $locale = 'en', ?User $owner_model = null, ?Rewrite $parentRewrite = null): EventModel
     {
         /** @var EventModel $event_model */
         $event_model = $this->containerCall([EventModel::class, 'new'], ['initial_data' => [
@@ -580,6 +587,11 @@ class FakeDataMigration extends BaseMigration
             'user_id' => $owner_model ? $owner_model->getId() : 0,
         ]]);
         $event_model->persist();
+
+        if ($parentRewrite) {
+            // update parent rewrite for created element
+            $event_model->getRewrite()?->setParentId($parentRewrite->getId())->persist();
+        }
 
         return $event_model;
     }

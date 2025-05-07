@@ -65,7 +65,10 @@ class BreadCrumbs extends BaseCodeBlock
         }
 
         if ($route_info->getRewrite() == null) {
-            $route_info->setRewrite(Rewrite::getCollection()->where(['route' => $route_info->getRoute(), 'locale' => $locale])?->getFirst()?->getId());
+            $rewriteId = Rewrite::getCollection()->where(['route' => $route_info->getRoute(), 'locale' => $locale])?->getFirst()?->getId();
+            if (is_int($rewriteId)) {
+                $route_info->setRewrite($rewriteId);
+            }
         }
 
         $menu_item = Menu::getCollection()->where(['rewrite_id' => $route_info?->getRewrite()])->getFirst();

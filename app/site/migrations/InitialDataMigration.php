@@ -97,10 +97,22 @@ class InitialDataMigration extends BaseMigration
     public static function addAdmin(): BaseModel
     {
         $admin_model = User::new();
-        $admin_model->setUsername(App::getInstance()->getEnv('ADMIN_USER'));
-        $admin_model->setNickname(App::getInstance()->getEnv('ADMIN_USER'));
-        $admin_model->setPassword(App::getInstance()->getUtils()->getEncodedPass(App::getInstance()->getEnv('ADMIN_PASS')));
-        $admin_model->setEmail(App::getInstance()->getEnv('ADMIN_EMAIL'));
+
+        $admin_user = App::getInstance()->getEnv('ADMIN_USER', $_ENV['ADMIN_USER'] ?? null);
+        $admin_pass = App::getInstance()->getEnv('ADMIN_PASS', $_ENV['ADMIN_PASS'] ?? null);
+        $admin_email = App::getInstance()->getEnv('ADMIN_EMAIL', $_ENV['ADMIN_EMAIL'] ?? null);
+
+        if (empty($admin_user) || empty($admin_pass) || empty($admin_email)) {
+            echo "\nmissing admin info. Using default values, please modify admin user after login.\n Admin User: \"admin\", Admin password:\"admin\", Admin email:\"admin@localhost\".\n\n";
+            $admin_user = 'admin';
+            $admin_pass = 'admin';
+            $admin_email = 'admin@localhost';
+        }
+
+        $admin_model->setUsername($admin_user);
+        $admin_model->setNickname($admin_user);
+        $admin_model->setPassword(App::getInstance()->getUtils()->getEncodedPass($admin_pass));
+        $admin_model->setEmail($admin_email);
         $admin_model->setLocale('en');
 
         $admin_model->setRole('admin');

@@ -26,6 +26,7 @@ use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
 use App\Base\Tools\Utils\Zip;
 use App\Base\Models\Website;
+use App\Base\Routers\Admin;
 use App\Base\Routing\RouteInfo;
 use App\Base\Routers\Web;
 use App\Base\Routers\Webhooks;
@@ -207,6 +208,17 @@ trait ContainerAwareTrait
     public function getWebRouter(): Web
     {
         return $this->getService('web_router');
+    }
+
+    /**
+     * gets admin service
+     *
+     * @return Admin
+     * @throws BasicException
+     */
+    public function getAdminRouter(): Admin
+    {
+        return $this->getService('admin_router');
     }
 
     /**

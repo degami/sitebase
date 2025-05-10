@@ -524,6 +524,7 @@ class FakeDataMigration extends BaseMigration
         $this->getDb()->query('UPDATE `block` SET `region` = \'post_footer\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\YearCopy\' LIMIT 1;'); 
         $this->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 1 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\LinkToUserArea\' LIMIT 1;'); 
         $this->getDb()->query('UPDATE `block` SET `region` = \'post_content\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\AuthorInfo\' LIMIT 1;'); 
+        $this->getDb()->query('UPDATE `block` SET `region` = \'post_header\', `config` = \'{"add-current":"1"}\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\BreadCrumbs\' LIMIT 1;'); 
     }
 
     /**

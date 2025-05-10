@@ -226,12 +226,17 @@ class App extends ContainerAwareObject
                 throw new BlockedIpException();
             }
 
-            $current_website_id = $this->getSiteData()->getCurrentWebsiteId();
+            if (App::installDone()) {
+                $current_website_id = $this->getSiteData()->getCurrentWebsiteId();
 
-            // preload configuration
-            $this->getSiteData()->preloadConfiguration();
+                // preload configuration
+                $this->getSiteData()->preloadConfiguration();
+    
+                $redirects = $this->getSiteData()->getRedirects($current_website_id);    
+            } else {
+                $redirects = [];
+            }
 
-            $redirects = $this->getSiteData()->getRedirects($current_website_id);
             $redirect_key = urldecode($_SERVER['REQUEST_URI']);
             if (isset($redirects[$redirect_key])) {
                 // redirect is not needed if site is offline
@@ -246,7 +251,7 @@ class App extends ContainerAwareObject
                 );
             } else {
                 // continue with execution
-                if ($this->getEnv('PRELOAD_REWRITES')) {
+                if (App::installDone() && $this->getEnv('PRELOAD_REWRITES')) {
                     // preload all rewrites
                     Rewrite::getCollection()->getItems();
                 }
@@ -335,7 +340,18 @@ class App extends ContainerAwareObject
             $allowedMethods = $this->getAppRouteInfo()->getAllowedMethods();
             $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getAppRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
         } catch (BasicException | Exception | Throwable $e) {
-            $response = $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
+            if (App::installDone()) {
+                $response = $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
+            } else {
+                $response = new Response(
+                    $this->genericErrorPage(
+                        'Critical Error',
+                        $e->getMessage(),
+                        $e
+                    ),
+                    500
+                );
+            }
         }
 
         // dispatch "before_send" event
@@ -498,8 +514,21 @@ class App extends ContainerAwareObject
         return App::$instance;
     }
 
-    protected function genericErrorPage(string $title, string $errorMessage) : string
+    public static function installDone() : bool
     {
+        // && (is_file(static::getDir(static::ROOT) . DS . '.env') && is_dir(static::getDir(static::ROOT) . DS . 'vendor'))
+        return is_file(static::getDir(static::ROOT) . DS . '.install_done');
+    }
+    
+    /**
+     * returns a generic error page html
+     */
+    protected function genericErrorPage(string $title, string $errorMessage, ?Exception $t = null) : string
+    {
+        $traceDetails = "";
+        if ($t) {
+            $traceDetails = $t->getTraceAsString();
+        }
         return <<<HTML
 <!DOCTYPE html>
 <html lang="it">
@@ -537,6 +566,7 @@ class App extends ContainerAwareObject
     <div class="container">
         <h1>{$title}</h1>
         <p>{$errorMessage}</p>
+        {$traceDetails}
     </div>
 </body>
 </html>

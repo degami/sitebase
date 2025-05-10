@@ -73,7 +73,7 @@ class Logout extends AdminPage
 
         return $this->doRedirect($this->getUrl("admin.login"), [
             "Authorization" => null,
-            "Set-Cookie" => "Authorization=;expires=" . date("r", time() - 3600)
+            "Set-Cookie" => "Authorization=;path=/;expires=" . date("r", time() - 3600)
         ]);
     }
 }

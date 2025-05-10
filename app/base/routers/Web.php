@@ -39,6 +39,16 @@ class Web extends BaseRouter implements WebRouterInterface
     /**
      * {@inheritdoc}
      *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return App::installDone();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return string[]
      */
     public function getHttpVerbs(): array
@@ -63,8 +73,8 @@ class Web extends BaseRouter implements WebRouterInterface
                 // collect routes
 
                 $controllerClasses = array_unique(array_merge(
-                    ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                    ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                    ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE.'\Frontend', ClassFinder::RECURSIVE_MODE),
+                    ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE.'\Frontend', ClassFinder::RECURSIVE_MODE),
                 ));
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {

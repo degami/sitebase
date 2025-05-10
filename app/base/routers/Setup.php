@@ -20,13 +20,20 @@ use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Routing\RouteInfo;
 use App\App;
+use App\Base\Tools\Setup\Helper as SetupHelper;
 
 /**
- * Graphql Router Class
+ * Setup Router Class
  */
-class Graphql extends BaseRouter
+class Setup extends BaseRouter
 {
-    public const ROUTER_TYPE = 'graphql';
+    public const ROUTER_TYPE = 'setup';
+    public const CLASS_METHOD = '__invoke';
+
+    protected ?string $php_bin = null;
+    protected ?string $composer_bin = null;
+    protected ?string $composer_dir = null;
+    protected ?string $npm_bin = null;
 
     /**
      * {@inheritdoc}
@@ -35,7 +42,7 @@ class Graphql extends BaseRouter
      */
     public static function isEnabled(): bool
     {
-        return App::installDone() && boolval(\App\App::getInstance()->getEnv('GRAPHQL'));
+        return !App::installDone();
     }
 
     /**
@@ -45,7 +52,9 @@ class Graphql extends BaseRouter
      */
     public function getHttpVerbs(): array
     {
-        return ['POST'];
+        return [
+            'GET', 'POST',
+        ];
     }
 
     /**
@@ -64,8 +73,7 @@ class Graphql extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $this->addRoute("/graphql", "grapql.entrypoint", "[/]", \App\Base\GraphQl\Entrypoint::class, self::CLASS_METHOD, $this->getHttpVerbs());
-                $this->addRoute("/graphql", "grapql.entrypoint.locale", "/{lang:[a-z]{2}}[/]", \App\Base\GraphQl\Entrypoint::class, self::CLASS_METHOD, $this->getHttpVerbs());
+                $this->addRoute("/setup", "setup.entrypoint", "/", self::class, self::CLASS_METHOD, $this->getHttpVerbs());
 
                 // cache controllers for faster access
                 $this->setCachedControllers($this->routes);
@@ -88,7 +96,46 @@ class Graphql extends BaseRouter
      */
     public function getRequestInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
     {
-        // set request info type as crud
+        // set request info type as webdav
         return parent::getRequestInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);
+    }
+
+    public function __invoke()
+    {
+        ob_start();
+        $setupHelper = new SetupHelper();
+        chdir(App::getDir(App::ROOT));
+
+        if (file_exists('.install_done')) {
+            die($setupHelper->errorPage('Installation already done.'));
+        }
+
+        if (isset($_GET['step'])) {
+            switch ($_GET['step']) {
+                case 0:
+                    $setupHelper->step0();
+                    break;
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:
+                case 6:
+                case 7:
+                case 8:
+                case 9:
+                case 10:
+                    header('Content-Type: application/json');
+                    $setupHelper->{'step'.$_GET['step']}();
+                    break;
+                default:
+                    $setupHelper->errorPage('Invalid Step!');
+                    break;
+            }
+        } else {
+            $setupHelper->step0();
+        }
+
+        exit();
     }
 }

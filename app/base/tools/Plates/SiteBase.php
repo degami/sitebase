@@ -190,6 +190,9 @@ class SiteBase implements ExtensionInterface
      */
     public function getUrl(string $route_name, $route_params = []): string
     {
+        if (str_starts_with($route_name, 'admin')) {
+            return $this->container->get('admin_router')->getUrl($route_name, $route_params);            
+        }
         return $this->container->get('web_router')->getUrl($route_name, $route_params);
     }
 

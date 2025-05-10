@@ -202,13 +202,13 @@ class Login extends FormPage
             $token = $parser->parse($result)->toString();
 
             if ($this->getEnv('USE2FA_ADMIN') && ($this->current_user?->passed2fa ?? false) != true){
-                $goto_url = $this->getUrl('admin.twofa');
+                $goto_url = $this->getAdminRouter()->getUrl('admin.twofa');
 
                 if ($this->getRequest()->get('dest')) {
                     $goto_url .= '?dest'.$this->getRequest()->get('dest');
                 }
             } else {
-                $goto_url = $this->getUrl("admin.dashboard");
+                $goto_url = $this->getAdminRouter()->getUrl("admin.dashboard");
 
                 if ($this->getRequest()->get('dest')) {
                     $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
@@ -221,7 +221,7 @@ class Login extends FormPage
 
             return $this->doRedirect($goto_url, [
                 "Authorization" => $token,
-                "Set-Cookie" => "Authorization=" . $token
+                "Set-Cookie" => "Authorization=" . $token .";path=/;"
             ]);
         }
         return parent::beforeRender();

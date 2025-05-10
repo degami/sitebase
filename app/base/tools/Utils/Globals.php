@@ -39,7 +39,9 @@ use App\Base\Exceptions\BlockedIpException;
 use App\Base\Exceptions\NotFoundException as AppNotFoundException;
 use App\Base\Exceptions\NotAllowedException;
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Models\ApplicationLog;
 use App\Base\Models\User;
+use App\App;
 
 /**
  * Global utils functions Helper Class
@@ -140,7 +142,9 @@ class Globals extends ContainerAwareObject
      */
     public function errorPage(int $error_code, Request $request, ?RouteInfo $route_info = null, array $template_data = [], ?string $template_name = null): Response
     {
-        $this->logRequestIfNeeded($error_code, $request);
+        if (App::installDone()) {
+            $this->logRequestIfNeeded($error_code, $request);
+        }
 
         if ($route_info == null) {
             $route_info = $this->getEmptyRouteInfo();
@@ -208,7 +212,9 @@ class Globals extends ContainerAwareObject
      */
     public function exceptionPage(Throwable $exception, Request $request, ?RouteInfo $route_info = null): Response
     {
-        $this->logException($exception, null, $request);
+        if (App::installDone()) {
+            $this->logException($exception, null, $request);
+        }
 
         if ($route_info == null) {
             $route_info = $this->getEmptyRouteInfo();
@@ -402,7 +408,9 @@ class Globals extends ContainerAwareObject
             $this->getLog()->debug(serialize($request->request->all()));
         }
 
-        $this->getApplicationLogger()->exception($e);
+        if (App::installDone()) {
+            $this->getApplicationLogger()->exception($e);
+        }
     }
 
     /**

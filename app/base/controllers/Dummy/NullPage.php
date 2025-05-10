@@ -14,6 +14,8 @@
 namespace App\Base\Controllers\Dummy;
 
 use App\Base\Abstracts\Controllers\BaseHtmlPage;
+use App\Base\Abstracts\Controllers\BasePage;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * This page does nothing
@@ -34,5 +36,13 @@ class NullPage extends BaseHtmlPage
     public function getTemplateData(): array
     {
         return [];
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    protected function beforeRender() : BasePage|Response
+    {
+        return $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
     }
 }

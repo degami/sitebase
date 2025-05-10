@@ -19,6 +19,9 @@
         $elem: null,
         settings: null,
 
+        notificationTimeout: null,
+        sessionTimeout: null,
+
         init : function(options) {
             var instance = this;
             // Iterate and reformat each matched element.
@@ -112,6 +115,10 @@
                 if ($elem.appAdmin('getSettings').currentRoute != 'admin.usernotifications') {
                     $elem.appAdmin('fetchNotifications');
                 }
+
+                $('#logout-btn').click(function(evt){
+                    $elem.appAdmin('logout');
+                });
 
                 $('#search-btn').click(function(evt){
                     evt.preventDefault();
@@ -221,7 +228,7 @@
                 }
             });
 
-            window.setTimeout(function(){
+            that.sessionTimeout = window.setTimeout(function(){
                 $(that).appAdmin('checkLoggedStatus');
             }, 60000);
         },
@@ -350,9 +357,18 @@
                 }
             });
 
-            window.setTimeout(function() {
+            that.notificationTimeout = window.setTimeout(function() {
                 $(that).appAdmin('fetchNotifications');
             }, 30000);
+        },
+        logout: function () {
+            var that = this;
+            if (that.notificationTimeout != null) {
+                window.clearTimeout(that.notificationTimeout);
+            }
+            if (that.sessionTimeout != null) {
+                window.clearTimeout(that.sessionTimeout);
+            }
         },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD

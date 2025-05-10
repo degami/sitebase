@@ -53,8 +53,9 @@ class Manager extends ContainerAwareObject
             return $log;
         } catch (Exception $e) {
             $this->getUtils()->logException($e, "Can't write ApplicationLog");
-            return null;
         }
+
+        return null;
     }
 
     /**

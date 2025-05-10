@@ -289,6 +289,19 @@ abstract class AdminPage extends BaseHtmlPage
     }
 
     /**
+     * gets url by route_name and params
+     *
+     * @param string $route_name
+     * @param array $route_params
+     * @return string
+     * @throws BasicException
+     */
+    public function getUrl(string $route_name, array $route_params = []): string
+    {
+        return $this->getAdminRouter()->getUrl($route_name, $route_params);
+    }
+
+    /**
      * gets access permission name
      *
      * @return string

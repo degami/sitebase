@@ -14,42 +14,20 @@
 namespace App\Base\Routers;
 
 use App\App;
-use App\Base\Abstracts\Controllers\BaseJsonPage;
-use App\Base\Abstracts\Controllers\BaseRestPage;
-use App\Base\Abstracts\Routing\BaseRouter;
-use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use App\Base\Routing\RouteInfo;
+use App\Base\Exceptions\InvalidValueException;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Controllers\Admin\Index as AdminIndexPage;
 
 /**
- * Crud Router Class
+ * Admin Router Class
  */
-class Crud extends BaseRouter
+class Admin extends Web
 {
-    public const ROUTER_TYPE = 'crud';
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return bool
-     */
-    public static function isEnabled(): bool
-    {
-        return App::installDone() && boolval(\App\App::getInstance()->getEnv('CRUD'));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string[]
-     */
-    public function getHttpVerbs(): array
-    {
-        return ['DELETE', 'GET', 'HEAD', 'OPTIONS', 'PATCH', 'POST', 'PUT'];
-    }
+    public const ROUTER_TYPE = 'admin';
 
     /**
      * gets routes
@@ -68,21 +46,21 @@ class Crud extends BaseRouter
                 // collect routes
 
                 $controllerClasses = array_unique(array_merge(
-                    ClassFinder::getClassesInNamespace(App::BASE_CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                    ClassFinder::getClassesInNamespace(App::CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                    ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE . '\Admin', ClassFinder::RECURSIVE_MODE),
+                    ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE . '\Admin', ClassFinder::RECURSIVE_MODE),
                 ));
                 foreach ($controllerClasses as $controllerClass) {
-                    if (is_subclass_of($controllerClass, BaseRestPage::class) || is_subclass_of($controllerClass, BaseJsonPage::class)) {
+                    if (is_subclass_of($controllerClass, BasePage::class)) {
 
                         if (!$this->containerCall([$controllerClass, 'isEnabled'])) {
                             continue;
                         }
 
-                        $group = "/crud";
-                        $path = str_replace("app/site/crud/", "", str_replace("\\", "/", 
-                            str_replace("app/base/crud/", "", str_replace("\\", "/", strtolower($controllerClass)))
+                        $group = "";
+                        $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", 
+                            str_replace("app/base/controllers/", "", str_replace("\\", "/", strtolower($controllerClass)))
                         ));
-                        $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
+                        $route_name = str_replace("/", ".", trim($path, "/"));
 
                         if (is_callable([$controllerClass, 'getPageRouteName'])) {
                             $route_name = $this->containerCall([$controllerClass, 'getPageRouteName']);
@@ -90,6 +68,25 @@ class Crud extends BaseRouter
 
                         $classMethod = self::CLASS_METHOD;
                         $verbs = $this->getClassHttpVerbs($controllerClass);
+
+                        if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
+                            $tmp = array_map(
+                                function ($el) {
+                                    return "/" . $el;
+                                },
+                                $tmp
+                            );
+                            if (!isset($this->routes[$tmp[0]])) {
+                                $this->routes[$tmp[0]] = [];
+                            }
+
+                            $group = $tmp[0];
+                            $path = $tmp[1];
+                        }
+
+                        if (method_exists($controllerClass, 'getRouteGroup')) {
+                            $group = $this->containerCall([$controllerClass, 'getRouteGroup']) ?? $group;
+                        }
 
                         if (method_exists($controllerClass, 'getRoutePath')) {
                             $path = $this->containerCall([$controllerClass, 'getRoutePath']) ?? $path;
@@ -100,11 +97,6 @@ class Crud extends BaseRouter
                         }
 
                         array_walk($path, function ($path_value, $key) use ($route_name, $group, $controllerClass, $classMethod, $verbs) {
-                            $path_prefix = "";
-                            if (method_exists($controllerClass, 'getRouteGroup')) {
-                                $path_prefix = rtrim($this->containerCall([$controllerClass, 'getRouteGroup']), '/') . '/' ?? "";
-                            }
-
                             if (!is_string($key)) {
                                 $key = $route_name;
                             }
@@ -113,33 +105,16 @@ class Crud extends BaseRouter
                                 throw new InvalidValueException("'{$path_value}': Invalid route string", 1);
                             }
 
-                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_prefix, '/') . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
                         });
                     }
                 }
+                $this->addRoute($this->containerCall([AdminIndexPage::class, 'getRouteGroup']), 'admin.root', "/", AdminIndexPage::class, self::CLASS_METHOD);
 
                 // cache controllers for faster access
                 $this->setCachedControllers($this->routes);
             }
         }
         return $this->routes;
-    }
-
-    /**
-     * returns a RouteInfo instance for current request
-     *
-     * @param string|null $http_method
-     * @param string|null $request_uri
-     * @param string|null $domain
-     * @return RouteInfo
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws PhpfastcacheSimpleCacheException
-     */
-    public function getRequestInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
-    {
-        // set request info type as crud
-        return parent::getRequestInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);
     }
 }

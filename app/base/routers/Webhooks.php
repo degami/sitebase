@@ -37,7 +37,7 @@ class Webhooks extends BaseRouter
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('WEBHOOKS'));
+        return App::installDone() && boolval(\App\App::getInstance()->getEnv('WEBHOOKS'));
     }
 
     /**

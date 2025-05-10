@@ -25,6 +25,7 @@ use App\Site\Webdav\MediaTree;
 use Sabre\DAV\Server;
 use Sabre\DAV\Auth\Plugin as AuthPlugin;
 use Sabre\DAV\Browser\Plugin as BrowserPlugin;
+use App\App;
 
 /**
  * Webdav Router Class
@@ -41,7 +42,7 @@ class Webdav extends BaseRouter
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('WEBDAV'));
+        return App::installDone() && boolval(\App\App::getInstance()->getEnv('WEBDAV'));
     }
 
     /**

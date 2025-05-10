@@ -25,12 +25,9 @@ if (isset($_REQUEST['info'])) {
 }
 
 if (isset($_GET['step'])) :
-    
-    header('Content-Type: application/json');
-
     switch ($_GET['step']) {
         case 0:
-            $setupHelper->step0();
+            echo $setupHelper->step0();
             break;
         case 1:
         case 2:
@@ -43,12 +40,12 @@ if (isset($_GET['step'])) :
         case 9:
         case 10:
             header('Content-Type: application/json');
-            $setupHelper->{'step'.$_GET['step']}();
+            echo json_encode($setupHelper->{'step'.$_GET['step']}());
             break;
         default:
-            $setupHelper->errorPage('Invalid Step!');
+            echo $setupHelper->errorPage('Invalid Step!');
             break;
     }
 else :
-    $setupHelper->step0();
+    echo $setupHelper->step0();
 endif;

@@ -102,18 +102,17 @@ class Setup extends BaseRouter
 
     public function __invoke()
     {
-        ob_start();
         $setupHelper = new SetupHelper();
         chdir(App::getDir(App::ROOT));
 
         if (file_exists('.install_done')) {
-            die($setupHelper->errorPage('Installation already done.'));
+            return $this->getUtils()->createHtmlResponse($setupHelper->errorPage('Installation already done.'));
         }
 
         if (isset($_GET['step'])) {
             switch ($_GET['step']) {
                 case 0:
-                    $setupHelper->step0();
+                    $this->getUtils()->createHtmlResponse($setupHelper->step0());
                     break;
                 case 1:
                 case 2:
@@ -125,17 +124,13 @@ class Setup extends BaseRouter
                 case 8:
                 case 9:
                 case 10:
-                    header('Content-Type: application/json');
-                    $setupHelper->{'step'.$_GET['step']}();
-                    break;
+                    return $this->getUtils()->createJsonResponse($setupHelper->{'step'.$_GET['step']}());
                 default:
-                    $setupHelper->errorPage('Invalid Step!');
-                    break;
+                    return $this->getUtils()->createHtmlResponse($setupHelper->errorPage('Invalid Step!'));
+
             }
         } else {
-            $setupHelper->step0();
+            return $this->getUtils()->createHtmlResponse($setupHelper->step0());
         }
-
-        exit();
     }
 }

@@ -523,7 +523,7 @@ class App extends ContainerAwareObject
     /**
      * returns a generic error page html
      */
-    protected function genericErrorPage(string $title, string $errorMessage, ?Exception $t = null) : string
+    protected function genericErrorPage(string $title, string $errorMessage, ?Throwable $t = null) : string
     {
         $traceDetails = "";
         if ($t) {

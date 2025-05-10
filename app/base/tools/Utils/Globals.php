@@ -42,6 +42,7 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Models\ApplicationLog;
 use App\Base\Models\User;
 use App\App;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Global utils functions Helper Class
@@ -786,5 +787,36 @@ class Globals extends ContainerAwareObject
         }
 
         return $out;
+    }
+
+    /**
+     * Creates a JSON response.
+     *
+     * @param mixed $data
+     * @param int $status
+     * @return JsonResponse
+     */
+    public function createJsonResponse(mixed $data, int $status = 200): JsonResponse
+    {
+        return new JsonResponse(
+            $data,
+            $status
+        );
+    }
+
+    /**
+     * Creates an HTML response.
+     *
+     * @param string $content
+     * @param int $status
+     * @return Response
+     */
+    public function createHtmlResponse(string $content, int $status = 200): Response
+    {
+        return new Response(
+            $content,
+            $status,
+            ['Content-Type' => 'text/html']
+        );
     }
 }

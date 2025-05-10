@@ -25,7 +25,8 @@ class Helper {
     protected ?string $npm_bin = null;
 
 
-    protected function findExecutable($name) {
+    protected function findExecutable($name) : ?string
+    {
         $path = trim(shell_exec("command -v $name"));
         return file_exists($path) ? $path : null;
     }
@@ -85,7 +86,7 @@ class Helper {
         ];
     }
 
-    public function step1()
+    public function step1() : array
     {
         $check = true;
         $info = "working directory: " . getcwd() . "\n";
@@ -99,14 +100,16 @@ class Helper {
             $info .= $cmd.": " . (file_exists($cmd) ? '' : 'not ') . "found\n";
         }
 
-        echo json_encode([
+        return [
             'html' => '<pre>'.$info.'</pre>', 
             'js' => ($check == true) ? 'loadStep(2, "Installing PHP dependencies...", false);' : ''
-        ]);
+        ];
     }
 
-    public function step2()
+    public function step2() : array
     {
+        ob_start();
+
         $php_bin = $this->getPhpBin();
         $composer_bin = $this->getComposerBin();
         $composer_dir = $this->getComposerDir();
@@ -127,14 +130,15 @@ class Helper {
         $html = ob_get_contents()."\n";
 
         ob_end_clean();
-        echo json_encode([
+        return [
             'html' => '<pre>'.$html.'</pre>', 
             'js' => 'loadStep(3, "Installing Node dependencies...", false);'
-        ]);
+        ];
     }
 
-    public function step3()
+    public function step3() : array
     {
+        ob_start();
         $npm_bin = $this->getNpmBin();        
 
         // install vendors
@@ -151,14 +155,15 @@ class Helper {
         $html = ob_get_contents()."\n";
 
         ob_end_clean();
-        echo json_encode([
+        return [
             'html' => '<pre>'.$html.'</pre>', 
             'js' => 'loadStep(4, "Building files...", false);'
-        ]);
+        ];
     }
 
-    public function step4()
+    public function step4() : array
     {
+        ob_start();
         $php_bin = $this->getPhpBin();
         $composer_bin = $this->getComposerBin();
         $composer_dir = $this->getComposerDir();
@@ -185,13 +190,13 @@ class Helper {
         $html = ob_get_contents()."\n";
 
         ob_end_clean();
-        echo json_encode([
+        return [
             'html' => '<pre>'.$html.'</pre><button class="btn btn-primary" id="continuebtn">Continue</button>', 
             'js' => '$(\'#continuebtn\').click(function(){loadStep(5, "Fill config data");});'
-        ]);
+        ];
     }
 
-    public function step5()
+    public function step5() : array
     {
         $dotenv_sections = $this->getDotenvSections();
 
@@ -220,7 +225,7 @@ class Helper {
         }
         $form .= '<p><em class="required">*</em> Required fields</p>';
         $form .= '</form>';
-        echo json_encode([
+        return [
             'html' => $form.'<button class="btn btn-primary" id="continuebtn">Continue</button>', 
             'js' => implode(" ", array_map('trim', explode("\n", '$(\'#continuebtn\').click(function() { 
                     var form = $(\'#envform\');
@@ -244,10 +249,10 @@ class Helper {
 
                     var formdata = form.serialize(); 
                     loadStep(6, "Saving data.", true, formdata);});')))
-        ]);
+        ];
     }
 
-    public function step6()
+    public function step6() : array
     {
         $dotenv_sections = $this->getDotenvSections();
 
@@ -272,14 +277,15 @@ class Helper {
         }
         $form .= '</form>';
 
-        echo json_encode([
+        return [
             'html' => $form, 
             'js' => 'window.setTimeout(function(){var formdata = $(\'#envform\').serialize(); loadStep(7, "Generate RSA key", false, formdata);}, 1000);'
-        ]);
+        ];
     }
 
-    public function step7()
+    public function step7() : array
     {
+        ob_start();
         $php_bin = $this->getPhpBin();
 
         // generate rsa key
@@ -307,14 +313,15 @@ class Helper {
         }
         $form .= '</form>';
 
-        echo json_encode([
+        return [
             'html' => $html.$form, 
             'js' => 'window.setTimeout(function(){var formdata = $(\'#envform\').serialize(); loadStep(8, "Run migrations", true, formdata);}, 1000);'
-        ]);
+        ];
     }
 
-    public function step8()
+    public function step8() : array
     {
+        ob_start();
         $php_bin = $this->getPhpBin();
 
         // run migrations
@@ -350,15 +357,16 @@ class Helper {
         $html = ob_get_contents()."\n";
         ob_end_clean();
 
-        echo json_encode([
+        return [
             'html' => '<pre>'.$html.'</pre><p>Run additional (fake data) migrations?</p><button class="btn btn-primary" id="continuebtn">Continue</button>&nbsp;&nbsp;<button class="btn btn-primary" id="skipbtn">Skip</button>', 
             'js' => '$(\'#continuebtn\').click(function(){loadStep(9, "Run additional migrations");});$(\'#skipbtn\').click(function(){loadStep(10, "And that\'s it");});'
-        ]);
+        ];
 
     }
 
-    public function step9()
+    public function step9() : array
     {
+        ob_start();
         $php_bin = $this->getPhpBin();
 
         // migrate additionals
@@ -379,15 +387,16 @@ class Helper {
         $html = ob_get_contents()."\n";
         ob_end_clean();
 
-        echo json_encode([
+        return [
             'html' => '<pre>'.$html.'</pre><button class="btn btn-primary" id="continuebtn">Continue</button>', 
             'js' => '$(\'#continuebtn\').click(function(){loadStep(10, "And that\'s it");});'
-        ]);
+        ];
         
     }
 
-    public function step10()
+    public function step10() : array
     {
+        ob_start();
         $php_bin = $this->getPhpBin();
 
         // TYP
@@ -410,14 +419,16 @@ class Helper {
         $html = ob_get_contents()."\n";
         ob_end_clean();
 
-        echo json_encode([
+        return [
             'html' => 'Enjoy your site.', 
             'js' => 'window.setTimeout(function(){ document.location = \'/\';}, 5000);'
-        ]);
+        ];
     }
 
-    public function errorPage(string $errorMessage) {
-?><!doctype html>
+    public function errorPage(string $errorMessage) : string
+    {
+        return <<<HTML
+<!doctype html>
 <html>
 <head>
     <title>SiteBase Installation</title>
@@ -444,7 +455,7 @@ class Helper {
                 <div id="step-content" class="step-content">
                     <div class="row d-flex justify-content-center mt-5">
                         <div class="col-6">
-                            <h2><?= $errorMessage ;?></h3>
+                            <h2>{$errorMessage}</h3>
                         </div>
                     </div>
                 </div>
@@ -453,12 +464,13 @@ class Helper {
     </div>
 </body>
 </html>
-<?php
+HTML;
     }
 
-    public function step0()
+    public function step0(): string
     {
-        ?><!doctype html>
+        return <<<HTML
+<!doctype html>
 <html>
 <head>
     <title>SiteBase Installation</title>
@@ -476,28 +488,28 @@ class Helper {
         font-weight: 100;
     }
     .lds-dual-ring {
-      display: inline-block;
-      width: 64px;
-      height: 64px;
+        display: inline-block;
+        width: 64px;
+        height: 64px;
     }
     .lds-dual-ring:after {
-      content: " ";
-      display: block;
-      width: 46px;
-      height: 46px;
-      margin: 1px;
-      border-radius: 50%;
-      border: 5px solid #666;
-      border-color: #666 transparent #666 transparent;
-      animation: lds-dual-ring 1.2s linear infinite;
+        content: " ";
+        display: block;
+        width: 46px;
+        height: 46px;
+        margin: 1px;
+        border-radius: 50%;
+        border: 5px solid #666;
+        border-color: #666 transparent #666 transparent;
+        animation: lds-dual-ring 1.2s linear infinite;
     }
     @keyframes lds-dual-ring {
-      0% {
+        0% {
         transform: rotate(0deg);
-      }
-      100% {
+        }
+        100% {
         transform: rotate(360deg);
-      }
+        }
     }
     em.required {
         color: #f00;
@@ -521,7 +533,7 @@ class Helper {
                             <div class="text-left">
                                 Welcome to the sitebase installation program.
                                 We will need the "composer" and "npm" programs installed onto your system,
-                                and in the $PATH environment.
+                                and in the \$PATH environment.
                                 The First two steps in the installation procedure can be quite long, so please be patient.
                                 If everything is fine, just click the "start" button.!
                             </div>
@@ -551,7 +563,7 @@ class Helper {
 
                 $('#step-content').append('<div class="lds-dual-ring"></div>');
 
-                $.post('<?= $_SERVER['REQUEST_URI'];?>?step='+numstep, formdata, function(data){
+                $.post('{$_SERVER['REQUEST_URI']}?step='+numstep, formdata, function(data){
                     $('#step-content').find('.lds-dual-ring').remove();
                     $('#step-content').append(data.html);
                     if($.trim(data.js) != '') {
@@ -569,6 +581,6 @@ class Helper {
     </script>
 </body>
 </html>
-<?php
+HTML;
     }
 }

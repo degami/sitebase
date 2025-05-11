@@ -226,15 +226,16 @@ class App extends ContainerAwareObject
                 throw new BlockedIpException();
             }
 
+            $redirects = [];
             if (App::installDone()) {
                 $current_website_id = $this->getSiteData()->getCurrentWebsiteId();
 
                 // preload configuration
                 $this->getSiteData()->preloadConfiguration();
     
-                $redirects = $this->getSiteData()->getRedirects($current_website_id);    
-            } else {
-                $redirects = [];
+                if (is_int($current_website_id)) {
+                    $redirects = $this->getSiteData()->getRedirects($current_website_id);
+                }
             }
 
             $redirect_key = urldecode($_SERVER['REQUEST_URI']);

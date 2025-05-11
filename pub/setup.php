@@ -39,6 +39,8 @@ if (isset($_GET['step'])) :
         case 8:
         case 9:
         case 10:
+        case 11:
+        case 12:
             header('Content-Type: application/json');
             echo json_encode($setupHelper->{'step'.$_GET['step']}());
             break;

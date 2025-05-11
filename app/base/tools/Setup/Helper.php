@@ -13,9 +13,12 @@
 
 namespace App\Base\Tools\Setup;
 
+use League\Plates\Template\Func;
+
 /**
  * Setup Helper
  * 
+ * this class tries to be as "php vanilla" as possible as it is used by the Setup router and the pub/setup.php file
  */
 class Helper {
 
@@ -23,6 +26,7 @@ class Helper {
     protected ?string $composer_bin = null;
     protected ?string $composer_dir = null;
     protected ?string $npm_bin = null;
+    protected ?string $console_bin = null;
 
 
     protected function findExecutable($name) : ?string
@@ -67,6 +71,15 @@ class Helper {
         return $this->npm_bin;
     }
 
+    protected function getConsoleBin() : string
+    {
+        if (is_null(($this->console_bin))) {
+            $this->console_bin = getcwd() . '/bin/console';
+        }
+
+        return $this->console_bin;
+    }
+
     protected function getDotenvSections() : array
     {
         return [
@@ -86,7 +99,7 @@ class Helper {
         ];
     }
 
-    public function step1() : array
+    public function checkRequirements() : array
     {
         $check = true;
         $info = "working directory: " . getcwd() . "\n";
@@ -100,13 +113,25 @@ class Helper {
             $info .= $cmd.": " . (file_exists($cmd) ? '' : 'not ') . "found\n";
         }
 
+        // create an empty .env if it does not exists
+        touch('.env');
+
+        return [$check, $info];
+    }
+
+    public function step1() : array
+    {
+        [$check, $info] = $this->checkRequirements();
+
         return [
             'html' => '<pre>'.$info.'</pre>', 
             'js' => ($check == true) ? 'loadStep(2, "Installing PHP dependencies...", false);' : ''
         ];
+
+        return $this->checkRequirements();
     }
 
-    public function step2() : array
+    public function composerInstall() : string
     {
         ob_start();
 
@@ -127,17 +152,26 @@ class Helper {
             echo implode("\n", $output)."\n";
         }
 
-        $html = ob_get_contents()."\n";
+        $consoleOutput = ob_get_contents()."\n";
 
         ob_end_clean();
+        
+        return $consoleOutput;
+    }
+
+    public function step2() : array
+    {
+        $html = $this->composerInstall();
+
         return [
             'html' => '<pre>'.$html.'</pre>', 
             'js' => 'loadStep(3, "Installing Node dependencies...", false);'
         ];
     }
 
-    public function step3() : array
+    public function npmInstall() : string
     {
+        // npm install is executed also by the app:deploy cli command - executing before to "skip" the download time after
         ob_start();
         $npm_bin = $this->getNpmBin();        
 
@@ -152,16 +186,24 @@ class Helper {
             echo implode("\n", $output)."\n";
         }
 
-        $html = ob_get_contents()."\n";
+        $consoleOutput = ob_get_contents()."\n";
 
         ob_end_clean();
+        
+        return $consoleOutput;
+    }
+
+    public function step3() : array
+    {
+        $html = $this->npmInstall();
+
         return [
             'html' => '<pre>'.$html.'</pre>', 
             'js' => 'loadStep(4, "Building files...", false);'
         ];
     }
 
-    public function step4() : array
+    public function dumpAutoloadAndAppDeploy() : string
     {
         ob_start();
         $php_bin = $this->getPhpBin();
@@ -187,22 +229,31 @@ class Helper {
             }
         }
 
-        $html = ob_get_contents()."\n";
+        $consoleOutput = ob_get_contents()."\n";
 
         ob_end_clean();
+        
+        return $consoleOutput;
+    }
+
+    public function step4() : array
+    {
+        $html = $this->dumpAutoloadAndAppDeploy();
+
         return [
             'html' => '<pre>'.$html.'</pre><button class="btn btn-primary" id="continuebtn">Continue</button>', 
             'js' => '$(\'#continuebtn\').click(function(){loadStep(5, "Fill config data");});'
         ];
     }
 
-    public function step5() : array
+    public function dotEnvForm() : string
     {
         $dotenv_sections = $this->getDotenvSections();
 
         // read sample .env file and fill the info
         $dotenv = parse_ini_file('.env.sample');
-        if (file_exists('.env')) {
+        if (file_exists('.env') && !empty(file_get_contents('.env'))) {
+            // read .env if it has informations
             $dotenv = parse_ini_file('.env');
         }
         $form = '<form action="" id="envform">';
@@ -225,6 +276,14 @@ class Helper {
         }
         $form .= '<p><em class="required">*</em> Required fields</p>';
         $form .= '</form>';
+        
+        return $form;
+    }
+
+    public function step5() : array
+    {
+        $form = $this->dotEnvForm();
+
         return [
             'html' => $form.'<button class="btn btn-primary" id="continuebtn">Continue</button>', 
             'js' => implode(" ", array_map('trim', explode("\n", '$(\'#continuebtn\').click(function() { 
@@ -252,7 +311,7 @@ class Helper {
         ];
     }
 
-    public function step6() : array
+    public function saveDotEnv() : string
     {
         $dotenv_sections = $this->getDotenvSections();
 
@@ -277,13 +336,20 @@ class Helper {
         }
         $form .= '</form>';
 
+        return $form;
+    }
+
+    public function step6() : array
+    {
+        $form = $this->saveDotEnv();
+
         return [
             'html' => $form, 
             'js' => 'window.setTimeout(function(){var formdata = $(\'#envform\').serialize(); loadStep(7, "Generate RSA key", false, formdata);}, 1000);'
         ];
     }
 
-    public function step7() : array
+    public function generateRsa() : string
     {
         ob_start();
         $php_bin = $this->getPhpBin();
@@ -303,8 +369,15 @@ class Helper {
             }
         }
 
-        $html = ob_get_contents()."\n";
+        $consoleOutput = ob_get_contents()."\n";
         ob_end_clean();
+
+        return $consoleOutput;
+    }
+
+    public function step7() : array
+    {
+        $html = $this->generateRsa();
 
         $form = '<form action="" id="envform">';
         foreach (['ADMIN_USER','ADMIN_PASS','ADMIN_EMAIL'] as $key) {
@@ -319,7 +392,7 @@ class Helper {
         ];
     }
 
-    public function step8() : array
+    public function execMigrations() : string
     {
         ob_start();
         $php_bin = $this->getPhpBin();
@@ -354,17 +427,23 @@ class Helper {
             }
         }
 
-        $html = ob_get_contents()."\n";
+        $consoleOutput = ob_get_contents()."\n";
         ob_end_clean();
+
+        return $consoleOutput;
+    }
+
+    public function step8() : array
+    {
+        $html = $this->execMigrations();
 
         return [
             'html' => '<pre>'.$html.'</pre><p>Run additional (fake data) migrations?</p><button class="btn btn-primary" id="continuebtn">Continue</button>&nbsp;&nbsp;<button class="btn btn-primary" id="skipbtn">Skip</button>', 
             'js' => '$(\'#continuebtn\').click(function(){loadStep(9, "Run additional migrations");});$(\'#skipbtn\').click(function(){loadStep(10, "And that\'s it");});'
         ];
-
     }
 
-    public function step9() : array
+    public function execOptionalMigrations() : string
     {
         ob_start();
         $php_bin = $this->getPhpBin();
@@ -384,17 +463,84 @@ class Helper {
             }
         }
 
-        $html = ob_get_contents()."\n";
+        $consoleOutput = ob_get_contents()."\n";
         ob_end_clean();
+
+        return $consoleOutput;
+    }
+
+    public function step9() : array
+    {
+        $html = $this->execOptionalMigrations();
 
         return [
             'html' => '<pre>'.$html.'</pre><button class="btn btn-primary" id="continuebtn">Continue</button>', 
-            'js' => '$(\'#continuebtn\').click(function(){loadStep(10, "And that\'s it");});'
+            'js' => '$(\'#continuebtn\').click(function(){loadStep(10, "Install crontabs");});'
         ];
-        
     }
 
-    public function step10() : array
+    public function crontabStep() : array
+    {
+        return [
+            'html' => '<p>Install crontabs?</p><button class="btn btn-primary" id="continuebtn">Continue</button>&nbsp;&nbsp;<button class="btn btn-primary" id="skipbtn">Skip</button>', 
+            'js' => '$(\'#continuebtn\').click(function(){loadStep(11, "Install crontabs");});$(\'#skipbtn\').click(function(){loadStep(12, "And that\'s it");});'
+        ];
+    }
+
+    public function step10() : array 
+    {
+        return $this->crontabStep();    
+    }
+
+    protected function addCronToCrontab($crontabCommand) {
+        // Get current crontab
+        $currentCrontab = shell_exec('crontab -l 2>/dev/null');
+        $cronLines = explode("\n", (string) $currentCrontab);
+        
+        // check if command is already installed
+        $found = false;
+        foreach ($cronLines as $line) {
+            if (strpos($line, $crontabCommand) !== false) {
+                $found = true;
+                break;
+            }
+        }
+    
+        if (!$found) {
+            $cronLines[] = "* * * * * $crontabCommand > /dev/null 2>&1";
+            $newCrontab = implode("\n", $cronLines);
+            
+            // Scrivi il nuovo crontab temporaneamente su file
+            $tmpFile = tempnam(sys_get_temp_dir(), 'cron');
+            file_put_contents($tmpFile, $newCrontab);
+            shell_exec("crontab $tmpFile");
+            unlink($tmpFile);
+
+            return "Adding '* * * * * $crontabCommand > /dev/null 2>&1'\n";
+        }
+
+        return "$crontabCommand is already installed\n";
+    }
+
+    public function installCrontabs() : string
+    {
+        $php_bin = $this->getPhpBin();
+        $console_bin = $this->getConsoleBin();
+
+        return $this->addCronToCrontab("$php_bin $console_bin cron:run") . $this->addCronToCrontab("$php_bin $console_bin queue:process");
+    }
+
+    public function step11() : array
+    {
+        $html = $this->installCrontabs();
+
+        return [
+            'html' => '<pre>'.$html.'</pre><button class="btn btn-primary" id="continuebtn">Continue</button>', 
+            'js' => '$(\'#continuebtn\').click(function(){loadStep(12, "And that\'s it");});'
+        ];
+    }
+
+    public function setInstallDone() : string
     {
         ob_start();
         $php_bin = $this->getPhpBin();
@@ -416,8 +562,15 @@ class Helper {
             }
         }
 
-        $html = ob_get_contents()."\n";
+        $consoleOutput = ob_get_contents()."\n";
         ob_end_clean();
+
+        return $consoleOutput;
+    }
+
+    public function step12() : array
+    {
+        $html = $this->setInstallDone();
 
         return [
             'html' => 'Enjoy your site.', 

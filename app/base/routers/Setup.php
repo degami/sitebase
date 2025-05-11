@@ -124,6 +124,8 @@ class Setup extends BaseRouter
                 case 8:
                 case 9:
                 case 10:
+                case 11:
+                case 12:
                     return $this->getUtils()->createJsonResponse($setupHelper->{'step'.$_GET['step']}());
                 default:
                     return $this->getUtils()->createHtmlResponse($setupHelper->errorPage('Invalid Step!'));

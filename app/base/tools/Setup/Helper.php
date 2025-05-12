@@ -13,8 +13,6 @@
 
 namespace App\Base\Tools\Setup;
 
-use League\Plates\Template\Func;
-
 /**
  * Setup Helper
  * 

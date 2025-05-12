@@ -437,7 +437,7 @@ class Helper {
 
         return [
             'html' => '<pre>'.$html.'</pre><p>Run additional (fake data) migrations?</p><button class="btn btn-primary" id="continuebtn">Continue</button>&nbsp;&nbsp;<button class="btn btn-primary" id="skipbtn">Skip</button>', 
-            'js' => '$(\'#continuebtn\').click(function(){loadStep(9, "Run additional migrations");});$(\'#skipbtn\').click(function(){loadStep(10, "And that\'s it");});'
+            'js' => '$(\'#continuebtn\').click(function(){loadStep(9, "Run additional migrations");});$(\'#skipbtn\').click(function(){loadStep(10, "Install crontabs");});'
         ];
     }
 

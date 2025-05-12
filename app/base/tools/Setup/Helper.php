@@ -111,8 +111,15 @@ class Helper {
             $info .= $cmd.": " . (file_exists($cmd) ? '' : 'not ') . "found\n";
         }
 
-        // create an empty .env if it does not exists
-        touch('.env');
+        if (!is_file(('.env'))) {
+            if (is_file('.env.sample')) {
+                $info .= "copying .env.sample to .env\n";
+                copy('.env.sample', '.env');
+            } else {
+                // create an empty .env if it does not exists
+                touch('.env');
+            }
+        }
 
         return [$check, $info];
     }
@@ -570,9 +577,20 @@ class Helper {
     {
         $html = $this->setInstallDone();
 
+        $timeoutSeconds = 5;
         return [
-            'html' => 'Enjoy your site.', 
-            'js' => 'window.setTimeout(function(){ document.location = \'/\';}, 5000);'
+            'html' => $html . '<br /><br /><p>Enjoy your site. <br /><span id="timer">'.$timeoutSeconds.'</span> seconds and you will be redirected to the home page.</p>', 
+            'js' => implode(" ", array_map('trim', explode("\n", '
+                let seconds = '.$timeoutSeconds.'; 
+                const timerElement = document.getElementById(\'timer\');
+                const interval = setInterval(() => {
+                    seconds--;
+                    timerElement.textContent = seconds;
+                    if (seconds <= 0) {
+                        clearInterval(interval);
+                        window.location.href = \'/\';
+                    }
+                }, 1000);')))
         ];
     }
 
@@ -667,6 +685,9 @@ HTML;
     }
     input.is-invalid {
         border-color: #dc3545;
+    }
+    #timer {
+        font-weight: 700;
     }
     </style>
 </head>

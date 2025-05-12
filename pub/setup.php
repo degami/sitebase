@@ -13,7 +13,7 @@ if (file_exists('.install_done')) {
     http_response_code(404);
     die($setupHelper->errorPage('Installation already done.'));
 } else {
-    if (is_file('vendor/autoload.php') && !isset($_GET['step'])) { // if vendors are installed  and we are not already executing an installation we can continue on setup_router
+    if (is_file('vendor/autoload.php') && is_file('.env') && !empty(file_get_contents('.env')) && !isset($_GET['step'])) { // if vendors are installed  and we are not already executing an installation we can continue on setup_router
         header('Location: /setup/');
         exit();
     }

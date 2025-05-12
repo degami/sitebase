@@ -25,8 +25,8 @@ use \App\App;
 $application = new Application();
 
 // load environment variables
-$dotenv = Dotenv\Dotenv::create(App::getDir(App::ROOT));
-$dotenv->load();
+//$dotenv = Dotenv\Dotenv::create(App::getDir(App::ROOT));
+//$dotenv->load();
 
 $builder = new \DI\ContainerBuilder();
 $builder->addDefinitions(App::getDir(App::CONFIG).DS.'di.php');
@@ -75,6 +75,13 @@ try {
         ClassFinder::getClassesInNamespace(App::COMMANDS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
     ));
     foreach($commandsClasses as $commandClass){
+            if (is_callable([$commandClass, 'registerCommand'])) {
+                $commandEnabled = call_user_func([$commandClass, 'registerCommand']);
+                if ($commandEnabled === false) {
+                    continue;
+                }    
+            }
+
             $array = explode("\\", $commandClass);
             $classname = array_pop($array);
             $commandname = str_replace(["App\\Base\\Commands\\","App\\Site\\Commands\\"], "", $commandClass);
@@ -91,5 +98,5 @@ try {
     if ($container instanceof ContainerInterface) {
         $container->get('utils')->logException($e);
     }
-    echo "Exception: {$e->getMessage()}\n";
+    echo "Exception: {$e->getMessage()}\n{$e->getTraceAsString()}\n";
 }

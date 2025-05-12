@@ -35,6 +35,16 @@ class RsaKey extends BaseExecCommand
 
     /**
      * {@inheritdoc}
+     * 
+     * @return bool
+     */
+    public static function registerCommand(): bool
+    {
+        return App::dotEnvPresent();
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

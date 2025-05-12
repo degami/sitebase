@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Commands;
 
+use App\App;
 use Exception;
 use Symfony\Component\Console\Command\Command;
 

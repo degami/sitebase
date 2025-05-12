@@ -158,10 +158,10 @@ trait ContainerAwareTrait
     /**
      * gets db object
      *
-     * @return Database
+     * @return Database|null
      * @throws BasicException
      */
-    public function getDb(): Database
+    public function getDb(): ?Database
     {
         return $this->getService('db');
     }
@@ -169,10 +169,10 @@ trait ContainerAwareTrait
     /**
      * gets PDO object
      *
-     * @return PDO
+     * @return PDO|null
      * @throws BasicException
      */
-    public function getPdo(): PDO
+    public function getPdo(): ?PDO
     {
         return $this->getService('pdo');
     }
@@ -180,10 +180,10 @@ trait ContainerAwareTrait
     /**
      * gets schema object
      *
-     * @return Schema
+     * @return Schema|null
      * @throws BasicException
      */
-    public function getSchema(): Schema
+    public function getSchema(): ?Schema
     {
         return $this->getService('schema');
     }

@@ -67,6 +67,16 @@ class BaseCommand extends SymfonyCommand
     }
 
     /**
+     * defines if the command is enabled
+     * 
+     * @return bool
+     */
+    public static function registerCommand(): bool
+    {
+        return App::dotEnvPresent() && App::installDone();
+    }
+
+    /**
      * boostrap command
      *
      * @return void
@@ -77,19 +87,23 @@ class BaseCommand extends SymfonyCommand
     protected function bootstrap()
     {
         // load environment variables
-        $dotenv = Dotenv::create(App::getDir(App::ROOT));
-        $dotenv->load();
-
-        $this->getContainer()->set(
-            'env',
-            array_combine(
-                $dotenv->getEnvironmentVariableNames(),
-                array_map(
-                    'getenv',
-                    $dotenv->getEnvironmentVariableNames()
+        try {
+            $dotenv = Dotenv::create(App::getDir(App::ROOT));
+            $dotenv->load();
+    
+            $this->getContainer()->set(
+                'env',
+                array_combine(
+                    $dotenv->getEnvironmentVariableNames(),
+                    array_map(
+                        'getenv',
+                        $dotenv->getEnvironmentVariableNames()
+                    )
                 )
-            )
-        );
+            );    
+        } catch (\Exception $e) {
+            $this->getContainer()->set('env', $_ENV);
+        }
 
         $this->getContainer()->set(RouteInfo::class, $this->getUtils()->getEmptyRouteInfo());
 
@@ -115,20 +129,22 @@ class BaseCommand extends SymfonyCommand
         $existing = false;
         try {
             $existing = $this->getPdo()->query("SELECT 1 FROM website") !== false;
-        } catch (\Exception $exception) {
-        }
+        } catch (\Throwable $exception) { }
 
         if ($existing) {
-            try {
-                if ($this->input->hasOption('website') && is_numeric($this->input->getOption('website'))) {
-                    $website = $this->containerCall([Website::class, 'load'], ['id' => $this->input->getOption('website')]);
+            if (!App::installDone()) {
+                $website = $this->containerMake(Website::class);
+            } else {
+                try {
+                    if ($this->input->hasOption('website') && is_numeric($this->input->getOption('website'))) {
+                        $website = $this->containerCall([Website::class, 'load'], ['id' => $this->input->getOption('website')]);
+                    }
+                } catch (\Throwable $e) { }
+    
+                if (!$website || !$website->isloaded()) {
+                    // $website = $this->getContainer()->call([Website::class, 'load'], ['id' => 1]);
+                    $website = Website::getCollection()->where([], ['created_at' => 'ASC'])->getFirst();
                 }
-            } catch (\Exception $e) {
-            }
-
-            if (!$website || !$website->isloaded()) {
-                // $website = $this->getContainer()->call([Website::class, 'load'], ['id' => 1]);
-                $website = Website::getCollection()->where([], ['created_at' => 'ASC'])->getFirst();
             }
         }
 

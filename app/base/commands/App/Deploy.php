@@ -41,6 +41,16 @@ class Deploy extends BaseExecCommand
     /**
      * {@inheritdoc}
      *
+     * @return true
+     */
+    public static function registerCommand(): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void

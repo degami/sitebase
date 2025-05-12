@@ -100,6 +100,16 @@ class Migrate extends BaseCommand
 
     /**
      * {@inheritdoc}
+     * 
+     * @return bool
+     */
+    public static function registerCommand(): bool
+    {
+        return App::dotEnvHasDbInformations();
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @param InputInterface $input
      * @param OutputInterface $output

@@ -62,6 +62,16 @@ class ModEnv extends BaseCommand
     /**
      * {@inheritdoc}
      *
+     * @return true
+     */
+    public static function registerCommand(): bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @param InputInterface $input
      * @param OutputInterface $output
      * @return void

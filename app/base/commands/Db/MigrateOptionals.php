@@ -50,4 +50,14 @@ class MigrateOptionals extends Migrate
         parent::configure();
         $this->setDescription('Migrate Optionals Migrations (eg Fake data)');
     }
+
+    /**
+     * {@inheritdoc}
+     * 
+     * @return bool
+     */
+    public static function registerCommand(): bool
+    {
+        return App::dotEnvHasDbInformations();
+    }
 }

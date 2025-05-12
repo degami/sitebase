@@ -32,6 +32,16 @@ class UpdateSalt extends BaseCommand
         $this->setDescription('Change SALT value into .env file');
     }
 
+        /**
+     * {@inheritdoc}
+     *
+     * @return true
+     */
+    public static function registerCommand(): bool
+    {
+        return true;
+    }
+
     /**
      * {@inheritdoc}
      *

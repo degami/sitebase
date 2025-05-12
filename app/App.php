@@ -104,10 +104,13 @@ class App extends ContainerAwareObject
         // session_start();
 
         try {
-            // load environment variables
-            $dotenv = Dotenv::create(static::getDir(self::ROOT));
-            $dotenv->load();
-
+            $dotenv = null;
+            if (static::dotEnvPresent()) {
+                // load environment variables
+                $dotenv = Dotenv::create(static::getDir(self::ROOT));
+                $dotenv->load();
+            }
+ 
             $builder = new ContainerBuilder();
             $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
 
@@ -134,13 +137,17 @@ class App extends ContainerAwareObject
                 }
             }
 
-            $env_variables = array_combine(
-                $dotenv->getEnvironmentVariableNames(),
-                array_map(
-                    'getenv',
-                    $dotenv->getEnvironmentVariableNames()
-                )
-            );
+            if ($dotenv) {
+                $env_variables = array_combine(
+                    $dotenv->getEnvironmentVariableNames(),
+                    array_map(
+                        'getenv',
+                        $dotenv->getEnvironmentVariableNames()
+                    )
+                );    
+            } else {
+                $env_variables = $_ENV;
+            }
 
             // remove some sensible data from _SERVER
             if (!getenv('DEBUG')) {
@@ -191,7 +198,8 @@ class App extends ContainerAwareObject
             $response = new Response(
                 $this->genericErrorPage(
                     'Critical Error',
-                    $e->getMessage()
+                    $e->getMessage(),
+                    $e
                 ),
                 500
             );
@@ -515,6 +523,40 @@ class App extends ContainerAwareObject
         return App::$instance;
     }
 
+    /**
+     * checks if .env file is present
+     *
+     * @return bool
+     */
+    public static function dotEnvPresent() : bool
+    {
+        return is_file(static::getDir(static::ROOT) . DS . '.env') && !empty(file_get_contents(static::getDir(static::ROOT) . DS . '.env'));
+    }
+
+    /**
+     * checks if .env file has db informations
+     *
+     * @return bool
+     */
+    public static function dotEnvHasDbInformations() : bool
+    {
+        if (!static::dotEnvPresent()) {
+            return false;
+        }
+
+        $dotenv = parse_ini_file(static::getDir(static::ROOT) . DS . '.env');
+        if (empty($dotenv['DATABASE_HOST']) || empty($dotenv['DATABASE_NAME']) || empty($dotenv['DATABASE_USER'])) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * checks if installation is done
+     *
+     * @return bool
+     */
     public static function installDone() : bool
     {
         // && (is_file(static::getDir(static::ROOT) . DS . '.env') && is_dir(static::getDir(static::ROOT) . DS . 'vendor'))
@@ -523,6 +565,8 @@ class App extends ContainerAwareObject
     
     /**
      * returns a generic error page html
+     * 
+     * @return string
      */
     protected function genericErrorPage(string $title, string $errorMessage, ?Throwable $t = null) : string
     {

@@ -25,6 +25,7 @@ return [
     'log' => DI\get(\Monolog\Logger::class),
 
     // 'pdo'
+/*
     \PDO::class => DI\autowire(\PDO::class)
         ->constructor(
             DI\string("mysql:dbname={dbname};host={dbhost}"),
@@ -32,11 +33,40 @@ return [
             DI\string('{dbpass}'),
             []
         ),
+*/        
+    \PDO::class => DI\Factory(function () {
+        $dbhost = getenv('DATABASE_HOST');
+        $dbname = getenv('DATABASE_NAME');
+        $dbuser = getenv('DATABASE_USER');
+        $dbpass = getenv('DATABASE_PASS');
+
+        if (empty($dbhost) || empty($dbname) || empty($dbuser)) {
+            return null;
+        }
+
+        $dsn = "mysql:dbname={$dbname};host={$dbhost}";
+        $options = [
+            \PDO::ATTR_ERRMODE => \PDO::ERRMODE_EXCEPTION,
+        ];
+        $pdo = new \PDO($dsn, $dbuser, $dbpass, $options);
+        return $pdo;
+    }),
     'pdo' => DI\get(\PDO::class),
 
     // 'db'
+/*    
     \LessQL\Database::class => DI\autowire(\LessQL\Database::class)
         ->constructor(DI\get('pdo')),
+*/
+    \LessQL\Database::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
+        $pdo = $c->get('pdo');
+        if ($pdo === null) {
+            return null;
+        }
+
+        $db = new \LessQL\Database($pdo);
+        return $db;
+    }),
     'db' => DI\get(\LessQL\Database::class),
 
     // 'templates'
@@ -70,8 +100,19 @@ return [
     'imagine' => DI\get(\Imagine\Gd\Imagine::class),
 
     // 'schema'
+/*
     \Degami\SqlSchema\Schema::class => DI\autowire(\Degami\SqlSchema\Schema::class)
         ->constructor(DI\get("pdo")),
+*/
+    \Degami\SqlSchema\Schema::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
+        $pdo = $c->get('pdo');
+        if ($pdo === null) {
+            return null;
+        }
+
+        $schema = new \Degami\SqlSchema\Schema($pdo);
+        return $schema;
+    }),
     'schema' => DI\get(\Degami\SqlSchema\Schema::class),
 
     // 'forms'
@@ -87,8 +128,19 @@ return [
     'debugbar' => DI\get(\DebugBar\StandardDebugBar::class),
 
     // 'traceable_pdo'
+/*
     \DebugBar\DataCollector\PDO\TraceablePDO::class => DI\autowire(DebugBar\DataCollector\PDO\TraceablePDO::class)
         ->constructor(DI\get('pdo')),
+*/
+    \DebugBar\DataCollector\PDO\TraceablePDO::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
+        $pdo = $c->get('pdo');
+        if ($pdo === null) {
+            return null;
+        }
+
+        $traceablePdo = new \DebugBar\DataCollector\PDO\TraceablePDO($pdo);
+        return $traceablePdo;
+    }),
     'traceable_pdo' => DI\get(\DebugBar\DataCollector\PDO\TraceablePDO::class),
 
     // 'db_collector'

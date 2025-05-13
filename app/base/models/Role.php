@@ -13,6 +13,7 @@
 
 namespace App\Base\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\InvalidValueException;
 use DateTime;
@@ -52,7 +53,7 @@ class Role extends BaseModel
         if (!(is_array($this->permissionsArray) && !empty($this->permissionsArray)) || $reset == true) {
             $this->permissionsArray = array_map(
                 function ($el) {
-                    return $this->containerMake(Permission::class, ['db_row' => $el]);
+                    return App::getInstance()->containerMake(Permission::class, ['db_row' => $el]);
                 },
                 $this->role_permissionList()->permission()->fetchAll()
             );

@@ -17,7 +17,6 @@ use DateTime;
 use Exception;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
-use Psr\Container\ContainerInterface;
 use App\App;
 use App\Base\Interfaces\Queue\QueueMessageInterface;
 use PDO;
@@ -90,15 +89,11 @@ class QueueMessage extends BaseModel implements QueueMessageInterface
         return null;
     }
 
-    public static function getQueueNames(?ContainerInterface $container = null) : array
+    public static function getQueueNames() : array
     {
         try {
-            if (is_null($container)) {
-                $container = App::getInstance()->getContainer();
-            }
-
             $query = "SELECT DISTINCT(queue_name) FROM ".static::defaultTableName();
-            $stmt = $container->get('db')->prepare($query);
+            $stmt = App::getInstance()->getDb()->prepare($query);
             $stmt->execute();
             return array_values($stmt->fetchAll(PDO::FETCH_COLUMN, 0));
         } catch (Exception $e) {

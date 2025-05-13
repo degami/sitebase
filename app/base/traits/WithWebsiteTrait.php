@@ -13,6 +13,7 @@
 
 namespace App\Base\Traits;
 
+use App\App;
 use App\Base\Models\Website;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -37,7 +38,7 @@ trait WithWebsiteTrait
         $this->checkLoaded();
 
         if ($this->websiteModel == null) {
-            $this->websiteModel = $this->containerMake(Website::class, ['db_row' => $this->website()->fetch()]);
+            $this->websiteModel = App::getInstance()->containerMake(Website::class, ['db_row' => $this->website()->fetch()]);
         }
 
         return $this->websiteModel;

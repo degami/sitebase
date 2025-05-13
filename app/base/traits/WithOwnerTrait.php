@@ -13,6 +13,7 @@
 
 namespace App\Base\Traits;
 
+use App\App;
 use App\Base\Models\User;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -33,6 +34,6 @@ trait WithOwnerTrait
     {
         $this->checkLoaded();
 
-        return $this->containerMake(User::class, ['db_row' => $this->user()->fetch()]);
+        return App::getInstance()->containerMake(User::class, ['db_row' => $this->user()->fetch()]);
     }
 }

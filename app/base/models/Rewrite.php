@@ -13,6 +13,7 @@
 
 namespace App\Base\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
@@ -76,15 +77,15 @@ class Rewrite extends BaseModel
             $elements = array_filter(
                 array_map(
                     function ($el) {
-                        if ($el->id == $this->getId() || $el->locale == $this->getLocale()) {
+                        if ($el->destination == $this->getId() || $el->locale == $this->getLocale()) {
                             return null;
                         }
                         return [
                             'locale' => $el->destination_locale,
-                            'rewrite' => $this->containerCall([Rewrite::class, 'load'], ['id' => $el->destination])
+                            'rewrite' => App::getInstance()->containerCall([Rewrite::class, 'load'], ['id' => $el->destination])
                         ];
                     },
-                    [] + $this->getDb()->table('rewrite_translation')->where('source', $this->getId())->fetchAll()
+                    [] + App::getInstance()->getDb()->table('rewrite_translation')->where('source', $this->getId())->fetchAll()
                 )
             );
 
@@ -106,6 +107,6 @@ class Rewrite extends BaseModel
      */
     public function getRouteInfo(): RouteInfo
     {
-        return $this->getWebRouter()->getRequestInfo('GET', $this->getRoute());
+        return App::getInstance()->getWebRouter()->getRequestInfo('GET', $this->getRoute());
     }
 }

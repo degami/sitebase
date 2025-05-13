@@ -98,7 +98,7 @@ class MediaElement extends BaseModel
             $img_attributes['data-src'] = $this->getThumbUrl($size, $mode);
         }
 
-        return $this->containerMake(TagElement::class, ['options' => [
+        return App::getInstance()->containerMake(TagElement::class, ['options' => [
             'tag' => 'img',
             'attributes' => [
                     'src' => boolval($this->getLazyload()) && !isset($img_attributes['for_admin']) ? static::TRANSPARENT_PIXEL : $this->getThumbUrl($size, $mode),
@@ -156,7 +156,7 @@ class MediaElement extends BaseModel
                         throw new Exception("Errors copying file " . $this->getPath() . " into " . $thumb_path);
                     }
                 } else {
-                    if (preg_match("/^image\/(.*?)/", $this->getMimetype()) && ($image = $this->getImagine()->open($this->getPath()))) {
+                    if (preg_match("/^image\/(.*?)/", $this->getMimetype()) && ($image = App::getInstance()->getImagine()->open($this->getPath()))) {
                         if ($thumb_sizes) {
                             $w = $thumb_sizes[1];
                             $h = $thumb_sizes[2];
@@ -174,7 +174,7 @@ class MediaElement extends BaseModel
                             // $mode    = Imagine\Image\ImageInterface::THUMBNAIL_OUTBOUND;
                         }
 
-                        $this->getImagine()
+                        App::getInstance()->getImagine()
                             ->open($this->path)
                             ->thumbnail($size, $mode)
                             ->save($thumb_path);
@@ -182,9 +182,9 @@ class MediaElement extends BaseModel
                         // @todo thumb in base a mimetype
                         $type = explode('/', $this->getMimetype());
                         if (is_array($type)) {
-                            return $this->getHtmlRenderer()->getFAIcon('file-'. array_pop($type), 'regular');
+                            return App::getInstance()->getHtmlRenderer()->getFAIcon('file-'. array_pop($type), 'regular');
                         } else {
-                            return $this->getHtmlRenderer()->getIcon('file');
+                            return App::getInstance()->getHtmlRenderer()->getIcon('file');
                         }
                     }
                 }
@@ -193,7 +193,7 @@ class MediaElement extends BaseModel
             }
         }
 
-        return $this->getAssets()->assetUrl(str_replace(App::getDir(App::WEBROOT), "", $thumb_path));
+        return App::getInstance()->getAssets()->assetUrl(str_replace(App::getDir(App::WEBROOT), "", $thumb_path));
     }
 
     /**
@@ -242,7 +242,7 @@ class MediaElement extends BaseModel
             return null;
         }
 
-        $image = $this->getImagine()->open($this->getPath());
+        $image = App::getInstance()->getImagine()->open($this->getPath());
         $sizes = $image->getSize();
         $w = $sizes->getWidth();
         $h = $sizes->getHeight();
@@ -321,10 +321,10 @@ class MediaElement extends BaseModel
                 $type = 'folder';
             }
 
-            return $this->getHtmlRenderer()->getFAIcon($type, $theme);
+            return App::getInstance()->getHtmlRenderer()->getFAIcon($type, $theme);
         }
         
-        return $this->getHtmlRenderer()->getIcon('file');
+        return App::getInstance()->getHtmlRenderer()->getIcon('file');
     }
 
     public function preRemove() : BaseModel

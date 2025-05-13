@@ -18,8 +18,8 @@ use App\Base\Abstracts\Models\BaseModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use Psr\Container\ContainerInterface;
 use App\Base\Traits\WithOwnerTrait;
+use App\Base\Models\User;
 
 /**
  * Contact Submission Model
@@ -49,31 +49,26 @@ class ContactSubmission extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->containerMake(Contact::class, ['db_row' => $this->contact()->fetch()]);
+        return App::getInstance()->containerMake(Contact::class, ['db_row' => $this->contact()->fetch()]);
     }
 
     /**
      * submit data
      *
-     * @param ContainerInterface|null $container
      * @param array $submission_data
      * @return self
      * @throws BasicException
      */
-    public static function submit(?ContainerInterface $container = null, array $submission_data = []): ContactSubmission
-    {
-        if (is_null($container)) {
-            $container = App::getInstance()->getContainer();
-        }
-    
+    public static function submit(array $submission_data = []): ContactSubmission
+    {    
         /** @var ContactSubmission $contact_submission */
-        $contact_submission = $container->make(ContactSubmission::class);
+        $contact_submission = App::getInstance()->containerMake(ContactSubmission::class);
         $contact_submission->setContactId($submission_data['contact_id']);
         $contact_submission->setUserId($submission_data['user_id']);
         $contact_submission->persist();
 
         foreach ($submission_data['data'] as $data) {
-            $contact_submission_data_row = $container->get('db')->createRow('contact_submission_data');
+            $contact_submission_data_row = App::getInstance()->getDb()->createRow('contact_submission_data');
             $data['contact_submission_id'] = $contact_submission->getId();
 
             $contact_submission_data_row->update($data);
@@ -92,7 +87,7 @@ class ContactSubmission extends BaseModel
     {
         $data = $this->getData();
         try {
-            $data['user'] = $this->containerCall([User::class, 'load'], ['id' => $data['user_id']])->getData();
+            $data['user'] = App::getInstance()->containerCall([User::class, 'load'], ['id' => $data['user_id']])->getData();
         } catch (Exception $e) {
             $data['user'] = null;
         }
@@ -102,7 +97,7 @@ class ContactSubmission extends BaseModel
                 $field_value = $el->field_value;
                 return [$field_label => $field_value];
             },
-            $this->getDb()->table('contact_submission_data')->where(['contact_submission_id' => $this->id])->fetchAll()
+            App::getInstance()->getDb()->table('contact_submission_data')->where(['contact_submission_id' => $this->id])->fetchAll()
         );
 
         $data['values'] = [];

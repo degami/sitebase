@@ -21,7 +21,6 @@ use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Models\Rewrite;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
-use Psr\Container\ContainerInterface;
 
 /**
  * Menu Item Model
@@ -74,8 +73,8 @@ class Menu extends ModelWithChildren
             /**
              * @var Rewrite $rewrite
              */
-            $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
-            return ($absolute ? $this->getWebRouter()->getUrl('/') : '') . '/' . ltrim($rewrite->getUrl(), '/');
+            $rewrite = App::getInstance()->containerCall([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
+            return ($absolute ? App::getInstance()->getWebhooksRouter()->getUrl('/') : '') . '/' . ltrim($rewrite->getUrl(), '/');
         }
 
         return "#";
@@ -92,7 +91,7 @@ class Menu extends ModelWithChildren
             /**
              * @var Rewrite $rewrite
              */
-            $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
+            $rewrite = App::getInstance()->containerCall([Rewrite::class, 'load'], ['id' => $this->getRewriteId()]);
             return $rewrite->getRoute();
         }
 
@@ -102,20 +101,15 @@ class Menu extends ModelWithChildren
     /**
      * gets all menu names
      *
-     * @param ContainerInterface|null $container
      * @return array
      */
-    public static function allMenusNames(?ContainerInterface $container = null): array
+    public static function allMenusNames(): array
     {
-        if (is_null($container)) {
-            $container = App::getInstance()->getContainer();
-        }
-    
         return array_map(
-            function ($el) use ($container) {
+            function ($el) {
                 return (object)($el);
             },
-            $container->get('db')->query(
+            App::getInstance()->getDb()->query(
                 "SELECT menu_name FROM `" . static::defaultTableName() . "` WHERE 1 GROUP BY menu_name"
             )->fetchAll()
         );

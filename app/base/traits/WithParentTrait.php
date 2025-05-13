@@ -13,8 +13,7 @@
 
 namespace App\Base\Traits;
 
-use Throwable;
-use App\Base\Abstracts\Models\BaseCollection;
+use App\App;
 
 /**
  * Trait for elements with parent
@@ -32,7 +31,7 @@ trait WithParentTrait
             return null;
         }
 
-        return $this->containerCall([static::class, 'load'], ['id' => $this->parent_id]);
+        return App::getInstance()->containerCall([static::class, 'load'], ['id' => $this->parent_id]);
     }
 
     /**

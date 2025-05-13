@@ -13,6 +13,8 @@
 
 namespace App\Site\Models;
 
+use App\App;
+use App\Base\Models\Rewrite;
 use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
@@ -64,13 +66,13 @@ class Sitemap extends FrontendModel
             $this->urlset = [
                 'url' => array_map(
                     function ($el) {
-                        $rewrite = $this->containerMake(Rewrite::class, ['db_row' => $el->rewrite()->fetch()]);
+                        $rewrite = App::getInstance()->containerMake(Rewrite::class, ['db_row' => $el->rewrite()->fetch()]);
                         return [
                             'id' => $el->id,
                             'rewrite' => $rewrite->id,
                             'changefreq' => $el->change_freq,
                             'priority' => $el->priority,
-                            'loc' => $this->getWebRouter()->getUrl('frontend.root') . ltrim($rewrite->getUrl(), '/'),
+                            'loc' => App::getInstance()->getWebRouter()->getUrl('frontend.root') . ltrim($rewrite->getUrl(), '/'),
                             'lastmod' => (new DateTime($rewrite->getUpdatedAt()))->format('Y-m-d'),
                         ];
                     },
@@ -146,6 +148,6 @@ class Sitemap extends FrontendModel
     {
         $this->checkLoaded();
 
-        return '/' . $this->getLocale() . '/sitemap-' . $this->getUtils()->slugify($this->getTitle()) . '-' . $this->getWebsite()->getDomain() . '.xml';
+        return '/' . $this->getLocale() . '/sitemap-' . App::getInstance()->getUtils()->slugify($this->getTitle()) . '-' . $this->getWebsite()->getDomain() . '.xml';
     }
 }

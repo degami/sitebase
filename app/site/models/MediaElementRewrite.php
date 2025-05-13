@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Models\Rewrite;
 use App\Base\Traits\WithOwnerTrait;
@@ -49,7 +50,7 @@ class MediaElementRewrite extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->containerMake(MediaElement::class, ['db_row' => $this->media_element()->fetch()]);
+        return App::getInstance()->containerMake(MediaElement::class, ['db_row' => $this->media_element()->fetch()]);
     }
 
     /**
@@ -62,6 +63,6 @@ class MediaElementRewrite extends BaseModel
     {
         $this->checkLoaded();
 
-        return $this->containerMake(Rewrite::class, ['db_row' => $this->rewrite()->fetch()]);
+        return App::getInstance()->containerMake(Rewrite::class, ['db_row' => $this->rewrite()->fetch()]);
     }
 }

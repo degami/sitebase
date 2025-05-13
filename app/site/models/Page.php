@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -80,7 +81,7 @@ class Page extends FrontendModel
             $this->gallery = array_filter(array_map(
                 function ($el) {
                     /** @var MediaElement $mediaElement */
-                    $mediaElement = $this->containerMake(MediaElement::class, ['db_row' => $el]);
+                    $mediaElement = App::getInstance()->containerMake(MediaElement::class, ['db_row' => $el]);
 
                     return $mediaElement->isImage() ? $mediaElement : null;
                 },
@@ -104,7 +105,7 @@ class Page extends FrontendModel
         if (!(is_array($this->medias) && !empty($this->medias)) || $reset == true) {
             $this->medias = array_filter(array_map(
                 function ($el) {
-                    return $this->containerMake(MediaElement::class, ['db_row' => $el]);
+                    return App::getInstance()->containerMake(MediaElement::class, ['db_row' => $el]);
                 },
                 $this->page_media_elementList()->media_element()->fetchAll()
             ));
@@ -121,7 +122,7 @@ class Page extends FrontendModel
      */
     public function addMedia(MediaElement $media_element): Page
     {
-        $new_page_media_row = $this->getDb()->table('page_media_element')->createRow();
+        $new_page_media_row = App::getInstance()->getDb()->table('page_media_element')->createRow();
         $new_page_media_row->update(
             [
                 'page_id' => $this->id,
@@ -140,7 +141,7 @@ class Page extends FrontendModel
      */
     public function removeMedia(MediaElement $media_element): Page
     {
-        $this->getDb()->table('page_media_element')->where(
+        App::getInstance()->getDb()->table('page_media_element')->where(
             [
                 'page_id' => $this->id,
                 'media_element_id' => $media_element->id,
@@ -163,7 +164,7 @@ class Page extends FrontendModel
         if (!(is_array($this->terms) && !empty($this->terms)) || $reset == true) {
             $this->terms = array_map(
                 function ($el) {
-                    return $this->containerMake(Taxonomy::class, ['db_row' => $el]);
+                    return App::getInstance()->containerMake(Taxonomy::class, ['db_row' => $el]);
                 },
                 $this->page_taxonomyList()->taxonomy()->fetchAll()
             );
@@ -180,7 +181,7 @@ class Page extends FrontendModel
      */
     public function addTerm(Taxonomy $term): Page
     {
-        $new_page_taxonomy_row = $this->getDb()->table('page_taxonomy')->createRow();
+        $new_page_taxonomy_row = App::getInstance()->getDb()->table('page_taxonomy')->createRow();
         $new_page_taxonomy_row->update(
             [
                 'page_id' => $this->id,
@@ -199,7 +200,7 @@ class Page extends FrontendModel
      */
     public function removeTerm(Taxonomy $term): Page
     {
-        $this->getDb()->table('page_taxonomy')->where(
+        App::getInstance()->getDb()->table('page_taxonomy')->where(
             [
                 'page_id' => $this->id,
                 'taxonomy_id' => $term->id,

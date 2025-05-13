@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Models;
 
+use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Models\BaseModel;
@@ -29,7 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 /**
  * A LessQL Collection
  */
-class BaseCollection extends ContainerAwareObject implements ArrayAccess, IteratorAggregate
+class BaseCollection implements ArrayAccess, IteratorAggregate
 {
     public const ITEMS_PER_PAGE = 50;
 
@@ -45,18 +46,15 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
 
 
     public function __construct(
-        protected ContainerInterface $container,
         protected string $className
     ) {
         if (!is_subclass_of($className, BaseModel::class, true)) {
             throw new InvalidValueException("$className is not a subclass of BaseModel");
         }
 
-        parent::__construct($container);
-
-        if ($this->getEnv('DEBUG')) {
+        if (App::getInstance()->getEnv('DEBUG')) {
             /** @var DebugBar $debugbar */
-            $debugbar = $this->getContainer()->get('debugbar');
+            $debugbar = App::getInstance()->getDebugbar();
             if (!$debugbar->hasCollector(CollectionDataCollector::NAME)) {
                 $debugbar->addCollector(new CollectionDataCollector());
             }
@@ -72,7 +70,15 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
      */
     public function getTableName() : string
     {
-        return $this->containerCall([$this->className, 'defaultTableName']);
+        return App::getInstance()->containerCall([$this->className, 'defaultTableName']);
+    }
+
+    /**
+     * gets db service
+     */    
+    protected function getDb() : \LessQL\Database
+    {
+        return App::getInstance()->getDb();
     }
 
     /**
@@ -161,7 +167,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
      */
     public function addOrder(array $order = [], string $position = 'end') : static 
     {
-        $tableColumns = $this->containerCall([$this->className, 'getTableColumns']);
+        $tableColumns = App::getInstance()->containerCall([$this->className, 'getTableColumns']);
         if (!empty($order) && is_array($order)) {
             foreach ($order as $column => $direction) {
                 if (!in_array(strtoupper(trim($direction)), ['ASC', 'DESC'])) {
@@ -186,7 +192,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
                 $this->stmt = $this->getSelect()->orderBy($order, true, position: $position);
             }
         } else {
-            $this->stmt = $this->getSelect()->orderBy($this->containerCall([$this->className, 'getKeyField']), position: $position);
+            $this->stmt = $this->getSelect()->orderBy(App::getInstance()->containerCall([$this->className, 'getKeyField']), position: $position);
         }
 
         return $this;
@@ -237,7 +243,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     {
         if (empty($this->items)) {
             /** @var DebugBar $debugbar */
-            $debugbar = $this->getDebugbar();
+            $debugbar = App::getInstance()->getDebugbar();
 
             $measure_key = 'load collection: ' . $this->getTableName();
 
@@ -247,7 +253,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
 
             $before = memory_get_usage();
             $this->items = [];
-            foreach($this->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()]) as $item) {
+            foreach(App::getInstance()->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()]) as $item) {
                 /** @var BaseModel $item */
                 $this->items[$item->getKeyFieldValue()] = $item;
             }
@@ -280,7 +286,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     public function getFirst()
     {
         $stmt = $this->getSelect()->limit(1);
-        $item = $this->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $stmt]); 
+        $item = App::getInstance()->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $stmt]); 
         $item = reset($item);
 
         if (!$item) {
@@ -356,7 +362,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     public function persist() : static 
     {
         /** @var DebugBar $debugbar */
-        $debugbar = $this->getDebugbar();
+        $debugbar = App::getInstance()->getDebugbar();
 
         $measure_key = 'persist collection: ' . $this->getTableName();
 
@@ -388,7 +394,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     public function remove() : static
     {
         /** @var DebugBar $debugbar */
-        $debugbar = $this->getDebugbar();
+        $debugbar = App::getInstance()->getDebugbar();
 
         $measure_key = 'remove collection: ' . $this->getTableName();
 
@@ -430,7 +436,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
     public function paginate(Request $request, int $page_size = self::ITEMS_PER_PAGE): array
     {
         /** @var DebugBar $debugbar */
-        $debugbar = $this->getDebugbar();
+        $debugbar = App::getInstance()->getDebugbar();
 
         $measure_key = 'paginate collection: ' . $this->getTableName();
 
@@ -444,7 +450,7 @@ class BaseCollection extends ContainerAwareObject implements ArrayAccess, Iterat
         $total = $this->count();
         
         $this->items = [];
-        foreach ($this->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()->limit($page_size, $start)]) as $item) {
+        foreach (App::getInstance()->containerCall([$this->className, 'hydrateStatementResult'], ['stmt' => $this->getSelect()->limit($page_size, $start)]) as $item) {
             $this->items[$item->getId()] = $item;
         }
 

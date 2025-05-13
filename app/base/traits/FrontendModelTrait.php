@@ -12,6 +12,8 @@
  */
 
 namespace App\Base\Traits;
+
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use Exception;
 
@@ -30,7 +32,7 @@ trait FrontendModelTrait
     {
         $this->checkLoaded();
 
-        return '/' . $this->getLocale() . '/' . $this->getUtils()->slugify($this->getUrl(), false) . '.html';
+        return '/' . $this->getLocale() . '/' . App::getInstance()->getUtils()->slugify($this->getUrl(), false) . '.html';
     }
 
     /**

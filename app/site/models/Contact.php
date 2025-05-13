@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
@@ -78,7 +79,7 @@ class Contact extends FrontendModel
             function ($el) {
                 return $el->getData();
             },
-            $this->getDb()->table('contact_definition')->where(['contact_id' => $this->id])->fetchAll()
+            App::getInstance()->getDb()->table('contact_definition')->where(['contact_id' => $this->id])->fetchAll()
         );
     }
 
@@ -116,7 +117,7 @@ class Contact extends FrontendModel
             function ($el) {
                 return $el->getData();
             },
-            $this->getDb()->table('contact_definition')->where(['contact_id' => $this->getId(), 'contact_submission_id' => $submission_id])->fetchAll()
+            App::getInstance()->getDb()->table('contact_definition')->where(['contact_id' => $this->getId(), 'contact_submission_id' => $submission_id])->fetchAll()
         );
     }
 
@@ -129,12 +130,12 @@ class Contact extends FrontendModel
      * @throws Exception
      * @throws BasicException
      */
-    public function getFormDefinition(FAPI\Abstracts\Base\Element $container, &$form_state): FAPI\Abstracts\Base\Element
+    public function getFormDefinition(FAPI\Abstracts\Base\Element $elemetContainer, &$form_state): FAPI\Abstracts\Base\Element
     {
         foreach ($this->getContactDefinition() as $field) {
             $field_data = (array)json_decode($field['field_data']);
-            $field_data['title'] = $this->getUtils()->translate($field_data['title'], locale: $this->getLocale());
-            $container->addField(
+            $field_data['title'] = App::getInstance()->getUtils()->translate($field_data['title'], locale: $this->getLocale());
+            $elemetContainer->addField(
                 $this->slugify($field['field_label']),
                 ['type' => $field['field_type']] +
                 ($field['field_required'] == true ? ['validate' => ['required']] : []) +
@@ -142,7 +143,7 @@ class Contact extends FrontendModel
             );
         }
 
-        return $container;
+        return $elemetContainer;
     }
 
     /**

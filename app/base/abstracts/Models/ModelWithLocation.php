@@ -21,6 +21,7 @@ use App\Base\Traits\WithRewriteTrait;
 use App\Base\Traits\IndexableTrait;
 use App\Base\Traits\FrontendModelTrait;
 use Degami\Basics\Html\TagElement;
+use Psr\Container\ContainerInterface;
 
 /**
  * A model with location
@@ -42,8 +43,7 @@ abstract class ModelWithLocation extends FrontendModel
 
     public static function getCollection() : BaseCollection
     {
-        $container = App::getInstance()->getContainer();
-        return $container->make(ModelWithLocationCollection::class, ['className' => static::class]);
+        return App::getInstance()->containerMake(ModelWithLocationCollection::class, ['className' => static::class]);
     }
 
     public static function addHeadDependencies() : void
@@ -75,7 +75,7 @@ abstract class ModelWithLocation extends FrontendModel
         $latitude = $this->getData('latitude');
         $longitude = $this->getData('longitude');
 
-        $map = $this->containerMake(TagElement::class, ['options' => [
+        $map = App::getInstance()->containerMake(TagElement::class, ['options' => [
             'tag' => 'div',
             'id' => $id.'-map',
             'attributes' => [
@@ -86,8 +86,8 @@ abstract class ModelWithLocation extends FrontendModel
 
         $css = ''; $script = '';
 
-        if ($this->getEnv('GOOGLE_API_KEY') || $this->getEnv('MAPBOX_API_KEY')) {
-            $css = $this->containerMake(TagElement::class, ['options' => [
+        if (App::getInstance()->getEnv('GOOGLE_API_KEY') || App::getInstance()->getEnv('MAPBOX_API_KEY')) {
+            $css = App::getInstance()->containerMake(TagElement::class, ['options' => [
                 'tag' => 'style',
                 'attributes' => [
                     'class' => '',
@@ -99,10 +99,10 @@ abstract class ModelWithLocation extends FrontendModel
             ]]);            
         }
 
-        if ($this->getEnv('GOOGLE_API_KEY')) {
+        if (App::getInstance()->getEnv('GOOGLE_API_KEY')) {
             $mapType = 'google.maps.MapTypeId.ROADMAP';
 
-            $script = $this->containerMake(TagElement::class, ['options' => [
+            $script = App::getInstance()->containerMake(TagElement::class, ['options' => [
                 'tag' => 'script',
                 'type' => 'text/javascript',
                 'attributes' => [
@@ -131,11 +131,11 @@ abstract class ModelWithLocation extends FrontendModel
 
                ",
             ]]);
-        } else if ($this->getEnv('MAPBOX_API_KEY')) {
+        } else if (App::getInstance()->getEnv('MAPBOX_API_KEY')) {
             $mapType = 'mapbox/streets-v12';
-            $accesToken = $this->getEnv('MAPBOX_API_KEY');
+            $accesToken = App::getInstance()->getEnv('MAPBOX_API_KEY');
 
-            $script = $this->containerMake(TagElement::class, ['options' => [
+            $script = App::getInstance()->containerMake(TagElement::class, ['options' => [
                 'tag' => 'script',
                 'attributes' => [
                     'class' => '',

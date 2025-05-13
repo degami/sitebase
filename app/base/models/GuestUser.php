@@ -13,6 +13,7 @@
 
 namespace App\Base\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\AccountModel;
 use App\Base\Abstracts\Models\BaseModel;
 use Degami\Basics\Exceptions\BasicException;
@@ -21,6 +22,7 @@ use DI\NotFoundException;
 use Psr\Container\ContainerInterface;
 use DateTime;
 use Exception;
+use LessQL\Row;
 
 /**
  * Guest User Model
@@ -66,10 +68,8 @@ class GuestUser extends AccountModel
      * @throws Exception
      */
     public function __construct(
-        protected ContainerInterface $container
+        ?Row $db_row = null, // not used
     ) {
-        parent::__construct($container);
-
         /* @todo chek if it is possible to store data to a jwt token */
         $this->permissions = array_map(
             function ($el) {
@@ -102,7 +102,7 @@ class GuestUser extends AccountModel
             return $this->roleObj;
         }
 
-        return $this->roleObj = $this->containerCall([Role::class, 'load'], ['id' => $this->getRoleId()]);
+        return $this->roleObj = App::getInstance()->containerCall([Role::class, 'load'], ['id' => $this->getRoleId()]);
     }
 
     /**
@@ -220,5 +220,10 @@ class GuestUser extends AccountModel
     public function getUserSession()
     {
         return null;
+    }
+
+    public function getJWT(): string
+    {
+        return '';
     }
 }

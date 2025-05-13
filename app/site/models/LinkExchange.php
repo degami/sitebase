@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
@@ -65,7 +66,7 @@ class LinkExchange extends BaseModel
         if (!(is_array($this->terms) && !empty($this->terms)) || $reset == true) {
             $this->terms = array_map(
                 function ($el) {
-                    return $this->containerMake(Taxonomy::class, ['db_row' => $el]);
+                    return App::getInstance()->containerMake(Taxonomy::class, ['db_row' => $el]);
                 },
                 $this->link_exchange_taxonomyList()->taxonomy()->fetchAll()
             );
@@ -82,7 +83,7 @@ class LinkExchange extends BaseModel
      */
     public function addTerm(Taxonomy $term): LinkExchange
     {
-        $new_link_exchange_taxonomy_row = $this->getDb()->table('link_exchange_taxonomy')->createRow();
+        $new_link_exchange_taxonomy_row = App::getInstance()->getDb()->table('link_exchange_taxonomy')->createRow();
         $new_link_exchange_taxonomy_row->update(
             [
                 'link_exchange_id' => $this->getId(),
@@ -101,7 +102,7 @@ class LinkExchange extends BaseModel
      */
     public function removeTerm(Taxonomy $term): LinkExchange
     {
-        $this->getDb()->table('link_exchange_taxonomy')->where(
+        App::getInstance()->getDb()->table('link_exchange_taxonomy')->where(
             [
                 'link_exchange_id' => $this->getId(),
                 'taxonomy_id' => $term->getId(),

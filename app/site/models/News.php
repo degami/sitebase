@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
 use Exception;
@@ -70,7 +71,7 @@ class News extends FrontendModel
      */
     public function getDate(): string
     {
-        $date_format = $this->getSiteData()->getDateFormat();
+        $date_format = App::getInstance()->getSiteData()->getDateFormat();
         return (new DateTime($this->date))->format($date_format);
     }
 }

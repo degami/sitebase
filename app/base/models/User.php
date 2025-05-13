@@ -13,6 +13,7 @@
 
 namespace App\Base\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\AccountModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
@@ -80,7 +81,7 @@ class User extends AccountModel
             return $this->roleObj;
         }
 
-        return $this->roleObj = $this->containerMake(Role::class, ['db_row' => $this->role()->fetch()]);
+        return $this->roleObj = App::getInstance()->containerMake(Role::class, ['db_row' => $this->role()->fetch()]);
     }
 
     /**
@@ -98,7 +99,7 @@ class User extends AccountModel
         } elseif (is_string($role)) {
             try {
                 /** @var Role $role */
-                $role = $this->containerCall([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role]);
+                $role = App::getInstance()->containerCall([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role]);
                 $this->setRoleId($role->getId());
             } catch (Exception $e) {
             }
@@ -134,8 +135,8 @@ class User extends AccountModel
             $now = new DateTime();
 
             $interval = date_diff($date, $now);
-            $differenceFormat = $this->getUtils()->translate('%y years %m months %d days', locale: $this->getLocale());
-            $date_format = $this->getSiteData()->getDateFormat();
+            $differenceFormat = App::getInstance()->getUtils()->translate('%y years %m months %d days', locale: $this->getLocale());
+            $date_format = App::getInstance()->getSiteData()->getDateFormat();
             return $date->format($date_format) . ' (' . $interval->format($differenceFormat) . ')';
         }
 
@@ -150,7 +151,7 @@ class User extends AccountModel
     protected function calcTokenId(): string
     {
         $string = $this->getId() . $this->getUsername();
-        $string = $this->getContainer()->get('jwt_id') . $string;
+        $string = App::getInstance()->getContainer()->get('jwt_id') . $string;
         return substr(sha1($string), 0, 10);
     }
 
@@ -164,9 +165,8 @@ class User extends AccountModel
     {
         $this->checkLoaded();
 
-
         if ($getExisting) {
-            $tokenData = $this->getUtils()->getTokenUserDataClaim();
+            $tokenData = App::getInstance()->getUtils()->getTokenUserDataClaim();
             if (is_object($tokenData)) {
                 $tokenData = (array) $tokenData;
             }    
@@ -176,7 +176,7 @@ class User extends AccountModel
 
         /** @var Builder $builder */
         //$builder = $this->getContainer()->get('jwt:builder');
-        $builder = $this->getContainer()->get('jwt:configuration')->builder();
+        $builder = App::getInstance()->getContainer()->get('jwt:configuration')->builder();
 
         $userData = [
             'id' => $this->getId(),
@@ -199,8 +199,8 @@ class User extends AccountModel
         $userData += $extraData;
 
         $builder
-        ->issuedBy($this->getContainer()->get('jwt_issuer'))
-        ->permittedFor($this->getContainer()->get('jwt_audience'))
+        ->issuedBy(App::getInstance()->getContainer()->get('jwt_issuer'))
+        ->permittedFor(App::getInstance()->getContainer()->get('jwt_audience'))
         ->identifiedBy($this->calcTokenId())
         // Configures the id (jti claim), replicating as a header item
         ->issuedAt(new \DateTimeImmutable())
@@ -215,7 +215,7 @@ class User extends AccountModel
         ->withClaim('userdata', (object)$userData);
 
         /** @var \Lcobucci\JWT\Configuration $configuration */
-        $configuration = $this->getContainer()->get('jwt:configuration');
+        $configuration = App::getInstance()->getContainer()->get('jwt:configuration');
 
         return $builder->getToken($configuration->signer(), $configuration->signingKey())->toString();
     }
@@ -236,18 +236,18 @@ class User extends AccountModel
 
         $this->checkLoaded();
 
-        $current_website_id = $this->getSiteData()->getCurrentWebsiteId();
+        $current_website_id = App::getInstance()->getSiteData()->getCurrentWebsiteId();
 
         $user_session = null;
 
         try {
             /** @var UserSession $user_session */
-            $user_session = $this->containerCall([UserSession::class, 'loadByCondition'], ['condition' => ['user_id' => $this->getId(), 'website_id' => $current_website_id]]);
+            $user_session = App::getInstance()->containerCall([UserSession::class, 'loadByCondition'], ['condition' => ['user_id' => $this->getId(), 'website_id' => $current_website_id]]);
         } catch (Exception $e) {
         }
 
         if (!$user_session) {
-            $user_session = $this->containerCall([UserSession::class, 'new']);
+            $user_session = App::getInstance()->containerCall([UserSession::class, 'new']);
             $user_session->setUserId($this->getId());
             $user_session->setWebsiteId($current_website_id);
         }
@@ -316,7 +316,7 @@ class User extends AccountModel
 
         if (is_null($websiteId)) {
             // if not passed - get current website_id
-            $websiteId = $this->getSiteData()->getCurrentWebsiteId();
+            $websiteId = App::getInstance()->getSiteData()->getCurrentWebsiteId();
         }
         if ($websiteId == 0) {
             // if 0 is passed - means admin - set to null

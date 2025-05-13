@@ -77,7 +77,7 @@ class Menus extends AdminManageModelsPage
     {
         if ($this->template_data['action'] == 'list') {
             $this->template_data += [
-                'menus' => (array)Menu::allMenusNames($this->getContainer()),
+                'menus' => (array)Menu::allMenusNames(),
             ];
         }
         return $this->template_data;

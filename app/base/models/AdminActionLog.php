@@ -13,10 +13,12 @@
 
 namespace App\Base\Models;
 
+use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\HttpFoundation\Request;
+use Psr\Container\ContainerInterface;
 
 /**
  * Admin Action Log Model
@@ -61,7 +63,7 @@ class AdminActionLog extends RequestLog
             $this->setRouteInfo(serialize($controller->getRouteInfo()->getData()));
             $this->setAction($controller->getRouteInfo()->getRouteName());
             if (method_exists($controller, 'getAdminActionLogData')) {
-                $this->setLogData(serialize($this->containerCall([$controller, 'getAdminActionLogData'])));
+                $this->setLogData(serialize(App::getInstance()->containerCall([$controller, 'getAdminActionLogData'])));
             }
         }
         return $this;

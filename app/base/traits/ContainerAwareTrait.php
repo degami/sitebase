@@ -48,8 +48,8 @@ use HaydenPierce\ClassFinder\ClassFinder;
 use PHPGangsta_GoogleAuthenticator;
 use Swift_Mailer;
 use Symfony\Component\HttpFoundation\Request;
-use DI\Definition\Helper\AutowireDefinitionHelper;
 use function DI\autowire;
+use DI\Container;
 
 /**
  * Container Aware Object Trait
@@ -64,9 +64,9 @@ trait ContainerAwareTrait
     /**
      * gets container object
      *
-     * @return ContainerInterface
+     * @return ContainerInterface|Container
      */
-    public function getContainer(): ContainerInterface
+    public function getContainer(): ContainerInterface|Container
     {
         return $this->container;
     }

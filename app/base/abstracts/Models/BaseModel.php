@@ -23,21 +23,22 @@ use IteratorAggregate;
 use LessQL\Result;
 use LessQL\Row;
 use PDOStatement;
-use Psr\Container\ContainerInterface;
-use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Tools\Search\Manager as SearchManager;
 use Exception;
+use Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
 
 /**
  * A wrapper for LessQL Row
  */
-abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, IteratorAggregate
+abstract class BaseModel implements ArrayAccess, IteratorAggregate
 {
+    use BasicToolsTrait;
+
     /**
      * @var Row database row
      */
-    protected Row $db_row;
+    protected ?Row $db_row = null;
 
     /**
      * @var string|null table name
@@ -64,23 +65,20 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * {@inheritdoc}
      *
-     * @param ContainerInterface $container
      * @param Row|null $db_row
      * @throws InvalidValueException
      * @throws BasicException
      */
     public function __construct(
-        protected ContainerInterface $container, 
         ?Row $db_row = null
     ) {
-        parent::__construct($container);
-
         $name = $this->getTableName();
         if ($db_row instanceof Row) {
             $this->checkDbName($db_row);
             $this->setOriginalData($db_row->getData());
         } else {
-            $db_row = $this->getDb()->createRow($name);
+            /** @var Row $db_row */
+            $db_row = App::getInstance()->getDb()->createRow($name);
             $this->setOriginalData(null);
         }
         $this->setTableName($name);
@@ -140,10 +138,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function hydrateStatementResult(Result $stmt): array
     {
-        $container = App::getInstance()->getContainer();
         return array_map(
-            function ($el) use ($container) {
-                return $container->make(static::class, ['db_row' => $el]);
+            function ($el) {
+                return App::getInstance()->containerMake(static::class, ['db_row' => $el]);
             },
             $stmt->fetchAll()
         );
@@ -154,8 +151,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function getCollection() : BaseCollection
     {
-        $container = App::getInstance()->getContainer();
-        return $container->make(BaseCollection::class, ['className' => static::class]);
+        return App::getInstance()->containerMake(BaseCollection::class, ['className' => static::class]);
     }
 
     /**
@@ -195,8 +191,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function select(array $options = []): PDOStatement
     {
-        $container = App::getInstance()->getContainer();
-        return $container->get('db')->select(static::defaultTableName(), $options);
+        return App::getInstance()->getDb()->select(static::defaultTableName(), $options);
     }
 
     /**
@@ -208,7 +203,6 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     protected static function getModelBasicWhere(?array $condition = [], array $order = []): Result
     {
-        $container = App::getInstance()->getContainer();
         if ($condition == null) {
             $condition = [];
         }
@@ -221,7 +215,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         }
 
         /** @var Result $stmt */
-        $stmt = $container->get('db')->table(
+        $stmt = App::getInstance()->getDb()->table(
             static::defaultTableName()
         );
 
@@ -388,10 +382,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function load(mixed $id, bool $reset = false): BaseModel
     {
-        $container = App::getInstance()->getContainer();
-
         /** @var DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
+        $debugbar = App::getInstance()->getDebugbar();
 
         $measure_key = 'load model: ' . static::defaultTableName();
 
@@ -413,7 +405,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             $condition = [$keyField => $id];
         }
 
-        $object = $container->call([static::class, 'loadByCondition'], ['condition' => $condition]);
+        $object = App::getInstance()->containerCall([static::class, 'loadByCondition'], ['condition' => $condition]);
 
         if (getenv('DEBUG')) {
             $debugbar['time']->stopMeasure($measure_key);
@@ -432,10 +424,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function loadByCondition(array $condition): ?BaseModel
     {
-        $container = App::getInstance()->getContainer();
-
-        /** @var$container-> DebugBar $debugbar */
-        $debugbar = $container->get('debugbar');
+        /** @var DebugBar $debugbar */
+        $debugbar = App::getInstance()->getDebugbar();
 
         $measure_key = 'loadByCondition model: ' . static::defaultTableName();
 
@@ -449,7 +439,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
             throw new BasicException('Model not found');
         }
 
-        static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($db_row->id)] = $container->make(static::class, ['db_row' => $db_row]);
+        static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($db_row->id)] = App::getInstance()->containerMake(static::class, ['db_row' => $db_row]);
 
         if (getenv('DEBUG')) {
             $debugbar['time']->stopMeasure($measure_key);
@@ -468,11 +458,9 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public static function new(array $initial_data = []): BaseModel
     {
-        $container = App::getInstance()->getContainer();
-
-        $db_row = $container->get('db')->createRow(static::defaultTableName());
+        $db_row = App::getInstance()->getDb()->createRow(static::defaultTableName());
         $db_row->setData($initial_data);
-        return new static($container, $db_row);
+        return new static($db_row);
     }
 
     /**
@@ -738,7 +726,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function persist(bool $recursive = true): BaseModel
     {
-        $debugbar = $this->getDebugbar();
+        /** @var DebugBar $debugbar */
+        $debugbar = App::getInstance()->getDebugbar();
 
         $measure_key = 'persist model: ' . static::defaultTableName();
 
@@ -807,7 +796,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
      */
     public function remove(): BaseModel
     {
-        $debugbar = $this->getDebugbar();
+        /** @var DebugBar $debugbar */
+        $debugbar = App::getInstance()->getDebugbar();
 
         $measure_key = 'delete model: ' . static::defaultTableName();
 
@@ -900,7 +890,7 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
     /**
      * @return Row database row
      */
-    public function getDbRow(): Row
+    public function getDbRow(): ?Row
     {
         return $this->db_row;
     }
@@ -951,13 +941,8 @@ abstract class BaseModel extends ContainerAwareObject implements ArrayAccess, It
         return $changed;
     }
 
-    public static function getTableColumns(?ContainerInterface $container = null)
+    public static function getTableColumns()
     {
-        // if argument is missing, try get it from environment
-        if (is_null($container)) {
-            $container = \App\App::getInstance()->getContainer();
-        }
-
-        return array_values(array_map(fn($column) => $column->getName(), $container->get('schema')->getTable(static::defaultTableName())?->getColumns()));
+        return array_values(array_map(fn($column) => $column->getName(), App::getInstance()->getSchema()->getTable(static::defaultTableName())?->getColumns()));
     }
 }

@@ -43,9 +43,9 @@ trait WithRewriteTrait
 
         if (!($this->rewriteObj instanceof Rewrite)) {
             try {
-                $this->rewriteObj = $this->containerCall([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => '/' . $this->getRewritePrefix() . '/' . $this->getId()]);
+                $this->rewriteObj = App::getInstance()->containerCall([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => '/' . $this->getRewritePrefix() . '/' . $this->getId()]);
             } catch (Exception $e) {
-                $this->rewriteObj = $this->containerCall([Rewrite::class, 'new']);
+                $this->rewriteObj = App::getInstance()->containerCall([Rewrite::class, 'new']);
             }
         }
         return $this->rewriteObj;
@@ -62,8 +62,8 @@ trait WithRewriteTrait
         return array_map(
             function ($el) {
                 $routeInfo = $el->getRouteInfo();
-                $modelClass = $this->containerCall([$routeInfo->getHandler()[0], 'getObjectClass']);
-                $model = $this->containerCall([$modelClass, 'load'], $routeInfo->getVars());
+                $modelClass = App::getInstance()->containerCall([$routeInfo->getHandler()[0], 'getObjectClass']);
+                $model = App::getInstance()->containerCall([$modelClass, 'load'], $routeInfo->getVars());
                 return $model->getRewrite()->getUrl();
             },
             $this->getRewrite()->getTranslations()

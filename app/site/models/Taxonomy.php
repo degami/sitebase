@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModelWithChildren;
 use App\Base\Traits\WithParentTrait;
@@ -90,7 +91,7 @@ class Taxonomy extends FrontendModelWithChildren
         if (!(is_array($this->pages) && !empty($this->pages)) || $reset == true) {
             $this->pages = array_map(
                 function ($el) {
-                    return $this->containerMake(Page::class, ['db_row' => $el]);
+                    return App::getInstance()->containerMake(Page::class, ['db_row' => $el]);
                 },
                 $this->page_taxonomyList()->page()->fetchAll()
             );

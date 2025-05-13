@@ -308,6 +308,25 @@ class FakeDataMigration extends BaseMigration
         }
 
         foreach ($this->locales as $locale) {
+            // home pages
+            foreach (array_diff($this->locales, [$locale]) as $other_locale) {
+                foreach (['homePages'] as $array_name) {
+                    $element_from = ${$array_name}[$locale];
+                    $element_to = ${$array_name}[$other_locale];
+                    $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
+                    $rewrite_translation_row->update(
+                        [
+                            'source' => $element_from->getId(),
+                            'source_locale' => $element_from->getLocale(),
+                            'destination' => $element_to->getId(),
+                            'destination_locale' => $element_to->getLocale()
+                        ]
+                    );
+                }
+            }
+        }
+
+        foreach ($this->locales as $locale) {
             foreach (array_diff($this->locales, [$locale]) as $other_locale) {
                 foreach (['pages', 'terms', 'contacts', 'news', 'events'] as $array_name) {
                     foreach (${$array_name}[$locale] as $index => $element_from) {

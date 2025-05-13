@@ -13,6 +13,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\ModelWithLocation;
 use App\Base\Abstracts\Models\ModelWithLocationCollection;
 use App\Base\Abstracts\Models\BaseCollection;
@@ -87,7 +88,7 @@ class Event extends ModelWithLocation
      */
     public function getDate(): string
     {
-        $date_format = $this->getSiteData()->getDateTimeFormat();
+        $date_format = App::getInstance()->getSiteData()->getDateTimeFormat();
         return (new DateTime($this->date))->format($date_format);
     }
 

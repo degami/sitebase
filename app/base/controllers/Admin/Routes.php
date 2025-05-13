@@ -103,7 +103,7 @@ class Routes extends AdminPage
                     $callable = $route['class'] . '::' . $route['method'];
 
                     if (is_file(App::getDir(App::WEBROOT) . DS . 'docs' . DS . 'classes' . DS . str_replace("\\", "-", $route['class']) . ".html")) {
-                        $linkTo = $this->getUrl('crud.app.site.controllers.admin.json.readdocs') . "?docpage=".urlencode("/docs/classes/". str_replace("\\", "-", $route['class']) . ".html#method_".$route['method']);
+                        $linkTo = $this->getUrl('crud.app.base.controllers.admin.json.readdocs') . "?docpage=".urlencode("/docs/classes/". str_replace("\\", "-", $route['class']) . ".html#method_".$route['method']);
                         $callable = $this->containerMake(TagElement::class, [
                             'options' => [
                                 'tag' => 'a',

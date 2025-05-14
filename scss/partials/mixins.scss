@@ -1,0 +1,13 @@
+@mixin transition($props...) {
+    transition: $props 0.2s ease-in-out;
+  }
+  
+  @mixin card {
+    background: var(--color-bg);
+    color: var(--color-text);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 1.5rem;
+  }
+  

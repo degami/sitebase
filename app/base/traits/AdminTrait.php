@@ -123,7 +123,7 @@ trait AdminTrait
                     TagElement::class,
                     ['options' => [
                         'tag' => 'li',
-                        'attributes' => ['class' => 'nav-item ml-1 text-nowrap'],
+                        'attributes' => ['class' => 'nav-item ml-1 text-nowrap d-inline-flex align-items-center'],
                         'text' => $button_html
                     ]]
                 )

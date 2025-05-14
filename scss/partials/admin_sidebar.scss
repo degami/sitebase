@@ -1,0 +1,263 @@
+@use "colors" as *;
+@use "variables" as *;
+
+/*
+* Sidebar
+*/
+
+.sidebar {
+    transition: all 0.3s;
+
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100; /* Behind the navbar */
+    padding: 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+
+    @media (max-width: 768px) {
+        z-index: 10000;
+
+        & {
+            width: 0;
+        }
+        &.active {
+            margin-left: 0;
+            width:90%;
+        }
+    }
+
+    /* Position and style the close button (top right corner) */
+    .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: $color-lightgray2;
+        display: block;
+        transition: 0.3s;
+
+        /* When you mouse over the navigation links, change their color */
+        &:hover {
+            color: $color-lightergray2;
+        }
+    }
+
+    .sidebar-sticky {
+        top: 0;
+        height: calc(100vh - 25px);
+    }
+
+    .nav {
+        margin-top: 50px;
+
+        @media (max-width: 768px) {
+            margin-top: 20px;
+        }
+    }
+
+
+    .nav-link {
+        white-space: nowrap;
+        font-weight: 500;
+        font-size: .750rem;
+        color: $color-gray;
+        padding: .4rem 1rem;
+        padding-left: 0;
+
+        .text {
+            display: inline-block;
+        }
+
+        .feather {
+            margin-right: 4px;
+            color: $color-lightgray;
+        }
+
+        &.active {
+            color: $color-blue;
+        }
+
+        &:hover, &.active {
+            .feather {
+                color: inherit;
+            }
+        }
+    }
+
+    #sidebar-minimize-btn {
+        position: absolute;
+        bottom: 40px;
+        right: 0;
+        color: $color-black;
+        span {
+            color: inherit;
+        }
+
+        .close-arrow{
+            display: inline;
+        }
+
+        .open-arrow{
+            display: none;
+        }
+
+        @media (max-width: 768px) {
+            display: none;
+        }
+    }
+
+    &.collapsed {
+        max-width: $max-width-collapsed;
+
+        & + main {
+            min-width: 100% !important;
+            padding-left: ($max-width-collapsed + 20px) !important;
+        }
+
+        @media (max-width: 768px) {
+            max-width: 100%;
+            & + main {
+                min-width: 0px !important;
+                padding-left: 1.5rem !important;
+            }
+        }
+
+        .card-header .btn {
+            .text {
+                display: none;
+                @media (max-width: 768px) {
+                    display: inline-block;
+                }
+            }
+        }
+
+        h5 {
+            text-align: center !important;
+            padding-left: 0;
+            padding-right: 0;
+            margin: auto !important; 
+            button {
+                text-align: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                margin: auto !important; 
+
+                svg {
+                    margin: 0 !important;
+                }
+            }
+        }
+
+        .nav-item {
+            .nav-link {
+                text-align: center !important;
+                padding-left: 0 !important;
+                padding-right: 0 !important;
+                margin: auto !important; 
+
+                svg {
+                    margin: 0 !important;
+                }
+    
+                .text {
+                    display: none;
+                    @media (max-width: 768px) {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+
+        #sidebar-minimize-btn {
+            outline: none;
+            .close-arrow{
+                display: none;
+            }
+
+            .open-arrow{
+                display: inline;
+            }
+        }
+    }
+}
+
+.sidebar-sticky {
+    position: -webkit-sticky;
+    position: sticky;
+    top: 48px; /* Height of navbar */
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+}
+
+
+.sidebar-heading {
+    font-size: .75rem;
+    text-transform: uppercase;
+}
+
+
+/* The sidepanel menu */
+.sidepanel {
+    height: 96vh; /* Specify a height */
+    width: 0; /* 0 width - change this with JavaScript */
+    margin-top: 2vh;
+    position: fixed; /* Stay in place */
+    z-index: 10000; /* Stay on top */
+    top: 0;
+    right: 0;
+    background-color: $color-almostwhite; /* grey*/
+    overflow-x: hidden; /* Disable horizontal scroll */
+    padding-top: 60px; /* Place content 60px from the top */
+    transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
+
+    /* The sidepanel links */
+    & > a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: $color-lightgray2;
+        display: block;
+        transition: 0.3s;
+
+        /* When you mouse over the navigation links, change their color */
+        &:hover {
+            color: $color-lightergray2;
+        }
+    }
+
+    /* Position and style the close button (top right corner) */
+    .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+    }
+}
+
+.select2-dropdown.in_sidepanel {
+    z-index: 1000000;
+}
+
+
+/* Style the button that is used to open the sidepanel */
+.openSidePanelBtn {
+    font-size: 20px;
+    cursor: pointer;
+    background-color: $color-almostblack;
+    color: $color-white;
+    padding: 10px 15px;
+    border: none;
+
+    &:hover {
+        background-color: $color-gray2;
+    }
+}

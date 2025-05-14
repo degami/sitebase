@@ -1,23 +1,34 @@
+@use "partials/variables" as *;
 @use "partials/colors" as *;
+@use "partials/typography" as *;
+@use "partials/mixins" as *;
 @use "partials/forms" as *;
+@use "partials/admin_sidebar" as *;
+@use "partials/admin_ui" as *;
 @use "partials/dark-mode" as *;
+
 @use "../node_modules/select2/src/scss/core";
 @use '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';
 
-$fa-font-path: "../vendor/components/font-awesome/webfonts";
 @use "../vendor/components/font-awesome/scss/fontawesome.scss";
 @use "../vendor/components/font-awesome/scss/solid.scss";
 @use "../vendor/components/font-awesome/scss/regular.scss";
 
-$max-width-collapsed: 50px;
+
 
 @CHARSET "UTF-8";
 
 body {
     font-size: .875rem;
-    animation: color 750mx ease;
-    animation: backgroud-color 750mx ease;
-    animation: border 750mx ease;
+    animation: color 750ms ease;
+    animation: backgroud-color 750ms ease;
+    animation: border 750ms ease;
+}
+
+*:hover,
+*:focus,
+*:active {
+    transition: all 0.2s ease-in-out;
 }
 
 .clear {
@@ -34,207 +45,6 @@ body {
     vertical-align: text-bottom;
 }
 
-/*
-* Sidebar
-*/
-
-.sidebar {
-    transition: all 0.3s;
-
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100; /* Behind the navbar */
-    padding: 0;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-
-    @media (max-width: 768px) {
-        z-index: 10000;
-
-        & {
-            width: 0;
-        }
-        &.active {
-            margin-left: 0;
-            width:90%;
-        }
-    }
-
-    /* Position and style the close button (top right corner) */
-    .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: $color-lightgray2;
-        display: block;
-        transition: 0.3s;
-
-        /* When you mouse over the navigation links, change their color */
-        &:hover {
-            color: $color-lightergray2;
-        }
-    }
-
-    .sidebar-sticky {
-        top: 0;
-        height: calc(100vh - 25px);
-    }
-
-    .nav {
-        margin-top: 50px;
-
-        @media (max-width: 768px) {
-            margin-top: 20px;
-        }
-    }
-
-
-    .nav-link {
-        white-space: nowrap;
-        font-weight: 500;
-        font-size: .750rem;
-        color: $color-gray;
-        padding: .4rem 1rem;
-        padding-left: 0;
-
-        .text {
-            display: inline-block;
-        }
-
-        .feather {
-            margin-right: 4px;
-            color: $color-lightgray;
-        }
-
-        &.active {
-            color: $color-blue;
-        }
-
-        &:hover, &.active {
-            .feather {
-                color: inherit;
-            }
-        }
-    }
-
-    #sidebar-minimize-btn {
-        position: absolute;
-        bottom: 40px;
-        right: 0;
-        color: $color-black;
-        span {
-            color: inherit;
-        }
-
-        .close-arrow{
-            display: inline;
-        }
-
-        .open-arrow{
-            display: none;
-        }
-
-        @media (max-width: 768px) {
-            display: none;
-        }
-    }
-
-    &.collapsed {
-        max-width: $max-width-collapsed;
-
-        & + main {
-            min-width: 100% !important;
-            padding-left: ($max-width-collapsed + 20px) !important;
-        }
-
-        @media (max-width: 768px) {
-            max-width: 100%;
-            & + main {
-                min-width: 0px !important;
-                padding-left: 1.5rem !important;
-            }
-        }
-
-        .card-header .btn {
-            .text {
-                display: none;
-                @media (max-width: 768px) {
-                    display: inline-block;
-                }
-            }
-        }
-
-        h5 {
-            text-align: center !important;
-            padding-left: 0;
-            padding-right: 0;
-            margin: auto !important; 
-            button {
-                text-align: center !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                margin: auto !important; 
-
-                svg {
-                    margin: 0 !important;
-                }
-            }
-        }
-
-        .nav-item {
-            .nav-link {
-                text-align: center !important;
-                padding-left: 0 !important;
-                padding-right: 0 !important;
-                margin: auto !important; 
-
-                svg {
-                    margin: 0 !important;
-                }
-    
-                .text {
-                    display: none;
-                    @media (max-width: 768px) {
-                        display: inline-block;
-                    }
-                }
-            }
-        }
-
-        #sidebar-minimize-btn {
-            outline: none;
-            .close-arrow{
-                display: none;
-            }
-
-            .open-arrow{
-                display: inline;
-            }
-        }
-    }
-}
-
-.sidebar-sticky {
-    position: -webkit-sticky;
-    position: sticky;
-    top: 48px; /* Height of navbar */
-    height: calc(100vh - 48px);
-    padding-top: .5rem;
-    overflow-x: hidden;
-    overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
-}
-
-
-.sidebar-heading {
-    font-size: .75rem;
-    text-transform: uppercase;
-}
 
 /*
 * Navbar
@@ -330,64 +140,6 @@ body {
     max-width: initial !important;
 }
 
-/* The sidepanel menu */
-.sidepanel {
-    height: 96vh; /* Specify a height */
-    width: 0; /* 0 width - change this with JavaScript */
-    margin-top: 2vh;
-    position: fixed; /* Stay in place */
-    z-index: 10000; /* Stay on top */
-    top: 0;
-    right: 0;
-    background-color: $color-almostwhite; /* grey*/
-    overflow-x: hidden; /* Disable horizontal scroll */
-    padding-top: 60px; /* Place content 60px from the top */
-    transition: 0.5s; /* 0.5 second transition effect to slide in the sidepanel */
-
-    /* The sidepanel links */
-    & > a {
-        padding: 8px 8px 8px 32px;
-        text-decoration: none;
-        font-size: 25px;
-        color: $color-lightgray2;
-        display: block;
-        transition: 0.3s;
-
-        /* When you mouse over the navigation links, change their color */
-        &:hover {
-            color: $color-lightergray2;
-        }
-    }
-
-    /* Position and style the close button (top right corner) */
-    .closebtn {
-        position: absolute;
-        top: 0;
-        right: 25px;
-        font-size: 36px;
-        margin-left: 50px;
-    }
-}
-
-.select2-dropdown.in_sidepanel {
-    z-index: 1000000;
-}
-
-
-/* Style the button that is used to open the sidepanel */
-.openSidePanelBtn {
-    font-size: 20px;
-    cursor: pointer;
-    background-color: $color-almostblack;
-    color: $color-white;
-    padding: 10px 15px;
-    border: none;
-
-    &:hover {
-        background-color: $color-gray2;
-    }
-}
-
 #overlay {
     background: rgba(0,0,0,0.75);
     height: 100vh;
@@ -403,19 +155,9 @@ body {
 .admin-page {
     &.admin-dashboard  {
         .counters{
-            width: 100%;
             .counter{
-                display: block;
                 label{
-                    float: left;
-                    width: 33%;
                     font-weight: bold;
-                }
-                &:after{
-                    display: block;
-                    content: ' ';
-                    width: 100%;
-                    clear: both;
                 }
             }
         }
@@ -562,82 +304,3 @@ body {
         vertical-align: middle;
     }
 }
-
-.darkmode-switch {
-    margin: 0 10px;
-    align-content: center;
-}
-
-/* Container per lo switch */
-.switch {
-    vertical-align: middle;
-    position: relative;
-    display: inline-block;
-    width: 50px;
-    height: 24px;
-    margin: 0;
-  }
-  
-  /* Nasconde il checkbox */
-  .switch input {
-    opacity: 0;
-    width: 0;
-    height: 0;
-  }
-  
-  /* Stile per lo slider */
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    transition: .4s;
-    border-radius: 24px;
-  }
-  
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 18px;
-    width: 18px;
-    left: 3px;
-    bottom: 3px;
-    background-color: white;
-    transition: .4s;
-    border-radius: 50%;
-  }
-  
-  /* Colore quando è selezionato */
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-  
-  input:checked + .slider:before {
-    transform: translateX(26px);
-  }
-  
-  /* Effetto focus */
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-  
-  /* Testo per lo stato On/Off */
-  .switch .slider::after {
-    content: "OFF";
-    color: white;
-    position: absolute;
-    right: 10px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 10px;
-  }
-  
-  input:checked + .slider::after {
-    content: "ON";
-    left: 10px;
-    right: auto;
-  }
-  

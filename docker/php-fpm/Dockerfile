@@ -32,6 +32,11 @@ RUN chmod 775 /usr/local/bin/phpdoc
 RUN wget https://getcomposer.org/download/latest-stable/composer.phar -O  /usr/local/bin/composer
 RUN chmod 775 /usr/local/bin/composer
 
+RUN apk add openjdk11-jre
+RUN curl -L -o /usr/local/bin/plantuml.jar https://downloads.sourceforge.net/project/plantuml/plantuml.jar && \
+    echo -e '#!/bin/sh\njava -jar /usr/local/bin/plantuml.jar \"$@\"' > /usr/local/bin/plantuml && \
+    chmod +x /usr/local/bin/plantuml /usr/local/bin/plantuml.jar
+
 RUN composer global require maglnet/composer-require-checker
 RUN composer global require ergebnis/composer-normalize
 

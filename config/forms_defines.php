@@ -3,7 +3,7 @@
 namespace Degami\PHPFormsApi;
 
 define('FORMS_DEFAULT_FORM_CONTAINER_TAG', 'div');
-define('FORMS_DEFAULT_FORM_CONTAINER_CLASS', 'form-container');
+define('FORMS_DEFAULT_FORM_CONTAINER_CLASS', 'form-container p-3');
 define('FORMS_DEFAULT_FIELD_CONTAINER_TAG', 'div');
 define('FORMS_DEFAULT_FIELD_CONTAINER_CLASS', 'form-item');
 define('FORMS_DEFAULT_FIELD_LABEL_CLASS', '');

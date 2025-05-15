@@ -172,4 +172,13 @@ body.dark-mode {
         }
     }
 
+    .list-group-item {
+        background-color: $color-darkgrey2 !important;
+        color: $color-almostwhite3;
+
+        &.active {
+            background-color: $color-blue;
+            color: $color-almostwhite;
+        }
+    }
 }

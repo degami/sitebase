@@ -204,7 +204,7 @@ class Rewrites extends AdminManageModelsPage
                         ]);
                     }
 
-                    $this->addSubmitButton($form, true);
+                    $this->addSubmitButton($form);
                 }
                 break;
 

@@ -18,17 +18,25 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
     </div>
     <?= $paginator; ?>
 <?php elseif ($action == 'usage') : ?>
-    <div class="text-center p-3"><?= $media_elem->getThumb('600x300');?></div>
-    <ul><li><?= implode('</li><li>', $elem_data); ?></li></ul>
-    <hr />
-    <div class="title"><strong><?= $this->sitebase()->translate('Pages');?></strong></div>
-    <ul>
-    <?php foreach ($pages as $key => $page) : ?>
-        <li><a href="<?= $page['url'];?>" target="_blank"><?= $page['title'];?></a> (id: <?= $page['id'];?>)</li>
-    <?php endforeach; ?>
-    </ul>
-    <hr />
-    <a class="btn btn-light btn-sm" href="<?= $controller->getControllerUrl();?>?action=list"><?php $this->sitebase()->drawIcon('rewind'); ?> <?= $this->sitebase()->translate('Back');?></a>    
+    <div class="container">
+        <h3 class="text-center m-3"><?= $this->sitebase()->translate('Media Element Usage');?></h3>
+        <hr class="border border-primary border-2 opacity-50" />
+        <div class="row">
+            <div class="col-md-6">
+                <div class="text-center p-3"><?= $media_elem->getThumb('600x300');?></div>
+                <ul class="list-group m-0 p-3"><li class="list-group-item"><?= implode('</li><li class="list-group-item">', $elem_data); ?></li></ul>
+            </div>
+            <div class="col-md-6 text-left">
+                <p class="m-0 p-0 text-center"><?= $this->sitebase()->translate('This media element is used in the following pages:');?></p>
+                <ul class="list-group m-0 p-3">
+                <?php foreach ($pages as $key => $page) : ?>
+                    <li class="list-group-item"><a href="<?= $page['url'];?>" target="_blank"><?= $page['title'];?></a> (id: <?= $page['id'];?>)</li>
+                <?php endforeach; ?>
+                </ul>
+   
+            </div>
+        </div>
+    </div>
 <?php else : ?>
     <?= $form; ?>
 <?php endif; ?>

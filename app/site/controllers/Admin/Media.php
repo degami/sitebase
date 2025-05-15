@@ -81,6 +81,7 @@ class Media extends AdminManageModelsPage
             }
 
         } elseif ($this->template_data['action'] == 'usage') {
+            $this->addBackButton();
             $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
             $elem_data = $media->getData();
             $elem_data['owner'] = $media->getOwner()->username;

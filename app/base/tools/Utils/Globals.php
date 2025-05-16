@@ -39,7 +39,6 @@ use App\Base\Exceptions\BlockedIpException;
 use App\Base\Exceptions\NotFoundException as AppNotFoundException;
 use App\Base\Exceptions\NotAllowedException;
 use App\Base\Exceptions\PermissionDeniedException;
-use App\Base\Models\ApplicationLog;
 use App\Base\Models\User;
 use App\App;
 use Symfony\Component\HttpFoundation\JsonResponse;

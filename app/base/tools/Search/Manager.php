@@ -1137,17 +1137,17 @@ class Manager extends ContainerAwareObject
                         ],
                     ];
 
-                case preg_match('/^(.+)%$/', $value, $matches):
-                    return [
-                        'prefix' => [
-                            $field => $matches[1],
-                        ],
-                    ];
-
                 case preg_match('/^%.+%$/', $value) || preg_match('/^%(.+)$/', $value):
                     return [
                         'wildcard' => [
                             $field => str_replace('%', '*', $value),
+                        ],
+                    ];
+
+                case preg_match('/^(.+)%$/', $value, $matches):
+                    return [
+                        'prefix' => [
+                            $field => $matches[1],
                         ],
                     ];
 

@@ -42,6 +42,7 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Models\User;
 use App\App;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 
 /**
  * Global utils functions Helper Class
@@ -166,35 +167,35 @@ class Globals extends ContainerAwareObject
                 $template = $this->getTemplates()->make($template_name ?: 'errors::' . $error_code);
                 $template->data($template_data);
 
-                return (new Response(
+                return $this->createHtmlResponse(
                     $template->render(),
                     $error_code
-                ));
+                );
             case 503:
                 $template = $this->getTemplates()->make($template_name ?: 'errors::offline');
                 $template_data['body_class'] = 'maintenance';
                 $template->data($template_data);
 
-                return (new Response(
+                return $this->createHtmlResponse(
                     $template->render(),
                     $error_code
-                ));
+                );
         }
 
         if ($error_code == 500 && isset($template_data['e'])) {
             $template = $this->getTemplates()->make($template_name ?: 'errors::exception');
             $template->data($template_data);
 
-            return (new Response(
+            return $this->createHtmlResponse(
                 $template->render(),
                 500
-            ));
+            );
         }
 
-        return (new Response(
+        return $this->createHtmlResponse(
             $this->getTemplates()->make('errors::500')->render(),
             500
-        ));
+        );
     }
 
     /**
@@ -265,13 +266,13 @@ class Globals extends ContainerAwareObject
      *
      * @param Exception $exception
      * @param Request $request
-     * @return Response
+     * @return JsonResponse
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function exceptionJson(Exception $exception, Request $request): Response
+    public function exceptionJson(Exception $exception, Request $request): JsonResponse
     {
         $this->logRequestIfNeeded(500, $request);
 
@@ -298,11 +299,10 @@ class Globals extends ContainerAwareObject
             default => 500,
         };
 
-        return (new Response(
-            json_encode($content),
-            $exceptionCode,
-            ['Content-Type' => 'application/json']
-        ));
+        return $this->createJsonResponse(
+            $content,
+            $exceptionCode
+        );
     }
 
     /**
@@ -333,11 +333,10 @@ class Globals extends ContainerAwareObject
             ];
         }
 
-        return (new Response(
+        return $this->createXmlResponse(
             ArrayToXml::convert($content),
-            500,
-            ['Content-Type' => 'text/xml']
-        ));
+            500
+        );
     }
 
     /**
@@ -816,6 +815,38 @@ class Globals extends ContainerAwareObject
             $content,
             $status,
             ['Content-Type' => 'text/html']
+        );
+    }
+
+    /**
+     * Creates an XML response.
+     *
+     * @param string $content
+     * @param int $status
+     * @return Response
+     */
+    public function createXmlResponse(string $content, int $status = 200): Response
+    {
+        return new Response(
+            $content,
+            $status,
+            ['Content-Type' => 'text/xml']
+        );
+    }
+
+    /**
+     * returns a redirect object
+     *
+     * @param $url
+     * @param array $additional_headers
+     * @return RedirectResponse
+     */
+    public function createRedirectResponse(string $url, int $code, array $headers = []): RedirectResponse
+    {
+        return new RedirectResponse(
+            $url,
+            $code,
+            $headers
         );
     }
 }

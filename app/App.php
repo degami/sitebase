@@ -16,7 +16,6 @@ namespace App;
 use App\Base\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use DI\ContainerBuilder;
-use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Response;
 use FastRoute\Dispatcher;
 use Psr\Container\ContainerInterface;
@@ -196,11 +195,7 @@ class App extends ContainerAwareObject
             App::$instance = $this;
         } catch (Throwable $e) {
             $response = new Response(
-                $this->genericErrorPage(
-                    'Critical Error',
-                    $e->getMessage(),
-                    $e
-                ),
+                $this->genericErrorPage('Critical Error', $e->getMessage()),
                 500
             );
             $response->send();
@@ -254,7 +249,7 @@ class App extends ContainerAwareObject
                 }
 
                 // redirect to new url
-                $response = RedirectResponse::create(
+                $response = $this->getUtils()->createRedirectResponse(
                     $redirects[$redirect_key]['url_to'],
                     $redirects[$redirect_key]['redirect_code']
                 );
@@ -353,11 +348,7 @@ class App extends ContainerAwareObject
                 $response = $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
             } else {
                 $response = new Response(
-                    $this->genericErrorPage(
-                        'Critical Error',
-                        $e->getMessage(),
-                        $e
-                    ),
+                    $this->genericErrorPage('Critical Error', $e->getMessage()),
                     500
                 );
             }

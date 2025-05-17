@@ -295,7 +295,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     protected function doRedirect($url, array $additional_headers = []): RedirectResponse
     {
-        return new RedirectResponse(
+        return $this->getUtils()->createRedirectResponse(
             $url,
             302,
             array_merge(

@@ -62,10 +62,9 @@ abstract class BaseJsonPage extends BasePage
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         try {
-            return $this
-                ->getResponse()
-                ->prepare($this->getRequest())
-                ->setData(array_merge(['success' => true,], $this->getJsonData()));
+            return $this->getUtils()->createJsonResponse(
+                array_merge(['success' => true,], $this->getJsonData())
+            );
         } catch (Exception $e) {
             return $this->getUtils()->exceptionJson($e, $this->getRequest());
         }

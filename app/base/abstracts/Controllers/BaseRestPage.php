@@ -152,36 +152,25 @@ abstract class BaseRestPage extends BasePage
 
                 $object->setData($data);
                 $object->save();
-                return $this
-                    ->getResponse()
-                    ->prepare($this->getRequest())
-                    ->setData($object->getData());
+
+                return $this->getUtils()->createJsonResponse($object->getData());
             case 'GET':
                 // Read
 
                 if ($object->id == null) {
-                    return $this
-                        ->getResponse()
-                        ->prepare($this->getRequest())
-                        ->setData(array_map(function ($object) {
+                    return $this->getUtils()->createJsonResponse(array_map(function ($object) {
                             return $object->getData();
                         }, $this->containerCall([$this->getObjectClass(), 'getCollection'])->getItems()));
                 }
 
-                return $this
-                    ->getResponse()
-                    ->prepare($this->getRequest())
-                    ->setData($object->getData());
+                return $this->getUtils()->createJsonResponse($object->getData());
             case 'DELETE':
                 // Delete
                 $old_data = $object->getData();
                 unset($old_data['id']);
                 $object->delete();
 
-                return $this
-                    ->getResponse()
-                    ->prepare($this->getRequest())
-                    ->setData($old_data);
+                return $this->getUtils()->createJsonResponse($old_data);
         }
 
         return $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 500, 'route_info' => $route_info]);

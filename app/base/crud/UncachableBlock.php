@@ -133,12 +133,7 @@ class UncachableBlock extends BaseRestPage
                     'html' => $block->render($current_page),
                 ];
 
-                /** @var JsonResponse $response */
-                $response = $this->getResponse();
-                
-                return $response
-                    ->prepare($this->getRequest())
-                    ->setData($data);
+                return $this->getUtils()->createJsonResponse($data);
         }
 
         throw new \Exception('Cannot Render block');

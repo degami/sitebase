@@ -110,10 +110,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
                 $out = ['html' => '', 'js' => '', 'is_submitted' => false];
             }
 
-            return $this
-                ->getResponse()
-                ->prepare($this->getRequest())
-                ->setData($out);
+            return $this->getUtils()->createJsonResponse($out);
         } catch (Exception $e) {
             return $this->getUtils()->exceptionJson($e, $this->getRequest());
         }

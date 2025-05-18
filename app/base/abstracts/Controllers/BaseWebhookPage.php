@@ -87,13 +87,9 @@ abstract class BaseWebhookPage extends BasePage
                 }    
             }
 
-            return $this
-                ->getResponse()
-                ->prepare($this->getRequest())
-                ->setData(array_merge(
-                    ['success' => true,], 
-                    $this->processWebhook($this->getWebhookData())
-                ));
+            return $this->getUtils()->createJsonResponse(
+                array_merge(['success' => true,], $this->processWebhook($this->getWebhookData()))
+            );
         } catch (Exception $e) {
             return $this->getUtils()->exceptionJson($e, $this->getRequest());
         }

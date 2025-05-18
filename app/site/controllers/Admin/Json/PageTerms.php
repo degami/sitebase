@@ -61,7 +61,7 @@ class PageTerms extends AdminJsonPage
 
         $terms = array_map(
             function ($el) use ($page) {
-                return $el->getTitle() . ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=deassoc">&times;</a>';
+                return $el->getTitle() . ' <a class="deassoc_lnk ml-auto" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=deassoc">&times;</a>';
             },
             $page->getTerms()
         );
@@ -125,7 +125,7 @@ class PageTerms extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'gallery' => $termsData,
-            'html' => ($this->getRequest()->get('action') == 'new' ? "<ul class=\"elements_list\"><li>" . implode("</li><li>", $terms) . "</li></ul><hr />" : '') . $form->render(),
+            'html' => ($this->getRequest()->get('action') == 'new' ? "<ul class=\"elements_list list-group\"><li class=\"list-group-item d-flex flex-row align-items-center\">" . implode("</li><li class=\"list-group-item d-flex flex-row align-items-center\">", $terms) . "</li></ul><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

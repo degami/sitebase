@@ -63,7 +63,7 @@ class MediaPages extends AdminJsonPage
             function ($el) use ($media) {
                 $page = $this->containerMake(Page::class, ['db_row' => $el]);
                 return $page->getTitle() .
-                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $media->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=media_deassoc">&times;</a>';
+                    ' <a class="deassoc_lnk ml-auto" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $media->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=media_deassoc">&times;</a>';
             },
             $this->getDb()->page_media_elementList()->where('media_element_id', $media->getId())->page()->fetchAll()
         );
@@ -107,7 +107,7 @@ class MediaPages extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'pages' => $pagesData,
-            'html' => ($this->getRequest()->get('action') == 'page_assoc' ? "<ul class=\"elements_list\"><li>" . implode("</li><li>", $pages) . "</li></ul><hr />" : '') . $form->render(),
+            'html' => ($this->getRequest()->get('action') == 'page_assoc' ? "<ul class=\"elements_list list-group\"><li class=\"list-group-item d-flex flex-row align-items-center\">" . implode("</li><li class=\"list-group-item d-flex flex-row align-items-center\">", $pages) . "</li></ul><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

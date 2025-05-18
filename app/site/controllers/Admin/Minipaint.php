@@ -96,6 +96,9 @@ class Minipaint extends AdminPage
             $backMessage = $this->getHtmlRenderer()->getIcon('rewind', ['height' => 16]) . '&nbsp;' . $this->getUtils()->translate("Back");
             $errorMessage = $this->getUtils()->translate("Errors on image save.");
 
+            $uninitialzedMessage = $this->getUtils()->translate("MiniPaint not initialized.");
+            $canvasNotFoundMessage = $this->getUtils()->translate("Canvas not found.");
+
             $content = str_replace("</body>",<<<EOF
 <script type="text/javascript">
 function getQueryParam(param) {
@@ -109,7 +112,7 @@ window.onload = function () {
     if (FileOpen) {
         FileOpen.file_open_data_url_handler(imageUrl);
     } else {
-        console.error('MiniPaint non è inizializzato correttamente.');
+        console.error('$uninitialzedMessage');
     }
 };
 
@@ -142,7 +145,7 @@ window.addEventListener('load', () => {
         saveButton.addEventListener('click', () => {
             const canvas = document.getElementById('canvas_minipaint');
             if (!canvas) {
-                console.error('Canvas not found.');
+                console.error('$canvasNotFoundMessage');
                 return;
             }
 

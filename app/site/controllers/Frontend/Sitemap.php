@@ -73,15 +73,9 @@ class Sitemap extends BaseXMLPage
         }
 
         try {
-            $response = $this
-                ->getResponse()
-                ->prepare($this->getRequest());
-
-            $response
-                ->setContent($sitemap->getContent())
-                ->headers->set('Content-Type', 'text/xml');
-
-            return $response;
+            return $this->getUtils()->createXmlResponse(
+                $sitemap->getContent()
+            );
         } catch (Exception $e) {
             return $this->getUtils()->exceptionXml($e, $this->getRequest());
         }

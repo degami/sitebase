@@ -62,13 +62,9 @@ abstract class BaseXMLPage extends BasePage
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         try {
-            $this
-                ->getResponse()
-                ->prepare($this->getRequest())
-                ->setContent(ArrayToXml::convert($this->getXMLData()))
-                ->headers->set('Content-Type', 'text/xml');
-
-            return $this->getResponse();
+            return $this->getUtils()->createXmlResponse(
+                ArrayToXml::convert($this->getXMLData())
+            );
         } catch (Exception $e) {
             return $this->getUtils()->exceptionXml($e, $this->getRequest());
         }

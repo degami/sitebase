@@ -30,6 +30,7 @@ use App\Base\Exceptions\NotFoundException;
 use App\Base\Exceptions\NotAllowedException;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Exceptions\InvalidValueException;
+use App\Base\Tools\Utils\Globals;
 use App\Base\Traits\ContainerAwareTrait;
 use App\Base\Traits\ToolsTrait;
 use App\Base\Traits\TranslatorsTrait;
@@ -39,7 +40,7 @@ use Throwable;
 /**
  * App class
  */
-class App extends ContainerAwareObject
+class App
 {
     use ContainerAwareTrait;
     use ToolsTrait;
@@ -93,6 +94,9 @@ class App extends ContainerAwareObject
      */
     protected $blocked_ips = [];
 
+    /**
+     * @var App|null application instance
+     */
     public static ?App $instance = null;
 
     /**
@@ -114,7 +118,7 @@ class App extends ContainerAwareObject
             $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
 
             /**
-             * @var ContainerInterface $this ->container
+             * @var ContainerInterface $this->container
              */
             $this->container = $builder->build();
 
@@ -194,11 +198,16 @@ class App extends ContainerAwareObject
 
             App::$instance = $this;
         } catch (Throwable $e) {
+            if (Globals::isCli()) {
+                echo $e->getMessage() . PHP_EOL;
+                die();
+            }
+            
             $response = new Response(
                 $this->genericErrorPage('Critical Error', $e->getMessage()),
                 500
             );
-            $response->send();
+            $response->prepare($this->getRequest())->send();
             die();
         }
     }
@@ -368,11 +377,11 @@ class App extends ContainerAwareObject
         }
 
         if ($response instanceof Response) {
-            $response->send();
+            $response->prepare($this->getRequest())->send();
         } else {
             // fallback to 404
             $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
-            $response->send();
+            $response->prepare($this->getRequest())->send();
         }
     }
 

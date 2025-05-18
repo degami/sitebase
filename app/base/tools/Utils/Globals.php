@@ -849,4 +849,34 @@ class Globals extends ContainerAwareObject
             $headers
         );
     }
+
+    /**
+     * Check if the current environment is CLI
+     * 
+     * @return bool
+     */
+    public static function isCli(): bool
+    {
+        return (php_sapi_name() === 'cli' || defined('STDIN'));
+    }
+
+    /**
+     * Check if the current environment is CLI server
+     * 
+     * @return bool
+     */
+    public static function isCliServer(): bool
+    {
+        return (php_sapi_name() === 'cli-server');
+    }
+
+    /**
+     * Check if the current environment is web
+     * 
+     * @return bool
+     */
+    public static function isWeb(): bool
+    {
+        return !self::isCli() && !self::isCliServer();
+    }
 }

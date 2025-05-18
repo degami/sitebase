@@ -136,7 +136,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
                 }
             }
 
-            return $this->getUtils()->createHtmlResponse($template_html);
+            return $this->getUtils()->createHtmlResponse($template_html, 200, $this);
         } catch (Throwable $e) {
             return $this->getUtils()->exceptionPage($e, $this->getRequest());
         }

@@ -151,7 +151,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      *
      * @return Response
      */
-    protected function getResponse(): Response
+    public function getResponse(): Response
     {
         return $this->response;
     }

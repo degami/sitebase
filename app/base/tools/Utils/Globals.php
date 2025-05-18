@@ -41,6 +41,7 @@ use App\Base\Exceptions\NotAllowedException;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Models\User;
 use App\App;
+use App\Base\Abstracts\Controllers\BasePage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 
@@ -794,12 +795,20 @@ class Globals extends ContainerAwareObject
      * @param int $status
      * @return JsonResponse
      */
-    public function createJsonResponse(mixed $data, int $status = 200): JsonResponse
+    public function createJsonResponse(mixed $data, int $status = 200, ?BasePage $currentPage = null): JsonResponse
     {
-        return new JsonResponse(
+        $out = new JsonResponse(
             $data,
             $status
         );
+
+        if (!is_null($currentPage)) {
+            foreach ($currentPage->getResponse()?->headers->getCookies() as $cookie) {
+                $out->headers->setCookie($cookie);
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -809,13 +818,21 @@ class Globals extends ContainerAwareObject
      * @param int $status
      * @return Response
      */
-    public function createHtmlResponse(string $content, int $status = 200): Response
+    public function createHtmlResponse(string $content, int $status = 200, ?BasePage $currentPage = null): Response
     {
-        return new Response(
+        $out = new Response(
             $content,
             $status,
             ['Content-Type' => 'text/html']
         );
+
+        if (!is_null($currentPage)) {
+            foreach ($currentPage->getResponse()?->headers->getCookies() as $cookie) {
+                $out->headers->setCookie($cookie);
+            }
+        }
+
+        return $out;
     }
 
     /**
@@ -825,13 +842,21 @@ class Globals extends ContainerAwareObject
      * @param int $status
      * @return Response
      */
-    public function createXmlResponse(string $content, int $status = 200): Response
+    public function createXmlResponse(string $content, int $status = 200, ?BasePage $currentPage = null): Response
     {
-        return new Response(
+        $out = new Response(
             $content,
             $status,
             ['Content-Type' => 'text/xml']
         );
+
+        if (!is_null($currentPage)) {
+            foreach ($currentPage->getResponse()?->headers->getCookies() as $cookie) {
+                $out->headers->setCookie($cookie);
+            }
+        }
+
+        return $out;
     }
 
     /**

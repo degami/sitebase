@@ -414,6 +414,11 @@ class SiteBase implements ExtensionInterface
         return $this->getHtmlRenderer()->getQrCode($url);    
     }
 
+    public function isAiAvailable() : bool
+    {
+        return $this->getSiteData()->isAiAvailable();
+    }
+
     public function getCurrentUrl() : string
     {
         return $this->getSiteData()->getRequest()->getUri();

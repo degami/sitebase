@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin\Json;
 
+use App\App;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -30,6 +31,16 @@ class ChatGPT extends AdminJsonPage
     public const CHATGPT_REMAINING_TOKENS_PATH = 'app/chatgpt/remaining_tokens';
 
     protected string $endpoint = 'https://api.openai.com/v1/engines/gpt-3.5-turbo/completions';
+
+    /**
+     * determines if route is available for router
+     * 
+     * @return bool
+     */
+    public static function isEnabled() : bool 
+    {
+        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH));
+    }
 
     /**
      * {@inheritdoc}
@@ -61,6 +72,8 @@ class ChatGPT extends AdminJsonPage
         $maxTokens = self::CHATGPT_MAX_TOKENS;
         $client = $this->getGuzzle();
 
+        $messageId = $this->getMessageId($this->getRequest());
+
         $prompt = $this->getPrompt($this->getRequest());
         if (empty($prompt)) {
             throw new Exception("Missing ChatGPT prompt text");
@@ -81,7 +94,7 @@ class ChatGPT extends AdminJsonPage
         // update remaining tokens configuration
         //$this->getSiteData()->setConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
 
-        return ['success' => true, 'text' => $generatedText];
+        return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }
 
     /**
@@ -95,5 +108,13 @@ class ChatGPT extends AdminJsonPage
         }
 
         return null;
+    }
+
+    /**
+     * @return string|null
+     */
+    protected function getMessageId(Request $request) : ?string
+    {
+        return $request->get('messageId') ?: $request->get('message_id');
     }
 }

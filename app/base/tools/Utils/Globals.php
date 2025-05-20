@@ -789,10 +789,11 @@ class Globals extends ContainerAwareObject
     }
 
     /**
-     * Creates a JSON response.
+     * Creates a JSON response. If current page is not null, it will copy the cookies from it.
      *
      * @param mixed $data
      * @param int $status
+     * @param BasePage|null $currentPage
      * @return JsonResponse
      */
     public function createJsonResponse(mixed $data, int $status = 200, ?BasePage $currentPage = null): JsonResponse
@@ -812,10 +813,11 @@ class Globals extends ContainerAwareObject
     }
 
     /**
-     * Creates an HTML response.
+     * Creates an HTML response. If current page is not null, it will copy the cookies from it.
      *
      * @param string $content
      * @param int $status
+     * @param BasePage|null $currentPage
      * @return Response
      */
     public function createHtmlResponse(string $content, int $status = 200, ?BasePage $currentPage = null): Response
@@ -836,10 +838,11 @@ class Globals extends ContainerAwareObject
     }
 
     /**
-     * Creates an XML response.
+     * Creates an XML response. If current page is not null, it will copy the cookies from it.
      *
      * @param string $content
      * @param int $status
+     * @param BasePage|null $currentPage
      * @return Response
      */
     public function createXmlResponse(string $content, int $status = 200, ?BasePage $currentPage = null): Response

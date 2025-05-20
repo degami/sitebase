@@ -4,6 +4,10 @@
  * @var $current_user \App\Base\Abstracts\Models\AccountModel
  * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
  */
+
+use App\Site\Controllers\Admin\Json\ChatGPT;
+use App\Site\Controllers\Admin\Json\GoogleGemini;
+
 $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
 
 <?php $this->start('head') ?>
@@ -74,6 +78,29 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
                     </div>
                 </div>
             </div>
+
+            <?php if ($this->sitebase()->isAiAvailable()): ?>
+            <div id="chatSidebar" class="sideChat position-fixed border-start shadow">
+                <div id="chatSidebarResizer" class="position-absolute top-0 start-0 h-100" style="width: 6px; cursor: ew-resize;"></div>
+
+                <div class="p-1 border-bottom d-flex justify-content-between align-items-center">
+                    <strong class="ml-3">Chat AI</strong>
+                    <select id="chatAISelector" class="select-processed" style="width: 150px;">
+                        <?php if (ChatGPT::isEnabled()) : ?><option value="chatGPT">ChatGPT</option><?php endif; ?>
+                        <?php if (GoogleGemini::isEnabled()) : ?><option value="gemini">Gemini</option><?php endif; ?>
+                    </select>
+                    <a href="#" class="closebtn mr-2">&times;</a>
+                </div>
+                <div id="chatMessages" class="chat-messages px-3 py-2 overflow-auto" style="height: calc(100vh - 120px);">
+
+                </div>
+                <div class="d-flex">
+                    <input type="text" id="chatInput" class="form-control me-2" placeholder="<?= $this->sitebase()->translate('ask a question');?>" />
+                    <button id="chatSendBtn" class="btn btn-primary"><?= $this->sitebase()->translate('Send');?></button>
+                </div>
+            </div>
+            <?php endif; ?>
+
         </main>
     </div>
 </div>

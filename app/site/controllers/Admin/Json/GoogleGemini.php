@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Admin\Json;
 
+use App\App;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -25,6 +26,16 @@ use Symfony\Component\HttpFoundation\Request;
 class GoogleGemini extends AdminJsonPage
 {
     public const GEMINI_TOKEN_PATH = 'app/gemini/token';
+
+    /**
+     * determines if route is available for router
+     * 
+     * @return bool
+     */
+    public static function isEnabled() : bool 
+    {
+        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH));
+    }
 
     /**
      * {@inheritdoc}
@@ -51,6 +62,8 @@ class GoogleGemini extends AdminJsonPage
         }
 
         $client = $this->getGuzzle();
+
+        $messageId = $this->getMessageId($this->getRequest());
 
         $prompt = $this->getPrompt($this->getRequest());
         if (empty($prompt)) {
@@ -80,7 +93,7 @@ class GoogleGemini extends AdminJsonPage
         // update remaining tokens configuration
         //$this->getSiteData()->setConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
 
-        return ['success' => true, 'text' => $generatedText];
+        return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }
 
     protected function getEndpoint(string $api_key) : string
@@ -100,4 +113,12 @@ class GoogleGemini extends AdminJsonPage
 
         return null;
     }
+
+    /**
+     * @return string|null
+     */
+    protected function getMessageId(Request $request) : ?string
+    {
+        return $request->get('messageId') ?: $request->get('message_id');
+    }    
 }

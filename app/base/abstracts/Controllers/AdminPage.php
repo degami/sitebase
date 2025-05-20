@@ -163,6 +163,7 @@ abstract class AdminPage extends BaseHtmlPage
                     'uIsettingsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.uisettings'),
                     'notificationsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.fetchnotifications'),
                     'notificationCrudUrl' => $this->getCrudRouter()->getUrl('crud.admin.usernotifications'),
+                    'aiAvailable' => $this->getSiteData()->isAiAvailable(),
                 ]
             ) . ");"
         );

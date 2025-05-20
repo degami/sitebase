@@ -124,6 +124,19 @@
                     evt.preventDefault();
                     $elem.appAdmin('searchTableColumns', this);
                 })
+            
+                if ($elem.appAdmin('getSettings').aiAvailable) {
+                    document.addEventListener('keydown', function(e) {
+                        if (e.ctrlKey && e.shiftKey && e.code === 'KeyC') {
+                            e.preventDefault();
+                            if (!$('.sideChat').hasClass('open')) {
+                                $elem.appAdmin('openAIChat');
+                            } else {
+                                $elem.appAdmin('closeAIChat');
+                            }
+                        }
+                    });
+                }
             });
         },
         showOverlay: function() {
@@ -143,6 +156,129 @@
             $('.sidepanel', this).data('lastLoadedUrl', false);
             $(this).appAdmin('hideOverlay');
             $('.sidepanel', this).css({'width': 0});
+        },
+        openAIChat: function() {
+            var that = this;
+
+            if (!$(that).appAdmin('getSettings').aiAvailable || $('.sideChat', that).length == 0) {
+                return;
+            }
+
+            $(this).appAdmin('showOverlay');
+
+            let chatPanelWidth = '350px';
+            $(that).appAdmin('getUserUiSettings', function(data) {
+                if (undefined != data.chatAIpanelWidth) {
+                    chatPanelWidth = data.chatAIpanelWidth;
+                }
+
+                $('.sideChat', that).css({'width': chatPanelWidth}).addClass('open');
+            });
+
+            $('.sideChat', that).css({'width': chatPanelWidth}).addClass('open');
+
+
+            $('.sideChat:not(".ai-processed")', this).each(function(index, chatPanel){
+                $('.closebtn', $(chatPanel)).click(function(evt){
+                    $(that).appAdmin('closeAIChat');
+                });
+
+                $('#chatSendBtn', $(chatPanel)).off('click').on('click', function(e) {
+                    e.preventDefault();
+
+                    let callbackFunc = function(data) {
+                        if (data.success == false) {
+                            console.log('Error: ' + data.error);
+                            return;
+                        }
+ 
+                        let text = data.text;
+                        let prompt = data.prompt;
+                        let messageId = data.messageId;
+
+                        let messageContent = '<div class="chat-message"><div class="item me"><strong>Me:</strong> ' + prompt + '</div><div class="item"><strong>AI:</strong> ' + text + '</div>';
+                        if (null != messageId) {
+                            $('#chatMessages').find('#'+messageId).replaceWith(messageContent);
+                        } else {
+                            $('#chatMessages').append(messageContent);
+                        }
+                        $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
+                    }
+
+                    var text = $('#chatInput').val();
+                    if (text.trim() != '') {
+                        $('#chatInput').val('');
+                        let messageId = 'message_' + moment(new Date()).unix();
+
+                        $('#chatMessages').append('<div id="'+messageId+'" class="d-flex p-5 justify-content-center"><div class="loader" /></div>');
+
+                        switch ($('#chatAISelector').val()) {
+                            case 'chatGPT':
+                                $(that).appAdmin('askChatGPT', {'prompt': text, 'messageId': messageId}, callbackFunc);
+                                break;
+                            case 'gemini':
+                                $(that).appAdmin('askGoogleGemini', {'prompt': text, 'messageId': messageId}, callbackFunc);
+                                break;
+                        }
+                    }
+                });
+
+                $('#chatInput', $(chatPanel)).off('keydown').on('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
+                        e.preventDefault();
+                        $('#chatSendBtn').trigger('click');
+                    }
+                });
+                
+                $('#chatAISelector', $(chatPanel)).off('change').on('change', function(e) {
+                    $(that).appAdmin('updateUserUiSettings', 
+                        {'preferredAI': $(this).val()},
+                        function (data) {
+                        }
+                    );
+                });
+
+                $(that).appAdmin('getUserUiSettings', function(data) {
+                    if (undefined != data.preferredAI) {
+                        $('#chatAISelector', $(chatPanel)).val(data.preferredAI);
+                    }
+                });
+
+                const resizer = $('#chatSidebarResizer', $(chatPanel))[0];
+                let isResizing = false;
+
+                resizer.addEventListener('mousedown', function (e) {
+                    isResizing = true;
+                    document.body.style.cursor = 'ew-resize';
+                });
+
+                document.addEventListener('mousemove', function (e) {
+                    if (!isResizing) return;
+                    const newWidth = window.innerWidth - e.clientX;
+                    if (newWidth > 250 && newWidth < 800) { // limiti min/max
+                        $(chatPanel).css({'width': newWidth + 'px'});
+                    }
+                });
+
+                document.addEventListener('mouseup', function () {
+                    if (isResizing) {
+                        isResizing = false;
+
+                        $(that).appAdmin('updateUserUiSettings', 
+                            {'chatAIpanelWidth': $(chatPanel).css('width')},
+                            function (data) {
+                            }
+                        );
+
+                        document.body.style.cursor = '';
+                    }
+                });
+
+            }).addClass('ai-processed');           
+        },
+        closeAIChat: function() {
+            $(this).appAdmin('hideOverlay');
+            $('.sideChat', this).css({'width': 0}).removeClass('open');
         },
         getElem: function() {
             return $(this).data('appAdmin').$elem;
@@ -237,7 +373,7 @@
             var href = $(btn).attr('href');
             document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
-        askAI: function(type, text, target) {
+        askAI: function(type, params, targetOrCallback) {
             var AIUrl = null;
             switch(type) {
                 case 'chatGPT':
@@ -248,37 +384,50 @@
                     break;    
             }
 
+            if (undefined != params.messageId) {
+                AIUrl += '?messageId='+params.messageId;
+            }
+
             if (AIUrl != null) {
                 $.ajax({
                     type: "POST",
                     url: AIUrl,
-                    data: JSON.stringify({'prompt': text}),
+                    data: JSON.stringify({'prompt': params.prompt}),
                     processData: false,
                     contentType: 'application/json',
                     success: function(data) {
                         if (data.success == true) {
-                            var $target = $(target);
-                            if ($target.is('input')) {
-                                $target.val(data.text);
-                            } else if ($target.is('div,p,span,li,textarea')) {
-                                $target.html(data.text);
-                                if (tinymce.get($target.attr('id'))) {
-                                    tinymce.get($target.attr('id')).setContent(data.text);
+                            if (typeof targetOrCallback === 'function') {
+                                targetOrCallback(data);
+                            } else {
+                                var $target = $(targetOrCallback);
+                                if ($target.is('input')) {
+                                    $target.val(data.text);
+                                } else if ($target.is('div,p,span,li,textarea')) {
+                                    $target.html(data.text);
+                                    if (tinymce.get($target.attr('id'))) {
+                                        tinymce.get($target.attr('id')).setContent(data.text);
+                                    }
                                 }
                             }
                         }
                     },
-                    error: function(xhr, ajaxOptions, thrownError) {}
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        if (typeof targetOrCallback === 'function') {
+                            targetOrCallback({ success: false, error: thrownError });
+                        }
+                    }
                 });
             }
         },
-        askChatGPT: function(text, target) {
-            $(this).appAdmin('askAI', 'chatGPT', text, target);
+        askChatGPT: function(params, targetOrCallback) {
+            $(this).appAdmin('askAI', 'chatGPT', params, targetOrCallback);
         },
-        askGoogleGemini: function(text, target) {
-            $(this).appAdmin('askAI', 'gemini', text, target);
+        askGoogleGemini: function(params, targetOrCallback) {
+            $(this).appAdmin('askAI', 'gemini', params, targetOrCallback);
         },
         updateUserUiSettings: function(settings, succesCallback) {
+            var that = this;
             var uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
             $.ajax({
                 type: "POST",
@@ -286,18 +435,30 @@
                 data: JSON.stringify(settings),
                 processData: false,
                 contentType: 'application/json',
-                success: succesCallback,
+                success: function( data, textStatus, xhr) {
+                    $(that).data('userSettings', data.settings);
+                    succesCallback(data.settings);
+                },
                 error: function(xhr, ajaxOptions, thrownError) {}
             });
         },
         getUserUiSettings: function(succesCallback) {
+            var that = this;
+            if ($(that).data('userSettings') != null) {
+                succesCallback(that.data('userSettings'));
+                return;
+            }
+
             var uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
             $.ajax({
                 type: "GET",
                 url: uIsettingsUrl,
                 processData: false,
                 contentType: 'application/json',
-                success: succesCallback,
+                success: function( data, textStatus, xhr) {
+                    $(that).data('userSettings', data.settings);
+                    succesCallback(data.settings);
+                },
                 error: function(xhr, ajaxOptions, thrownError) {}
             });
         },
@@ -388,5 +549,6 @@
         'currentRoute': null,
         'notificationsUrl': null,
         'notificationCrudUrl': null,
+        'aiAvailable': null,
     }
 })(jQuery);

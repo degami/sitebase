@@ -15,11 +15,14 @@ namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
+use App\Site\Controllers\Admin\Json\ChatGPT;
+use App\Site\Controllers\Admin\Json\GoogleGemini;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+Use Degami\PHPFormsApi\Containers\Fieldset;
 
 /**
  * Administration Forms Trait
@@ -159,41 +162,106 @@ trait AdminFormTrait
             $object_html_title = $object->html_title;
         }
 
-        $fieldset = $form->addField(
-            'seo',
-            [
-                'type' => 'fieldset',
-                'title' => 'SEO',
-                'collapsible' => true,
-                'collapsed' => true,
-            ]
-        );
+        /** @var Fieldset $fieldset */
+        $fieldset = $form->addField('seo', [
+            'type' => 'fieldset',
+            'title' => 'SEO',
+            'collapsible' => true,
+            'collapsed' => true,
+        ]);
 
-        $fieldset->addField(
-            'meta_description',
-            [
+        $fieldset
+            ->addField('meta_description', [
                 'type' => 'textfield',
                 'title' => 'Meta Description',
                 'default_value' => $object_meta_description,
-            ]
-        )
-            ->addField(
-                'meta_keywords',
-                [
-                    'type' => 'textfield',
-                    'title' => 'Meta Keywords',
-                    'default_value' => $object_meta_keywords,
-                ]
-            )
-            ->addField(
-                'html_title',
-                [
-                    'type' => 'textfield',
-                    'title' => 'Html Title',
-                    'default_value' => $object_html_title,
-                ]
-            );
+            ])
+            ->addField('meta_keywords', [
+                'type' => 'textfield',
+                'title' => 'Meta Keywords',
+                'default_value' => $object_meta_keywords,
+            ])
+            ->addField('html_title', [
+                'type' => 'textfield',
+                'title' => 'Html Title',
+                'default_value' => $object_html_title,
+            ]);
+        
+        if ($this->getSiteData()->isAiAvailable()) {
+            $promptText = $this->getUtils()->translate("Generate a json with meta_description, meta_keywords, html_title using language \":language\" for the text: \\n:text");
 
+            $ai_options = [];
+            if (ChatGPT::isEnabled()) {
+                $ai_options['chatgpt'] = 'ChatGPT';
+            }
+            if (GoogleGemini::isEnabled()) {
+                $ai_options['googlegemini'] = 'Google Gemini';
+            }
+
+            $fieldset
+                ->addField('ai_chooser_container', [
+                    'type' => 'tag_container',
+                    'attributes' => [
+                        'class' => 'd-flex flex-row gap-2 align-items-center',
+                    ],
+                    'suffix' => '<small>Generate Meta Description / Meta Keywords / Html Title using AI</small>',
+                ])
+                ->addField('ai_generator_chooser', [
+                    'type' => 'select',
+                    'title' => '',
+                    'default_value' => '',
+                    'options' => $ai_options,
+                ])
+                ->addField('ai_meta_generate', [
+                    'type' => 'button',
+                    'default_value' => 'Generate',
+                    'attributes' => [
+                        'class' => 'btn btn-primary mr-2',
+                    ],
+                    'onclick' => 'generateMetaDescription()',
+                ])
+                ->addJs("\$('#ai_meta_generate').off('click').on('click', function(e) {
+                        var that = this;
+                        e.preventDefault();
+                        var selected = \$('#ai_generator_chooser').val();
+                        if (selected == '') {
+                            alert('".$this->getutils()->translate("Please select an AI generator")."');
+                            return;
+                        }
+                        var elementContent = $('#content').val();
+                        if (tinymce.get('content')) {
+                            elementContent = tinymce.get('content').getContent();
+                        }
+                        var locale = $('#locale').val();
+                        var promptText = '".$promptText."'.replace(':language', locale).replace(':text', elementContent);
+
+                        var responseCallback = function(response) {
+                            if (response.success == true) {
+                                var json = JSON.parse(response.text.replace('```json','').replace('```',''));
+                                $('#meta_description').val(json.meta_description);
+                                $('#meta_keywords').val(json.meta_keywords);
+                                $('#html_title').val(json.html_title);
+                            } else {
+                                alert('Error: ' + response.message);
+                            }
+                            $(that).prop('disabled',false).next('.loader').remove();
+                        };
+
+                        $(that).prop('disabled',true).after('<div class=\"loader d-inline-flex ml-5\" style=\"zoom: 0.5\"></div>');
+                        switch(selected) {
+                            case 'chatgpt':
+                                $('#admin').appAdmin('askChatGPT', {'prompt' : promptText}, responseCallback);
+                                break;
+                            case 'googlegemini':
+                                $('#admin').appAdmin('askGoogleGemini', {'prompt' : promptText}, responseCallback);
+                                break;
+                            default:
+                                alert('".$this->getUtils()->translate("Error: AI generator not found")."');
+                                $(that).prop('disabled',false).next('.loader').remove();
+                                break;
+                        }
+                })");
+        }
 
         return $form;
     }

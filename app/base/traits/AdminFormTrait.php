@@ -82,6 +82,22 @@ trait AdminFormTrait
                     'validate' => ['required'],
                 ]
             );
+
+            if ($form->getField('title')) {
+                $form->addJs("
+                    \$('#title').on('change', function() {
+                        if (\$('#url').val() != '') {
+                            return;
+                        }
+                        var url = \$(this).val();
+                        if (url == '') {
+                            return;
+                        }
+                        url = url.replace(/[^a-zA-Z0-9\\-\\_]+/g, '-');
+                        \$('#url').val(url);
+                    });
+                ");
+            }
         }
 
         if (in_array('website_id', $form_elements)) {

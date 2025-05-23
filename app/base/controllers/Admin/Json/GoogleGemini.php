@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Json;
+namespace App\Base\Controllers\Admin\Json;
 
 use App\App;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
@@ -21,16 +21,11 @@ use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
- * ChatGPT Admin
+ * GoogleGemini Admin
  */
-class ChatGPT extends AdminJsonPage
+class GoogleGemini extends AdminJsonPage
 {
-
-    public const CHATGPT_MAX_TOKENS = 50;
-    public const CHATGPT_TOKEN_PATH = 'app/chatgpt/token';
-    public const CHATGPT_REMAINING_TOKENS_PATH = 'app/chatgpt/remaining_tokens';
-
-    protected string $endpoint = 'https://api.openai.com/v1/engines/gpt-3.5-turbo/completions';
+    public const GEMINI_TOKEN_PATH = 'app/gemini/token';
 
     /**
      * determines if route is available for router
@@ -39,7 +34,7 @@ class ChatGPT extends AdminJsonPage
      */
     public static function isEnabled() : bool 
     {
-        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH));
+        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH));
     }
 
     /**
@@ -61,40 +56,46 @@ class ChatGPT extends AdminJsonPage
      */
     protected function getJsonData(): array
     {
-        $apiKey = $this->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH);
+        $apiKey = $this->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH);
         if (empty($apiKey)) {
-            throw new Exception("Missing ChatGPT Token");
+            throw new Exception("Missing Gemini Token");
         }
 
-//        $remainingTokens = intval($this->getSiteData()->getConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH));
-//        $maxTokens = min(self::CHATGPT_MAX_TOKENS, $remainingTokens);
-
-        $maxTokens = self::CHATGPT_MAX_TOKENS;
         $client = $this->getGuzzle();
 
         $messageId = $this->getMessageId($this->getRequest());
 
         $prompt = $this->getPrompt($this->getRequest());
         if (empty($prompt)) {
-            throw new Exception("Missing ChatGPT prompt text");
+            throw new Exception("Missing Gemini prompt text");
         }
 
-        $response = $client->post($this->endpoint, [
+        $response = $client->post($this->getEndpoint($apiKey), [
             'headers' => [
-                'Authorization' => "Bearer ".$apiKey,
+                'Content-Type' => "application/json",
             ],
             'json' => [
-                'prompt' => $prompt,
-                'max_tokens' => $maxTokens, // Adjust the max tokens as needed
+                'contents' => [
+                    [
+                        'role' => 'user',
+                        'parts' => [
+                            [
+                                'text' => $prompt,
+                            ]
+                        ]
+                    ]
+                ],
             ],
         ]);
         $data = json_decode($response->getBody(), true);
-        $generatedText = $data['choices'][0]['text'];
-
-        // update remaining tokens configuration
-        //$this->getSiteData()->setConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
+        $generatedText = $data['candidates'][0]['content']['parts'][0]['text'];
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
+    }
+
+    protected function getEndpoint(string $api_key) : string
+    {
+        return "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={$api_key}";
     }
 
     /**
@@ -116,5 +117,5 @@ class ChatGPT extends AdminJsonPage
     protected function getMessageId(Request $request) : ?string
     {
         return $request->get('messageId') ?: $request->get('message_id');
-    }
+    }    
 }

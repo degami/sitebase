@@ -414,9 +414,9 @@ class SiteBase implements ExtensionInterface
         return $this->getHtmlRenderer()->getQrCode($url);    
     }
 
-    public function isAiAvailable() : bool
+    public function isAiAvailable(string|array|null $ai = null) : bool
     {
-        return $this->getSiteData()->isAiAvailable();
+        return $this->getSiteData()->isAiAvailable($ai);
     }
 
     public function getCurrentUrl() : string

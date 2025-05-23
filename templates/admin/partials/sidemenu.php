@@ -34,13 +34,22 @@
                         <a class="nav-link<?= ($controller->getRouteName() == $link['route_name']) ? ' active' : '';?> <?= $link['route_name'];?>" href="<?= $this->sitebase()->getUrl($link['route_name']);?>" title="<?= $this->sitebase()->translate($link['text']);?>">
                             <?php $this->sitebase()->drawIcon($link['icon']); ?> <span class="text"><?= $this->sitebase()->translate($link['text']);?></span>
                         </a>
-                </div>
+                    </div>
                 <?php endforeach;?>
             </div>
         </div>
     </div>
     <?php $collapsed = 'collapse'; ?>    
 <?php endforeach;?>
+<?php if ($this->sitebase()->isAiAvailable()): ?>
+    <div class="card-header" id="heading ia-chat mt-5">
+        <div class="nav-item">
+            <a class="nav-link ai-chat" href="#" onclick="$('#admin').appAdmin('openAIChat')" title="<?= $this->sitebase()->translate('AI Chat');?>">
+                <?php $this->sitebase()->drawIcon('message-square'); ?> <span class="text"><?= $this->sitebase()->translate('AI Chat');?></span>
+            </a>
+        </div>
+    </div>
+<?php endif;?>
 </div>
 
 <a href="#" id="sidebar-minimize-btn">

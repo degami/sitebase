@@ -29,8 +29,8 @@ use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\Website;
-use App\Site\Controllers\Admin\Json\ChatGPT;
-use App\Site\Controllers\Admin\Json\GoogleGemini;
+use App\Base\Controllers\Admin\Json\ChatGPT;
+use App\Base\Controllers\Admin\Json\GoogleGemini;
 
 /**
  * Site Data Helper Class
@@ -717,8 +717,33 @@ class SiteData extends ContainerAwareObject
         return $links;
     }
 
-    public function isAiAvailable(): bool
+    public function isAiAvailable(string|array|null $ai = null): bool
     {
+        if (is_array($ai)) {
+            $out = true;
+            $ai = array_intersect(array_map('strtolower', $ai), ['google', 'gemini']);
+            if (empty($ai)) {
+                return false;
+            }
+
+            foreach($ai as $aiElem) {
+                if ($aiElem == 'googlegemini' && !GoogleGemini::isEnabled()) {
+                    $out &= false;
+                }
+                if ($aiElem == 'chatgpt' && !ChatGPT::isEnabled()) {
+                    $out &= false;
+                }                
+            }
+            return $out;
+        } elseif (is_string($ai)) {
+            if ($ai == 'googlegemini') {
+                return GoogleGemini::isEnabled();
+            } elseif ($ai == 'chatgpt') {
+                return ChatGPT::isEnabled();
+            }
+            return false;
+        }
+
         return GoogleGemini::isEnabled() || ChatGPT::isEnabled();
     }
 }

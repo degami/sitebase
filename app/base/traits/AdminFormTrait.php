@@ -15,8 +15,6 @@ namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
-use App\Site\Controllers\Admin\Json\ChatGPT;
-use App\Site\Controllers\Admin\Json\GoogleGemini;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
@@ -207,10 +205,10 @@ trait AdminFormTrait
             $promptText = $this->getUtils()->translate("Generate a json with meta_description, meta_keywords, html_title using language \":language\" for the text: \\n:text");
 
             $ai_options = [];
-            if (ChatGPT::isEnabled()) {
+            if ($this->getSiteData()->isAiAvailable('chatgpt')) {
                 $ai_options['chatgpt'] = 'ChatGPT';
             }
-            if (GoogleGemini::isEnabled()) {
+            if ($this->getSiteData()->isAiAvailable('googlegemini')) {
                 $ai_options['googlegemini'] = 'Google Gemini';
             }
 

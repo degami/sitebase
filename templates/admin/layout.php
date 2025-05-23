@@ -5,9 +5,6 @@
  * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
  */
 
-use App\Site\Controllers\Admin\Json\ChatGPT;
-use App\Site\Controllers\Admin\Json\GoogleGemini;
-
 $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
 
 <?php $this->start('head') ?>
@@ -86,8 +83,8 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
                 <div class="p-1 border-bottom d-flex justify-content-between align-items-center">
                     <strong class="ml-3">Chat AI</strong>
                     <select id="chatAISelector" class="select-processed" style="width: 150px;">
-                        <?php if (ChatGPT::isEnabled()) : ?><option value="chatGPT">ChatGPT</option><?php endif; ?>
-                        <?php if (GoogleGemini::isEnabled()) : ?><option value="gemini">Gemini</option><?php endif; ?>
+                        <?php if ($this->sitebase()->isAiAvailable('chatgpt')) : ?><option value="chatGPT">ChatGPT</option><?php endif; ?>
+                        <?php if ($this->sitebase()->isAiAvailable('googlegemini')) : ?><option value="gemini">Google Gemini</option><?php endif; ?>
                     </select>
                     <a href="#" class="closebtn mr-2">&times;</a>
                 </div>

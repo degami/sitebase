@@ -143,6 +143,7 @@ class TwoFa extends LoggedUserFormPage
             'title' => 'Enter your OTP',
             'default_value' => '',
             'otp_length' => 6,
+            'show_characters' => true,
             'validate' => ['required', 'numeric'],
         ] + (!$userHasPassed2Fa ? [] : ['description' => $this->getUtils()->translate('2 Factor authentication is already configured - enter the "%s" OTP code', [$qrCodeIdentifier])]));
 

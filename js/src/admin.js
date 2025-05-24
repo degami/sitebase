@@ -23,11 +23,11 @@
         sessionTimeout: null,
 
         init : function(options) {
-            var instance = this;
+            let instance = this;
             // Iterate and reformat each matched element.
             return this.each(function() {
-                var settings = $.extend({}, $.fn.appAdmin.defaults, options);
-                var $elem = $( this );
+                let settings = $.extend({}, $.fn.appAdmin.defaults, options);
+                let $elem = $( this );
 
                 instance.settings = settings;
                 instance.$elem = $elem;
@@ -164,7 +164,7 @@
             return $(this).data('appAdmin').settings;
         },
         openSidePanel: function() {
-            var that = this;
+            let that = this;
 
             $(this).appAdmin('showOverlay');
             $('.sidepanel', this).css({'width': '95%'});
@@ -174,7 +174,7 @@
             }, 'sidePanel'));
         },
         closeSidePanel: function() {
-            var that = this;
+            let that = this;
 
             $('.sidepanel', this).data('lastLoadedUrl', false);
             $(this).appAdmin('hideOverlay');
@@ -186,7 +186,7 @@
             }
         },
         openAIChat: function() {
-            var that = this;
+            let that = this;
 
             if (!$(that).appAdmin('getSettings').aiAvailable || $('.sideChat', that).length == 0) {
                 return;
@@ -233,7 +233,7 @@
                         $('#chatMessages').scrollTop($('#chatMessages')[0].scrollHeight);
                     }
 
-                    var text = $('#chatInput').val();
+                    let text = $('#chatInput').val();
                     if (text.trim() != '') {
                         $('#chatInput').val('');
                         let messageId = 'message_' + moment(new Date()).unix();
@@ -309,7 +309,7 @@
             }, 'aiChat'));
         },
         closeAIChat: function() {
-            var that = this;
+            let that = this;
 
             $(this).appAdmin('hideOverlay');
             $('.sideChat', this).css({'width': 0}).removeClass('open');
@@ -341,7 +341,7 @@
             return $(this).data('appAdmin').$elem;
         },
         loadPanelContent: function(title, url, open_panel, store_last_url) {
-            var that = this;
+            let that = this;
             if (undefined == open_panel) {
                 open_panel = true;
             }
@@ -365,7 +365,7 @@
                 }).addClass('select-processed');
                 $('.sidepanel form', that).submit(function(evt){
                     evt.preventDefault();
-                    var formData = new FormData(this);
+                    let formData = new FormData(this);
                     $.ajax({
                         type: "POST",
                         url: $(this).attr("action"),
@@ -397,14 +397,14 @@
             });
         },
         reloadPanelContent: function() {
-            var url = $('.sidepanel', this).data('lastLoadedUrl');
+            let url = $('.sidepanel', this).data('lastLoadedUrl');
             $(this).appAdmin('loadPanelContent', $('.sidepanel', this).find('.card-title').text(), url, false);
         },
         checkLoggedStatus: function() {
-            var that = this;
+            let that = this;
 
-            var checkUrl = $(this).appAdmin('getSettings').checkLoggedUrl;
-            var logoutUrl = $(this).appAdmin('getSettings').logoutUrl;
+            let checkUrl = $(this).appAdmin('getSettings').checkLoggedUrl;
+            let logoutUrl = $(this).appAdmin('getSettings').logoutUrl;
 
             $.ajax({
                 type: "GET",
@@ -426,12 +426,12 @@
             }, 60000);
         },
         searchTableColumns: function(btn) {
-            var query = $('input, select, textarea', $(btn).data('target')).serialize();
-            var href = $(btn).attr('href');
+            let query = $('input, select, textarea', $(btn).data('target')).serialize();
+            let href = $(btn).attr('href');
             document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
         askAI: function(type, params, targetOrCallback) {
-            var AIUrl = null;
+            let AIUrl = null;
             switch(type) {
                 case 'chatGPT':
                     AIUrl = $(this).appAdmin('getSettings').chatGPTUrl;
@@ -457,7 +457,7 @@
                             if (typeof targetOrCallback === 'function') {
                                 targetOrCallback(data);
                             } else {
-                                var $target = $(targetOrCallback);
+                                let $target = $(targetOrCallback);
                                 if ($target.is('input')) {
                                     $target.val(data.text);
                                 } else if ($target.is('div,p,span,li,textarea')) {
@@ -484,8 +484,8 @@
             $(this).appAdmin('askAI', 'gemini', params, targetOrCallback);
         },
         updateUserUiSettings: function(settings, succesCallback) {
-            var that = this;
-            var uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
+            let that = this;
+            let uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
             $.ajax({
                 type: "POST",
                 url: uIsettingsUrl,
@@ -500,13 +500,13 @@
             });
         },
         getUserUiSettings: function(succesCallback) {
-            var that = this;
+            let that = this;
             if ($(that).data('userSettings') != null) {
                 succesCallback(that.data('userSettings'));
                 return;
             }
 
-            var uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
+            let uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
             $.ajax({
                 type: "GET",
                 url: uIsettingsUrl,
@@ -520,10 +520,10 @@
             });
         },
         fetchNotifications: function() {
-            var that = this;
+            let that = this;
         
-            var notificationsUrl = $(this).appAdmin('getSettings').notificationsUrl;
-            var notificationDismissUrl = $(this).appAdmin('getSettings').notificationCrudUrl;
+            let notificationsUrl = $(this).appAdmin('getSettings').notificationsUrl;
+            let notificationDismissUrl = $(this).appAdmin('getSettings').notificationCrudUrl;
 
             $.ajax({
                 type: "GET",
@@ -534,7 +534,7 @@
                 success: function(data) {
                     if (Array.isArray(data.notifications) && data.notifications.length > 0) {
                         data.notifications.forEach(function(notification, index) {
-                            var notificationId = 'notificationDialog_' + index;
+                            let notificationId = 'notificationDialog_' + index;
         
                             if ($('#' + notificationId).length === 0) {
                                 $('body').append(`
@@ -552,8 +552,8 @@
                         });
         
                         $('body').on('click', '.closeNotification', function() {
-                            var dialogId = $(this).data('dialogid');
-                            var notificationId = $(this).data('id');                            
+                            let dialogId = $(this).data('dialogid');
+                            let notificationId = $(this).data('id');                            
         
                             $.ajax({
                                 type: "PUT",
@@ -583,7 +583,7 @@
             }, 30000);
         },
         logout: function () {
-            var that = this;
+            let that = this;
             if (that.notificationTimeout != null) {
                 window.clearTimeout(that.notificationTimeout);
             }

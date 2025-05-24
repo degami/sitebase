@@ -139,23 +139,51 @@
                 }
             });
         },
-        showOverlay: function() {
-            $('#overlay').addClass('d-block').removeClass('d-none');
+        showOverlay: function(namespace) {
+            let overlayId = '#overlay';
+            if (namespace) {
+                overlayId = '#' + namespace + '-overlay';
+            }
+            if ($(overlayId).length == 0) {
+                $('body').append('<div id="'+namespace+'-overlay" class="overlay d-none"></div>');
+            }
+            $(overlayId).addClass('d-block').removeClass('d-none');
         },
-        hideOverlay: function() {
-            $('#overlay').addClass('d-none').removeClass('d-block');
+        hideOverlay: function(namespace) {
+            let overlayId = '#overlay';
+            if (namespace) {
+                overlayId = '#' + namespace + '-overlay';
+            }
+            if ($(overlayId).length == 0) {
+                $('body').append('<div id="'+namespace+'-overlay" class="overlay d-none"></div>');
+            }
+
+            $(overlayId).addClass('d-none').removeClass('d-block');
         },
         getSettings: function() {
             return $(this).data('appAdmin').settings;
         },
         openSidePanel: function() {
+            var that = this;
+
             $(this).appAdmin('showOverlay');
             $('.sidepanel', this).css({'width': '95%'});
+
+            $(that).data('sidePanelEscUnbind', $(that).appAdmin('createEscHandler', function() {
+                $(that).appAdmin('closeSidePanel');
+            }, 'sidePanel'));
         },
         closeSidePanel: function() {
+            var that = this;
+
             $('.sidepanel', this).data('lastLoadedUrl', false);
             $(this).appAdmin('hideOverlay');
             $('.sidepanel', this).css({'width': 0});
+
+            const unbindEsc = $(this).data('sidePanelEscUnbind');
+            if (unbindEsc) {
+                unbindEsc();
+            }
         },
         openAIChat: function() {
             var that = this;
@@ -274,11 +302,40 @@
                     }
                 });
 
-            }).addClass('ai-processed');           
+            }).addClass('ai-processed');    
+            
+            $(that).data('aiChatEscUnbind', $(that).appAdmin('createEscHandler', function() {
+                $(that).appAdmin('closeAIChat');
+            }, 'aiChat'));
         },
         closeAIChat: function() {
+            var that = this;
+
             $(this).appAdmin('hideOverlay');
             $('.sideChat', this).css({'width': 0}).removeClass('open');
+
+            const unbindEsc = $(this).data('aiChatEscUnbind');
+            if (unbindEsc) {
+                unbindEsc();
+            }
+        },
+        createEscHandler: function(callback, namespace) {
+            const handler = function (e) {
+                if (e.key === 'Escape') {
+                    e.preventDefault();
+                    callback();
+                }
+            };
+
+            // Usa un namespace per evitare conflitti
+            const namespacedEvent = 'keydown.appAdmin.' + namespace;
+
+            $(document).on(namespacedEvent, handler);
+
+            // Restituisci una funzione per rimuovere il listener
+            return function() {
+                $(document).off(namespacedEvent, handler);
+            };
         },
         getElem: function() {
             return $(this).data('appAdmin').$elem;

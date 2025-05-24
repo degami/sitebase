@@ -102,5 +102,5 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
     </div>
 </div>
 <footer class="version text-right"><?= $this->sitebase()->version();?></footer>
-<div id="overlay" class="d-none"></div>
+<div id="overlay" class="overlay d-none"></div>
 <!-- /Content -->

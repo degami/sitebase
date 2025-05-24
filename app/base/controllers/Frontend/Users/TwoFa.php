@@ -139,10 +139,11 @@ class TwoFa extends LoggedUserFormPage
         }
 
         $tableRow->addField('otp', [
-            'type' => 'textfield',
+            'type' => 'otp',
             'title' => 'Enter your OTP',
             'default_value' => '',
-            'validate' => ['required'],
+            'otp_length' => 6,
+            'validate' => ['required', 'numeric'],
         ] + (!$userHasPassed2Fa ? [] : ['description' => $this->getUtils()->translate('2 Factor authentication is already configured - enter the "%s" OTP code', [$qrCodeIdentifier])]));
 
         $form->addField($table->getName(), $table);

@@ -195,7 +195,7 @@ class GuestUser extends AccountModel
      */
     public function getLocale(): string
     {
-        return $this->getSiteData()->getDefaultLocale();
+        return App::getInstance()->getSiteData()->getDefaultLocale();
     }
 
     /**

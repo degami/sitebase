@@ -169,6 +169,6 @@ class Search extends FrontendPage
         $prefix .= trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
 
 
-        return $this->normalizeCacheKey($prefix . '.q.'. $this->getSearchQuery().'.p.'.$page);
+        return $this->normalizeCacheKey($prefix . '.q='. $this->getSearchQuery().'.p='.$page);
     }
 }

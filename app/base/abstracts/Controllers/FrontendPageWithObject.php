@@ -16,6 +16,7 @@ namespace App\Base\Abstracts\Controllers;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Routing\RouteInfo;
 use App\Base\Traits\FrontendPageTrait;
+use App\Base\Traits\FrontendPageWithObjectTrait;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Exceptions\NotFoundException;
@@ -29,7 +30,10 @@ use Throwable;
  */
 abstract class FrontendPageWithObject extends FrontendPage
 {
-    use FrontendPageTrait;
+    use FrontendPageTrait, FrontendPageWithObjectTrait {
+        FrontendPageWithObjectTrait::getCurrentLocale insteadOf FrontendPageTrait;
+        FrontendPageWithObjectTrait::alterTemplateName insteadOf FrontendPageTrait;
+    }
 
     /**
      * {@inheritdoc}

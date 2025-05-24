@@ -13,7 +13,7 @@
 
 namespace App\Base\Traits;
 
-use App\Base\Abstracts\Models\BaseModel;
+
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -48,28 +48,6 @@ trait FrontendPageTrait
     }
 
     /**
-     * sets object to show
-     *
-     * @param BaseModel $object
-     * @return self
-     */
-    protected function setObject(BaseModel $object) : static
-    {
-        $this->template_data['object'] = $object;
-        return $this;
-    }
-
-    /**
-     * gets object to show
-     *
-     * @return BaseModel|null
-     */
-    public function getObject(): ?BaseModel
-    {
-        return $this->template_data['object'] ?? null;
-    }
-
-    /**
      * eventually alters template name
      *
      * @return string
@@ -79,16 +57,10 @@ trait FrontendPageTrait
      * @throws PhpfastcacheSimpleCacheException
      */
     protected function alterTemplateName(string $templateName): string
-    {        
+    {
         $alterFunction = '\theme_alterTemplateName'; // to avoid vscode intelephense warning about non existing function
         if (function_exists($alterFunction)) {
             return $alterFunction($templateName, $this);
-        }
-
-        if ($this->getObject()?->isLoaded()) {
-            if (is_callable([$this->getObject(), 'getTemplateName']) && !empty($this->getObject()->getTemplateName())) {
-                return $this->getObject()->getTemplateName();
-            }
         }
 
         return $templateName;
@@ -110,7 +82,6 @@ trait FrontendPageTrait
         );
     }
 
-
     /**
      * {@inheritdoc}
      *
@@ -121,15 +92,14 @@ trait FrontendPageTrait
      */
     public function getCurrentLocale(): string
     {
-        if (isset($this->template_data['object']) && ($this->template_data['object'] instanceof BaseModel) && $this->template_data['object']->isLoaded()) {
-            if ($this->template_data['object']->getLocale()) {
-                return $this->getApp()->setCurrentLocale($this->template_data['object']->getLocale())->getCurrentLocale();
-            }
-        }
-
         return $this->getApp()->setCurrentLocale(parent::getCurrentLocale())->getCurrentLocale();
     }
 
+    /**
+     * checks if 2FA is passed
+     *
+     * @return bool
+     */
     protected function check2FA(): bool
     {
         if ($this->getEnv('USE2FA_USERS') && !in_array($this->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && ($this->current_user?->passed2fa ?? false) != true) {

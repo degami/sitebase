@@ -111,14 +111,6 @@ abstract class FrontendPageWithObject extends FrontendPage
     }
 
     /**
-     * gets fpc cache key
-     */
-    public function getFpcCacheKey() : string
-    {
-        return 'fpc.'.$this->getCacheKey();
-    }
-
-    /**
      * {@inheritdoc}
      */
     public function getInfo() : array

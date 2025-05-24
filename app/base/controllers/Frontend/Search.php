@@ -152,4 +152,23 @@ class Search extends FrontendPage
     {
         return $this->getUtils()->translate('Search', locale: $this->getCurrentLocale());
     }
+
+    /**
+     * gets cache key
+     */
+    public function getCacheKey() : string
+    {
+
+        $website_id = $this->getSiteData()->getCurrentWebsiteId();
+        $locale = $this->getRewrite()?->getLocale() ?? $this->getSiteData()->getDefaultLocale();
+        $page = $this->getRequest()->get('page') ?? 0;
+
+        $prefix = 'site.'.$website_id.'.'.$locale.'.';
+
+
+        $prefix .= trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
+
+
+        return $this->normalizeCacheKey($prefix . '.q.'. $this->getSearchQuery().'.p.'.$page);
+    }
 }

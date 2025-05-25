@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\BAse\Models;
+namespace App\Base\Models;
 
 use App\App;
 use App\Base\Models\Rewrite;

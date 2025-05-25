@@ -17,7 +17,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\BaseXMLPage;
-use App\BAse\Models\Sitemap as SitemapModel;
+use App\Base\Models\Sitemap as SitemapModel;
 use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;

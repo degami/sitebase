@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Site\Controllers\Admin\Cms;
 
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;

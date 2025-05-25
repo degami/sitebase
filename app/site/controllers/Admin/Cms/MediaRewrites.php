@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Site\Controllers\Admin\Cms;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Models\MediaElement;

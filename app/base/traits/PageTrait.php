@@ -15,7 +15,7 @@ namespace App\Base\Traits;
 
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\FrontendPage;
-use App\Site\Controllers\Frontend\Page;
+use App\Site\Controllers\Frontend\Cms\Page;
 use App\Site\Models\Page as PageModel;
 use App\Base\Abstracts\Models\AccountModel;
 use App\Base\Models\GuestUser;

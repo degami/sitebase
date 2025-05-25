@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Site\Controllers\Admin\Cms;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Routing\RouteInfo;
@@ -308,6 +308,7 @@ class Media extends AdminManageModelsPage
                 $form->addField('upload_file', [
                     'type' => 'file',
                     'destination' => $destinationDir,
+                    'rename_on_existing' => true,
                     'title' => 'Upload new file',
                 ])
                 ->addField('lazyload', [
@@ -468,6 +469,14 @@ class Media extends AdminManageModelsPage
                 }
                 if ($values->upload_file->filesize) {
                     $media->setFilesize($values->upload_file->filesize);
+                }
+                if ($values->upload_file->renamed) {
+                    $this->addInfoFlashMessage(
+                        $this->getUtils()->translate(
+                            "File was renamed to %s",
+                            [$values->upload_file->filename]
+                        )
+                    );
                 }
                 $media->setLazyload($values->lazyload);
 

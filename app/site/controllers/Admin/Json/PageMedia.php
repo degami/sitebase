@@ -13,7 +13,7 @@
 
 namespace App\Site\Controllers\Admin\Json;
 
-use App\Site\Controllers\Admin\Media;
+use App\Site\Controllers\Admin\Cms\Media;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use App\Site\Models\Page;
@@ -78,7 +78,7 @@ class PageMedia extends AdminJsonPage
         $mediaController = $this->containerMake(Media::class);
         $form = $mediaController->getForm();
 
-        $form->setAction($this->getUrl('admin.media') . '?action=' . $this->getRequest()->get('action'));
+        $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->get('action'));
         $form->addField(
             'page_id',
             [

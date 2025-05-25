@@ -13,7 +13,7 @@
 
 namespace App\Site\Controllers\Admin\Json;
 
-use App\Site\Controllers\Admin\Taxonomy;
+use App\Site\Controllers\Admin\Cms\Taxonomy;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use App\Site\Models\Page;
@@ -112,7 +112,7 @@ class PageTerms extends AdminJsonPage
             $form->setField('locale', $newLocaleField);
         }
 
-        $form->setAction($this->getUrl('admin.taxonomy') . '?action=' . $this->getRequest()->get('action'));
+        $form->setAction($this->getUrl('admin.cms.taxonomy') . '?action=' . $this->getRequest()->get('action'));
         $form->addField(
             'page_id',
             [

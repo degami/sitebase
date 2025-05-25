@@ -26,7 +26,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Interfaces\Router\WebRouterInterface;
-use App\Site\Controllers\Frontend\Page;
+use App\Site\Controllers\Frontend\Cms\Page;
 use App\Base\Routing\RouteInfo;
 
 /**

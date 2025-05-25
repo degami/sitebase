@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Site\Controllers\Admin\Cms;
 
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -131,7 +131,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     $templates[$key] = basename($template);
                 }
 
-                $term_title = $term_content = $term_parent = $term_position = $term_template_name = '';
+                $term_title = $term_content = $term_parent = $term_template_name = '';
+                $term_position = 0;
                 if ($term->isLoaded()) {
                     $term_title = $term->title;
                     $term_content = $term->content;

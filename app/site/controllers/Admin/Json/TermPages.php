@@ -13,7 +13,7 @@
 
 namespace App\Site\Controllers\Admin\Json;
 
-use App\Site\Controllers\Admin\Pages;
+use App\Site\Controllers\Admin\Cms\Pages;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use App\Site\Models\Page;
@@ -81,7 +81,7 @@ class TermPages extends AdminJsonPage
             $pagesController = $this->containerMake(Pages::class);
             $form = $pagesController->getForm();
 
-            $form->setAction($this->getUrl('admin.pages') . '?action=' . $this->getRequest()->get('action'));
+            $form->setAction($this->getUrl('admin.cms.pages') . '?action=' . $this->getRequest()->get('action'));
             $form->addField(
                 'term_id',
                 [
@@ -90,10 +90,10 @@ class TermPages extends AdminJsonPage
                 ]
             );
         } else {
-            $taxonomyController = $this->containerMake(\App\Site\Controllers\Admin\Taxonomy::class);
+            $taxonomyController = $this->containerMake(\App\Site\Controllers\Admin\Cms\Taxonomy::class);
             $form = $taxonomyController->getForm();
 
-            $form->setAction($this->getUrl('admin.taxonomy') . '?action=' . $this->getRequest()->get('action'));
+            $form->setAction($this->getUrl('admin.cms.taxonomy') . '?action=' . $this->getRequest()->get('action'));
             $form->addField(
                 'term_id',
                 [

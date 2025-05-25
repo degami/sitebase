@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Site\Controllers\Admin\Cms;
 
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;

@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Frontend;
+namespace App\Site\Controllers\Frontend\Cms;
 
 use Degami\Basics\Exceptions\BasicException;
 use Exception;

@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Json;
+namespace App\Base\Controllers\Admin\Json;
 
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -22,7 +22,7 @@ use App\Base\Abstracts\Controllers\AdminJsonPage;
 use App\Site\Models\Contact;
 use App\Base\Routing\RouteInfo;
 use Degami\PHPFormsApi as FAPI;
-use App\Site\Controllers\Admin\Sitemaps as SitemapsController;
+use App\Base\Controllers\Admin\Sitemaps as SitemapsController;
 use Symfony\Component\HttpFoundation\Response;
 
 /**

@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Base\Controllers\Admin;
 
 use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
@@ -21,9 +21,9 @@ use DI\NotFoundException;
 use Exception;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
-use App\Site\Models\Sitemap;
+use App\Base\Models\Sitemap;
 use App\Base\Models\Rewrite;
-use App\Site\Controllers\Admin\Json\SitemapCallback;
+use App\Base\Controllers\Admin\Json\SitemapCallback;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -130,7 +130,7 @@ class Sitemaps extends AdminManageModelsPage
                 $this->addBackButton();
 
                 if ($sitemap->isLoaded()) {
-                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($sitemap->getAppWebsite()->getId());
+                    $languages = $this->getUtils()->getSiteLanguagesSelectOptions($sitemap->getAppWebsite()?->getId());
                 } else {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
                 }
@@ -220,7 +220,7 @@ class Sitemaps extends AdminManageModelsPage
                     $form->addField('addmore', [
                         'type' => 'submit',
                         'value' => 'Add more',
-                        'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.sitemapcallback') . '?action=' . $this->getRequest()->get('action') . '&sitemap_id=' . $this->getRequest()->get('sitemap_id'),
+                        'ajax_url' => $this->getUrl('crud.app.base.controllers.admin.json.sitemapcallback') . '?action=' . $this->getRequest()->get('action') . '&sitemap_id=' . $this->getRequest()->get('sitemap_id'),
                         'event' => [
                             [
                                 'event' => 'click',

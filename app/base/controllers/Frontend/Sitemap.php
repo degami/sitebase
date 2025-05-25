@@ -11,13 +11,13 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Frontend;
+namespace App\Base\Controllers\Frontend;
 
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\BaseXMLPage;
-use App\Site\Models\Sitemap as SitemapModel;
+use App\BAse\Models\Sitemap as SitemapModel;
 use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;

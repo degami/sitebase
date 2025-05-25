@@ -16,6 +16,7 @@ namespace App\Base\Traits;
 use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\ModelWithChildren;
+use Exception;
 use Throwable;
 
 /**
@@ -41,10 +42,26 @@ trait WithChildrenTrait
 
         if (!(is_array($this->children) && !empty($this->children)) || $reset == true) {
             $query = null;
+
+            $tableHasPosition = false;
+            try {
+                $positionColumn = App::getInstance()->getSchema()->getTable($this->table_name)->getColumn('position');
+                if ($positionColumn) {
+                    $tableHasPosition = true;
+                }
+            } catch (Exception $e) {}
+
+
             if ($locale != null) {
-                $query = App::getInstance()->getDb()->table($this->table_name)->where(['parent_id' => $this->id, 'locale' => $locale])->orderBy('position');
+                $query = App::getInstance()->getDb()->table($this->table_name)->where(['parent_id' => $this->id, 'locale' => $locale]);
+                if ($tableHasPosition) {
+                    $query = $query->orderBy('position');
+                }
             } else {
-                $query = App::getInstance()->getDb()->table($this->table_name)->where(['parent_id' => $this->id])->orderBy('position');
+                $query = App::getInstance()->getDb()->table($this->table_name)->where(['parent_id' => $this->id]);
+                if ($tableHasPosition) {
+                    $query = $query->orderBy('position');
+                }
             }
 
             $this->children = array_map(
@@ -66,6 +83,7 @@ trait WithChildrenTrait
      */
     protected function sortChildren() : void
     {
+        // can be used also if table has not position column, as null == null
         usort($this->children, [$this, 'cmpPosition']);
     }
 

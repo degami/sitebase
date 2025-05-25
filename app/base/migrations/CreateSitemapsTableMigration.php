@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Migrations;
+namespace App\Base\Migrations;
 
 use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Exceptions\DuplicateException;

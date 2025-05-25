@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Migrations;
+namespace App\Base\Migrations;
 
 use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Exceptions\DuplicateException;
@@ -20,7 +20,7 @@ use Degami\SqlSchema\Index;
 use Degami\SqlSchema\Table;
 
 /**
- * "block_rewrite" table migration
+ * "sitemap_rewrite" table migration
  */
 class CreateSitemapsRewritesTableMigration extends DBMigration
 {

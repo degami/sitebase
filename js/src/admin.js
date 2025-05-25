@@ -134,12 +134,17 @@
                             } else {
                                 $elem.appAdmin('closeAIChat');
                             }
-                        } else if (e.ctrlKey && e.shiftKey && e.code === 'KeyM') { 
-                            e.preventDefault();
-                            $('#darkmode-selector').prop('checked', !$('#darkmode-selector').prop('checked')).trigger('change');
                         }
                     });
                 }
+
+                document.addEventListener('keydown', function(e) {
+                    if (e.ctrlKey && e.shiftKey && e.code === 'KeyM') { 
+                        e.preventDefault();
+                        $('#darkmode-selector').prop('checked', !$('#darkmode-selector').prop('checked')).trigger('change');
+                    }
+                });
+
             });
         },
         showOverlay: function(namespace) {

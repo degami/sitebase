@@ -13,10 +13,10 @@
 
 namespace App\Site\Controllers\Frontend\Commerce;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
-use App\Site\Models\News;
 use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Exceptions\NotFoundException;
@@ -24,7 +24,6 @@ use App\Site\Models\DownloadableProduct;
 use Throwable;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\BasePage;
-use App\Base\Traits\CommercePageTrait;
 use App\Base\Traits\FormPageTrait;
 
 /**
@@ -62,6 +61,16 @@ class DownloadbleDetail extends FrontendPageWithObject
     public function getTemplateName(): string
     {
         return 'commerce/downloadable_detail';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return App::installDone() && boolval(\App\App::getInstance()->getEnv('ENABLE_COMMERCE'));
     }
 
     /**

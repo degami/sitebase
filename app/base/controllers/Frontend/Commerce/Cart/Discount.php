@@ -31,7 +31,7 @@ class Discount extends FrontendPage
      */
     public static function isEnabled(): bool
     {
-        return App::getInstance()->getEnv('ENABLE_COMMERCE', false);
+        return App::installDone() && App::getInstance()->getEnv('ENABLE_COMMERCE', false);
     }
 
     /**

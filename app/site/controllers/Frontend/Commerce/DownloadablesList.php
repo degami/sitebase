@@ -13,6 +13,7 @@
 
 namespace App\Site\Controllers\Frontend\Commerce;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Routing\RouteInfo;
@@ -58,6 +59,16 @@ class DownloadablesList extends FrontendPage
     public function getTemplateName(): string
     {
         return 'commerce/downloadables_list';
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public static function isEnabled(): bool
+    {
+        return App::installDone() && boolval(\App\App::getInstance()->getEnv('ENABLE_COMMERCE'));
     }
 
     /**

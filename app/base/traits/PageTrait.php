@@ -20,6 +20,7 @@ use App\Site\Models\Page as PageModel;
 use App\Base\Abstracts\Models\AccountModel;
 use App\Base\Models\GuestUser;
 use App\Base\Models\User;
+use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -48,6 +49,11 @@ trait PageTrait
      * @var RouteInfo|null route info object
      */
     protected ?RouteInfo $route_info;
+
+    /**
+     * @var Website|null current website model
+     */
+    protected ?Website $current_website = null;
 
     /**
      * calculates JWT token id
@@ -134,6 +140,20 @@ trait PageTrait
         }
 
         return $this->current_user_model;
+    }
+
+    /**
+     * returns current website
+     * 
+     * @return Website
+     */
+    public function getCurrentWebsite() : ?Website
+    {
+        if ($this->current_website == null && $this->getSiteData()->getCurrentWebsiteId()) {
+            $this->current_website = $this->containerCall([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);
+        }
+        
+        return $this->current_website;
     }
 
     /**

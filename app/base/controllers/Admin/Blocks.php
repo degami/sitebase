@@ -59,7 +59,10 @@ class Blocks extends AdminManageModelsPage
     ) {
         AdminFormPage::__construct($container, $request, $route_info);
         if (($this->getRequest()->get('action') ?? 'list') == 'list') {
-            $blockClasses = ClassFinder::getClassesInNamespace(App::BLOCKS_NAMESPACE);
+            $blockClasses = array_merge(
+                ClassFinder::getClassesInNamespace(App::BASE_BLOCKS_NAMESPACE), 
+                ClassFinder::getClassesInNamespace(App::BLOCKS_NAMESPACE)
+            );
 
             foreach ($blockClasses as $blockClass) {
                 $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();
@@ -127,7 +130,7 @@ class Blocks extends AdminManageModelsPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
         return [
             'permission_name' => static::getAccessPermission(),

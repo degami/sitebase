@@ -16,6 +16,7 @@ namespace App\Base\Tools\Utils;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Models\Language;
 use App\Base\Models\Website;
+use App\Base\Models\Country;
 use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -44,6 +45,9 @@ use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Exchanger\ExchangeRateQueryBuilder;
+use Exchanger\Service\ExchangerateHost;
+use Exchanger\Exchanger;
 
 /**
  * Global utils functions Helper Class
@@ -61,6 +65,27 @@ class Globals extends ContainerAwareObject
         foreach (Website::getCollection() as $website) {
             /** @var Website $website */
             $out[$website->getId()] = $website->getSiteName() . " (" . $website->getDomain() . ")";
+        }
+        return $out;
+    }
+
+    public function getCountriesSelectOptions(): array
+    {
+        $countriesItems = Country::getCollection()->getItems();
+        $out = array_combine(
+            array_map(fn($el) => $el->getIso2(), $countriesItems),
+            array_map(fn($el) => $el->getNameEn(), $countriesItems),
+        );
+
+        return $out;
+    }
+
+    public function getUsersSelectOptions(): array
+    {
+        $out = [];
+        foreach (User::getCollection() as $user) {
+            /** @var User $user */
+            $out[$user->getId()] = $user->getNickname() . ' ('.$user->getEmail().')';
         }
         return $out;
     }
@@ -906,5 +931,192 @@ class Globals extends ContainerAwareObject
     public static function isWeb(): bool
     {
         return !self::isCli() && !self::isCliServer();
+    }
+
+    public function convertFromCurrencyToCurrency(float $amount, string $currencyCodeFrom, string $currencyCodeTo) : float
+    {
+        $ratio = $this->calcCurrenciesRatio($currencyCodeFrom, $currencyCodeTo);
+        return $amount * $ratio;
+    }
+
+    public function calcCurrenciesRatio(string $currencyCodeFrom, string $currencyCodeTo) : float
+    {
+        try {
+            $service = new ExchangerateHost();
+            $exchanger = new Exchanger($service);
+            $query = (new ExchangeRateQueryBuilder(strtoupper($currencyCodeFrom).'/'.strtoupper($currencyCodeTo)))->build();
+            $rate = $exchanger->getExchangeRate($query);
+
+            return $rate->getValue();
+        } catch (\Exception $e) { }
+
+        return 1.0;
+    }
+
+    public function formatPrice(float $price, string $currency = 'EUR', $decimalSeparator = ',', $thousandSeparator = '.', bool $currencyBefore = false): string
+    {
+        return ($currencyBefore ? $this->currencySymbol($currency) . ' ' : '') . number_format($price, 2, $decimalSeparator, $thousandSeparator) . (!$currencyBefore ? ' ' . $this->currencySymbol($currency) : '');
+    }
+
+    public function currencySymbol(string $currencyCode): string 
+    {
+        $currenciesMap = [
+            'AED' => 'د.إ',
+            'AFN' => '؋',
+            'ALL' => 'L',
+            'AMD' => '֏',
+            'ANG' => 'ƒ',
+            'AOA' => 'Kz',
+            'ARS' => '$',
+            'AUD' => 'A$',
+            'AWG' => 'ƒ',
+            'AZN' => '₼',
+            'BAM' => 'KM',
+            'BBD' => '$',
+            'BDT' => '৳',
+            'BGN' => 'лв',
+            'BHD' => '.د.ب',
+            'BIF' => 'FBu',
+            'BMD' => '$',
+            'BND' => '$',
+            'BOB' => 'Bs.',
+            'BRL' => 'R$',
+            'BSD' => '$',
+            'BTN' => 'Nu.',
+            'BWP' => 'P',
+            'BYN' => 'Br',
+            'BZD' => '$',
+            'CAD' => 'C$',
+            'CDF' => 'FC',
+            'CHF' => 'CHF',
+            'CLP' => '$',
+            'CNY' => '¥',
+            'COP' => '$',
+            'CRC' => '₡',
+            'CUP' => '$',
+            'CVE' => '$',
+            'CZK' => 'Kč',
+            'DJF' => 'Fdj',
+            'DKK' => 'kr',
+            'DOP' => 'RD$',
+            'DZD' => 'دج',
+            'EGP' => '£',
+            'ERN' => 'Nfk',
+            'ETB' => 'Br',
+            'EUR' => '€',
+            'FJD' => '$',
+            'FKP' => '£',
+            'GBP' => '£',
+            'GEL' => '₾',
+            'GHS' => '₵',
+            'GIP' => '£',
+            'GMD' => 'D',
+            'GNF' => 'FG',
+            'GTQ' => 'Q',
+            'GYD' => '$',
+            'HKD' => 'HK$',
+            'HNL' => 'L',
+            'HRK' => '€',
+            'HTG' => 'G',
+            'HUF' => 'Ft',
+            'IDR' => 'Rp',
+            'ILS' => '₪',
+            'INR' => '₹',
+            'IQD' => 'ع.د',
+            'IRR' => '﷼',
+            'ISK' => 'kr',
+            'JMD' => '$',
+            'JOD' => 'د.ا',
+            'JPY' => '¥',
+            'KES' => 'KSh',
+            'KGS' => 'сом',
+            'KHR' => '៛',
+            'KMF' => 'CF',
+            'KRW' => '₩',
+            'KWD' => 'د.ك',
+            'KYD' => '$',
+            'KZT' => '₸',
+            'LAK' => '₭',
+            'LBP' => 'ل.ل',
+            'LKR' => 'Rs',
+            'LRD' => '$',
+            'LSL' => 'L',
+            'LYD' => 'ل.د',
+            'MAD' => 'د.م.',
+            'MDL' => 'L',
+            'MGA' => 'Ar',
+            'MKD' => 'ден',
+            'MMK' => 'Ks',
+            'MNT' => '₮',
+            'MOP' => 'P',
+            'MRU' => 'UM',
+            'MUR' => '₨',
+            'MVR' => 'Rf',
+            'MWK' => 'MK',
+            'MXN' => '$',
+            'MYR' => 'RM',
+            'MZN' => 'MT',
+            'NAD' => '$',
+            'NGN' => '₦',
+            'NIO' => 'C$',
+            'NOK' => 'kr',
+            'NPR' => '₨',
+            'NZD' => 'NZ$',
+            'OMR' => 'ر.ع.',
+            'PAB' => 'B/.',
+            'PEN' => 'S/',
+            'PGK' => 'K',
+            'PHP' => '₱',
+            'PKR' => '₨',
+            'PLN' => 'zł',
+            'PYG' => '₲',
+            'QAR' => 'ر.ق',
+            'RON' => 'lei',
+            'RSD' => 'дин',
+            'RUB' => '₽',
+            'RWF' => 'RF',
+            'SAR' => 'ر.س',
+            'SBD' => '$',
+            'SCR' => '₨',
+            'SDG' => 'ج.س.',
+            'SEK' => 'kr',
+            'SGD' => '$',
+            'SHP' => '£',
+            'SLL' => 'Le',
+            'SOS' => 'Sh',
+            'SRD' => '$',
+            'SSP' => '£',
+            'STN' => 'Db',
+            'SYP' => '£',
+            'SZL' => 'L',
+            'THB' => '฿',
+            'TJS' => 'ЅМ',
+            'TMT' => 'm',
+            'TND' => 'د.ت',
+            'TOP' => 'T$',
+            'TRY' => '₺',
+            'TTD' => 'TT$',
+            'TWD' => 'NT$',
+            'TZS' => 'TSh',
+            'UAH' => '₴',
+            'UGX' => 'USh',
+            'USD' => '$',
+            'UYU' => '$U',
+            'UZS' => 'soʻm',
+            'VES' => 'Bs.S',
+            'VND' => '₫',
+            'VUV' => 'VT',
+            'WST' => 'T',
+            'XAF' => 'FCFA',
+            'XCD' => '$',
+            'XOF' => 'CFA',
+            'XPF' => '₣',
+            'YER' => '﷼',
+            'ZAR' => 'R',
+            'ZMW' => 'ZK',
+            'ZWL' => '$'
+        ];
+
+        return $currenciesMap[$currencyCode] ?? $currencyCode;
     }
 }

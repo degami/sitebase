@@ -23,6 +23,7 @@ use Symfony\Component\Console\Question\ConfirmationQuestion;
 use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 
 /**
  * Generate Model Command
@@ -79,7 +80,9 @@ class Model extends CodeGeneratorCommand
 
         do {
             $column_info = $this->askColumnInfo();
-            $this->columns[$column_info['col_name']] = $column_info;
+            if ($column_info) {
+                $this->columns[$column_info['col_name']] = $column_info;
+            }
 
             $question = new ConfirmationQuestion('Add another field? ', false);
         } while ($this->getQuestionHelper()->ask($input, $output, $question) == true);
@@ -110,9 +113,10 @@ class Model extends CodeGeneratorCommand
      *
      * @return array
      */
-    protected function askColumnInfo(): array
+    protected function askColumnInfo(): ?array
     {
-        $helper = $this->getHelper('question');
+        /** @var QuestionHelper $helper */
+        $helper = $this->getQuestionHelper();
 
         $column_info = [
             'col_name' => '',
@@ -129,6 +133,18 @@ class Model extends CodeGeneratorCommand
         while (trim($column_info['col_name']) == '') {
             $question = new Question('Column name: ');
             $column_info['col_name'] = trim($helper->ask($this->input, $this->output, $question));
+        }
+
+        if (in_array($column_info['col_name'], ['id','created_at','updated_at'])) {
+            $this->getIo()->error("Cannot overwrite column ".$column_info['col_name']);
+            return null;
+        }
+
+        if (in_array($column_info['col_name'], array_keys($this->columns))) {
+            $confirmation = $this->confirmMessage('Column '.$column_info['col_name'].' is already defined. Do you confirm overwrite existing definition?', 'Aborting');
+            if (!$confirmation) {
+                return null;
+            }
         }
 
         $types = [

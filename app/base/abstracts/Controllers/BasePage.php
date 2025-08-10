@@ -277,6 +277,23 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
     }
 
     /**
+     * gets a RedirectResponse to loginPage that will return tu current page after login
+     * 
+     * @param string!null $custom_message
+     * @return RedirectResponse
+     */
+    public function returnAfterLogin(?string $custom_message = null) : RedirectResponse
+    {
+        $this->addWarningFlashMessage(
+            $this->getUtils()->translate( $custom_message ?? 'You need to be logged in to access this page. Please log in or register.')
+        );
+        
+        return $this->doRedirect( 
+            $this->getUrl('frontend.users.login') . '?dest='.$this->getDestParam()
+        );
+    }
+
+    /**
      * specifies if this controller is eligible for full page cache
      *
      * @return bool

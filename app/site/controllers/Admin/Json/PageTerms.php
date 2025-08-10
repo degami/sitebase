@@ -61,7 +61,7 @@ class PageTerms extends AdminJsonPage
 
         $terms = array_map(
             function ($el) use ($page) {
-                return $el->getTitle() . ' <a class="deassoc_lnk ml-auto" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=deassoc">&times;</a>';
+                return $el->getTitle() . ' <a class="deassoc_lnk ml-auto" data-page_id="' . $page->id . '" data-term_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $page->id]) . '?page_id=' . $page->id . '&term_id=' . $el->id . '&action=page_deassoc">&times;</a>';
             },
             $page->getTerms()
         );

@@ -32,7 +32,7 @@ trait FrontendModelTrait
     {
         $this->checkLoaded();
 
-        return '/' . $this->getLocale() . '/' . App::getInstance()->getUtils()->slugify($this->getUrl(), false) . '.html';
+        return '/' . $this->getLocale() . '/' . App::getInstance()->getUtils()->slugify($this->getUrl() ?? $this->getUrlKey(), false) . '.html';
     }
 
     /**

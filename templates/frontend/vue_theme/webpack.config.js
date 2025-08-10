@@ -39,6 +39,7 @@ module.exports = {
       },
       {
         test: /\.scss$/,
+        include: path.resolve(__dirname, 'js'),
         use: [
           //MiniCssExtractPlugin.loader, // Estrae il CSS in un file separato
           'vue-style-loader', // Oppure 'style-loader'

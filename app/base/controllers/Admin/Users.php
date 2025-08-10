@@ -13,6 +13,8 @@
 
 namespace App\Base\Controllers\Admin;
 
+use App\Base\Models\Country;
+use App\Base\Models\Address;
 use App\Base\Models\Role;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
@@ -72,7 +74,7 @@ class Users extends AdminManageModelsPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
         return [
             'permission_name' => static::getAccessPermission(),
@@ -117,6 +119,15 @@ class Users extends AdminManageModelsPage
                 $this->addBackButton();
 
                 if ($type == 'edit') {
+
+                    $this->addActionLink(
+                        'addresses-btn',
+                        'addresses-btn',
+                        '<i class="fas fa-address-book"></i> Addresses',
+                        $this->getUrl('crud.app.base.controllers.admin.json.useraddresses', ['id' => $this->getRequest()->get('user_id')]) . '?user_id=' . $this->getRequest()->get('user_id') . '&action=newaddress',
+                        'btn btn-sm btn-light inToolSidePanel'
+                    );
+ 
                     if ($user->locked) {
                         $this->addActionLink(
                             'lock-btn',
@@ -204,6 +215,115 @@ class Users extends AdminManageModelsPage
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
                 break;
+
+            case 'newaddress':
+            case 'editaddress':
+
+                $countries = $this->getUtils()->getCountriesSelectOptions();
+
+                $address = $this->containerMake(Address::class);
+                if ($this->getRequest()->get('address_id')) {
+                    $address = Address::load($this->getRequest()->get('address_id'));
+                }
+
+                $websites = $this->getUtils()->getWebsitesSelectOptions();
+
+                $form
+                ->addMarkup('<div class="row">')
+                ->addField('first_name', [
+                    'type' => 'textfield',
+                    'title' => 'First Name',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'validate' => ['required'],
+                    'default_value' => $address->getFirstName(),
+                ])
+                ->addField('last_name', [
+                    'type' => 'textfield',
+                    'title' => 'Last Name',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'validate' => ['required'],
+                    'default_value' => $address->getLastName(),
+                ])
+                ->addField('company', [
+                    'type' => 'textfield',
+                    'title' => 'Company',
+                    'container_class' => 'col-sm-12 pb-2',
+                    'default_value' => $address->getCompany(),
+                ])
+                ->addField('address1', [
+                    'type' => 'textfield',
+                    'title' => 'Address 1',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'validate' => ['required'],
+                    'default_value' => $address->getAddress1(),
+                ])
+                ->addField('address2', [
+                    'type' => 'textfield',
+                    'title' => 'Address 2',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'default_value' => $address->getAddress2(),
+                ])
+                ->addField('city', [
+                    'type' => 'textfield',
+                    'title' => 'City',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'validate' => ['required'],
+                    'default_value' => $address->getCity(),
+                ])
+                ->addField('state', [
+                    'type' => 'textfield',
+                    'title' => 'State',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'default_value' => $address->getState(),
+                ])
+                ->addField('postcode', [
+                    'type' => 'textfield',
+                    'title' => 'Post Code',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'validate' => ['required'],
+                    'default_value' => $address->getPostcode(),
+                ])
+                ->addField('country_code', [
+                    'type' => 'select',
+                    'title' => 'Country',
+                    'container_class' => 'col-sm-6 pb-2',
+                    'options' => ['' => '-- Select --'] + $countries,
+                    'validate' => ['required'],
+                    'default_value' => $address->getCountryCode(),
+                ])
+                ->addField('phone', [
+                    'type' => 'textfield',
+                    'title' => 'Phone',
+                    'container_class' => 'col-sm-6',
+                    'default_value' => $address->getPhone(),
+                ])
+                ->addField('email', [
+                    'type' => 'email',
+                    'title' => 'Email',
+                    'container_class' => 'col-sm-6',
+                    'validate' => ['required', 'email'],
+                    'default_value' => $address->getEmail(),
+                ])
+                ->addField('website_id', [
+                    'type' => 'select',
+                    'title' => 'Website',
+                    'container_class' => 'col-sm-12',
+                    'options' => $websites,
+                    'validate' => ['required'],
+                    'default_value' => $address->getWebsiteId(),
+                ])
+                ->addMarkup('</div>');
+
+                $this->addSubmitButton($form);
+
+                break;
+            case 'deleteaddress':
+                $form->addField('address_id', [
+                    'type' => 'hidden',
+                    'default_value' => $this->getRequest()->get('address_id'),
+                ]);
+                $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
+                break;
         }
 
         return $form;
@@ -275,6 +395,42 @@ class Users extends AdminManageModelsPage
                 $user->delete();
 
                 $this->setAdminActionLogData('Deleted user ' . $user->getId());
+
+                break;
+
+            case 'newaddress':
+            case 'editaddress':
+
+                $address = $this->containerMake(Address::class);
+                if ($this->getRequest()->get('address_id')) {
+                    $address = Address::load($this->getRequest()->get('address_id'));
+                }
+
+                $address->setUserId($user->getId());
+                $address->setWebsiteId($values['website_id']);
+                $address->setFirstName($values['first_name']);
+                $address->setLastName($values['last_name']);
+                $address->setCompany($values['company']);
+                $address->setAddress1($values['address1']);
+                $address->setAddress2($values['address2']);
+                $address->setCity($values['city']);
+                $address->setState($values['state']);
+                $address->setPostcode($values['postcode']);
+                $address->setCountryCode($values['country_code']);
+                $address->setPhone($values['phone']);
+                $address->setEmail($values['email']);
+
+                $this->setAdminActionLogData($address->getChangedData());
+
+                $address->persist();
+
+                break;
+            case 'deleteaddress':
+
+                $address = Address::load($this->getRequest()->get('address_id'));
+
+                $this->setAdminActionLogData('Deleted user ' . $user->getId());
+                $address->delete();
 
                 break;
         }

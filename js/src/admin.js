@@ -363,7 +363,7 @@
                 }
                 $('.sidepanel', that).find('.card-title').html(title);
                 $('.sidepanel', that).find('.card-block').html(response.html || '');
-                $('.sidepanel', that).find('.card').css({'height': '95%'});
+                $('.sidepanel', that).find('.card').css({'min-height': '95%'});
                 $('.sidepanel', that).find('.card-block').css({'height': '100%'});
                 
                 // add behaviours
@@ -399,6 +399,11 @@
                 $('.sidepanel', that).find('.card-block a[href]').click(function(evt){
                     if($(this).attr('href') != '#') {
                        evt.preventDefault();
+                       if ($(this).hasClass('cancel-btn')) {
+                            $(that).appAdmin('closeSidePanel');
+                            return;
+                       }
+
                        $(that).appAdmin('loadPanelContent', title, $(this).attr('href'), false, false);
                     }
                 });

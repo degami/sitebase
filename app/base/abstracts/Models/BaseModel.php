@@ -737,12 +737,13 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $this->prePersist();
 
-        if (!$this->getDbRow()->exists() && array_key_exists('created_at', $this->getDbRow()->getData()) && $this->getData('created_at') == null) {
+        if (!$this->getDbRow()->exists() && in_array('created_at', static::getTableColumns()) && $this->getData('created_at') == null) {
             $this->getDbRow()->created_at = date("Y-m-d H:i:s", time());
         }
-        if (array_key_exists('updated_at', $this->getDbRow()->getData())) {
+        if (in_array('updated_at', static::getTableColumns())) {
             $this->getDbRow()->updated_at = date("Y-m-d H:i:s", time());
         }
+
         $this->getDbRow()->update($this->getData(), $recursive);
 
         $this->postPersist();
@@ -765,6 +766,13 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      */
     public function prePersist(): BaseModel
     {
+        if (in_array('created_at', static::getTableColumns()) && $this->getData('created_at') == null) {
+            $this->getDbRow()->created_at = date("Y-m-d H:i:s", time());
+        }
+        if (in_array('updated_at', static::getTableColumns())) {
+            $this->getDbRow()->updated_at = date("Y-m-d H:i:s", time());
+        }
+        $this->emitEvent('pre_persist');
         return $this;
     }
 
@@ -775,6 +783,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      */
     public function postPersist(): BaseModel
     {
+        $this->emitEvent('post_persist');
         return $this;
     }
 
@@ -825,6 +834,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      */
     public function preRemove(): BaseModel
     {
+        $this->emitEvent('pre_remove');
         return $this;
     }
 
@@ -835,6 +845,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      */
     public function postRemove(): BaseModel
     {
+        $this->emitEvent('post_remove');
         return $this;
     }
 
@@ -944,5 +955,15 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
     public static function getTableColumns()
     {
         return array_values(array_map(fn($column) => $column->getName(), App::getInstance()->getSchema()->getTable(static::defaultTableName())?->getColumns()));
+    }
+
+    protected function emitEvent($eventName)
+    {
+        // ensure event name is lowercase
+        $eventName = trim(strtolower($eventName));
+
+        // emit event post persist
+        App::getInstance()->event('model_'.$eventName, ['object' => $this]);
+        App::getInstance()->event(strtolower(basename(str_replace("\\", DIRECTORY_SEPARATOR, get_class($this)))) . '_' . $eventName, ['object' => $this]);
     }
 }

@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Exception;
 use App\Base\Traits\FrontendPageTrait;
 use App\Base\Exceptions\NotFoundException;
+use App\Base\Traits\FrontendPageWithObjectTrait;
 use Throwable;
 
 /**
@@ -38,7 +39,7 @@ use Throwable;
  */
 class ContactForm extends FormPage // and and is similar to FrontendPageWithObject
 {
-    use FrontendPageTrait;
+    use FrontendPageWithObjectTrait;
 
     /**
      * {@inheritdoc}

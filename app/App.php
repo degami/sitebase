@@ -35,7 +35,9 @@ use App\Base\Traits\ContainerAwareTrait;
 use App\Base\Traits\ToolsTrait;
 use App\Base\Traits\TranslatorsTrait;
 use Exception;
+use HaydenPierce\ClassFinder\ClassFinder;
 use Throwable;
+use App\Base\Interfaces\EventListenerInterface;
 
 /**
  * App class
@@ -67,21 +69,38 @@ class App
     public const GRAPHQL = 'graphql';
 
     public const BASE_COMMANDS_NAMESPACE = 'App\Base\Commands';
-    public const BASE_CONTROLLERS_NAMESPACE = 'App\Base\Controllers';
-    public const BASE_CRON_TASKS_NAMESPACE = 'App\Base\Cron\Tasks';
-    public const BASE_ROUTERS_NAMESPACE = 'App\Base\Routers';
-    public const BASE_BLOCKS_NAMESPACE = 'App\Base\Blocks';
-    public const BASE_CRUD_NAMESPACE = 'App\Base\Crud';
-    public const ROUTERS_NAMESPACE = 'App\Site\Routers';
-    public const CONTROLLERS_NAMESPACE = 'App\Site\Controllers';
-    public const CRUD_NAMESPACE = 'App\Site\Crud';
-    public const WEBHOOKS_NAMESPACE = 'App\Site\Webhooks';
-    public const BLOCKS_NAMESPACE = 'App\Site\Blocks';
-    public const MODELS_NAMESPACE = 'App\Site\Models';
     public const COMMANDS_NAMESPACE = 'App\Site\Commands';
-    public const MIGRATIONS_NAMESPACE = 'App\Site\Migrations';
+
+    public const BASE_CONTROLLERS_NAMESPACE = 'App\Base\Controllers';
+    public const CONTROLLERS_NAMESPACE = 'App\Site\Controllers';
+
+    public const BASE_CRON_TASKS_NAMESPACE = 'App\Base\Cron\Tasks';
     public const CRON_TASKS_NAMESPACE = 'App\Site\Cron\Tasks';
+
+    public const BASE_ROUTERS_NAMESPACE = 'App\Base\Routers';
+    public const ROUTERS_NAMESPACE = 'App\Site\Routers';
+
+    public const BASE_BLOCKS_NAMESPACE = 'App\Base\Blocks';
+    public const BLOCKS_NAMESPACE = 'App\Site\Blocks';
+
+    public const BASE_MODELS_NAMESPACE = 'App\Base\Models';
+    public const MODELS_NAMESPACE = 'App\Site\Models';
+
+    public const BASE_CRUD_NAMESPACE = 'App\Base\Crud';
+    public const CRUD_NAMESPACE = 'App\Site\Crud';
+
+    public const BASE_COMMERCE_NAMESPACE = 'App\Base\Commerce';
+    public const COMMERCE_NAMESPACE = 'App\Site\Commerce';
+
+    public const BASE_MIGRATIONS_NAMESPACE = 'App\Base\Migrations';
+    public const MIGRATIONS_NAMESPACE = 'App\Site\Migrations';
+
+    public const BASE_EVENT_LISTENERS_NAMESPACE = 'App\Base\EventListeners';
+    public const EVENT_LISTENERS_NAMESPACE = 'App\Site\EventListeners';
+
+    public const WEBHOOKS_NAMESPACE = 'App\Site\Webhooks';
     public const QUEUES_NAMESPACE = 'App\Site\Queues';
+
     public const GRAPHQL_RESOLVERS_NAMESPACE = 'App\Site\GraphQL\Resolvers';
 
     /**
@@ -224,6 +243,8 @@ class App
             $debugbar = $this->getDebugbar();
             $debugbar['time']->startMeasure('app_bootstrap', 'App bootstrap');
         }
+
+        $this->registerEventListeners();
 
         $response = null;
         $routeInfo = null;
@@ -417,6 +438,38 @@ class App
     public function event(string $event_name, mixed $event_data): App
     {
         $this->getEventManager()->emit(new Event($event_name, $event_data));
+
+        return $this;
+    }
+
+    public function registerEventListeners(bool $reset = false) : App
+    {
+        $event_liteners_key = "site.event_listeners";
+        if (!$this->getCache()->has($event_liteners_key) || $reset) {
+
+            $listeners = array_filter(array_merge(
+                ClassFinder::getClassesInNamespace(App::BASE_EVENT_LISTENERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                ClassFinder::getClassesInNamespace(App::EVENT_LISTENERS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
+            ), fn ($listenerClass) => is_subclass_of($listenerClass, EventListenerInterface::class));
+
+            $this->getCache()->set($event_liteners_key, $listeners);
+        } else {
+            $listeners = $this->getCache()->get($event_liteners_key);
+        }
+
+        foreach ($listeners as $listenerClass) {
+            if (is_subclass_of($listenerClass, EventListenerInterface::class)) {
+                $lister = $this->containerMake($listenerClass);
+
+                foreach ($lister->getEventHandlers() as $eventName => $eventHandler) {
+                    if (is_callable($eventHandler)) {
+                        $this->getEventManager()->on([$eventName], function(Event $e) use ($eventHandler) {
+                            call_user_func_array($eventHandler, [$e]);
+                        });
+                    }
+                }
+            }
+        }
 
         return $this;
     }

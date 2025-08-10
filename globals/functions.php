@@ -51,3 +51,17 @@ function dbq($query_string, mixed $params = null)
         echo $e->getMessage();
     }
 }
+
+function isJson($content)
+{
+    if (!is_string($content)) {
+        return false;
+    }
+
+    $decoded = json_decode($content);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        return false;
+    }
+
+    return is_array($decoded) || is_object($decoded);
+}

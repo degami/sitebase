@@ -159,7 +159,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         return $this->normalizeCacheKey(
             'site.'.$this->getRewriteObject()?->getWebsiteId().
             '.' . $this->getRewriteObject()?->getLocale() . 
-            '.' . trim($this->getRouteInfo()->getRouteName(), '.')
+            '.' . trim($this->getRouteInfo()->getRouteName() ?? "", '.')
         );
     }
 

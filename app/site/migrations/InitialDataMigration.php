@@ -19,6 +19,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Models\Configuration;
 use App\Base\Models\Language;
+use App\Base\Models\Country;
 use App\Site\Models\Page;
 use App\Base\Models\Permission;
 use App\Base\Models\Role;
@@ -58,6 +59,7 @@ class InitialDataMigration extends BaseMigration
     {
         static::addRolesPermissions();
         static::addLanguages();
+        static::addCountries();
 
         $website = static::addWebsite();
         $admin = static::addAdmin();
@@ -81,6 +83,7 @@ class InitialDataMigration extends BaseMigration
         $website_model->setDomain($site_domain);
         $website_model->setAliases('www.' . $site_domain);
         $website_model->setDefaultLocale('en');
+        $website_model->setDefaultCurrencyCode('EUR');
 
         $website_model->persist();
 
@@ -205,29 +208,6 @@ class InitialDataMigration extends BaseMigration
         }
 
         // admin only permissions
-        /*$permissions = [
-            'administer_site',
-            'administer_configuration',
-            'administer_websites',
-            'administer_users',
-            'administer_permissions',
-            'administer_pages',
-            'administer_medias',
-            'administer_languages',
-            'administer_menu',
-            'administer_taxonomy',
-            'administer_blocks',
-            'administer_rewrites',
-            'administer_cron',
-            'administer_contact',
-            'administer_logs',
-            'administer_links',
-            'administer_queue',
-            'administer_news',
-            'administer_events',
-            'administer_sitemaps',
-            'system_info',
-        ];*/
         $permissions = static::getAdminPermissionsArray();
         foreach ($permissions as $permission_name) {
             static::addPermission($admin_role_model, $permission_name);
@@ -259,6 +239,36 @@ class InitialDataMigration extends BaseMigration
                 $lang_model->setFamily($lang['family']);
 
                 $lang_model->persist();
+            }
+        }
+    }
+
+    /**
+     * adds countries
+     *
+     * @throws BasicException
+     * @throws InvalidValueException
+     */
+    public static function addCountries()
+    {
+        $fd = fopen("app/base/tools/all_countries_with_capitals.csv", "r");
+        $header = null;
+        while ($row = fgetcsv($fd)) {
+            if ($header == null) {
+                $header = $row;
+            } else {
+                $country = array_combine((array)$header, $row);
+
+                $country_model = Country::new();
+                $country_model->setIso2($country['iso2']);
+                $country_model->setIso3($country['iso3']);
+                $country_model->setNameEn($country['name_en']);
+                $country_model->setNameNative($country['name_native']);
+                $country_model->setCapital($country['capital']);
+                $country_model->setLongitude((float)$country['longitude']);
+                $country_model->setLatitude((float)$country['latitude']);
+
+                $country_model->persist();
             }
         }
     }

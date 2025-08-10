@@ -14,6 +14,8 @@
 namespace App\Base\Abstracts\Controllers;
 
 use App\Base\Routing\RouteInfo;
+use App\Base\Abstracts\Controllers\BasePage;
+use Symfony\Component\HttpFoundation\Response;
 use App\Base\Traits\FormPageTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
@@ -22,6 +24,7 @@ use DI\NotFoundException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Degami\PHPFormsApi as FAPI;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * Base for admin form page
@@ -73,5 +76,57 @@ abstract class AdminFormPage extends AdminPage
             $this->getApp()->event('before_form_process', ['form' => $this->template_data['form']]);
             $this->template_data['form']->process();
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Response|self
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     */
+    protected function beforeRender(): BasePage|Response
+    {
+        if ($this->getForm() && $this->getRequest()->get('asJson') == 1) {
+            if ($this->getForm()->isSubmitted()) {
+                $this->getApp()->event('form_submitted', ['form' => $this->getForm()]);
+                $formResults = $this->getForm()->getSubmitResults(get_class($this) . '::formSubmitted');
+
+                if (isJson($formResults)) {
+                    return JsonResponse::fromJsonString($formResults);
+                }
+                if (is_string($formResults)) {
+                    return $this->containerMake(JsonResponse::class, ['data' => [
+                        'html' => $formResults,
+                    ]]);
+                }
+                if ($formResults instanceof Response) {
+                    return $formResults;
+                }
+
+                return $this->containerMake(JsonResponse::class, ['data' => $formResults]);
+            }
+
+            if ($this->getForm()->getAction() == null) {
+                $queryParams = $this->getRequest()->query->all();
+                $this->getForm()->setAction($this->getControllerUrl() . ($queryParams ? '?' . http_build_query($queryParams) : ''));
+            }
+
+            $formHTML = $this->getForm()->render();
+            if (isJson($formHTML)) {
+                return JsonResponse::fromJsonString($formHTML);
+            }
+
+            return $this->containerMake(JsonResponse::class, ['data' => [
+                'html' => $formHTML,
+            ]]);
+        }
+
+        // as in FormPageTrait::beforeRender()
+        if ($this->getForm() && $this->getForm()->isSubmitted()) {
+            $this->getApp()->event('form_submitted', ['form' => $this->getForm()]);
+            return $this->getForm()->getSubmitResults(get_class($this) . '::formSubmitted');
+        }
+        return parent::beforeRender();
     }
 }

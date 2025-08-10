@@ -97,7 +97,7 @@ class Events extends AdminManageFrontendModelsPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
         return [
             'permission_name' => static::getAccessPermission(),
@@ -160,17 +160,20 @@ class Events extends AdminManageFrontendModelsPage
                     'title' => 'Title',
                     'default_value' => $event_title,
                     'validate' => ['required'],
-                ])->addField('location', [
+                ])
+                ->addField('location', [
                     'type' => $locationFieldType,
                     'title' => 'Location',
                     'default_value' => $event_location,
                     'validate' => ['required'],
-                ] + $mapOptions)->addField('date', [
+                ] + $mapOptions)
+                ->addField('date', [
                     'type' => 'datepicker',
                     'title' => 'Date',
                     'default_value' => $event_date,
                     'validate' => ['required'],
-                ])->addField('content', [
+                ])
+                ->addField('content', [
                     'type' => 'tinymce',
                     'title' => 'Content',
                     'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
@@ -218,7 +221,7 @@ class Events extends AdminManageFrontendModelsPage
     public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         /**
-         * @var NewsModel $news
+         * @var EventModel $news
          */
         $event = $this->getObject();
 
@@ -286,21 +289,21 @@ class Events extends AdminManageFrontendModelsPage
     protected function getTableElements(array $data): array
     {
         return array_map(
-            function ($news) {
+            function ($event) {
                 return [
-                    'ID' => $news->id,
-                    'Website' => $news->getWebsiteId() == null ? 'All websites' : $news->getWebsite()->domain,
-                    'URL' => $news->url,
-                    'Locale' => $news->locale,
-                    'Title' => $news->title,
-                    'Date' => $news->date,
+                    'ID' => $event->id,
+                    'Website' => $event->getWebsiteId() == null ? 'All websites' : $event->getWebsite()->domain,
+                    'URL' => $event->url,
+                    'Locale' => $event->locale,
+                    'Title' => $event->title,
+                    'Date' => $event->date,
                     'actions' => implode(
                         " ",
                         [
-                            $this->getFrontendModelButton($news),
-                            $this->getTranslationsButton($news),
-                            $this->getEditButton($news->id),
-                            $this->getDeleteButton($news->id),
+                            $this->getFrontendModelButton($event),
+                            $this->getTranslationsButton($event),
+                            $this->getEditButton($event->id),
+                            $this->getDeleteButton($event->id),
                         ]
                     ),
                 ];

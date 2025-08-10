@@ -75,7 +75,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
         return [
             'permission_name' => static::getAccessPermission(),
@@ -308,7 +308,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     $this->addSuccessFlashMessage($this->getUtils()->translate("Term Saved."));
                 }
                 break;
-            case 'deassoc':
+            case 'page_deassoc':
                 if ($values['page_id']) {
                     /** @var Page $page */
                     $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);

@@ -1064,6 +1064,10 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $handler = [$log, 'get' . $this->getUtils()->snakeCaseToPascalCase($property)];
             $value = call_user_func($handler);
 
+            if (!is_scalar($value)) {
+                $value = var_export($value, true);
+            }
+
             if (!empty($value) && str_contains($value, "\\n")) {
                 $value = '<pre>'. str_replace("\\n", "\n", $value) . '</pre>';
             }

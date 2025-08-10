@@ -68,9 +68,9 @@ class Elasticsearch extends AdminPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
-        if (!$this->getSearch()->isEnabled()) {
+        if (!App::getInstance()->getSearch()->isEnabled()) {
             return null;
         }
 

@@ -19,6 +19,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Throwable;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\QuestionHelper;
 
 /**
  * Database Shell Command
@@ -42,7 +43,8 @@ class Shell extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        $helper = $this->getHelper('question');
+        /** @var QuestionHelper $helper */
+        $helper = $this->getQuestionHelper();
 
         $this->getIo()->title('Welcome.');
 

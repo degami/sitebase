@@ -49,7 +49,7 @@ class ServerStats extends AdminPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
         return [
             'permission_name' => static::getAccessPermission(),

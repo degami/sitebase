@@ -29,7 +29,7 @@ use App\Site\Models\Page;
 use App\App;
 use App\Base\Abstracts\Models\BaseCollection;
 use Degami\Basics\Html\TagElement;
-use League\Plates\Template\Func;
+use App\Site\Models\DownloadableProduct;
 
 /**
  * "Media" Admin Page
@@ -152,7 +152,7 @@ class Media extends AdminManageModelsPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
         return [
             'permission_name' => static::getAccessPermission(),
@@ -332,23 +332,16 @@ class Media extends AdminManageModelsPage
                         'default_value' => $page->getId(),
                     ]);
                 }
-                break;
-            case 'deassoc':
-                /** @var Page $page */
-                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
-                $form->addField('page_id', [
-                    'type' => 'hidden',
-                    'default_value' => $page->getId(),
-                ])->addField('media_id', [
-                    'type' => 'hidden',
-                    'default_value' => $media->getId(),
-                ])->addField('confirm', [
-                    'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the selected element from the "' . $page->getTitle() . '" page (ID: ' . $page->getId() . ') ?',
-                    'suffix' => '<br /><br />',
-                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $page->getId()]) . '?page_id=' . $page->getId() . '&action=new">Cancel</a>');
 
-                $this->addSubmitButton($form, true);
+                if ($this->getRequest()->get('product_id')) {
+                    /** @var DownloadableProduct $product */
+                    $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->get('product_id')]);
+                    $form->addField('product_id', [
+                        'type' => 'hidden',
+                        'default_value' => $product->getId(),
+                    ]);
+                }
+
                 break;
             case 'page_assoc':
                 $not_in = array_map(
@@ -382,6 +375,75 @@ class Media extends AdminManageModelsPage
                     'type' => 'hidden',
                     'default_value' => $media->getId(),
                 ]);
+
+                $this->addSubmitButton($form, true);
+                break;
+            case 'page_deassoc':
+                /** @var Page $page */
+                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                $form->addField('page_id', [
+                    'type' => 'hidden',
+                    'default_value' => $page->getId(),
+                ])->addField('media_id', [
+                    'type' => 'hidden',
+                    'default_value' => $media->getId(),
+                ])->addField('confirm', [
+                    'type' => 'markup',
+                    'value' => 'Do you confirm the disassociation of the selected element from the "' . $page->getTitle() . '" page (ID: ' . $page->getId() . ') ?',
+                    'suffix' => '<br /><br />',
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $page->getId()]) . '?page_id=' . $page->getId() . '&action=new">Cancel</a>');
+
+                $this->addSubmitButton($form, true);
+                break;
+            case 'downloadable_product_assoc':
+                $not_in = array_map(
+                    function ($el) {
+                        return $el->page_id;
+                    },
+                    $this->getDb()->downloadable_product_media_elementList()->where('media_element_id', $media->getId())->fetchAll()
+                );
+
+                $products = array_filter(
+                    array_map(
+                        function ($product) use ($not_in) {
+                            /** @var DownloadableProduct $product */
+                            if (in_array($product->getId(), $not_in)) {
+                                return null;
+                            }
+
+                            return ['title' => $product->getTitle() . ' - ' . $product->getRewrite()->getUrl(), 'id' => $product->getId()];
+                        },
+                        DownloadableProduct::getCollection()->getItems()
+                    )
+                );
+
+                $products = array_combine(array_column($products, 'id'), array_column($products, 'title'));
+
+                $form->addField('product_id', [
+                    'type' => 'select',
+                    'options' => ['' => ''] + $products,
+                    'default_value' => '',
+                ])->addField('media_id', [
+                    'type' => 'hidden',
+                    'default_value' => $media->getId(),
+                ]);
+
+                $this->addSubmitButton($form, true);
+                break;
+            case 'downloadable_product_deassoc':
+                /** @var DownloadableProduct $product */
+                $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->get('product_id')]);
+                $form->addField('product_id', [
+                    'type' => 'hidden',
+                    'default_value' => $product->getId(),
+                ])->addField('media_id', [
+                    'type' => 'hidden',
+                    'default_value' => $media->getId(),
+                ])->addField('confirm', [
+                    'type' => 'markup',
+                    'value' => 'Do you confirm the disassociation of the selected element from the "' . $product->getTitle() . '" product (ID: ' . $product->getId() . ') ?',
+                    'suffix' => '<br /><br />',
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.downloadablemedia', ['id' => $product->getId()]) . '?page_id=' . $product->getId() . '&action=new">Cancel</a>');
 
                 $this->addSubmitButton($form, true);
                 break;
@@ -486,20 +548,38 @@ class Media extends AdminManageModelsPage
 
                 if ($values['page_id'] != null) {
                     $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']])->addMedia($media);
+                } else if ($values['product_id'] != null) {
+                    $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $values['product_id']])->addMedia($media);
                 } else {
                     $this->addSuccessFlashMessage($this->getUtils()->translate("Media Saved."));
                 }
                 break;
-            case 'deassoc':
+            case 'page_deassoc':
                 if ($values['page_id']) {
+                    /** @var Page $page */
                     $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->removeMedia($media);
                 }
                 break;
             case 'page_assoc':
                 if ($values['page_id']) {
+                    /** @var Page $page */
                     $page = $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']]);
                     $page->addMedia($media);
+                }
+                break;
+            case 'downloadable_product_deassoc':
+                if ($values['product_id']) {
+                    /** @var DownloadableProduct $page */
+                    $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $values['product_id']]);
+                    $product->removeMedia($media);
+                }
+                break;
+            case 'downloadable_product_assoc':
+                if ($values['product_id']) {
+                    /** @var DownloadableProduct $product */
+                    $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $values['product_id']]);
+                    $product->addMedia($media);
                 }
                 break;
             case 'delete':

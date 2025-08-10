@@ -71,12 +71,12 @@ class Websites extends AdminManageModelsPage
      *
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static function getAdminPageLink() : array|null
     {
         return [
             'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
-            'icon' => 'globe',
+            'icon' => 'upload-cloud',
             'text' => 'Websites',
             'section' => 'system',
             'order' => 3,

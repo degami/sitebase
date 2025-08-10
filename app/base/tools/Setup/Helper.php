@@ -78,7 +78,7 @@ class Helper {
         return $this->console_bin;
     }
 
-    protected function getDotenvSections() : array
+    public static function getDotenvSections() : array
     {
         return [
             'Basic Info' => ['APPNAME', 'APPDOMAIN', 'SALT'],
@@ -94,6 +94,7 @@ class Helper {
             'WebHooks Info' => ['WEBHOOKS'],
             'Crud Info' => ['CRUD'],
             'Webdav Info' => ['WEBDAV'],
+            'Ecommerce Info' => ['ENABLE_COMMERCE'],
         ];
     }
 
@@ -253,7 +254,7 @@ class Helper {
 
     public function dotEnvForm() : string
     {
-        $dotenv_sections = $this->getDotenvSections();
+        $dotenv_sections = static::getDotenvSections();
 
         // read sample .env file and fill the info
         $dotenv = parse_ini_file('.env.sample');
@@ -318,7 +319,7 @@ class Helper {
 
     public function saveDotEnv() : string
     {
-        $dotenv_sections = $this->getDotenvSections();
+        $dotenv_sections = static::getDotenvSections();
 
         // save .env file
         $dotenv = '';

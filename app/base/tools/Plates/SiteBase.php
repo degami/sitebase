@@ -280,6 +280,7 @@ class SiteBase implements ExtensionInterface
             $icon_name = match($icon_name) {
                 'main' => 'award',
                 'cms' => 'feather',
+                'commerce' => 'shopping-bag',
                 'site' => 'layout',
                 'system' => 'settings',
                 'tools' => 'tool',
@@ -422,5 +423,20 @@ class SiteBase implements ExtensionInterface
     public function getCurrentUrl() : string
     {
         return $this->getSiteData()->getRequest()->getUri();
+    }
+
+    public function isCommerceAvailable() : bool
+    {
+        return boolval($this->getSiteData()->getEnv('ENABLE_COMMERCE'));
+    }
+
+    public function formatPrice(float $price, string $currencyCode = '') : string
+    {
+        return $this->getUtils()->formatPrice($price, $currencyCode ?: $this->getCurrentWebsite()->getDefaultCurrencyCode());
+    }
+
+    public function formatBytes(int $size) : string
+    {
+        return $this->getUtils()->formatBytes($size);
     }
 }

@@ -17,7 +17,7 @@ use App\Base\Abstracts\Models\BaseModel;
 
 trait FrontendPageWithObjectTrait
 {
-    use TemplatePageTrait;
+    use FrontendPageTrait;
 
     /**
      * sets object to show

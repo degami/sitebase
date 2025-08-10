@@ -100,15 +100,17 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     protected function defaultOrder() : array
     {
-        $reflection = new ReflectionClass($this->getObjectClass());
-        $docComment = $reflection->getDocComment();
-        if ($docComment && strpos($docComment, 'getId') !== false) {
-            return ['id' => 'ASC'];
-        }
+        try {
+            $reflection = new ReflectionClass($this->getObjectClass());
+            $docComment = $reflection->getDocComment();
+            if ($docComment && strpos($docComment, 'getId') !== false) {
+                return ['id' => 'ASC'];
+            }
 
-        if ($docComment && strpos($docComment, 'getCreatedAt') !== false) {
-            return ['created_at' => 'ASC'];
-        }
+            if ($docComment && strpos($docComment, 'getCreatedAt') !== false) {
+                return ['created_at' => 'ASC'];
+            }
+        } catch (Exception $e) { }
 
         return [];
     }
@@ -372,6 +374,19 @@ abstract class AdminManageModelsPage extends AdminFormPage
     public function getEditButton(int $object_id): string
     {
         return $this->getActionButton('edit', $object_id, 'primary', 'edit', 'Edit');
+    }
+
+    /**
+     * gets duplicate button html
+     *
+     * @param int $object_id
+     * @return string
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getDuplicateButton(int $object_id): string
+    {
+        return $this->getActionButton('duplicate', $object_id, 'primary', 'duplicate', 'Duplicate');
     }
 
     /**

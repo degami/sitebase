@@ -81,7 +81,7 @@ class MediaPages extends AdminJsonPage
             $pagesController = $this->containerMake(Pages::class);
             $form = $pagesController->getForm();
 
-            $form->setAction($this->getUrl('admin.pages') . '?action=' . $this->getRequest()->get('action'));
+            $form->setAction($this->getUrl('admin.pages') . '?action=' . $this->getRequest()->get('action'). ($this->getRequest()->get('page_id') ? '&page_id=' . $this->getRequest()->get('page_id') : ''));
             $form->addField(
                 'media_id',
                 [
@@ -93,7 +93,7 @@ class MediaPages extends AdminJsonPage
             $mediaController = $this->containerMake(\App\Site\Controllers\Admin\Cms\Media::class);
             $form = $mediaController->getForm();
 
-            $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->get('action'));
+            $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->get('action') . ($this->getRequest()->get('page_id') ? '&page_id=' . $this->getRequest()->get('page_id') : ''));
             $form->addField(
                 'media_id',
                 [

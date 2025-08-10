@@ -29,6 +29,20 @@ trait WithChildrenTrait
      */
     protected array $children = [];
 
+    public function getChildrenClass(): string
+    {    
+        return $this->children_class ?? static::class;
+    }
+
+    public function getChildrenTableName(): string
+    {
+        if ($this->getChildrenClass() == static::class) {
+            return $this->table_name;
+        }
+
+        return App::getInstance()->containerCall([$this->getChildrenClass(), 'defaultTableName']);
+    }
+
     /**
      * gets children
      *
@@ -45,7 +59,7 @@ trait WithChildrenTrait
 
             $tableHasPosition = false;
             try {
-                $positionColumn = App::getInstance()->getSchema()->getTable($this->table_name)->getColumn('position');
+                $positionColumn = App::getInstance()->getSchema()->getTable($this->getChildrenTableName())->getColumn('position');
                 if ($positionColumn) {
                     $tableHasPosition = true;
                 }
@@ -53,12 +67,12 @@ trait WithChildrenTrait
 
 
             if ($locale != null) {
-                $query = App::getInstance()->getDb()->table($this->table_name)->where(['parent_id' => $this->id, 'locale' => $locale]);
+                $query = App::getInstance()->getDb()->table($this->getChildrenTableName())->where(['parent_id' => $this->id, 'locale' => $locale]);
                 if ($tableHasPosition) {
                     $query = $query->orderBy('position');
                 }
             } else {
-                $query = App::getInstance()->getDb()->table($this->table_name)->where(['parent_id' => $this->id]);
+                $query = App::getInstance()->getDb()->table($this->getChildrenTableName())->where(['parent_id' => $this->id]);
                 if ($tableHasPosition) {
                     $query = $query->orderBy('position');
                 }
@@ -66,7 +80,7 @@ trait WithChildrenTrait
 
             $this->children = array_map(
                 function ($el) {
-                    return App::getInstance()->containerMake(static::class, ['db_row' => $el]);
+                    return App::getInstance()->containerMake($this->getChildrenClass(), ['db_row' => $el]);
                 },
                 $query->fetchAll()
             );

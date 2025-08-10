@@ -31,6 +31,7 @@ class Manager extends ContainerAwareObject
     public const RESULTS_PER_PAGE = 10;
     public const SUMMARIZE_MAX_WORDS = 50;
     public const MAX_ELEMENTS_PER_QUERY = 10000;
+    public const DEFAULT_SCROLL_TIME = '1m';
 
     protected ?ElasticSearchClient $client = null;
 
@@ -505,11 +506,11 @@ class Manager extends ContainerAwareObject
      * @param int $page The page number to retrieve.
      * @param int $pageSize The number of results per page.
      * @param bool $onlyAggregations Return only aggregations
-     * @param bool $withScroll Use Scroll api
+     * @param string|null $withScroll Use Scroll api
      * 
      * @return array
      */
-    public function getSearchParams(int $page = 0, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, bool $withScroll = false) : array
+    public function getSearchParams(int $page = 0, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, ?string $withScroll = null) : array
     {
         $searchParams = [
             'index' => $this->getIndexName(),
@@ -538,7 +539,7 @@ class Manager extends ContainerAwareObject
             }
 
             if ($withScroll && $searchParams['body']['size'] > 0) {
-                $searchParams['scroll'] = '1m';
+                $searchParams['scroll'] = $this->validateScrollTime($withScroll) ?? self::DEFAULT_SCROLL_TIME;
             }
         }
 
@@ -551,11 +552,11 @@ class Manager extends ContainerAwareObject
      * @param int $page The page number to retrieve.
      * @param int $pageSize The number of results per page.
      * @param bool $onlyAggregations Return only aggregations
-     * @param bool $withScroll Use Scroll api
+     * @param string|null $withScroll Use Scroll api
      * 
      * @return array An array containing the total count, the documents found and scroll_id if used, if aggregations are used, returns aggragations array
      */
-    public function searchData(int $page = 0, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, bool $withScroll = false) : array
+    public function searchData(int $page = 0, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, ?string $withScroll = null) : array
     {
         $search_result = $this->getClient()->search($this->getSearchParams($page, $pageSize, $onlyAggregations, $withScroll));
 
@@ -583,10 +584,10 @@ class Manager extends ContainerAwareObject
      * 
      * @return array An array containing the total count, the documents found and scroll_id.
      */
-    public function continueScroll(string $scrollId) : array
+    public function continueScroll(string $scrollId, ?string $scrollTime = null) : array
     {
         $searchParams = [
-            'scroll' => '1m',
+            'scroll' => $this->validateScrollTime($scrollTime) ?? self::DEFAULT_SCROLL_TIME,
             'scroll_id' => $scrollId,
         ];
 
@@ -603,6 +604,28 @@ class Manager extends ContainerAwareObject
         }, $hits);
 
         return ['total' => $total, 'docs' => $docs, 'scroll_id' => $search_result['_scroll_id']];
+    }
+
+    public function closeScroll(string $scrollId) : array
+    {
+        return $this->getClient()->clearScroll(['scroll_id' => $scrollId]);
+    }
+
+    protected function validateScrollTime(?string $scrollTime) : ?string
+    {
+        if (is_null($scrollTime)) {
+            return null;
+        }
+
+        $units = ['d', 'h', 'm', 's', 'ms', 'micros', 'nanos'];
+        $pattern = '/^(\d+)(['.implode('|', $units).'])$/';
+
+        if (!preg_match($pattern, $scrollTime)) {
+            //throw new InvalidArgumentException('Invalid scroll time format. Use a number followed by a time unit (e.g., "1m", "2h").');
+            return null;
+        }
+
+        return $scrollTime;
     }
 
     /**

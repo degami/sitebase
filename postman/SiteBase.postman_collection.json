@@ -48,6 +48,41 @@
 							"response": []
 						},
 						{
+							"name": "Countries List",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/countries",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"countries"
+									]
+								}
+							},
+							"response": []
+						},
+						{
 							"name": "Website 1 Detail",
 							"request": {
 								"auth": {
@@ -77,6 +112,42 @@
 										"crud",
 										"{{backend_name}}",
 										"websites",
+										"1"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Country 1 Detail",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{crud_token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [
+									{
+										"key": "Content-Type",
+										"value": "application/json",
+										"type": "default"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/crud/{{backend_name}}/countries/1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"crud",
+										"{{backend_name}}",
+										"countries",
 										"1"
 									]
 								}

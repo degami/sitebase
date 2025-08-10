@@ -24,12 +24,14 @@ use App\Base\Abstracts\Models\BaseModel;
  * @method string getDomain()
  * @method string getAliases()
  * @method int getDefaultLocale()
+ * @method string getDefaultCurrencyCode()
  * @method self setId(int $id)
  * @method self setSiteName(string $site_name)
  * @method self setDomain(string $domain)
  * @method self setAliases(string $aliases)
  * @method self setDefaultLocale(int $default_locale)
- */
+ * @method self setDefaultCurrencyCode(string $default_currency_code)
+*/
 class Website extends BaseModel
 {
     /**

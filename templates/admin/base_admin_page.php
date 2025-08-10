@@ -12,7 +12,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
     <div class="table-responsive">
         <?= $table; ?>
     </div>
-    <?= $paginator; ?>
+    <?= $paginator ?? ''; ?>
 <?php else : ?>
     <?= $form; ?>
 <?php endif; ?>

@@ -298,10 +298,11 @@ class SiteData extends ContainerAwareObject
      */
     public function setConfigValue(string $config_path, mixed $value, ?int $website_id = null, ?string $locale = null) : bool
     {
+
         if ($website_id == null) {
             $website_id = $this->getCurrentWebsiteId();
         }
-
+/*
         if ($locale == null && $this->getContainer()->has('app')) {
             $locale = $this->getApp()->getCurrentLocale();
         }
@@ -309,16 +310,28 @@ class SiteData extends ContainerAwareObject
         if ($locale == null) {
             $locale = static::DEFAULT_LOCALE;
         }
-
+*/
         try {
+            /** @var Configuration $result */
             $result = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])]]);
             if ($result instanceof Configuration) {
                 $result->setValue($value);
                 $result->persist();
             }
         } catch (Exception $e) {
+//            return false;
+            /** @var Configuration $result */
+            $result = $this->containerMake(Configuration::class);
+            $result->setPath($config_path)->setWebsiteId($website_id)->setLocale($locale);
+        }
+
+        try {
+            $result->setValue($value);
+            $result->persist();
+        } catch (Exception $e) {
             return false;
         }
+
 
         // refresh configuration
         $this->getCache()->delete(self::CONFIGURATION_CACHE_KEY);

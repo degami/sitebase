@@ -80,7 +80,7 @@ abstract class AdminPage extends BaseHtmlPage
      * 
      * @return array|null
      */
-    public Function getAdminPageLink() : array|null
+    public static Function getAdminPageLink() : array|null
     {
         return null;
     }
@@ -202,7 +202,7 @@ abstract class AdminPage extends BaseHtmlPage
         $out['body_class'] = $this->getHtmlRenderer()->getHtmlAdminClasses($this);
         $out['icon'] = 'box';
         if (method_exists($this, 'getAdminPageLink')) {
-            $pageLink = $this->getAdminPageLink();
+            $pageLink = static::getAdminPageLink();
             $out['icon'] = $pageLink['icon'] ?? 'box';
         }
         return $out;

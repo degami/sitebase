@@ -53,7 +53,12 @@
         "components/font-awesome": "dev-master",
         "chillerlan/php-qrcode": "dev-main",
         "mpdf/mpdf": "dev-development",
-        "sabre/dav": "dev-master"
+        "sabre/dav": "dev-master",
+        "florianv/exchanger": "^2.0@dev",
+        "stripe/stripe-php": "^17.5@beta",
+        "paypal/paypal-checkout-sdk": "dev-develop",
+        "scalapay/scalapay-php-sdk": "dev-master",
+        "symfony/mime": "7.4.x-dev"
     },
   "autoload": {
     "files": [
@@ -79,6 +84,8 @@
       "App\\Base\\Cron\\Tasks\\": "app/base/cron_tasks",
       "App\\Base\\Queues\\": "app/base/queues",
       "App\\Base\\Blocks\\": "app/base/blocks",
+      "App\\Base\\Commerce\\": "app/base/commerce",
+      "App\\Base\\EventListeners\\": "app/base/event_listeners",
       "App\\Site\\": "app/site",
       "App\\Site\\Routers\\": "app/site/routers",
       "App\\Site\\Controllers\\": "app/site/controllers",
@@ -91,7 +98,9 @@
       "App\\Site\\Cron\\Tasks\\": "app/site/cron_tasks",
       "App\\Site\\Queues\\": "app/site/queues",
       "App\\Site\\GraphQL\\Resolvers\\": "app/site/graphql/Resolvers",
-      "App\\Site\\Webdav\\": "app/site/webdav"
+      "App\\Site\\Webdav\\": "app/site/webdav",
+      "App\\Site\\Commerce\\": "app/site/commerce",
+      "App\\Site\\EventListeners\\": "app/site/event_listeners"
     }
   },
     "require-dev": {
@@ -99,7 +108,8 @@
     },
     "config": {
         "allow-plugins": {
-            "cweagans/composer-patches": true
+            "cweagans/composer-patches": true,
+            "php-http/discovery": true
         }
     },
     "extra": {

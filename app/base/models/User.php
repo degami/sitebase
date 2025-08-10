@@ -68,6 +68,21 @@ class User extends AccountModel
      */
     protected ?UserSession $sessionObj = null;
 
+    public function getFullName(): string
+    {
+        $this->checkLoaded();
+
+        $fullName = trim($this->getNickname() ?? '');
+        if ($fullName === '') {
+            $fullName = trim($this->getUsername() ?? '');
+        }
+        if ($fullName === '') {
+            $fullName = trim($this->getEmail() ?? '');
+        }
+
+        return $fullName;
+    }
+
     /**
      * gets user role
      *

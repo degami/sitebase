@@ -433,7 +433,7 @@ class Manager extends ContainerAwareObject
     {
         static $domain_prefix = null;
 
-        if ($this->getAppRouteInfo()->isAdminRoute()) {
+        if ($this->getAppRouteInfo()?->isAdminRoute()) {
             $domain_prefix = $this->getWebRouter()->getUrl('frontend.root');
         } elseif (empty($domain_prefix)) {
             $domain_prefix = $this->getSiteData()->getConfigValue(self::ASSETS_DOMAIN_PATH, $website_id, $locale);

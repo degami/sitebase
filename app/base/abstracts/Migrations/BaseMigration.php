@@ -37,6 +37,16 @@ abstract class BaseMigration extends ContainerAwareObject implements MigrationIn
     abstract public function down();
 
     /**
+     * is migration active
+     * 
+     * @return bool
+     */
+    public static function enabled() : bool
+    {
+        return true;
+    }
+
+    /**
      * gets migration name
      *
      * @return string

@@ -20,31 +20,13 @@ use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Command\Command;
+use App\Base\Tools\Setup\Helper as SetupHelper;
 
 /**
  * Modify Env Command
  */
 class ModEnv extends BaseCommand
 {
-    /**
-     * @var array dotenv file sections
-     */
-    protected $dotenv_sections = [
-        'Basic Info' => ['APPNAME', 'APPDOMAIN', 'SALT'],
-        'Database Info' => ['DATABASE_HOST', 'DATABASE_NAME', 'DATABASE_USER', 'DATABASE_PASS'],
-        'Admin Info' => ['ADMINPAGES_GROUP', 'ADMIN_USER', 'ADMIN_PASS', 'ADMIN_EMAIL', 'USE2FA_ADMIN'],
-        'Cache Info' => ['CACHE_LIFETIME', 'DISABLE_CACHE', 'ENABLE_FPC', 'PRELOAD_REWRITES'],
-        'Other Info' => ['DEBUG','GTMID', 'ENABLE_LOGGEDPAGES', 'USE2FA_USERS', 'LOGGEDPAGES_GROUP','GOOGLE_API_KEY','MAPBOX_API_KEY', 'ADMIN_DARK_MODE'],
-        'ElasticSearch Info' => ['ELASTICSEARCH','ELASTICSEARCH_HOST','ELASTICSEARCH_PORT'],
-        'Smtp Info' => ['SMTP_HOST', 'SMTP_PORT', 'SMTP_USER', 'SMTP_PASS'],
-        'SES Info' => ['SES_REGION','SES_PROFILE'],
-        'Redis Info' => ['REDIS_CACHE','REDIS_HOST','REDIS_PORT','REDIS_PASSWORD','REDIS_DATABASE'],
-        'GraphQL Info' => ['GRAPHQL'],
-        'WebHooks Info' => ['WEBHOOKS'],
-        'Crud Info' => ['CRUD'],
-        'Webdav Info' => ['WEBDAV'],
-    ];
-
     /**
      * {@inheritdoc}
      */
@@ -85,7 +67,9 @@ class ModEnv extends BaseCommand
 
         $values = [];
 
-        foreach ($this->dotenv_sections as $label => $keys) {
+        $dotenvSections = SetupHelper::getDotenvSections();
+
+        foreach ($dotenvSections as $label => $keys) {
             foreach ($keys as $key) {
                 if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL', 'ADMIN_PASS', 'ADMIN_USER'])) {
                     continue;
@@ -119,7 +103,7 @@ class ModEnv extends BaseCommand
         }
 
         $dotenv = '';
-        foreach ($this->dotenv_sections as $label => $keys) {
+        foreach ($dotenvSections as $label => $keys) {
             $dotenv .= "\n# -- {$label} --\n";
             foreach ($keys as $key) {
                 if (file_exists('.install_done') && in_array($key, ['ADMIN_EMAIL', 'ADMIN_PASS', 'ADMIN_USER'])) {

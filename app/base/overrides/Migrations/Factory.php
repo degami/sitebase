@@ -13,6 +13,7 @@
 
 namespace App\Base\Overrides\Migrations;
 
+use App\Base\Abstracts\Migrations\BaseMigration;
 use Closure;
 use Genkgo\Migrations\AdapterInterface;
 use Genkgo\Migrations\Utils\FileList;
@@ -81,7 +82,13 @@ class Factory
             $qualifiedClassName = $namespace . $classname;
 
             if (\is_a($qualifiedClassName, MigrationInterface::class, true)) {
-                $collection->attach($classloader($qualifiedClassName));
+                if (\is_a($qualifiedClassName, BaseMigration::class, true)) {
+                    if (call_user_func_array([$qualifiedClassName, 'enabled'], [])) {
+                        $collection->attach($classloader($qualifiedClassName));
+                    }
+                } else {
+                    $collection->attach($classloader($qualifiedClassName));
+                }
             }
         }
 

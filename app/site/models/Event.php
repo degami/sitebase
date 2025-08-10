@@ -92,7 +92,7 @@ class Event extends ModelWithLocation
         return (new DateTime($this->date))->format($date_format);
     }
 
-        /**
+    /**
      * gets latitude
      *
      * @return float

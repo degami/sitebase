@@ -112,4 +112,17 @@ class DownloadablesList extends FrontendPage
         $this->getApp()->setCurrentLocale($this->locale);
         return $this->locale;
     }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getRouteName(): string
+    {
+        return $this->getUtils()->translate('Downloadables', locale: $this->getCurrentLocale());
+    }
 }

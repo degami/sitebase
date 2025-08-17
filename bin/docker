@@ -164,6 +164,14 @@ case "$1" in
         echo "container php-fpm is down"
       fi
     ;;
+  phpshell|php)
+      if [[ $(dockerps php-fpm) = 1 ]]; then
+        shift
+        dockerexec php-fpm php -a "$@"
+      else
+        echo "container php-fpm is down"
+      fi
+    ;;
   *)
       echo $"Usage: $0 {build, start|go|up, stop|k|down, restart|r, status|st, sh[ell] <web|database|php-fpm>, console <command>}"
       exit 1

@@ -17,6 +17,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
 use DateTime;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Redirect Model
@@ -38,6 +39,7 @@ use DateTime;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class Redirect extends BaseModel
 {
     use WithOwnerTrait;

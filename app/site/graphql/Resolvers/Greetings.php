@@ -17,7 +17,7 @@ use App\Base\Interfaces\GraphQl\ResolverInterface;
 
 class Greetings implements ResolverInterface
 {
-    public static function resolve(array $args): mixed
+    public static function resolve(array $args, mixed $source = null): mixed
     {
         return trim(__('Hello').' '.($args['firstName'] ?? '') . ' '.($args['lastName'] ?? ''));
     }

@@ -15,6 +15,7 @@ namespace App\Base\Models;
 
 use App\App;
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Website Model
@@ -23,15 +24,16 @@ use App\Base\Abstracts\Models\BaseModel;
  * @method string getSiteName()
  * @method string getDomain()
  * @method string getAliases()
- * @method int getDefaultLocale()
+ * @method string getDefaultLocale()
  * @method string getDefaultCurrencyCode()
  * @method self setId(int $id)
  * @method self setSiteName(string $site_name)
  * @method self setDomain(string $domain)
  * @method self setAliases(string $aliases)
- * @method self setDefaultLocale(int $default_locale)
+ * @method self setDefaultLocale(string $default_locale)
  * @method self setDefaultCurrencyCode(string $default_currency_code)
 */
+#[GraphQLExport]
 class Website extends BaseModel
 {
     /**

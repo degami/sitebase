@@ -53,7 +53,7 @@ class AdminActionLog extends RequestLog
      *
      * @param Request $request
      * @param BasePage|null $controller
-     * @return $this|AdminActionLog
+     * @return AdminActionLog
      * @throws BasicException
      */
     public function fillWithRequest(Request $request, ?BasePage $controller = null): RequestLog

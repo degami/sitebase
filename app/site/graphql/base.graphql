@@ -1,0 +1,129 @@
+type Query {
+  greetings(firstName: String!, lastName: String!): String!
+  websites(input: SearchCriteriaInput): WebsiteCollection
+  rewrites(input: SearchCriteriaInput): [Rewrite]
+  pageRegions(rewrite_id: Int, route_path: String): PageRegionsResponse
+  menuTree(menu_name: String!, website_id: Int!): [Menu]
+  configuration: [ConfigsResult]
+  translations: [TranslationEntry],
+  search(input: String!, locale: String, page: Int): SearchResult
+}
+
+type Mutation {
+  voidMutation: String
+}
+
+input SearchCriteriaInput {
+  criteria: [SearchCriterionInput]
+  limit: Int
+  offset: Int
+  orderBy: [OrderByInput]
+}
+
+input SearchCriterionInput {
+  key: String!
+  value: String!
+}
+
+input OrderByInput {
+  field: String!
+  direction: OrderDirection!
+}
+
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+input HelloInput {
+  firstName: String!
+  lastName: String
+}
+
+type User {
+  nickname: String!
+}
+
+type Website {
+  id: Int!
+  site_name: String!
+  domain: String!
+  aliases: String
+  default_locale: String
+}
+
+type WebsiteCollection {
+  items: [Website]
+  count: Int!
+}
+
+type Menu {
+  menu_id: Int!
+  website: Website
+  parent_id: Int
+  rewrite_id: Int
+  title: String!
+  locale: String
+  href: String
+  target: String
+  internal: String
+  breadcrumb: String
+  level: Int
+  children: [Menu]
+}
+
+type Rewrite {
+  id: Int!
+  website: Website
+  owner: User
+  url: String
+  route: String
+  locale: String
+}
+
+type PageRegionsResponse {
+  locale: String
+  regions: PageRegions
+}
+
+type PageRegions {
+  after_body_open: String
+  before_body_close: String
+  pre_menu: String
+  post_menu: String
+  pre_header: String
+  post_header: String
+  pre_content: String
+  post_content: String
+  pre_footer: String
+  post_footer: String
+}
+
+type ConfigsResult {
+  website: Website!
+  locale: String
+  configs: [ConfigEntry]
+}
+
+type ConfigEntry {
+  path: String!
+  value: String
+}
+
+type TranslationEntry {
+  key: String!
+  value: String!
+}
+
+type SearchResult {
+  search_query: String!
+  search_result: [ResultItem]
+  total: Int!
+  page: Int!
+}
+
+type ResultItem {
+  frontend_url: String!
+  title: String!
+  excerpt: String!
+}

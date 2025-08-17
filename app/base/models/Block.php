@@ -26,6 +26,7 @@ use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Block Model
@@ -158,9 +159,10 @@ class Block extends BaseModel
      * gets block rewrite objects
      *
      * @param bool $reset
-     * @return array
+     * @return \App\Base\Models\Rewrite[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getRewrites(bool $reset = false): array
     {
         $this->checkLoaded();

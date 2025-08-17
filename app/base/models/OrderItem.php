@@ -75,6 +75,11 @@ class OrderItem extends BaseModel
     protected ?Order $order = null;
     protected ?ProductInterface $product = null;
 
+    /**
+     * Get the order associated with this item
+     *
+     * @return Order
+     */
     public function getOrder(): Order
     {
         if (!$this->order) {
@@ -84,6 +89,12 @@ class OrderItem extends BaseModel
         return $this->order;
     }
 
+    /**
+     * Set the order for this item
+     *
+     * @param Order $order
+     * @return self
+     */
     public function setOrder(Order $order): self
     {
         $this->order = $order;
@@ -96,6 +107,11 @@ class OrderItem extends BaseModel
         return $this;
     }
 
+    /**
+     * Get the product associated with this order item
+     *
+     * @return ProductInterface|null
+     */
     public function getProduct() : ?ProductInterface
     {
         if ($this->product) {
@@ -122,6 +138,12 @@ class OrderItem extends BaseModel
         return $this->product;
     }
 
+    /**
+     * Set the product for this order item and update related properties
+     *
+     * @param ProductInterface $product
+     * @return self
+     */
     public function setProduct(ProductInterface $product): self
     {
         $this->product = $product;

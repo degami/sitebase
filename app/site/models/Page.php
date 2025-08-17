@@ -18,6 +18,7 @@ use App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Page Model
@@ -29,6 +30,7 @@ use Exception;
  * @method string getTitle()
  * @method string getTemplateName()
  * @method string getContent()
+ * @method string getMetaTitle()
  * @method string getMetaDescription()
  * @method string getMetaKeywords()
  * @method string getHtmlTitle()
@@ -42,6 +44,7 @@ use Exception;
  * @method self setTitle(string $title)
  * @method self setTemplateName(string $template_name)
  * @method self setContent(string $content)
+ * @method self setMetaTitle(string $meta_title)
  * @method self setMetaDescription(string $meta_description)
  * @method self setMetaKeywords(string $meta_keywords)
  * @method self setHtmlTitle(string $html_title)
@@ -49,6 +52,7 @@ use Exception;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class Page extends FrontendModel
 {
     /**
@@ -70,9 +74,10 @@ class Page extends FrontendModel
      * gets page gallery
      *
      * @param bool $reset
-     * @return array
+     * @return \App\Site\Models\MediaElement[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getGallery(bool $reset = false): array
     {
         $this->checkLoaded();
@@ -91,13 +96,14 @@ class Page extends FrontendModel
         return $this->gallery;
     }
 
-        /**
+    /**
      * gets page gallery
      *
      * @param bool $reset
-     * @return array
+     * @return \App\Site\Models\MediaElement[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getMedias(bool $reset = false): array
     {
         $this->checkLoaded();
@@ -154,9 +160,10 @@ class Page extends FrontendModel
      * get page terms
      *
      * @param bool $reset
-     * @return array
+     * @return \App\Site\Models\Taxonomy[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getTerms(bool $reset = false): array
     {
         $this->checkLoaded();

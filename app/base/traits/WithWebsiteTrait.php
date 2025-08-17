@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Models\Website;
 use DI\DependencyException;
 use DI\NotFoundException;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Trait for elements with Website
@@ -33,6 +34,7 @@ trait WithWebsiteTrait
      * @throws DependencyException
      * @throws NotFoundException
      */
+    #[GraphQLExport]
     public function getWebsite(): Website
     {
         $this->checkLoaded();

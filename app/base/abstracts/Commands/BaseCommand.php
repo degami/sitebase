@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Routing\RouteInfo;
 use App\Base\Traits\ContainerAwareTrait;
 use App\Base\Models\Website;
+use App\Base\Traits\ToolsTrait;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -38,7 +39,7 @@ use Symfony\Component\Console\Command\Command as SymfonyCommand;
  */
 class BaseCommand extends SymfonyCommand
 {
-    use ContainerAwareTrait;
+    use ContainerAwareTrait, ToolsTrait;
 
     /** @var InputInterface */
     protected $input = null;

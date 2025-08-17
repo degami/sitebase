@@ -23,6 +23,7 @@ use App\Base\Abstracts\Controllers\BasePage;
  */
 class CollectionDataCollector extends DataCollector implements Renderable, AssetProvider
 {
+
     public const NAME = "Collections Data";
 
     protected $collectionsInfo = [];
@@ -43,7 +44,7 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
     {
         $out = ['n_collections' => count($this->collectionsInfo), 'collections'];
         foreach ($this->collectionsInfo as $className => $info) {
-            $out['collections'][basename(str_replace("\\","/",$className))."Collection"] = count($info['keys']). ' items, '.$this->convert($info['size']);
+            $out['collections'][static::getClassBasename($className)."Collection"] = count($info['keys']). ' items, '.$this->convert($info['size']);
         }
         return $out;
     }
@@ -109,5 +110,16 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
     {
         $unit=array('b','kb','mb','gb','tb','pb');
         return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+    }
+
+    public static function getClassBasename(string|object $object_or_namespace) : string
+    {
+        if (is_object($object_or_namespace)) {
+            $class = get_class($object_or_namespace);
+        } else {
+            $class = $object_or_namespace;
+        }
+
+        return basename(str_replace('\\', DIRECTORY_SEPARATOR, $class));
     }
 }

@@ -20,6 +20,7 @@ use App\Base\Tools\Cache\Manager as CacheManager;
 use App\Base\Tools\Redis\Manager as RedisManager;
 use App\Base\Tools\Search\Manager as SearchManager;
 use App\Base\Tools\ApplicationLogger\Manager as ApplicationLoggerManager;
+use App\Base\Auth\Manager as AuthManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
@@ -256,7 +257,7 @@ trait ContainerAwareTrait
 
             $registerRouter = function (string $className) use (&$out) {
                 if (is_subclass_of($className, BaseRouter::class)) {
-                    $serviceName = strtolower(basename(str_replace("\\", "/", $className)) . '_router');
+                    $serviceName = strtolower(static::getClassBasename($className)) . '_router'; 
                     $out[] = $serviceName;
     
                     if (!$this->getContainer()->has($serviceName)) {
@@ -509,5 +510,16 @@ trait ContainerAwareTrait
         }
 
         return null;
+    }
+
+    /**
+     * gets auth manager service
+     * 
+     * @return AuthManager
+     * @throws BasicException
+     */
+    public function getAuth(): AuthManager
+    {
+        return $this->getService('auth');
     }
 }

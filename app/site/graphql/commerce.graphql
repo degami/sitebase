@@ -1,0 +1,80 @@
+# this file defines the GraphQL schema for the commerce module
+
+extend type Query {
+  cart: Cart
+}
+
+interface Product {
+  id: Int!
+  class: String!
+  name: String!
+  price: Float!
+  sku: String!
+  tax_class_id: Int
+  is_physical: Boolean!
+}
+
+type DownloadableProduct implements Product {
+  id: Int!
+  class: String!
+  name: String!
+  price: Float!
+  sku: String!
+  tax_class_id: Int
+  is_physical: Boolean!
+
+  title: String!
+  locale: String
+  content: String
+  url: String!
+  owner: User
+  website: Website
+  gallery: [MediaElement]
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+  rewrite: Rewrite
+}
+
+type DownloadableProductCollection {
+  items: [DownloadableProduct]
+  count: Int!
+}
+
+type CartItem {
+  id: Int!
+  product_id: Int!
+  quantity: Int!
+  price: Float!
+  subtotal: Float
+  discount_amount: Float
+  tax_amount: Float
+  total_incl_tax: Float
+  created_at: String
+  updated_at: String
+  product: Product
+}
+
+type CartDiscount {
+  id: Int!
+  code: String
+  description: String
+  type: String
+  discount_amount: Float!
+  currency: String
+}
+
+type Cart {
+  id: Int!
+  user_id: Int!
+  website_id: Int!
+  created_at: String
+  updated_at: String
+  items: [CartItem!]!
+  discounts: [CartDiscount]
+  subtotal: Float
+  tax_amount: Float
+  discount_amount: Float
+  total_incl_tax: Float
+  currency: String
+}

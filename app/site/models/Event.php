@@ -23,6 +23,7 @@ use App\Base\Traits\WithRewriteTrait;
 use App\Base\Traits\IndexableTrait;
 use App\Base\Traits\FrontendModelTrait;
 use DateTime;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Event Model
@@ -52,6 +53,7 @@ use DateTime;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class Event extends ModelWithLocation
 {
     use WithOwnerTrait;
@@ -86,6 +88,7 @@ class Event extends ModelWithLocation
      * @return string
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getDate(): string
     {
         $date_format = App::getInstance()->getSiteData()->getDateTimeFormat();
@@ -97,6 +100,7 @@ class Event extends ModelWithLocation
      *
      * @return float
      */
+    #[GraphQLExport]
     public function getLatitude(): float
     {
         return (float) $this->getData('latitude');
@@ -107,6 +111,7 @@ class Event extends ModelWithLocation
      *
      * @return float
      */
+    #[GraphQLExport]
     public function getLongitude(): float
     {
         return (float) $this->getData('longitude');

@@ -21,6 +21,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Lcobucci\JWT\Builder;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * User Model
@@ -90,6 +91,7 @@ class User extends AccountModel
      * @throws DependencyException
      * @throws NotFoundException
      */
+    #[GraphQLExport]
     public function getRole(): Role
     {
         if ($this->roleObj instanceof Role) {
@@ -143,6 +145,7 @@ class User extends AccountModel
      * @return string
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getRegisteredSince(): string
     {
         if ($this->isLoaded()) {
@@ -320,6 +323,7 @@ class User extends AccountModel
         return $this;
     }
 
+    #[GraphQLExport]
     public function getDisplayName() : string
     {
         return $this->getNickname() ?? 'anonymous';

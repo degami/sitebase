@@ -305,7 +305,7 @@ class Manager extends ContainerAwareObject
     {
         $modelClass = get_class($object);
  
-        $type = basename(str_replace("\\", "/", strtolower($modelClass)));
+        $type = strtolower(static::getClassBasename($modelClass));
 
         $fields_to_index = ['title', 'content'];
         if (method_exists($modelClass, 'exposeToIndexer')) {

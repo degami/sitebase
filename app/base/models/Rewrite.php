@@ -26,6 +26,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Rewrite Model
@@ -49,6 +50,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class Rewrite extends BaseModel
 {
     use WithOwnerTrait;

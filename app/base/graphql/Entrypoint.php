@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\BaseCollection;
+use App\Base\Interfaces\Model\ProductInterface;
 use App\Base\Routing\RouteInfo;
 use App\Base\Models\RequestLog;
 use Exception;
@@ -25,11 +26,24 @@ use GraphQL\GraphQL;
 use GraphQL\Type\Schema;
 use GraphQL\Utils\BuildSchema;
 use GraphQL\Type\Definition\ResolveInfo;
+use GraphQL\Type\SchemaConfig;
+use GraphQL\Type\Definition\InterfaceType;
+use GraphQL\Type\Definition\InputObjectType;
+use GraphQL\Type\Definition\EnumType;
+use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\Type;
 use ReflectionNamedType;
 use Symfony\Component\HttpFoundation\Response;
+use HaydenPierce\ClassFinder\ClassFinder;
+use ReflectionClass;
+use ReflectionMethod;
+use ReflectionUnionType;
 
 class Entrypoint extends BasePage
 {
+    protected array $typesByName = [];
+    protected array $typesByClass = [];
+
     public function renderPage(?RouteInfo $route_info = null, array $route_data = []) : JsonResponse
     {
         return $this->process($route_info, $route_data);
@@ -48,10 +62,42 @@ class Entrypoint extends BasePage
         if ($this->getRouteInfo()->getVar('lang') != null) {
             $this->getApp()->setCurrentLocale($this->getRouteInfo()->getVar('lang'));
         }
-        $contents = file_get_contents(App::getDir(APP::GRAPHQL).DS.'schema.graphql');
+
+        $contents = '';
+        $schemaDir = App::getDir(APP::GRAPHQL);
+        $files = glob($schemaDir . DS . '*.graphql');
+        foreach($files as $filePath) {
+            if (!$this->getEnv('ENABLE_COMMERCE') && basename($filePath) == 'commerce.graphql') {
+                continue; // skip commerce schema if not enabled
+            }
+
+            $contents .= file_get_contents($filePath);
+        }
 
         /** @var Schema $schema */
-        $schema = BuildSchema::build($contents);
+        $schema = BuildSchema::build($contents, function ($typeConfig, $typeDefinitionNode) {
+            if ($typeConfig['name'] === 'Product') {
+                $typeConfig['resolveType'] = function ($value) {
+                    // Recupera il nome classe dal valore
+                    $className = null;
+                    if (is_array($value)) {
+                        $className = $value['class'] ?? null;
+                    } elseif ($value instanceof ProductInterface) {
+                        $className = get_class($value);
+                    }
+
+                    if ($className) {
+                        return static::getClassBasename($className);
+                    }
+
+                    throw new \Exception('Unknown product type: ' . print_r($value, true));
+                };
+            }
+            return $typeConfig;
+        });
+
+        // schema can be built automatically
+        // $schema = $this->buildGraphQLSchema();
 
         $rawInput = file_get_contents('php://input');
         $input = json_decode($rawInput, true);
@@ -134,15 +180,11 @@ class Entrypoint extends BasePage
         }
 
         if (class_exists("App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName)) && is_callable(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'])) {
-            return $this->containerCall(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'], ['args' => $args + ['locale' => $this->getApp()->getCurrentLocale()]]);
+            return $this->containerCall(["App\\Site\\GraphQL\\Resolvers\\".ucfirst($fieldName), 'resolve'], ['source' => $this->inferSourceValue($source, $fieldName), 'args' => $args + ['locale' => $this->getApp()->getCurrentLocale()]]);
         }
 
-        if (is_object($source) && property_exists($source, $fieldName)) {
-            return $source->$fieldName;
-        }
-
-        if (is_array($source) && isset($source[$fieldName])) {
-            return $source[$fieldName];
+        if ( (is_object($source) && property_exists($source, $fieldName)) || (is_array($source) && isset($source[$fieldName]))) {
+            return $this->inferSourceValue($source, $fieldName);
         }
 
         if (preg_match("/^\[(.*?)\]$/", $returnType, $matches) || preg_match("/(.*?)Collection$/", $returnType, $matches)) {
@@ -201,6 +243,31 @@ class Entrypoint extends BasePage
         return null;
     }
 
+    private function inferSourceValue(mixed $source, string $fieldName) : mixed
+    {
+        if (is_object($source) && method_exists($source, $fieldName)) {
+            return $this->containerCall([$source, $fieldName]);
+        }
+
+        if (is_object($source) && property_exists($source, $fieldName)) {
+            return $source->$fieldName;
+        }
+
+        if (is_object($source) && method_exists($source, "get".ucfirst($this->getUtils()->snakeCaseToPascalCase($fieldName)))) {
+            return $this->containerCall([$source, "get".ucfirst($this->getUtils()->snakeCaseToPascalCase($fieldName))]);
+        }
+
+        if ((is_object($source) || is_string($source)) && ($foundMethod = $this->classHasPropertyNameMethod($source, $fieldName)) !== false) {
+            return $this->containerCall([$source, $foundMethod]);
+        }
+
+        if (is_array($source) && isset($source[$fieldName])) {
+            return $source[$fieldName];
+        }
+
+        return null;
+    }
+
     private function classHasMethodReturningType($class, $returnType) : string|bool
     {
         if (class_exists("App\\Site\\Models\\".$returnType) || class_exists("App\\Base\\Models\\".$returnType)) {
@@ -237,4 +304,382 @@ class Entrypoint extends BasePage
 
         return false;
     }
+
+    protected function maskedMethods(): array
+    {
+        return [
+            'getData', 'getRealInstance', 'getChangedData', 'getTableColumns', 'getKeyField',
+            'getTableName', 'getDbRow', 'getClassBasename', 'getInstance', 
+            'getPassword', 'getJWT', 'getExportHeader', 'getExportRowData',
+        ];
+    }
+
+    protected function generateGraphQLFieldsFromModel(string $modelClass): array
+    {
+        $reflection = new \ReflectionClass($modelClass);
+        $docComment = $reflection->getDocComment();
+        $fields = [];
+
+        if ($docComment) {
+            preg_match_all('/@method\s+([^\s]+)\s+(get\w+)\(\)/', $docComment, $matches, PREG_SET_ORDER);
+
+            foreach ($matches as $match) {
+                $returnType = $match[1];
+                $getterName = $match[2];
+                $fieldName  = static::pascalCaseToSnakeCase(substr($getterName, 3));
+
+        
+                if (in_array($getterName, $this->maskedMethods())) {
+                    continue; // skip masked getters
+                }
+
+                $graphqlType = $this->phpDocTypeToGraphQL($returnType);
+
+                $fields[$fieldName] = [
+                    'type'    => $graphqlType,
+                    'resolve' => fn($root) => $root->$getterName(),
+                ];
+            }
+        }
+
+        foreach ($reflection->getMethods(\ReflectionMethod::IS_PUBLIC) as $methodRef) {
+            $methodName = $methodRef->getName();
+            $docComment = $methodRef->getDocComment();
+
+            if (!preg_match('/^get([A-Z]\w*)$/', $methodName, $m)) {
+                continue; // only consider getters
+            }
+
+            if (in_array($methodName, $this->maskedMethods())) {
+                continue; // skip masked getters
+            }
+
+            if (!$this->isGrahqlExportable($methodRef)) {
+                continue; // skip non-exportable methods
+            }
+
+            $propName  = $m[1];
+            $fieldName = static::pascalCaseToSnakeCase($propName);
+
+            $returnType = $methodRef->getReturnType();
+            if ($returnType instanceof \ReflectionUnionType) {
+                $returnType = $returnType->getTypes()[0] ?? null;
+            }
+
+            $phpType = $returnType instanceof \ReflectionNamedType
+                ? $returnType->getName()
+                : 'string';
+
+
+            // only base types or models types should be added
+            if (!in_array($phpType, ['int', 'string', 'bool', 'float', 'double', 'array']) && 
+                !str_starts_with($phpType, App::MODELS_NAMESPACE) &&
+                !str_starts_with($phpType, App::BASE_MODELS_NAMESPACE)
+            ) {
+                // continue;
+            }
+
+            if (!isset($fields[$fieldName])) {
+                if ($docComment !== false) {
+                    if ($phpType == 'array' && preg_match('/@return\s+([\\\\\w]+)\[\]/', $docComment, $matches)) {
+                        $phpType = $matches[1].'[]';
+                    }
+                }
+
+                $fields[$fieldName] = [
+                    'type'    => $this->mapPhpTypeToGraphQL($phpType),
+                    'resolve' => fn($root) => $root->{$methodName}(),
+                ];
+            }
+        }
+
+        return $fields;
+    }
+
+    protected function mapPhpTypeToGraphQL(string $phpType): Type
+    {
+        return $this->phpDocTypeToGraphQL($phpType);
+    }
+
+    protected function phpDocTypeToGraphQL(string $phpDocType): Type
+    {
+        $phpDocType = trim($phpDocType);
+        $lowerType  = strtolower($phpDocType);
+
+        // --- scalari ---
+        switch ($lowerType) {
+            case 'int': case 'integer': return Type::int();
+            case 'string': return Type::string();
+            case 'bool': case 'boolean': return Type::boolean();
+            case 'float': case 'double': return Type::float();
+            case 'array': return Type::listOf(Type::string());
+            case 'id': return Type::id();
+        }
+
+        // --- array ---
+        if (str_ends_with($phpDocType, '[]')) {
+            $inner = substr($phpDocType, 0, -2);
+            return Type::listOf($this->phpDocTypeToGraphQL($inner));
+        }
+
+        // --- classi modello ---
+        if (class_exists($phpDocType)) {
+            $shortName = (new \ReflectionClass($phpDocType))->getShortName();
+
+            if ($shortName == 'DateTime' || $shortName == 'DateTimeImmutable') {
+                return Type::string(); // DateTime is represented as string in GraphQL
+            }
+
+            // se già esiste, riutilizza
+            if (isset($this->typesByName[$shortName])) {
+                return $this->typesByName[$shortName];
+            }
+
+            // placeholder (per cicli)
+            $this->typesByName[$shortName] = null;
+
+            // crea il tipo
+            $objectType = new ObjectType([
+                'name'   => $shortName,
+                'fields' => fn() => $this->generateGraphQLFieldsFromModel($phpDocType),
+            ]);
+
+            $this->typesByName[$shortName]   = $objectType;
+            $this->typesByClass[$phpDocType] = $objectType;
+
+            return $objectType;
+        }
+
+        // fallback
+        return Type::string();
+    }
+
+
+    protected function buildBaseSearchTypes(): void
+    {
+        if (!isset($this->typesByName['OrderDirection'])) {
+            $this->typesByName['OrderDirection'] = new EnumType([
+                'name' => 'OrderDirection',
+                'values' => [
+                    'ASC'  => ['value' => 'ASC'],
+                    'DESC' => ['value' => 'DESC'],
+                ]
+            ]);
+        }
+
+        if (!isset($this->typesByName['OrderByInput'])) {
+            $this->typesByName['OrderByInput'] = new InputObjectType([
+                'name' => 'OrderByInput',
+                'fields' => [
+                    'field' => [
+                        'type' => Type::nonNull(Type::string()),
+                    ],
+                    'direction' => [
+                        'type' => Type::nonNull($this->typesByName['OrderDirection']),
+                    ],
+                ]
+            ]);
+        }
+
+        if (!isset($this->typesByName['SearchCriterionInput'])) {
+            $this->typesByName['SearchCriterionInput'] = new InputObjectType([
+                'name' => 'SearchCriterionInput',
+                'fields' => [
+                    'key' => ['type' => Type::nonNull(Type::string())],
+                    'value' => ['type' => Type::nonNull(Type::string())],
+                ]
+            ]);
+        }
+
+        if (!isset($this->typesByName['SearchCriteriaInput'])) {
+            $this->typesByName['SearchCriteriaInput'] = new InputObjectType([
+                'name' => 'SearchCriteriaInput',
+                'fields' => [
+                    'criteria' => ['type' => Type::listOf($this->typesByName['SearchCriterionInput'])],
+                    'limit'    => ['type' => Type::int()],
+                    'offset'   => ['type' => Type::int()],
+                    'orderBy'  => ['type' => Type::listOf($this->typesByName['OrderByInput'])],
+                ]
+            ]);
+        }
+    }
+
+    protected function buildGraphQLSchema(): Schema
+    {
+        $queryFields = [];
+        $mutationFields = [];
+
+        $modelClasses = array_filter(array_merge(
+            ClassFinder::getClassesInNamespace('App\\Base\\Models', ClassFinder::RECURSIVE_MODE),
+            ClassFinder::getClassesInNamespace('App\\Site\\Models', ClassFinder::RECURSIVE_MODE)
+        ), function ($class) {
+            return is_subclass_of($class, BaseModel::class) && !is_subclass_of($class, BaseCollection::class);
+        });
+
+        $this->buildBaseSearchTypes();
+
+        if (!isset($this->typesByName['Product'])) {
+            $this->typesByName['Product'] = new InterfaceType([
+                'name' => 'Product',
+                'fields' => [
+                    'id'          => ['type' => Type::nonNull(Type::int())],
+                    'class'       => ['type' => Type::nonNull(Type::string())],
+                    'name'        => ['type' => Type::nonNull(Type::string())],
+                    'price'       => ['type' => Type::nonNull(Type::float())],
+                    'sku'         => ['type' => Type::nonNull(Type::string())],
+                    'tax_class_id'=> ['type' => Type::int()],
+                    'is_physical' => ['type' => Type::nonNull(Type::boolean())],
+                ],
+                'resolveType' => function ($value) {
+                    $className = is_object($value) ? get_class($value) : ($value['class'] ?? null);
+                    return $className && isset($this->typesByClass[$className])
+                        ? $this->typesByClass[$className]
+                        : null;
+                },
+            ]);
+        }
+
+        $productInterface = $this->typesByName['Product'];
+
+        // --- tipi per i modelli ---
+        foreach ($modelClasses as $modelClass) {
+            $reflection = new ReflectionClass($modelClass);
+            if (!$this->isGrahqlExportable($reflection)) {
+                continue; // skip non-exportable models
+            }
+
+            $typeName = $reflection->getShortName();
+
+            // riuso se già creato
+            if (!isset($this->typesByName[$typeName])) {
+                $fields = $this->generateGraphQLFieldsFromModel($modelClass);
+                $implementsProduct = is_subclass_of($modelClass, ProductInterface::class);
+
+                $this->typesByName[$typeName] = new ObjectType([
+                    'name' => $typeName,
+                    'fields' => $fields,
+                    'interfaces' => $implementsProduct ? [$productInterface] : [],
+                ]);
+
+                $this->typesByClass[$modelClass] = $this->typesByName[$typeName];
+            }
+
+            // collection type
+            $collName = $typeName . 'Collection';
+            if (!isset($this->typesByName[$collName])) {
+                $this->typesByName[$collName] = new ObjectType([
+                    'name' => $collName,
+                    'fields' => [
+                        'items' => ['type' => Type::listOf($this->typesByName[$typeName])],
+                        'count' => ['type' => Type::nonNull(Type::int())],
+                    ]
+                ]);
+            }
+
+            // query field
+            $queryFields['all' . $this->pluralize($typeName)] = [
+                'type' => $this->typesByName[$collName],
+                'args' => ['search' => ['type' => $this->typesByName['SearchCriteriaInput']]],
+                'resolve' => function ($root, $args) use ($modelClass) {
+                    $collection = $this->containerCall([$modelClass, "getCollection"]);
+
+                    if (!empty($args['search']['criteria'])) {
+                        foreach ($args['search']['criteria'] as $criterion) {
+                            $collection->addFilter($criterion['key'], $criterion['value']);
+                        }
+                    }
+                    if (!empty($args['search']['orderBy'])) {
+                        foreach ($args['search']['orderBy'] as $order) {
+                            $collection->addOrder($order['field'], $order['direction']);
+                        }
+                    }
+                    if (isset($args['search']['limit'])) {
+                        $collection->setPageSize($args['search']['limit']);
+                    }
+                    if (isset($args['search']['offset'])) {
+                        $collection->setOffset($args['search']['offset']);
+                    }
+
+                    return [
+                        'items' => $collection->getItems(),
+                        'count' => $collection->count(),
+                    ];
+                }
+            ];
+        }
+
+        // --- root Query & Mutation ---
+        $queryType = new ObjectType([
+            'name' => 'Query',
+            'fields' => $queryFields,
+        ]);
+
+        $mutationType = new ObjectType([
+            'name' => 'Mutation',
+            'fields' => $mutationFields,
+        ]);
+
+        $config = SchemaConfig::create()
+            ->setTypes($this->typesByName)
+            ->setQuery($queryType)
+            ->setMutation($mutationType)
+            ->setTypeLoader(fn(string $name) => $this->typesByName[$name] ?? null);
+
+        return new Schema($config);
+    }
+
+    protected function isGrahqlExportable(ReflectionClass|ReflectionMethod $ref) : bool
+    {
+        $attrs = $ref->getAttributes(GraphQLExport::class);
+        if ($ref instanceOf ReflectionClass) {
+            $attrs = array_merge($attrs, $this->getAllAttributes($ref, GraphQLExport::class));
+        }
+        if (!empty($attrs)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function getAllAttributes(ReflectionClass $refClass, string $attributeName): array {
+        $attrs = [];
+
+        do {
+            $attrs = array_merge($attrs, $refClass->getAttributes($attributeName));
+            $refClass = $refClass->getParentClass();
+        } while ($refClass);
+
+        return $attrs;
+    }
+
+    protected function pluralize(string $word): string 
+    {
+        $lower = strtolower($word);
+
+        // Words ending in y preceded by a consonant → replace y with ies
+        if (preg_match('/([^aeiou])y$/i', $word)) {
+            return preg_replace('/y$/i', 'ies', $word);
+        }
+
+        // Common irregulars (optional, you can expand)
+        $irregulars = [
+            'person' => 'people',
+            'man' => 'men',
+            'woman' => 'women',
+            'child' => 'children',
+            'mouse' => 'mice',
+            'goose' => 'geese',
+        ];
+
+        if (isset($irregulars[$lower])) {
+            // preserve original casing
+            $firstUpper = ctype_upper($word[0]);
+            $plural = $irregulars[$lower];
+            return $firstUpper ? ucfirst($plural) : $plural;
+        }
+
+        // Default: just add 's'
+        return $word . (!str_ends_with($word, 's') ? 's' : '');
+    }
+
 }

@@ -55,6 +55,11 @@ class CartDiscount extends BaseModel
     protected ?CartItem $cartItem = null;
     protected ?Discount $initialDiscount = null;
 
+    /**
+     * Get the cart associated with this discount
+     * 
+     * @return Cart
+     */
     public function getCart(): Cart
     {
         if (!$this->cart) {
@@ -64,6 +69,11 @@ class CartDiscount extends BaseModel
         return $this->cart;
     }
 
+    /**
+     * Get the cart item associated with this discount
+     * 
+     * @return CartItem|null
+     */
     public function getCartItem(): ?CartItem
     {
         if (!$this->cart_item_id) {
@@ -77,6 +87,12 @@ class CartDiscount extends BaseModel
         return $this->cartItem;
     }
 
+    /**
+     * Set the cart and update related properties
+     *
+     * @param Cart $cart
+     * @return self
+     */
     public function setCart(Cart $cart): self
     {
         $this->cart = $cart;
@@ -89,6 +105,12 @@ class CartDiscount extends BaseModel
         return $this;
     }
 
+    /**
+     * Set the cart item and update related properties
+     *
+     * @param CartItem $cartItem
+     * @return self
+     */
     public function setCartItem(CartItem $cartItem): self
     {
         $this->cartItem = $cartItem;
@@ -98,6 +120,11 @@ class CartDiscount extends BaseModel
         return $this;
     }
 
+    /**
+     * Get the initial discount associated with this cart discount
+     *
+     * @return Discount|null
+     */
     public function getInitialDiscount(): ?Discount
     {
         if ($this->initialDiscount) {
@@ -111,6 +138,12 @@ class CartDiscount extends BaseModel
         return $this->setInitialDiscount(Discount::load($this->getInitialDiscountId()))->initialDiscount;
     }
 
+    /**
+     * Set the initial discount for this cart discount
+     *
+     * @param Discount $discount
+     * @return self
+     */
     public function setInitialDiscount(Discount $discount): self
     {
         $this->initialDiscount = $discount;
@@ -119,6 +152,14 @@ class CartDiscount extends BaseModel
         return $this;
     }
 
+    /**
+     * Create a CartDiscount from a Discount and a target Cart or CartItem
+     *
+     * @param Discount $discount
+     * @param Cart|CartItem $target
+     * @return self
+     * @throws \InvalidArgumentException
+     */
     public static function createFromDiscount(Discount $discount, Cart|CartItem $target): self
     {
         $cartDiscount = new self();

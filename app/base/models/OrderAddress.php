@@ -63,6 +63,12 @@ class OrderAddress extends BaseModel
 {
     use WithLatLngTrait, WithOwnerTrait, WithWebsiteTrait;
 
+    /**
+     * Set the order for this address
+     * 
+     * @param Order $order
+     * @return self
+     */
     public function setOrder(Order $order): self
     {
         return $this
@@ -71,6 +77,12 @@ class OrderAddress extends BaseModel
             ->setOrderId($order->getId());
     }
 
+    /**
+     * Create an order address from a generic address
+     *
+     * @param Address $address
+     * @return self
+     */
     public static function createFromAddress(Address $address): self
     {
         $orderAddress = new self();
@@ -88,11 +100,21 @@ class OrderAddress extends BaseModel
             ->setEmail($address->getEmail());
     }
 
+    /**
+     * Get the full name of the person associated with this address
+     *
+     * @return string
+     */
     public function getFullName(): string
     {
         return trim($this->getFirstName() . ' ' . $this->getLastName());
     }
 
+    /**
+     * Get the full address as a formatted string
+     *
+     * @return string
+     */
     public function getFullAddress(): string
     {
         $addressParts = [
@@ -106,6 +128,11 @@ class OrderAddress extends BaseModel
         return implode(', ', array_filter($addressParts));
     }
 
+    /**
+     * Get the full contact information as a string
+     *
+     * @return string
+     */
     public function getFullContact(): string
     {
         $contactParts = [
@@ -117,6 +144,11 @@ class OrderAddress extends BaseModel
         return implode(' | ', array_filter($contactParts));
     }
 
+    /**
+     * Get the type of this address as a human-readable label
+     *
+     * @return string
+     */
     public function getTypeLabel(): string
     {
         return match ($this->getType()) {
@@ -125,7 +157,12 @@ class OrderAddress extends BaseModel
             default => 'Unknown Address Type'
         };
     }
-    
+
+    /**
+     * Get the icon class for this address type
+     *
+     * @return string
+     */
     public function getTypeIcon(): string
     {
         return match ($this->getType()) {

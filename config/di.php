@@ -247,6 +247,9 @@ return [
     \App\Base\Tools\ApplicationLogger\Manager::class => DI\autowire(\App\Base\Tools\ApplicationLogger\Manager::class),
     'application_logger' => DI\get(\App\Base\Tools\ApplicationLogger\Manager::class),
 
+    \App\Base\Auth\Manager::class => DI\autowire(\App\Base\Auth\Manager::class),
+    'auth' => DI\get(\App\Base\Auth\Manager::class),
+
     // 'request'
     \Symfony\Component\HttpFoundation\Request::class => DI\factory(function(){
         return \Symfony\Component\HttpFoundation\Request::createFromGlobals();

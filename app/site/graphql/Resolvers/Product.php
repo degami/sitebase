@@ -15,22 +15,27 @@ namespace App\Site\GraphQL\Resolvers;
 
 use App\App;
 use App\Base\Interfaces\GraphQl\ResolverInterface;
+use App\Base\Models\User;
+use App\Base\Models\Website;
 
-class MenuTree implements ResolverInterface
+class Product implements ResolverInterface
 {
     public static function resolve(array $args, mixed $source = null): mixed
     {
         $app = App::getInstance();
 
-        $locale = $args['locale'];
-        if ($locale == null) {
-            $locale = $app->getSiteData()->getDefaultLocale();
+        $className = $source['class'] ?? null;
+        if (!$className) {
+            return null; // or throw an exception if needed
         }
 
-        $website_id = $args['website_id'];
-        $menu_name = $args['menu_name'];
+        $productId = $source['id'] ?? null;
+        if (!$productId) {
+            return null; // or throw an exception if needed
+        }
 
-        $tree = $app->getSiteData()->getSiteMenu($menu_name, $website_id, $locale, null, false);
-        return $tree;
+        $product = $app->containerCall([$className, 'load'], [$productId]);
+
+        return $source + $product->getData();
     }
 }

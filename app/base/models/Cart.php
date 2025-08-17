@@ -73,6 +73,11 @@ class Cart extends BaseModel
     protected ?Address $billingAddress = null;
     protected ?Address $shippingAddress = null;
 
+    /**
+     * Get the name of the model
+     * 
+     * @return \App\Base\Model\CartItem[]
+     */
     public function getItems(): array
     {
         $this->loadCartItems();
@@ -80,6 +85,11 @@ class Cart extends BaseModel
         return $this->items;
     }
 
+    /**
+     * Load cart items from the database if not already loaded
+     *
+     * @return static
+     */
     protected function loadCartItems(): static
     {
         if (empty($this->items)) {
@@ -93,6 +103,11 @@ class Cart extends BaseModel
         return $this;
     }
 
+    /**
+     * Load discounts associated with the cart
+     *
+     * @return static
+     */
     protected function loadDiscounts(): static
     {
         if (empty($this->discounts)) {
@@ -108,6 +123,11 @@ class Cart extends BaseModel
         return $this;        
     }
 
+    /**
+     * Full load of the cart, including items and discounts
+     *
+     * @return static
+     */
     public function fullLoad(): static
     {
         $this->resetItems()->resetDiscounts()->loadCartItems()->loadDiscounts();
@@ -121,30 +141,55 @@ class Cart extends BaseModel
         return $this;
     }
 
+    /**
+     * Reset discounts
+     *
+     * @return static
+     */
     public function resetDiscounts() : static
     {
         $this->discounts = null;
         return $this;
     }
 
+    /**
+     * Reset items
+     *
+     * @return static
+     */
     public function resetItems() : static
     {
         $this->items = [];
         return $this;
     }
 
+    /**
+     * Reset billing and shipping addresses
+     *
+     * @return static
+     */
     public function resetBillingAddress() : static
     {
         $this->billingAddress = null;
         return $this;
     }
 
+    /**
+     * Reset shipping address
+     *
+     * @return static
+     */
     public function resetShippingAddress() : static
     {
         $this->shippingAddress = null;
         return $this;
     }
 
+    /**
+     * Get the billing address
+     *
+     * @return Address|null
+     */
     public function getBillingAddress() : ?Address
     {
         if ($this->billingAddress) {
@@ -158,6 +203,12 @@ class Cart extends BaseModel
         return $this->setBillingAddress(Address::load($this->getBillingAddressId()))->billingAddress;
     }
 
+    /**
+     * Set the billing address
+     *
+     * @param Address $billingAddress
+     * @return static
+     */
     public function setBillingAddress(Address $billingAddress) : static
     {
         $this->billingAddress = $billingAddress;
@@ -166,6 +217,11 @@ class Cart extends BaseModel
         return $this;
     }
 
+    /**
+     * Get the shipping address
+     *
+     * @return Address|null
+     */
     public function getShippingAddress() : ?Address
     {
         if ($this->shippingAddress) {
@@ -179,6 +235,12 @@ class Cart extends BaseModel
         return $this->setShippingAddress(Address::load($this->getShippingAddressId()))->shippingAddress;
     }
 
+    /**
+     * Set the shipping address
+     *
+     * @param Address $shippingAddress
+     * @return static
+     */
     public function setShippingAddress(Address $shippingAddress) : static
     {
         $this->shippingAddress = $shippingAddress;
@@ -187,6 +249,13 @@ class Cart extends BaseModel
         return $this;
     }
 
+    /**
+     * Add a product to the cart
+     *
+     * @param ProductInterface $product
+     * @param int $quantity
+     * @return CartItem
+     */
     public function addProduct(ProductInterface $product, int $quantity = 1): CartItem
     {
         $cartItem = new CartItem();
@@ -204,6 +273,12 @@ class Cart extends BaseModel
         return $cartItem;
     }
 
+    /**
+     * Remove a product from the cart
+     *
+     * @param ProductInterface $product
+     * @return static
+     */
     public function removeProduct(ProductInterface $product): static
     {
         $cartItem = null;
@@ -228,6 +303,12 @@ class Cart extends BaseModel
         return $this;
     }
 
+    /**
+     * Get a cart item by its ID
+     *
+     * @param int $cartItemId
+     * @return CartItem|null
+     */
     public function getCartItem(int $cartItemId): ?CartItem
     {
         foreach ($this->getItems() as $item) {
@@ -239,6 +320,12 @@ class Cart extends BaseModel
         return null;
     }
 
+    /**
+     * Remove an item from the cart
+     *
+     * @param CartItem|int $cartItem
+     * @return static
+     */
     public function removeItem(CartItem|int $cartItem): static
     {
         if ($cartItem instanceof CartItem) {
@@ -262,6 +349,11 @@ class Cart extends BaseModel
         return $this->save();
     }
 
+    /**
+     * Get discounts associated with the cart
+     *
+     * @return \App\Base\Models\CartDiscount[]|null
+     */
     public function getDiscounts() : ?array
     {
         if (!$this->getId()) {
@@ -270,7 +362,7 @@ class Cart extends BaseModel
 
         return $this->loadDiscounts()->discounts;
     }
-
+    
     public function prePersist() : BaseModel
     {
         $this->calculate();
@@ -294,6 +386,11 @@ class Cart extends BaseModel
         return parent::postPersist();
     }
 
+    /**
+     * Calculate the cart totals
+     *
+     * @return static
+     */
     public function calculate() : self
     {
         $sub_total = 0; $discount_amount = 0; $tax_amount = 0;
@@ -334,6 +431,11 @@ class Cart extends BaseModel
             ->setAdminTotalInclTax($admin_total_incl_tax);
     }
 
+    /**
+     * Check if the cart requires shipping
+     *
+     * @return bool
+     */
     public function requireShipping(): bool
     {
         foreach ($this->getItems() as $item) {
@@ -346,6 +448,11 @@ class Cart extends BaseModel
         return false;
     }
 
+    /**
+     * Calculate shipping costs for the cart
+     *
+     * @return float
+     */
     public function calculateShipping(): float
     {
         if (!$this->requireShipping()) {

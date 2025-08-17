@@ -20,6 +20,7 @@ use Degami\Basics\Exceptions\BasicException;
 use App\Base\Interfaces\Model\ProductInterface;
 use App\Site\Models\MediaElement;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Downloadable Product Model
@@ -32,6 +33,7 @@ use Exception;
  * @method int getMediaId()
  * @method float getPrice()
  * @method string getContent()
+ * @method string getMetaTitle()
  * @method string getMetaDescription()
  * @method string getMetaKeywords()
  * @method string getHtmlTitle()
@@ -47,6 +49,7 @@ use Exception;
  * @method self setMediaId(int $media_id)
  * @method self setPrice(float $price)
  * @method self setContent(string $content)
+ * @method self setMetaTitle(string $meta_title)
  * @method self setMetaDescription(string $meta_description)
  * @method self setMetaKeywords(string $meta_keywords)
  * @method self setHtmlTitle(string $html_title)
@@ -55,6 +58,7 @@ use Exception;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class DownloadableProduct extends FrontendModel implements ProductInterface
 {
     /**
@@ -77,9 +81,10 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
      * gets downloadable_product gallery
      *
      * @param bool $reset
-     * @return array
+     * @return \App\Site\Models\MediaElement[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getGallery(bool $reset = false): array
     {
         $this->checkLoaded();
@@ -139,7 +144,7 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
      * getsmedia element
      *
      * @param bool $reset
-     * @return array
+     * @return MediaElement|null
      * @throws Exception
      */
     public function getMedia(bool $reset = false): ?MediaElement
@@ -167,26 +172,31 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
         return 'downloadable';
     }
 
+    #[GraphQLExport]
     public function getId(): int
     {
         return $this->getData('id');
     }
 
+    #[GraphQLExport]
     public function getPrice(): float
     {
         return $this->getData('price');
     }
 
+    #[GraphQLExport]
     public function getTaxClassId(): ?int
     {
         return $this->getData('tax_class_id');
     }
 
+    #[GraphQLExport]
     public function getName() : ?string
     {
         return $this->getTitle();
     }
 
+    #[GraphQLExport]
     public function getSku(): string
     {
         return $this->getTitle() ?? "downloadable_product_" . $this->getId();

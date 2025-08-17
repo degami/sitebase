@@ -23,6 +23,7 @@ use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Html\TagElement;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Media Element Model
@@ -106,7 +107,7 @@ class MediaElement extends BaseModel
                     'style' => preg_match('/img-fluid/i', (string) $class) ? '' : "max-width:{$w}px;max-height:{$h}px;",
                     'border' => 0,
                 ] + $img_attributes,
-        ]]);
+        ]])->renderTag();
     }
 
     /**
@@ -258,6 +259,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
+    #[GraphQLExport]
     public function getImage(string $class = 'img-fluid'): string
     {
         $this->checkLoaded();
@@ -276,6 +278,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
+    #[GraphQLExport]
     public function getImageUrl(): string
     {
         $this->checkLoaded();
@@ -311,6 +314,13 @@ class MediaElement extends BaseModel
         return $this->getMimetype() == 'inode/directory';
     }
 
+    /**
+     * gets the icon for the media element
+     *
+     * @param string $theme
+     * @return string
+     */
+    #[GraphQLExport]
     public function getMimeIcon($theme = 'regular') : string
     {
         $type = explode('/', $this->getMimetype());

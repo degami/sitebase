@@ -77,6 +77,11 @@ class Order extends BaseModel
     protected ?OrderPayment $orderPayment = null;
     protected array $items = [];
 
+    /**
+     * Get the order items
+     *
+     * @return \App\Base\Models\OrderItem[]
+     */
     public function getItems(): array
     {
         if ($this->items) {
@@ -90,12 +95,23 @@ class Order extends BaseModel
         return $this->setItems(OrderItem::getCollection()->where(['order_id' => $this->getId()])->getItems())->items;
     }
 
+    /**
+     * Set the order items
+     *
+     * @param \App\Base\Models\OrderItem[] $items
+     * @return self
+     */
     public function setItems(array $items): self
     {
         $this->items = $items;
         return $this;
     }
 
+    /**
+     * Get the order status
+     *
+     * @return OrderStatus|null
+     */
     public function getOrderStatus(): ?OrderStatus
     {
         if (!$this->getOrderStatusId()) {
@@ -105,6 +121,11 @@ class Order extends BaseModel
         return $this->setOrderStatus(OrderStatus::getCollection()->where(['id' => $this->getOrderStatusId()])->getFirst())->orderStatus;
     }
 
+    /**
+     * Get the billing address for this order
+     *
+     * @return OrderAddress|null
+     */
     public function getBillingAddress() : ?OrderAddress
     {
         if ($this->billingAddress) {
@@ -122,7 +143,12 @@ class Order extends BaseModel
 
         return $this->setBillingAddress($address)->billingAddress;
     }
-    
+
+    /**
+     * Get the shipping address for this order
+     *
+     * @return OrderAddress|null
+     */
     public function getShippingAddress() : ?OrderAddress
     {
         if ($this->shippingAddress) {
@@ -140,7 +166,13 @@ class Order extends BaseModel
 
         return $this->setShippingAddress($address)->shippingAddress;
     }
-    
+
+    /**
+     * Set the order status and update related properties
+     *
+     * @param OrderStatus $orderStatus
+     * @return self
+     */
     public function setOrderStatus(OrderStatus $orderStatus): self
     {
         $this->orderStatus = $orderStatus;
@@ -148,6 +180,12 @@ class Order extends BaseModel
         return $this;
     }
 
+    /**
+     * Set the billing and shipping addresses for this order
+     *
+     * @param OrderAddress|Address $address
+     * @return self
+     */
     public function setBillingAddress(OrderAddress|Address $address): self
     {
         if (!$address instanceof OrderAddress) {
@@ -158,6 +196,12 @@ class Order extends BaseModel
         return $this;
     }
 
+    /**
+     * Set the shipping address for this order
+     *
+     * @param OrderAddress|Address $address
+     * @return self
+     */
     public function setShippingAddress(OrderAddress|Address $address): self
     {
         if (!$address instanceof OrderAddress) {
@@ -168,6 +212,12 @@ class Order extends BaseModel
         return $this;
     }
 
+    /**
+     * Create an order from a cart
+     *
+     * @param Cart $cart
+     * @return self
+     */
     public static function createFromCart(Cart $cart): self
     {
         // ensure cart is calculated
@@ -252,11 +302,25 @@ class Order extends BaseModel
         return parent::postPersist();
     }
 
+    /**
+     * Calculate the order number based on the website ID and order ID
+     *
+     * @param Order $order
+     * @return string
+     */
     public static function calcOrderNumber(Order $order) : string
     {
         return "ORDER_".$order->getWebsiteId().str_pad($order->getId(), 10, '0', STR_PAD_LEFT);
     }
 
+    /**
+     * Pay the order using a payment method
+     *
+     * @param string $payment_method_name
+     * @param string $transaction_id
+     * @param mixed $additional_data
+     * @return self
+     */
     public function pay(string $payment_method_name, string $transaction_id, $additional_data = null) : self
     {
         $payment = OrderPayment::createForOrder($this, $payment_method_name, $transaction_id, $additional_data);
@@ -269,6 +333,11 @@ class Order extends BaseModel
         return $this;
     }
 
+    /**
+     * Get the order payment
+     *
+     * @return OrderPayment|null
+     */
     public function getOrderPayment() : ?OrderPayment
     {
         if ($this->orderPayment) {
@@ -283,12 +352,23 @@ class Order extends BaseModel
         return $this->setOrderPayment($payment)->orderPayment;
     }
 
+    /**
+     * Set the order payment
+     *
+     * @param OrderPayment $orderPayment
+     * @return self
+     */
     public function setOrderPayment(OrderPayment $orderPayment): self
     {
         $this->orderPayment = $orderPayment;
         return $this;
     }
 
+    /**
+     * Get the comments associated with this order
+     *
+     * @return BaseCollection|null
+     */
     public function getComments() : ?BaseCollection
     {
         if (!$this->getId()) {

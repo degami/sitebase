@@ -89,6 +89,11 @@ class QueueMessage extends BaseModel implements QueueMessageInterface
         return null;
     }
 
+    /**
+     * gets all queue names
+     *
+     * @return string[]
+     */
     public static function getQueueNames() : array
     {
         try {

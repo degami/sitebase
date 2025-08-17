@@ -19,7 +19,7 @@ use App\Base\Interfaces\GraphQl\ResolverInterface;
 
 class Search implements ResolverInterface
 {
-    public static function resolve(array $args): mixed
+    public static function resolve(array $args, mixed $source = null): mixed
     {
         $input = $args['input'];
         $page = $args['page'] ?? 0;

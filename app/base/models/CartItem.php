@@ -74,6 +74,11 @@ class CartItem extends BaseModel
     protected ?ProductInterface $product = null;
     protected ?array $discounts = null;
 
+    /**
+     * Get the cart associated with this cart item
+     * 
+     * @return Cart
+     */
     public function getCart(): Cart
     {
         if (!$this->cart) {
@@ -83,6 +88,12 @@ class CartItem extends BaseModel
         return $this->cart;
     }
 
+    /**
+     * Set the cart for this cart item and update related properties
+     *
+     * @param Cart $cart
+     * @return self
+     */
     public function setCart(Cart $cart): self
     {
         $this->cart = $cart;
@@ -95,6 +106,12 @@ class CartItem extends BaseModel
         return $this;
     }
 
+    /**
+     * Set the product for this cart item and update related properties
+     *
+     * @param ProductInterface $product
+     * @return self
+     */
     public function setProduct(ProductInterface $product): self
     {
         $this->product = $product;
@@ -106,6 +123,11 @@ class CartItem extends BaseModel
         return $this;
     }
 
+    /**
+     * Get the product associated with this cart item
+     *
+     * @return ProductInterface|null
+     */
     public function getProduct() : ?ProductInterface
     {
         if ($this->product) {
@@ -132,6 +154,11 @@ class CartItem extends BaseModel
         return $this->product;
     }
 
+    /**
+     * Calculate the total for this cart item including discounts and taxes
+     *
+     * @return self
+     */
     public function calculate() : self
     {
         $sub_total = $this->calculateSubTotal();
@@ -142,6 +169,11 @@ class CartItem extends BaseModel
         return $this;
     }
 
+    /**
+     * Load discounts associated with this cart item
+     *
+     * @return static
+     */
     protected function loadDiscounts(): static
     {
         if (empty($this->discounts)) {
@@ -157,11 +189,21 @@ class CartItem extends BaseModel
         return $this;        
     }
 
+    /**
+     * Full load of the cart item including discounts
+     *
+     * @return static
+     */
     public function fullLoad(): static
     {
         return $this->loadDiscounts();
     }
 
+    /**
+     * Get the discounts associated with this cart item
+     *
+     * @return CartDiscount[]|null
+     */
     protected function getDiscounts() : ?array
     {
         if (!$this->getId()) {
@@ -173,6 +215,11 @@ class CartItem extends BaseModel
         return $this->discounts;
     }
 
+    /**
+     * Calculate the subtotal for this cart item
+     *
+     * @return float
+     */
     public function calculateSubTotal() : float
     {
         $sub_total = $this->getUnitPrice() * $this->getQuantity();
@@ -181,6 +228,11 @@ class CartItem extends BaseModel
         return $sub_total;        
     }
 
+    /**
+     * Calculate the total discount amount for this cart item
+     *
+     * @return float
+     */
     public function calculateDiscount() : float
     {
         $discount_amount = 0.0;
@@ -194,6 +246,12 @@ class CartItem extends BaseModel
         return $discount_amount;
     }
 
+    /**
+     * Calculate the tax amount for this cart item
+     *
+     * @param string|null $countryCode
+     * @return float
+     */
     public function calculateTax(?string $countryCode = null) : float
     {
         $tax_amount = 0.0;
@@ -243,6 +301,11 @@ class CartItem extends BaseModel
         return parent::postPersist();
     }
 
+    /**
+     * Check if this cart item requires shipping
+     *
+     * @return bool
+     */
     public function requireShipping(): bool
     {
         if (!$this->getProduct()) {

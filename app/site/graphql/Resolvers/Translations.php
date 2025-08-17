@@ -18,7 +18,7 @@ use App\Base\Interfaces\GraphQl\ResolverInterface;
 
 class Translations implements ResolverInterface
 {
-    public static function resolve(array $args): mixed
+    public static function resolve(array $args, mixed $source = null): mixed
     {
         $translationsPath = App::getDir(App::TRANSLATIONS);
         $translationsArr = include($translationsPath.DS.'en.php');

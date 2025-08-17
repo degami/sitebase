@@ -17,6 +17,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithLatLngTrait;
 use App\Base\Traits\WithOwnerTrait;
 use DateTime;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Address Model
@@ -63,6 +64,7 @@ class Address extends BaseModel
         return trim($this->getFirstName() . ' ' . $this->getLastName());
     }
 
+    #[GraphQLExport]
     public function getFullAddress(): string
     {
         $addressParts = [
@@ -76,6 +78,7 @@ class Address extends BaseModel
         return implode(', ', array_filter($addressParts));
     }
 
+    #[GraphQLExport]
     public function getFullContact(): string
     {
         $contactParts = [

@@ -1,0 +1,128 @@
+# this file defines the GraphQL schema for the CMS module
+
+extend type Query {
+  pages(input: SearchCriteriaInput): PageCollection
+  news(input: SearchCriteriaInput): NewsCollection
+  events(input: SearchCriteriaInput): EventCollection
+  medias(input: SearchCriteriaInput): [MediaElement]
+  links(input: SearchCriteriaInput): LinkExchangeCollection
+  terms(input: SearchCriteriaInput): TaxonomyCollection,
+}
+
+type Taxonomy {
+  id: Int!
+  title: String!
+  position: Int
+  locale: String
+  content: String
+  url: String!
+  path: String
+  level: Int
+  owner: User
+  website: Website
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+  rewrite: Rewrite
+  children: [Taxonomy]
+  pages: [Page]
+}
+
+type TaxonomyCollection {
+  items: [Taxonomy]
+  count: Int!
+}
+
+type MediaElement {
+  id: Int!
+  path: String!
+  filename: String!
+  mimetype: String!
+  filesize: Int!
+  lazyload: Boolean
+  website: Website
+  getImageUrl: String!
+  getThumbUrl_200x200: String!
+  getThumbUrl_300x200: String!
+  getThumbUrl_640x480: String!
+  getThumbUrl_800x600: String!
+}
+
+type Page {
+  id: Int!
+  title: String!
+  locale: String
+  content: String
+  url: String!
+  owner: User
+  website: Website
+  terms: [Taxonomy]
+  gallery: [MediaElement]
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+  rewrite: Rewrite
+}
+
+type PageCollection {
+  items: [Page]
+  count: Int!
+}
+
+type News {
+  id: Int!
+  title: String!
+  locale: String
+  content: String
+  url: String!
+  date: String!
+  owner: User
+  website: Website
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+  rewrite: Rewrite
+}
+
+type NewsCollection {
+  items: [News]
+  count: Int!
+}
+
+type Event {
+  id: Int!
+  title: String!
+  locale: String
+  content: String
+  url: String!
+  date: String!
+  latitude: Float!
+  longitude: Float!
+  owner: User
+  website: Website
+  meta_keywords: String
+  meta_description: String
+  meta_title: String
+  rewrite: Rewrite
+}
+
+type EventCollection {
+  items: [Event]
+  count: Int!
+}
+
+type LinkExchange {
+  id: Int!
+  url: String!
+  title: String!
+  locale: String
+  description: String
+  owner: User
+  website: Website
+  active: Boolean
+}
+
+type LinkExchangeCollection {
+  items: [LinkExchange]
+  count: Int!
+}

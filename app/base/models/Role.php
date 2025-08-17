@@ -19,6 +19,7 @@ use App\Base\Exceptions\InvalidValueException;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Role Model
@@ -43,9 +44,10 @@ class Role extends BaseModel
      * returns permissions array
      *
      * @param bool $reset
-     * @return array
+     * @return \App\Base\Models\Permission[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getPermissionsArray(bool $reset = false): array
     {
         $this->checkLoaded();

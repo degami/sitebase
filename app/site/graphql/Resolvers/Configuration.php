@@ -19,7 +19,7 @@ use App\Base\Models\Website;
 
 class Configuration implements ResolverInterface
 {
-    public static function resolve(array $args): mixed
+    public static function resolve(array $args, mixed $source = null): mixed
     {
         $app = App::getInstance();
 

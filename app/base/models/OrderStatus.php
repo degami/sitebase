@@ -43,6 +43,11 @@ class OrderStatus extends BaseModel
 
     use WithWebsiteTrait;
 
+    /**
+     * Get the status of this order
+     *
+     * @return OrderStatus
+     */
     public static function getByStatus(string $status) : static
     {
         return static::getCollection()->where(['status' => $status])->getFirst();

@@ -64,46 +64,7 @@ trait PageTrait
      */
     public function calcTokenId(int $uid, string $username): string
     {
-        $string = $uid . $username;
-        if ($this instanceof ContainerAwareObject) {
-            $string = $this->getContainer()->get('jwt_id') . $string;
-        }
-
-        return substr(sha1($string), 0, 10);
-    }
-
-    /**
-     * checks if token is still active
-     *
-     * @param Token $token
-     * @return bool
-     */
-    public function tokenIsActive(Token $token): bool
-    {
-        /** @var Validator $validator */
-        $validator = $this->getContainer()->get('jwt:configuration')->validator();
-        $constraints = $this->getContainer()->get('jwt:configuration')->validationConstraints();
-        if ($validator->validate($token, ...$constraints) && !$token->isExpired(new \DateTime())) {
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
-     * gets token data
-     *
-     * @return mixed
-     */
-    protected function getTokenData(): mixed
-    {
-        $userDataClaim = $this->getContainer()->get('utils')->getTokenUserDataClaim();
-        if ($userDataClaim !== false && !empty($userDataClaim)) {
-            $this->current_user = (object)$userDataClaim;
-            return $this->current_user;
-        }
-
-        return false;
+        return $this->getAuth()->calcTokenId($uid, $username);
     }
 
     /**
@@ -116,30 +77,17 @@ trait PageTrait
      */
     public function getCurrentUser(bool $reset = false): ?AccountModel
     {
-        if (($this->current_user_model instanceof AccountModel) && $reset != true) {
-            return $this->current_user_model;
-        }
+        return $this->getAuth()->getCurrentUser($reset);
+    }
 
-        if (!$this->current_user && !$this->getTokenData()) {
-            if ($this->current_user_model instanceof AccountModel) {
-                return $this->current_user_model;
-            }
-            return ($this->current_user_model = $this->containerMake(GuestUser::class));
-        }
-
-        if (!$this->current_user) {
-            $this->getTokenData();
-        }
-
-        if (is_array($this->current_user)) {
-            $this->current_user = (object)$this->current_user;
-        }
-
-        if (is_object($this->current_user) && property_exists($this->current_user, 'id')) {
-            $this->current_user_model = $this->containerCall([User::class, 'load'], ['id' => $this->current_user->id]);
-        }
-
-        return $this->current_user_model;
+    /**
+     * gets token data
+     *
+     * @return mixed
+     */
+    public function getTokenData(): mixed
+    {
+        return $this->getAuth()->getTokenData();
     }
 
     /**

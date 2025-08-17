@@ -41,6 +41,11 @@ class OrderStatusChange extends BaseModel
 
     protected ?Order $order = null;
 
+    /**
+     * Get the order associated with this status change
+     *
+     * @return Order|null
+     */
     public function getOrder(): ?Order
     {
         if ($this->order) {
@@ -55,6 +60,12 @@ class OrderStatusChange extends BaseModel
         return $this->setOrder($order)->order;
     }
 
+    /**
+     * Set the order for this status change
+     *
+     * @param Order $order
+     * @return self
+     */
     public function setOrder(Order $order): self
     {
         $this->order = $order;

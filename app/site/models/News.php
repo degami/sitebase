@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * News Model
@@ -41,6 +42,7 @@ use Exception;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class News extends FrontendModel
 {
     /**

@@ -21,7 +21,7 @@ use App\Base\Routing\RouteInfo;
 
 class PageRegions implements ResolverInterface
 {
-    public static function resolve(array $args): mixed
+    public static function resolve(array $args, mixed $source = null): mixed
     {
         $app = App::getInstance();
 

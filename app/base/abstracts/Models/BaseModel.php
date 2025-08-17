@@ -27,6 +27,7 @@ use App\Base\Exceptions\InvalidValueException;
 use App\Base\Tools\Search\Manager as SearchManager;
 use Exception;
 use Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * A wrapper for LessQL Row
@@ -96,7 +97,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      */
     protected function getModelName(): string
     {
-        return basename(str_replace("\\", "/", get_called_class()));
+        return static::getClassBasename(get_called_class());
     }
 
     /**
@@ -169,7 +170,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             $search->addAndCondition($condition);
         }
 
-        $type = basename(str_replace("\\", "/", strtolower(static::class)));
+        $type = static::getClassBasename(static::class);
         $search->addAndCondition('type', $type);
 
         $count_result = $search->countAll();
@@ -901,7 +902,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
     /**
      * @return Row database row
      */
-    public function getDbRow(): ?Row
+    protected function getDbRow(): ?Row
     {
         return $this->db_row;
     }
@@ -911,7 +912,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      *
      * @return self
      */
-    public function setDbRow(Row $db_row): BaseModel
+    protected function setDbRow(Row $db_row): BaseModel
     {
         $this->db_row = $db_row;
 
@@ -964,6 +965,6 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         // emit event post persist
         App::getInstance()->event('model_'.$eventName, ['object' => $this]);
-        App::getInstance()->event(strtolower(basename(str_replace("\\", DIRECTORY_SEPARATOR, get_class($this)))) . '_' . $eventName, ['object' => $this]);
+        App::getInstance()->event(strtolower(static::getClassBasename($this)) . '_' . $eventName, ['object' => $this]);
     }
 }

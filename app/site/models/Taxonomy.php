@@ -19,6 +19,7 @@ use App\Base\Abstracts\Models\FrontendModelWithChildren;
 use App\Base\Traits\WithParentTrait;
 use DateTime;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Taxonomy Model
@@ -30,6 +31,7 @@ use Exception;
  * @method int getPosition()
  * @method string getLocale()
  * @method string getTitle()
+ * @method string getMetaTitle()
  * @method string getMetaKeywords()
  * @method string getMetaDescription()
  * @method string getHtmlTitle()
@@ -47,6 +49,7 @@ use Exception;
  * @method self setPosition(int $position)
  * @method self setLocale(string $locale)
  * @method self setTitle(string $title)
+ * @method self setMetaTitle(string $meta_title)
  * @method self setMetaKeywords(string $met_keywords)
  * @method self setMetaDescription(string $meta_description)
  * @method self setHtmlTitle(string $html_title)
@@ -58,6 +61,7 @@ use Exception;
  * @method self setPath(string $path)
  * @method self setLevel(int $level)
  */
+#[GraphQLExport]
 class Taxonomy extends FrontendModelWithChildren
 {
     use WithParentTrait;
@@ -81,9 +85,10 @@ class Taxonomy extends FrontendModelWithChildren
      * gets term pages
      *
      * @param false $reset
-     * @return array
+     * @return \App\Site\Models\Page[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getPages($reset = false): array
     {
         $this->checkLoaded();

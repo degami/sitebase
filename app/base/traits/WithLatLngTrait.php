@@ -15,6 +15,7 @@ namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\ModelWithLocationCollection;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Trait for elements with latitude and longitude
@@ -38,6 +39,7 @@ trait WithLatLngTrait
      *
      * @return float
      */
+    #[GraphQLExport]
     public function getLatitude(): float
     {
         return $this->latitude;
@@ -48,6 +50,7 @@ trait WithLatLngTrait
      *
      * @return float
      */
+    #[GraphQLExport]
     public function getLongitude(): float
     {
         return $this->longitude;

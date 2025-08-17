@@ -19,6 +19,7 @@ use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Link Exchange Model
@@ -42,6 +43,7 @@ use Exception;
  * @method self setUserId(int $user_id)
  * @method self setActive(bool $active)
  */
+#[GraphQLExport]
 class LinkExchange extends BaseModel
 {
     use WithOwnerTrait;
@@ -56,9 +58,10 @@ class LinkExchange extends BaseModel
      * gets Link Taxonomy Terms
      *
      * @param bool $reset
-     * @return array
+     * @return \App\Site\Models\Taxonomy[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getTerms(bool $reset = false): array
     {
         $this->checkLoaded();
@@ -111,7 +114,14 @@ class LinkExchange extends BaseModel
         return $this;
     }
 
-    public function getDomain()
+    /**
+     * gets the domain of the link
+     *
+     * @return string
+     * @throws BasicException
+     */
+    #[GraphQLExport]
+    public function getDomain() : string
     {
         $parsed = parse_url($this->getUrl());
         return $parsed['scheme'].'://'.$parsed['host'];

@@ -66,7 +66,8 @@ class Stats extends BaseCommand
             if (!$this->containerCall([$className, 'isIndexable'])) {
                 continue;
             }
-            $type = strtolower(basename(str_replace("\\", DS, $className)));
+            
+            $type = strtolower(static::getClassBasename($className));
             $types[$type] = 0;
         }
 

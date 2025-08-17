@@ -15,6 +15,7 @@ namespace App\Base\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
 use DateTime;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Language Model
@@ -34,6 +35,7 @@ use DateTime;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class Language extends BaseModel
 {
 }

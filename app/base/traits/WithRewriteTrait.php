@@ -19,6 +19,7 @@ use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
 use Exception;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Trait for elements with rewrite
@@ -37,6 +38,7 @@ trait WithRewriteTrait
      * @return Rewrite|null
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getRewrite(): ?Rewrite
     {
         $this->checkLoaded();

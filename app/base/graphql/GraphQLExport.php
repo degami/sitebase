@@ -11,9 +11,12 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Base\Interfaces\GraphQl;
+namespace App\Base\GraphQl;
 
-interface ResolverInterface
-{
-    public static function resolve(array $args, mixed $source = null) : mixed;
+/**
+ * GraphQL Export Attribute
+ */
+#[\Attribute(\Attribute::TARGET_CLASS | \Attribute::TARGET_METHOD)]
+class GraphQLExport {
+    public function __construct(public ?string $name = null) {}
 }

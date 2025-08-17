@@ -131,7 +131,7 @@ class Elasticsearch extends AdminPage
             if (!$this->containerCall([$className, 'isIndexable'])) {
                 continue;
             }
-            $type = strtolower(basename(str_replace("\\", DS, $className)));
+            $type = strtolower(static::getClassBasename($className));
             $tableContents[] = [
                 'Type' => $type, 
                 'Count' => 0, 
@@ -182,7 +182,7 @@ class Elasticsearch extends AdminPage
 
             $classes = ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
             foreach ($classes as $modelClass) {
-                $type = basename(str_replace("\\", "/", strtolower($modelClass)));
+                $type = strtolower(static::getClassBasename($modelClass));
                 if ($this->getRequest()->get('type') && $type != $this->getRequest()->get('type')) {
                     continue;
                 }

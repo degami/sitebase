@@ -67,6 +67,7 @@
     "psr-4": {
       "App\\": "app",
       "App\\Base\\": "app/base",
+      "App\\Base\\Auth\\": "app/base/auth",
       "App\\Base\\Interfaces\\": "app/base/interfaces",
       "App\\Base\\Routing\\": "app/base/routing",
       "App\\Base\\Routers\\": "app/base/routers",

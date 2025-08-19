@@ -654,12 +654,12 @@ class SiteData extends ContainerAwareObject
     protected function menuElementToArray(Menu $menu_element, bool $absolute = true): array
     {
         return [
-            'menu_id' => $menu_element->getId(),
+            'id' => $menu_element->getId(),
             'parent_id' => $menu_element->getParentId(),
             'title' => $menu_element->getTitle(),
             'href' => $menu_element->getLinkUrl($absolute),
             'target' => $menu_element->getTarget(),
-            'internal' => $menu_element->getInternalRoute(),
+            'internal_route' => $menu_element->getInternalRoute(),
             'breadcrumb' => $menu_element->getBreadcrumb(),
             'rewrite_id' => $menu_element->getRewriteId(),
             'locale' => $menu_element->getLocale(),

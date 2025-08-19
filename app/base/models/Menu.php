@@ -21,6 +21,7 @@ use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Models\Rewrite;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Menu Item Model
@@ -38,6 +39,7 @@ use Degami\Basics\Exceptions\BasicException;
  * @method int getLevel()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method \App\Base\Models\Menu[] getChildren()
  * @method self setId(int $id)
  * @method self setWebsiteId(int $website_id)
  * @method self setTitle(string $title)
@@ -52,6 +54,7 @@ use Degami\Basics\Exceptions\BasicException;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class Menu extends ModelWithChildren
 {
     use WithParentTrait;
@@ -63,6 +66,7 @@ class Menu extends ModelWithChildren
      * @return string
      * @throws BasicException
      */
+    #[GraphQLExport]
     public function getLinkUrl(bool $absolute = true): string
     {
         if (trim((string) $this->getHref()) != '') {
@@ -85,6 +89,7 @@ class Menu extends ModelWithChildren
      * 
      * @return string|null
      */
+    #[GraphQLExport]
     public function getInternalRoute() : ?string 
     {    
         if ($this->getRewriteId()) {

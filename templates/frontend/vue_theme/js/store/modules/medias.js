@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 const MEDIA_QUERY = gql`
-query Medias ($mediaId: String!) {
-    medias(
+query Mediaelements ($mediaId: String!) {
+    mediaelements(
         input: {
             criteria: [{ key: "id", value: $mediaId }]
             limit: 1
@@ -17,8 +17,8 @@ query Medias ($mediaId: String!) {
             mimetype
             filesize
             lazyload
-            getImageUrl
-            getThumbUrl_300x200
+            image_url
+            thumb_url__300x200
             website {
                 id
             }
@@ -29,8 +29,8 @@ query Medias ($mediaId: String!) {
 `
 
 const MEDIA_LIST_QUERY = gql`
-query Medias ($input: SearchCriteriaInput) {
-    medias(input: $input) {
+query Mediaelements ($input: SearchCriteriaInput) {
+    mediaelements(input: $input) {
         items {
             id
             path
@@ -38,8 +38,8 @@ query Medias ($input: SearchCriteriaInput) {
             mimetype
             filesize
             lazyload
-            getImageUrl
-            getThumbUrl_300x200
+            image_url
+            thumb_url__300x200
             website {
                 id
             }
@@ -50,15 +50,15 @@ query Medias ($input: SearchCriteriaInput) {
 `
 
 const state = () => ({
-    medias: {},
+    mediaelements: {},
     totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
 const mutations = {
-    setMedias(state, medias) {
-        medias.forEach(element => {
-            state.medias = { ...state.medias, [element.id]: element };
+    setMedias(state, mediaelements) {
+        mediaelements.forEach(element => {
+            state.mediaelements = { ...state.mediaelements, [element.id]: element };
         });
     },
     setTotalCount(state, totalCount) {
@@ -68,16 +68,16 @@ const mutations = {
         state.loading = loading;
     },
     flushMedias(state) {
-        state.medias = {};
+        state.mediaelements = {};
         state.totalCount = 0;
     }
 };
   
 const actions = {
     async fetchMedia({ commit, dispatch }, {mediaId}) {
-        if (undefined !== state.medias && undefined !== state.medias[mediaId]) {
+        if (undefined !== state.mediaelements && undefined !== state.mediaelements[mediaId]) {
             console.log("got media "+mediaId);
-            return state.medias[mediaId];
+            return state.mediaelements[mediaId];
         }
 
         const MEDIA_VARIABLES = {"mediaId": ""+mediaId};
@@ -95,9 +95,9 @@ const actions = {
                 query: MEDIA_QUERY,
                 variables: MEDIA_VARIABLES,
             });
-            commit('setMedias', data.medias.items);
-            commit('setTotalCount', data.medias.count);
-            returnElement = data.medias.items[0];
+            commit('setMedias', data.mediaelements.items);
+            commit('setTotalCount', data.mediaelements.count);
+            returnElement = data.mediaelements.items[0];
         } catch (error) {
             console.error('Errore durante il fetch del media:', error);
         } finally {
@@ -121,8 +121,8 @@ const actions = {
                 query: MEDIA_LIST_QUERY,
                 variables: MEDIA_VARIABLES,
             });
-            commit('setMedias', data.medias.items);
-            commit('setTotalCount', data.medias.count);
+            commit('setMedias', data.mediaelements.items);
+            commit('setTotalCount', data.mediaelements.count);
         } catch (error) {
             console.error('Errore durante il fetch dei media:', error);
         } finally {

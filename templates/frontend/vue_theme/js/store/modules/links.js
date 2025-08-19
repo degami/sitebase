@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 const LINKS_QUERY = gql`
-query Links ($linkId: String!) {
-    links(
+query Linkexchanges ($linkId: String!) {
+    linkexchanges(
         input: {
             criteria: [{ key: "id", value: $linkId }]
             limit: 1
@@ -27,8 +27,8 @@ query Links ($linkId: String!) {
 `
 
 const LINKS_LIST_QUERY = gql`
-query Links ($input: SearchCriteriaInput) {
-    links(input: $input) {
+query Linkexchanges ($input: SearchCriteriaInput) {
+    linkexchanges(input: $input) {
         items {
             id
             url
@@ -46,15 +46,15 @@ query Links ($input: SearchCriteriaInput) {
 `
 
 const state = () => ({
-    links: {},
+    linkexchanges: {},
     totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
 const mutations = {
-    setLinks(state, links) {
-        links.forEach(element => {
-            state.links = { ...state.links, [element.id]: element };
+    setLinks(state, linkexchanges) {
+        linkexchanges.forEach(element => {
+            state.linkexchanges = { ...state.linkexchanges, [element.id]: element };
         });
     },
     setTotalCount(state, totalCount) {
@@ -64,7 +64,7 @@ const mutations = {
         state.loading = loading;
     },
     flushLinks(state) {
-        state.links = {};
+        state.linkexchanges = {};
         state.totalCount = 0;
     }
 };
@@ -91,9 +91,9 @@ const actions = {
                 query: LINKS_QUERY,
                 variables: LINKS_VARIABLES,
             });
-            commit('setLinks', data.links.items);
-            commit('setTotalCount', data.links.count);
-            returnElement = data.links.items[0];
+            commit('setLinks', data.linkexchanges.items);
+            commit('setTotalCount', data.linkexchanges.count);
+            returnElement = data.linkexchanges.items[0];
         } catch (error) {
             console.error('Errore durante il fetch del link:', error);
         } finally {
@@ -117,8 +117,8 @@ const actions = {
                 query: LINKS_LIST_QUERY,
                 variables: LINKS_VARIABLES,
             });
-            commit('setLinks', data.links.items);
-            commit('setTotalCount', data.news.count);
+            commit('setLinks', data.linkexchanges.items);
+            commit('setTotalCount', data.linkexchanges.count);
         } catch (error) {
             console.error('Errore durante il fetch dei links:', error);
         } finally {

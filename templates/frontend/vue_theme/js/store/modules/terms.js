@@ -29,15 +29,15 @@ const TERM_ITEM_FRAGMENT = `fragment TermItemFields on Taxonomy {
 }`
 
 const state = () => ({
-    terms: {},
+    taxonomies: {},
     totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
 const mutations = {
-    setTerms(state, terms) {
-        terms.forEach(element => {
-            state.terms = { ...state.terms, [element.id]: element };
+    setTerms(state, taxonomies) {
+        taxonomies.forEach(element => {
+            state.taxonomies = { ...state.taxonomies, [element.id]: element };
         });
     },
     setTotalCount(state, totalCount) {
@@ -47,16 +47,16 @@ const mutations = {
         state.loading = loading;
     },
     flushTerms(state) {
-        state.terms = {};
+        state.taxonomies = {};
         state.totalCount = 0;
     }
 };
   
 const actions = {
     async fetchTerm({ commit, dispatch }, {termId, maxLevels = 3}) {
-        if (undefined !== state.terms && undefined !== state.terms[termId]) {
+        if (undefined !== state.taxonomies && undefined !== state.taxonomies[termId]) {
             console.log("got term "+termId);
-            return state.terms[termId];
+            return state.taxonomies[termId];
         }
 
         let queryLevels = "...TermItemFields";
@@ -70,8 +70,8 @@ const actions = {
         }
 
         let completeQuery = `
-        query Terms ($termId: String!) {
-            terms(
+        query Taxonomies ($termId: String!) {
+            taxonomies(
                 input: {
                     criteria: [{ key: "id", value: $termId }]
                     limit: 1
@@ -105,9 +105,9 @@ const actions = {
                 query: TERM_QUERY,
                 variables: TERM_VARIABLES,
             });
-            commit('setTerms', data.terms.items);
-            commit('setTotalCount', data.terms.count);
-            returnElement = data.terms.items[0];
+            commit('setTerms', data.taxonomies.items);
+            commit('setTotalCount', data.taxonomies.count);
+            returnElement = data.taxonomies.items[0];
         } catch (error) {
             console.error('Errore durante il fetch del termine di tassonomia:', error);
         } finally {
@@ -129,8 +129,8 @@ const actions = {
         }
 
         let completeQuery = `
-        query Terms ($input: SearchCriteriaInput) {
-            terms(input: $input) {
+        query Taxonomies ($input: SearchCriteriaInput) {
+            taxonomies(input: $input) {
                 items {
                     `+queryLevels+`
                 }
@@ -156,8 +156,8 @@ const actions = {
                 query: TERMS_LIST_QUERY,
                 variables: TERMS_VARIABLES,
             });
-            commit('setTerms', data.terms.items);
-            commit('setTotalCount', data.terms.count);
+            commit('setTerms', data.taxonomies.items);
+            commit('setTotalCount', data.taxonomies.count);
         } catch (error) {
             console.error('Errore durante il fetch dei termini di tassonoia:', error);
         } finally {

@@ -38,14 +38,14 @@ const actions = {
         }
         
         fragment MenuItemFields on Menu {
-            menu_id
+            id
             parent_id
             rewrite_id
             title
             locale
             href
             target
-            internal
+            internal_route
             breadcrumb
             level
         }
@@ -90,7 +90,7 @@ const actions = {
         // Funzione ricorsiva per trovare l'elemento con il path
         const findInTree = (tree, targetPath) => {
             for (let item of tree) {
-                if (item.internal === targetPath) {
+                if (item.internal_route === targetPath) {
                     return item;  // Se il percorso corrisponde, ritorniamo l'elemento
                 }
 

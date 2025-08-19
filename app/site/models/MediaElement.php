@@ -38,6 +38,10 @@ use App\Base\GraphQl\GraphQLExport;
  * @method int getParentId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
+ * @method string getThumbUrl__200x200()
+ * @method string getThumbUrl__300x200()
+ * @method string getThumbUrl__640x480()
+ * @method string getThumbUrl__800x600()
  * @method self setId(int $id)
  * @method self setPath(string $path)
  * @method self setFilename(string $filename)
@@ -49,6 +53,7 @@ use App\Base\GraphQl\GraphQLExport;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class MediaElement extends BaseModel
 {
     use WithOwnerTrait;

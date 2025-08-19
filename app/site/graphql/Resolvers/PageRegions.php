@@ -18,6 +18,7 @@ use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Base\Interfaces\GraphQl\ResolverInterface;
 use App\Base\Models\Rewrite;
 use App\Base\Routing\RouteInfo;
+use ArrayObject;
 
 class PageRegions implements ResolverInterface
 {

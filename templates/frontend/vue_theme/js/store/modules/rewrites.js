@@ -8,12 +8,14 @@ query Rewrites ($websiteId: String!) {
             orderBy: [{ field: "id", direction: ASC }]
         }
     ) {
-        id
-        url
-        route
-        locale
-        website {
+        items {
             id
+            url
+            route
+            locale
+            website {
+                id
+            }
         }
     }
 }
@@ -49,7 +51,7 @@ const actions = {
                 query: REWRITES_QUERY,
                 variables: REWRITES_VARIABLES,
             });
-            commit('setRewrites', data.rewrites);
+            commit('setRewrites', data.rewrites.items);
         } catch (error) {
             console.error('Errore durante il fetch delle rewrites:', error);
         } finally {

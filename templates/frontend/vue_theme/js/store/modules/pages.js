@@ -18,8 +18,8 @@ query Pages ($pageId: String!) {
             url
             meta_title
             gallery {
-                getImageUrl
-                getThumbUrl_300x200
+                image_url
+                thumb_url__300x200
                 lazyload
                 mimetype
                 filesize
@@ -49,7 +49,7 @@ query Pages ($input: SearchCriteriaInput) {
             meta_title
             gallery {
                 getImageUrl
-                getThumbUrl_300x200
+                getThumbUrl__300x200
                 lazyload
                 mimetype
                 filesize

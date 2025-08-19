@@ -1,7 +1,7 @@
 type Query {
   greetings(firstName: String!, lastName: String!): String!
   websites(input: SearchCriteriaInput): WebsiteCollection
-  rewrites(input: SearchCriteriaInput): [Rewrite]
+  rewrites(input: SearchCriteriaInput): RewriteCollection
   pageRegions(rewrite_id: Int, route_path: String): PageRegionsResponse
   menuTree(menu_name: String!, website_id: Int!): [Menu]
   configuration: [ConfigsResult]
@@ -58,7 +58,7 @@ type WebsiteCollection {
 }
 
 type Menu {
-  menu_id: Int!
+  id: Int!
   website: Website
   parent_id: Int
   rewrite_id: Int
@@ -66,7 +66,7 @@ type Menu {
   locale: String
   href: String
   target: String
-  internal: String
+  internal_route: String
   breadcrumb: String
   level: Int
   children: [Menu]
@@ -79,6 +79,11 @@ type Rewrite {
   url: String
   route: String
   locale: String
+}
+
+type RewriteCollection {
+  items: [Rewrite]
+  count: Int!
 }
 
 type PageRegionsResponse {

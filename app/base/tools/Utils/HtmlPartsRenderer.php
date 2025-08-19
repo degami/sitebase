@@ -114,7 +114,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $link_options['attributes']['target'] = $leaf['target'];
         }
         if (!empty($leaf['children'])) {
-            $link_options['id'] = 'navbarDropdown-' . $leaf['menu_id'];
+            $link_options['id'] = 'navbarDropdown-' . $leaf['id'];
             $link_options['attributes']['role'] = 'button';
             $link_options['attributes']['data-toggle'] = 'dropdown';
             $link_options['attributes']['aria-haspopup'] = 'true';
@@ -143,7 +143,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         ];
 
         if ($parent != null) {
-            $tag_options['attributes']['aria-labelledby'] = 'navbarDropdown-' . $parent['menu_id'];
+            $tag_options['attributes']['aria-labelledby'] = 'navbarDropdown-' . $parent['id'];
         }
 
         $out = $this->containerMake(TagElement::class, ['options' => $tag_options]);

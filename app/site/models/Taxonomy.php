@@ -42,6 +42,7 @@ use App\Base\GraphQl\GraphQLExport;
  * @method DateTime getUpdatedAt()
  * @method string getPath()
  * @method int getLevel()
+ * @method \App\Site\Models\Taxonomy[] getChildren()
  * @method self setId(int $id)
  * @method self setWebsiteId(int $website_id)
  * @method self setUrl(string $url)

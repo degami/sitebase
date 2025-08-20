@@ -4,7 +4,7 @@ extend type Query {
   cart: Cart
 }
 
-interface Product {
+interface ProductInterface {
   id: Int!
   class: String!
   name: String!
@@ -14,7 +14,7 @@ interface Product {
   is_physical: Boolean!
 }
 
-type DownloadableProduct implements Product {
+type DownloadableProduct implements ProductInterface {
   id: Int!
   class: String!
   name: String!
@@ -52,7 +52,7 @@ type CartItem {
   total_incl_tax: Float
   created_at: String
   updated_at: String
-  product: Product
+  product: ProductInterface
 }
 
 type CartDiscount {

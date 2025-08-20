@@ -78,7 +78,7 @@ class Entrypoint extends BasePage
             // schema is read from file(s)
             /** @var Schema $schema */
             $schema = BuildSchema::build($contents, function ($typeConfig, $typeDefinitionNode) {
-                if ($typeConfig['name'] === 'Product') {
+                if ($typeConfig['name'] === 'ProductInterface') {
                     $typeConfig['resolveType'] = function ($value) {
                         // Recupera il nome classe dal valore
                         $className = null;
@@ -476,28 +476,47 @@ class Entrypoint extends BasePage
         return Type::string();
     }
 
-    protected Function buildInterfacesTypes(): void
+    protected function buildInterfaceType(ReflectionClass $reflection): InterfaceType
     {
-        if (!isset($this->typesByName['Product'])) {
-            $this->typesByName['Product'] = new InterfaceType([
-                'name' => 'Product',
-                'fields' => [
-                    'id'          => ['type' => Type::nonNull(Type::int())],
-                    'class'       => ['type' => Type::nonNull(Type::string())],
-                    'name'        => ['type' => Type::nonNull(Type::string())],
-                    'price'       => ['type' => Type::nonNull(Type::float())],
-                    'sku'         => ['type' => Type::nonNull(Type::string())],
-                    'tax_class_id'=> ['type' => Type::int()],
-                    'is_physical' => ['type' => Type::nonNull(Type::boolean())],
-                ],
-                'resolveType' => function ($value) {
-                    $className = is_object($value) ? get_class($value) : ($value['class'] ?? null);
-                    return $className && isset($this->typesByClass[$className])
-                        ? $this->typesByClass[$className]
-                        : null;
-                },
-            ]);
+        if (!$reflection->isInterface()) {
+            throw new \InvalidArgumentException("Class " . $reflection->getName() . " is not an interface.");
         }
+
+        $shortName = $reflection->getShortName();
+
+        if (isset($this->typesByName[$shortName])) {
+            return $this->typesByName[$shortName];
+        }
+
+        $fields = [];
+
+        foreach ($reflection->getMethods(ReflectionMethod::IS_PUBLIC) as $method) {
+            if (str_starts_with($method->getName(), 'get')) {
+                $fieldName = $this->getUtils()->pascalCaseToSnakeCase(substr($method->getName(), 3));
+                $returnType = $method->getReturnType();
+                if ($returnType instanceof ReflectionUnionType) {
+                    $returnType = $returnType->getTypes()[0] ?? null;
+                }
+                $fields[$fieldName] = [
+                    'type' => $this->phpDocTypeToGraphQL($returnType ? $returnType->getName() : 'string'),
+                ];
+            }
+        }
+
+        $interfaceType = new InterfaceType([
+            'name' => $shortName,
+            'fields' => $fields,
+            'resolveType' => function ($value) {
+                $className = is_object($value) ? get_class($value) : ($value['class'] ?? null);
+                return $className && isset($this->typesByClass[$className])
+                    ? $this->typesByClass[$className]
+                    : null;
+            },
+        ]);
+
+        $this->typesByName[$shortName] = $interfaceType;
+        $this->typesByClass[$reflection->getName()] = $interfaceType;
+        return $interfaceType;
     }
 
     protected function buildBaseSearchTypes(): void
@@ -549,11 +568,6 @@ class Entrypoint extends BasePage
         }
     }
 
-    protected function buildAdditionalBaseTypes(): void
-    {
-        // add additional base types if needed
-    }
-
     protected function buildGraphQLSchema(): Schema
     {
         $queryFields = [];
@@ -568,9 +582,6 @@ class Entrypoint extends BasePage
 
         // base search types
         $this->buildBaseSearchTypes();
-
-        // interfaces types
-        $this->buildInterfacesTypes();
 
         // --- tipi per i modelli ---
         foreach ($modelClasses as $modelClass) {
@@ -589,19 +600,28 @@ class Entrypoint extends BasePage
             // placeholder
             $this->typesByName[$typeName] = null;
 
-                // crea il tipo
+            // build interfaces types if needed
+            $interfaces = [];
+            foreach ($reflection->getInterfaces() as $interface) {
+                $this->buildInterfaceType($interface);
+                if (isset($this->typesByName[$interface->getShortName()])) {
+                    $interfaces[] = $this->typesByName[$interface->getShortName()];
+                }
+            }
+
+             // create class type
             $objectType = new ObjectType([
                 'name'   => $typeName,
                 'fields' => function() use ($modelClass, &$objectType) {
                     return $this->generateGraphQLFieldsFromModel($modelClass, $objectType);
                 },
-                'interfaces' => is_subclass_of($modelClass, ProductInterface::class) ? [$this->typesByName['Product']] : [],
+                'interfaces' => $interfaces,
             ]);
 
             $this->typesByName[$typeName] = $objectType;
             $this->typesByClass[$modelClass] = $this->typesByName[$typeName];
 
-            // collection type
+            // create collection type
             $collName = $typeName . 'Collection';
             if (!isset($this->typesByName[$collName])) {
                 $this->typesByName[$collName] = new ObjectType([
@@ -656,9 +676,6 @@ class Entrypoint extends BasePage
                 }
             ];
         }
-
-        // additional base types
-        $this->buildAdditionalBaseTypes();
 
         // complete types , queries and mutations by event hooks        
         App::getInstance()->event('register_graphql_query_fields', ['object' => (object) [

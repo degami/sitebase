@@ -105,6 +105,7 @@ const actions = {
                 query: TERM_QUERY,
                 variables: TERM_VARIABLES,
             });
+
             commit('setTerms', data.taxonomies.items);
             commit('setTotalCount', data.taxonomies.count);
             returnElement = data.taxonomies.items[0];

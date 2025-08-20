@@ -76,7 +76,7 @@ class Entrypoint extends BasePage
 
         if (!empty($contents)) {
             // schema is read from file(s)
-           /** @var Schema $schema */
+            /** @var Schema $schema */
             $schema = BuildSchema::build($contents, function ($typeConfig, $typeDefinitionNode) {
                 if ($typeConfig['name'] === 'Product') {
                     $typeConfig['resolveType'] = function ($value) {
@@ -107,6 +107,7 @@ class Entrypoint extends BasePage
         if (!is_array($input)) {
             throw new \App\Base\Exceptions\InvalidValueException("Missing request body");
         }
+
         $query = $input['query'];
         $variableValues = $input['variables'] ?? null;
         $operationName = $input['operationName'] ?? null;
@@ -354,7 +355,6 @@ class Entrypoint extends BasePage
 
                 $fields[$fieldName] = [
                     'type'    => $graphqlType,
-//                    'resolve' => fn($root) => $root->$getterName(),
                     'resolve' => fn($root) => $this->inferSourceValue($root, $fieldName),
                 ];
             }
@@ -409,7 +409,6 @@ class Entrypoint extends BasePage
 
                 $fields[$fieldName] = [
                     'type'    => $this->phpDocTypeToGraphQL($phpType),
-//                    'resolve' => fn($root) => $root->{$methodName}(),
                     'resolve' => fn($root) => $this->inferSourceValue($root, $fieldName),
                 ];
             }
@@ -477,6 +476,29 @@ class Entrypoint extends BasePage
         return Type::string();
     }
 
+    protected Function buildInterfacesTypes(): void
+    {
+        if (!isset($this->typesByName['Product'])) {
+            $this->typesByName['Product'] = new InterfaceType([
+                'name' => 'Product',
+                'fields' => [
+                    'id'          => ['type' => Type::nonNull(Type::int())],
+                    'class'       => ['type' => Type::nonNull(Type::string())],
+                    'name'        => ['type' => Type::nonNull(Type::string())],
+                    'price'       => ['type' => Type::nonNull(Type::float())],
+                    'sku'         => ['type' => Type::nonNull(Type::string())],
+                    'tax_class_id'=> ['type' => Type::int()],
+                    'is_physical' => ['type' => Type::nonNull(Type::boolean())],
+                ],
+                'resolveType' => function ($value) {
+                    $className = is_object($value) ? get_class($value) : ($value['class'] ?? null);
+                    return $className && isset($this->typesByClass[$className])
+                        ? $this->typesByClass[$className]
+                        : null;
+                },
+            ]);
+        }
+    }
 
     protected function buildBaseSearchTypes(): void
     {
@@ -529,87 +551,7 @@ class Entrypoint extends BasePage
 
     protected function buildAdditionalBaseTypes(): void
     {
-        if (!isset($this->typesByName['ConfigEntry'])) {
-            $this->typesByName['ConfigEntry'] = new ObjectType([
-                'name' => 'ConfigEntry',
-                'fields' => [
-                    'path'  => ['type' => Type::nonNull(Type::string())],
-                    'value' => ['type' => Type::string()],
-                ]
-            ]);
-        }
-
-        if (!isset($this->typesByName['ConfigsResult'])) {
-            $this->typesByName['ConfigsResult'] = new ObjectType([
-                'name' => 'ConfigsResult',
-                'fields' => [
-                    'website' => ['type' => Type::nonNull($this->typesByName['Website'])],
-                    'locale'  => ['type' => Type::string()],
-                    'configs' => ['type' => Type::listOf($this->typesByName['ConfigEntry'])],
-                ]
-            ]);
-        }
-
-        if (!isset($this->typesByName['TranslationEntry'])) {
-            $this->typesByName['TranslationEntry'] = new ObjectType([
-                'name' => 'TranslationEntry',
-                'fields' => [
-                    'key'   => ['type' => Type::nonNull(Type::string())],
-                    'value' => ['type' => Type::nonNull(Type::string())],
-                ]
-            ]);
-        }
-
-        if (!isset($this->typesByName['ResultItem'])) {
-            $this->typesByName['ResultItem'] = new ObjectType([
-                'name' => 'ResultItem',
-                'fields' => [
-                    'frontend_url' => ['type' => Type::nonNull(Type::string())],
-                    'title'        => ['type' => Type::nonNull(Type::string())],
-                    'excerpt'      => ['type' => Type::nonNull(Type::string())],
-                ]
-            ]);
-        }
-
-        if (!isset($this->typesByName['SearchResult'])) {
-            $this->typesByName['SearchResult'] = new ObjectType([
-                'name' => 'SearchResult',
-                'fields' => [
-                    'search_query' => ['type' => Type::nonNull(Type::string())],
-                    'search_result' => ['type' => Type::listOf($this->typesByName['ResultItem'])],
-                    'total' => ['type' => Type::nonNull(Type::int())],
-                    'page'  => ['type' => Type::nonNull(Type::int())],
-                ]
-            ]);
-        }
-
-        if (!isset($this->typesByName['PageRegions'])) {
-            $this->typesByName['PageRegions'] = new ObjectType([
-                'name' => 'PageRegions',
-                'fields' => [
-                    'after_body_open' => ['type' => Type::string()],
-                    'before_body_close' => ['type' => Type::string()],
-                    'pre_menu' => ['type' => Type::string()],
-                    'post_menu' => ['type' => Type::string()],
-                    'pre_header' => ['type' => Type::string()],
-                    'post_header' => ['type' => Type::string()],
-                    'pre_content' => ['type' => Type::string()],
-                    'post_content' => ['type' => Type::string()],
-                    'pre_footer' => ['type' => Type::string()],
-                    'post_footer' => ['type' => Type::string()],
-                ]
-            ]);
-        }
-
-        if (!isset($this->typesByName['PageRegionsResponse'])) {
-            $this->typesByName['PageRegionsResponse'] = new ObjectType([
-                'name' => 'PageRegionsResponse',
-                'fields' => [
-                    'locale' => ['type' => Type::string()],
-                    'regions' => ['type' => $this->typesByName['PageRegions']],
-                ]
-            ]);
-        }
+        // add additional base types if needed
     }
 
     protected function buildGraphQLSchema(): Schema
@@ -627,28 +569,8 @@ class Entrypoint extends BasePage
         // base search types
         $this->buildBaseSearchTypes();
 
-        if (!isset($this->typesByName['Product'])) {
-            $this->typesByName['Product'] = new InterfaceType([
-                'name' => 'Product',
-                'fields' => [
-                    'id'          => ['type' => Type::nonNull(Type::int())],
-                    'class'       => ['type' => Type::nonNull(Type::string())],
-                    'name'        => ['type' => Type::nonNull(Type::string())],
-                    'price'       => ['type' => Type::nonNull(Type::float())],
-                    'sku'         => ['type' => Type::nonNull(Type::string())],
-                    'tax_class_id'=> ['type' => Type::int()],
-                    'is_physical' => ['type' => Type::nonNull(Type::boolean())],
-                ],
-                'resolveType' => function ($value) {
-                    $className = is_object($value) ? get_class($value) : ($value['class'] ?? null);
-                    return $className && isset($this->typesByClass[$className])
-                        ? $this->typesByClass[$className]
-                        : null;
-                },
-            ]);
-        }
-
-        $productInterface = $this->typesByName['Product'];
+        // interfaces types
+        $this->buildInterfacesTypes();
 
         // --- tipi per i modelli ---
         foreach ($modelClasses as $modelClass) {
@@ -667,15 +589,13 @@ class Entrypoint extends BasePage
             // placeholder
             $this->typesByName[$typeName] = null;
 
-            $implementsProduct = is_subclass_of($modelClass, ProductInterface::class);
-
                 // crea il tipo
             $objectType = new ObjectType([
                 'name'   => $typeName,
                 'fields' => function() use ($modelClass, &$objectType) {
                     return $this->generateGraphQLFieldsFromModel($modelClass, $objectType);
                 },
-                'interfaces' => $implementsProduct ? [$productInterface] : [],
+                'interfaces' => is_subclass_of($modelClass, ProductInterface::class) ? [$this->typesByName['Product']] : [],
             ]);
 
             $this->typesByName[$typeName] = $objectType;
@@ -740,43 +660,18 @@ class Entrypoint extends BasePage
         // additional base types
         $this->buildAdditionalBaseTypes();
 
-        //  pageRegions(rewrite_id: Int, route_path: String): PageRegionsResponse
-        $queryFields['pageRegions'] = [
-            'type' => $this->typesByName['PageRegionsResponse'],
-            'args' => [
-                'rewrite_id' => ['type' => Type::int()],
-                'route_path' => ['type' => Type::string()],
-            ],
-        ];
+        // complete types , queries and mutations by event hooks        
+        App::getInstance()->event('register_graphql_query_fields', ['object' => (object) [
+            'queryFields' => &$queryFields,
+            'typesByName' => &$this->typesByName,
+            'typesByClass' => &$this->typesByClass,
+        ]]);
 
-        //  configuration: [ConfigsResult]
-        $queryFields['configuration'] = [
-            'type' => Type::listOf($this->typesByName['ConfigsResult']),
-        ];
-
-        //  translations: [TranslationEntry],
-        $queryFields['translations'] = [
-            'type' => Type::listOf($this->typesByName['TranslationEntry']),
-        ];
-
-        //  menuTree(menu_name: String!, website_id: Int!): [Menu]
-        $queryFields['menuTree'] = [
-            'args' => [
-                'menu_name' => ['type' => Type::nonNull(Type::string())], 
-                'website_id' => ['type' => Type::nonNull(Type::int())]
-            ],
-            'type' => Type::listOf($this->typesByName['Menu']),
-        ];
-
-        // search(input: String!, locale: String, page: Int): SearchResult
-        $queryFields['search'] = [
-            'type' => $this->typesByName['SearchResult'],
-            'args' => [
-                'input' => ['type' => Type::nonNull(Type::string())],
-                'locale' => ['type' => Type::string()],
-                'page' => ['type' => Type::int()],
-            ],
-        ];
+        App::getInstance()->event('register_graphql_mutation_fields', ['object' => (object) [
+            'mutationFields' => &$mutationFields,
+            'typesByName' => &$this->typesByName,
+            'typesByClass' => &$this->typesByClass,
+        ]]);
 
         // --- root Query & Mutation ---
         $queryType = new ObjectType([

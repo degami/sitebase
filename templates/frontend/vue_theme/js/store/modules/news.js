@@ -16,7 +16,6 @@ query News ($newsId: String!) {
             content
             locale
             url
-            meta_title
             date
             rewrite {
                 id
@@ -39,7 +38,6 @@ query News ($input: SearchCriteriaInput) {
             content
             locale
             url
-            meta_title
             date
             rewrite {
                 id

@@ -71,6 +71,7 @@ class News extends FrontendModel
      * @return string
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getDate(): string
     {
         $date_format = App::getInstance()->getSiteData()->getDateFormat();

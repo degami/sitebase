@@ -16,7 +16,6 @@ query Events ($eventId: String!) {
             content
             locale
             url
-            meta_title
             date
             latitude
             longitude
@@ -41,7 +40,6 @@ query Events ($input: SearchCriteriaInput) {
             content
             locale
             url
-            meta_title
             date
             latitude
             longitude

@@ -29,15 +29,15 @@ const TERM_ITEM_FRAGMENT = `fragment TermItemFields on Taxonomy {
 }`
 
 const state = () => ({
-    taxonomies: {},
+    terms: {},
     totalCount: 0,
     loading: false,  // Aggiungi la proprietà loading
 });
   
 const mutations = {
-    setTerms(state, taxonomies) {
-        taxonomies.forEach(element => {
-            state.taxonomies = { ...state.taxonomies, [element.id]: element };
+    setTerms(state, terms) {
+        terms.forEach(element => {
+            state.terms = { ...state.terms, [element.id]: element };
         });
     },
     setTotalCount(state, totalCount) {
@@ -47,16 +47,16 @@ const mutations = {
         state.loading = loading;
     },
     flushTerms(state) {
-        state.taxonomies = {};
+        state.terms = {};
         state.totalCount = 0;
     }
 };
   
 const actions = {
     async fetchTerm({ commit, dispatch }, {termId, maxLevels = 3}) {
-        if (undefined !== state.taxonomies && undefined !== state.taxonomies[termId]) {
+        if (undefined !== state.terms && undefined !== state.terms[termId]) {
             console.log("got term "+termId);
-            return state.taxonomies[termId];
+            return state.terms[termId];
         }
 
         let queryLevels = "...TermItemFields";

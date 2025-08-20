@@ -3,12 +3,12 @@
       <Loader text="Loading terms..." />
     </div>
     <div v-else>
-      <h1 v-if="taxonomies" class="taxonomy-title">{{ taxonomies[id]?.title }}</h1>
-      <div v-if="taxonomies" class="taxonomy-content" v-html="taxonomies[id]?.content"></div>
+      <h1 class="taxonomy-title">{{ terms[id]?.title }}</h1>
+      <div class="taxonomy-content" v-html="terms[id]?.content"></div>
 
-      <div v-if="taxonomies^[id].pages" class="taxonomy-pages">
+      <div v-if="terms^[id].pages" class="taxonomy-pages">
           <ul class="list">
-            <li v-for="pagesItem in taxonomies[id].pages" key="pagesItem.id">
+            <li v-for="pagesItem in terms[id].pages" key="pagesItem.id">
               <router-link :to="pagesItem.rewrite.url">{{ pagesItem.title }}</router-link>
             </li>
           </ul>
@@ -44,9 +44,9 @@
         configLoading: 'loading', // loading per configuration
         configuration: 'configuration'
       }),
-      ...mapState('taxonomies', {
+      ...mapState('terms', {
         termsLoading: 'loading', // loading per terms
-        taxonomies: 'taxonomies'
+        terms: 'terms'
       })
     },
     mounted() {

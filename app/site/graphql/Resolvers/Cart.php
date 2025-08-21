@@ -37,6 +37,11 @@ class Cart implements ResolverInterface
 
         $cart = static::getCart($currentUser, $currentWesite);
 
+        return static::getCartReturnArray($cart);
+    }
+
+    public static function getCartReturnArray(CartModel $cart): array
+    {
         $out = [
             'id' => $cart->getId(),
             'user_id' => $cart->getUserId(),

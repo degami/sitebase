@@ -847,7 +847,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Pages {\n    pages(\n        input: {\n            criteria: [{ key: \"url\", value: \"page-1\" }, { key: \"locale:not\", value: \"en\" }]\n            limit: 5\n            offset: 0\n            orderBy: [{ field: \"id\", direction: ASC }]\n        }\n    ) {\n        count\n        items {\n            id\n            title\n            locale\n            url\n            meta_title\n            gallery {\n                getImageUrl\n                getThumbUrl_300x200\n                lazyload\n                mimetype\n                path\n                filename\n                filesize\n            }\n            rewrite {\n                id\n                locale\n                route\n                url\n            }\n        }\n    }\n}\n",
+										"query": "query Pages {\n    pages(\n        input: {\n            criteria: [{ key: \"url\", value: \"page-1\" }, { key: \"locale:not\", value: \"en\" }]\n            limit: 5\n            offset: 0\n            orderBy: [{ field: \"id\", direction: ASC }]\n        }\n    ) {\n        count\n        items {\n            id\n            title\n            locale\n            url\n            meta_title\n            gallery {\n                iImage_url\n                thumb_url__300x200\n                lazyload\n                mimetype\n                path\n                filename\n                filesize\n            }\n            rewrite {\n                id\n                locale\n                route\n                url\n            }\n        }\n    }\n}\n",
 										"variables": ""
 									}
 								},
@@ -871,7 +871,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Configuration {\n    configuration {\n        locale\n        website {\n            id\n            site_name\n            domain\n            aliases\n            default_locale\n        }\n        configs {\n            path\n            value\n        }\n    }\n    pageRegions(rewrite_id: 12) {\n        locale\n        regions {\n            after_body_open\n            before_body_close\n            pre_menu\n            post_menu\n            pre_header\n            post_header\n            pre_content\n            post_content\n            pre_footer\n            post_footer\n        }\n    }\n    rewrites {\n        id\n        url\n        route\n        locale\n        website {\n            id\n            site_name\n            domain\n            aliases\n            default_locale\n        }\n    }\n}\n",
+										"query": "query Configuration {\n    configuration {\n        locale\n        website {\n            id\n            site_name\n            domain\n            aliases\n            default_locale\n        }\n        configs {\n            path\n            value\n        }\n    }\n    pageRegions(rewrite_id: 12) {\n        locale\n        regions {\n            after_body_open\n            before_body_close\n            pre_menu\n            post_menu\n            pre_header\n            post_header\n            pre_content\n            post_content\n            pre_footer\n            post_footer\n        }\n    }\n    rewrites {\n        {\n        items {\n        id\n        url\n        route\n        locale\n        website {\n            id\n            site_name\n            domain\n            aliases\n            default_locale\n        }\n    }\n    }\n}\n",
 										"variables": ""
 									}
 								},
@@ -895,7 +895,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Translations {\n    translations {\n        key\n        value\n    }\n    rewrites {\n        id\n        url\n        route\n        locale\n    }\n    configuration {\n        locale\n        configs {\n            path\n            value\n        }\n    }\n}\n",
+										"query": "query Translations {\n    translations {\n        key\n        value\n    }\n    rewrites {\n        items {\n        id\n        url\n        route\n        locale\n    }\n    }\n    configuration {\n        locale\n        configs {\n            path\n            value\n        }\n    }\n}\n",
 										"variables": ""
 									}
 								},
@@ -919,7 +919,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Links {\n    links(\n        input: { criteria: [{ key: \"locale\", value: \"it\" }], limit: 3, offset: 1 }\n    ) {\n        count\n        items {\n            id\n            url\n            title\n            locale\n            description\n            active\n        }\n    }\n    medias {\n        id\n        path\n        filename\n        mimetype\n        filesize\n        lazyload\n        getImageUrl\n        getThumbUrl_300x200\n        getThumbUrl_640x480\n        getThumbUrl_800x600\n        getThumbUrl_200x200\n    }\n}\n",
+										"query": "query Links {\n    linkexchanges(\n        input: { criteria: [{ key: \"locale\", value: \"it\" }], limit: 3, offset: 1 }\n    ) {\n        count\n        items {\n            id\n            url\n            title\n            locale\n            description\n            active\n        }\n    }\n    mediaelements {\n        id\n        path\n        filename\n        mimetype\n        filesize\n        lazyload\n        image_url\n        thumb_url__300x200\n        thumb_url__640x480\n        thumb_url__800x600\n        thumb_url__200x200\n    }\n}\n",
 										"variables": ""
 									}
 								},
@@ -943,7 +943,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Menu_tree {\n    menuTree(menu_name: \"primary-menu_it\", website_id: 1) {\n        menu_id\n        parent_id\n        rewrite_id\n        title\n        locale\n        href\n        target\n        breadcrumb\n        level\n        children {\n            menu_id\n            parent_id\n            rewrite_id\n            title\n            locale\n            href\n            target\n            breadcrumb\n            level\n        }\n    }\n}\n",
+										"query": "query Menu_tree {\n    menuTree(menu_name: \"primary-menu_it\", website_id: 1) {\n        id\n        parent_id\n        rewrite_id\n        title\n        locale\n        href\n        target\n        breadcrumb\n        level\n        children {\n            id\n            parent_id\n            rewrite_id\n            title\n            locale\n            href\n            target\n            breadcrumb\n            level\n        }\n    }\n}\n",
 										"variables": ""
 									}
 								},
@@ -968,7 +968,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query menuTree($menu_name: String!, $website_id: Int!) {\n            menuTree(menu_name: $menu_name, website_id: $website_id) {\n               ...MenuItemFields\n                children {\n                    ...MenuItemFields\n                children {\n                    ...MenuItemFields\n                children {\n                    ...MenuItemFields\n\n                }\n\n                }\n\n                }\n\n            }\n        }\n        \n        fragment MenuItemFields on Menu {\n            menu_id\n            parent_id\n            rewrite_id\n            title\n            locale\n            href\n            target\n            internal\n            breadcrumb\n            level\n        }",
+										"query": "query menuTree($menu_name: String!, $website_id: Int!) {\n            menuTree(menu_name: $menu_name, website_id: $website_id) {\n               ...MenuItemFields\n                children {\n                    ...MenuItemFields\n                children {\n                    ...MenuItemFields\n                children {\n                    ...MenuItemFields\n\n                }\n\n                }\n\n                }\n\n            }\n        }\n        \n        fragment MenuItemFields on Menu {\n            id\n            parent_id\n            rewrite_id\n            title\n            locale\n            href\n            target\n            internal_route\n            breadcrumb\n            level\n        }",
 										"variables": "{\n    \"menu_name\": \"primary-menu_it\",\n    \"website_id\": 1\n}"
 									}
 								},
@@ -993,7 +993,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query menuTree($menu_name: String!, $website_id: Int!) {\n  menuTree(menu_name: $menu_name, website_id: $website_id) {\n    ...MenuItemFields\n    children {\n      ...MenuItemFields\n      children {\n        ...MenuItemFields\n        children {\n          ...MenuItemFields\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment MenuItemFields on Menu {\n  menu_id\n  parent_id\n  rewrite_id\n  title\n  locale\n  href\n  target\n  internal\n  breadcrumb\n  level\n  __typename\n}",
+										"query": "query menuTree($menu_name: String!, $website_id: Int!) {\n  menuTree(menu_name: $menu_name, website_id: $website_id) {\n    ...MenuItemFields\n    children {\n      ...MenuItemFields\n      children {\n        ...MenuItemFields\n        children {\n          ...MenuItemFields\n          __typename\n        }\n        __typename\n      }\n      __typename\n    }\n    __typename\n  }\n}\n\nfragment MenuItemFields on Menu {\n  id\n  parent_id\n  rewrite_id\n  title\n  locale\n  href\n  target\n  internal_route\n  breadcrumb\n  level\n  __typename\n}",
 										"variables": "{\n    \"menu_name\": \"primary-menu_en\",\n    \"website_id\": 1\n}"
 									}
 								},
@@ -1018,7 +1018,7 @@
 								"body": {
 									"mode": "graphql",
 									"graphql": {
-										"query": "query Terms($termId: String!) {\n    terms(\n        input: {\n            criteria: [{ key: \"id\", value: $termId }]\n            limit: 1\n            offset: 0\n            orderBy: [{ field: \"id\", direction: ASC }]\n        }\n    ) {\n        count\n        items {\n            ...TermItemFields\n            children {\n                ...TermItemFields\n                children {\n                    ...TermItemFields\n                    children {\n                        ...TermItemFields\n                    }\n                }\n            }\n        }\n    }\n}\n                                \nfragment TermItemFields on Taxonomy {\n    id\n    title\n    position\n    locale\n    content\n    url\n    path\n    level\n    meta_keywords\n    meta_description\n    meta_title\n    pages {\n        id\n        url\n        title\n        locale\n        rewrite {\n            route\n            url\n        }\n    }\n}\n",
+										"query": "query Taxonomies($termId: String!) {\n    taxonomies(\n        input: {\n            criteria: [{ key: \"id\", value: $termId }]\n            limit: 1\n            offset: 0\n            orderBy: [{ field: \"id\", direction: ASC }]\n        }\n    ) {\n        count\n        items {\n            ...TermItemFields\n            children {\n                ...TermItemFields\n                children {\n                    ...TermItemFields\n                    children {\n                        ...TermItemFields\n                    }\n                }\n            }\n        }\n    }\n}\n                                \nfragment TermItemFields on Taxonomy {\n    id\n    title\n    position\n    locale\n    content\n    url\n    path\n    level\n    meta_keywords\n    meta_description\n    meta_title\n    pages {\n        id\n        url\n        title\n        locale\n        rewrite {\n            route\n            url\n        }\n    }\n}\n",
 										"variables": "{\n    \"termId\" : \"3\"\n}"
 									}
 								},

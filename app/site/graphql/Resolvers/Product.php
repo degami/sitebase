@@ -15,8 +15,6 @@ namespace App\Site\GraphQL\Resolvers;
 
 use App\App;
 use App\Base\Interfaces\GraphQl\ResolverInterface;
-use App\Base\Models\User;
-use App\Base\Models\Website;
 
 class Product implements ResolverInterface
 {

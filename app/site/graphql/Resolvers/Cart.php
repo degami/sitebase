@@ -20,13 +20,16 @@ use App\Base\Models\Cart as CartModel;
 use App\Base\Models\CartItem;
 use App\Base\Models\CartDiscount;
 use App\Base\Models\Website;
-use App\Base\Traits\CommercePageTrait;
 
 class Cart implements ResolverInterface
 {
     public static function resolve(array $args, mixed $source = null): mixed
     {
         $app = App::getInstance();
+
+        if (!$app->getEnv('ENABLE_COMMERCE', false)) {
+            return null;
+        }
 
         $currentUser = $app->getAuth()->getCurrentUser();
         if (!$currentUser || !$currentUser->getId()) {

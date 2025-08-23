@@ -18,10 +18,14 @@ use App\Base\Interfaces\EventListenerInterface;
 use Gplanchat\EventManager\Event;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
-use App\Site\GraphQL\Resolvers\Cart as CartResolver;
 use RuntimeException;
+use App\Base\Models\User;
+use App\Base\Models\Cart as CartModel;
+use App\Base\Models\CartItem;
 use App\Base\Models\CartDiscount;
+use App\Base\Models\Website;
 use App\Base\Models\Discount as DiscountModel;
+use GraphQL\Type\Definition\ResolveInfo;
 
 class CommerceEventListener implements EventListenerInterface
 {
@@ -103,6 +107,22 @@ class CommerceEventListener implements EventListenerInterface
             //  cart: Cart
             $queryFields['cart'] = [
                 'type' => $typesByName['Cart'],
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                    if (!$app->getEnv('ENABLE_COMMERCE', false)) {
+                        return null;
+                    }
+
+                    $currentUser = $app->getAuth()->getCurrentUser();
+                    if (!$currentUser || !$currentUser->getId()) {
+                        return null; // or throw an exception if needed
+                    }
+
+                    $currentWesite = $app->getSiteData()->getCurrentWebsite();
+
+                    $cart = static::getCart($currentUser, $currentWesite);
+
+                    return static::getCartReturnArray($cart);
+                }
             ];
         }
     }
@@ -128,14 +148,14 @@ class CommerceEventListener implements EventListenerInterface
                     'productId' => ['type' => Type::nonNull(Type::int())],
                     'quantity' => ['type' => Type::nonNull(Type::int())],
                 ],
-                'resolve' => function ($root, $args) use ($app) {
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
                     $currentUser = $app->getAuth()->getCurrentUser();
                     $currentWesite = $app->getSiteData()->getCurrentWebsite();
                     if (!$currentUser || !$currentUser->getId()) {
                         return null; // or throw an exception if needed
                     }
 
-                    $cart = CartResolver::getCart($currentUser, $currentWesite);
+                    $cart = static::getCart($currentUser, $currentWesite);
                     $productClass = $args['productClass'] ?? null;
                     $productId = $args['productId'] ?? null;
                     $quantity = $args['quantity'] ?? 1;
@@ -147,7 +167,7 @@ class CommerceEventListener implements EventListenerInterface
 
                     $cart->calculate()->persist();
 
-                    return CartResolver::getCartReturnArray($cart);
+                    return static::getCartReturnArray($cart);
                 }
             ];
         }
@@ -160,14 +180,14 @@ class CommerceEventListener implements EventListenerInterface
                     'cartItemId' => ['type' => Type::nonNull(Type::int())],
                     'quantity' => ['type' => Type::nonNull(Type::int())],
                 ],
-                'resolve' => function ($root, $args) use ($app) {
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
                     $currentUser = $app->getAuth()->getCurrentUser();
                     $currentWesite = $app->getSiteData()->getCurrentWebsite();
                     if (!$currentUser || !$currentUser->getId()) {
                         return null; // or throw an exception if needed
                     }
 
-                    $cart = CartResolver::getCart($currentUser, $currentWesite);
+                    $cart = static::getCart($currentUser, $currentWesite);
                     $cartItemId = $args['cartItemId'] ?? null;
                     $quantity = $args['quantity'] ?? null;
 
@@ -186,7 +206,7 @@ class CommerceEventListener implements EventListenerInterface
 
                     $cart->calculate()->persist();
 
-                    return CartResolver::getCartReturnArray($cart);
+                    return static::getCartReturnArray($cart);
                 }
             ];
         }
@@ -198,14 +218,14 @@ class CommerceEventListener implements EventListenerInterface
                 'args' => [
                     'cartItemId' => ['type' => Type::nonNull(Type::int())],
                 ],
-                'resolve' => function ($root, $args) use ($app) {
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
                     $currentUser = $app->getAuth()->getCurrentUser();
                     $currentWesite = $app->getSiteData()->getCurrentWebsite();
                     if (!$currentUser || !$currentUser->getId()) {
                         return null; // or throw an exception if needed
                     }
 
-                    $cart = CartResolver::getCart($currentUser, $currentWesite);
+                    $cart = static::getCart($currentUser, $currentWesite);
                     $cartItemId = $args['cartItemId'] ?? null;
 
                     $cart->fullLoad();
@@ -215,10 +235,11 @@ class CommerceEventListener implements EventListenerInterface
                         throw new RuntimeException($app->getUtils()->translate('Cart item not found.'));
                     }
 
-                    $cartItem->remove();
-                    $cart->calculate()->persist();
+                    $cart->removeItem($cartItem);
 
-                    return CartResolver::getCartReturnArray($cart);
+                    $cart->fullLoad()->calculate()->persist();
+
+                    return static::getCartReturnArray($cart);
                 }
             ];
         }
@@ -230,14 +251,14 @@ class CommerceEventListener implements EventListenerInterface
                 'args' => [
                     'code' => ['type' => Type::nonNull(Type::string())],
                 ],
-                'resolve' => function ($root, $args) use ($app) {
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
                     $currentUser = $app->getAuth()->getCurrentUser();
                     $currentWesite = $app->getSiteData()->getCurrentWebsite();
                     if (!$currentUser || !$currentUser->getId()) {
                         return null; // or throw an exception if needed
                     }
 
-                    $cart = CartResolver::getCart($currentUser, $currentWesite);
+                    $cart = static::getCart($currentUser, $currentWesite);
                     $code = $args['code'] ?? null;
 
                     if (empty($code)) {
@@ -267,7 +288,9 @@ class CommerceEventListener implements EventListenerInterface
                     // save the cart discount
                     $cartDiscount->persist();
 
-                    return CartResolver::getCartReturnArray($cart);
+                    $cart->fullLoad()->calculate()->persist();
+
+                    return static::getCartReturnArray($cart);
                 }
             ];
         }
@@ -279,14 +302,14 @@ class CommerceEventListener implements EventListenerInterface
                 'args' => [
                     'cartDiscountId' => ['type' => Type::nonNull(Type::int())],
                 ],
-                'resolve' => function ($root, $args) use ($app) {
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
                     $currentUser = $app->getAuth()->getCurrentUser();
                     $currentWesite = $app->getSiteData()->getCurrentWebsite();
                     if (!$currentUser || !$currentUser->getId()) {
                         return null; // or throw an exception if needed
                     }
 
-                    $cart = CartResolver::getCart($currentUser, $currentWesite);
+                    $cart = static::getCart($currentUser, $currentWesite);
                     $cartDiscountId = $args['cartDiscountId'] ?? null;
 
                     $cartDiscount = CartDiscount::load($cartDiscountId);
@@ -300,11 +323,90 @@ class CommerceEventListener implements EventListenerInterface
                     }
 
                     $cartDiscount->delete();
-                    $cart->calculate()->persist();
 
-                    return CartResolver::getCartReturnArray($cart);
+                    $cart->fullLoad()->calculate()->persist();
+
+                    return static::getCartReturnArray($cart);
                 }
             ];
         }
     }
+
+    public static function getCartReturnArray(CartModel $cart): array
+    {
+        $cart->fullLoad();
+        $out = [
+            'id' => $cart->getId(),
+            'user_id' => $cart->getUserId(),
+            'website_id' => $cart->getWebsiteId(),
+            'created_at' => $cart->getCreatedAt(),
+            'updated_at' => $cart->getUpdatedAt(),
+            'items' => array_map(function (CartItem $item) {
+                        return [
+                            'id' => $item->getId(),
+                            'product_id' => $item->getProductId(),
+                            'quantity' => $item->getQuantity(),
+                            'price' => $item->getUnitPrice(),
+                            'subtotal' => $item->getSubTotal(),
+                            'discount_amount' => $item->getDiscountAmount(),
+                            'tax_amount' => $item->getTaxAmount(),
+                            'total_incl_tax' => $item->getTotalInclTax(),
+                            'currency' => $item->getCurrencyCode(),
+                            'product' => $item->getProduct() ? [
+                                'id' => $item->getProductId(),
+                                'class' => $item->getProductClass(),
+                                'name' => $item->getProduct()->getName(),
+                                'sku' => $item->getProduct()->getSku(),
+                                'price' => $item->getProduct()->getPrice(),
+                                'tax_class_id' => $item->getProduct()->getTaxClassId(),
+                                'is_physical' => $item->getProduct()->isPhysical(),
+                            ] : null,
+                        ];
+                    }, $cart->getItems()),
+            'discounts' => array_map(function (CartDiscount $discount) {
+                        return [
+                            'id' => $discount->getId(),
+                            'code' => $discount->getInitialDiscount()->getCode(),
+                            'type' => $discount->getInitialDiscount()->getDiscountType(),
+                            'description' => $discount->getInitialDiscount()->getTitle(),
+                            'discount_amount' => $discount->getDiscountAmount(),
+                            'currency' => $discount->getCurrencyCode(),
+                        ];
+                    }, $cart->getDiscounts() ?? []),
+            'subtotal' => $cart->getSubTotal(),
+            'tax_amount' => $cart->getTaxAmount(),
+            'discount_amount' => $cart->getDiscountAmount(),
+            'total_incl_tax' => $cart->getTotalInclTax(),
+            'currency' => $cart->getCurrencyCode(),
+        ];
+
+        return $out;
+    }
+
+    public static function getCart(User $user, Website $website) : ?CartModel
+    {
+        $cart = CartModel::getCollection()->where([
+            'user_id' => $user->getId(),
+            'website_id' => $website->getId(),
+            'is_active' => true,
+        ])->getFirst();
+
+        if ($cart instanceof CartModel) {
+            return $cart;
+        }
+
+        // prepare a new empty cart and persist it
+        $cart = App::getInstance()->containerMake(CartModel::class);
+        $cart
+            ->setUserId($user->getId())
+            ->setWebsiteId($website->getId())
+            ->setIsActive(true)
+
+            ->setAdminCurrencyCode($website->getDefaultCurrencyCode())
+            ->setCurrencyCode($website->getDefaultCurrencyCode())
+
+            ->persist();
+
+        return $cart;
+    }    
 }

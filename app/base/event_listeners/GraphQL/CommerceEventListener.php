@@ -105,25 +105,7 @@ class CommerceEventListener implements EventListenerInterface
 
         if (!isset($queryFields['cart'])) {
             //  cart: Cart
-            $queryFields['cart'] = [
-                'type' => $typesByName['Cart'],
-                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
-                    if (!$app->getEnv('ENABLE_COMMERCE', false)) {
-                        return null;
-                    }
-
-                    $currentUser = $app->getAuth()->getCurrentUser();
-                    if (!$currentUser || !$currentUser->getId()) {
-                        return null; // or throw an exception if needed
-                    }
-
-                    $currentWesite = $app->getSiteData()->getCurrentWebsite();
-
-                    $cart = static::getCart($currentUser, $currentWesite);
-
-                    return static::getCartReturnArray($cart);
-                }
-            ];
+            $queryFields['cart'] = $this->getCartQueryDefinition($typesByName, $typesByClass);
         }
     }
 
@@ -141,198 +123,251 @@ class CommerceEventListener implements EventListenerInterface
 
         if (!isset($mutationFields['addToCart'])) {
             //  cart: Cart
-            $mutationFields['addToCart'] = [
-                'type' => $typesByName['Cart'],
-                'args' => [
-                    'productClass' => ['type' => Type::nonNull(Type::string())],
-                    'productId' => ['type' => Type::nonNull(Type::int())],
-                    'quantity' => ['type' => Type::nonNull(Type::int())],
-                ],
-                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
-                    $currentUser = $app->getAuth()->getCurrentUser();
-                    $currentWesite = $app->getSiteData()->getCurrentWebsite();
-                    if (!$currentUser || !$currentUser->getId()) {
-                        return null; // or throw an exception if needed
-                    }
-
-                    $cart = static::getCart($currentUser, $currentWesite);
-                    $productClass = $args['productClass'] ?? null;
-                    $productId = $args['productId'] ?? null;
-                    $quantity = $args['quantity'] ?? 1;
-
-                    $cart->fullLoad();
-
-                    $product = $app->containerCall([$productClass, 'load'], [$productId]);
-                    $cart->addProduct($product, $quantity);
-
-                    $cart->calculate()->persist();
-
-                    return static::getCartReturnArray($cart);
-                }
-            ];
+            $mutationFields['addToCart'] = $this->getAddToCartMutationDefinition($typesByName, $typesByClass);
         }
 
         if (!isset($mutationFields['updateCartItem'])) {
             //  updateCartItem: CartItem
-            $mutationFields['updateCartItem'] = [
-                'type' => $typesByName['Cart'],
-                'args' => [
-                    'cartItemId' => ['type' => Type::nonNull(Type::int())],
-                    'quantity' => ['type' => Type::nonNull(Type::int())],
-                ],
-                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
-                    $currentUser = $app->getAuth()->getCurrentUser();
-                    $currentWesite = $app->getSiteData()->getCurrentWebsite();
-                    if (!$currentUser || !$currentUser->getId()) {
-                        return null; // or throw an exception if needed
-                    }
-
-                    $cart = static::getCart($currentUser, $currentWesite);
-                    $cartItemId = $args['cartItemId'] ?? null;
-                    $quantity = $args['quantity'] ?? null;
-
-                    $cart->fullLoad();
-
-                    $cartItem = $cart->getCartItem($cartItemId);
-                    if (!$cartItem) {
-                        throw new RuntimeException($app->getUtils()->translate('Cart item not found.'));
-                    }
-
-                    if ($quantity) {
-                        $cartItem->setQuantity($quantity)->persist();
-                    } else {
-                        $cartItem->remove();
-                    }
-
-                    $cart->calculate()->persist();
-
-                    return static::getCartReturnArray($cart);
-                }
-            ];
+            $mutationFields['updateCartItem'] = $this->getUpdateCartItemMutationDefinition($typesByName, $typesByClass);
         }
 
         if (!isset($mutationFields['removeFromCart'])) {
             //  removeCartItem: CartItem
-            $mutationFields['removeFromCart'] = [
-                'type' => $typesByName['Cart'],
-                'args' => [
-                    'cartItemId' => ['type' => Type::nonNull(Type::int())],
-                ],
-                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
-                    $currentUser = $app->getAuth()->getCurrentUser();
-                    $currentWesite = $app->getSiteData()->getCurrentWebsite();
-                    if (!$currentUser || !$currentUser->getId()) {
-                        return null; // or throw an exception if needed
-                    }
-
-                    $cart = static::getCart($currentUser, $currentWesite);
-                    $cartItemId = $args['cartItemId'] ?? null;
-
-                    $cart->fullLoad();
-
-                    $cartItem = $cart->getCartItem($cartItemId);
-                    if (!$cartItem) {
-                        throw new RuntimeException($app->getUtils()->translate('Cart item not found.'));
-                    }
-
-                    $cart->removeItem($cartItem);
-
-                    $cart->fullLoad()->calculate()->persist();
-
-                    return static::getCartReturnArray($cart);
-                }
-            ];
+            $mutationFields['removeFromCart'] = $this->getRemoveFromCartMutationDefinition($typesByName, $typesByClass);
         }
 
         if (!isset($mutationFields['applyCartDiscount'])) {
             //  cartDiscount: CartDiscount
-            $mutationFields['applyCartDiscount'] = [
-                'type' => $typesByName['Cart'],
-                'args' => [
-                    'code' => ['type' => Type::nonNull(Type::string())],
-                ],
-                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
-                    $currentUser = $app->getAuth()->getCurrentUser();
-                    $currentWesite = $app->getSiteData()->getCurrentWebsite();
-                    if (!$currentUser || !$currentUser->getId()) {
-                        return null; // or throw an exception if needed
-                    }
-
-                    $cart = static::getCart($currentUser, $currentWesite);
-                    $code = $args['code'] ?? null;
-
-                    if (empty($code)) {
-                        throw new RuntimeException('Discount code is required.');
-                    }
-
-                    $discount = DiscountModel::getCollection()
-                        ->where([
-                            'code' => $code,
-                            'active' => 1,
-                            'website_id' => $currentWesite->getId(),
-                        ])
-                        ->getFirst();
-
-                    if (!$discount) {
-                        throw new RuntimeException('Invalid or inactive discount code.');
-                    }
-
-                    $cart->fullLoad();
-                    
-                    if (in_array($discount->getId(), array_map(fn($d) => $d->getInitialDiscountId(), $cart->getDiscounts() ?? []))) {
-                        throw new RuntimeException('Discount code already applied.');
-                    }
-
-                    $cartDiscount = CartDiscount::createFromDiscount($discount, $cart);
-
-                    // save the cart discount
-                    $cartDiscount->persist();
-
-                    $cart->fullLoad()->calculate()->persist();
-
-                    return static::getCartReturnArray($cart);
-                }
-            ];
+            $mutationFields['applyCartDiscount'] = $this->getApplyCartDiscountMutationDefinition($typesByName, $typesByClass);
         }
 
         if (!isset($mutationFields['removeCartDiscount'])) {
             //  cartDiscount: CartDiscount
-            $mutationFields['removeCartDiscount'] = [
-                'type' => $typesByName['Cart'],
-                'args' => [
-                    'cartDiscountId' => ['type' => Type::nonNull(Type::int())],
-                ],
-                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
-                    $currentUser = $app->getAuth()->getCurrentUser();
-                    $currentWesite = $app->getSiteData()->getCurrentWebsite();
-                    if (!$currentUser || !$currentUser->getId()) {
-                        return null; // or throw an exception if needed
-                    }
-
-                    $cart = static::getCart($currentUser, $currentWesite);
-                    $cartDiscountId = $args['cartDiscountId'] ?? null;
-
-                    $cartDiscount = CartDiscount::load($cartDiscountId);
-
-                    if (!$cartDiscount) {
-                        throw new RuntimeException($app->getUtils()->translate('Cart discount not found.'));
-                    }
-                
-                    if ($cartDiscount->getCartId() !== $cart->getId()) {
-                        throw new RuntimeException($app->getUtils()->translate('Cart discount does not belong to this cart.'));
-                    }
-
-                    $cartDiscount->delete();
-
-                    $cart->fullLoad()->calculate()->persist();
-
-                    return static::getCartReturnArray($cart);
-                }
-            ];
+            $mutationFields['removeCartDiscount'] = $this->getRemoveCartDiscountMutationDefinition($typesByName, $typesByClass);
         }
     }
 
-    public static function getCartReturnArray(CartModel $cart): array
+    protected function getCartQueryDefinition(array &$typesByName, array &$typesByClass): array
+    {
+        $app = App::getInstance();
+        return [
+            'type' => $typesByName['Cart'],
+            'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                if (!$app->getEnv('ENABLE_COMMERCE', false)) {
+                    return null;
+                }
+
+                $currentUser = $app->getAuth()->getCurrentUser();
+                if (!$currentUser || !$currentUser->getId()) {
+                    return null; // or throw an exception if needed
+                }
+
+                $currentWesite = $app->getSiteData()->getCurrentWebsite();
+
+                return $this->getCartReturnArray($this->getCart($currentUser, $currentWesite));
+            }
+        ];
+    }
+
+    protected function getRemoveCartDiscountMutationDefinition(array &$typesByName, array &$typesByClass): array
+    {
+        $app = App::getInstance();
+        return [
+            'type' => $typesByName['Cart'],
+            'args' => [
+                'cartDiscountId' => ['type' => Type::nonNull(Type::int())],
+            ],
+            'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                $currentUser = $app->getAuth()->getCurrentUser();
+                $currentWesite = $app->getSiteData()->getCurrentWebsite();
+                if (!$currentUser || !$currentUser->getId()) {
+                    return null; // or throw an exception if needed
+                }
+
+                $cart = $this->getCart($currentUser, $currentWesite);
+                $cartDiscountId = $args['cartDiscountId'] ?? null;
+
+                $cartDiscount = CartDiscount::load($cartDiscountId);
+
+                if (!$cartDiscount) {
+                    throw new RuntimeException($app->getUtils()->translate('Cart discount not found.'));
+                }
+            
+                if ($cartDiscount->getCartId() !== $cart->getId()) {
+                    throw new RuntimeException($app->getUtils()->translate('Cart discount does not belong to this cart.'));
+                }
+
+                $cartDiscount->delete();
+
+                $cart->fullLoad()->calculate()->persist();
+
+                return $this->getCartReturnArray($cart);
+            }
+        ];
+    }
+
+    protected function getRemoveFromCartMutationDefinition(array &$typesByName, array &$typesByClass): array
+    {
+        $app = App::getInstance();
+        return [
+            'type' => $typesByName['Cart'],
+            'args' => [
+                'cartItemId' => ['type' => Type::nonNull(Type::int())],
+            ],
+            'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                $currentUser = $app->getAuth()->getCurrentUser();
+                $currentWesite = $app->getSiteData()->getCurrentWebsite();
+                if (!$currentUser || !$currentUser->getId()) {
+                    return null; // or throw an exception if needed
+                }
+
+                $cart = $this->getCart($currentUser, $currentWesite);
+                $cartItemId = $args['cartItemId'] ?? null;
+
+                $cart->fullLoad();
+
+                $cartItem = $cart->getCartItem($cartItemId);
+                if (!$cartItem) {
+                    throw new RuntimeException($app->getUtils()->translate('Cart item not found.'));
+                }
+
+                $cart->removeItem($cartItem);
+
+                $cart->fullLoad()->calculate()->persist();
+
+                return $this->getCartReturnArray($cart);
+            }
+        ];
+    }
+
+    protected function getApplyCartDiscountMutationDefinition(array &$typesByName, array &$typesByClass): array
+    {
+        $app = App::getInstance();
+        return [
+            'type' => $typesByName['Cart'],
+            'args' => [
+                'code' => ['type' => Type::nonNull(Type::string())],
+            ],
+            'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                $currentUser = $app->getAuth()->getCurrentUser();
+                $currentWesite = $app->getSiteData()->getCurrentWebsite();
+                if (!$currentUser || !$currentUser->getId()) {
+                    return null; // or throw an exception if needed
+                }
+
+                $cart = $this->getCart($currentUser, $currentWesite);
+                $code = $args['code'] ?? null;
+
+                if (empty($code)) {
+                    throw new RuntimeException('Discount code is required.');
+                }
+
+                $discount = DiscountModel::getCollection()
+                    ->where([
+                        'code' => $code,
+                        'active' => 1,
+                        'website_id' => $currentWesite->getId(),
+                    ])
+                    ->getFirst();
+
+                if (!$discount) {
+                    throw new RuntimeException('Invalid or inactive discount code.');
+                }
+
+                $cart->fullLoad();
+                
+                if (in_array($discount->getId(), array_map(fn($d) => $d->getInitialDiscountId(), $cart->getDiscounts() ?? []))) {
+                    throw new RuntimeException('Discount code already applied.');
+                }
+
+                $cartDiscount = CartDiscount::createFromDiscount($discount, $cart);
+
+                // save the cart discount
+                $cartDiscount->persist();
+
+                $cart->fullLoad()->calculate()->persist();
+
+                return $this->getCartReturnArray($cart);
+            }
+        ];
+    }
+
+
+    protected function getAddToCartMutationDefinition(array &$typesByName, array &$typesByClass): array
+    {
+        $app = App::getInstance();
+        return [
+            'type' => $typesByName['Cart'],
+            'args' => [
+                'productClass' => ['type' => Type::nonNull(Type::string())],
+                'productId' => ['type' => Type::nonNull(Type::int())],
+                'quantity' => ['type' => Type::nonNull(Type::int())],
+            ],
+            'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                $currentUser = $app->getAuth()->getCurrentUser();
+                $currentWesite = $app->getSiteData()->getCurrentWebsite();
+                if (!$currentUser || !$currentUser->getId()) {
+                    return null; // or throw an exception if needed
+                }
+
+                $cart = $this->getCart($currentUser, $currentWesite);
+                $productClass = $args['productClass'] ?? null;
+                $productId = $args['productId'] ?? null;
+                $quantity = $args['quantity'] ?? 1;
+
+                $cart->fullLoad();
+
+                $product = $app->containerCall([$productClass, 'load'], [$productId]);
+                $cart->addProduct($product, $quantity);
+
+                $cart->calculate()->persist();
+
+                return $this->getCartReturnArray($cart);
+            }
+        ];
+    }
+
+    protected function getUpdateCartItemMutationDefinition(array &$typesByName, array &$typesByClass): array
+    {
+        $app = App::getInstance();
+        return [
+            'type' => $typesByName['Cart'],
+            'args' => [
+                'cartItemId' => ['type' => Type::nonNull(Type::int())],
+                'quantity' => ['type' => Type::nonNull(Type::int())],
+            ],
+            'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                $currentUser = $app->getAuth()->getCurrentUser();
+                $currentWesite = $app->getSiteData()->getCurrentWebsite();
+                if (!$currentUser || !$currentUser->getId()) {
+                    return null; // or throw an exception if needed
+                }
+
+                $cart = $this->getCart($currentUser, $currentWesite);
+                $cartItemId = $args['cartItemId'] ?? null;
+                $quantity = $args['quantity'] ?? null;
+
+                $cart->fullLoad();
+
+                $cartItem = $cart->getCartItem($cartItemId);
+                if (!$cartItem) {
+                    throw new RuntimeException($app->getUtils()->translate('Cart item not found.'));
+                }
+
+                if ($quantity) {
+                    $cartItem->setQuantity($quantity)->persist();
+                } else {
+                    $cartItem->remove();
+                }
+
+                $cart->calculate()->persist();
+
+                return $this->getCartReturnArray($cart);
+            }
+        ];
+    }
+
+    protected function getCartReturnArray(CartModel $cart): array
     {
         $cart->fullLoad();
         $out = [
@@ -383,7 +418,7 @@ class CommerceEventListener implements EventListenerInterface
         return $out;
     }
 
-    public static function getCart(User $user, Website $website) : ?CartModel
+    protected function getCart(User $user, Website $website) : ?CartModel
     {
         $cart = CartModel::getCollection()->where([
             'user_id' => $user->getId(),

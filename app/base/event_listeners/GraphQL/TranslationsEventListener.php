@@ -13,10 +13,12 @@
 
 namespace App\Base\EventListeners\GraphQL;
 
+use App\App;
 use App\Base\Interfaces\EventListenerInterface;
 use Gplanchat\EventManager\Event;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
+use GraphQL\Type\Definition\ResolveInfo;
 
 class TranslationsEventListener implements EventListenerInterface
 {
@@ -30,6 +32,7 @@ class TranslationsEventListener implements EventListenerInterface
 
     public function RegisterGraphQLQueryFields(Event $e) 
     {
+        $app = App::getInstance();
         $object = $e->getData('object');
         $queryFields = &$object->queryFields;
         $typesByName = &$object->typesByName;
@@ -49,6 +52,13 @@ class TranslationsEventListener implements EventListenerInterface
             //  translations: [TranslationEntry],
             $queryFields['translations'] = [
                 'type' => Type::listOf($typesByName['TranslationEntry']),
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                    $translationsPath = App::getDir(App::TRANSLATIONS);
+                    $translationsArr = include($translationsPath.DS.'en.php');
+                    $keys = array_keys($translationsArr);
+
+                    return array_map(fn ($key) => ['key' => $key, 'value' => __($key)], $keys);
+                }
             ];
         }
     }

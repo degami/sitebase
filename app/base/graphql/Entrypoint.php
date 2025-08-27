@@ -46,14 +46,8 @@ class Entrypoint extends BasePage
     protected array $queryFields = [];
     protected array $mutationFields = [];
 
-    public function renderPage(?RouteInfo $route_info = null, array $route_data = []) : JsonResponse
-    {
-        return $this->process($route_info, $route_data);
-    }
-
     /**
      * {@inheritdoc}
-     * this is only for compatibility
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data

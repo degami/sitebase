@@ -39,6 +39,7 @@ class SearchEventListener implements EventListenerInterface
         $queryFields = &$object->queryFields;
         $typesByName = &$object->typesByName;
         $typesByClass = &$object->typesByClass;
+        $entrypoint = $object->entrypoint;
 
         if (!isset($typesByName['ResultItem'])) {
             $typesByName['ResultItem'] = new ObjectType([

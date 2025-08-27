@@ -37,6 +37,7 @@ class MenuTreeEventListener implements EventListenerInterface
         $queryFields = &$object->queryFields;
         $typesByName = &$object->typesByName;
         $typesByClass = &$object->typesByClass;
+        $entrypoint = $object->entrypoint;
 
         if (!isset($typesByName['menuTree'])) {
             //  menuTree(menu_name: String!, website_id: Int!): [Menu]

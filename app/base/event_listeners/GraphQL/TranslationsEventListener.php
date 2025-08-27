@@ -37,6 +37,7 @@ class TranslationsEventListener implements EventListenerInterface
         $queryFields = &$object->queryFields;
         $typesByName = &$object->typesByName;
         $typesByClass = &$object->typesByClass;
+        $entrypoint = $object->entrypoint;
 
         if (!isset($this->typesByName['TranslationEntry'])) {
             $typesByName['TranslationEntry'] = new ObjectType([

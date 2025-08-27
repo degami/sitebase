@@ -43,6 +43,8 @@ class Entrypoint extends BasePage
 {
     protected array $typesByName = [];
     protected array $typesByClass = [];
+    protected array $queryFields = [];
+    protected array $mutationFields = [];
 
     public function renderPage(?RouteInfo $route_info = null, array $route_data = []) : JsonResponse
     {
@@ -585,120 +587,33 @@ class Entrypoint extends BasePage
 
         // --- tipi per i modelli ---
         foreach ($modelClasses as $modelClass) {
-            $reflection = new ReflectionClass($modelClass);
-            if (!$this->isGrahqlExportable($reflection)) {
-                continue; // skip non-exportable models
-            }
-
-            $typeName = $reflection->getShortName();
-
-            // riuso se già creato
-            if (isset($this->typesByName[$typeName])) {
-                continue;
-            }
-
-            // placeholder
-            $this->typesByName[$typeName] = null;
-
-            // build interfaces types if needed
-            $interfaces = [];
-            foreach ($reflection->getInterfaces() as $interface) {
-                $this->buildInterfaceType($interface);
-                if (isset($this->typesByName[$interface->getShortName()])) {
-                    $interfaces[] = $this->typesByName[$interface->getShortName()];
-                }
-            }
-
-             // create class type
-            $objectType = new ObjectType([
-                'name'   => $typeName,
-                'fields' => function() use ($modelClass, &$objectType) {
-                    return $this->generateGraphQLFieldsFromModel($modelClass, $objectType);
-                },
-                'interfaces' => $interfaces,
-            ]);
-
-            $this->typesByName[$typeName] = $objectType;
-            $this->typesByClass[$modelClass] = $this->typesByName[$typeName];
-
-            // create collection type
-            $collName = $typeName . 'Collection';
-            if (!isset($this->typesByName[$collName])) {
-                $this->typesByName[$collName] = new ObjectType([
-                    'name' => $collName,
-                    'fields' => [
-                        'items' => ['type' => Type::listOf($this->typesByName[$typeName])],
-                        'count' => ['type' => Type::nonNull(Type::int())],
-                    ]
-                ]);
-            }
-
-            // register collections query
-            $queryFields[strtolower($this->pluralize($typeName))] = [
-                'type' => $this->typesByName[$collName],
-                'args' => ['input' => ['type' => $this->typesByName['SearchCriteriaInput']]],
-                'resolve' => function ($root, $args) use ($modelClass) {
-
-                    $collection = $this->containerCall([$modelClass, "getCollection"]);
-                    if (isset($args['input'])) {
-                        $searchCriteriaInput = $args['input'];
-
-                        if (isset($searchCriteriaInput['criteria'])) {
-                            $collection->addCondition(
-                                array_combine(
-                                    array_column($searchCriteriaInput['criteria'], 'key'), 
-                                    array_column($searchCriteriaInput['criteria'], 'value')
-                                )
-                            );
-                        }
-
-                        if (isset($searchCriteriaInput['limit'])) {
-                            $pageSize = $searchCriteriaInput['limit'];
-                            $startOffset = 0;
-                            if (isset($searchCriteriaInput['offset'])) {
-                                $startOffset = $searchCriteriaInput['offset'];
-                            }
-                            $collection->limit($pageSize, $startOffset);
-                        }
-
-                        if (isset($searchCriteriaInput['orderBy'])) {
-                            $collection->addOrder(array_combine(
-                                array_column($searchCriteriaInput['orderBy'], 'field'), 
-                                array_column($searchCriteriaInput['orderBy'], 'direction')
-                            ));
-                        }
-                    }
-
-                    return [
-                        'items' => $collection->getItems(),
-                        'count' => $collection->count(),
-                    ];
-                }
-            ];
+            $this->registerModelClass($modelClass, true);
         }
 
         // complete types , queries and mutations by event hooks        
         App::getInstance()->event('register_graphql_query_fields', ['object' => (object) [
-            'queryFields' => &$queryFields,
+            'queryFields' => &$this->queryFields,
             'typesByName' => &$this->typesByName,
             'typesByClass' => &$this->typesByClass,
+            'entrypoint' => $this,
         ]]);
 
         App::getInstance()->event('register_graphql_mutation_fields', ['object' => (object) [
-            'mutationFields' => &$mutationFields,
+            'mutationFields' => &$this->mutationFields,
             'typesByName' => &$this->typesByName,
             'typesByClass' => &$this->typesByClass,
+            'entrypoint' => $this,
         ]]);
 
         // --- root Query & Mutation ---
         $queryType = new ObjectType([
             'name' => 'Query',
-            'fields' => $queryFields,
+            'fields' => $this->queryFields,
         ]);
 
         $mutationType = new ObjectType([
             'name' => 'Mutation',
-            'fields' => $mutationFields,
+            'fields' => $this->mutationFields,
         ]);
 
         $config = SchemaConfig::create()
@@ -764,4 +679,111 @@ class Entrypoint extends BasePage
         return $word . (!str_ends_with($word, 's') ? 's' : '');
     }
 
+    public function getTypesByName(): array
+    {
+        return $this->typesByName;
+    }
+
+    public function getTypesByClass(): array
+    {
+        return $this->typesByClass;
+    }
+
+    public function registerModelClass(string $modelClass, bool $withCollection = true, bool $forceRegistration = false) : void
+    {
+        $reflection = new ReflectionClass($modelClass);
+        if (!$this->isGrahqlExportable($reflection) && !$forceRegistration) {
+            return; // skip non-exportable models
+        }
+
+        $typeName = $reflection->getShortName();
+
+        // riuso se già creato
+        if (isset($this->typesByName[$typeName])) {
+            return;
+        }
+
+        // placeholder
+        $this->typesByName[$typeName] = null;
+
+        // build interfaces types if needed
+        $interfaces = [];
+        foreach ($reflection->getInterfaces() as $interface) {
+            $this->buildInterfaceType($interface);
+            if (isset($this->typesByName[$interface->getShortName()])) {
+                $interfaces[] = $this->typesByName[$interface->getShortName()];
+            }
+        }
+
+            // create class type
+        $objectType = new ObjectType([
+            'name'   => $typeName,
+            'fields' => function() use ($modelClass, &$objectType) {
+                return $this->generateGraphQLFieldsFromModel($modelClass, $objectType);
+            },
+            'interfaces' => $interfaces,
+        ]);
+
+        $this->typesByName[$typeName] = $objectType;
+        $this->typesByClass[$modelClass] = $this->typesByName[$typeName];
+
+        // create collection type
+        $collName = $typeName . 'Collection';
+        if (!isset($this->typesByName[$collName])) {
+            $this->typesByName[$collName] = new ObjectType([
+                'name' => $collName,
+                'fields' => [
+                    'items' => ['type' => Type::listOf($this->typesByName[$typeName])],
+                    'count' => ['type' => Type::nonNull(Type::int())],
+                ]
+            ]);
+        }
+
+        if (!$withCollection) {
+            return;
+        }
+
+        // register collections query
+        $this->queryFields[strtolower($this->pluralize($typeName))] = [
+            'type' => $this->typesByName[$collName],
+            'args' => ['input' => ['type' => $this->typesByName['SearchCriteriaInput']]],
+            'resolve' => function ($root, $args) use ($modelClass) {
+
+                $collection = $this->containerCall([$modelClass, "getCollection"]);
+                if (isset($args['input'])) {
+                    $searchCriteriaInput = $args['input'];
+
+                    if (isset($searchCriteriaInput['criteria'])) {
+                        $collection->addCondition(
+                            array_combine(
+                                array_column($searchCriteriaInput['criteria'], 'key'), 
+                                array_column($searchCriteriaInput['criteria'], 'value')
+                            )
+                        );
+                    }
+
+                    if (isset($searchCriteriaInput['limit'])) {
+                        $pageSize = $searchCriteriaInput['limit'];
+                        $startOffset = 0;
+                        if (isset($searchCriteriaInput['offset'])) {
+                            $startOffset = $searchCriteriaInput['offset'];
+                        }
+                        $collection->limit($pageSize, $startOffset);
+                    }
+
+                    if (isset($searchCriteriaInput['orderBy'])) {
+                        $collection->addOrder(array_combine(
+                            array_column($searchCriteriaInput['orderBy'], 'field'), 
+                            array_column($searchCriteriaInput['orderBy'], 'direction')
+                        ));
+                    }
+                }
+
+                return [
+                    'items' => $collection->getItems(),
+                    'count' => $collection->count(),
+                ];
+            }
+        ];
+    }
 }

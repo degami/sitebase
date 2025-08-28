@@ -31,6 +31,7 @@ use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
 use App\Site\Controllers\Admin\Json\ContactCallback;
 use App\App;
+use App\Site\Models\ContactDefinition;
 
 /**
  * "ContactForms" Admin Page
@@ -88,9 +89,16 @@ class ContactForms extends AdminManageFrontendModelsPage
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $data['page_size']),
             ];
         } elseif ($this->template_data['action'] == 'view_submission') {
-            $this->addBackButton();
+            /** @var Contact $contact */
+            $contact = $this->getObject();
+
+            $this->addBackButton([
+                'action' => 'submissions', 
+                'contact_id' => $contact->getId(),
+            ]);
+
             $this->template_data += [
-                'submission' => $this->containerCall([ContactSubmission::class, 'load'], ['id' => $this->getRequest()->get('submission_id')]),
+                'submission_data' => $contact->getContactSubmission($this->getRequest()->get('submission_id'))
             ];
         }
     }
@@ -171,6 +179,7 @@ class ContactForms extends AdminManageFrontendModelsPage
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
         $type = $this->getRequest()->get('action') ?? 'list';
+        /** @var Contact $contact */
         $contact = $this->getObject();
 
         $form->addField('action', [
@@ -228,7 +237,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                     ]);
 
                     $contact_definition = $contact->getContactDefinition();
-                    foreach ($contact_definition as $index => $component) {
+                    foreach (array_values($contact_definition) as $index => $component) {
                         $component['effaceable'] = true;
                         $this->addComponent(
                             $fieldset->addField(
@@ -316,7 +325,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      * @param array|null $component
      * @return Element
      */
-    private function addComponent(Element $form_component, int $index, ?array $component = null): Element
+    private function addComponent(Element $form_component, int $index, ContactDefinition|array|null $component = null): Element
     {
         if (is_null($component)) {
             $component = [
@@ -511,7 +520,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                         'ID' => $submission->id,
                         'User' => $submission->getUserId() > 0 ? $submission->getOwner()->email : 'guest',
                         'Created At' => $submission->created_at,
-                        'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>'
+                        'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&contact_id='.$this->getRequest()->get('contact_id').'&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>'
                     ];
                 },
                 $data

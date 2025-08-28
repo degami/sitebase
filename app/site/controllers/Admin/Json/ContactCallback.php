@@ -98,7 +98,7 @@ class ContactCallback extends AdminJsonPage
      */
     public static function contactFormsCallback(FAPI\Form $form): ?FAPI\Abstracts\Base\Element
     {
-        return $form->getField('form_definition');
+        return $form->getField('form_definition') ?? current(array_filter($form->getFields(), fn ($el) => $el->getName() == 'form_definition'));
     }
 
     //not used on this class

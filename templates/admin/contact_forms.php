@@ -5,24 +5,16 @@
  * @var $table string
  * @var $paginator string
  * @var $form \Degami\PHPFormsApi\Form
- * @var $submission \App\Site\Models\ContactSubmission
+ * @var $submission_data array
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
-<?php if ($action == 'list') : ?>
-    <div class="table-responsive">
-        <?= $table; ?>
-    </div>
-    <?= $paginator; ?>
-<?php elseif ($action == 'submissions') : ?>
+<?php if (in_array($action, ['list', 'submissions'])) : ?>
     <div class="table-responsive">
         <?= $table; ?>
     </div>
     <?= $paginator; ?>
 <?php elseif ($action == 'view_submission') : ?>
-    <?php
-    $submission_data = $submission->getFullData();
-    ?>
     <div class="card card-inverse m-2">
         <div class="card-header">
             <div class="card-title">

@@ -16,6 +16,7 @@ namespace App\Site\Models;
 use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
+use App\Base\GraphQl\GraphQLExport;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
@@ -55,6 +56,7 @@ use Exception;
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */
+#[GraphQLExport]
 class Contact extends FrontendModel
 {
     /**
@@ -70,25 +72,21 @@ class Contact extends FrontendModel
     /**
      * gets contact form definition
      *
-     * @return array
+     * @return \App\Site\Models\ContactDefinition[]
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getContactDefinition(): array
     {
         $this->checkLoaded();
 
-        return array_map(
-            function ($el) {
-                return $el->getData();
-            },
-            App::getInstance()->getDb()->table('contact_definition')->where(['contact_id' => $this->id])->fetchAll()
-        );
+        return ContactDefinition::getCollection()->where(['contact_id' => $this->getId()])->getItems();
     }
 
     /**
      * gets contact form submissions
      *
-     * @return array
+     * @return int[]
      * @throws Exception
      */
     public function getContactSubmissions(): array
@@ -96,31 +94,23 @@ class Contact extends FrontendModel
         $this->checkLoaded();
 
         return array_map(
-            function ($el) {
-                /** @var ContactSubmission $el */
-                return $el->getId();
-            },
+            fn ($el) => $el->getId(),
             ContactSubmission::getCollection()->where(['contact_id' => $this->getId()])->getItems()
         );
     }
 
     /**
-     * gets contact form specific submission
+     * gets contact form specific submission data
      *
      * @param int $submission_id
-     * @return array
+     * @return array|null
      * @throws Exception
      */
-    public function getContactSubmission(int $submission_id): array
+    public function getContactSubmission(int $submission_id): ?array
     {
         $this->checkLoaded();
 
-        return array_map(
-            function ($el) {
-                return $el->getData();
-            },
-            App::getInstance()->getDb()->table('contact_definition')->where(['contact_id' => $this->getId(), 'contact_submission_id' => $submission_id])->fetchAll()
-        );
+        return ContactSubmission::getCollection()->where(['contact_id' => $this->getId(), 'id' => $submission_id])->getFirst()?->getFullData();
     }
 
     /**
@@ -135,12 +125,12 @@ class Contact extends FrontendModel
     public function getFormDefinition(FAPI\Abstracts\Base\Element $elemetContainer, &$form_state): FAPI\Abstracts\Base\Element
     {
         foreach ($this->getContactDefinition() as $field) {
-            $field_data = (array)json_decode($field['field_data']);
+            $field_data = (array)json_decode($field->getFieldData(), true);
             $field_data['title'] = App::getInstance()->getUtils()->translate($field_data['title'], locale: $this->getLocale());
             $elemetContainer->addField(
-                $this->slugify($field['field_label']),
-                ['type' => $field['field_type']] +
-                ($field['field_required'] == true ? ['validate' => ['required']] : []) +
+                $this->slugify($field->getFieldLabel()),
+                ['type' => $field->getFieldType()] +
+                ($field->getFieldRequired() == true ? ['validate' => ['required']] : []) +
                 $field_data
             );
         }

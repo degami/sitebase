@@ -266,8 +266,8 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
             ];
         }
 
-        //$submission_obj =
-        $this->containerCall([ContactSubmission::class, 'submit'], ['submission_data' => $submission]);
+        /** @var ContactSubmission $contactSubmission */
+        $contactSubmission = $this->containerCall([ContactSubmission::class, 'submit'], ['submission_data' => $submission]);
 
         $form->addHighlight('Thanks for your submission!');
         //var_dump($form->get_triggering_element());
@@ -277,7 +277,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
             $this->getSiteData()->getSiteEmail(),
             $contact->getSubmitTo(),
             'New Submission - ' . $contact->getTitle(),
-            var_export($values, true)
+            var_export($contactSubmission->getFullData()['values'], true)
         );
 
         $form->reset();

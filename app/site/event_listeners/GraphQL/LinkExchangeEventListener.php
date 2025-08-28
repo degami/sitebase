@@ -17,7 +17,6 @@ use App\App;
 use App\Base\Interfaces\EventListenerInterface;
 use Gplanchat\EventManager\Event;
 use GraphQL\Type\Definition\Type;
-use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\ResolveInfo;
 use App\Site\Models\LinkExchange;
 
@@ -41,21 +40,9 @@ class LinkExchangeEventListener implements EventListenerInterface
         $typesByClass = &$object->typesByClass;
         $entrypoint = $object->entrypoint;
 
-        if (!isset($typesByName['SubmitLinkExchangeResponse'])) {
-            $typesByName['SubmitLinkExchangeResponse'] = new ObjectType([
-                'name' => 'SubmitLinkExchangeResponse',
-                'fields' => function() {
-                    return [
-                        'success' => Type::nonNull(Type::boolean()),
-                        'message' => Type::nonNull(Type::string()),
-                    ];
-                },
-            ]);
-        }
-
         if (!isset($mutationFields['submitLinkExchange'])) {
             $mutationFields['submitLinkExchange'] = [
-                'type' => $typesByName['SubmitLinkExchangeResponse'],
+                'type' => $typesByName['SubmitActionResponse'],
                 'args' => [
                     'url' => ['type' => Type::nonNull(Type::string())],
                     'email' => ['type' => Type::nonNull(Type::string())],

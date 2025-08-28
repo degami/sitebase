@@ -17,13 +17,8 @@ use App\App;
 use App\Base\Interfaces\EventListenerInterface;
 use Gplanchat\EventManager\Event;
 use GraphQL\Type\Definition\Type;
-use GraphQL\Type\Definition\ObjectType;
-use RuntimeException;
-use App\Base\Models\User;
 use GraphQL\Type\Definition\ResolveInfo;
-use App\Base\Exceptions\NotFoundException;
 use App\Site\Models\Contact;
-use Exception;
 use GraphQL\Type\Definition\InputObjectType;
 use App\Site\Models\ContactSubmission;
 
@@ -47,18 +42,6 @@ class ContactEventListener implements EventListenerInterface
         $typesByClass = &$object->typesByClass;
         $entrypoint = $object->entrypoint;
 
-        if (!isset($typesByName['SubmitContactResponse'])) {
-            $typesByName['SubmitContactResponse'] = new ObjectType([
-                'name' => 'SubmitContactResponse',
-                'fields' => function() {
-                    return [
-                        'success' => Type::nonNull(Type::boolean()),
-                        'message' => Type::nonNull(Type::string()),
-                    ];
-                },
-            ]);
-        }
-
         if (!isset($typesByName['SubmitContactFieldValue'])) {
             $typesByName['SubmitContactFieldValue'] = new InputObjectType([
                 'name' => 'SubmitContactFieldValue',
@@ -71,7 +54,7 @@ class ContactEventListener implements EventListenerInterface
 
         if (!isset($mutationFields['submitContact'])) {
             $mutationFields['submitContact'] = [
-                'type' => $typesByName['SubmitContactResponse'],
+                'type' => $typesByName['SubmitActionResponse'],
                 'args' => [
                     'contact_id' => ['type' => Type::nonNull(Type::int())],
                     'submission_data' => ['type' => Type::listOf($typesByName['SubmitContactFieldValue'])],

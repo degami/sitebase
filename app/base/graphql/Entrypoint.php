@@ -515,7 +515,7 @@ class Entrypoint extends BasePage
         return $interfaceType;
     }
 
-    protected function buildBaseSearchTypes(): void
+    protected function buildBaseTypes(): void
     {
         if (!isset($this->typesByName['OrderDirection'])) {
             $this->typesByName['OrderDirection'] = new EnumType([
@@ -562,13 +562,22 @@ class Entrypoint extends BasePage
                 ]
             ]);
         }
+
+        if (!isset($typesByName['SubmitActionResponse'])) {
+            $this->typesByName['SubmitActionResponse'] = new ObjectType([
+                'name' => 'SubmitActionResponse',
+                'fields' => function() {
+                    return [
+                        'success' => Type::nonNull(Type::boolean()),
+                        'message' => Type::nonNull(Type::string()),
+                    ];
+                },
+            ]);
+        }
     }
 
     protected function buildGraphQLSchema(): Schema
     {
-        $queryFields = [];
-        $mutationFields = [];
-
         $modelClasses = array_filter(array_merge(
             ClassFinder::getClassesInNamespace('App\\Base\\Models', ClassFinder::RECURSIVE_MODE),
             ClassFinder::getClassesInNamespace('App\\Site\\Models', ClassFinder::RECURSIVE_MODE)
@@ -576,8 +585,8 @@ class Entrypoint extends BasePage
             return is_subclass_of($class, BaseModel::class) && !is_subclass_of($class, BaseCollection::class);
         });
 
-        // base search types
-        $this->buildBaseSearchTypes();
+        // base types
+        $this->buildBaseTypes();
 
         // --- tipi per i modelli ---
         foreach ($modelClasses as $modelClass) {
@@ -709,7 +718,7 @@ class Entrypoint extends BasePage
             }
         }
 
-            // create class type
+        // create class type
         $objectType = new ObjectType([
             'name'   => $typeName,
             'fields' => function() use ($modelClass, &$objectType) {

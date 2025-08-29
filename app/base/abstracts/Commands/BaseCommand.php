@@ -182,10 +182,13 @@ class BaseCommand extends SymfonyCommand
      * @param string $question_message
      * @return mixed
      */
-    protected function keepAsking(string $question_message)
+    protected function keepAsking(string $question_message, ?array $choices = null)
     {
         $value = "";
-        while (trim((string)$value) == '') {
+        while (trim((string)$value) == '' || (is_array($choices) && !in_array(trim((string)$value), array_map(fn($el) => trim((string) $el), $choices)))) {
+            if (is_array($choices)) {
+                $this->getIo()->error('valid values are: ['.implode(', ', array_map(fn($el) => '"'.trim((string) $el).'"', $choices)).']');
+            }
             $question = new Question($question_message);
             $value = $this->getQuestionHelper()->ask($this->input, $this->output, $question);
         }

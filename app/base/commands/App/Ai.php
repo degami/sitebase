@@ -81,7 +81,7 @@ class Ai extends BaseCommand
                 App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\ChatGPT::CHATGPT_TOKEN_PATH, null);
             }
 
-            $this->getIo()->error('Ai support has been disabled');
+            $this->getIo()->success('Ai support has been disabled');
             return Command::SUCCESS;
         }
 
@@ -98,7 +98,7 @@ class Ai extends BaseCommand
                     break;
             }
 
-            $this->getIo()->error('Ai support for '.$aiType.' enabled');
+            $this->getIo()->success('Ai support for '.$aiType.' enabled');
             return Command::SUCCESS;
         }
 

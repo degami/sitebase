@@ -186,11 +186,12 @@ class BaseCommand extends SymfonyCommand
     {
         $value = "";
         while (trim((string)$value) == '' || (is_array($choices) && !in_array(trim((string)$value), array_map(fn($el) => trim((string) $el), $choices)))) {
-            if (is_array($choices)) {
-                $this->getIo()->error('valid values are: ['.implode(', ', array_map(fn($el) => '"'.trim((string) $el).'"', $choices)).']');
-            }
             $question = new Question($question_message);
             $value = $this->getQuestionHelper()->ask($this->input, $this->output, $question);
+
+            if (is_array($choices) && !in_array(trim((string)$value), array_map(fn($el) => trim((string) $el), $choices))) {
+                $this->getIo()->error('valid values are: ['.implode(', ', array_map(fn($el) => '"'.trim((string) $el).'"', $choices)).']');
+            }
         }
 
         return $value;

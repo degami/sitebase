@@ -85,6 +85,7 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
                     <select id="chatAISelector" class="select-processed" style="width: 150px;">
                         <?php if ($this->sitebase()->isAiAvailable('chatgpt')) : ?><option value="chatGPT">ChatGPT</option><?php endif; ?>
                         <?php if ($this->sitebase()->isAiAvailable('googlegemini')) : ?><option value="gemini">Google Gemini</option><?php endif; ?>
+                        <?php if ($this->sitebase()->isAiAvailable('claude')) : ?><option value="claude">Claude</option><?php endif; ?>
                     </select>
                     <a href="#" class="closebtn mr-2">&times;</a>
                 </div>

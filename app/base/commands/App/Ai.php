@@ -82,6 +82,7 @@ class Ai extends BaseCommand
             if ($isAiAvailable) {
                 App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\GoogleGemini::GEMINI_TOKEN_PATH, null);
                 App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\ChatGPT::CHATGPT_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\Claude::CLAUDE_TOKEN_PATH, null);
             }
 
             $this->getIo()->success('Ai support has been disabled');
@@ -99,6 +100,9 @@ class Ai extends BaseCommand
                 case 'chatgpt':
                     App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\ChatGPT::CHATGPT_TOKEN_PATH, $apiTokenValue);
                     break;
+                case 'claude':
+                    App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\Claude::CLAUDE_TOKEN_PATH, $apiTokenValue);
+                    break;
             }
 
             $this->getIo()->success('Ai support for '.$aiType.' enabled');
@@ -110,11 +114,10 @@ class Ai extends BaseCommand
             return Command::SUCCESS;
         }
 
-
-        $availableAIs = array_filter(['googlegemini', 'chatgpt'], fn($el) => App::getInstance()->getSiteData()->isAiAvailable($el));
+        $availableAIs = array_filter(['googlegemini', 'chatgpt', 'claude'], fn($el) => App::getInstance()->getSiteData()->isAiAvailable($el));
 
         if (count($availableAIs) > 1) {
-            $aiType = $this->keepAsking('Which AI do you want to use? (googlegemini, chatgpt) ', $availableAIs);
+            $aiType = $this->keepAsking('Which AI do you want to use? (' . implode(',', $availableAIs) . ') ', $availableAIs);
         } else {
             $aiType = reset($availableAIs);
         }
@@ -139,6 +142,9 @@ class Ai extends BaseCommand
                                 break;
                             case 'chatgpt':
                                 $this->getIo()->write("\n---\n" . $this->askChatGPT($prompt) . "\n---\n");
+                                break;
+                            case 'claude':
+                                $this->getIo()->write("\n---\n" . $this->askClaude($prompt) . "\n---\n");
                                 break;
                         }
                     } catch (Exception $e) {
@@ -215,6 +221,46 @@ class Ai extends BaseCommand
         ]);
         $data = json_decode($response->getBody(), true);
         $generatedText = $data['candidates'][0]['content']['parts'][0]['text'];
+
+        // add prompth and response to interactions to maintain history
+        $this->interactions[] = [
+            'role' => 'user',
+            'parts' => [['text' => $prompt]]
+        ];
+        $this->interactions[] = [
+            'role' => 'model',
+            'parts' => [['text' => $generatedText]]
+        ];
+
+        return trim($generatedText);
+    }
+
+    protected function askClaude(string $prompt) : string
+    {
+        $client = App::getInstance()->getGuzzle();
+        $apiKey = App::getInstance()->getSiteData()->getConfigValue(\App\Base\Controllers\Admin\Json\Claude::CLAUDE_TOKEN_PATH);
+        $endPoint = "https://api.anthropic.com/v1/messages";
+
+        $messages = $this->interactions;
+        $messages[] = [
+            'role' => 'user',
+            'content' => $prompt,
+        ];
+
+        $response = $client->post($endPoint, [
+            'headers' => [
+                'Content-Type: application/json',
+                'x-api-key: ' . $apiKey,
+                'anthropic-version: 2023-06-01'
+            ],
+            'json' => [
+                'model' => 'claude-3-5-sonnet-20241022',
+                'max_tokens' => 1000,
+                'messages' => $messages,
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+        $generatedText = $data['content'][0]['text'];
 
         // add prompth and response to interactions to maintain history
         $this->interactions[] = [

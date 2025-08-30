@@ -255,6 +255,10 @@
                             case 'gemini':
                                 $(that).appAdmin('askGoogleGemini', {'prompt': text, 'messageId': messageId}, callbackFunc);
                                 break;
+                            case 'claude':
+                                $(that).appAdmin('askClaude', {'prompt': text, 'messageId': messageId}, callbackFunc);
+                                break;
+
                         }
                     }
                 });
@@ -451,7 +455,10 @@
                     break;
                 case 'gemini':
                     AIUrl = $(this).appAdmin('getSettings').googleGeminiUrl;
-                    break;    
+                    break;
+                case 'claude':
+                    AIUrl = $(this).appAdmin('getSettings').claudeUrl;
+                    break;
             }
 
             if (undefined != params.messageId) {
@@ -495,6 +502,9 @@
         },
         askGoogleGemini: function(params, targetOrCallback) {
             $(this).appAdmin('askAI', 'gemini', params, targetOrCallback);
+        },
+        askClaude: function(params, targetOrCallback) {
+            $(this).appAdmin('askAI', 'claude', params, targetOrCallback);
         },
         updateUserUiSettings: function(settings, succesCallback) {
             let that = this;
@@ -615,6 +625,7 @@
         'logoutUrl': null,
         'chatGPTUrl': null,
         'googleGeminiUrl': null,
+        'claudeUrl': null,
         'uIsettingsUrl': null,
         'currentRoute': null,
         'notificationsUrl': null,

@@ -16,12 +16,10 @@ namespace App\Base\Tools\Utils;
 use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\AdminPage;
-use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Models\Block;
 use App\Base\Models\Configuration;
 use App\Base\Models\Menu;
 use App\Base\Models\Redirect;
-use App\Base\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -31,6 +29,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\Website;
 use App\Base\Controllers\Admin\Json\ChatGPT;
 use App\Base\Controllers\Admin\Json\GoogleGemini;
+use App\Base\Controllers\Admin\Json\Claude;
 
 /**
  * Site Data Helper Class
@@ -745,7 +744,10 @@ class SiteData extends ContainerAwareObject
                 }
                 if ($aiElem == 'chatgpt' && !ChatGPT::isEnabled()) {
                     $out &= false;
-                }                
+                }
+                if ($aiElem == 'claude' && !Claude::isEnabled()) {
+                    $out &= false;
+                }
             }
             return $out;
         } elseif (is_string($ai)) {
@@ -753,10 +755,12 @@ class SiteData extends ContainerAwareObject
                 return GoogleGemini::isEnabled();
             } elseif ($ai == 'chatgpt') {
                 return ChatGPT::isEnabled();
+            } elseif ($ai == 'claude') {
+                return Claude::isEnabled();
             }
             return false;
         }
 
-        return GoogleGemini::isEnabled() || ChatGPT::isEnabled();
+        return GoogleGemini::isEnabled() || ChatGPT::isEnabled() || Claude::isEnabled();
     }
 }

@@ -30,6 +30,8 @@ class Ai extends BaseCommand
 
     protected array $interactions = [];
 
+    protected $availableAIs = ['googlegemini', 'chatgpt', 'claude', 'mistral'];
+
     /**
      * {@inheritdoc}
      */
@@ -83,6 +85,7 @@ class Ai extends BaseCommand
                 App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\GoogleGemini::GEMINI_TOKEN_PATH, null);
                 App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\ChatGPT::CHATGPT_TOKEN_PATH, null);
                 App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\Claude::CLAUDE_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\Mistral::MISTRAL_TOKEN_PATH, null);
             }
 
             $this->getIo()->success('Ai support has been disabled');
@@ -90,7 +93,7 @@ class Ai extends BaseCommand
         }
 
         if ($doEnable) {
-            $aiType = $this->keepAsking('Which AI do you want to enable? (googlegemini, chatgpt) ', ['googlegemini', 'chatgpt']);
+            $aiType = $this->keepAsking('Which AI do you want to enable? ('.implode(', ', $this->availableAIs).') ', $this->availableAIs);
             $apiTokenValue = $this->keepAsking($aiType . ' token value? ');
 
             switch ($aiType) {
@@ -103,6 +106,9 @@ class Ai extends BaseCommand
                 case 'claude':
                     App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\Claude::CLAUDE_TOKEN_PATH, $apiTokenValue);
                     break;
+                case 'mistral':
+                    App::getInstance()->getSiteData()->setConfigValue(\App\Base\Controllers\Admin\Json\Mistral::MISTRAL_TOKEN_PATH, $apiTokenValue);
+                    break;
             }
 
             $this->getIo()->success('Ai support for '.$aiType.' enabled');
@@ -114,10 +120,10 @@ class Ai extends BaseCommand
             return Command::SUCCESS;
         }
 
-        $availableAIs = array_filter(['googlegemini', 'chatgpt', 'claude'], fn($el) => App::getInstance()->getSiteData()->isAiAvailable($el));
+        $availableAIs = array_filter($this->availableAIs, fn($el) => App::getInstance()->getSiteData()->isAiAvailable($el));
 
         if (count($availableAIs) > 1) {
-            $aiType = $this->keepAsking('Which AI do you want to use? (' . implode(',', $availableAIs) . ') ', $availableAIs);
+            $aiType = $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);
         } else {
             $aiType = reset($availableAIs);
         }
@@ -145,6 +151,9 @@ class Ai extends BaseCommand
                                 break;
                             case 'claude':
                                 $this->getIo()->write("\n---\n" . $this->askClaude($prompt) . "\n---\n");
+                                break;
+                            case 'mistral':
+                                $this->getIo()->write("\n---\n" . $this->askMistral($prompt) . "\n---\n");
                                 break;
                         }
                     } catch (Exception $e) {
@@ -265,11 +274,51 @@ class Ai extends BaseCommand
         // add prompth and response to interactions to maintain history
         $this->interactions[] = [
             'role' => 'user',
-            'parts' => [['text' => $prompt]]
+            'content' => $prompt,
         ];
         $this->interactions[] = [
             'role' => 'model',
-            'parts' => [['text' => $generatedText]]
+            'content' => $generatedText,
+        ];
+
+        return trim($generatedText);
+    }
+
+    protected function askMistral(string $prompt) : string
+    {
+        $client = App::getInstance()->getGuzzle();
+        $apiKey = App::getInstance()->getSiteData()->getConfigValue(\App\Base\Controllers\Admin\Json\Mistral::MISTRAL_TOKEN_PATH);
+        $endPoint = "https://api.mistral.ai/v1/chat/completions";
+
+        $messages = $this->interactions;
+        $messages[] = [
+            'role' => 'user',
+            'content' => $prompt,
+        ];
+
+        $response = $client->post($endPoint, [
+            'headers' => [
+                'Content-Type: application/json',
+                'Authorization' => 'Bearer ' . $apiKey,
+            ],
+            'json' => [
+                'model' => 'mistral-medium',
+                'max_tokens' => 1000,
+                "temperature" => 0.7,
+                'messages' => $messages,
+            ],
+        ]);
+        $data = json_decode($response->getBody(), true);
+        $generatedText = $data['choices'][0]['message']['content'] ?? null;
+
+        // add prompth and response to interactions to maintain history
+        $this->interactions[] = [
+            'role' => 'user',
+            'content' => $prompt,
+        ];
+        $this->interactions[] = [
+            'role' => 'model',
+            'content' => $generatedText,
         ];
 
         return trim($generatedText);
@@ -289,8 +338,9 @@ class Ai extends BaseCommand
 
         // Testo del messaggio
         $text = match($aiType) {
-            'chatgpt' => $interaction['content'] ?? 'n/a',
+            'mistral','claude','chatgpt' => $interaction['content'] ?? 'n/a',
             'googlegemini' => $interaction['parts'][0]['text'] ?? 'n/a',
+            default => 'Unknown ' . $aiType .' model',
         };
 
         if ($role === 'USER') {

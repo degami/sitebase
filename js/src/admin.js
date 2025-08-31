@@ -258,6 +258,9 @@
                             case 'claude':
                                 $(that).appAdmin('askClaude', {'prompt': text, 'messageId': messageId}, callbackFunc);
                                 break;
+                            case 'mistral':
+                                $(that).appAdmin('askMistral', {'prompt': text, 'messageId': messageId}, callbackFunc);
+                                break;
 
                         }
                     }
@@ -459,6 +462,9 @@
                 case 'claude':
                     AIUrl = $(this).appAdmin('getSettings').claudeUrl;
                     break;
+                case 'mistral':
+                    AIUrl = $(this).appAdmin('getSettings').mistralUrl;
+                    break;
             }
 
             if (undefined != params.messageId) {
@@ -505,6 +511,9 @@
         },
         askClaude: function(params, targetOrCallback) {
             $(this).appAdmin('askAI', 'claude', params, targetOrCallback);
+        },
+        askMistral: function(params, targetOrCallback) {
+            $(this).appAdmin('askAI', 'mistral', params, targetOrCallback);
         },
         updateUserUiSettings: function(settings, succesCallback) {
             let that = this;
@@ -626,6 +635,7 @@
         'chatGPTUrl': null,
         'googleGeminiUrl': null,
         'claudeUrl': null,
+        'mistralUrl': null,
         'uIsettingsUrl': null,
         'currentRoute': null,
         'notificationsUrl': null,

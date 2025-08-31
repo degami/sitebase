@@ -30,6 +30,7 @@ use App\Base\Models\Website;
 use App\Base\Controllers\Admin\Json\ChatGPT;
 use App\Base\Controllers\Admin\Json\GoogleGemini;
 use App\Base\Controllers\Admin\Json\Claude;
+use App\Base\Controllers\Admin\Json\Mistral;
 
 /**
  * Site Data Helper Class
@@ -748,6 +749,9 @@ class SiteData extends ContainerAwareObject
                 if ($aiElem == 'claude' && !Claude::isEnabled()) {
                     $out &= false;
                 }
+                if ($aiElem == 'mistral' && !Mistral::isEnabled()) {
+                    $out &= false;
+                }
             }
             return $out;
         } elseif (is_string($ai)) {
@@ -757,10 +761,12 @@ class SiteData extends ContainerAwareObject
                 return ChatGPT::isEnabled();
             } elseif ($ai == 'claude') {
                 return Claude::isEnabled();
+            } elseif ($ai == 'mistral') {
+                return Mistral::isEnabled();
             }
             return false;
         }
 
-        return GoogleGemini::isEnabled() || ChatGPT::isEnabled() || Claude::isEnabled();
+        return GoogleGemini::isEnabled() || ChatGPT::isEnabled() || Claude::isEnabled() || Mistral::isEnabled();
     }
 }

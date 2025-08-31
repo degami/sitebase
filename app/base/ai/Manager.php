@@ -22,19 +22,24 @@ use Exception;
  */
 class Manager extends ContainerAwareObject
 {
+    public const GEMINI_MODEL = 'gemini-1.5-flash-latest';
+    public const GEMINI_VERSION = 'v1beta';
     public const GEMINI_TOKEN_PATH = 'app/gemini/token';
 
     public const CHATGPT_MODEL = 'gpt-3.5-turbo';
+    public const CHATGPT_VERSION = 'v1';
     public const CHATGPT_TOKEN_PATH = 'app/chatgpt/token';
     public const CHATGPT_REMAINING_TOKENS_PATH = 'app/chatgpt/remaining_tokens';
     public const CHATGPT_MAX_TOKENS = 50;
 
     public const CLAUDE_MODEL = 'claude-3-5-sonnet-20241022';
+    public const CLAUDE_VERSION = 'v1';
     public const CLAUDE_TOKEN_PATH = 'app/claude/token';
     public const CLAUDE_REMAINING_TOKENS_PATH = 'app/claude/remaining_tokens';
     public const CLAUDE_MAX_TOKENS = 1000;
 
     public const MISTRAL_MODEL = 'mistral-medium';
+    public const MISTRAL_VERSION = 'v1';
     public const MISTRAL_TOKEN_PATH = 'app/mistral/token';
     public const MISTRAL_REMAINING_TOKENS_PATH = 'app/mistral/remaining_tokens';
     public const MISTRAL_MAX_TOKENS = 1000;
@@ -137,7 +142,7 @@ class Manager extends ContainerAwareObject
 
         $maxTokens = self::CHATGPT_MAX_TOKENS;
 
-        $endPoint = "https://api.openai.com/v1/chat/completions";
+        $endPoint = "https://api.openai.com/" . self::CHATGPT_VERSION . "/chat/completions";
 
         $messages = $this->interactions;
         $messages[] = [
@@ -183,7 +188,7 @@ class Manager extends ContainerAwareObject
             throw new Exception("Missing Gemini Token");
         }
 
-        $endPoint = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent?key={$apiKey}";
+        $endPoint = "https://generativelanguage.googleapis.com/" . self::GEMINI_VERSION . "/models/" . self::GEMINI_MODEL . ":generateContent?key={$apiKey}";
 
         $contents = $this->interactions;
         $contents[] = [
@@ -224,7 +229,7 @@ class Manager extends ContainerAwareObject
             throw new Exception("Missing Claude Token");
         }
 
-        $endPoint = "https://api.anthropic.com/v1/messages";
+        $endPoint = "https://api.anthropic.com/" . self::CLAUDE_VERSION . "/messages";
 
         // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH));
         // $maxTokens = min(self::CLAUDE_MAX_TOKENS, $remainingTokens);
@@ -277,7 +282,7 @@ class Manager extends ContainerAwareObject
             throw new Exception("Missing Mistral Token");
         }
 
-        $endPoint = "https://api.mistral.ai/v1/chat/completions";
+        $endPoint = "https://api.mistral.ai/" . self::MISTRAL_VERSION . "/chat/completions";
 
         // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH));
         // $maxTokens = min(self::MISTRAL_MAX_TOKENS, $remainingTokens);

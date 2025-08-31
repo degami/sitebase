@@ -83,10 +83,9 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
                 <div class="p-1 border-bottom d-flex justify-content-between align-items-center">
                     <strong class="ml-3">Chat AI</strong>
                     <select id="chatAISelector" class="select-processed" style="width: 150px;">
-                        <?php if ($this->sitebase()->isAiAvailable('chatgpt')) : ?><option value="chatGPT">ChatGPT</option><?php endif; ?>
-                        <?php if ($this->sitebase()->isAiAvailable('googlegemini')) : ?><option value="gemini">Google Gemini</option><?php endif; ?>
-                        <?php if ($this->sitebase()->isAiAvailable('claude')) : ?><option value="claude">Claude</option><?php endif; ?>
-                        <?php if ($this->sitebase()->isAiAvailable('mistral')) : ?><option value="mistral">Mistral</option><?php endif; ?>
+                        <?php foreach ($this->sitebase()->getAvailableAIs(true) as $ai => $name) : ?>
+                            <?php if ($this->sitebase()->isAiAvailable($ai)) : ?><option value="<?= $ai; ?>"><?= ucfirst($name); ?></option><?php endif; ?>
+                        <?php endforeach; ?>
                     </select>
                     <a href="#" class="closebtn mr-2">&times;</a>
                 </div>

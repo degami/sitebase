@@ -252,7 +252,7 @@
                             case 'chatGPT':
                                 $(that).appAdmin('askChatGPT', {'prompt': text, 'messageId': messageId}, callbackFunc);
                                 break;
-                            case 'gemini':
+                            case 'googlegemini':
                                 $(that).appAdmin('askGoogleGemini', {'prompt': text, 'messageId': messageId}, callbackFunc);
                                 break;
                             case 'claude':
@@ -456,7 +456,7 @@
                 case 'chatGPT':
                     AIUrl = $(this).appAdmin('getSettings').chatGPTUrl;
                     break;
-                case 'gemini':
+                case 'googlegemini':
                     AIUrl = $(this).appAdmin('getSettings').googleGeminiUrl;
                     break;
                 case 'claude':
@@ -507,7 +507,7 @@
             $(this).appAdmin('askAI', 'chatGPT', params, targetOrCallback);
         },
         askGoogleGemini: function(params, targetOrCallback) {
-            $(this).appAdmin('askAI', 'gemini', params, targetOrCallback);
+            $(this).appAdmin('askAI', 'googlegemini', params, targetOrCallback);
         },
         askClaude: function(params, targetOrCallback) {
             $(this).appAdmin('askAI', 'claude', params, targetOrCallback);

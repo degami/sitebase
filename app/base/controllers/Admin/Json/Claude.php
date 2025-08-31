@@ -38,6 +38,16 @@ class Claude extends AdminJsonPage
     }
 
     /**
+     * returns model name
+     * 
+     * @return string
+     */
+    public static function getModelName() : string
+    {
+        return 'Claude';
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return string

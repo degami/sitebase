@@ -43,6 +43,16 @@ class ChatGPT extends AdminJsonPage
     }
 
     /**
+     * returns model name
+     * 
+     * @return string
+     */
+    public static function getModelName() : string
+    {
+        return 'ChatGPT';
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return string

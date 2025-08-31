@@ -38,6 +38,16 @@ class GoogleGemini extends AdminJsonPage
     }
 
     /**
+     * returns model name
+     * 
+     * @return string
+     */
+    public static function getModelName() : string
+    {
+        return 'Google Gemini';
+    }
+
+    /**
      * {@inheritdoc}
      *
      * @return string

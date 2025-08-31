@@ -730,11 +730,27 @@ class SiteData extends ContainerAwareObject
         return $links;
     }
 
+    public function getAvailableAIs(bool $withNames = false) : array
+    {
+        $AIs = [
+            'googlegemini' => GoogleGemini::getModelName(), 
+            'chatgpt' => ChatGPT::getModelName(), 
+            'claude' => Claude::getModelName(), 
+            'mistral' => Mistral::getModelName()
+        ];
+
+        if ($withNames) {
+            return $AIs;
+        }
+
+        return array_keys($AIs);
+    }
+
     public function isAiAvailable(string|array|null $ai = null): bool
     {
         if (is_array($ai)) {
             $out = true;
-            $ai = array_intersect(array_map('strtolower', $ai), ['google', 'gemini']);
+            $ai = array_intersect(array_map('strtolower', $ai), $this->getAvailableAIs());
             if (empty($ai)) {
                 return false;
             }

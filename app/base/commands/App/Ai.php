@@ -30,8 +30,6 @@ class Ai extends BaseCommand
 
     protected array $interactions = [];
 
-    protected $availableAIs = ['googlegemini', 'chatgpt', 'claude', 'mistral'];
-
     /**
      * {@inheritdoc}
      */
@@ -93,7 +91,7 @@ class Ai extends BaseCommand
         }
 
         if ($doEnable) {
-            $aiType = $this->keepAsking('Which AI do you want to enable? ('.implode(', ', $this->availableAIs).') ', $this->availableAIs);
+            $aiType = $this->keepAsking('Which AI do you want to enable? ('.implode(', ', $this->getSiteData()->getAvailableAIs()).') ', $this->getSiteData()->getAvailableAIs());
             $apiTokenValue = $this->keepAsking($aiType . ' token value? ');
 
             switch ($aiType) {
@@ -120,7 +118,7 @@ class Ai extends BaseCommand
             return Command::SUCCESS;
         }
 
-        $availableAIs = array_filter($this->availableAIs, fn($el) => App::getInstance()->getSiteData()->isAiAvailable($el));
+        $availableAIs = array_filter($this->getSiteData()->getAvailableAIs(), fn($el) => App::getInstance()->getSiteData()->isAiAvailable($el));
 
         if (count($availableAIs) > 1) {
             $aiType = $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);

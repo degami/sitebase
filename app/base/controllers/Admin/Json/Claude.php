@@ -13,20 +13,17 @@
 
 namespace App\Base\Controllers\Admin\Json;
 
-use App\App;
-use App\Base\Abstracts\Controllers\AdminJsonPage;
+use App\Base\Abstracts\Controllers\AIAdminJsonPage;
+use App\Base\AI\Manager;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Claude Admin
  */
-class Claude extends AdminJsonPage
+class Claude extends AIAdminJsonPage
 {
-    public const CLAUDE_TOKEN_PATH = 'app/claude/token';
-
     /**
      * determines if route is available for router
      * 
@@ -34,17 +31,7 @@ class Claude extends AdminJsonPage
      */
     public static function isEnabled() : bool 
     {
-        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH));
-    }
-
-    /**
-     * returns model name
-     * 
-     * @return string
-     */
-    public static function getModelName() : string
-    {
-        return 'Claude';
+        return Manager::isClaudeEnabled();
     }
 
     /**
@@ -66,16 +53,6 @@ class Claude extends AdminJsonPage
      */
     protected function getJsonData(): array
     {
-        $apiKey = $this->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH);
-        if (empty($apiKey)) {
-            throw new Exception("Missing Claude Token");
-        }
-
-        $model = 'claude-3-5-sonnet-20241022';
-        $maxTokens = 1000;
-
-        $client = $this->getGuzzle();
-
         $messageId = $this->getMessageId($this->getRequest());
 
         $prompt = $this->getPrompt($this->getRequest());
@@ -83,53 +60,8 @@ class Claude extends AdminJsonPage
             throw new Exception("Missing Claude prompt text");
         }
 
-        $response = $client->post($this->getEndpoint(), [
-            'headers' => [
-                'Content-Type: application/json',
-                'x-api-key: ' . $apiKey,
-                'anthropic-version: 2023-06-01'
-            ],
-            'json' => [
-                'model' => $model,
-                'max_tokens' => $maxTokens,
-                'messages' => [
-                    [
-                        'role' => 'user',
-                        'content' => $prompt
-                    ]
-                ]
-            ],
-        ]);
-        $data = json_decode($response->getBody(), true);
-
-        $generatedText = $data['content'][0]['text'];
+        $generatedText = $this->getAI()->askClaude($prompt);
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }
-
-    protected function getEndpoint() : string
-    {
-        return "https://api.anthropic.com/v1/messages";
-    }
-
-    /**
-     * @return string|null
-     */
-    protected function getPrompt(Request $request) : ?string
-    {
-        $content = json_decode($request->getContent(), true);
-        if (is_array($content) && !empty($content['prompt'])) {
-            return (string) $content['prompt'];
-        }
-
-        return null;
-    }
-
-    /**
-     * @return string|null
-     */
-    protected function getMessageId(Request $request) : ?string
-    {
-        return $request->get('messageId') ?: $request->get('message_id');
-    }    
 }

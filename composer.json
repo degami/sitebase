@@ -87,6 +87,7 @@
       "App\\Base\\Blocks\\": "app/base/blocks",
       "App\\Base\\Commerce\\": "app/base/commerce",
       "App\\Base\\EventListeners\\": "app/base/event_listeners",
+      "App\\Base\\AI\\": "app/base/ai",
       "App\\Site\\": "app/site",
       "App\\Site\\Routers\\": "app/site/routers",
       "App\\Site\\Controllers\\": "app/site/controllers",

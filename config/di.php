@@ -250,6 +250,9 @@ return [
     \App\Base\Auth\Manager::class => DI\autowire(\App\Base\Auth\Manager::class),
     'auth' => DI\get(\App\Base\Auth\Manager::class),
 
+    \App\Base\AI\Manager::class => DI\autowire(\App\Base\AI\Manager::class),
+    'ai' => DI\get(\App\Base\AI\Manager::class),
+
     // 'request'
     \Symfony\Component\HttpFoundation\Request::class => DI\factory(function(){
         return \Symfony\Component\HttpFoundation\Request::createFromGlobals();

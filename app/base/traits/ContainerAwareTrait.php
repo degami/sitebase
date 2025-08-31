@@ -15,6 +15,7 @@ namespace App\Base\Traits;
 
 use App\App;
 use App\Base\Abstracts\Routing\BaseRouter;
+use App\Base\AI\Manager as AIManager;
 use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Cache\Manager as CacheManager;
 use App\Base\Tools\Redis\Manager as RedisManager;
@@ -521,5 +522,16 @@ trait ContainerAwareTrait
     public function getAuth(): AuthManager
     {
         return $this->getService('auth');
+    }
+
+    /**
+     * gets ai manager service
+     * 
+     * @return AIManager
+     * @throws BasicException
+     */
+    public function getAI(): AIManager
+    {
+        return $this->getService('ai');
     }
 }

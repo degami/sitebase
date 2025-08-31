@@ -14,6 +14,8 @@
 namespace App\Base\Tools\Plates;
 
 use App\Base\Tools\Assets\Manager as AssetsManager;
+use App\Base\Auth\Manager as AuthManager;
+use App\Base\AI\Manager as AIManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\SiteData;
@@ -236,6 +238,25 @@ class SiteBase implements ExtensionInterface
         return $this->container->get('site_data');
     }
 
+    /**
+     * gets auth
+     *
+     * @return AuthManager
+     */
+    protected function getAuth(): AuthManager
+    {
+        return $this->container->get('auth');
+    }
+
+    /**
+     * gets ai
+     *
+     * @return AIManager
+     */
+    protected function getAI(): AIManager
+    {
+        return $this->container->get('ai');
+    }
 
     /**
      * gets app object
@@ -417,12 +438,12 @@ class SiteBase implements ExtensionInterface
 
     public function getAvailableAIs(bool $withNames = false) : array
     {
-        return $this->getSiteData()->getAvailableAIs($withNames);
+        return $this->getAI()->getAvailableAIs($withNames);
     }
 
     public function isAiAvailable(string|array|null $ai = null) : bool
     {
-        return $this->getSiteData()->isAiAvailable($ai);
+        return $this->getAI()->isAiAvailable($ai);
     }
 
     public function getCurrentUrl() : string

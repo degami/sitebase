@@ -22,20 +22,22 @@ use Exception;
  */
 class Manager extends ContainerAwareObject
 {
-    public const CHATGPT_MODEL = 'gpt-3.5-turbo';
-    public const CLAUDE_MODEL = 'claude-3-5-sonnet-20241022';
-    public const MISTRAL_MODEL = 'mistral-medium';
+    public const GEMINI_TOKEN_PATH = 'app/gemini/token';
 
+    public const CHATGPT_MODEL = 'gpt-3.5-turbo';
     public const CHATGPT_TOKEN_PATH = 'app/chatgpt/token';
     public const CHATGPT_REMAINING_TOKENS_PATH = 'app/chatgpt/remaining_tokens';
-    public const GEMINI_TOKEN_PATH = 'app/gemini/token';    
-    public const CLAUDE_TOKEN_PATH = 'app/claude/token';
-    public const MISTRAL_TOKEN_PATH = 'app/mistral/token';
-
     public const CHATGPT_MAX_TOKENS = 50;
-    public const CLAUDE_MAX_TOKENS = 50;
-    public const MISTRAL_MAX_TOKENS = 50;
 
+    public const CLAUDE_MODEL = 'claude-3-5-sonnet-20241022';
+    public const CLAUDE_TOKEN_PATH = 'app/claude/token';
+    public const CLAUDE_REMAINING_TOKENS_PATH = 'app/claude/remaining_tokens';
+    public const CLAUDE_MAX_TOKENS = 1000;
+
+    public const MISTRAL_MODEL = 'mistral-medium';
+    public const MISTRAL_TOKEN_PATH = 'app/mistral/token';
+    public const MISTRAL_REMAINING_TOKENS_PATH = 'app/mistral/remaining_tokens';
+    public const MISTRAL_MAX_TOKENS = 1000;
 
     protected array $interactions = [];
 
@@ -224,6 +226,9 @@ class Manager extends ContainerAwareObject
 
         $endPoint = "https://api.anthropic.com/v1/messages";
 
+        // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH));
+        // $maxTokens = min(self::CLAUDE_MAX_TOKENS, $remainingTokens);
+
         $maxTokens = self::CLAUDE_MAX_TOKENS;
 
         $messages = $this->interactions;
@@ -257,6 +262,9 @@ class Manager extends ContainerAwareObject
             'content' => $generatedText,
         ];
 
+        // update remaining tokens configuration
+        // $this->getSiteData()->setConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
+
         return trim($generatedText);
     }
 
@@ -270,6 +278,9 @@ class Manager extends ContainerAwareObject
         }
 
         $endPoint = "https://api.mistral.ai/v1/chat/completions";
+
+        // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH));
+        // $maxTokens = min(self::MISTRAL_MAX_TOKENS, $remainingTokens);
 
         $maxTokens = self::MISTRAL_MAX_TOKENS;
 
@@ -303,6 +314,9 @@ class Manager extends ContainerAwareObject
             'role' => 'model',
             'content' => $generatedText,
         ];
+
+        // update remaining tokens configuration
+        // $this->getSiteData()->setConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
 
         return trim($generatedText);
     }

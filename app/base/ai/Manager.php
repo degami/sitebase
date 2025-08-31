@@ -311,7 +311,7 @@ class Manager extends ContainerAwareObject
             'content' => $prompt,
         ];
         $this->interactions[] = [
-            'role' => 'model',
+            'role' => 'assistant',
             'content' => $generatedText,
         ];
 

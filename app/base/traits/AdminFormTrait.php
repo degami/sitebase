@@ -201,15 +201,14 @@ trait AdminFormTrait
                 'default_value' => $object_html_title,
             ]);
         
-        if ($this->getSiteData()->isAiAvailable()) {
+        if ($this->getAI()->isAiAvailable()) {
             $promptText = $this->getUtils()->translate("Generate a json with meta_description, meta_keywords, html_title using language \":language\" for the text: \\n:text");
 
             $ai_options = [];
-            if ($this->getSiteData()->isAiAvailable('chatgpt')) {
-                $ai_options['chatgpt'] = 'ChatGPT';
-            }
-            if ($this->getSiteData()->isAiAvailable('googlegemini')) {
-                $ai_options['googlegemini'] = 'Google Gemini';
+            foreach ($this->getAI()->getAvailableAIs(true) as $aiCode => $aiName) {
+                if ($this->getAI()->isAiAvailable($aiCode)) {
+                    $ai_options[$aiCode] = $aiName;
+                }
             }
 
             $fieldset
@@ -268,6 +267,12 @@ trait AdminFormTrait
                                 break;
                             case 'googlegemini':
                                 $('#admin').appAdmin('askGoogleGemini', {'prompt' : promptText}, responseCallback);
+                                break;
+                            case 'claude':
+                                $('#admin').appAdmin('askClaude', {'prompt' : promptText}, responseCallback);
+                                break;
+                            case 'mistral':
+                                $('#admin').appAdmin('askMistral', {'prompt' : promptText}, responseCallback);
                                 break;
                             default:
                                 alert('".$this->getUtils()->translate("Error: AI generator not found")."');

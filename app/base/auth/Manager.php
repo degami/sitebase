@@ -79,12 +79,16 @@ class Manager extends ContainerAwareObject
 
     public function currentUserHasPassed2FA($onAdmin = false) : bool
     {
+        if (!$this->getCurrentUser()) {
+            return false;
+        }
+
         try {
             if ($onAdmin) {
-                return ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
+                return ($this->getCurrentUser()?->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
             }
 
-            return ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
+            return ($this->getCurrentUser()?->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
         } catch (Exception $e) {}
 
         return false;

@@ -151,6 +151,18 @@ abstract class AdminPage extends BaseHtmlPage
         $template = $this->getTemplates()->make('admin::' . $this->getTemplateName());
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());
 
+        $availableAIs = [];
+        foreach ($this->getAI()->getAvailableAIs('true') as $modelCode => $modelName) {
+            if (!$this->getAi()->isAiAvailable($modelCode)) {
+                continue;
+            }
+            $availableAIs[] = [
+                'code' => $modelCode, 
+                'name' => $modelName, 
+                'aiURL' => $this->getUrl('crud.app.base.controllers.admin.json.'.$modelCode),
+            ];
+        }
+
         $this->getAssets()->addJs(
             "\$('#admin').appAdmin(" . json_encode(
                 [
@@ -158,14 +170,11 @@ abstract class AdminPage extends BaseHtmlPage
                     'currentRoute' => $this->getRouteInfo()->getRouteName(),
                     'checkLoggedUrl' => $this->getUrl('crud.app.base.controllers.admin.json.checksession'),
                     'logoutUrl' => $this->getUrl('admin.logout'),
-                    'chatGPTUrl' => $this->getUrl('crud.app.base.controllers.admin.json.chatgpt'),
-                    'googleGeminiUrl' => $this->getUrl('crud.app.base.controllers.admin.json.googlegemini'),
-                    'claudeUrl' => $this->getUrl('crud.app.base.controllers.admin.json.claude'),
-                    'mistralUrl' => $this->getUrl('crud.app.base.controllers.admin.json.mistral'),
                     'uIsettingsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.uisettings'),
                     'notificationsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.fetchnotifications'),
                     'notificationCrudUrl' => $this->getCrudRouter()->getUrl('crud.admin.usernotifications'),
                     'aiAvailable' => $this->getAI()->isAiAvailable(),
+                    'availableAImodels' => $availableAIs,
                 ]
             ) . ");"
         );

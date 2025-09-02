@@ -3,6 +3,7 @@
 //=include ../../node_modules/highlightjs/highlight.pack.js
 //=include ../../node_modules/moment/min/moment-with-locales.min.js
 //=include ./tinymce-plugin-block.js
+//=include ./tinymce-plugin-aitranslate.js
 
 (function($){
     $.fn.appAdmin = function (methodOrOptions) {
@@ -452,19 +453,13 @@
         },
         askAI: function(type, params, targetOrCallback) {
             let AIUrl = null;
-            switch(type) {
-                case 'chatGPT':
-                    AIUrl = $(this).appAdmin('getSettings').chatGPTUrl;
-                    break;
-                case 'googlegemini':
-                    AIUrl = $(this).appAdmin('getSettings').googleGeminiUrl;
-                    break;
-                case 'claude':
-                    AIUrl = $(this).appAdmin('getSettings').claudeUrl;
-                    break;
-                case 'mistral':
-                    AIUrl = $(this).appAdmin('getSettings').mistralUrl;
-                    break;
+
+            const aiModel = $(this).appAdmin('getSettings').availableAImodels.find((model) => model.code == type);
+            if (aiModel) {
+                AIUrl = aiModel.aiURL;
+            } else {
+                alert('AI model ' + type + ' is not available');
+                return;
             }
 
             if (undefined != params.messageId) {
@@ -632,14 +627,11 @@
         'rootUrl': null,
         'checkLoggedUrl': null,
         'logoutUrl': null,
-        'chatGPTUrl': null,
-        'googleGeminiUrl': null,
-        'claudeUrl': null,
-        'mistralUrl': null,
         'uIsettingsUrl': null,
         'currentRoute': null,
         'notificationsUrl': null,
         'notificationCrudUrl': null,
         'aiAvailable': null,
+        'availableAImodels': [],
     }
 })(jQuery);

@@ -236,6 +236,7 @@ trait AdminFormTrait
                 ->addJs("\$('#ai_meta_generate').off('click').on('click', function(e) {
                         var that = this;
                         e.preventDefault();
+                        var availableAIs = ['".implode("','", $this->getAI()->getAvailableAIs())."'];
                         var selected = \$('#ai_generator_chooser').val();
                         if (selected == '') {
                             alert('".$this->getutils()->translate("Please select an AI generator")."');
@@ -250,10 +251,20 @@ trait AdminFormTrait
 
                         var responseCallback = function(response) {
                             if (response.success == true) {
-                                var json = JSON.parse(response.text.replace('```json','').replace('```',''));
-                                $('#meta_description').val(json.meta_description);
-                                $('#meta_keywords').val(json.meta_keywords);
-                                $('#html_title').val(json.html_title);
+                                var match = response.text.match(/```json([\s\S]*?)```/);
+                                if (match && match[1]) {
+                                    try {
+                                        var json = JSON.parse(match[1].trim());
+                                        console.log(json);
+                                        $('#meta_description').val(json.meta_description);
+                                        $('#meta_keywords').val(json.meta_keywords);
+                                        $('#html_title').val(json.html_title);
+                                    } catch (e) {
+                                        alert('Error parsing JSON: ' + e.message);
+                                    }
+                                } else {
+                                    alert('No JSON block found in response');
+                                }
                             } else {
                                 alert('Error: ' + response.message);
                             }
@@ -261,23 +272,11 @@ trait AdminFormTrait
                         };
 
                         $(that).prop('disabled',true).after('<div class=\"loader d-inline-flex ml-5\" style=\"zoom: 0.5\"></div>');
-                        switch(selected) {
-                            case 'chatgpt':
-                                $('#admin').appAdmin('askChatGPT', {'prompt' : promptText}, responseCallback);
-                                break;
-                            case 'googlegemini':
-                                $('#admin').appAdmin('askGoogleGemini', {'prompt' : promptText}, responseCallback);
-                                break;
-                            case 'claude':
-                                $('#admin').appAdmin('askClaude', {'prompt' : promptText}, responseCallback);
-                                break;
-                            case 'mistral':
-                                $('#admin').appAdmin('askMistral', {'prompt' : promptText}, responseCallback);
-                                break;
-                            default:
-                                alert('".$this->getUtils()->translate("Error: AI generator not found")."');
-                                $(that).prop('disabled',false).next('.loader').remove();
-                                break;
+                        if (availableAIs.includes(selected)) {
+                            $('#admin').appAdmin('askAI', selected, {'prompt' : promptText}, responseCallback);
+                        } else {
+                            alert('".$this->getUtils()->translate("Error: AI generator not found")."');
+                            $(that).prop('disabled',false).next('.loader').remove();
                         }
                 })");
         }

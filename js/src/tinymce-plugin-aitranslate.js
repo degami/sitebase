@@ -3,7 +3,7 @@ tinymce.PluginManager.add('ai_translate_plugin', function(editor, url) {
     function translateWithAI(preferredAI) {
         const elementContent = editor.getContent();
         const locale = jQuery('#locale').val() || 'en';
-        const promptText = `Translate the following text into ${locale}:\n\n${elementContent}`;
+        const promptText = `Translate the following text into language with iso2 code "${locale}":\n\n${elementContent}`;
 
         editor.setProgressState(true);
 

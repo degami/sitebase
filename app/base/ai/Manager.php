@@ -44,13 +44,10 @@ class Manager extends ContainerAwareObject
     public const MISTRAL_REMAINING_TOKENS_PATH = 'app/mistral/remaining_tokens';
     public const MISTRAL_MAX_TOKENS = 1000;
 
+    public const MAX_INTERACTIONS_HISTORYLENGTH = 200;
+    public const MAX_INTERACTIONS_HISTORYLIFETIME = 1800;
+
     protected array $interactions = [];
-
-
-    public function getInteractions() : array
-    {
-        return $this->interactions;
-    }
 
     public function getAvailableAIs(bool $withNames = false) : array
     {
@@ -144,7 +141,7 @@ class Manager extends ContainerAwareObject
 
         $endPoint = "https://api.openai.com/" . self::CHATGPT_VERSION . "/chat/completions";
 
-        $messages = $this->interactions;
+        $messages = $this->getInteractions('chatgpt');
         $messages[] = [
             'role' => 'user',
             'content' => $prompt,
@@ -164,14 +161,7 @@ class Manager extends ContainerAwareObject
         $generatedText = $data['choices'][0]['text'];
 
         // add prompth and response to interactions to maintain history
-        $this->interactions[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-        $this->interactions[] = [
-            'role' => 'assistant',
-            'content' => $generatedText,
-        ];
+        $this->saveInteraction($prompt, $generatedText, 'chatgpt');
 
         // update remaining tokens configuration
         // $this->getSiteData()->setConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
@@ -190,7 +180,7 @@ class Manager extends ContainerAwareObject
 
         $endPoint = "https://generativelanguage.googleapis.com/" . self::GEMINI_VERSION . "/models/" . self::GEMINI_MODEL . ":generateContent?key={$apiKey}";
 
-        $contents = $this->interactions;
+        $contents = $this->getInteractions('googlegemini');
         $contents[] = [
             'role' => 'user',
             'parts' => [['text' => $prompt]]
@@ -208,14 +198,7 @@ class Manager extends ContainerAwareObject
         $generatedText = $data['candidates'][0]['content']['parts'][0]['text'];
 
         // add prompth and response to interactions to maintain history
-        $this->interactions[] = [
-            'role' => 'user',
-            'parts' => [['text' => $prompt]]
-        ];
-        $this->interactions[] = [
-            'role' => 'model',
-            'parts' => [['text' => $generatedText]]
-        ];
+        $this->saveInteraction($prompt, $generatedText, 'googlegemini');
 
         return trim($generatedText);
     }
@@ -236,7 +219,7 @@ class Manager extends ContainerAwareObject
 
         $maxTokens = self::CLAUDE_MAX_TOKENS;
 
-        $messages = $this->interactions;
+        $messages = $this->getInteractions('claude');
         $messages[] = [
             'role' => 'user',
             'content' => $prompt,
@@ -258,14 +241,7 @@ class Manager extends ContainerAwareObject
         $generatedText = $data['content'][0]['text'];
 
         // add prompth and response to interactions to maintain history
-        $this->interactions[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-        $this->interactions[] = [
-            'role' => 'model',
-            'content' => $generatedText,
-        ];
+        $this->saveInteraction($prompt, $generatedText, 'claude');
 
         // update remaining tokens configuration
         // $this->getSiteData()->setConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
@@ -289,7 +265,7 @@ class Manager extends ContainerAwareObject
 
         $maxTokens = self::MISTRAL_MAX_TOKENS;
 
-        $messages = $this->interactions;
+        $messages = $this->getInteractions('mistral');
         $messages[] = [
             'role' => 'user',
             'content' => $prompt,
@@ -311,14 +287,7 @@ class Manager extends ContainerAwareObject
         $generatedText = $data['choices'][0]['message']['content'] ?? null;
 
         // add prompth and response to interactions to maintain history
-        $this->interactions[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-        $this->interactions[] = [
-            'role' => 'assistant',
-            'content' => $generatedText,
-        ];
+        $this->saveInteraction($prompt, $generatedText, 'mistral');
 
         // update remaining tokens configuration
         // $this->getSiteData()->setConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
@@ -326,10 +295,90 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
+    public function clearInteractions(?string $model = null) : self
+    {
+        if ($this->getRedis()->isEnabled()) {
+            $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
+            $redis_key = $this->getRedisKey($model);
+            $this->getRedis()->del($redis_key);
+        }
+
+        $this->interactions = [];
+        return $this;
+    }
+
+    public function getInteractions(?string $model = null) : array
+    {
+        if ($this->getRedis()->isEnabled()) {
+            $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
+            $redis_key = $this->getRedisKey($model);
+
+            // get last MAX_INTERACTIONS_HISTORYLENGTH elements
+            return array_slice(
+                array_map(fn($el) => json_decode($el, true), $this->getRedis()->lRange($redis_key, 0, -1)) ?: [], 
+                -1 * self::MAX_INTERACTIONS_HISTORYLENGTH
+            );
+        }
+
+        return array_slice( $this->interactions, -1 * self::MAX_INTERACTIONS_HISTORYLENGTH);
+    }
+
+    protected function saveInteraction(string $prompt, string $generatedText, ?string $model = null) : self
+    {       
+        $modelRole = match($model) {
+            'googlegemini', 'claude' => 'model',
+            'chatgpt', 'mistral' => 'assistant',
+            default => 'model',
+        };
+
+        if ($model == 'googlegemini') {
+            $userInteraction = [
+                'role' => 'user',
+                'parts' => [['text' => $prompt]]
+            ];
+            $modelInteraction = [
+                'role' => $modelRole,
+                'parts' => [['text' => $generatedText]]
+            ];
+        } else {
+            $userInteraction = [
+                'role' => 'user',
+                'content' => $prompt,
+            ];
+            $modelInteraction = [
+                'role' => 'assistant',
+                'content' => $generatedText,
+            ];
+        }
+
+        if ($this->getRedis()->isEnabled()) {
+            $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
+            $redis_key = $this->getRedisKey($model);
+
+            $this->getRedis()->rPush($redis_key, json_encode($userInteraction));
+            $this->getRedis()->rPush($redis_key, json_encode($modelInteraction));
+
+            // set key expiration
+            $this->getRedis()->expire($redis_key, self::MAX_INTERACTIONS_HISTORYLIFETIME);
+
+            return $this;
+        }
+
+        $this->interactions[] = $userInteraction;
+        $this->interactions[] = $modelInteraction;
+
+        return $this;
+    }
+
+    protected function getRedisKey(?string $model = null) : string
+    {
+        return 'ai_interactions:' . $model . ':' . ($this->getAuth()->getCurrentUser()?->getId() ?? 0);
+    }
+
     public function getHistory(string $aiType, int $terminalWidth = 80) : array
     {
         $out = [];
-        foreach ($this->getInteractions() as $interaction) {
+        foreach ($this->getInteractions($aiType) as $interaction) {
             $out[] = $this->parseInteraction($interaction, $aiType, $terminalWidth);
         }
 

@@ -62,7 +62,7 @@ trait AdminTrait
                     throw new PermissionDeniedException('User Locked');
                 }
 
-                if ($this->getEnv('USE2FA_ADMIN') && !$this->isCrud($this->getRouteInfo()) && !in_array($this->getRouteInfo()->getRouteName(), ['admin.twofa', 'admin.login']) && ($this->current_user?->passed2fa ?? false) != true) {
+                if ($this->getEnv('USE2FA_ADMIN') && !$this->isCrud($this->getRouteInfo()) && !in_array($this->getRouteInfo()->getRouteName(), ['admin.twofa', 'admin.login']) && $this->getAuth()->currentUserHasPassed2FA() != true) {
                     return false;
                 }
 

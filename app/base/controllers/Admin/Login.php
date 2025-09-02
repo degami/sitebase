@@ -201,7 +201,7 @@ class Login extends FormPage
             $parser = $this->getContainer()->get('jwt:configuration')->parser();
             $token = $parser->parse($result)->toString();
 
-            if ($this->getEnv('USE2FA_ADMIN') && ($this->current_user?->passed2fa ?? false) != true){
+            if ($this->getEnv('USE2FA_ADMIN') && $this->getAuth()->currentUserHasPassed2FA(true) != true) {
                 $goto_url = $this->getAdminRouter()->getUrl('admin.twofa');
 
                 if ($this->getRequest()->get('dest')) {

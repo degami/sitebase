@@ -133,7 +133,7 @@ class Login extends FormPage
             $token = $parser->parse($result)->toString();
 
 
-            if ($this->getEnv('USE2FA_USERS') && ($this->current_user?->passed2fa ?? false) != true){
+            if ($this->getEnv('USE2FA_USERS') && $this->getAuth()->currentUserHasPassed2FA() != true) {
                 $goto_url = $this->getUrl('frontend.users.twofa');
 
                 if ($this->getRequest()->get('dest')) {

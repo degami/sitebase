@@ -17,6 +17,7 @@ use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Models\AccountModel;
 use App\Base\Models\User;
 use App\Base\Models\GuestUser;
+use Exception;
 use Lcobucci\JWT\Token;
 use Lcobucci\JWT\Validator;
 
@@ -27,6 +28,8 @@ use Lcobucci\JWT\Validator;
  */
 class Manager extends ContainerAwareObject
 {
+    public const ADMIN_WEBSITE_ID = 0;
+
     /**
      * @var array|object|null current user data
      */
@@ -72,6 +75,19 @@ class Manager extends ContainerAwareObject
         }
 
         return $this->current_user_model;
+    }
+
+    public function currentUserHasPassed2FA($onAdmin = false) : bool
+    {
+        try {
+            if ($onAdmin) {
+                return ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
+            }
+
+            return ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
+        } catch (Exception $e) {}
+
+        return false;
     }
 
     /**

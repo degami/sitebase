@@ -161,6 +161,10 @@ return [
     \App\Base\Routers\Web::class => DI\autowire(\App\Base\Routers\Web::class),
     'web_router' => DI\get(\App\Base\Routers\Web::class),
 
+    // 'admin_router'
+    \App\Base\Routers\Admin::class => DI\autowire(\App\Base\Routers\Admin::class),
+    'admin_router' => DI\get(\App\Base\Routers\Admin::class),
+
     // 'crud_router'
     \App\Base\Routers\Crud::class => DI\autowire(\App\Base\Routers\Crud::class),
     'crud_router' => DI\get(\App\Base\Routers\Crud::class),

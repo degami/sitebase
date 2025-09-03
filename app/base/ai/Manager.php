@@ -49,21 +49,46 @@ class Manager extends ContainerAwareObject
 
     protected array $interactions = [];
 
-    public function getAvailableAIs(bool $withNames = false) : array
+    public function getAvailableAIs(bool $fullInfo = false) : array
     {
         $AIs = [
-            'googlegemini' => 'Google Gemini', 
-            'chatgpt' => 'ChatGPT', 
-            'claude' => 'Claude', 
-            'mistral' => 'Mistral',
+            'googlegemini' => [
+                'code' => 'googlegemini',
+                'name' => 'Google Gemini',
+            ], 
+            'chatgpt' => [
+                'code' => 'chatgpt',
+                'name' => 'ChatGPT',
+            ], 
+            'claude' => [
+                'code' => 'claude',
+                'name' => 'Claude',
+            ], 
+            'mistral' => [
+                'code' => 'mistral',
+                'name' => 'Mistral',
+            ],
         ];
 
-        if ($withNames) {
+        if ($fullInfo) {
+            foreach ($AIs as $aiCode => &$aiInfo) {
+                $aiInfo['aiURL'] = $this->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.'.$aiCode);
+            }
+
             return $AIs;
         }
 
         return array_keys($AIs);
     }
+
+    public function getEnabledAIs(bool $fullInfo = false) : array
+    {
+        $enabled = array_filter($this->getAvailableAIs($fullInfo), function($aiModel) {
+            return $this->isAiAvailable(is_array($aiModel) ? $aiModel['code'] : $aiModel);
+        });
+
+        return $enabled;
+    } 
 
     public static function isChatGPTEnabled() : bool 
     {

@@ -83,8 +83,8 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
                 <div class="p-1 border-bottom d-flex justify-content-between align-items-center">
                     <strong class="ml-3">Chat AI</strong>
                     <select id="chatAISelector" class="select-processed" style="width: 150px;">
-                        <?php foreach ($this->sitebase()->getAvailableAIs(true) as $ai => $name) : ?>
-                            <?php if ($this->sitebase()->isAiAvailable($ai)) : ?><option value="<?= $ai; ?>"><?= ucfirst($name); ?></option><?php endif; ?>
+                        <?php foreach ($this->sitebase()->getEnabledAIs(true) as $ai => $AIinfo) : ?>
+                            <option value="<?= $ai; ?>"><?= ucfirst($AIinfo['name']); ?></option>
                         <?php endforeach; ?>
                     </select>
                     <a href="#" class="closebtn mr-2">&times;</a>

@@ -118,7 +118,7 @@ class Ai extends BaseCommand
             return Command::SUCCESS;
         }
 
-        $availableAIs = array_filter($this->getAi()->getAvailableAIs(), fn($el) => App::getInstance()->getAi()->isAiAvailable($el));
+        $availableAIs = $this->getAI()->getEnabledAIs();
 
         if (count($availableAIs) > 1) {
             $aiType = $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);

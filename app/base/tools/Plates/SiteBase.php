@@ -436,9 +436,14 @@ class SiteBase implements ExtensionInterface
         return $this->getHtmlRenderer()->getQrCode($url);    
     }
 
-    public function getAvailableAIs(bool $withNames = false) : array
+    public function getAvailableAIs(bool $fullInfo = false) : array
     {
-        return $this->getAI()->getAvailableAIs($withNames);
+        return $this->getAI()->getAvailableAIs($fullInfo);
+    }
+
+    public function getEnabledAIs(bool $fullInfo = false) : array
+    {
+        return $this->getAI()->getEnabledAIs($fullInfo);
     }
 
     public function isAiAvailable(string|array|null $ai = null) : bool

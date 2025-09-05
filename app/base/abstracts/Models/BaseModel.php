@@ -170,7 +170,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             $search->addAndCondition($condition);
         }
 
-        $type = static::getClassBasename(static::class);
+        $type = strtolower(static::getClassBasename(static::class));
         $search->addAndCondition('type', $type);
 
         $count_result = $search->countAll();

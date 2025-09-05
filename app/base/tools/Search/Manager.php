@@ -526,7 +526,7 @@ class Manager extends ContainerAwareObject
             unset($searchParams['body']['from']);
             $searchParams['body']['aggs'] = $this->getAggregationsArray();
         } else {
-            if (($page * $pageSize) + $pageSize > self::MAX_ELEMENTS_PER_QUERY) {
+            if (!$withScroll && (($page + 1) * $pageSize) > self::MAX_ELEMENTS_PER_QUERY) {
                 throw new InvalidArgumentException('from + size cannot be over '.self::MAX_ELEMENTS_PER_QUERY);
             }
 
@@ -558,11 +558,73 @@ class Manager extends ContainerAwareObject
      */
     public function searchData(int $page = 0, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false, ?string $withScroll = null) : array
     {
-        $search_result = $this->getClient()->search($this->getSearchParams($page, $pageSize, $onlyAggregations, $withScroll));
+        // on page 0 no scroll is needed
+        if ($page == 0) {
+            $withScroll = null;
+        }
+
+        // if we are requesting more elements than the maximum per query , we need to use scroll
+        if (!$withScroll && (($page + 1) * $pageSize) > self::MAX_ELEMENTS_PER_QUERY) {
+            $withScroll = self::DEFAULT_SCROLL_TIME;
+        }
+
+        if ($withScroll) {
+            try {
+                $search_result = $this->openScroll($withScroll, $pageSize, $onlyAggregations);
+
+                // continue to requested page
+                for ($i = 1; $i <= $page; $i++) {
+                    $search_result = $this->continueScroll($search_result['scroll_id'], $this->validateScrollTime($withScroll) ?? self::DEFAULT_SCROLL_TIME);
+                }
+            } finally {
+                // close scroll
+                $this->closeScroll($search_result['scroll_id']);
+            }
+        } else {
+            // normal method
+            $search_result = $this->getClient()->search($this->getSearchParams($page, $pageSize, $onlyAggregations, $withScroll));
+        }
 
         if ($onlyAggregations) {
             return $this->normalizeAggregationsResults($search_result['aggregations']);
         }
+
+        // $search_result can be direct ioensearch result or a current class function result . normalize 
+
+        $total = $search_result['total'] ?? $search_result['hits']['total']['value'] ?? 0;
+        if (isset($search_result['docs'])) {
+            $docs = $search_result['docs'];
+        } else {
+            $hits = $search_result['hits']['hits'] ?? [];
+            $docs = array_map(function ($el) {
+                return $el['_source'];
+            }, $hits);
+        }
+
+        $out = ['total' => $total, 'docs' => $docs];
+        if ($withScroll) {
+            $out['scroll_id'] = $search_result['scroll_id'] ?? $search_result['_scroll_id'];
+        }
+        if (isset($search_result['aggregations'])) {
+            $out['aggregations'] = $search_result['aggregations'];
+        }
+
+        return $out;
+    }
+
+    /**
+     * Opens a scroll search
+     * 
+     * @param int $pageSize The number of results per page.
+     * @param string|null $withScroll Use Scroll api
+     * @param bool $onlyAggregations Return only aggregations
+    * 
+     * @return array An array containing the total count, the documents found and scroll_id.
+     */
+    public function openScroll(string $withScroll, int $pageSize = self::RESULTS_PER_PAGE, bool $onlyAggregations = false) : array
+    {
+        $withScroll = $this->validateScrollTime($withScroll) ?? self::DEFAULT_SCROLL_TIME;
+        $search_result = $this->getClient()->search($this->getSearchParams(0, $pageSize, $onlyAggregations, $withScroll));
 
         $total = $search_result['hits']['total']['value'] ?? 0;
         $hits = $search_result['hits']['hits'] ?? [];
@@ -570,10 +632,11 @@ class Manager extends ContainerAwareObject
             return $el['_source'];
         }, $hits);
 
-        $out = ['total' => $total, 'docs' => $docs];
-        if ($withScroll) {
-            $out['scroll_id'] = $search_result['_scroll_id'];
+        $out = ['total' => $total, 'docs' => $docs, 'scroll_id' => $search_result['_scroll_id']];
+        if (isset($search_result['aggregations'])) {
+            $out['aggregations'] = $search_result['aggregations'];
         }
+
         return $out;
     }
 
@@ -581,6 +644,7 @@ class Manager extends ContainerAwareObject
      * Continues scroll search
      * 
      * @param string $scrollId
+     * @param string!null $crollTime
      * 
      * @return array An array containing the total count, the documents found and scroll_id.
      */
@@ -603,14 +667,31 @@ class Manager extends ContainerAwareObject
             return $el['_source'];
         }, $hits);
 
-        return ['total' => $total, 'docs' => $docs, 'scroll_id' => $search_result['_scroll_id']];
+        $out = ['total' => $total, 'docs' => $docs, 'scroll_id' => $search_result['_scroll_id']];
+        if (isset($search_result['aggregations'])) {
+            $out['aggregations'] = $search_result['aggregations'];
+        }
+
+        return $out;
     }
 
+    /**
+     * Closes a scroll search
+     * 
+     * @param string $scrollId
+     * 
+     * @return array
+     */
     public function closeScroll(string $scrollId) : array
     {
         return $this->getClient()->clearScroll(['scroll_id' => $scrollId]);
     }
 
+    /**
+     * Validates scroll time string
+     * 
+     * @return string|null
+     */
     protected function validateScrollTime(?string $scrollTime) : ?string
     {
         if (is_null($scrollTime)) {
@@ -1175,15 +1256,35 @@ class Manager extends ContainerAwareObject
                     ];
 
                 case preg_match('/^:fuzzy\|(.+)$/', $value, $matches):
+                    /*
                     return [
                         'fuzzy' => [
                             $field => $matches[1],
+                        ],
+                    ];
+                    */
+                    return [
+                        'match' => [
+                            $field => [
+                                'query' => $matches[1],
+                                'fuzzyness' => 'AUTO',
+                            ],
                         ],
                     ];
                 case preg_match('/^:match\|(.+)$/', $value, $matches):
                     return [
                         'match' => [
                             $field => $matches[1],
+                        ],
+                    ];
+                case preg_match('/^:more_like_this\|(.+)$/', $value, $matches):
+                    return [
+                        'more_like_this' => [
+                            'fields' => [$field],
+                            'like' => $matches[1],
+                            'min_term_freq' => 1,
+                            'min_doc_freq' => 1,
+                            'max_query_terms' => 12,
                         ],
                     ];
             }

@@ -23,23 +23,31 @@ use Exception;
 class Manager extends ContainerAwareObject
 {
     public const GEMINI_MODEL = 'gemini-1.5-flash-latest';
+    public const GEMINI_MODEL_PATH = 'app/gemini/model';
     public const GEMINI_VERSION = 'v1beta';
+    public const GEMINI_VERSION_PATH = 'app/gemini/version';
     public const GEMINI_TOKEN_PATH = 'app/gemini/token';
 
     public const CHATGPT_MODEL = 'gpt-3.5-turbo';
+    public const CHATGPT_MODEL_PATH = 'app/chatgpt/model';
     public const CHATGPT_VERSION = 'v1';
+    public const CHATGPT_VERSION_PATH = 'app/chatgpt/version';
     public const CHATGPT_TOKEN_PATH = 'app/chatgpt/token';
     public const CHATGPT_REMAINING_TOKENS_PATH = 'app/chatgpt/remaining_tokens';
     public const CHATGPT_MAX_TOKENS = 50;
 
     public const CLAUDE_MODEL = 'claude-3-5-sonnet-20241022';
+    public const CLAUDE_MODEL_PATH = 'app/claude/model';
     public const CLAUDE_VERSION = 'v1';
+    public const CLAUDE_VERSION_PATH = 'app/claude/version';
     public const CLAUDE_TOKEN_PATH = 'app/claude/token';
     public const CLAUDE_REMAINING_TOKENS_PATH = 'app/claude/remaining_tokens';
     public const CLAUDE_MAX_TOKENS = 1000;
 
     public const MISTRAL_MODEL = 'mistral-medium';
+    public const MISTRAL_MODEL_PATH = 'app/mistral/model';
     public const MISTRAL_VERSION = 'v1';
+    public const MISTRAL_VERSION_PATH = 'app/mistral/version';
     public const MISTRAL_TOKEN_PATH = 'app/mistral/token';
     public const MISTRAL_REMAINING_TOKENS_PATH = 'app/mistral/remaining_tokens';
     public const MISTRAL_MAX_TOKENS = 1000;
@@ -150,6 +158,16 @@ class Manager extends ContainerAwareObject
         return static::isGoogleGeminiEnabled() || static::isChatGPTEnabled() || static::isClaudeEnabled() || static::isMistralEnabled();
     }
 
+    protected function getChatGPTModel() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::CHATGPT_MODEL_PATH) ?? self::CHATGPT_MODEL;
+    }
+
+    protected function getChatGPTVersion() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::CHATGPT_VERSION_PATH) ?? self::CHATGPT_VERSION;
+    }
+
     public function askChatGPT(string $prompt) : string
     {
         $client = $this->getGuzzle();
@@ -164,7 +182,7 @@ class Manager extends ContainerAwareObject
 
         $maxTokens = self::CHATGPT_MAX_TOKENS;
 
-        $endPoint = "https://api.openai.com/" . self::CHATGPT_VERSION . "/chat/completions";
+        $endPoint = "https://api.openai.com/" . $this->getChatGPTVersion() . "/chat/completions";
 
         $messages = $this->getInteractions('chatgpt');
         $messages[] = [
@@ -177,7 +195,7 @@ class Manager extends ContainerAwareObject
                 'Authorization' => "Bearer ".$apiKey,
             ],
             'json' => [
-                'model' => self::CHATGPT_MODEL,
+                'model' => $this->getChatGPTModel(),
                 'messages' => $messages,
                 'max_tokens' => $maxTokens, // Adjust the max tokens as needed
             ],
@@ -194,6 +212,16 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
+    protected function getGoogleGeminiModel() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::GEMINI_MODEL_PATH) ?? self::GEMINI_MODEL;
+    }
+
+    protected function getGoogleGeminiVersion() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::GEMINI_VERSION_PATH) ?? self::GEMINI_VERSION;
+    }
+    
     public function askGoogleGemini(string $prompt) : string
     {
         $client = $this->getGuzzle();
@@ -203,7 +231,7 @@ class Manager extends ContainerAwareObject
             throw new Exception("Missing Gemini Token");
         }
 
-        $endPoint = "https://generativelanguage.googleapis.com/" . self::GEMINI_VERSION . "/models/" . self::GEMINI_MODEL . ":generateContent?key={$apiKey}";
+        $endPoint = "https://generativelanguage.googleapis.com/" . $this->getGoogleGeminiVersion() . "/models/" . $this->getGoogleGeminiModel() . ":generateContent?key={$apiKey}";
 
         $contents = $this->getInteractions('googlegemini');
         $contents[] = [
@@ -228,6 +256,16 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
+    protected function getClaudeModel() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::CLAUDE_MODEL_PATH) ?? self::CLAUDE_MODEL;
+    }
+
+    protected function getClaudeVersion() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::CLAUDE_VERSION_PATH) ?? self::CLAUDE_VERSION;
+    }
+
     public function askClaude(string $prompt) : string
     {
         $client = $this->getGuzzle();
@@ -237,7 +275,7 @@ class Manager extends ContainerAwareObject
             throw new Exception("Missing Claude Token");
         }
 
-        $endPoint = "https://api.anthropic.com/" . self::CLAUDE_VERSION . "/messages";
+        $endPoint = "https://api.anthropic.com/" . $this->getClaudeVersion() . "/messages";
 
         // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH));
         // $maxTokens = min(self::CLAUDE_MAX_TOKENS, $remainingTokens);
@@ -257,7 +295,7 @@ class Manager extends ContainerAwareObject
                 'anthropic-version: 2023-06-01'
             ],
             'json' => [
-                'model' => self::CLAUDE_MODEL,
+                'model' => $this->getClaudeModel(),
                 'max_tokens' => $maxTokens,
                 'messages' => $messages,
             ],
@@ -274,6 +312,16 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
+    protected function getMistralModel() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::MISTRAL_MODEL_PATH) ?? self::MISTRAL_MODEL;
+    }
+
+    protected function getMistralVersion() : string
+    {
+        return $this->getSiteData()->getConfigValue(self::MISTRAL_VERSION_PATH) ?? self::MISTRAL_VERSION;
+    }
+
     public function askMistral(string $prompt) : string
     {
         $client = $this->getGuzzle();
@@ -283,7 +331,7 @@ class Manager extends ContainerAwareObject
             throw new Exception("Missing Mistral Token");
         }
 
-        $endPoint = "https://api.mistral.ai/" . self::MISTRAL_VERSION . "/chat/completions";
+        $endPoint = "https://api.mistral.ai/" . $this->getMistralVersion() . "/chat/completions";
 
         // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH));
         // $maxTokens = min(self::MISTRAL_MAX_TOKENS, $remainingTokens);
@@ -302,7 +350,7 @@ class Manager extends ContainerAwareObject
                 'Authorization' => 'Bearer ' . $apiKey,
             ],
             'json' => [
-                'model' => self::MISTRAL_MODEL,
+                'model' => $this->getMistralModel(),
                 'max_tokens' => $maxTokens,
                 "temperature" => 0.7,
                 'messages' => $messages,

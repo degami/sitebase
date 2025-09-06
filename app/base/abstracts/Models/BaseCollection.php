@@ -121,7 +121,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
      * @param array|string|null $condition
      * @return static
      */
-    public function addCondition(array|string|null $condition = []): static
+    public function addCondition(array|string|null $condition = [], $whereGroup = 'AND'): static
     {
         if ($condition == null) {
             $condition = [];
@@ -143,16 +143,28 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
                     $conditions_where[$key] = $value;
                 }
             } else {
-                $this->stmt = $this->getSelect()->where($value);
+                if ($whereGroup == 'OR') {
+                    $this->stmt = $this->getSelect()->orWhere($value);
+                } else {
+                    $this->stmt = $this->getSelect()->where($value);
+                }
             }
         }
 
         if (!empty($conditions_where)) {
-            $this->stmt = $this->getSelect()->where($conditions_where);
+            if ($whereGroup == 'OR') {
+                $this->stmt = $this->getSelect()->orWhere($conditions_where);
+            } else {
+                $this->stmt = $this->getSelect()->where($conditions_where);
+            }
         }
 
         if (!empty($conditions_wherenot)) {
-            $this->stmt = $this->getSelect()->whereNot($conditions_wherenot);
+//            if ($whereGroup == 'OR') {
+                $this->stmt = $this->getSelect()->orWhereNot($conditions_wherenot);
+//            } else {
+//                $this->stmt = $this->getSelect()->whereNot($conditions_wherenot);
+//            }
         }
 
         return $this;
@@ -225,6 +237,29 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
     public function where(array|string $condition, array $order = [], ?int $page_size = null, int $start = 0): static
     {
         $this->addCondition($condition);
+        if (!empty($order)) {
+            $this->addOrder($order);
+        }
+        if (is_int($page_size) && $page_size > 0) {
+            $this->limit($page_size, $start);
+        }
+        return $this;
+    }
+
+    /**
+     * finds elements
+     *
+     * @param array|string $condition
+     * @param array $order
+     * @param int!null $page_size
+     * @param int $start
+     * @return static
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function orWhere(array|string $condition, array $order = [], ?int $page_size = null, int $start = 0): static
+    {
+        $this->addCondition($condition, 'OR');
         if (!empty($order)) {
             $this->addOrder($order);
         }

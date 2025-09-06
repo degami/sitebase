@@ -57,6 +57,40 @@ trait FormPageTrait
         return ($this->getForm() && $this->getForm()->isSubmitted());
     }
 
+
+    /**
+     * Adds a generic button to the form
+     *
+     * @param FAPI\Form $form
+     * @param string $name
+     * @param string $text
+     * @param string $icon
+     * @param array $options
+     * @return FAPI\Form
+     * @throws FAPI\Exceptions\FormException
+     */
+    protected function addButton(
+        FAPI\Form $form,
+        string $name,
+        string $text,
+        string $icon,
+        array $options = []
+    ): FAPI\Form {
+        $defaults = [
+            'type' => 'button',
+            'container_tag' => null,
+            'prefix' => '&nbsp;',
+            'value' => $text,
+            'attributes' => ['class' => 'btn btn-primary btn-sm'],
+            'weight' => 100,
+            'label' => $this->getHtmlRenderer()->getIcon($icon, ['style' => 'zoom: 1.5']) . '&nbsp;' . __($text),
+        ];
+
+        $form->addField($name, array_merge($defaults, $options));
+
+        return $form;
+    }
+
     /**
      * adds submit button to form
      *
@@ -66,40 +100,46 @@ trait FormPageTrait
      * @return FAPI\Form
      * @throws FAPI\Exceptions\FormException
      */
-    protected function addSubmitButton(FAPI\Form $form, bool $inline_button = false, bool $isConfirmation = false, ?string $buttonText = null): FAPI\Form
-    {
-        if ($inline_button) {
-            $form
-                ->addField(
-                    'button',
-                    [
-                        'type' => 'button',
-                        'container_tag' => null,
-                        'prefix' => '&nbsp;',
-                        'value' => 'Ok',
-                        'attributes' => ['class' => 'btn btn-primary btn-sm'],
-                        'weight' => 100,
-                        'label' => $this->getHtmlRenderer()->getIcon($isConfirmation ? 'check' : 'save', ['style' => 'zoom: 1.5']) . '&nbsp' . __($buttonText ?? 'Ok'),
-                    ]
-                );
-        } else {
-            $form
-                ->addField(
-                    'button',
-                    [
-                        'type' => 'button',
-                        'value' => 'Ok',
-                        'container_class' => 'form-item mt-3',
-                        'attributes' => ['class' => 'btn btn-primary btn-lg btn-block'],
-                        'weight' => 110,
-                        'label' => $this->getHtmlRenderer()->getIcon($isConfirmation ? 'check' : 'save', ['style' => 'zoom: 1.5']) . '&nbsp' . __($buttonText ?? 'Ok'),
-                    ]
-                );
-        }
+    protected function addSubmitButton(
+        FAPI\Form $form,
+        bool $inline_button = false,
+        bool $isConfirmation = false,
+        ?string $buttonText = null
+    ): FAPI\Form {
+        $options = $inline_button
+            ? ['attributes' => ['class' => 'btn btn-primary btn-sm'], 'weight' => 100]
+            : ['attributes' => ['class' => 'btn btn-primary btn-lg btn-block'], 'container_class' => 'form-item mt-3', 'weight' => 110];
+
+        $this->addButton(
+            $form,
+            'button',
+            $buttonText ?? 'Ok',
+            $isConfirmation ? 'check' : 'save',
+            $options
+        );
 
         return $form;
     }
 
+    /**
+     * Shortcut for cancel button
+     */
+    protected function addCancelButton(FAPI\Form $form, ?string $buttonText = null): FAPI\Form
+    {
+        $this->addButton(
+            $form,
+            'cancel',
+            $buttonText ?? 'Cancel',
+            'times',
+            [
+                'attributes' => ['class' => 'btn btn-secondary'],
+                'weight' => 120,
+            ]
+        );
+
+        return $form;
+    }
+    
     /**
      * gets a form for confirmation
      *

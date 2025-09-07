@@ -73,12 +73,14 @@ class Indexer extends BaseCommand
             return is_subclass_of($className, FrontendModel::class) && $this->containerCall([$className, 'isIndexable']);
         });
 
-        if (count($classes) > 0) {
-            /** @var ProgressManagerProcess $progressManagerProcess */
-            $progressManagerProcess = $this->containerMake(ProgressManagerProcess::class);
-            $progressManagerProcess->setCallable(json_encode([SearchManager::class, 'indexFrontendClasses']));
+        if (!count($classes)) {
+            $this->getIo()->error("No frontend classes found to index");
+            return Command::FAILURE;
         }
 
+        /** @var ProgressManagerProcess $progressManagerProcess */
+        $progressManagerProcess = $this->containerMake(ProgressManagerProcess::class);
+        $progressManagerProcess->setCallable(json_encode([SearchManager::class, 'indexFrontendClasses']));
         $results = $progressManagerProcess->run($classes);
 
         $this->renderTitle('Indexer results');

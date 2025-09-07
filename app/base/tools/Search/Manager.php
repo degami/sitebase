@@ -18,9 +18,10 @@ use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\FrontendModel;
 use Elasticsearch\Client as ElasticSearchClient;
 use App\Base\Tools\Plates\SiteBase;
-use Degami\Basics\Exceptions\BasicException;
 use InvalidArgumentException;
-use League\Plates\Template\Func;
+use App\Base\Models\ProgressManagerProcess;
+use App\App;
+
 
 /**
  * Search Manager
@@ -1498,5 +1499,27 @@ class Manager extends ContainerAwareObject
     public function __call(string $name, mixed $arguments) : mixed
     {
         return call_user_func_array([$this->getClient(), $name], $arguments);
+    }
+    
+    public static function indexFrontendClasses(ProgressManagerProcess $process, array $classes)
+    {
+        $classes = array_filter($classes, function($className) {
+            return is_subclass_of($className, FrontendModel::class) && App::getInstance()->containerCall([$className, 'isIndexable']);
+        });
+
+        if (!count($classes)) {
+            $process->invalud();
+            return;
+        }
+
+        $process->setTotal(count($classes))->persist();
+
+        foreach ($classes as $className) {
+            $process->progress()->persist();
+            foreach (App::getInstance()->containerCall([$className, 'getCollection']) as $object) {
+                /** @var FrontendModel $object */
+                App::getInstance()->getSearch()->indexFrontendModel($object);
+            }
+        }
     }
 }

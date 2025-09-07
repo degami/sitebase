@@ -153,4 +153,9 @@ class ProgressManagerProcess extends BaseModel
         }
         return $this->setExitStatus(self::ABORT)->setEndedAt(date('Y-m-d H:i:s'))->persist();
     }
+
+    public function invalid() : self
+    {
+        return $this->setExitStatus(self::INVALID)->setEndedAt(date('Y-m-d H:i:s'))->persist();
+    }
 }

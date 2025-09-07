@@ -1501,7 +1501,7 @@ class Manager extends ContainerAwareObject
         return call_user_func_array([$this->getClient(), $name], $arguments);
     }
     
-    public static function indexFrontendClasses(ProgressManagerProcess $process, array $classes)
+    public static function indexFrontendClasses(ProgressManagerProcess $process, array $classes) : ?array
     {
         $classes = array_filter($classes, function($className) {
             return is_subclass_of($className, FrontendModel::class) && App::getInstance()->containerCall([$className, 'isIndexable']);
@@ -1509,17 +1509,25 @@ class Manager extends ContainerAwareObject
 
         if (!count($classes)) {
             $process->invalud();
-            return;
+            return null;
         }
 
         $process->setTotal(count($classes))->persist();
 
+        $results = [];
         foreach ($classes as $className) {
             $process->progress()->persist();
-            foreach (App::getInstance()->containerCall([$className, 'getCollection']) as $object) {
-                /** @var FrontendModel $object */
-                App::getInstance()->getSearch()->indexFrontendModel($object);
+            $response = App::getInstance()->getSearch()->indexFrontendCollection(App::getInstance()->containerCall([$className, 'getCollection']));
+            foreach ($response['items'] as $item) {
+                if (isset($item['index']['result'])) {
+                    if (!isset($results[$item['index']['result']])) {
+                        $results[$item['index']['result']] = 0;
+                    }
+                    $results[$item['index']['result']]++;
+                }
             }
         }
+
+        return $results;
     }
 }

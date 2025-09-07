@@ -115,7 +115,7 @@ class ProgressManagerProcess extends BaseModel
         return $this->isStarted() && !$this->isEnded();
     }
 
-    public function run(...$args) : self
+    public function run(...$args) : mixed
     {
         if ($this->isStarted()) {
             throw new Exception('Process '.$this->getId().' is already running');
@@ -127,6 +127,7 @@ class ProgressManagerProcess extends BaseModel
 
         $pid = getmypid();
 
+        $result = null;
         try {
             $callable = json_decode($this->getCallable(), true);
             if (!$callable || !is_callable($callable)) {
@@ -135,14 +136,16 @@ class ProgressManagerProcess extends BaseModel
 
             $this->setPid($pid)->start()->persist();
 
-            App::getInstance()->containerCall($callable, array_merge([$this], $args));
+            $result = App::getInstance()->containerCall($callable, array_merge([$this], $args));
 
             $this->setMessage('Run complete.')->success();
         } catch (Exception $e) {
             $this->setMessage($e->getMessage())->failure();
         }
 
-        return $this->persist();
+        $this->persist();
+
+        return $result;
     }
 
     public function abort() : self

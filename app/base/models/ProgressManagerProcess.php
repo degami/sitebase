@@ -68,7 +68,7 @@ class ProgressManagerProcess extends BaseModel
      */
     public function end(?int $exitStatus = self::SUCCESS) : self
     {
-        if (!$this->getStartedAt()) {
+        if (!in_array($exitStatus, [self::INVALID]) && !$this->getStartedAt()) {
             throw new Exception('Process not started');
         }
 
@@ -190,7 +190,7 @@ class ProgressManagerProcess extends BaseModel
         try {
             $callable = json_decode($this->getCallable(), true);
             if (!$callable || !is_callable($callable)) {
-                return $this->end(self::INVALID)->persist();
+                return $this->invalid();
             }
 
             $this->setPid($pid)->start()->persist();

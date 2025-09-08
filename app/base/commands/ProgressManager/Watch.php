@@ -64,11 +64,11 @@ class Watch extends BaseCommand
             $percent = $process->getProgressPercentual();
             $message = $process->getMessage() ?? '';
 
-            $status = $process->getEndedAt() ? '✅ ended [' . match($process->getExitStatus()) {
-                ProgressManagerProcess::ABORT => 'aborted',
-                ProgressManagerProcess::INVALID => 'invalid',
-                ProgressManagerProcess::FAILURE => 'fail',
-                ProgressManagerProcess::SUCCESS => 'success',
+            $status = $process->getEndedAt() ? 'ended [' . match($process->getExitStatus()) {
+                ProgressManagerProcess::ABORT   => '🛑 aborted',
+                ProgressManagerProcess::INVALID => '⚠️ invalid',
+                ProgressManagerProcess::FAILURE => '❌ failed',
+                ProgressManagerProcess::SUCCESS => '✅ success',
             } . ']' : '⏳ active';
 
             $barWidth = 30;

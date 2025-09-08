@@ -19,6 +19,7 @@ use App\Base\Models\MailLog;
 use App\Base\Models\RequestLog;
 use App\Base\Models\CronLog;
 use App\Base\Models\AdminActionLog;
+use App\Base\Models\ProgressManagerProcess;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -175,6 +176,21 @@ class Logs extends AdminPage
                     }
 
                     break;
+                case 'progress_manager':
+                    $this->page_title = 'Progress Manager Processes';
+
+                    if (is_numeric($this->getRequest()->query->get('id'))) {
+                        $log = $this->containerCall([ProgressManagerProcess::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    } else {
+                        /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
+                        $collection = $this->containerCall([ProgressManagerProcess::class, 'getCollection']);
+                        $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
+                        $data = $this->containerCall([$collection, 'paginate']);
+                        $header = ['id', 'callable', 'exit_status', 'message', 'created_at', 'started_at', 'ended_at'];
+                    }
+
+                    break;
+
             }
 
             if (is_numeric($this->getRequest()->query->get('id'))) {

@@ -34,6 +34,7 @@ use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Controllers\Admin\Login;
 use App\Base\Models\Block;
+use App\Base\Models\ProgressManagerProcess;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
 use chillerlan\QRCode\QRCode;
@@ -1050,14 +1051,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
     /**
      * renders log
      *
-     * @param RequestLog|CronLog|MailLog|AdminActionLog $log
+     * @param RequestLog|CronLog|MailLog|AdminActionLog|ProgressManagerProcess $log
      * @param bool $nowrap
      * @return mixed
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderLog(RequestLog|CronLog|MailLog|AdminActionLog $log, bool $nowrap = true): mixed
+    public function renderLog(RequestLog|CronLog|MailLog|AdminActionLog|ProgressManagerProcess $log, bool $nowrap = true): mixed
     {
         $data = [];
         foreach (array_keys($log->getData()) as $property) {

@@ -79,8 +79,7 @@ class Indexer extends BaseCommand
         }
 
         /** @var ProgressManagerProcess $progressManagerProcess */
-        $progressManagerProcess = $this->containerMake(ProgressManagerProcess::class);
-        $progressManagerProcess->setCallable(json_encode([SearchManager::class, 'indexFrontendClasses']));
+        $progressManagerProcess = ProgressManagerProcess::createForCallable([SearchManager::class, 'indexFrontendClasses']);
         $results = $progressManagerProcess->run($classes);
 
         $this->renderTitle('Indexer results');

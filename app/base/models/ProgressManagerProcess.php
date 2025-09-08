@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use DateTime;
 use Exception;
+use InvalidArgumentException;
 
 /**
  * ProgressManager Process Model
@@ -49,11 +50,22 @@ class ProgressManagerProcess extends BaseModel
     public const INVALID = 2;
     public const ABORT = 3;
 
+    /**
+     * Starts current process
+     * 
+     * @return self
+     */
     public function start() : self
     {
         return $this->setProgress(0)->setStartedAt(date('Y-m-d H:i:s'));
     }
 
+    /**
+     * Ends current process, setting an exist status
+     * 
+     * @param int|null $exitStatus
+     * @return self
+     */
     public function end(?int $exitStatus = self::SUCCESS) : self
     {
         if (!$this->getStartedAt()) {
@@ -71,16 +83,31 @@ class ProgressManagerProcess extends BaseModel
         return $this->setProgress($this->getTotal())->setExitStatus($exitStatus)->setEndedAt(date('Y-m-d H:i:s'));
     }
 
+    /**
+     * Sets current process as successful
+     * 
+     * @return self
+     */
     public function success() : self
     {
         return $this->end(self::SUCCESS);
     }
 
+    /**
+     * Sets current process as failed
+     * 
+     * @return self
+     */
     public function failure() : self
     {
         return $this->end(self::FAILURE);
     }
 
+    /**
+     * Calculates current progress percentual
+     * 
+     * @return float|null
+     */
     public function getProgressPercentual() : ?float
     {
         if (!$this->getTotal()) {
@@ -90,31 +117,63 @@ class ProgressManagerProcess extends BaseModel
         return floatval($this->getProgress() / $this->getTotal() * 100);
     }
 
+    /**
+     * Advance progress counter
+     * 
+     * @param int $step
+     * @return self
+     */
     public function increment(int $step = 1) : self
     {
         return $this->setProgress($this->getProgress() + $step);
     }
 
+    /**
+     * Advance progress counter, updating message with current percentual
+     * 
+     * @param int $step
+     * @return self
+     */
     public function progress(int $step = 1) : self
     {
         return $this->increment($step)->setMessage('progress '. (!is_null($this->getProgressPercentual()) ? round($this->getProgressPercentual(), 2).'%' : 'n/a'));
     }
 
+    /**
+     * Check if process is started
+     * 
+     * @return bool
+     */
     public function isStarted() : bool
     {
         return $this->getStartedAt() != null;
     }
 
+    /**
+     * Check if process is ended
+     * 
+     * @return bool
+     */
     public function isEnded() : bool
     {
         return $this->getEndedAt() != null;
     }
 
+    /**
+     * Check if process is running
+     * 
+     * @return bool
+     */
     public function isRunning() : bool
     {
         return $this->isStarted() && !$this->isEnded();
     }
 
+    /**
+     * Runs callable with arguments. Injects process instance as first parameter to keep track of process status
+     * 
+     * @return mixed
+     */
     public function run(...$args) : mixed
     {
         if ($this->isStarted()) {
@@ -148,6 +207,11 @@ class ProgressManagerProcess extends BaseModel
         return $result;
     }
 
+    /**
+     * Aborts current process, killing pid if available
+     * 
+     * @return self
+     */
     public function abort() : self
     {
         $pid = $this->getPid();
@@ -157,8 +221,30 @@ class ProgressManagerProcess extends BaseModel
         return $this->setExitStatus(self::ABORT)->setEndedAt(date('Y-m-d H:i:s'))->persist();
     }
 
+    /**
+     * Sets current process as invalid
+     * 
+     * @return self
+     */
     public function invalid() : self
     {
         return $this->setExitStatus(self::INVALID)->setEndedAt(date('Y-m-d H:i:s'))->persist();
+    }
+
+    /**
+     * Utility function to create a ProgressManagerProcess for a callable
+     * 
+     * @param string|array $callable
+     * @return ProgressManagerProcess
+     */
+    public static function createForCallable(string|array $callable) : ProgressManagerProcess
+    {
+        $out = new self();
+        if (!is_callable($callable)) {
+            throw new InvalidArgumentException('Invalid callable argument');
+        }
+
+        $out->setCallable(json_encode($callable));
+        return $out;
     }
 }

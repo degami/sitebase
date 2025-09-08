@@ -54,8 +54,7 @@ class SearchManager extends ContainerAwareObject
         }
 
         /** @var ProgressManagerProcess $progressManagerProcess */
-        $progressManagerProcess = $this->containerMake(ProgressManagerProcess::class);
-        $progressManagerProcess->setCallable(json_encode([Manager::class, 'indexFrontendClasses']));
+        $progressManagerProcess = ProgressManagerProcess::createForCallable([Manager::class, 'indexFrontendClasses']);
         $progressManagerProcess->run($classes);
 
         return null;

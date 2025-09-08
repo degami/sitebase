@@ -49,4 +49,17 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         </div>
         <div class="col-2">&nbsp;</div>
     </div>
+    <div class="row m-4">
+        <div class="col-2">&nbsp;</div>
+        <div class="col-4">
+            <a class="btn btn-lg btn-block btn-outline-info nowrap p-4" role="button" href="<?= $controller->getControllerUrl();?>?logtype=progress_manager">
+                <?php $this->sitebase()->drawIcon('coffee', ['style' => $icon_style]); ?> 
+                <?= $this->sitebase()->translate('Progress Manager Processes');?>
+            </a>
+        </div>
+        <div class="col-4">
+            <!-- next log button here -->
+        </div>
+        <div class="col-2">&nbsp;</div>
+    </div>
 <?php endif; ?>

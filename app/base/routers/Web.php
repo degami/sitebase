@@ -177,6 +177,11 @@ class Web extends BaseRouter implements WebRouterInterface
 
             /** @var Website $website */
             $website = $this->getSiteData()->getCurrentWebsite();
+
+            if (!$website) {
+                return null;
+            }
+
             $domain = $website->getDomain();
             $website_id = $website->getId();
 

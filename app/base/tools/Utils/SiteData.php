@@ -27,10 +27,6 @@ use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\Website;
-use App\Base\Controllers\Admin\Json\ChatGPT;
-use App\Base\Controllers\Admin\Json\GoogleGemini;
-use App\Base\Controllers\Admin\Json\Claude;
-use App\Base\Controllers\Admin\Json\Mistral;
 
 /**
  * Site Data Helper Class
@@ -417,7 +413,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getSiteLocales(?int $website_id = null): array|bool
     {
-        return explode(",", $this->getConfigValue(self::LOCALES_PATH, $website_id, null));
+        return explode(",", $this->getConfigValue(self::LOCALES_PATH, $website_id, null) ?? self::DEFAULT_LOCALE);
     }
 
     /**

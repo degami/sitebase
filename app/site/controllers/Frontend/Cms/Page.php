@@ -20,6 +20,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use App\Site\Models\Page as PageModel;
 use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
@@ -145,6 +146,11 @@ class Page extends FrontendPageWithObject
 
         if ($homepage_id) {
             return $this->showPage($homepage_id, $route_info);
+        }
+
+        if (!$browser_locale || $route_vars['lang'] == $browser_locale) {
+            // redireting to /<browser_locale> will end into an endless loop. Throw exception
+            throw new ExceptionsNotFoundException("Missing homepage for current website");
         }
 
         // if page was not found, try to redirect to language

@@ -180,7 +180,7 @@ class SiteBase implements ExtensionInterface
      */
     public function assetUrl(string $asset_path): string
     {
-        return $this->getAssets()->assetUrl($asset_path, $this->getCurrentWebsite()->getId());
+        return $this->getAssets()->assetUrl($asset_path, $this->getCurrentWebsite()?->getId());
     }
 
     /**

@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'संपर्क करें',
     'Links Exchange' => 'लिंक एक्सचेंज',
     'Term' => 'श्रेणीबद्ध शब्द',
+    'Thanks for your submission!' => 'आपके सबमिशन के लिए धन्यवाद!',
+    'Sending...' => 'भेजा जा रहा है...',
 ];

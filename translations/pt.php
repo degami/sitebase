@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Contate-Nos',
     'Links Exchange' => 'Troca de links',
     'Term' => 'Termo de taxonomia',
+    'Thanks for your submission!' => 'Obrigado pela sua submissão!',
+    'Sending...' => 'Enviando...',
 ];

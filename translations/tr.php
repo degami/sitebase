@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Bize Ulaşın',
     'Links Exchange' => 'Bağlantı Değişimi',
     'Term' => 'Taksonomi terimi',
+    'Thanks for your submission!' => 'Gönderiniz için teşekkürler!',
+    'Sending...' => 'Gönderiliyor...',
 ];

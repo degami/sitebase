@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Neem contact op',
     'Links Exchange' => 'Linkruil',
     'Term' => 'Taxonomie-term',
+    'Thanks for your submission!' => 'Bedankt voor uw inzending!',
+    'Sending...' => 'Verzenden...',
 ];

@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Contact Us',
     'Links Exchange' => 'Links Exchange',
     'Term' => 'Term',
+    'Thanks for your submission!' => 'Thanks for your submission!',
+    'Sending...' => 'Sending...',
 ];

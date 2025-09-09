@@ -195,4 +195,6 @@ return [
     'Contact Us' => '联系我们',
     'Links Exchange' => '链接交换',
     'Term' => '分类术语',
+    'Thanks for your submission!' => '感谢您的提交！',
+    'Sending...' => '正在发送...',
 ];

@@ -16,6 +16,7 @@ query Linkexchanges ($linkId: String!) {
             title
             locale
             description
+            domain
             active
             website {
                 id
@@ -35,12 +36,22 @@ query Linkexchanges ($input: SearchCriteriaInput) {
             title
             locale
             description
+            domain
             active
             website {
                 id
             }
         }
         count
+    }
+}
+`
+
+const LINKS_MUTATION = gql`
+mutation SubmitLinkExchange ($url:String!, $email:String!, $title: String!, $description: String! ){
+    submitLinkExchange(url: $url, email: $email, title: $title, description: $description) {
+        success
+        message
     }
 }
 `
@@ -123,6 +134,34 @@ const actions = {
             console.error('Errore durante il fetch dei links:', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
+        }
+    },
+    async submitLink({ commit, dispatch }, {url, email, title, description}) {
+        const LINKS_VARIABLES = {
+            "url": url,
+            "email": email,
+            "title": title,
+            "description": description
+        };
+
+        //commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
+
+        try {
+            const client = await dispatch('apolloClient/getApolloClient', null, { root: true });  // Usa il root per accedere a un modulo Vuex diverso
+            if (!client) {
+                throw new Error("Apollo Client non inizializzato");
+            }
+
+            const { data } = await client.mutate({
+                mutation: LINKS_MUTATION,
+                variables: LINKS_VARIABLES,
+            });
+
+            return data.submitLinkExchange || null;
+        } catch (error) {
+            console.error('Errore durante il submit del link:', error);
+        } finally {
+            //commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
     },
     flushLinks({commit}) {

@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Skontaktuj się z nami',
     'Links Exchange' => 'Wymiana linków',
     'Term' => 'Termin taksonomiczny',
+    'Thanks for your submission!' => 'Dziękujemy za przesłanie!',
+    'Sending...' => 'Wysyłanie...',
 ];

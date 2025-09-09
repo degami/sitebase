@@ -197,4 +197,6 @@ return [
     'Contact Us' => 'যোগাযোগ করুন',
     'Links Exchange' => 'লিঙ্ক বিনিময়',
     'Term' => 'শ্রেণীবিভাগ শব্দ',
+    'Thanks for your submission!' => 'আপনার জমা দেওয়ার জন্য ধন্যবাদ!',
+    'Sending...' => 'প্রেরণ হচ্ছে...',
 ];

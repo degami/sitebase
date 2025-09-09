@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'お問い合わせ',
     'Links Exchange' => 'リンク交換',
     'Term' => '分類用語',
+    'Thanks for your submission!' => 'ご投稿ありがとうございます！',
+    'Sending...' => '送信中...',
 ];

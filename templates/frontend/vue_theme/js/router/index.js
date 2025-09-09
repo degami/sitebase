@@ -48,6 +48,7 @@ export function getComponentMap() {
     'taxonomy': () => import('@/components/Taxonomy.vue'),
     'newslist': () => import('@/components/ListNews.vue'),
     'eventslist': () => import('@/components/ListEvents.vue'),
+    'links': () => import('@/components/Links.vue'),
     'search': () => import('@/components/Search.vue'),
   };
 }

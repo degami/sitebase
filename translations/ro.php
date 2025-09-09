@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Contactați-ne',
     'Links Exchange' => 'Schimb de linkuri',
     'Term' => 'Termen de taxonomie',
+    'Thanks for your submission!' => 'Mulțumim pentru trimitere!',
+    'Sending...' => 'Se trimite...',
 ];

@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Kapcsolat',
     'Links Exchange' => 'Linkcsere',
     'Term' => 'Taxonómiai kifejezés',
+    'Thanks for your submission!' => 'Köszönjük a beküldést!',
+    'Sending...' => 'Küldés...',
 ];

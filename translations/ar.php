@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'اتصل بنا',
     'Links Exchange' => 'تبادل الروابط',
     'Term' => 'مصطلح تصنيفي',
+    'Thanks for your submission!' => 'شكرًا على إرسالكم!',
+    'Sending...' => 'جارٍ الإرسال...',
 ];

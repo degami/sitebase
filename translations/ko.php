@@ -195,4 +195,6 @@ return [
     'Contact Us' => '문의하기',
     'Links Exchange' => '링크 교환',
     'Term' => '분류 용어',
+    'Thanks for your submission!' => '제출해 주셔서 감사합니다!',
+    'Sending...' => '보내는 중...',
 ];

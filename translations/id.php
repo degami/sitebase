@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Hubungi Kami',
     'Links Exchange' => 'Pertukaran Tautan',
     'Term' => 'Istilah taksonomi',
+    'Thanks for your submission!' => 'Terima kasih atas kiriman Anda!',
+    'Sending...' => 'Mengirim...',
 ];

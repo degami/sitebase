@@ -195,4 +195,6 @@ return [
     'Contact Us' => 'Liên hệ với chúng tôi',
     'Links Exchange' => 'Trao đổi liên kết',
     'Term' => 'Thuật ngữ phân loại',
+    'Thanks for your submission!' => 'Cảm ơn bạn đã gửi!',
+    'Sending...' => 'Đang gửi...',
 ];

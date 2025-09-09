@@ -67,7 +67,7 @@ class LinkExchangeEventListener implements EventListenerInterface
                     $link->persist();
 
                     $success = true;
-                    $message = 'Thanks for your submission!';
+                    $message = App::getInstance()->getUtils()->translate('Thanks for your submission!');
 
                     $app->getUtils()->queueLinksFormMail(
                         $args['email'],

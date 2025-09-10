@@ -18,7 +18,7 @@
                         {{ linksItem.url }}
                     </a>
                     <span class="link-title">{{ linksItem.url }}</span>
-                    <span class="link-description">{{ linksItem.description }}</span>
+                    <span class="link-description" v-html="linksItem.description"></span>
                 </li>
             </ul>
             <Paginator :current_page="currentPage" :total="totalCount" :page_size="pageSize" />        

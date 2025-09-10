@@ -312,6 +312,10 @@ abstract class FrontendPage extends BaseHtmlPage
                 $this->locale = $this->getRouteData('locale');
             }
 
+            if ($this->locale == null && $this->getRouteData('lang') != null) {
+                $this->locale = $this->getRouteData('lang');
+            }
+
             if ($this->locale == null && $this->getCurrentUser()) {
                 $this->locale = $this->getCurrentUser()->getLocale();
             }

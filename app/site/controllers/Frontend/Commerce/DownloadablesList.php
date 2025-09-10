@@ -16,6 +16,7 @@ namespace App\Site\Controllers\Frontend\Commerce;
 use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\FrontendPage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Base\Routing\RouteInfo;
 use App\Site\Models\DownloadableProduct;
 use DI\DependencyException;
@@ -24,7 +25,7 @@ use DI\NotFoundException;
 /**
  * Downloadables List Page
  */
-class DownloadablesList extends FrontendPage
+class DownloadablesList extends FrontendPageWithLang
 {
     /**
      * @var RouteInfo|null route info object
@@ -44,11 +45,14 @@ class DownloadablesList extends FrontendPage
     /**
      * return route path
      *
-     * @return string
+     * @return array
      */
-    public static function getRoutePath(): string
+    public static function getRoutePath(): array
     {
-        return 'downloadables';
+        return [
+            'frontend.commerce.downloadableslist' => 'downloadables', 
+            'frontend.commerce.downloadableslist.withlang' => '/{lang:[a-z]{2}}/downloadables',
+        ];
     }
 
     /**
@@ -83,6 +87,7 @@ class DownloadablesList extends FrontendPage
     {
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
         $collection = $this->containerCall([DownloadableProduct::class, 'getCollection']);
+        $collection->addCondition(['locale' => $this->getCurrentLocale()]);
         $data = $this->containerCall([$collection, 'paginate'] /*, ['page_size' => 10]*/);
         return $this->template_data += [
             'page_title' => $this->getUtils()->translate('Downloadables', locale: $this->getCurrentLocale()),

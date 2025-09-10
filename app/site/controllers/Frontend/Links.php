@@ -18,14 +18,14 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\PHPFormsApi as FAPI;
-use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Abstracts\Controllers\FormPageWithLang;
 use App\Site\Models\LinkExchange;
 use Throwable;
 
 /**
  * Link Exchange Page
  */
-class Links extends FormPage
+class Links extends FormPageWithLang
 {
     /**
      * gets route group
@@ -45,16 +45,6 @@ class Links extends FormPage
     public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
-    }
-
-    /**
-     * return route path
-     *
-     * @return string
-     */
-    public static function getRoutePath(): string
-    {
-        return 'links';
     }
 
     /**

@@ -58,13 +58,13 @@ class Routes extends BaseCommand
             $tableContents[] = ['<info>'.$routerName.'</info>'];
             foreach ($router->getRoutes() as $group => $routes) {
                 foreach ($routes as $route) {
-                    $tableContents[] = [$route['name'], $group, $route['path'], $route['class'] . '::' . $route['method']];
+                    $tableContents[] = [$route['name'], $group . $route['path'], $route['class'] . '::' . $route['method']];
                 }
             }    
         }
 
         $this->renderTitle('Routes');
-        $this->renderTable(['Name', 'Group', 'Path', 'Callable'], $tableContents);
+        $this->renderTable(['Name', 'Path', 'Callable'], $tableContents);
 
         return Command::SUCCESS;
     }

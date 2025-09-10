@@ -14,7 +14,7 @@
 namespace App\Site\Controllers\Frontend\Cms;
 
 use Degami\Basics\Exceptions\BasicException;
-use App\Base\Abstracts\Controllers\FrontendPage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Site\Models\Event;
 use App\Base\Routing\RouteInfo;
 use DI\DependencyException;
@@ -23,7 +23,7 @@ use DI\NotFoundException;
 /**
  * Events List Page
  */
-class EventList extends FrontendPage
+class EventList extends FrontendPageWithLang
 {
     /**
      * @var RouteInfo|null route info object
@@ -43,11 +43,11 @@ class EventList extends FrontendPage
     /**
      * return route path
      *
-     * @return string
+     * @return array
      */
-    public static function getRoutePath(): string
+    public static function getRoutePath(): array
     {
-        return 'events';
+        return ['frontend.cms.eventlist' => 'events', 'frontend.cms.eventlist.withlang' => '/{lang:[a-z]{2}}/events'];
     }
 
     /**

@@ -14,13 +14,13 @@
 namespace App\Base\Controllers\Frontend\Commerce\Checkout;
 
 use App\App;
-use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Traits\CommercePageTrait;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Base\Models\OrderStatus;
 
-class Typ extends FrontendPage
+class Typ extends FrontendPageWithLang
 {
     use CommercePageTrait;
 
@@ -86,6 +86,7 @@ class Typ extends FrontendPage
         $this->template_data += [
             'order' => $this->getOrder(),
             'user' => $this->getCurrentUser(),
+            'locale' => $this->getCurrentLocale(),
         ];
 
         // Clear the order from the session after rendering the page
@@ -104,7 +105,10 @@ class Typ extends FrontendPage
     protected function beforeRender() : BasePage|Response
     {
         if (!$this->getOrder()) {
-            return $this->doRedirect($this->getUrl('frontend.commerce.cart'));            
+            if ($this->hasLang()) {
+                return $this->doRedirect($this->getUrl('frontend.commerce.cart.withlang', ['lang' => $this->getCurrentLocale()]));
+            }
+            return $this->doRedirect($this->getUrl('frontend.commerce.cart'));
         }
 
         return parent::beforeRender();

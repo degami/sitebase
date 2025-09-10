@@ -14,12 +14,12 @@
 namespace App\Base\Controllers\Frontend\Commerce\Cart;
 
 use App\App;
-use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use Symfony\Component\HttpFoundation\Response;
 
-class Add extends FrontendPage
+class Add extends FrontendPageWithLang
 {
     use CommercePageTrait;
     
@@ -34,11 +34,14 @@ class Add extends FrontendPage
     /**
      * return route path
      *
-     * @return string
+     * @return array
      */
-    public static function getRoutePath(): string
+    public static function getRoutePath(): array
     {
-        return '/commerce/cart/add/{product_details}';
+        return [
+            'frontend.commerce.cart.add' => '/commerce/cart/add/{product_details}', 
+            'frontend.commerce.cart.add.withlang' => '/{lang:[a-z]{2}}/commerce/cart/add/{product_details}', 
+        ];
     }
 
     /**
@@ -87,6 +90,11 @@ class Add extends FrontendPage
                 $this->addErrorFlashMessage(
                     $this->getUtils()->translate('Product not found.')
                 );
+
+                if ($this->hasLang()) {
+                    return $this->doRedirect($this->getUrl('frontend.commerce.cart.withlang', ['lang' => $this->getCurrentLocale()]));            
+                }
+
                 return $this->doRedirect($this->getUrl('frontend.commerce.cart'));
             }
 
@@ -103,6 +111,11 @@ class Add extends FrontendPage
             $this->addSuccessFlashMessage(
                 $this->getUtils()->translate('Product added to cart successfully.')
             );
+
+            if ($this->hasLang()) {
+                return $this->doRedirect($this->getUrl('frontend.commerce.cart.withlang', ['lang' => $this->getCurrentLocale()]));            
+            }
+
             return $this->doRedirect($this->getUrl('frontend.commerce.cart'));
         }
 
@@ -110,6 +123,11 @@ class Add extends FrontendPage
         $this->addErrorFlashMessage(
             $this->getUtils()->translate('No product details provided.')
         );
+
+        if ($this->hasLang()) {
+            return $this->doRedirect($this->getUrl('frontend.commerce.cart.withlang', ['lang' => $this->getCurrentLocale()]));            
+        }
+
         return $this->doRedirect($this->getUrl('frontend.commerce.cart'));
     }
 }

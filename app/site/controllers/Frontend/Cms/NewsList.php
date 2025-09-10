@@ -14,7 +14,7 @@
 namespace App\Site\Controllers\Frontend\Cms;
 
 use Degami\Basics\Exceptions\BasicException;
-use App\Base\Abstracts\Controllers\FrontendPage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Site\Models\News;
 use App\Base\Routing\RouteInfo;
 use DI\DependencyException;
@@ -23,7 +23,7 @@ use DI\NotFoundException;
 /**
  * News List Page
  */
-class NewsList extends FrontendPage
+class NewsList extends FrontendPageWithLang
 {
     /**
      * @var RouteInfo|null route info object
@@ -43,11 +43,11 @@ class NewsList extends FrontendPage
     /**
      * return route path
      *
-     * @return string
+     * @return array
      */
-    public static function getRoutePath(): string
+    public static function getRoutePath(): array
     {
-        return 'news';
+        return ['frontend.cms.newslist' => 'news', 'frontend.cms.newslist.withlang' => '/{lang:[a-z]{2}}/news'];
     }
 
     /**
@@ -73,7 +73,7 @@ class NewsList extends FrontendPage
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
         $collection = $this->containerCall([News::class, 'getCollection']);
         $collection->addCondition(['locale' => $this->getCurrentLocale()])->addOrder(['date' => 'DESC']);
-    $data = $this->containerCall([$collection, 'paginate'] /*, ['page_size' => 10]*/);
+        $data = $this->containerCall([$collection, 'paginate'] /*, ['page_size' => 10]*/);
         return $this->template_data += [
             'page_title' => $this->getUtils()->translate('News', locale: $this->getCurrentLocale()),
             'news' => $data['items'],

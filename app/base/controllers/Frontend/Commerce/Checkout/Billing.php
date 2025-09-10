@@ -14,12 +14,12 @@
 namespace App\Base\Controllers\Frontend\Commerce\Checkout;
 
 use App\App;
-use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Abstracts\Controllers\FormPageWithLang;
 use App\Base\Traits\CommercePageTrait;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Address;
 
-class Billing extends FormPage
+class Billing extends FormPageWithLang
 {
     use CommercePageTrait;
 
@@ -70,6 +70,7 @@ class Billing extends FormPage
         return $this->template_data + [
             'cart' => $this->getCart(),
             'user' => $this->getCurrentUser(),
+            'locale' => $this->getCurrentLocale(),
         ];
     }
 
@@ -247,11 +248,18 @@ class Billing extends FormPage
             ->setBillingAddressId($address->getId())
             ->persist();
 
+        $redirectUrl = $this->getUrl('frontend.commerce.checkout.shipping');
+        if ($this->hasLang()) {
+            $redirectUrl = $this->getUrl('frontend.commerce.checkout.shipping.withlang', ['lang' => $this->getCurrentLocale()]);
+        }
         if (!$this->getCart()->requireShipping()) {
             // If the cart does not require shipping, redirect to payment
-            return $this->doRedirect($this->getUrl('frontend.commerce.checkout.payment'));
+            $redirectUrl = $this->getUrl('frontend.commerce.checkout.payment');
+            if ($this->hasLang()) {
+                $redirectUrl = $this->getUrl('frontend.commerce.checkout.payment.withlang', ['lang' => $this->getCurrentLocale()]);
+            }
         }
 
-        return $this->doRedirect($this->getUrl('frontend.commerce.checkout.shipping'));
+        return $this->doRedirect($redirectUrl);
     }
 }

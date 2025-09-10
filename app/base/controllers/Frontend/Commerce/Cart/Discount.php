@@ -14,15 +14,15 @@
 namespace App\Base\Controllers\Frontend\Commerce\Cart;
 
 use App\App;
-use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Base\Models\CartDiscount;
 use App\Base\Models\Discount as DiscountModel;
 use Symfony\Component\HttpFoundation\Response;
 use RuntimeException;
 
-class Discount extends FrontendPage
+class Discount extends FrontendPageWithLang
 {
     use CommercePageTrait;
     
@@ -37,11 +37,14 @@ class Discount extends FrontendPage
     /**
      * return route path
      *
-     * @return string
+     * @return array
      */
-    public static function getRoutePath(): string
+    public static function getRoutePath(): array
     {
-        return '/commerce/cart/discount/{action_details}';
+        return [
+            'frontend.commerce.cart.discount' => '/commerce/cart/discount/{action_details}',
+            'frontend.commerce.cart.discount.withlang' => '/{lang:[a-z]{2}}/commerce/cart/discount/{action_details}',
+        ];
     }
 
     /**
@@ -159,6 +162,10 @@ class Discount extends FrontendPage
             $this->addErrorFlashMessage(
                 $e->getMessage()
             );            
+        }
+
+        if ($this->hasLang()) {
+            return $this->doRedirect($this->getUrl('frontend.commerce.cart.withlang', ['lang' => $this->getCurrentLocale()]));            
         }
 
         return $this->doRedirect($this->getUrl('frontend.commerce.cart'));

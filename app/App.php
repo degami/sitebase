@@ -21,7 +21,6 @@ use FastRoute\Dispatcher;
 use Psr\Container\ContainerInterface;
 use Gplanchat\EventManager\Event;
 use Dotenv\Dotenv;
-use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
 use App\Base\Exceptions\OfflineException;
@@ -334,6 +333,12 @@ class App
 
                         // add route collected data
                         $vars['route_data'] = $this->getAppRouteInfo()->getVars();
+                        if (isset($vars['lang'])) {
+                            $this->setCurrentLocale($vars['lang']);
+                            if (!isset($vars['locale'])) {
+                                $vars['locale'] = $vars['lang'];
+                            }
+                        }
 
                         if ($this->isSiteOffline() && !$routeInfo->worksOffline()) {
                             throw new OfflineException();

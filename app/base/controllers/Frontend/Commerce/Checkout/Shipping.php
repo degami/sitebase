@@ -14,13 +14,13 @@
 namespace App\Base\Controllers\Frontend\Commerce\Checkout;
 
 use App\App;
-use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Abstracts\Controllers\FormPageWithLang;
 use App\Base\Traits\CommercePageTrait;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Country;
 use App\Base\Models\Address;
 
-class Shipping extends FormPage
+class Shipping extends FormPageWithLang
 {
     use CommercePageTrait;
 
@@ -71,6 +71,7 @@ class Shipping extends FormPage
         return $this->template_data + [
             'cart' => $this->getCart(),
             'user' => $this->getCurrentUser(),
+            'locale' => $this->getCurrentLocale(),
         ];
     }
 
@@ -251,6 +252,10 @@ class Shipping extends FormPage
         $this->getCart()
             ->setShippingAddressId($address->getId())
             ->persist();
+
+        if ($this->hasLang()) {
+            return $this->doRedirect($this->getUrl('frontend.commerce.checkout.payment.withlang', ['lang' => $this->getCurrentLocale()]));
+        }
 
         return $this->doRedirect($this->getUrl('frontend.commerce.checkout.payment'));
     }

@@ -15,14 +15,14 @@ namespace App\Base\Controllers\Frontend\Commerce;
 
 use App\App;
 use App\Base\Traits\CommercePageTrait;
-use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Abstracts\Controllers\FormPageWithLang;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Request;
 use Psr\Container\ContainerInterface;
 use Degami\PHPFormsApi\Containers\TableContainer;
 
-class Cart extends FormPage
+class Cart extends FormPageWithLang
 {
     use CommercePageTrait;
     
@@ -88,9 +88,51 @@ class Cart extends FormPage
      */
     public function getTemplateData(): array
     {
+        $checkoutURL = $this->getUrl('frontend.commerce.checkout.billing');
+        if ($this->hasLang()) {
+            $checkoutURL = $this->getUrl('frontend.commerce.checkout.billing.withlang', ['lang' => $this->getCurrentLocale()]);
+        }
+        $discounts = [];
+        foreach($this->getCart()->getDiscounts() as $discountModel) {
+            $removeUrl = $this->getUrl('frontend.commerce.cart.discount', [
+                'action_details' => base64_encode(json_encode([
+                    'action' => 'remove_discount', 
+                    'discount_id' => $discountModel->getId()
+                ]))
+            ]);
+
+            if ($this->hasLang()) {
+                $removeUrl = $this->getUrl('frontend.commerce.cart.discount.withlang', [
+                    'action_details' => base64_encode(json_encode([
+                        'action' => 'remove_discount', 
+                        'discount_id' => $discountModel->getId(),
+                    ])),
+                    'lang' => $this->getCurrentLocale(),
+                ]);
+            }
+
+            $discounts[] = [
+                'model' => $discountModel,
+                'removeUrl' => $removeUrl,
+            ];
+        }
+
+        $applyDiscountUrl = $this->getUrl('frontend.commerce.cart.discount', [
+            'action_details' => base64_encode('{"from-request":true}')
+        ]);
+        if ($this->hasLang()) {
+            $applyDiscountUrl = $this->getUrl('frontend.commerce.cart.discount.withlang', [
+                'action_details' => base64_encode('{"from-request":true}'),
+                'lang' => $this->getCurrentLocale(),
+            ]);
+        }
         return $this->template_data + [
             'cart' => $this->getCart()?->calculate(),
             'user' => $this->getCurrentUser(),
+            'locale' => $this->getCurrentLocale(),
+            'discounts' => $discounts,
+            'checkoutURL' => $checkoutURL,
+            'applyDiscountUrl' => $applyDiscountUrl,
         ];
     }
 
@@ -129,6 +171,16 @@ class Cart extends FormPage
                 $itemTitle = '<a href="'.$item->getProduct()->getFrontendUrl().'">' . $item->getProduct()->getTitle() . '</a>';
             }
 
+            $removeUrl = $this->getUrl('frontend.commerce.cart.remove', [
+                'row_details' => base64_encode(json_encode(['id' => $item->getId()]))
+            ]);
+            if ($this->hasLang()) {
+                $removeUrl = $this->getUrl('frontend.commerce.cart.remove.withlang', [
+                    'lang' => $this->getCurrentLocale(),
+                    'row_details' => base64_encode(json_encode(['id' => $item->getId()]))
+                ]);
+            }
+
             $table->addRow()
                 ->addField('product_name_'.$table->numRows(), [
                     'type' => 'markup', 
@@ -161,9 +213,7 @@ class Cart extends FormPage
                 ])
                 ->addField('remove_'.$table->numRows(), [
                     'type' => 'markup',
-                    'value' => '<a href="' . $this->getUrl('frontend.commerce.cart.remove', [
-                        'row_details' => base64_encode(json_encode(['id' => $item->getId()]))
-                    ]) . '" class="btn btn-danger">'
+                    'value' => '<a href="' . $removeUrl . '" class="btn btn-danger">'
                     . $this->getHtmlRenderer()->getIcon('trash') . '</a>',
                     'container_class' => 'text-right'
                 ]);

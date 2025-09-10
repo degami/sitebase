@@ -116,6 +116,13 @@ document.addEventListener("DOMContentLoaded", function() {
 
     public function executePayment(?FormValues $values, Cart $cart): array
     {
+        $hasLang = !empty(App::getInstance()->getAppRouteInfo()?->getVar('lang'));
+
+        $returnUrl =  App::getInstance()->getWebRouter()->getUrl('frontend.commerce.checkout.stripe.stripereturncallback');
+        if ($hasLang) {
+            $returnUrl =  App::getInstance()->getWebRouter()->getUrl('frontend.commerce.checkout.stripe.stripereturncallback.withlang', ['lang' => App::getInstance()->getCurrentLocale()]);
+        }
+
         StripeMethod::setApiKey(App::getInstance()->getSiteData()->getConfigValue('payments/stripe/private_key'));
 
         try {
@@ -125,7 +132,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 'payment_method' => $values->stripe_token,
                 'confirmation_method' => 'manual',
                 'confirm' => true,
-                'return_url' => App::getInstance()->getWebRouter()->getUrl('frontend.commerce.checkout.stripe.stripereturncallback'),
+                'return_url' => $returnUrl,
             ]);
 
             return [

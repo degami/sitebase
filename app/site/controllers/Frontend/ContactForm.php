@@ -29,7 +29,6 @@ use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
-use App\Base\Traits\FrontendPageTrait;
 use App\Base\Exceptions\NotFoundException;
 use App\Base\Traits\FrontendPageWithObjectTrait;
 use Throwable;

@@ -14,12 +14,12 @@
 namespace App\Base\Controllers\Frontend\Commerce\Checkout\Stripe;
 
 use App\App;
-use App\Base\Abstracts\Controllers\BaseHtmlPage;
 use App\Base\Traits\CommercePageTrait;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 
-class StripeReturnCallback extends BaseHtmlPage
+class StripeReturnCallback extends FrontendPageWithLang
 {
     use CommercePageTrait;
 

@@ -14,7 +14,7 @@
 namespace App\Base\Controllers\Frontend;
 
 use App\Base\Abstracts\Controllers\BasePage;
-use App\Base\Abstracts\Controllers\FrontendPage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -25,7 +25,7 @@ use App\Base\Tools\Search\Manager as SearchManager;
 /**
  * Search page
  */
-class Search extends FrontendPage
+class Search extends FrontendPageWithLang
 {
     /**
      * {@inheritdoc}
@@ -35,16 +35,6 @@ class Search extends FrontendPage
     public static function isEnabled(): bool
     {
         return boolval(\App\App::getInstance()->getSearch()->isEnabled());
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return array
-     */
-    public static function getRoutePath(): array
-    {
-        return ['frontend.search' => 'search', 'frontend.search.withlang' => '{lang:[a-z]{2}}/search'];
     }
 
     /**

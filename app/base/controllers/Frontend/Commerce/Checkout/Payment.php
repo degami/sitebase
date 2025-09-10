@@ -14,7 +14,7 @@
 namespace App\Base\Controllers\Frontend\Commerce\Checkout;
 
 use App\App;
-use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Abstracts\Controllers\FormPageWithLang;
 use App\Base\Interfaces\Commerce\PaymentMethodInterface;
 use App\Base\Models\Order;
 use App\Base\Models\OrderStatus;
@@ -23,7 +23,7 @@ use App\Base\Models\UserSession;
 use Degami\PHPFormsApi as FAPI;
 use HaydenPierce\ClassFinder\ClassFinder;
 
-class Payment extends FormPage
+class Payment extends FormPageWithLang
 {
     use CommercePageTrait;
 
@@ -74,6 +74,7 @@ class Payment extends FormPage
         return $this->template_data + [
             'cart' => $this->getCart(),
             'user' => $this->getCurrentUser(),
+            'locale' => $this->getCurrentLocale(),
         ];
     }
 
@@ -167,8 +168,14 @@ class Payment extends FormPage
 
         if (!in_array($status, [OrderStatus::CANCELED, OrderStatus::NOT_PAID])) {
             $url = $this->getUrl('frontend.commerce.checkout.typ');
+            if ($this->hasLang()) {
+                $url = $this->getUrl('frontend.commerce.checkout.typ.withlang', ['lang' => $this->getCurrentLocale()]);
+            }
         } else {
             $url = $this->getUrl('frontend.commerce.checkout.ko');
+            if ($this->hasLang()) {
+                $url = $this->getUrl('frontend.commerce.checkout.ko.withlang', ['lang' => $this->getCurrentLocale()]);
+            }
         }
 
         /** @var Order $order */

@@ -2,6 +2,9 @@
 /**
  * @var $user \App\Base\Abstracts\Models\AccountModel
  * @var $cart \App\Base\Models\Cart
+ * @var $checkoutURL string
+ * @var $applyDiscountUrl string
+ * @var $discounts array
  * @var $controller \App\Base\Controllers\Frontend\Commerce\Cart
  */
 
@@ -49,7 +52,7 @@ $this->layout('frontend::layout', ['title' => 'Cart'] + get_defined_vars()) ?>
                 </div>
 
             </div>
-             <a href="<?= $this->sitebase()->getUrl('frontend.commerce.checkout.billing') ?>" class="btn btn-primary">
+             <a href="<?= $checkoutURL?>" class="btn btn-primary">
                 <?= $this->sitebase()->translate('Checkout') ?>
             </a>
 
@@ -58,7 +61,7 @@ $this->layout('frontend::layout', ['title' => 'Cart'] + get_defined_vars()) ?>
         <div class="col-md-3">
             <h5><?= $this->sitebase()->translate('Apply Discount Code') ?></h5>
 
-            <form method="get" id="applydiscount_form" action="<?= $this->sitebase()->getUrl('frontend.commerce.cart.discount', ['action_details' => base64_encode('{"from-request":true}')]) ?>">
+            <form method="get" id="applydiscount_form" action="<?= $applyDiscountUrl ?>">
                 <input type="hidden" name="action" value="apply_discount">
 
                 <div class="d-flex justify-content-between align-items-center">
@@ -71,12 +74,12 @@ $this->layout('frontend::layout', ['title' => 'Cart'] + get_defined_vars()) ?>
             <hr />
 
             <h5><?= $this->sitebase()->translate('Applied Discounts:') ?></h5>
-            <?php foreach ($cart->getDiscounts() ?? [] as $discount): ?>
+            <?php foreach ($discounts ?? [] as $discount): ?>
                 <?php /** @var \App\Base\Models\CartDiscount $discount */ ?>
                 <div class="alert alert-info d-flex">
-                    <strong class="mr-1"><?= $discount->getInitialDiscount()?->getTitle() ?></strong>
-                    <?= $this->sitebase()->translate('Amount:') ?> <?= $this->sitebase()->formatPrice($discount->getDiscountAmount(), $cart->getCurrencyCode()) ?>
-                    <a href="<?= $this->sitebase()->getUrl('frontend.commerce.cart.discount', ['action_details' => base64_encode(json_encode(['action' => 'remove_discount', 'discount_id' => $discount->getId()])) ]) ?>" class="ml-auto text-danger">
+                    <strong class="mr-1"><?= $discount['model']->getInitialDiscount()?->getTitle() ?></strong>
+                    <?= $this->sitebase()->translate('Amount:') ?> <?= $this->sitebase()->formatPrice($discount['model']->getDiscountAmount(), $cart->getCurrencyCode()) ?>
+                    <a href="<?= $discount['removeUrl'] ?>" class="ml-auto text-danger">
                         <?php $this->sitebase()->drawIcon('x-circle') ?>
                     </a>
                 </div>

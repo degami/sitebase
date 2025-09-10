@@ -14,12 +14,12 @@
 namespace App\Base\Controllers\Frontend\Commerce\Cart;
 
 use App\App;
-use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use Symfony\Component\HttpFoundation\Response;
 
-class Remove extends FrontendPage
+class Remove extends FrontendPageWithLang
 {
     use CommercePageTrait;
     
@@ -34,11 +34,14 @@ class Remove extends FrontendPage
     /**
      * return route path
      *
-     * @return string
+     * @return array
      */
-    public static function getRoutePath(): string
+    public static function getRoutePath(): array
     {
-        return '/commerce/cart/remove/{row_details}';
+        return [
+            'frontend.commerce.cart.remove' => '/commerce/cart/remove/{row_details}',
+            'frontend.commerce.cart.remove.withlang' => '/{lang:[a-z]{2}}/commerce/cart/remove/{row_details}',
+        ];
     }
 
     /**
@@ -87,6 +90,11 @@ class Remove extends FrontendPage
             $this->addSuccessFlashMessage(
                 $this->getUtils()->translate('Cart Item removed successfully.')
             );
+
+            if ($this->hasLang()) {
+                return $this->doRedirect($this->getUrl('frontend.commerce.cart.withlang', ['lang' => $this->getCurrentLocale()]));            
+            }
+
             return $this->doRedirect($this->getUrl('frontend.commerce.cart'));
         }
 
@@ -94,6 +102,11 @@ class Remove extends FrontendPage
         $this->addErrorFlashMessage(
             $this->getUtils()->translate('No row details provided.')
         );
+
+        if ($this->hasLang()) {
+            return $this->doRedirect($this->getUrl('frontend.commerce.cart.withlang', ['lang' => $this->getCurrentLocale()]));            
+        }
+
         return $this->doRedirect($this->getUrl('frontend.commerce.cart'));
     }
 }

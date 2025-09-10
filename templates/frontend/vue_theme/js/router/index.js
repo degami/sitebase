@@ -50,6 +50,7 @@ export function getComponentMap() {
     'eventslist': () => import('@/components/ListEvents.vue'),
     'links': () => import('@/components/Links.vue'),
     'search': () => import('@/components/Search.vue'),
+    'contact': () => import('@/components/ContactPage.vue'),
   };
 }
 

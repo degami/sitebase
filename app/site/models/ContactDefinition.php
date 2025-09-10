@@ -13,14 +13,8 @@
 
 namespace App\Site\Models;
 
-use App\App;
 use App\Base\Abstracts\Models\BaseModel;
-use App\Base\Abstracts\Models\FrontendModel;
-use App\Base\GraphQl\GraphQLExport;
 use DateTime;
-use Degami\Basics\Exceptions\BasicException;
-use Degami\PHPFormsApi as FAPI;
-use Exception;
 
 /**
  * Contact Field Definition Model

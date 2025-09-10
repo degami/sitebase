@@ -152,7 +152,6 @@ export default {
       this.labels.title = await this.translate('Your Site Name');
       this.labels.description = await this.translate('Your Site Description');
       this.labels.send = await this.translate('Send');
-      this.labels.send = await this.translate('Send');
       this.labels.sending = await this.translate('Sending...');
     },
     fetchLinksList(page = 0) {

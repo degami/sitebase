@@ -8,7 +8,7 @@ function theme_alterTemplateName(string $templateName, FrontendPage $controllerO
         return $templateName;
     }
 
-    if (in_array($templateName, ['homepage', 'event_detail', 'event_list', 'news_detail', 'news_list', 'page', 'taxonomy', 'links', 'search'])) {
+    if (in_array($templateName, ['homepage', 'event_detail', 'event_list', 'news_detail', 'news_list', 'page', 'taxonomy', 'links', 'search', 'contact_form'])) {
         return 'layout';
     }
 

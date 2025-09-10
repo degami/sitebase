@@ -92,7 +92,7 @@ class ContactEventListener implements EventListenerInterface
                     );
 
 
-                    return ['success' => $success, 'message' => $message];
+                    return ['success' => $success, 'message' => App::getInstance()->getUtils()->translate($message)];
                 },
             ];
         }

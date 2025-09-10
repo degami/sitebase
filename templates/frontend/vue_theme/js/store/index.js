@@ -14,6 +14,7 @@ import medias from './modules/medias';
 import links from './modules/links'
 import search from './modules/search';
 import website from './modules/website';
+import contacts from './modules/contacts';
 
 const store = createStore({
   modules: {
@@ -31,6 +32,7 @@ const store = createStore({
     links,
     medias,
     search,
+    contacts,
   },
 });
 

@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Base\Commands\ProgressManager;
 
 use App\Base\Abstracts\Commands\BaseCommand;
@@ -10,6 +21,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputArgument;
 
+/**
+ * Progress Manager Abort Process Command
+ */
 class Abort extends BaseCommand
 {
     protected function configure(): void

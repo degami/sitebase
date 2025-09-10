@@ -81,9 +81,8 @@ const mutations = {
 };
   
 const actions = {
-    async fetchLink({ commit, dispatch }, {linkId}) {
+    async fetchLink({ commit, dispatch, state }, {linkId}) {
         if (undefined !== state.links && undefined !== state.links[linkId]) {
-            console.log("got link "+linkId);
             return state.links[linkId];
         }
 

@@ -37,7 +37,12 @@ const mutations = {
 };
 
 const actions = {
-    async getWebsite({ commit, dispatch }, {siteDomain}) {
+    async getWebsite({ commit, dispatch, state }, {siteDomain}) {
+
+        if (state.website && state.website.domain === siteDomain) {
+            return state.website;
+        }
+
         const WEBSITE_VARIABLES = {"siteDomain": siteDomain};
 
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch

@@ -15,6 +15,7 @@ import links from './modules/links'
 import search from './modules/search';
 import website from './modules/website';
 import contacts from './modules/contacts';
+import contentPrefetch from './modules/contentPrefetch';
 
 const store = createStore({
   modules: {
@@ -33,6 +34,7 @@ const store = createStore({
     medias,
     search,
     contacts,
+    contentPrefetch,
   },
 });
 

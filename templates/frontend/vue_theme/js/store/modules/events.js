@@ -80,9 +80,8 @@ const mutations = {
 };
   
 const actions = {
-    async fetchEvent({ commit, dispatch }, {eventId}) {
+    async fetchEvent({ commit, dispatch, state }, {eventId}) {
         if (undefined !== state.events && undefined !== state.events[eventId]) {
-            console.log("got events "+eventId);
             return state.events[eventId];
         }
 

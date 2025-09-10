@@ -53,9 +53,8 @@ const mutations = {
 };
   
 const actions = {
-    async fetchTerm({ commit, dispatch }, {termId, maxLevels = 3}) {
+    async fetchTerm({ commit, dispatch, state }, {termId, maxLevels = 3}) {
         if (undefined !== state.terms && undefined !== state.terms[termId]) {
-            console.log("got term "+termId);
             return state.terms[termId];
         }
 

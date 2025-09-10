@@ -62,7 +62,6 @@ const mutations = {
 const actions = {
   async fetchContact({ commit, dispatch, state }, { contactId, locale }) {
     if (state.contacts[contactId]) {
-      console.log("got contact " + contactId);
       return state.contacts[contactId];
     }
 

@@ -76,9 +76,8 @@ const mutations = {
 };
   
 const actions = {
-    async fetchNews({ commit, dispatch }, {newsId}) {
+    async fetchNews({ commit, dispatch, state }, {newsId}) {
         if (undefined !== state.news && undefined !== state.news[newsId]) {
-            console.log("got news "+newsId);
             return state.news[newsId];
         }
 

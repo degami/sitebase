@@ -35,6 +35,10 @@ const mutations = {
 
 const actions = {
     async fetchConfiguration({ commit, dispatch }) {
+        if (this.state.configration?.length) {
+            return;
+        }
+
         commit('setLoading', true);  // Imposta loading a true quando inizia il fetch
 
         try {

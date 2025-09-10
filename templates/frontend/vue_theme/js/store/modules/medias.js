@@ -74,9 +74,8 @@ const mutations = {
 };
   
 const actions = {
-    async fetchMedia({ commit, dispatch }, {mediaId}) {
+    async fetchMedia({ commit, dispatch, state }, {mediaId}) {
         if (undefined !== state.mediaelements && undefined !== state.mediaelements[mediaId]) {
-            console.log("got media "+mediaId);
             return state.mediaelements[mediaId];
         }
 

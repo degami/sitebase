@@ -27,6 +27,8 @@ const app = createApp({
 app.use(store);
 app.use(router); 
 
+store.dispatch("contentPrefetch/prefetchAll");
+
 try {
   app.mount('#app');
 } catch (e) {

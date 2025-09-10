@@ -48,8 +48,8 @@ query Pages ($input: SearchCriteriaInput) {
             url
             meta_title
             gallery {
-                getImageUrl
-                getThumbUrl__300x200
+                image_url
+                thumb_url__300x200
                 lazyload
                 mimetype
                 filesize
@@ -92,10 +92,9 @@ const mutations = {
 };
   
 const actions = {
-    async fetchPage({ commit, dispatch }, {pageId}) {
+    async fetchPage({ commit, dispatch, state }, {pageId}) {
         if (undefined !== state.pages && undefined !== state.pages[pageId]) {
-            console.log("got page "+pageId);
-            return;
+            return state.pages[pageId];
         }
 
         const PAGE_VARIABLES = {"pageId": ""+pageId};

@@ -2,7 +2,7 @@
     <div v-if="pageregionsLoading">
       <Loader :text="loadingText" />
     </div>
-    <div v-else v-html="pageRegion"></div>
+    <div v-else class="pageregion-content" :class="region" ref="content" v-html="pageRegion"></div>
 </template>
   
 <script>
@@ -37,6 +37,7 @@
         pageregionsLoading: false,
         loadingText: '',
         pageRegion: null,
+        _onDelegatedClick: null, // riferimento al listener per rimozione
       };
     },
     async created() {
@@ -44,7 +45,107 @@
       this.loadPageRegion();
     },
     mounted() {
+      // ATTENZIONE: agganciamo il listener al root del componente (this.$el)
+      this._onDelegatedClick = async (e) => {
+        // ignora se l'evento è già stato gestito
+        if (e.defaultPrevented) return;
+
+        // supporto per middle/modified clicks: lascia il comportamento di default
+        if (e.button && e.button !== 0) return;
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+
+        const a = e.target.closest && e.target.closest('a[href]');
+        if (!a) return;
+
+        let href = a.getAttribute('href');
+        if (!href) return;
+
+        // rispetta target (es. _blank)
+        const target = a.getAttribute('target');
+        if (target && target !== '_self') return;
+
+        // normalizza il path (gestisce anche link relativi)
+        let normalized;
+
+        try {
+          const currentUrlObj = new URL(window.location.href, window.location.origin);
+          const linkUrlObj = new URL(href);
+
+          if (currentUrlObj.origin == linkUrlObj.origin) {
+            href = linkUrlObj.pathname + linkUrlObj.search;
+          }
+        } catch (err) {
+          // fallback semplice
+          normalized = href.split('?')[0];
+        }
+
+        // escludi link esterni, mailto, tel, ancore
+        if (href.startsWith('http') || href.startsWith('mailto:') || href.startsWith('tel:') || href.startsWith('#')) {
+          return;
+        }
+
+        try {
+          const urlObj = new URL(href, window.location.origin);
+          normalized = urlObj.pathname + urlObj.search;
+        } catch (err) {
+          // fallback semplice
+          normalized = href.split('?')[0];
+        }
+
+        // vogliamo gestire solo path che iniziano con '/'
+        if (!normalized.startsWith('/')) return;
+
+        // ottieni websiteId (fallback a configuration se non presente)
+        let websiteId = this.$store.getters['appState/website_id'];
+        if (!websiteId) {
+          // chiama configuration/getWebsiteId; qui usiamo direttamente this.$store
+          try {
+            websiteId = await this.$store.dispatch('configuration/getWebsiteId', { siteDomain: window.location.hostname });
+          } catch (err) {
+            // ignore — se non otteniamo websiteId procediamo a non intercettare
+          }
+        }
+
+        // usa lo store per verificare la rewrite
+        try {
+          if (normalized == '/') {
+            e.preventDefault();
+            this.$router.push({ path: '/' }).catch(() => {});
+            return;
+          }
+
+          const rewrite = await this.$store.dispatch('rewrites/findRewriteByUrl', { url: normalized, websiteId });
+          if (rewrite) {
+            e.preventDefault();
+
+            // opzionale: aggiorna appState / apollo locale se vuoi
+            if (rewrite.locale) {
+              this.$store.dispatch('appState/updateLocale', rewrite.locale);
+              this.$store.dispatch('apolloClient/updateLocale', rewrite.locale);
+            }
+            if (rewrite.website && rewrite.website.id) {
+              this.$store.dispatch('appState/updateWebsiteId', rewrite.website.id);
+            }
+
+            // naviga con router (path normalizzato)
+            this.$router.push({ path: normalized }).catch(() => {});
+            return;
+          }
+        } catch (err) {
+          // se la ricerca della rewrite fallisce, non bloccare il link
+          // (opzionalmente log)
+          // console.error('rewrite check failed', err);
+        }
+      };
     },
+
+    beforeUnmount() {
+      if (this._onDelegatedClick && this.$refs.content) {
+        this.$refs.wrapper.removeEventListener("click", this._onDelegatedClick);
+        this._onDelegatedClick = null;
+      }
+    },
+
     computed: {
     },
     watch: {
@@ -73,6 +174,12 @@
           this.pageRegion = await this.$store.dispatch('pageregions/getPageregion', {
             param: key,
             region: this.region
+          });
+
+          this.$nextTick(() => {
+              if (this.$refs.content) {
+                this.$refs.content.addEventListener("click", this._onDelegatedClick, { passive: false });
+              }
           });
 
           if (this.pageRegion && this.pageRegion.includes('cycle-slideshow')) {
@@ -125,7 +232,7 @@
       },
       async translate(text, ...parameters) {
         return this.$store.dispatch('appState/translate', {text, parameters});
-      }
+      },
     }
   };
 </script>

@@ -34,8 +34,8 @@ const mutations = {
 };
 
 const actions = {
-    async fetchConfiguration({ commit, dispatch }) {
-        if (this.state.configration?.length) {
+    async fetchConfiguration({ state, commit, dispatch }) {
+        if (state.configuration?.length) {
             return;
         }
 
@@ -98,8 +98,14 @@ const actions = {
     
         return null;
     },
-    async getWebsiteId({ state, dispatch }, {siteDomain, locale = null}) {
+    async getWebsiteId({ state, getters, rootState, rootGetters, commit, dispatch }, {siteDomain, locale = null}) {
         const website = await dispatch('getWebsite', {siteDomain, locale});
+
+        if (!rootGetters['appState/website_id'] && website?.id) {
+            // if appstate website_id is not set, set it now
+            await dispatch('appState/updateWebsiteId', website.id, { root: true });
+        }
+
         if (website) {
             return website.id;
         }

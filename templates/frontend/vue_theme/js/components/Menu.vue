@@ -1,17 +1,17 @@
 <template>
-  <p v-if="error">Something went wrong...</p>
-  <p v-if="menuLoading">
-    <Loader text="Loading Menu..." />
-  </p>
-
-  <nav v-else class="navbar navbar-expand-lg navbar-light">
+  <nav class="navbar navbar-expand-lg navbar-light">
     <router-link v-if="logoOnMenu == '1'" to="/" class="navbar-brand">
       <img :src="assetsDomain + '/sitebase_logo.png'" />
     </router-link>
     <button class="navbar-toggler" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigatopm">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div id="navbarSupportedContent" class="collapse navbar-collapse">
+    <p v-if="error">Something went wrong...</p>
+
+    <p v-if="menuLoading">
+      <Loader text="Loading Menu..." />
+    </p>
+    <div v-else id="navbarSupportedContent" class="collapse navbar-collapse">
     <ul class="navbar-nav mr-auto">
       <li class="nav-item" v-for="treeItem in menuTree" :key="treeItem.id">
         <a v-if="treeItem.children.length" :id="'navbarDropdown-' + treeItem.id" class="nav-link dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" :href="treeItem.href" v-html="treeItem.title"></a>

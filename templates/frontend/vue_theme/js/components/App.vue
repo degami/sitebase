@@ -1,4 +1,6 @@
 <template>
+  <FullscreenLoader v-if="prefetchLoading" text="Loading your experience..." logo-src="/sitebase_logo.png"  />
+  <div v-else>
   <PageRegion region="after_body_open" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
 
   <div class="menu">
@@ -24,15 +26,19 @@
   </div>
 
   <PageRegion region="before_body_close" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
+  </div>
 </template>
 
 <script>
+import { mapState } from 'vuex';
 import Menu from './Menu.vue';
 import PageRegion from './PageRegion.vue';
 import Loader from '../utils/Loader.vue';
+import FullscreenLoader from '../utils/FullscreenLoader.vue';
 
 export default {
   components: {
+    FullscreenLoader,
     Loader,
     Menu,
     PageRegion,
@@ -57,15 +63,23 @@ export default {
     },
     primary_menu() {
       return this.$store.getters['appState/primary_menu'];
-    }
+    },
+    ...mapState('contentPrefetch', {
+      prefetchLoading: 'loading', // loading per prefetch
+    })
   },
   async mounted() {
     const website = await this.getWebsite();
     let locale = this.$route.params.locale || this.currentRewrite?.locale || this.$store.getters['appState/locale'] || website.default_locale;
     this.$store.dispatch('appState/updateLocale', locale, { root: true });
-    this.$store.dispatch('appState/updateWebsiteId', website.id, { root: true });
-    this.$store.dispatch('appState/fetchTranslations', { root: true });
-    this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', {websiteId: this.$store.getters['appState/website_id']}, { root: true });
+
+    this.$store.dispatch("contentPrefetch/prefetchAll");
+//    const website = await this.getWebsite();
+//    let locale = this.$route.params.locale || this.currentRewrite?.locale || this.$store.getters['appState/locale'] || website.default_locale;
+//    this.$store.dispatch('appState/updateLocale', locale, { root: true });
+//    this.$store.dispatch('appState/updateWebsiteId', website.id, { root: true });
+//    this.$store.dispatch('appState/fetchTranslations', { root: true });
+//    this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', {websiteId: this.$store.getters['appState/website_id']}, { root: true });
   },
   methods: {
     async getConfigValue(path, locale = null) {

@@ -64,7 +64,7 @@ const actions = {
             });
             commit('SET_TRANSLATIONS', data.translations);
         } catch (error) {
-            console.error('Errore durante il fetch delle traduzioni:', error);
+            //console.error('Errore durante il fetch delle traduzioni:', error);
         } finally {
             commit('setLoading', false);  // Imposta loading a false quando il fetch è completato
         }
@@ -102,6 +102,11 @@ const actions = {
         return await dispatch('configuration/getConfigurationByPath', { 
           path, 
           locale, 
+          siteDomain: window.location.hostname 
+        }, { root: true });
+    },
+    async getWebsite() {
+      return await dispatch('website/getWebsite', { 
           siteDomain: window.location.hostname 
         }, { root: true });
     },

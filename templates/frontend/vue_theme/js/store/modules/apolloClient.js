@@ -29,12 +29,12 @@ const actions = {
       link: httpLink,
       cache: new InMemoryCache(),
     });
-    console.log('ApolloClient Initialized');
+    //console.log('ApolloClient Initialized');
     commit('SET_APOLLO_CLIENT', apolloClient);
   },
   updateLocale({ commit, dispatch }, locale) {
     commit('SET_LOCALE', locale);
-    console.log('ApolloClient locale set to '+locale);
+    //console.log('ApolloClient locale set to '+locale);
     // Rinnova l'istanza dell'Apollo Client ogni volta che cambia il locale
     dispatch('initializeApolloClient');
   },

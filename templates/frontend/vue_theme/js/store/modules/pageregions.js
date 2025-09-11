@@ -79,15 +79,18 @@ const actions = {
         }
 
         if (!isNaN(parseInt(param))) {
-            await dispatch('fetchPageregionsByRewrite', {rewriteId: param});
+            return await dispatch('fetchPageregionsByRewrite', {rewriteId: param});
         } else {
-            await dispatch('fetchPageregionsByRoute', {routePath: param});
+            return await dispatch('fetchPageregionsByRoute', {routePath: param});
         }        
     },
     async fetchPageregionsByRewrite({state, commit, dispatch}, {rewriteId}) {
-        console.log("fetchPageregionsByRewrite: "+rewriteId);
-
         const PAGEREGIONS_VARIABLES = {"rewriteId": parseInt(rewriteId)};
+
+        if (state.pageregions[""+rewriteId]) { 
+            // already fetched
+            return state.pageregions[""+rewriteId];
+        }
 
         commit('setLoading', { key: rewriteId, loading: true});
 
@@ -100,17 +103,22 @@ const actions = {
                 query: PAGEREGIONS_REWRITE_QUERY,
                 variables: PAGEREGIONS_VARIABLES,
             });
-            commit('setPageregions', { key: ""+rewriteId, pageregions: data.pageRegions.regions });
+            await commit('setPageregions', { key: ""+rewriteId, pageregions: data.pageRegions.regions });
+
+            return state.pageregions[""+rewriteId];
         } catch (error) {
-            console.error('Errore durante il fetch delle regioni:', error);
+            //console.error('Errore durante il fetch delle regioni:', error);
         } finally {
             commit('setLoading', { key: rewriteId, loading: false });
         }
     },
     async fetchPageregionsByRoute({state, commit, dispatch}, {routePath}) {
-        console.log("fetchPageregionsByRoute: "+routePath);
-
         const PAGEREGIONS_VARIABLES = {"routePath": routePath};
+
+        if (state.pageregions[""+routePath]) { 
+            // already fetched
+            return state.pageregions[""+routePath];
+        }
 
         commit('setLoading', { key: routePath, loading: true});
 
@@ -123,9 +131,11 @@ const actions = {
                 query: PAGEREGIONS_ROUTE_QUERY,
                 variables: PAGEREGIONS_VARIABLES,
             });
-            commit('setPageregions', { key: routePath, pageregions: data.pageRegions.regions });
+            await commit('setPageregions', { key: routePath, pageregions: data.pageRegions.regions });
+
+            return state.pageregions[""+routePath];
         } catch (error) {
-            console.error('Errore durante il fetch delle regioni:', error);
+            //console.error('Errore durante il fetch delle regioni:', error);
         } finally {
             commit('setLoading', { key: routePath, loading: false });
         }
@@ -134,8 +144,10 @@ const actions = {
         if (!param) {
             return null;
         }
+
         if (!state.pageregions[""+param]) {
-            await dispatch('fetchPageregions', { param: param });
+            const pageRegions = await dispatch('fetchPageregions', { param: param });
+            return pageRegions ? pageRegions[region] || null : null;
         }
 
         return state.pageregions[""+param][region] || null;

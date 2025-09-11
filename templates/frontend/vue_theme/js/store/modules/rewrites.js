@@ -22,7 +22,7 @@ query Rewrites ($websiteId: String!) {
 `
 
 const state = () => ({
-    rewrites: {},
+    rewrites: [],
     loading: false,  // Aggiungi la proprietà loading
 });
   
@@ -52,6 +52,8 @@ const actions = {
                 variables: REWRITES_VARIABLES,
             });
             commit('setRewrites', data.rewrites.items);
+
+            return data.rewrites.items;
         } catch (error) {
             console.error('Errore durante il fetch delle rewrites:', error);
         } finally {
@@ -113,10 +115,15 @@ const actions = {
         return null;
     },
 };
+
+const getters = {
+    rewrites: (state) => state.rewrites,
+};
   
 export default {
     namespaced: true,
     state,
     mutations,
     actions,
+    getters,
 };

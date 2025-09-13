@@ -40,6 +40,11 @@ const mutations = {
 const actions = {
     async doSearch({ commit, dispatch }, {searchString, locale, page = 0}) {
 
+        if (!searchString || searchString.trim() === '') {
+            commit('flushResults');
+            return [];
+        }
+
         const SEARCH_VARIABLES = {
             "input": searchString, 
             "locale": locale,

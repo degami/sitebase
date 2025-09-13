@@ -38,6 +38,7 @@
         loadingText: '',
         pageRegion: null,
         _onDelegatedClick: null, // riferimento al listener per rimozione
+        _onDelegatedSubmit: null, // riferimento al listener per rimozione
       };
     },
     async created() {
@@ -137,12 +138,61 @@
           // console.error('rewrite check failed', err);
         }
       };
+
+      this._onDelegatedSubmit = async (e) => {
+        const form = e.target.closest('form');
+        if (!form) return;
+
+        let action = form.getAttribute('action');
+        const method = (form.getAttribute('method') || 'GET').toUpperCase();
+
+        // Considera solo form GET e interne
+        if (method !== 'GET') return;
+
+        try {
+          const currentUrlObj = new URL(window.location.href, window.location.origin);
+          const actionUrlObj = new URL(action);
+
+          if (currentUrlObj.origin == actionUrlObj.origin) {
+            action = actionUrlObj.pathname + actionUrlObj.search;
+          }
+        } catch (err) {
+          // fallback semplice
+          action = action.split('?')[0];
+        }
+
+        if (!action.startsWith(window.location.origin) && !action.startsWith('/')) return;
+
+        e.preventDefault(); // <-- blocca submit nativo
+
+        const formData = new FormData(form);
+        const query = {};
+        for (const [key, value] of formData.entries()) {
+          query[key] = value;
+        }
+
+        // Normalizza l'URL target
+        let normalized;
+        try {
+          const urlObj = new URL(action, window.location.origin);
+          normalized = urlObj.pathname;
+        } catch (err) {
+          normalized = action;
+        }
+
+        // Usa Vue Router per navigare
+        this.$router.push({ path: normalized, query }).catch(() => {});
+      };
     },
 
     beforeUnmount() {
       if (this._onDelegatedClick && this.$refs.content) {
-        this.$refs.wrapper.removeEventListener("click", this._onDelegatedClick);
+        this.$refs.content.removeEventListener("click", this._onDelegatedClick);
         this._onDelegatedClick = null;
+      }
+      if (this._onDelegatedSubmit && this.$refs.content) {
+        this.$refs.content.removeEventListener("click", this._onDelegatedSubmit);
+        this._onDelegatedSubmit = null;
       }
     },
 
@@ -220,6 +270,12 @@
                   $('.cookie-notice').fadeIn();
                   $('body').addClass('cookie-notice-visible');
               }
+            });
+          }
+
+          if (this.pageRegion && this.pageRegion.includes('form')) {
+            this.$nextTick(() => {
+              this.$refs.content.addEventListener("submit", this._onDelegatedSubmit, { passive: false });
             });
           }
         } catch (error) {

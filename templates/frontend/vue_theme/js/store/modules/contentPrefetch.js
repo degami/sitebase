@@ -25,7 +25,6 @@ const actions = {
         }, { root: true });
         const website_id = rootGetters["appState/website_id"] || defaultWebsiteId;
 
-        // richiami entrambi i moduli in parallelo
         await Promise.all([
             dispatch('appState/fetchTranslations', { root: true }),
             dispatch("pages/fetchAllPages", { filters: null }, { root: true }),
@@ -39,22 +38,11 @@ const actions = {
           // sort by current rewrite first, then by current locale, then others
           const currentPath = '/' + window.location.pathname.replace(/^\/+|\/+$/g, ''); // rimuovi gli slash iniziali e finali
           const locale = rootGetters['appState/locale'] || 'en';
-          rewrites.sort((a, b) => {
-              if (a.url === currentPath) return -1;
-              if (b.url === currentPath) return 1;
-              if (a.locale === locale && b.locale !== locale) return -1;
-              if (b.locale === locale && a.locale !== locale) return 1;
-              return 0;
-          });
-          if (rewrites.length > 0) {
-              await dispatch("pageregions/fetchPageregions", { param: rewrites[0].id }, { root: true });
 
-              window.setTimeout(() => {
-                rewrites.slice(1).forEach(rewrite => {
-                    dispatch("pageregions/fetchPageregions", { param: rewrite.id }, { root: true });
-                });
-              }, 1000);
-          }
+          //filter out rewrites that do not match the current locale
+          rewrites = rewrites.filter(rw => !rw.locale || rw.locale === locale);
+
+          await dispatch("prefetchPageregions", { rewrites, locale, currentPath });
         }
 
         commit("setInitialized", true);
@@ -64,7 +52,32 @@ const actions = {
     } finally {
       commit("setLoading", false);
     }
+  },
+
+  async prefetchPageregions({ commit, dispatch, state }, { rewrites, locale = null, currentPath = null }) {
+    // reorder rewrites: first the one matching currentPath, then those matching locale, then the rest
+    rewrites.sort((a, b) => {
+        if (currentPath) {
+          if (a.url === currentPath) return -1;
+          if (b.url === currentPath) return 1;
+        }
+        if (a.locale === locale && b.locale !== locale) return -1;
+        if (b.locale === locale && a.locale !== locale) return 1;
+        return 0;
+    });
+
+    // fetch pageregions for the first rewrite immediately, then stagger the rest
+    if (rewrites.length > 0) {
+        await dispatch("pageregions/fetchPageregions", { param: rewrites[0].id }, { root: true });
+
+        window.setTimeout(() => {
+          rewrites.slice(1).forEach(rewrite => {
+              dispatch("pageregions/fetchPageregions", { param: rewrite.id }, { root: true });
+          });
+        }, 250);
+    }
   }
+
 };
 
 export default {

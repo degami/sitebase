@@ -121,11 +121,10 @@
 
             // opzionale: aggiorna appState / apollo locale se vuoi
             if (rewrite.locale) {
-              this.$store.dispatch('appState/updateLocale', rewrite.locale);
-              this.$store.dispatch('apolloClient/updateLocale', rewrite.locale);
+              this.$store.dispatch('appState/updateLocale', rewrite.locale, false, { root: true });
             }
             if (rewrite.website && rewrite.website.id) {
-              this.$store.dispatch('appState/updateWebsiteId', rewrite.website.id);
+              this.$store.dispatch('appState/updateWebsiteId', rewrite.website.id, { root: true });
             }
 
             // naviga con router (path normalizzato)

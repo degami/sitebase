@@ -58,9 +58,8 @@ export default {
 
       if (rewrite) {
         // Aggiorna lo stato dell'app
-        store.dispatch('appState/updateLocale', rewrite.locale);
-        store.dispatch('appState/updateWebsiteId', rewrite.website.id);
-        store.dispatch('apolloClient/updateLocale', rewrite.locale);
+        store.dispatch('appState/updateLocale', rewrite.locale, false, { root: true });
+        store.dispatch('appState/updateWebsiteId', rewrite.website.id, { root: true });
 
         // Mappa che collega le rotte interne ai componenti
         const componentMap = getComponentMap();
@@ -136,14 +135,12 @@ export default {
               "locale": locale,
             };
 
-            store.dispatch('appState/updateLocale', locale);
+            store.dispatch('appState/updateLocale', locale, false, { root: true });
 
             const defaultWebsiteId = await store.dispatch('configuration/getWebsiteId', { 
               siteDomain: window.location.hostname 
             });
-
             store.dispatch('appState/updateWebsiteId', defaultWebsiteId);
-            store.dispatch('apolloClient/updateLocale', locale);
 
             this.componentKey = `${componentType}-${this.componentProps.locale}`;
           }

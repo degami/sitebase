@@ -72,14 +72,7 @@ export default {
     const website = await this.getWebsite();
     let locale = this.$route.params.locale || this.currentRewrite?.locale || this.$store.getters['appState/locale'] || website.default_locale;
     this.$store.dispatch('appState/updateLocale', locale, { root: true });
-
     this.$store.dispatch("contentPrefetch/prefetchAll");
-//    const website = await this.getWebsite();
-//    let locale = this.$route.params.locale || this.currentRewrite?.locale || this.$store.getters['appState/locale'] || website.default_locale;
-//    this.$store.dispatch('appState/updateLocale', locale, { root: true });
-//    this.$store.dispatch('appState/updateWebsiteId', website.id, { root: true });
-//    this.$store.dispatch('appState/fetchTranslations', { root: true });
-//    this.rewrites = await this.$store.dispatch('rewrites/fetchRewrites', {websiteId: this.$store.getters['appState/website_id']}, { root: true });
   },
   methods: {
     async getConfigValue(path, locale = null) {

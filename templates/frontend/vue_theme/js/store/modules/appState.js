@@ -1,4 +1,5 @@
 import gql from 'graphql-tag';
+import router from '@/router';
 
 const TRANSLATIONS_QUERY = gql`
 query Translations {
@@ -40,12 +41,19 @@ const mutations = {
 };
 
 const actions = {
-    async updateLocale({ commit, dispatch }, locale) {
+    async updateLocale({ commit, dispatch, state, rootGetters }, locale, refreshPageregions = true) {
         commit('SET_LOCALE', locale);
         await dispatch('apolloClient/updateLocale', locale, { root: true });
 
         const menu_name = await dispatch('getConfigValue', {path: 'app/frontend/main_menu', locale});
         commit('SET_PRIMARY_MENU', menu_name);
+
+        if (refreshPageregions) {
+            const rewrites = rootGetters['rewrites/rewrites']?.filter(rw => !rw.locale || rw.locale === locale) || [];
+            if (rewrites.length) {
+                await dispatch('contentPrefetch/prefetchPageregions', { rewrites, locale }, { root: true });
+            }
+        }
     },
     updateWebsiteId({ commit }, website_id) {
         commit('SET_WEBSITE_ID', website_id);
@@ -105,7 +113,7 @@ const actions = {
           siteDomain: window.location.hostname 
         }, { root: true });
     },
-    async getWebsite() {
+    async getWebsite({dispatch}) {
       return await dispatch('website/getWebsite', { 
           siteDomain: window.location.hostname 
         }, { root: true });

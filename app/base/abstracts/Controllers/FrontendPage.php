@@ -362,12 +362,22 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     public function getTranslations(): array
     {
-        return array_map(
+        $out = array_map(
             function ($el) {
                 return $el->url;
             },
             $this->getRewrite()?->getTranslations() ?? []
         );
+
+        if (empty($out) && $this instanceof FrontendPageWithLang || $this instanceof FormPageWithLang) {
+            foreach ($this->getSiteData()->getSiteLocales() as $locale) {
+                if ($locale != $this->getCurrentLocale()) {
+                    $out[$locale] = $this->getUrl(str_replace('.withlang', '', $this->getRouteInfo()->getRouteName()).'.withlang', ['lang' => $locale] + $this->getRouteInfo()->getVars());
+                }
+            }
+        }
+
+        return $out;
     }
 
 

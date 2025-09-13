@@ -1,6 +1,6 @@
 <template>
   <h1 class="page-title" v-html="title"></h1>
-  <form v-if="!currentQuery" action="" method="get">
+  <form v-if="!currentQuery" action="" method="get" @submit.prevent="onSearch">
         <div class="form-group">
         <div class="searchbar input-group">
             <input type="text" name="q" value="" class="form-control" />
@@ -89,6 +89,12 @@
       }
     },
     methods: {
+      onSearch(e) {
+        this.$router.push({
+          path: this.$route.path,
+          query: { q: e.target.q.value }
+        }).catch(() => {});
+      },
       async translate(text) {
         return this.$store.dispatch('appState/translate', {text});
       },

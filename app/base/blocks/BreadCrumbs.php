@@ -24,7 +24,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\Menu;
-use App\Base\Traits\AdminTrait;
 use App\Base\Models\Rewrite;
 use Degami\Basics\Html\TagElement;
 use App\Base\Routing\RouteInfo;
@@ -72,7 +71,11 @@ class BreadCrumbs extends BaseCodeBlock
         }
 
         $menu_item = Menu::getCollection()->where(['rewrite_id' => $route_info?->getRewrite()])->getFirst();
-        $home_url = $this->getWebRouter()->getUrl('frontend.root');
+        if ($this->getAppRouteInfo()->getVar('lang') || preg_match('/\.withlang$/', $this->getAppRouteInfo()->getRouteName()) || preg_match('/^\/[a-zA-Z]{2}\//', $this->getAppRouteInfo()->getUri())) {
+            $home_url = $this->getWebRouter()->getUrl('frontend.root.withlang', ['lang' => $locale]);
+        } else {
+            $home_url = $this->getWebRouter()->getUrl('frontend.root');
+        }
 
         /** @var TagElement $breadcrumbs_links */
         $breadcrumbs_links = $this->containerMake(TagElement::class, ['options' => [
@@ -257,6 +260,19 @@ class BreadCrumbs extends BaseCodeBlock
                             'title' => $menu_item->getTitle(),
                         ],
                         'text' => $menu_item->getTitle(),
+                    ]]
+                );
+            } else if ($current_page->getRewrite()) {
+                $atag = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'a',
+                        'attributes' => [
+                            'class' => 'breadcrumb-link',
+                            'href' => $current_page->getRewrite()->getUrl(),
+                            'title' => $current_page->getRouteName(),
+                        ],
+                        'text' => $current_page->getRouteName(),
                     ]]
                 );
             } else {

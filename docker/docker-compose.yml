@@ -37,6 +37,7 @@ services:
       - ./database/data.sql:/docker-entrypoint-initdb.d/data.sql
       - ./database/docker.cnf:/etc/mysql/conf.d/docker.cnf:ro
       - ./data/database/mysql:/var/lib/mysql
+      - ./dumps:/var/dumps
       - ..:/var/www/html
     networks:
       sitebasenet:

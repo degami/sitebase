@@ -125,6 +125,10 @@ export default {
     },
     // Metodo per verificare se una rotta esiste nel router
     isRouteValid(route) {
+      if (!route || route === '#') {
+        return false;
+      }
+
       const componentMap = getComponentMap();
       let componentType = route.split('/')[1];
       if (route.split('/').length === 2 && componentMap[componentType + 'list']) {

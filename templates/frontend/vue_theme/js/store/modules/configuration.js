@@ -62,7 +62,6 @@ const actions = {
             locale = null;
         }
         if (!state.configuration.length) {
-            console.log('getting configuration');
             await dispatch('fetchConfiguration');
         }
 

@@ -36,9 +36,7 @@
       };
     },
     async created() {
-      const website = await this.$store.dispatch('configuration/getWebsite', { 
-          siteDomain: window.location.hostname,
-      });
+      const website = await this.$store.dispatch('appState/getWebsite');
 
       let locale = null;
       this.redirectsToLocale = await this.getConfigValue('app/frontend/homepage_redirects_to_language');

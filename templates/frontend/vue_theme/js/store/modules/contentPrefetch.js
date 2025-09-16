@@ -20,10 +20,8 @@ const actions = {
 
     commit("setLoading", true);
     try {
-        const defaultWebsiteId = await dispatch('configuration/getWebsiteId', { 
-            siteDomain: window.location.hostname 
-        }, { root: true });
-        const website_id = rootGetters["appState/website_id"] || defaultWebsiteId;
+        const website = await dispatch('appState/getWebsite', null, { root: true });
+        const website_id = website?.id;
 
         await Promise.all([
             dispatch('appState/fetchTranslations', { root: true }),
@@ -32,6 +30,14 @@ const actions = {
         ]);
 
         let rewrites = await dispatch('rewrites/fetchRewrites', { websiteId : website_id }, { root: true });
+
+        // we can only prefetch current route pageregions, as setting appState locale will trigger a full prefetch
+        const currentRewrite = rewrites.find(rw => rw.url === '/' + window.location.pathname.replace(/^\/+|\/+$/g, ''));
+        if (currentRewrite) {
+          await dispatch("pageregions/fetchPageregions", { param: currentRewrite.id }, { root: true });
+        }
+
+        /*
         if (rewrites) {
           rewrites = [...rewrites];
 
@@ -40,10 +46,11 @@ const actions = {
           const locale = rootGetters['appState/locale'] || 'en';
 
           //filter out rewrites that do not match the current locale
-          rewrites = rewrites.filter(rw => !rw.locale || rw.locale === locale);
+          rewrites = rewrites.filter(rw => (!rw.locale || rw.locale === locale) && rw.route.match(/^\/(page|taxonomy)(\/.*)?$/));
 
           await dispatch("prefetchPageregions", { rewrites, locale, currentPath });
         }
+        */
 
         commit("setInitialized", true);
         console.log("Prefetch completato!");

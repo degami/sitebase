@@ -95,6 +95,12 @@ export default {
   },
   methods: {
     async getConfigValue(path, locale = null) {
+
+        if (!this.websiteId) {
+          const website = await this.$store.dispatch('appState/getWebsite');
+          this.websiteId = website.id;
+        }
+
         return await this.$store.dispatch('configuration/getConfigurationByPath', { 
           path, 
           locale, 

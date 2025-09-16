@@ -69,7 +69,7 @@ export default {
     })
   },
   async mounted() {
-    const website = await this.getWebsite();
+    const website = await this.$store.dispatch('appState/getWebsite');
     let locale = this.$route.params.locale || this.currentRewrite?.locale || this.$store.getters['appState/locale'] || website.default_locale;
     this.$store.dispatch('appState/updateLocale', locale, { root: true });
     this.$store.dispatch("contentPrefetch/prefetchAll");
@@ -79,11 +79,6 @@ export default {
         return await this.$store.dispatch('configuration/getConfigurationByPath', { 
           path, 
           locale, 
-          siteDomain: window.location.hostname 
-        }, { root: true });
-    },
-    async getWebsite() {
-      return await this.$store.dispatch('website/getWebsite', { 
           siteDomain: window.location.hostname 
         }, { root: true });
     },
@@ -111,8 +106,7 @@ export default {
     },
     async handleViewData(data) {
       if (null == this.$store.getters['appState/website_id']) {
-        const website = await this.getWebsite();
-        this.$store.dispatch('appState/updateWebsiteId', website.id, { root: true });
+        const website = await dispatch('appState/getWebsite');
       }
 
       if (data.rewrite_id) {

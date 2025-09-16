@@ -96,16 +96,7 @@
         // vogliamo gestire solo path che iniziano con '/'
         if (!normalized.startsWith('/')) return;
 
-        // ottieni websiteId (fallback a configuration se non presente)
-        let websiteId = this.$store.getters['appState/website_id'];
-        if (!websiteId) {
-          // chiama configuration/getWebsiteId; qui usiamo direttamente this.$store
-          try {
-            websiteId = await this.$store.dispatch('configuration/getWebsiteId', { siteDomain: window.location.hostname });
-          } catch (err) {
-            // ignore — se non otteniamo websiteId procediamo a non intercettare
-          }
-        }
+        const websiteId = this.$store.getters['appState/website_id'] || (await this.$store.dispatch('appState/getWebsite'))?.id;
 
         // usa lo store per verificare la rewrite
         try {

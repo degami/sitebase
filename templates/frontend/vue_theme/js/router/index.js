@@ -17,9 +17,7 @@ const router = createRouter({
 });
 
 // Ottenere l'ID del sito web al caricamento del router
-const defaultWebsiteId = await store.dispatch('configuration/getWebsiteId', { 
-  siteDomain: window.location.hostname 
-});
+const defaultWebsiteId = store.getters['appState/website_id'] || (await store.dispatch('appState/getWebsite'))?.id;
 
 router.beforeEach(async (to, from, next) => {
   const appInstance = router.app;

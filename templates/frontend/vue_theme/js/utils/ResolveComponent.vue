@@ -35,20 +35,9 @@ export default {
     next();
   },
   methods: {
-    async getWebsite() {
-      return await this.$store.dispatch('website/getWebsite', { 
-          siteDomain: window.location.hostname 
-        }, { root: true });
-    },
     async resolveRoute(route) {
       const store = this.$store;
-
-
-      let websiteId = store.getters['appState/website_id'];
-      if (null === websiteId) {
-        const website = await this.getWebsite();
-        websiteId = website.id;
-      }
+      const websiteId = store.getters['appState/website_id'] || (await store.dispatch('appState/getWebsite'))?.id;
 
       // Recupera la riscrittura dalla store Vuex
       const rewrite = await store.dispatch('rewrites/findRewriteByUrl', {
@@ -137,9 +126,7 @@ export default {
 
             store.dispatch('appState/updateLocale', locale, false, { root: true });
 
-            const defaultWebsiteId = await store.dispatch('configuration/getWebsiteId', { 
-              siteDomain: window.location.hostname 
-            });
+            const defaultWebsiteId = store.getters['appState/website_id'] || (await store.dispatch('appState/getWebsite'))?.id;
             store.dispatch('appState/updateWebsiteId', defaultWebsiteId);
 
             this.componentKey = `${componentType}-${this.componentProps.locale}`;

@@ -114,9 +114,10 @@ const actions = {
         }, { root: true });
     },
     async getWebsite({dispatch}) {
-      return await dispatch('website/getWebsite', { 
-          siteDomain: window.location.hostname 
-        }, { root: true });
+        const website = await dispatch('website/getWebsite', { siteDomain: window.location.hostname }, { root: true });
+        dispatch('updateWebsiteId', website.id, { root: true });
+
+        return website;
     },
 };
 

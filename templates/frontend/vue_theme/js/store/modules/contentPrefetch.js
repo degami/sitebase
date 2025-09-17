@@ -53,9 +53,9 @@ const actions = {
         */
 
         commit("setInitialized", true);
-        console.log("Prefetch completato!");
+        console.log("Prefetch completed!");
     } catch (err) {
-      console.error("Errore nel prefetch:", err);
+      console.error("Errors on prefetch:", err);
     } finally {
       commit("setLoading", false);
     }

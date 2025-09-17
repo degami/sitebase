@@ -5,7 +5,7 @@
 
   <div class="menu">
     <PageRegion region="pre_menu" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
-    <Menu v-if="primary_menu && website_id" :menuName="primary_menu" :websiteId="website_id" @data-sent="handleMenuData"></Menu>
+    <Menu v-if="primary_menu && websiteId" :menuName="primary_menu" :websiteId="websiteId" @data-sent="handleMenuData"></Menu>
     <PageRegion region="post_menu" :rewriteId="currentRewrite?.id" :routePath="currentPath" />
   </div>
 
@@ -50,29 +50,27 @@ export default {
       primary_menu: null,
       currentRewrite: null,
       currentPath: null,
+      websiteId: null,
     };
   },
   async created() {
   },
   computed: {
-    locale() {
-      return this.$store.getters['appState/locale'];
-    },
-    website_id() {
-      return this.$store.getters['appState/website_id'];
-    },
-    primary_menu() {
-      return this.$store.getters['appState/primary_menu'];
-    },
     ...mapState('contentPrefetch', {
       prefetchLoading: 'loading', // loading per prefetch
     })
   },
   async mounted() {
     const website = await this.$store.dispatch('appState/getWebsite');
+    this.websiteId = website.id;
     let locale = this.$route.params.locale || this.currentRewrite?.locale || this.$store.getters['appState/locale'] || website.default_locale;
     this.$store.dispatch('appState/updateLocale', locale, { root: true });
     this.$store.dispatch("contentPrefetch/prefetchAll");
+
+    let menuName = await this.getConfigValue('app/frontend/main_menu', locale);
+    if (menuName) {
+      this.primary_menu = menuName;
+    }
   },
   methods: {
     async getConfigValue(path, locale = null) {
@@ -106,7 +104,7 @@ export default {
     },
     async handleViewData(data) {
       if (null == this.$store.getters['appState/website_id']) {
-        const website = await dispatch('appState/getWebsite');
+        const website = await this.$store.dispatch('appState/getWebsite');
       }
 
       if (data.rewrite_id) {

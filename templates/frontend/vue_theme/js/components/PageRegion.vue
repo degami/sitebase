@@ -106,7 +106,10 @@
             return;
           }
 
-          const rewrite = await this.$store.dispatch('rewrites/findRewriteByUrl', { url: normalized, websiteId });
+          let rewrite = await this.$store.dispatch('rewrites/findRewriteByUrl', { url: normalized, websiteId });
+          if (!rewrite) {
+            rewrite = await this.$store.dispatch('rewrites/findRewriteByRoute', { route: normalized, websiteId });
+          }
           if (rewrite) {
             e.preventDefault();
 

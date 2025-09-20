@@ -78,6 +78,14 @@ class Order extends BaseModel
     protected array $items = [];
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * Get the order items
      *
      * @return \App\Base\Models\OrderItem[]

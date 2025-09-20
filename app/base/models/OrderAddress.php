@@ -64,6 +64,14 @@ class OrderAddress extends BaseModel
     use WithLatLngTrait, WithOwnerTrait, WithWebsiteTrait;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * Set the order for this address
      * 
      * @param Order $order

@@ -46,6 +46,14 @@ class QueueMessage extends BaseModel implements QueueMessageInterface
     use WithWebsiteTrait;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * gets decoded message data
      *
      * @return array

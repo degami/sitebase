@@ -41,6 +41,14 @@ class MediaElementRewrite extends BaseModel
     use WithOwnerTrait;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * gets Media Element object
      *
      * @return MediaElement

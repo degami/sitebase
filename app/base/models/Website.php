@@ -48,7 +48,7 @@ class Website extends BaseModel
      */
     public function prePersist(): BaseModel
     {
-        $this->aliases = implode(",", array_filter(array_map('trim', explode(",", $this->aliases))));
+        $this->aliases = implode(",", array_filter(array_map('trim', explode(",", (string)$this->aliases))));
 
         return parent::prePersist();
     }

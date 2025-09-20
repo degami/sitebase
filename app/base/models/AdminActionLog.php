@@ -49,6 +49,14 @@ use Psr\Container\ContainerInterface;
 class AdminActionLog extends RequestLog
 {
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * fills log with request object
      *
      * @param Request $request

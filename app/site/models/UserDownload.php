@@ -49,6 +49,14 @@ class UserDownload extends BaseModel
     public const UNLIMITED_DOWNLOADS = -1;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * gets relative path
      *
      * @return string

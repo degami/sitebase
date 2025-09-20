@@ -76,6 +76,14 @@ class OrderItem extends BaseModel
     protected ?ProductInterface $product = null;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * Get the order associated with this item
      *
      * @return Order

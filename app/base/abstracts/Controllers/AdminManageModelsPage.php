@@ -29,6 +29,8 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Degami\Basics\Html\TagElement;
 use ReflectionClass;
+use App\Base\Abstracts\Controllers\BasePage;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Base for admin page that manages a Model
@@ -64,6 +66,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
         protected ?RouteInfo $route_info = null
     ) {
         parent::__construct($container, $request, $route_info);
+
         if (($this->template_data['action'] ?? 'list') == 'list') {
             $this->addPaginationSizeSelector();
             $this->addNewButton();
@@ -77,6 +80,12 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
             ];
+        }
+
+        if ($this->template_data['action'] == 'edit') {
+            if ($this->containerCall([$this->getObject(), 'canBeDuplicated'])) {
+                $this->addDuplicateButton();
+            }
         }
     }
 
@@ -248,6 +257,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * loads object by id
      *
      * @param int $id
+     * 
      * @return BaseModel|null
      */
     protected function loadObject(int $id): ?BaseModel
@@ -265,6 +275,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @return BaseModel|null
      * @throws DependencyException
      * @throws NotFoundException
+     * 
+     * @return BaseModel|null
      */
     protected function newEmptyObject(): ?BaseModel
     {
@@ -281,12 +293,33 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
+     * 
+     * @return void
      */
     public function addNewButton()
     {
         $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
     }
 
+    /**
+     * adds a "duplicate" button
+     *
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * 
+     * @return void
+     */
+    public function addDuplicateButton()
+    {
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-light');
+    }
+
+    /**
+     * adds a paginator selecton
+     * 
+     * @return void
+     */
     public function addPaginationSizeSelector()
     {
         // calculate options values, including value used for pagination
@@ -449,6 +482,30 @@ abstract class AdminManageModelsPage extends AdminFormPage
     public function getModelTableName(): mixed
     {
         return $this->containerCall([$this->getObjectClass(), 'defaultTableName']);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return Response|self
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     */
+    protected function beforeRender(): BasePage|Response
+    {
+        if ($this->getRequest()->get('action') == 'duplicate') {
+            $object = $this->getObject();
+            $copy = $object?->duplicate()->persist();
+            if ($copy) {
+                $this->addSuccessFlashMessage($this->getUtils()->translate('Object duplicated successfully', locale: $this->getCurrentLocale()));
+                return $this->doRedirect($this->getControllerUrl() . '?action=edit&' . $this->getObjectIdQueryParam() . '=' . $copy->getId());
+            } else {
+                $this->addErrorFlashMessage($this->getUtils()->translate('Error duplicating object', locale: $this->getCurrentLocale()));
+                return $this->doRedirect($this->getControllerUrl() . '?action=list');
+            }
+        }
+
+        return parent::beforeRender();
     }
 
     /**

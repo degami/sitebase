@@ -40,4 +40,12 @@ use DateTime;
 class Configuration extends BaseModel
 {
     use WithWebsiteTrait;
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
 }

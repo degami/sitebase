@@ -38,4 +38,11 @@ use DateTime;
  */
 class MailLog extends BaseModel
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
 }

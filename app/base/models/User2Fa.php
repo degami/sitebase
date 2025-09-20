@@ -40,6 +40,14 @@ class User2Fa extends BaseModel
     use WithWebsiteTrait;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * gets model table name
      *
      * @return string

@@ -39,6 +39,14 @@ class UserSession extends BaseModel
 
     /**
      * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
      *
      * @return BaseModel
      */

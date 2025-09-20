@@ -15,6 +15,7 @@ namespace App\Base\Traits;
 
 use App\App;
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Models\Rewrite;
 use Exception;
 
 /**
@@ -45,7 +46,44 @@ trait FrontendModelTrait
     {
         $rewrite = $this->getRewrite();
         $rewrite->setWebsiteId($this->getWebsiteId());
-        $rewrite->setUrl($this->getFrontendUrl());
+
+        // check if a rewrite with the same url already exists, if so, append a counter to the url until a free one is found. change the frontend_url too
+        $counter = 0;
+        $original_rewrite_url = $rewrite_url = $this->getFrontendUrl();
+        do {
+            $collection = Rewrite::getCollection()
+                ->where(['url' => $rewrite_url, 'id:not' => $rewrite->getId()]);
+
+            if ($collection->count() == 0) {
+                break;
+            }
+
+            $counter++;
+            $rewrite_url = preg_replace('/(.*)(\-[0-9]+)?(\.html)/', '$1-' . $counter . '$3', $original_rewrite_url);
+        } while ($collection->count() > 0) ;
+
+        if ($counter > 0) {
+            // cannot user persist here to vaoid loops. will do a direct db update
+
+            $columnName = null;
+            $tableInfo = App::getInstance()->getSchema()->getTable(static::defaultTableName());
+            if ($tableInfo->getColumn('url')) {
+                $columnName = 'url';
+            } else if ($tableInfo->getColumn('url_key')) {
+                $columnName = 'url_key';
+            }
+
+            if ($columnName) {
+                $newValue = preg_replace('/\.html$/', '', preg_replace('/^\/'.$this->getLocale().'\//' , '', $rewrite_url));
+                App::getInstance()->getDb()->update(
+                    $this->getTableName(),
+                    [$columnName => $newValue],
+                    ['id = ' . $this->getId()]
+                );
+            }
+        }
+
+        $rewrite->setUrl($rewrite_url);
         $rewrite->setRoute('/' . $this->getRewritePrefix() . '/' . $this->getId());
         $rewrite->setUserId($this->getUserId());
         $rewrite->setLocale($this->getLocale());

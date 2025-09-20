@@ -51,6 +51,14 @@ class ProgressManagerProcess extends BaseModel
     public const ABORT = 3;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * Starts current process
      * 
      * @return self

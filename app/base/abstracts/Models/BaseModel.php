@@ -27,7 +27,8 @@ use App\Base\Exceptions\InvalidValueException;
 use App\Base\Tools\Search\Manager as SearchManager;
 use Exception;
 use Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
-use App\Base\GraphQl\GraphQLExport;
+use RuntimeException;
+use Degami\SqlSchema\IndexColumn;
 
 /**
  * A wrapper for LessQL Row
@@ -953,12 +954,22 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
         return $changed;
     }
 
-    public static function getTableColumns()
+    /**
+     * returns table columns
+     * 
+     * @return array
+     */
+    public static function getTableColumns() : array
     {
         return array_values(array_map(fn($column) => $column->getName(), App::getInstance()->getSchema()->getTable(static::defaultTableName())?->getColumns()));
     }
 
-    protected function emitEvent($eventName)
+    /**
+     * Emits event to event manager
+     * 
+     * @return void
+     */
+    protected function emitEvent($eventName) : void
     {
         // ensure event name is lowercase
         $eventName = trim(strtolower($eventName));
@@ -966,5 +977,66 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
         // emit event post persist
         App::getInstance()->event('model_'.$eventName, ['object' => $this]);
         App::getInstance()->event(strtolower(static::getClassBasename($this)) . '_' . $eventName, ['object' => $this]);
+    }
+
+    /**
+     * Determines if model can be duplicated
+     * 
+     * @return bool
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return true;
+    }
+
+    /**
+     * Duplicate Model
+     * 
+     * @return BaseModel
+     */
+    public function duplicate() : BaseModel
+    {
+        if (!static::canBeDuplicated()) {
+            throw new RuntimeException("Model of class " . basename(str_replace("\\", "/", get_class($this))) . " can't be duplicated.");
+        }
+
+        $data = $this->getData();
+        $keyfield = static::getKeyField();
+
+        // unset key field(s)
+        if (is_array($keyfield)) {
+            foreach ($keyfield as $key) {
+                unset($data[$key]);
+            }
+        } else {
+            unset($data[$keyfield]);
+        }
+
+        // any unique constraint field should be unset too
+        $tableInfo = App::getInstance()->getSchema()->getTable(static::defaultTableName());
+        foreach ($tableInfo->getIndexes() as $index) {
+            if ($index->getType() == 'UNIQUE') {
+                foreach ($index->getColumns() as $column) {
+                    /** @var IndexColumn $column */
+                    unset($data[$column->getName()]);
+                }
+            }
+        }
+
+        if (in_array('created_at', static::getTableColumns())) {
+            unset($data['created_at']);
+        }
+        if (in_array('updated_at', static::getTableColumns())) {
+            unset($data['updated_at']);
+        }
+
+        if (isset($data['title'])) {
+            $data['title'] .= ' Copy';
+        }
+
+        // create new object with same data
+        $out = static::new($data);
+
+        return $out;
     }
 }

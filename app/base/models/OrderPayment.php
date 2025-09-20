@@ -51,6 +51,14 @@ class OrderPayment extends BaseModel
     protected ?Order $order = null;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * Get the order associated with this payment
      *
      * @return Order|null

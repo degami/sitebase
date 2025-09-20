@@ -34,4 +34,11 @@ use DateTime;
  */
 class CronLog extends BaseModel
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
 }

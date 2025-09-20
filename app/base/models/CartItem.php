@@ -204,7 +204,7 @@ class CartItem extends BaseModel
      *
      * @return CartDiscount[]|null
      */
-    protected function getDiscounts() : ?array
+    public function getDiscounts() : ?array
     {
         if (!$this->getId()) {
             return null;
@@ -213,6 +213,22 @@ class CartItem extends BaseModel
         $this->loadDiscounts();
 
         return $this->discounts;
+    }
+
+    public function setDiscounts(array $discounts) : static
+    {
+        $cartDiscounts = [];
+        foreach ($discounts as $discount) {
+            if (!($discount instanceof CartDiscount)) {
+                continue;
+            }
+
+            $cartDiscounts[] = $discount->setCartItem($this);
+        }
+
+        $this->discounts = $cartDiscounts;
+
+        return $this;
     }
 
     /**
@@ -313,5 +329,27 @@ class CartItem extends BaseModel
         }
 
         return $this->getProduct()->isPhysical();
+    }
+
+    /**
+     * Duplicate Model
+     * 
+     * @return BaseModel
+     */
+    public function duplicate() : BaseModel
+    {
+        /** @var CartItem $copy */
+        $copy = parent::duplicate();
+
+        if ($this->getDiscouts()) {
+            $discountsCopy = [];
+            foreach ($this->getDiscounts() as $discount) {
+                $discountsCopy[] = $discount->duplicate();
+            }
+
+            $copy->setDiscounts($discountsCopy);
+        }
+
+        return $copy;
     }
 }

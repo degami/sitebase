@@ -62,6 +62,14 @@ class ApplicationLog extends BaseModel
     public const LEVEL_EMERGENCY = 'emergency';
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * fills log with exception
      *
      * @param Throwable $e

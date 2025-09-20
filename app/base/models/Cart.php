@@ -86,6 +86,29 @@ class Cart extends BaseModel
     }
 
     /**
+     * Sets items
+     * 
+     * @param array $items
+     * 
+     * @return static
+     */
+    public function setItems(array $items) : static
+    {
+        $cartItems = [];
+        foreach ($items as $item) {
+            if (!($item instanceof CartItem)) {
+                continue;
+            }
+
+            $cartItems[] = $item->setCart($this);
+        }
+
+        $this->items = $cartItems;
+
+        return $this;
+    }
+
+    /**
      * Load cart items from the database if not already loaded
      *
      * @return static
@@ -362,6 +385,29 @@ class Cart extends BaseModel
 
         return $this->loadDiscounts()->discounts;
     }
+
+    /**
+     * Sets cart discounts
+     * 
+     * @param array $discounts
+     * 
+     * @return static
+     */
+    public function setDiscounts(array $discounts) : static
+    {
+        $cartDiscounts = [];
+        foreach ($discounts as $discount) {
+            if (!($discount instanceof CartDiscount)) {
+                continue;
+            }
+
+            $cartDiscounts[] = $discount->setCart($this);
+        }
+
+        $this->discounts = $cartDiscounts;
+
+        return $this;
+    }
     
     public function prePersist() : BaseModel
     {
@@ -473,5 +519,36 @@ class Cart extends BaseModel
         $this->setShippingAmount($shipping_amount);
         $this->setAdminShippingAmount(App::getInstance()->getUtils()->convertFromCurrencyToCurrency($shipping_amount, $this->getCurrencyCode(), $this->getAdminCurrencyCode()));
         return $shipping_amount;
+    }
+
+    /**
+     * Duplicate Model
+     * 
+     * @return BaseModel
+     */
+    public function duplicate() : BaseModel
+    {
+        /** @var Cart $copy */
+        $copy = parent::duplicate();
+
+
+        if ($this->getItems()) {
+            $itemsCopy = [];
+            foreach ($this->getItems() as $item) {
+                $itemsCopy[] = $item->duplicate();
+            }
+            $copy->setItems($itemsCopy);
+        }
+
+        if ($this->getDiscounts()) {
+            $discountsCopy = [];
+            foreach ($this->getDiscounts() as $discount) {
+                $discountsCopy[] = $discount->duplicate();
+            }
+
+            $copy->setDiscounts($discountsCopy);
+        }
+
+        return $copy;
     }
 }

@@ -63,6 +63,14 @@ class MediaElement extends BaseModel
     public const ORIGINAL_SIZE = 'originals';
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * gets relative path
      *
      * @return string

@@ -48,6 +48,14 @@ class RequestLog extends BaseModel
     use WithWebsiteTrait;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * fills log with request object
      *
      * @param Request $request

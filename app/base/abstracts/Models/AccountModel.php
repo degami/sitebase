@@ -20,4 +20,11 @@ use App\Base\Interfaces\Model\AccountInterface;
  */
 abstract class AccountModel extends BaseModel implements AccountInterface
 {
+    /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
 }

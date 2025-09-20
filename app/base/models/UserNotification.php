@@ -48,6 +48,14 @@ class UserNotification extends BaseModel
     use WithWebsiteTrait;
 
     /**
+     * {@inheritdoc}
+     */
+    public static function canBeDuplicated() : bool
+    {
+        return false;
+    }
+
+    /**
      * gets owner
      *
      * @return User|null

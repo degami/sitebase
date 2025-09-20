@@ -33,7 +33,56 @@ trait FrontendModelTrait
     {
         $this->checkLoaded();
 
+        if ($this->getUrl() ?? $this->getUrlKey() === null) {
+            return "";
+        }
+
         return '/' . $this->getLocale() . '/' . App::getInstance()->getUtils()->slugify($this->getUrl() ?? $this->getUrlKey(), false) . '.html';
+    }
+
+    /**
+     * pre persist hook
+     *
+     * @return self
+     * @throws Exception
+     */
+    public function prePersist(): BaseModel
+    {
+
+        $table = $this->getTableName();
+        $tableInfo = App::getInstance()->getSchema()->getTable($table);
+
+        try {
+            if ($tableInfo->getColumn('website_id') && !$this->getWebsiteId()) {
+                $this->setWebsiteId(App::getInstance()->getSiteData()->getCurrentWebsite()?->getId() ?? $this->getAppWebsite()?->getId());
+            }
+        } catch (Exception $e) {}
+
+        try {
+            if ($tableInfo->getColumn('user_id') && !$this->getUserId()) {
+                $this->setUserId(App::getInstance()->getAuth()->getCurrentUser()?->getId() ?? App::getInstance()->getSiteData()->getDefaultAdminUser()?->getId());
+            }
+        } catch (Exception $e) {}
+
+        try {
+            if ($tableInfo->getColumn('locale') && !$this->getLocale()) {
+                $this->setLocale(App::getInstance()->getDefaultLocale());
+            }
+        } catch (Exception $e) {}
+
+        try {
+            if ($tableInfo->getColumn('url') && !$this->getUrl()) {
+                $this->setUrl(App::getInstance()->getUtils()->slugify($this->getTitle() ?? strtolower($this->getModelName()) . '-' . time(), false));
+            }
+        } catch (Exception $e) {}
+
+        try {
+            if ($tableInfo->getColumn('url_key') && !$this->getUrlKey()) {
+                $this->setUrlKey(App::getInstance()->getUtils()->slugify($this->getTitle() ?? strtolower($this->getModelName()) . '-' . time(), false));
+            }
+        } catch (Exception $e) {}
+
+        return parent::prePersist();
     }
 
     /**

@@ -20,6 +20,8 @@ use App\Base\Models\Block;
 use App\Base\Models\Configuration;
 use App\Base\Models\Menu;
 use App\Base\Models\Redirect;
+use App\Base\Models\Role;
+use App\Base\Models\User;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -724,5 +726,21 @@ class SiteData extends ContainerAwareObject
         }
 
         return $links;
+    }
+
+    public function getDefaultAdminUser() : ?User
+    {
+        $adminRole = Role::getCollection()->where(['name' => 'admin'])->getFirst();
+
+        if (!$adminRole instanceof Role) {
+            return null;
+        }
+
+        $user = User::getCollection()->where(['role_id' => $adminRole->getId()])->getFirst();
+        if ($user instanceof User) {
+            return $user;
+        }
+
+        return null;
     }
 }

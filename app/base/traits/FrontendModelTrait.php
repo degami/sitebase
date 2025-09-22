@@ -33,7 +33,7 @@ trait FrontendModelTrait
     {
         $this->checkLoaded();
 
-        if ($this->getUrl() ?? $this->getUrlKey() === null) {
+        if (($this->getUrl() ?? $this->getUrlKey()) === null) {
             return "";
         }
 

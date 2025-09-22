@@ -275,7 +275,7 @@ class BaseCommand extends SymfonyCommand
         $table = new Table($this->output);
 
         if ($compressed == true) {
-            $table->getStyle()->setVerticalBorderChar(' ');
+            $table->getStyle()->setVerticalBorderChars(' ')->setHorizontalBorderChars(' ')->setCrossingChars(' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ', ' ');
         }
 
         if (!empty($header)) {
@@ -350,5 +350,12 @@ class BaseCommand extends SymfonyCommand
     protected function renderTitle(string $title)
     {
         $this->getIo()->block(implode("\n", [$title, str_repeat('=', strlen($title))]), null, 'fg=green;bg=default', '', false, true);
+    }
+
+    protected function selectElementFromList(array $list)
+    {
+        $counter = 0;
+        $this->renderTable([], array_map(function($el) use (&$counter) { return [++$counter, $el]; }, $list), true);
+        return $list[$this->keepAsking('Select one of the above: ', range(1, $counter)) - 1] ?? null;
     }
 }

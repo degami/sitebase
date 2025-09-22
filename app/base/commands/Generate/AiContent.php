@@ -123,9 +123,25 @@ class AiContent extends BaseCommand
             $aiType = reset($availableAIs);
         }
 
+        $selectModel = $this->keepAsking('Do you want to select a specific model? (y/n) ', ['y', 'n']) == 'y';
+        $model = null;
+        if ($selectModel) {
+            $models = match ($aiType) {
+                'googlegemini' => $this->getAI()->listGoogleGeminiModels(true),
+                'chatgpt' => $this->getAI()->listChatGPTModels(true),
+                'claude' => $this->getAI()->listClaudeModels(true),
+                'mistral' => $this->getAI()->listMistralModels(true),
+                default => [],
+            };
+
+            if (count($models) > 0) {
+                $model = $this->selectElementFromList($models);
+            }
+        }
+
         $subject = $this->keepAsking("write your subject:");
 
-        $promptText = $this->getUtils()->translate("Generate a json with data for a single model of type %s containing the following fields ando %s using language \"%s\" (the json structure must be a single object containing onlu the specified fields) for the subject: \\n%s" , [
+        $promptText = $this->getUtils()->translate("Generate a json with data, no comments for a single model of type %s containing the following fields ando %s using language \"%s\" (the json structure must be a single object containing onlu the specified fields) for the subject: \\n%s" , [
             $contentType,
             $fieldDefinition,
             $locale,
@@ -133,16 +149,27 @@ class AiContent extends BaseCommand
         ]);
 
         $response = match($aiType) {
-            'googlegemini' => $this->getAI()->askGoogleGemini($promptText),
-            'chatgpt' => $this->getAI()->askChatGPT($promptText),
-            'claude' => $this->getAI()->askClaude($promptText),
-            'mistral' => $this->getAI()->askMistral($promptText),
+            'googlegemini' => $this->getAI()->askGoogleGemini($promptText, $model),
+            'chatgpt' => $this->getAI()->askChatGPT($promptText, $model),
+            'claude' => $this->getAI()->askClaude($promptText, $model),
+            'mistral' => $this->getAI()->askMistral($promptText, $model),
         };
 
-        $json = preg_match('/```json(.*?)```/i', $response, $matches) ? $matches[1] : $response;
+        if (preg_match('/```json(.*?)```/is', $response, $matches)) {
+            $json = $matches[1];
+        } else {
+            $json = $response;
+        };
         $json = preg_replace('/```(json)?/i', '', $json);
         $json = trim($json);
+
         $data = json_decode($json, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            $output->writeln('<error>Invalid json response from AI: ' . json_last_error_msg() . '</error>');
+            $output->writeln('Full response: ' . $response);
+            return Command::FAILURE;
+        }
 
         $data['locale'] = $locale;
         $data['website_id'] = $this->getAppWebsite()?->getId();

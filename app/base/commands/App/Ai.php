@@ -109,6 +109,35 @@ class Ai extends BaseCommand
                     break;
             }
 
+            $selectModel = $this->keepAsking('Do you want to select a specific model? (y/n) ', ['y', 'n']) == 'y';
+            if ($selectModel) {
+                $models = match ($aiType) {
+                    'googlegemini' => $this->getAI()->listGoogleGeminiModels(true),
+                    'chatgpt' => $this->getAI()->listChatGPTModels(true),
+                    'claude' => $this->getAI()->listClaudeModels(true),
+                    'mistral' => $this->getAI()->listMistralModels(true),
+                    default => [],
+                };
+
+                if (count($models) > 0) {
+                    $model = $this->selectElementFromList($models);
+                    switch ($aiType) {
+                        case 'googlegemini':
+                            App::getInstance()->getSiteData()->setConfigValue(AIManager::GEMINI_MODEL_PATH, $model);
+                            break;
+                        case 'chatgpt':
+                            App::getInstance()->getSiteData()->setConfigValue(AIManager::CHATGPT_MODEL_PATH, $model);
+                            break;
+                        case 'claude':
+                            App::getInstance()->getSiteData()->setConfigValue(AIManager::CLAUDE_MODEL_PATH, $model);
+                            break;
+                        case 'mistral':
+                            App::getInstance()->getSiteData()->setConfigValue(AIManager::MISTRAL_MODEL_PATH, $model);
+                            break;
+                    }
+                }
+            }
+
             $this->getIo()->success('Ai support for '.$aiType.' enabled');
             return Command::SUCCESS;
         }

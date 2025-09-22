@@ -158,8 +158,12 @@ class Manager extends ContainerAwareObject
         return static::isGoogleGeminiEnabled() || static::isChatGPTEnabled() || static::isClaudeEnabled() || static::isMistralEnabled();
     }
 
-    protected function getChatGPTModel() : string
+    protected function getChatGPTModel(?string $model = null) : string
     {
+        if (!is_null($model) && in_array($model, $this->listChatGPTModels())) {
+            return $model;
+        }
+
         return $this->getSiteData()->getConfigValue(self::CHATGPT_MODEL_PATH) ?? self::CHATGPT_MODEL;
     }
 
@@ -168,7 +172,7 @@ class Manager extends ContainerAwareObject
         return $this->getSiteData()->getConfigValue(self::CHATGPT_VERSION_PATH) ?? self::CHATGPT_VERSION;
     }
 
-    public function askChatGPT(string $prompt) : string
+    public function askChatGPT(string $prompt, ?string $model = null) : string
     {
         $client = $this->getGuzzle();
         $apiKey = $this->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH);
@@ -195,7 +199,7 @@ class Manager extends ContainerAwareObject
                 'Authorization' => "Bearer ".$apiKey,
             ],
             'json' => [
-                'model' => $this->getChatGPTModel(),
+                'model' => $this->getChatGPTModel($model),
                 'messages' => $messages,
                 'max_tokens' => $maxTokens, // Adjust the max tokens as needed
             ],
@@ -212,8 +216,12 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
-    protected function getGoogleGeminiModel() : string
+    protected function getGoogleGeminiModel(?string $model = null) : string
     {
+        if (!is_null($model) && in_array($model, $this->listGoogleGeminiModels())) {
+            return $model;
+        }
+
         return $this->getSiteData()->getConfigValue(self::GEMINI_MODEL_PATH) ?? self::GEMINI_MODEL;
     }
 
@@ -222,7 +230,7 @@ class Manager extends ContainerAwareObject
         return $this->getSiteData()->getConfigValue(self::GEMINI_VERSION_PATH) ?? self::GEMINI_VERSION;
     }
     
-    public function askGoogleGemini(string $prompt) : string
+    public function askGoogleGemini(string $prompt, ?string $model = null) : string
     {
         $client = $this->getGuzzle();
         $apiKey = $this->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH);
@@ -231,7 +239,7 @@ class Manager extends ContainerAwareObject
             throw new Exception("Missing Gemini Token");
         }
 
-        $endPoint = "https://generativelanguage.googleapis.com/" . $this->getGoogleGeminiVersion() . "/models/" . $this->getGoogleGeminiModel() . ":generateContent?key={$apiKey}";
+        $endPoint = "https://generativelanguage.googleapis.com/" . $this->getGoogleGeminiVersion() . "/models/" . $this->getGoogleGeminiModel($model) . ":generateContent?key={$apiKey}";
 
         $contents = $this->getInteractions('googlegemini');
         $contents[] = [
@@ -256,8 +264,12 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
-    protected function getClaudeModel() : string
+    protected function getClaudeModel(?string $model = null) : string
     {
+        if (!is_null($model) && in_array($model, $this->listClaudeModels())) {
+            return $model;
+        }
+
         return $this->getSiteData()->getConfigValue(self::CLAUDE_MODEL_PATH) ?? self::CLAUDE_MODEL;
     }
 
@@ -266,7 +278,7 @@ class Manager extends ContainerAwareObject
         return $this->getSiteData()->getConfigValue(self::CLAUDE_VERSION_PATH) ?? self::CLAUDE_VERSION;
     }
 
-    public function askClaude(string $prompt) : string
+    public function askClaude(string $prompt, ?string $model = null) : string
     {
         $client = $this->getGuzzle();
         $apiKey = $this->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH);
@@ -295,7 +307,7 @@ class Manager extends ContainerAwareObject
                 'anthropic-version: 2023-06-01'
             ],
             'json' => [
-                'model' => $this->getClaudeModel(),
+                'model' => $this->getClaudeModel($model),
                 'max_tokens' => $maxTokens,
                 'messages' => $messages,
             ],
@@ -312,8 +324,12 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
-    protected function getMistralModel() : string
+    protected function getMistralModel(?string $model = null) : string
     {
+        if (!is_null($model) && in_array($model, $this->listMistralModels())) {
+            return $model;
+        }
+
         return $this->getSiteData()->getConfigValue(self::MISTRAL_MODEL_PATH) ?? self::MISTRAL_MODEL;
     }
 
@@ -322,7 +338,7 @@ class Manager extends ContainerAwareObject
         return $this->getSiteData()->getConfigValue(self::MISTRAL_VERSION_PATH) ?? self::MISTRAL_VERSION;
     }
 
-    public function askMistral(string $prompt) : string
+    public function askMistral(string $prompt, ?string $model = null) : string
     {
         $client = $this->getGuzzle();
         $apiKey = $this->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH);
@@ -350,7 +366,7 @@ class Manager extends ContainerAwareObject
                 'Authorization' => 'Bearer ' . $apiKey,
             ],
             'json' => [
-                'model' => $this->getMistralModel(),
+                'model' => $this->getMistralModel($model),
                 'max_tokens' => $maxTokens,
                 "temperature" => 0.7,
                 'messages' => $messages,
@@ -493,6 +509,145 @@ class Manager extends ContainerAwareObject
         ));
 
         return $roleLine . "\n" . $alignedText;
+    }
+
+    /**
+     * Lista modelli ChatGPT (OpenAI)
+     */
+    public function listChatGPTModels(bool $reset = false): array
+    {
+        $models_key = "ai.chatgpt.models_list";
+        if (!$this->getCache()->has($models_key) || $reset) {
+
+            $client = $this->getGuzzle();
+            $apiKey = $this->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH);
+
+            if (empty($apiKey)) {
+                throw new Exception("Missing ChatGPT Token");
+            }
+
+            $endPoint = "https://api.openai.com/v1/models";
+
+            $response = $client->get($endPoint, [
+                'headers' => [
+                    'Authorization' => "Bearer " . $apiKey,
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            $models = array_column($data['data'] ?? [], 'id');
+
+            $this->getCache()->set($models_key, $models);
+        } else {
+            $models = $this->getCache()->get($models_key);
+        }
+
+        return $models;
+    }
+
+    /**
+     * Lista modelli Google Gemini
+     */
+    public function listGoogleGeminiModels(bool $reset = false): array
+    {
+        $models_key = "ai.googlegemini.models_list";
+        if (!$this->getCache()->has($models_key) || $reset) {
+
+            $client = $this->getGuzzle();
+            $apiKey = $this->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH);
+
+            if (empty($apiKey)) {
+                throw new Exception("Missing Gemini Token");
+            }
+
+            $endPoint = "https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}";
+
+            $response = $client->get($endPoint, [
+                'headers' => [
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            $models = array_map(fn ($el) => str_replace("models/","", $el), array_column($data['models'] ?? [], 'name'));
+
+            $this->getCache()->set($models_key, $models);
+        } else {
+            $models = $this->getCache()->get($models_key);
+        }
+
+        return $models;
+    }
+
+    /**
+     * Lista modelli Claude (Anthropic)
+     */
+    public function listClaudeModels(bool $reset = false): array
+    {
+        $models_key = "ai.claude.models_list";
+        if (!$this->getCache()->has($models_key) || $reset) {
+
+            $client = $this->getGuzzle();
+            $apiKey = $this->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH);
+
+            if (empty($apiKey)) {
+                throw new Exception("Missing Claude Token");
+            }
+
+            $endPoint = "https://api.anthropic.com/v1/models";
+
+            $response = $client->get($endPoint, [
+                'headers' => [
+                    'x-api-key' => $apiKey,
+                    'anthropic-version' => '2023-06-01',
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            $models = array_column($data['data'] ?? [], 'id');
+
+            $this->getCache()->set($models_key, $models);
+        } else {
+            $models = $this->getCache()->get($models_key);
+        }
+
+        return $models;
+    }
+
+    /**
+     * Lista modelli Mistral
+     */
+    public function listMistralModels(bool $reset = false): array
+    {
+        $models_key = "ai.mistral.models_list";
+        if (!$this->getCache()->has($models_key) || $reset) {
+
+            $client = $this->getGuzzle();
+            $apiKey = $this->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH);
+
+            if (empty($apiKey)) {
+                throw new Exception("Missing Mistral Token");
+            }
+
+            $endPoint = "https://api.mistral.ai/v1/models";
+
+            $response = $client->get($endPoint, [
+                'headers' => [
+                    'Authorization' => 'Bearer ' . $apiKey,
+                    'Content-Type' => 'application/json',
+                ],
+            ]);
+
+            $data = json_decode($response->getBody(), true);
+            $models = array_column($data['data'] ?? [], 'id');
+
+            $this->getCache()->set($models_key, $models);
+        } else {
+            $models = $this->getCache()->get($models_key);
+        }
+
+        return $models;
     }
 
     /** --- Helper --- */

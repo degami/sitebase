@@ -148,12 +148,7 @@ class AiContent extends BaseCommand
             $subject,
         ]);
 
-        $response = match($aiType) {
-            'googlegemini' => $this->getAI()->askGoogleGemini($promptText, $model),
-            'chatgpt' => $this->getAI()->askChatGPT($promptText, $model),
-            'claude' => $this->getAI()->askClaude($promptText, $model),
-            'mistral' => $this->getAI()->askMistral($promptText, $model),
-        };
+        $response = $this->getAi()->askAI($aiType, $promptText, $model);
 
         if (preg_match('/```json(.*?)```/is', $response, $matches)) {
             $json = $matches[1];

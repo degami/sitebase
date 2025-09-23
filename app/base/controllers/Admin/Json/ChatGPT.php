@@ -14,7 +14,7 @@
 namespace App\Base\Controllers\Admin\Json;
 
 use App\Base\Abstracts\Controllers\AIAdminJsonPage;
-use App\Base\AI\Manager;
+use App\Base\AI\Models\ChatGPT as ChatGPTModel;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -31,7 +31,7 @@ class ChatGPT extends AIAdminJsonPage
      */
     public static function isEnabled() : bool 
     {
-        return Manager::isChatGPTEnabled();
+        return ChatGPTModel::isEnabled();
     }
 
     /**
@@ -60,7 +60,7 @@ class ChatGPT extends AIAdminJsonPage
             throw new Exception("Missing ChatGPT prompt text");
         }
 
-        $generatedText = $this->getAI()->askChatGPT($prompt);
+        $generatedText = $this->getAI()->askAI(ChatGPTModel::getCode(), $prompt);
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }

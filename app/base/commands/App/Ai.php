@@ -16,6 +16,10 @@ namespace App\Base\Commands\App;
 use App\App;
 use App\Base\Abstracts\Commands\BaseCommand;
 use App\Base\AI\Manager as AIManager;
+use App\Base\AI\Models\ChatGPT;
+use App\Base\AI\Models\Claude;
+use App\Base\AI\Models\GoogleGemini;
+use App\Base\AI\Models\Mistral;
 use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -48,7 +52,7 @@ class Ai extends BaseCommand
      */
     public static function registerCommand(): bool
     {
-        return true;
+        return true; // always enabled as this command is used to enable/disable AI support
     }
 
     /**
@@ -80,10 +84,10 @@ class Ai extends BaseCommand
 
         if ($doDisable) {
             if ($isAiAvailable) {
-                App::getInstance()->getSiteData()->setConfigValue(AIManager::GEMINI_TOKEN_PATH, null);
-                App::getInstance()->getSiteData()->setConfigValue(AIManager::CHATGPT_TOKEN_PATH, null);
-                App::getInstance()->getSiteData()->setConfigValue(AIManager::CLAUDE_TOKEN_PATH, null);
-                App::getInstance()->getSiteData()->setConfigValue(AIManager::MISTRAL_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(GoogleGemini::GEMINI_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(ChatGPT::CHATGPT_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(Claude::CLAUDE_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(Mistral::MISTRAL_TOKEN_PATH, null);
             }
 
             $this->getIo()->success('Ai support has been disabled');
@@ -96,43 +100,37 @@ class Ai extends BaseCommand
 
             switch ($aiType) {
                 case 'googlegemini':
-                    App::getInstance()->getSiteData()->setConfigValue(AIManager::GEMINI_TOKEN_PATH, $apiTokenValue);
+                    App::getInstance()->getSiteData()->setConfigValue(GoogleGemini::GEMINI_TOKEN_PATH, $apiTokenValue);
                     break;
                 case 'chatgpt':
-                    App::getInstance()->getSiteData()->setConfigValue(AIManager::CHATGPT_TOKEN_PATH, $apiTokenValue);
+                    App::getInstance()->getSiteData()->setConfigValue(ChatGPT::CHATGPT_TOKEN_PATH, $apiTokenValue);
                     break;
                 case 'claude':
-                    App::getInstance()->getSiteData()->setConfigValue(AIManager::CLAUDE_TOKEN_PATH, $apiTokenValue);
+                    App::getInstance()->getSiteData()->setConfigValue(Claude::CLAUDE_TOKEN_PATH, $apiTokenValue);
                     break;
                 case 'mistral':
-                    App::getInstance()->getSiteData()->setConfigValue(AIManager::MISTRAL_TOKEN_PATH, $apiTokenValue);
+                    App::getInstance()->getSiteData()->setConfigValue(Mistral::MISTRAL_TOKEN_PATH, $apiTokenValue);
                     break;
             }
 
             $selectModel = $this->keepAsking('Do you want to select a specific model? (y/n) ', ['y', 'n']) == 'y';
             if ($selectModel) {
-                $models = match ($aiType) {
-                    'googlegemini' => $this->getAI()->listGoogleGeminiModels(true),
-                    'chatgpt' => $this->getAI()->listChatGPTModels(true),
-                    'claude' => $this->getAI()->listClaudeModels(true),
-                    'mistral' => $this->getAI()->listMistralModels(true),
-                    default => [],
-                };
+                $models = $this->getAi()->getAIModel($aiType)?->getAvailableModels(true) ?? [];
 
                 if (count($models) > 0) {
                     $model = $this->selectElementFromList($models);
                     switch ($aiType) {
                         case 'googlegemini':
-                            App::getInstance()->getSiteData()->setConfigValue(AIManager::GEMINI_MODEL_PATH, $model);
+                            App::getInstance()->getSiteData()->setConfigValue(GoogleGemini::GEMINI_MODEL_PATH, $model);
                             break;
                         case 'chatgpt':
-                            App::getInstance()->getSiteData()->setConfigValue(AIManager::CHATGPT_MODEL_PATH, $model);
+                            App::getInstance()->getSiteData()->setConfigValue(ChatGPT::CHATGPT_MODEL_PATH, $model);
                             break;
                         case 'claude':
-                            App::getInstance()->getSiteData()->setConfigValue(AIManager::CLAUDE_MODEL_PATH, $model);
+                            App::getInstance()->getSiteData()->setConfigValue(Claude::CLAUDE_MODEL_PATH, $model);
                             break;
                         case 'mistral':
-                            App::getInstance()->getSiteData()->setConfigValue(AIManager::MISTRAL_MODEL_PATH, $model);
+                            App::getInstance()->getSiteData()->setConfigValue(Mistral::MISTRAL_MODEL_PATH, $model);
                             break;
                     }
                 }
@@ -155,6 +153,15 @@ class Ai extends BaseCommand
             $aiType = reset($availableAIs);
         }
 
+        $selectModel = $this->keepAsking('Do you want to select a specific model? (y/n) ', ['y', 'n']) == 'y';
+        $model = null;
+        if ($selectModel) {
+            $models = $this->getAi()->getAIModel($aiType)?->getAvailableModels(true) ?? [];
+            if (count($models) > 0) {
+                $model = $this->selectElementFromList($models);
+            }
+        }
+
         do {
             $prompt = rtrim(trim($this->keepAsking("\nASK " . $aiType . "\n> ")), ';'); 
             switch ($prompt) {
@@ -170,20 +177,7 @@ class Ai extends BaseCommand
                     break;
                 default:
                     try {
-                        switch ($aiType) {
-                            case 'googlegemini':
-                                $this->getIo()->write("\n---\n" . $this->getAi()->askGoogleGemini($prompt) . "\n---\n");
-                                break;
-                            case 'chatgpt':
-                                $this->getIo()->write("\n---\n" . $this->getAi()->askChatGPT($prompt) . "\n---\n");
-                                break;
-                            case 'claude':
-                                $this->getIo()->write("\n---\n" . $this->getAi()->askClaude($prompt) . "\n---\n");
-                                break;
-                            case 'mistral':
-                                $this->getIo()->write("\n---\n" . $this->getAi()->askMistral($prompt) . "\n---\n");
-                                break;
-                        }
+                        $this->getIo()->write("\n---\n" . $this->getAi()->askAI($aiType, $prompt, $model) . "\n---\n");
                     } catch (Exception $e) {
                         $this->getIo()->error($e->getMessage());
                     }

@@ -249,21 +249,7 @@
 
                         $('#chatMessages').append('<div id="'+messageId+'" class="d-flex p-5 justify-content-center"><div class="loader" /></div>');
 
-                        switch ($('#chatAISelector').val()) {
-                            case 'chatGPT':
-                                $(that).appAdmin('askChatGPT', {'prompt': text, 'messageId': messageId}, callbackFunc);
-                                break;
-                            case 'googlegemini':
-                                $(that).appAdmin('askGoogleGemini', {'prompt': text, 'messageId': messageId}, callbackFunc);
-                                break;
-                            case 'claude':
-                                $(that).appAdmin('askClaude', {'prompt': text, 'messageId': messageId}, callbackFunc);
-                                break;
-                            case 'mistral':
-                                $(that).appAdmin('askMistral', {'prompt': text, 'messageId': messageId}, callbackFunc);
-                                break;
-
-                        }
+                        $(that).appAdmin('askAI', $('#chatAISelector').val(), {'prompt': text, 'messageId': messageId}, callbackFunc);
                     }
                 });
 
@@ -497,18 +483,6 @@
                     }
                 });
             }
-        },
-        askChatGPT: function(params, targetOrCallback) {
-            $(this).appAdmin('askAI', 'chatGPT', params, targetOrCallback);
-        },
-        askGoogleGemini: function(params, targetOrCallback) {
-            $(this).appAdmin('askAI', 'googlegemini', params, targetOrCallback);
-        },
-        askClaude: function(params, targetOrCallback) {
-            $(this).appAdmin('askAI', 'claude', params, targetOrCallback);
-        },
-        askMistral: function(params, targetOrCallback) {
-            $(this).appAdmin('askAI', 'mistral', params, targetOrCallback);
         },
         updateUserUiSettings: function(settings, succesCallback) {
             let that = this;

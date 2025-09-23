@@ -14,7 +14,7 @@
 namespace App\Base\Controllers\Admin\Json;
 
 use App\Base\Abstracts\Controllers\AIAdminJsonPage;
-use App\Base\AI\Manager;
+use App\Base\AI\Models\Mistral as MistralModel;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -31,7 +31,7 @@ class Mistral extends AIAdminJsonPage
      */
     public static function isEnabled() : bool 
     {
-        return Manager::isMistralEnabled();
+        return MistralModel::isEnabled();
     }
 
     /**
@@ -60,7 +60,7 @@ class Mistral extends AIAdminJsonPage
             throw new Exception("Missing Mistral prompt text");
         }
 
-        $generatedText = $this->getAI()->askMistral($prompt);
+        $generatedText = $this->getAI()->askAI(MistralModel::getCode(), $prompt);
 
         return [
             'success' => true,

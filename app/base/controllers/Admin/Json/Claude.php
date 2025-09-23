@@ -14,7 +14,7 @@
 namespace App\Base\Controllers\Admin\Json;
 
 use App\Base\Abstracts\Controllers\AIAdminJsonPage;
-use App\Base\AI\Manager;
+use App\Base\AI\Models\Claude as ClaudeModel;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -31,7 +31,7 @@ class Claude extends AIAdminJsonPage
      */
     public static function isEnabled() : bool 
     {
-        return Manager::isClaudeEnabled();
+        return ClaudeModel::isEnabled();
     }
 
     /**
@@ -60,7 +60,7 @@ class Claude extends AIAdminJsonPage
             throw new Exception("Missing Claude prompt text");
         }
 
-        $generatedText = $this->getAI()->askClaude($prompt);
+        $generatedText = $this->getAI()->askAI(ClaudeModel::getCode(), $prompt);
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }

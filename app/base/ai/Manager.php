@@ -15,72 +15,67 @@ namespace App\Base\AI;
 
 use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Interfaces\AI\AIModelInterface;
+use App\Base\Tools\Utils\Globals;
 use Exception;
+use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * Ai Manager
  */
 class Manager extends ContainerAwareObject
 {
-    public const GEMINI_MODEL = 'gemini-1.5-flash-latest';
-    public const GEMINI_MODEL_PATH = 'app/gemini/model';
-    public const GEMINI_VERSION = 'v1beta';
-    public const GEMINI_VERSION_PATH = 'app/gemini/version';
-    public const GEMINI_TOKEN_PATH = 'app/gemini/token';
-
-    public const CHATGPT_MODEL = 'gpt-3.5-turbo';
-    public const CHATGPT_MODEL_PATH = 'app/chatgpt/model';
-    public const CHATGPT_VERSION = 'v1';
-    public const CHATGPT_VERSION_PATH = 'app/chatgpt/version';
-    public const CHATGPT_TOKEN_PATH = 'app/chatgpt/token';
-    public const CHATGPT_REMAINING_TOKENS_PATH = 'app/chatgpt/remaining_tokens';
-    public const CHATGPT_MAX_TOKENS = 50;
-
-    public const CLAUDE_MODEL = 'claude-3-5-sonnet-20241022';
-    public const CLAUDE_MODEL_PATH = 'app/claude/model';
-    public const CLAUDE_VERSION = 'v1';
-    public const CLAUDE_VERSION_PATH = 'app/claude/version';
-    public const CLAUDE_TOKEN_PATH = 'app/claude/token';
-    public const CLAUDE_REMAINING_TOKENS_PATH = 'app/claude/remaining_tokens';
-    public const CLAUDE_MAX_TOKENS = 1000;
-
-    public const MISTRAL_MODEL = 'mistral-medium';
-    public const MISTRAL_MODEL_PATH = 'app/mistral/model';
-    public const MISTRAL_VERSION = 'v1';
-    public const MISTRAL_VERSION_PATH = 'app/mistral/version';
-    public const MISTRAL_TOKEN_PATH = 'app/mistral/token';
-    public const MISTRAL_REMAINING_TOKENS_PATH = 'app/mistral/remaining_tokens';
-    public const MISTRAL_MAX_TOKENS = 1000;
-
     public const MAX_INTERACTIONS_HISTORYLENGTH = 200;
     public const MAX_INTERACTIONS_HISTORYLIFETIME = 1800;
 
     protected array $interactions = [];
+    protected ?array $availableAIsCache = null;
 
     public function getAvailableAIs(bool $fullInfo = false) : array
     {
-        $AIs = [
-            'googlegemini' => [
-                'code' => 'googlegemini',
-                'name' => 'Google Gemini',
-            ], 
-            'chatgpt' => [
-                'code' => 'chatgpt',
-                'name' => 'ChatGPT',
-            ], 
-            'claude' => [
-                'code' => 'claude',
-                'name' => 'Claude',
-            ], 
-            'mistral' => [
-                'code' => 'mistral',
-                'name' => 'Mistral',
-            ],
-        ];
+        if ($this->availableAIsCache !== null) {
+            if ($fullInfo) {
+                if (!Globals::isCli()) {
+                    foreach ($this->availableAIsCache as $aiCode => &$aiInfo) {
+                        $aiInfo['aiURL'] = $this->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.'.$aiCode);
+                    }
+                }
+
+                return $this->availableAIsCache;
+            }
+
+            return array_keys($this->availableAIsCache);
+        }
+
+        $classes = array_merge(
+            ClassFinder::getClassesInNamespace(App::BASE_AIMODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+            ClassFinder::getClassesInNamespace(App::AIMODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+        );
+
+        $classes = array_filter($classes, function($className) {
+            return is_subclass_of($className, AIModelInterface::class) && !(new \ReflectionClass($className))->isAbstract();
+        });
+
+        $AIs = [];
+        foreach ($classes as $className) {
+            $code = $this->containerCall([$className, 'getCode']);
+            $name = $this->containerCall([$className, 'getName']);
+            $AIs[$code] = [
+                'code' => $code,
+                'name' => $name,
+                'class' => $className,
+            ];
+        }
+
+        if (is_array($AIs)) {
+            $this->availableAIsCache = $AIs;
+        }
 
         if ($fullInfo) {
-            foreach ($AIs as $aiCode => &$aiInfo) {
-                $aiInfo['aiURL'] = $this->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.'.$aiCode);
+            if (!Globals::isCli()) {
+                foreach ($AIs as $aiCode => &$aiInfo) {
+                    $aiInfo['aiURL'] = $this->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.'.$aiCode);
+                }
             }
 
             return $AIs;
@@ -96,26 +91,6 @@ class Manager extends ContainerAwareObject
         });
 
         return $enabled;
-    } 
-
-    public static function isChatGPTEnabled() : bool 
-    {
-        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH));
-    }
-
-    public static function isGoogleGeminiEnabled() : bool 
-    {
-        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH));
-    }
-
-    public static function isClaudeEnabled() : bool 
-    {
-        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH));
-    }
-
-    public static function isMistralEnabled() : bool 
-    {
-        return !empty(App::getInstance()->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH));
     }
 
     public function isAiAvailable(string|array|null $ai = null): bool
@@ -128,259 +103,34 @@ class Manager extends ContainerAwareObject
             }
 
             foreach($ai as $aiElem) {
-                if ($aiElem == 'googlegemini' && !static::isGoogleGeminiEnabled()) {
-                    $out &= false;
-                }
-                if ($aiElem == 'chatgpt' && !static::isChatGPTEnabled()) {
-                    $out &= false;
-                }
-                if ($aiElem == 'claude' && !static::isClaudeEnabled()) {
-                    $out &= false;
-                }
-                if ($aiElem == 'mistral' && !static::isMistralEnabled()) {
+                if (!$this->getAIModel($aiElem)->isEnabled()) {
                     $out &= false;
                 }
             }
             return $out;
         } elseif (is_string($ai)) {
-            if ($ai == 'googlegemini') {
-                return static::isGoogleGeminiEnabled();
-            } elseif ($ai == 'chatgpt') {
-                return static::isChatGPTEnabled();
-            } elseif ($ai == 'claude') {
-                return static::isClaudeEnabled();
-            } elseif ($ai == 'mistral') {
-                return static::isMistralEnabled();
+            return $this->getAIModel($ai)?->isEnabled() ?? false;
+        }
+
+        foreach($this->getAvailableAIs() as $aiElem) {
+            if ($this->getAIModel($aiElem)?->isEnabled()) {
+                return true;
             }
-            return false;
         }
 
-        return static::isGoogleGeminiEnabled() || static::isChatGPTEnabled() || static::isClaudeEnabled() || static::isMistralEnabled();
+        return false;
     }
 
-    protected function getChatGPTModel(?string $model = null) : string
+    public function askAI(string $aiType, string $prompt, ?string $model = null) : string
     {
-        if (!is_null($model) && in_array($model, $this->listChatGPTModels())) {
-            return $model;
-        }
-
-        return $this->getSiteData()->getConfigValue(self::CHATGPT_MODEL_PATH) ?? self::CHATGPT_MODEL;
-    }
-
-    protected function getChatGPTVersion() : string
-    {
-        return $this->getSiteData()->getConfigValue(self::CHATGPT_VERSION_PATH) ?? self::CHATGPT_VERSION;
-    }
-
-    public function askChatGPT(string $prompt, ?string $model = null) : string
-    {
-        $client = $this->getGuzzle();
-        $apiKey = $this->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH);
-
-        if (empty($apiKey)) {
-            throw new Exception("Missing ChatGPT Token");
-        }
-
-        // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH));
-        // $maxTokens = min(self::CHATGPT_MAX_TOKENS, $remainingTokens);
-
-        $maxTokens = self::CHATGPT_MAX_TOKENS;
-
-        $endPoint = "https://api.openai.com/" . $this->getChatGPTVersion() . "/chat/completions";
-
-        $messages = $this->getInteractions('chatgpt');
-        $messages[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-
-        $response = $client->post($endPoint, [
-            'headers' => [
-                'Authorization' => "Bearer ".$apiKey,
-            ],
-            'json' => [
-                'model' => $this->getChatGPTModel($model),
-                'messages' => $messages,
-                'max_tokens' => $maxTokens, // Adjust the max tokens as needed
-            ],
-        ]);
-        $data = json_decode($response->getBody(), true);
-        $generatedText = $data['choices'][0]['text'];
-
+        // get previous interactions for the selected aiType
+        $previousInteractions = $this->getInteractions($aiType);
+ 
+        $generatedText = $this->getAIModel($aiType)->ask($prompt, $model, $previousInteractions);
+ 
         // add prompth and response to interactions to maintain history
-        $this->saveInteraction($prompt, $generatedText, 'chatgpt');
-
-        // update remaining tokens configuration
-        // $this->getSiteData()->setConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
-
-        return trim($generatedText);
-    }
-
-    protected function getGoogleGeminiModel(?string $model = null) : string
-    {
-        if (!is_null($model) && in_array($model, $this->listGoogleGeminiModels())) {
-            return $model;
-        }
-
-        return $this->getSiteData()->getConfigValue(self::GEMINI_MODEL_PATH) ?? self::GEMINI_MODEL;
-    }
-
-    protected function getGoogleGeminiVersion() : string
-    {
-        return $this->getSiteData()->getConfigValue(self::GEMINI_VERSION_PATH) ?? self::GEMINI_VERSION;
-    }
-    
-    public function askGoogleGemini(string $prompt, ?string $model = null) : string
-    {
-        $client = $this->getGuzzle();
-        $apiKey = $this->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH);
-
-        if (empty($apiKey)) {
-            throw new Exception("Missing Gemini Token");
-        }
-
-        $endPoint = "https://generativelanguage.googleapis.com/" . $this->getGoogleGeminiVersion() . "/models/" . $this->getGoogleGeminiModel($model) . ":generateContent?key={$apiKey}";
-
-        $contents = $this->getInteractions('googlegemini');
-        $contents[] = [
-            'role' => 'user',
-            'parts' => [['text' => $prompt]]
-        ];
-
-        $response = $client->post($endPoint, [
-            'headers' => [
-                'Content-Type' => "application/json",
-            ],
-            'json' => [
-                'contents' => $contents,
-            ],
-        ]);
-        $data = json_decode($response->getBody(), true);
-        $generatedText = $data['candidates'][0]['content']['parts'][0]['text'];
-
-        // add prompth and response to interactions to maintain history
-        $this->saveInteraction($prompt, $generatedText, 'googlegemini');
-
-        return trim($generatedText);
-    }
-
-    protected function getClaudeModel(?string $model = null) : string
-    {
-        if (!is_null($model) && in_array($model, $this->listClaudeModels())) {
-            return $model;
-        }
-
-        return $this->getSiteData()->getConfigValue(self::CLAUDE_MODEL_PATH) ?? self::CLAUDE_MODEL;
-    }
-
-    protected function getClaudeVersion() : string
-    {
-        return $this->getSiteData()->getConfigValue(self::CLAUDE_VERSION_PATH) ?? self::CLAUDE_VERSION;
-    }
-
-    public function askClaude(string $prompt, ?string $model = null) : string
-    {
-        $client = $this->getGuzzle();
-        $apiKey = $this->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH);
-
-        if (empty($apiKey)) {
-            throw new Exception("Missing Claude Token");
-        }
-
-        $endPoint = "https://api.anthropic.com/" . $this->getClaudeVersion() . "/messages";
-
-        // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH));
-        // $maxTokens = min(self::CLAUDE_MAX_TOKENS, $remainingTokens);
-
-        $maxTokens = self::CLAUDE_MAX_TOKENS;
-
-        $messages = $this->getInteractions('claude');
-        $messages[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-
-        $response = $client->post($endPoint, [
-            'headers' => [
-                'Content-Type: application/json',
-                'x-api-key: ' . $apiKey,
-                'anthropic-version: 2023-06-01'
-            ],
-            'json' => [
-                'model' => $this->getClaudeModel($model),
-                'max_tokens' => $maxTokens,
-                'messages' => $messages,
-            ],
-        ]);
-        $data = json_decode($response->getBody(), true);
-        $generatedText = $data['content'][0]['text'];
-
-        // add prompth and response to interactions to maintain history
-        $this->saveInteraction($prompt, $generatedText, 'claude');
-
-        // update remaining tokens configuration
-        // $this->getSiteData()->setConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
-
-        return trim($generatedText);
-    }
-
-    protected function getMistralModel(?string $model = null) : string
-    {
-        if (!is_null($model) && in_array($model, $this->listMistralModels())) {
-            return $model;
-        }
-
-        return $this->getSiteData()->getConfigValue(self::MISTRAL_MODEL_PATH) ?? self::MISTRAL_MODEL;
-    }
-
-    protected function getMistralVersion() : string
-    {
-        return $this->getSiteData()->getConfigValue(self::MISTRAL_VERSION_PATH) ?? self::MISTRAL_VERSION;
-    }
-
-    public function askMistral(string $prompt, ?string $model = null) : string
-    {
-        $client = $this->getGuzzle();
-        $apiKey = $this->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH);
-
-        if (empty($apiKey)) {
-            throw new Exception("Missing Mistral Token");
-        }
-
-        $endPoint = "https://api.mistral.ai/" . $this->getMistralVersion() . "/chat/completions";
-
-        // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH));
-        // $maxTokens = min(self::MISTRAL_MAX_TOKENS, $remainingTokens);
-
-        $maxTokens = self::MISTRAL_MAX_TOKENS;
-
-        $messages = $this->getInteractions('mistral');
-        $messages[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-
-        $response = $client->post($endPoint, [
-            'headers' => [
-                'Content-Type: application/json',
-                'Authorization' => 'Bearer ' . $apiKey,
-            ],
-            'json' => [
-                'model' => $this->getMistralModel($model),
-                'max_tokens' => $maxTokens,
-                "temperature" => 0.7,
-                'messages' => $messages,
-            ],
-        ]);
-        $data = json_decode($response->getBody(), true);
-        $generatedText = $data['choices'][0]['message']['content'] ?? null;
-
-        // add prompth and response to interactions to maintain history
-        $this->saveInteraction($prompt, $generatedText, 'mistral');
-
-        // update remaining tokens configuration
-        // $this->getSiteData()->setConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
-
+        $this->saveInteraction($prompt, $generatedText, $aiType);
+ 
         return trim($generatedText);
     }
 
@@ -511,146 +261,17 @@ class Manager extends ContainerAwareObject
         return $roleLine . "\n" . $alignedText;
     }
 
-    /**
-     * Lista modelli ChatGPT (OpenAI)
-     */
-    public function listChatGPTModels(bool $reset = false): array
-    {
-        $models_key = "ai.chatgpt.models_list";
-        if (!$this->getCache()->has($models_key) || $reset) {
-
-            $client = $this->getGuzzle();
-            $apiKey = $this->getSiteData()->getConfigValue(self::CHATGPT_TOKEN_PATH);
-
-            if (empty($apiKey)) {
-                throw new Exception("Missing ChatGPT Token");
-            }
-
-            $endPoint = "https://api.openai.com/v1/models";
-
-            $response = $client->get($endPoint, [
-                'headers' => [
-                    'Authorization' => "Bearer " . $apiKey,
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-            $models = array_column($data['data'] ?? [], 'id');
-
-            $this->getCache()->set($models_key, $models);
-        } else {
-            $models = $this->getCache()->get($models_key);
-        }
-
-        return $models;
-    }
-
-    /**
-     * Lista modelli Google Gemini
-     */
-    public function listGoogleGeminiModels(bool $reset = false): array
-    {
-        $models_key = "ai.googlegemini.models_list";
-        if (!$this->getCache()->has($models_key) || $reset) {
-
-            $client = $this->getGuzzle();
-            $apiKey = $this->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH);
-
-            if (empty($apiKey)) {
-                throw new Exception("Missing Gemini Token");
-            }
-
-            $endPoint = "https://generativelanguage.googleapis.com/v1beta/models?key={$apiKey}";
-
-            $response = $client->get($endPoint, [
-                'headers' => [
-                    'Content-Type' => 'application/json',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-            $models = array_map(fn ($el) => str_replace("models/","", $el), array_column($data['models'] ?? [], 'name'));
-
-            $this->getCache()->set($models_key, $models);
-        } else {
-            $models = $this->getCache()->get($models_key);
-        }
-
-        return $models;
-    }
-
-    /**
-     * Lista modelli Claude (Anthropic)
-     */
-    public function listClaudeModels(bool $reset = false): array
-    {
-        $models_key = "ai.claude.models_list";
-        if (!$this->getCache()->has($models_key) || $reset) {
-
-            $client = $this->getGuzzle();
-            $apiKey = $this->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH);
-
-            if (empty($apiKey)) {
-                throw new Exception("Missing Claude Token");
-            }
-
-            $endPoint = "https://api.anthropic.com/v1/models";
-
-            $response = $client->get($endPoint, [
-                'headers' => [
-                    'x-api-key' => $apiKey,
-                    'anthropic-version' => '2023-06-01',
-                    'Content-Type' => 'application/json',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-            $models = array_column($data['data'] ?? [], 'id');
-
-            $this->getCache()->set($models_key, $models);
-        } else {
-            $models = $this->getCache()->get($models_key);
-        }
-
-        return $models;
-    }
-
-    /**
-     * Lista modelli Mistral
-     */
-    public function listMistralModels(bool $reset = false): array
-    {
-        $models_key = "ai.mistral.models_list";
-        if (!$this->getCache()->has($models_key) || $reset) {
-
-            $client = $this->getGuzzle();
-            $apiKey = $this->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH);
-
-            if (empty($apiKey)) {
-                throw new Exception("Missing Mistral Token");
-            }
-
-            $endPoint = "https://api.mistral.ai/v1/models";
-
-            $response = $client->get($endPoint, [
-                'headers' => [
-                    'Authorization' => 'Bearer ' . $apiKey,
-                    'Content-Type' => 'application/json',
-                ],
-            ]);
-
-            $data = json_decode($response->getBody(), true);
-            $models = array_column($data['data'] ?? [], 'id');
-
-            $this->getCache()->set($models_key, $models);
-        } else {
-            $models = $this->getCache()->get($models_key);
-        }
-
-        return $models;
-    }
-
     /** --- Helper --- */
+
+    public function getAIModel(string $aiType) : ?AIModelInterface
+    {
+        $availableAIs = $this->getAvailableAIs(true);
+        if (array_key_exists($aiType, $availableAIs)) {
+            return $this->containerMake($availableAIs[$aiType]['class']);
+        }
+
+        return null;
+    }
 
     /** Rimuove le sequenze ANSI (colori, ecc.) */
     private function stripAnsi(string $s): string

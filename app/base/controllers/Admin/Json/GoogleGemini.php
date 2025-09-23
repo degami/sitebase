@@ -14,7 +14,7 @@
 namespace App\Base\Controllers\Admin\Json;
 
 use App\Base\Abstracts\Controllers\AIAdminJsonPage;
-use App\Base\AI\Manager;
+use App\Base\AI\Models\GoogleGemini as GoogleGeminiModel;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
@@ -31,7 +31,7 @@ class GoogleGemini extends AIAdminJsonPage
      */
     public static function isEnabled() : bool 
     {
-        return Manager::isGoogleGeminiEnabled();
+        return GoogleGeminiModel::isEnabled();
     }
 
     /**
@@ -60,7 +60,7 @@ class GoogleGemini extends AIAdminJsonPage
             throw new Exception("Missing Gemini prompt text");
         }
 
-        $generatedText = $this->getAI()->askGoogleGemini($prompt);
+        $generatedText = $this->getAI()->askAI(GoogleGeminiModel::getCode(), $prompt);
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }

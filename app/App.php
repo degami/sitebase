@@ -102,6 +102,9 @@ class App
 
     public const GRAPHQL_RESOLVERS_NAMESPACE = 'App\Site\GraphQL\Resolvers';
 
+    public const BASE_AIMODELS_NAMESPACE = 'App\Base\AI\Models';
+    public const AIMODELS_NAMESPACE = 'App\Site\AI\Models';
+
     /**
      * @var string|null current locale
      */

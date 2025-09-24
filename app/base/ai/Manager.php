@@ -134,11 +134,11 @@ class Manager extends ContainerAwareObject
         return trim($generatedText);
     }
 
-    public function clearInteractions(?string $model = null) : self
+    public function clearInteractions(?string $aiType = null) : self
     {
         if ($this->getRedis()->isEnabled()) {
             // $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
-            $redis_key = $this->getRedisKey($model);
+            $redis_key = $this->getRedisKey($aiType);
             $this->getRedis()->del($redis_key);
         }
 
@@ -146,11 +146,11 @@ class Manager extends ContainerAwareObject
         return $this;
     }
 
-    public function getInteractions(?string $model = null) : array
+    public function getInteractions(?string $aiType = null) : array
     {
         if ($this->getRedis()->isEnabled()) {
             // $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
-            $redis_key = $this->getRedisKey($model);
+            $redis_key = $this->getRedisKey($aiType);
 
             // get last MAX_INTERACTIONS_HISTORYLENGTH elements
             return array_slice(
@@ -209,9 +209,9 @@ class Manager extends ContainerAwareObject
         return $this;
     }
 
-    protected function getRedisKey(?string $model = null) : string
+    protected function getRedisKey(?string $aiType = null) : string
     {
-        return 'ai_interactions:' . $model . ':' . ($this->getAuth()->getCurrentUser()?->getId() ?? 0);
+        return 'ai_interactions:' . $aiType . ':' . ($this->getAuth()->getCurrentUser()?->getId() ?? 0);
     }
 
     public function getHistory(string $aiType, int $terminalWidth = 80) : array

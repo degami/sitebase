@@ -18,7 +18,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use App\Base\Models\Role;
 use Symfony\Component\Console\Command\Command;
 
@@ -81,13 +80,7 @@ class Revoke extends BaseCommand
 
         $permission = $input->getOption('permission');
         if (empty($permission)) {
-            $question = new ChoiceQuestion(
-                'Role Permission? ',
-                $permissions_available,
-                0
-            );
-            $question->setErrorMessage('Permission %s is invalid.');
-            $permission = $this->getQuestionHelper()->ask($input, $output, $question);
+            $permission = $this->selectElementFromList($permissions_available, 'Role Permission? ');
         }
 
         if (!$this->confirmSave('Revoke permission "' . $permission . '" to role "' . $role->getName() . '"? ')) {

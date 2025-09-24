@@ -20,7 +20,6 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -162,13 +161,7 @@ class Model extends CodeGeneratorCommand
             'DATETIME' => '\\DateTime',
         ];
 
-        $question = new ChoiceQuestion(
-            'Column Type? ',
-            array_keys($types),
-            0
-        );
-        $question->setErrorMessage('Invalid type %s.');
-        $column_type = $helper->ask($this->input, $this->output, $question);
+        $column_type = $this->selectElementFromList(array_keys($types), 'Column Type? ');
 
         $column_info['mysql_type'] = $column_type;
         $column_info['php_type'] = $types[$column_type];
@@ -190,7 +183,7 @@ class Model extends CodeGeneratorCommand
         }
 
         $question = new Question('Column options (comma separated): ');
-        $options = array_map("strtoupper", array_filter(array_map("trim", explode(",", $helper->ask($this->input, $this->output, $question)))));
+        $options = array_map("strtoupper", array_filter(array_map("trim", explode(",", (string)$helper->ask($this->input, $this->output, $question)))));
         foreach ($options as $k => $option) {
             if (!is_numeric($option) && !empty($option) && $option != 'NULL') {
                 $options[$k] = "'" . $option . "'";

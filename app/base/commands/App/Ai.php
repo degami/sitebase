@@ -118,7 +118,7 @@ class Ai extends BaseCommand
                 $models = $this->getAi()->getAIModel($aiType)?->getAvailableModels(true) ?? [];
 
                 if (count($models) > 0) {
-                    $model = $this->selectElementFromList($models);
+                    $model = $this->selectElementFromList($models, 'Choose model');
                     switch ($aiType) {
                         case 'googlegemini':
                             App::getInstance()->getSiteData()->setConfigValue(GoogleGemini::GEMINI_MODEL_PATH, $model);
@@ -158,7 +158,7 @@ class Ai extends BaseCommand
         if ($selectModel) {
             $models = $this->getAi()->getAIModel($aiType)?->getAvailableModels(true) ?? [];
             if (count($models) > 0) {
-                $model = $this->selectElementFromList($models);
+                $model = $this->selectElementFromList($models, 'Choose model');
             }
         }
 

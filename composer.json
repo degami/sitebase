@@ -41,7 +41,6 @@
         "dragonmantank/cron-expression": "^2.3",
         "swiftmailer/swiftmailer": "^6.2",
         "phpfastcache/phpfastcache": "^8.0.7",
-        "nadar/php-composer-reader": "^1.3",
         "spatie/db-dumper": "^3.7",
         "stidges/country-flags": "^2.0",
         "spatie/array-to-xml": "^3.3",
@@ -58,7 +57,8 @@
         "stripe/stripe-php": "^17.5@beta",
         "paypal/paypal-checkout-sdk": "dev-develop",
         "scalapay/scalapay-php-sdk": "dev-master",
-        "symfony/mime": "7.4.x-dev"
+        "symfony/mime": "7.4.x-dev",
+        "nadar/php-composer-reader": "dev-master"
     },
   "autoload": {
     "files": [
@@ -122,7 +122,10 @@
           },
           "phpgangsta/googleauthenticator": {
               "fixes Using var in strings is deprecated": "patches/googleauthenticator.patch"
-          }
+          },
+          "nadar/php-composer-reader": {
+              "Fix PHP 8.3 Iterator return types": "patches/php-composer-reader-php83.patch"
+          }       
       }
   }
 }

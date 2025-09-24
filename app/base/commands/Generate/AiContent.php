@@ -69,7 +69,7 @@ class AiContent extends BaseCommand
             array_map(fn($el) => strtolower(basename(str_replace("\\", '/', $el))), $contentTypes)
         );
 
-        $contentType = $this->keepAskingForOption('contenttype', 'Content Type ('.implode(', ', array_values($contentTypes)).')? ', array_values($contentTypes));
+        $contentType = $this->selectElementFromList(array_values($contentTypes), 'Choose content type'); // $this->keepAskingForOption('contenttype', 'Content Type ('.implode(', ', array_values($contentTypes)).')? ', array_values($contentTypes));
 
         $class = array_search($contentType, $contentTypes);
 
@@ -113,12 +113,12 @@ class AiContent extends BaseCommand
 
 
         $availableLocales = $this->getSiteData()->getSiteLocales();
-        $locale = $this->keepAskingForOption('locale', "Locale (".implode(', ', $availableLocales).")", $availableLocales);
+        $locale = $this->selectElementFromList($availableLocales, 'Select locale'); // $this->keepAskingForOption('locale', "Locale (".implode(', ', $availableLocales).")", $availableLocales);
 
         $availableAIs = $this->getAI()->getEnabledAIs();
 
         if (count($availableAIs) > 1) {
-            $aiType = $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);
+            $aiType = $this->selectElementFromList($availableAIs, 'Select which AI'); // $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);
         } else {
             $aiType = reset($availableAIs);
         }
@@ -126,22 +126,15 @@ class AiContent extends BaseCommand
         $selectModel = $this->keepAsking('Do you want to select a specific model? (y/n) ', ['y', 'n']) == 'y';
         $model = null;
         if ($selectModel) {
-            $models = match ($aiType) {
-                'googlegemini' => $this->getAI()->listGoogleGeminiModels(true),
-                'chatgpt' => $this->getAI()->listChatGPTModels(true),
-                'claude' => $this->getAI()->listClaudeModels(true),
-                'mistral' => $this->getAI()->listMistralModels(true),
-                default => [],
-            };
-
+            $models = $this->getAi()->getAIModel($aiType)?->getAvailableModels(true) ?? [];
             if (count($models) > 0) {
-                $model = $this->selectElementFromList($models);
+                $model = $this->selectElementFromList($models, 'Choose model');
             }
         }
 
         $subject = $this->keepAsking("write your subject:");
 
-        $promptText = $this->getUtils()->translate("Generate a json with data, no comments for a single model of type %s containing the following fields ando %s using language \"%s\" (the json structure must be a single object containing onlu the specified fields) for the subject: \\n%s" , [
+        $promptText = $this->getUtils()->translate("Generate a json with data, no comments for a single model of type %s containing the following fields ando %s using language \"%s\" (the json structure must be a single object containing only the specified fields) for the subject: \\n%s" , [
             $contentType,
             $fieldDefinition,
             $locale,

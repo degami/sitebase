@@ -21,7 +21,6 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use App\Base\Models\User;
 use Exception;
 use Symfony\Component\Console\Command\Command;
@@ -68,30 +67,18 @@ class Add extends BaseCommand
 
         $role = $input->getOption('role');
         if (empty($role)) {
-            $question = new ChoiceQuestion(
-                'User Role? ',
-                array_map(
-                    function ($el) {
-                        /** @var Role $el */
-                        return $el->getName();
-                    },
-                    Role::getCollection()->getItems()
-                ),
-                0
-            );
-            $question->setErrorMessage('Role %s is invalid.');
-            $role = $helper->ask($input, $output, $question);
+            $role = $this->selectElementFromList(array_map(
+                        function ($el) {
+                            /** @var Role $el */
+                            return $el->getName();
+                        },
+                        Role::getCollection()->getItems()
+                    ), 'User Role? ');
         }
 
         $locale = $input->getOption('locale');
         if (empty($locale)) {
-            $question = new ChoiceQuestion(
-                'User Locale? ',
-                $this->getUtils()->getSiteLanguagesSelectOptions(),
-                0
-            );
-            $question->setErrorMessage('Locale %s is invalid.');
-            $locale = $helper->ask($input, $output, $question);
+            $locale = $this->selectElementFromList($this->getUtils()->getSiteLanguagesSelectOptions(), 'User Locale? ');
         }
 
         $password = $this->keepAskingForOption('password', 'Password? ');

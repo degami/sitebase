@@ -20,7 +20,6 @@ use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\ConfirmationQuestion;
-use Symfony\Component\Console\Question\ChoiceQuestion;
 use Symfony\Component\Console\Question\Question;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\QuestionHelper;
@@ -199,13 +198,7 @@ class Product extends CodeGeneratorCommand
             'DATETIME' => '\\DateTime',
         ];
 
-        $question = new ChoiceQuestion(
-            'Column Type? ',
-            array_keys($types),
-            0
-        );
-        $question->setErrorMessage('Invalid type %s.');
-        $column_type = $helper->ask($this->input, $this->output, $question);
+        $column_type = $this->selectElementFromList(array_keys($types), 'Column Type? ');
 
         $column_info['mysql_type'] = $column_type;
         $column_info['php_type'] = $types[$column_type];

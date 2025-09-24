@@ -1,0 +1,50 @@
+--- a/src/DataIterator.php	2025-09-24 23:29:03.726066047 +0200
++++ b/src/DataIterator.php	2025-09-24 23:24:55.782352414 +0200
+@@ -63,7 +63,6 @@
+     /**
+      * @inheritDoc
+      */
+-    #[\ReturnTypeWillChange]
+     public function current()
+     {
+         return $this->createIteratorItem();
+@@ -72,7 +71,6 @@
+     /**
+      * @inheritDoc
+      */
+-    #[\ReturnTypeWillChange]
+     public function rewind()
+     {
+         return reset($this->data);
+@@ -81,7 +79,6 @@
+     /**
+      * @inheritDoc
+      */
+-    #[\ReturnTypeWillChange]
+     public function key()
+     {
+         return key($this->data);
+@@ -90,7 +87,6 @@
+     /**
+      * @inheritDoc
+      */
+-    #[\ReturnTypeWillChange]
+     public function next()
+     {
+         return next($this->data);
+@@ -99,7 +95,6 @@
+     /**
+      * @inheritDoc
+      */
+-    #[\ReturnTypeWillChange]
+     public function valid()
+     {
+         return key($this->data) !== null;
+@@ -108,7 +103,6 @@
+     /**
+      * @inheritDoc
+      */
+-    #[\ReturnTypeWillChange]
+     public function count()
+     {
+         return count($this->data);

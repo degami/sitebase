@@ -33,6 +33,7 @@ use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Helper\TableCell;
 use Symfony\Component\Console\Helper\TableSeparator;
 use Symfony\Component\Console\Command\Command as SymfonyCommand;
+use Symfony\Component\Console\Question\ChoiceQuestion;
 
 /**
  * Base for cli commands
@@ -352,10 +353,22 @@ class BaseCommand extends SymfonyCommand
         $this->getIo()->block(implode("\n", [$title, str_repeat('=', strlen($title))]), null, 'fg=green;bg=default', '', false, true);
     }
 
-    protected function selectElementFromList(array $list)
+    protected function selectElementFromList(array $list, ?string $message = null)
     {
-        $counter = 0;
-        $this->renderTable([], array_map(function($el) use (&$counter) { return [++$counter, $el]; }, $list), true);
-        return $list[$this->keepAsking('Select one of the above: ', range(1, $counter)) - 1] ?? null;
+        /** @var QuestionHelper $helper */
+        $helper = $this->getQuestionHelper();
+
+        $question = new ChoiceQuestion(
+            $message ?? 'Select one ',
+            $list,
+            0
+        );
+
+        $question->setErrorMessage('Invalid choice %s.');
+        return $helper->ask($this->input, $this->output, $question);
+
+//        $counter = 0;
+//        $this->renderTable([], array_map(function($el) use (&$counter) { return [++$counter, $el]; }, $list), true);
+//        return $list[$this->keepAsking('Select one of the above: ', range(1, $counter)) - 1] ?? null;
     }
 }

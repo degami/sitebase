@@ -93,7 +93,7 @@ class Cart extends FormPageWithLang
             $checkoutURL = $this->getUrl('frontend.commerce.checkout.billing.withlang', ['lang' => $this->getCurrentLocale()]);
         }
         $discounts = [];
-        foreach($this->getCart()->getDiscounts() as $discountModel) {
+        foreach ($this->getCart()->getDiscounts() ?? [] as $discountModel) {
             $removeUrl = $this->getUrl('frontend.commerce.cart.discount', [
                 'action_details' => base64_encode(json_encode([
                     'action' => 'remove_discount', 

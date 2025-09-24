@@ -47,7 +47,7 @@ use DateTime;
  * @method self setId(int $id)
  * @method self setCartId(int $cart_id)
  * @method self setUserId(int $user_id)
- * @method self setWebsiteId(int $website_id
+ * @method self setWebsiteId(int $website_id)
  * @method self setProductClass(string $product_class)
  * @method self setProductId(int $product_id)
  * @method self setQuantity(int $quantity)

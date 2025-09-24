@@ -37,7 +37,7 @@ use App\Base\GraphQl\GraphQLExport;
  * @method string getRoute()
  * @method string getLocale()
  * @method int getUserId()
- * @method int!null getParentId()
+ * @method int getParentId()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -46,7 +46,7 @@ use App\Base\GraphQl\GraphQLExport;
  * @method self setRoute(string $route)
  * @method self setLocale(string $locale)
  * @method self setUserId(int $user_id)
- * @method self setParentId(int!null $parent_id)
+ * @method self setParentId(int $parent_id)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */

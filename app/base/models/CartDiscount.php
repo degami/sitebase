@@ -38,7 +38,7 @@ use DateTime;
  * @method self setCartId(int $cart_id)
  * @method self setCartItemId(int $cart_item_id)
  * @method self setUserId(int $user_id)
- * @method self setWebsiteId(int $website_id
+ * @method self setWebsiteId(int $website_id)
  * @method self setInitialDiscountId(int $initial_discount_id)
  * @method self setDiscountAmount(float $discount_amount)
  * @method self setCurrencyCode(string $currency_code)

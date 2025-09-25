@@ -703,6 +703,7 @@ class Globals extends ContainerAwareObject
     public function getTokenUserDataClaim(): mixed
     {
         try {
+            /** @var \Lcobucci\JWT\Token\Plain */
             $token = $this->getToken();
             if (is_null($token)) {
                 return null;

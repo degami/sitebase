@@ -29,7 +29,6 @@ use App\Base\Exceptions\NotFoundException;
 use App\Base\Exceptions\NotAllowedException;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Exceptions\InvalidValueException;
-use App\Base\Tools\Utils\Globals;
 use App\Base\Traits\ContainerAwareTrait;
 use App\Base\Traits\ToolsTrait;
 use App\Base\Traits\TranslatorsTrait;

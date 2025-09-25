@@ -81,7 +81,7 @@ class SiteData extends ContainerAwareObject
         }
 
         $website = null;
-        if (Globals::isCliServer() || Globals::isCli()) {
+        if ($this->getEnvironment()->isCliServer() || $this->getEnvironment()->isCli()) {
             $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
         } else {
             $website = Website::getCollection()->where('domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)')->getFirst();

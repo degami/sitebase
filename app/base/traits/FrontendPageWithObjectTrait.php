@@ -78,7 +78,17 @@ trait FrontendPageWithObjectTrait
 
         if ($this->getObject()?->isLoaded()) {
             if (is_callable([$this->getObject(), 'getTemplateName']) && !empty($this->getObject()->getTemplateName())) {
-                return $this->getObject()->getTemplateName();
+                $objectTemplateName = $this->getObject()->getTemplateName();
+
+                $template_frontend = $this->getTemplates()->make('frontend::' . $objectTemplateName);
+                $template_theme = $this->getTemplates()->make('theme::' . $objectTemplateName);
+                if (!$template_frontend->exists() && !$template_theme->exists()) {
+                    // if template does not exist, get back to default
+                    $this->getApplicationLogger()->warning('Template "'.$objectTemplateName.'" for object ID '.$this->getObject()->getId().' does not exist, falling back to default.');
+                    return $this->getTemplateName();
+                }
+
+                return $objectTemplateName;
             }
         }
 

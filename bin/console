@@ -16,6 +16,7 @@ require dirname(__DIR__).'/vendor/autoload.php';
 error_reporting(E_ALL & ~E_NOTICE);
 
 use Psr\Container\ContainerInterface;
+use DI\Container;
 use \Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputOption;
 use \HaydenPierce\ClassFinder\ClassFinder;
@@ -32,7 +33,7 @@ $builder = new \DI\ContainerBuilder();
 $builder->addDefinitions(App::getDir(App::CONFIG).DS.'di.php');
 
 try {
-    /** @var ContainerInterface $container */
+    /** @var Container $container */
     $container = $builder->build();
 
     $applicationDefinition = $application->getDefinition();

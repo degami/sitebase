@@ -48,6 +48,14 @@ class Manager extends ContainerAwareObject
                 ->setLogData($message)
                 ->setLevel($level);
 
+            if ($this->getEnvironment()->isWeb()) {
+                $log->setIpAddress($this->getEnvironment()->getRequest()?->getClientIp());
+            }
+
+            if ($this->getAuth()->getCurrentUser()) {
+                $log->setUserId($this->getAuth()->getCurrentUser()->getId());
+            }
+
             $log->persist();
 
             return $log;

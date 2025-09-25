@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Base\AI;
+namespace App\Base\Tools\AI;
 
 use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
@@ -35,7 +35,7 @@ class Manager extends ContainerAwareObject
     {
         if ($this->availableAIsCache !== null) {
             if ($fullInfo) {
-                if (!Globals::isCli()) {
+                if (!$this->getEnvironment()->isCli()) {
                     foreach ($this->availableAIsCache as $aiCode => &$aiInfo) {
                         $aiInfo['aiURL'] = $this->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.'.$aiCode);
                     }
@@ -72,7 +72,7 @@ class Manager extends ContainerAwareObject
         }
 
         if ($fullInfo) {
-            if (!Globals::isCli()) {
+            if (!$this->getEnvironment()->isCli()) {
                 foreach ($AIs as $aiCode => &$aiInfo) {
                     $aiInfo['aiURL'] = $this->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.'.$aiCode);
                 }

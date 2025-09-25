@@ -15,7 +15,7 @@ namespace App\Base\Tools\Plates;
 
 use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Auth\Manager as AuthManager;
-use App\Base\AI\Manager as AIManager;
+use App\Base\Tools\AI\Manager as AIManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\SiteData;

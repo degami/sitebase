@@ -15,13 +15,14 @@ namespace App\Base\Traits;
 
 use App\App;
 use App\Base\Abstracts\Routing\BaseRouter;
-use App\Base\AI\Manager as AIManager;
+use App\Base\Tools\AI\Manager as AIManager;
 use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Cache\Manager as CacheManager;
 use App\Base\Tools\Redis\Manager as RedisManager;
 use App\Base\Tools\Search\Manager as SearchManager;
 use App\Base\Tools\ApplicationLogger\Manager as ApplicationLoggerManager;
 use App\Base\Auth\Manager as AuthManager;
+use App\Base\Environment\Manager as EnvironmentManager;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
@@ -267,7 +268,6 @@ trait ContainerAwareTrait
                 }
             };
 
-
             foreach (ClassFinder::getClassesInNamespace(App::BASE_ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
                 $registerRouter($className);
             }
@@ -473,17 +473,6 @@ trait ContainerAwareTrait
     }
 
     /**
-     * gets current request object
-     *
-     * @return Request
-     * @throws BasicException
-     */
-    public function getRequest(): Request
-    {
-        return $this->getService(Request::class);
-    }
-
-    /**
      * gets route info
      *
      * @return RouteInfo|null
@@ -533,5 +522,16 @@ trait ContainerAwareTrait
     public function getAI(): AIManager
     {
         return $this->getService('ai');
+    }
+
+    /**
+     * gets environment manager service
+     * 
+     * @return EnvironmentManager
+     * @throws BasicException
+     */
+    public function getEnvironment(): EnvironmentManager
+    {
+        return $this->getService('environment');
     }
 }

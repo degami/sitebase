@@ -654,8 +654,8 @@ class Globals extends ContainerAwareObject
      */
     public function getAuthorizationHeader(): ?string
     {
-        $token = $this->getRequest()->headers->get('Authorization');
-        return (string) ($token ?: $this->getRequest()->cookies->get('Authorization'));
+        $token = $this->getEnvironment()->getRequest()->headers->get('Authorization');
+        return (string) ($token ?: $this->getEnvironment()->getRequest()->cookies->get('Authorization'));
     }
 
     /**
@@ -901,36 +901,6 @@ class Globals extends ContainerAwareObject
             $code,
             $headers
         );
-    }
-
-    /**
-     * Check if the current environment is CLI
-     * 
-     * @return bool
-     */
-    public static function isCli(): bool
-    {
-        return (php_sapi_name() === 'cli' || defined('STDIN'));
-    }
-
-    /**
-     * Check if the current environment is CLI server
-     * 
-     * @return bool
-     */
-    public static function isCliServer(): bool
-    {
-        return (php_sapi_name() === 'cli-server');
-    }
-
-    /**
-     * Check if the current environment is web
-     * 
-     * @return bool
-     */
-    public static function isWeb(): bool
-    {
-        return !self::isCli() && !self::isCliServer();
     }
 
     public function convertFromCurrencyToCurrency(float $amount, string $currencyCodeFrom, string $currencyCodeTo) : float

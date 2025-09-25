@@ -101,12 +101,6 @@ trait WithRewriteTrait
 
         $vars = $routeInfo->getVars();
 
-        // inject container into vars
-        //$vars['container'] = $this->getContainer();
-
-        // inject request object into vars
-        //$vars['request'] = $this->getRequest();
-
         // inject routeInfo
         $vars['route_info'] = $routeInfo;
 

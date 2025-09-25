@@ -53,7 +53,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
         protected ?RouteInfo $route_info = null
     ) {
         parent::__construct($container);
-        $this->request = $request ?: $this->getApp()->getRequest();
+        $this->request = $request ?: $this->getEnvironment()->getRequest();
         $this->route_info = $route_info ?: $this->getAppRouteInfo();
 
         // dispatch "request_created" event

@@ -219,7 +219,7 @@ class App
 
             App::$instance = $this;
         } catch (Throwable $e) {
-            if (Globals::isCli()) {
+            if ($this->getEnvironment()->isCli()) {
                 echo $e->getMessage() . PHP_EOL;
                 die();
             }
@@ -228,7 +228,7 @@ class App
                 $this->genericErrorPage('Critical Error', $e->getMessage()),
                 500
             );
-            $response->prepare($this->getRequest())->send();
+            $response->prepare($this->getEnvironment()->getRequest())->send();
             die();
         }
     }
@@ -252,11 +252,11 @@ class App
         $routeInfo = null;
         try {
             $website = null;
-            if (php_sapi_name() == 'cli-server') {
+            if ($this->getEnvironment()->isCliServer()) {
                 $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
             }
 
-            if ($this->isBlocked($this->getRequest()->getClientIp())) {
+            if ($this->isBlocked($this->getEnvironment()->getRequest()?->getClientIp())) {
                 // if blocked stop immediately
                 throw new BlockedIpException();
             }
@@ -293,7 +293,6 @@ class App
                 }
 
                 foreach ($this->getRouters() as $router) {
-
                     if (!$this->containerCall([$this->getService($router), 'isEnabled'])) {
                         continue;
                     }
@@ -324,12 +323,6 @@ class App
                     case Dispatcher::FOUND:
                         $handler = $this->getAppRouteInfo()->getHandler();
                         $vars = $this->getAppRouteInfo()->getVars();
-
-                        // inject container into vars
-                        //$vars['container'] = $this->getContainer();
-
-                        // inject request object into vars
-                        //$vars['request'] = $this->getRequest();
 
                         // inject routeInfo
                         $vars['route_info'] = $this->getAppRouteInfo();
@@ -406,11 +399,11 @@ class App
         }
 
         if ($response instanceof Response) {
-            $response->prepare($this->getRequest())->send();
+            $response->prepare($this->getEnvironment()->getRequest())->send();
         } else {
             // fallback to 404
             $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
-            $response->prepare($this->getRequest())->send();
+            $response->prepare($this->getEnvironment()->getRequest())->send();
         }
     }
 

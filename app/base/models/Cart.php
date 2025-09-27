@@ -76,7 +76,7 @@ class Cart extends BaseModel
     /**
      * Get the name of the model
      * 
-     * @return \App\Base\Model\CartItem[]
+     * @return \App\Base\Models\CartItem[]
      */
     public function getItems(): array
     {

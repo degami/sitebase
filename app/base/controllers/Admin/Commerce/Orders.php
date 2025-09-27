@@ -13,6 +13,7 @@
 
 namespace App\Base\Controllers\Admin\Commerce;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -24,6 +25,8 @@ use App\Base\Models\OrderPayment;
 use App\Base\Models\OrderStatus;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\OrderComment;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * "Orders" Admin Page
@@ -403,5 +406,13 @@ class Orders extends AdminManageFrontendModelsPage
             },
             $data
         );
+    }
+
+    protected function beforeRender(): BasePage|Response 
+    {
+        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) == false) {
+            $this->addWarningFlashMessage($this->getUtils()->translate("Commerce functionallity is currently disabled"), true);
+        }
+        return parent::beforeRender();
     }
 }

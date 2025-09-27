@@ -13,6 +13,7 @@
 
 namespace App\Base\Controllers\Admin\Commerce;
 
+use App\App;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Base\Routing\RouteInfo;
@@ -24,6 +25,8 @@ use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Discount as DiscountModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * "Discounts" Admin Page
@@ -305,5 +308,13 @@ class Discounts extends AdminManageFrontendModelsPage
             },
             $data
         );
+    }
+
+    protected function beforeRender(): BasePage|Response 
+    {
+        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) == false) {
+            $this->addWarningFlashMessage($this->getUtils()->translate("Commerce functionallity is currently disabled"), true);
+        }
+        return parent::beforeRender();
     }
 }

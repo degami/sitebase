@@ -14,27 +14,22 @@
 namespace App\Base\Controllers\Admin\Commerce;
 
 use App\App;
-use App\Base\Abstracts\Models\BaseCollection;
-use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Routing\RouteInfo;
-use App\Base\Models\User;
-use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi\Exceptions\FormException;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Exception;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Degami\Basics\Html\TagElement;
-use ReflectionClass;
 use App\Base\Interfaces\Commerce\PaymentMethodInterface;
 use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Abstracts\Controllers\AdminFormPage;
-use App\Base\Models\Configuration;
 use Degami\PHPFormsApi as FAPI;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * Order Payments Methods manage
@@ -318,5 +313,13 @@ class PaymentMethods extends AdminFormPage
         }
 
         return $this->refreshPage();
+    }
+
+    protected function beforeRender(): BasePage|Response 
+    {
+        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) == false) {
+            $this->addWarningFlashMessage($this->getUtils()->translate("Commerce functionallity is currently disabled"), true);
+        }
+        return parent::beforeRender();
     }
 }

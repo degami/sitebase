@@ -13,6 +13,7 @@
 
 namespace App\Base\Controllers\Admin\Commerce;
 
+use App\App;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Base\Routing\RouteInfo;
@@ -24,6 +25,8 @@ use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\OrderPayment as OrderPaymentModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * "Order Payments" Admin Page
@@ -297,5 +300,14 @@ class OrderPayments extends AdminManageFrontendModelsPage
         $data = $orderPayment->getData();
         $data['additional_data'] = json_decode($orderPayment->getAdditionalData(), true);
         return '<h2>'.$this->getUtils()->translate('Payment for order %s', [$orderPayment->getOrder()?->getOrderNumber()]).'</h2><hr/>'.$this->getHtmlRenderer()->renderArrayOnTable($data);
+    }
+
+
+    protected function beforeRender(): BasePage|Response 
+    {
+        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) == false) {
+            $this->addWarningFlashMessage($this->getUtils()->translate("Commerce functionallity is currently disabled"), true);
+        }
+        return parent::beforeRender();
     }
 }

@@ -13,9 +13,7 @@
 
 namespace App\Base\Controllers\Admin\Commerce;
 
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -27,10 +25,11 @@ use App\Base\Models\Cart as CartModel;
 use App\Base\Models\CartDiscount;
 use App\Base\Models\CartItem;
 use App\Base\Models\Country;
-use App\Base\Models\User;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\Basics\Html\TagElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
+use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * "Carts" Admin Page
@@ -647,5 +646,13 @@ class Carts extends AdminManageFrontendModelsPage
     protected function getAddresses(CartModel $cart) : array
     {
         return Address::getCollection()->where(['user_id' => $cart->getUserId()])->getItems();
+    }
+
+    protected function beforeRender(): BasePage|Response 
+    {
+        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) == false) {
+            $this->addWarningFlashMessage($this->getUtils()->translate("Commerce functionallity is currently disabled"), true);
+        }
+        return parent::beforeRender();
     }
 }

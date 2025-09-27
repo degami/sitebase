@@ -6,6 +6,7 @@
 @use "partials/admin_sidebar" as *;
 @use "partials/admin_ui" as *;
 @use "partials/dark-mode" as *;
+@use "partials/debugbar" as *;
 
 @use "../node_modules/select2/src/scss/core";
 @use '../node_modules/pretty-checkbox/src/pretty-checkbox.scss';

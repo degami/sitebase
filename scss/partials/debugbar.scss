@@ -1,0 +1,116 @@
+.phpdebugbar {
+    .phpdebugbar-restore-btn {
+        background-color: #444;
+        border: 0;
+    }
+
+    &.phpdebugbar-closed,
+    &.phpdebugbar-minimized {
+        border-top: 1px solid #444;
+    }
+
+    .phpdebugbar-resize-handle {
+        border-bottom: 1px solid #444;
+    }
+    .phpdebugbar-body {
+        border-top: 1px solid #444;
+    }
+
+    background: #1e1e1e !important;
+    color: #ccc !important;
+
+    .phpdebugbar-header,
+    .phpdebugbar-tab {
+        background: #2c2c2c !important;
+        color: #eee !important;
+    }
+
+    .phpdebugbar-header {
+        padding: 5px;
+        .phpdebugbar-indicator {
+            border: 0;
+            color: #ccc !important;
+        }
+    }
+
+    .phpdebugbar-content {
+        background: #1e1e1e !important;
+        color: #ccc !important;
+    }
+
+    .phpdebugbar-tab.active {
+        background: #3a3a3a !important;
+        color: #fff !important;
+    }
+
+    ul.phpdebugbar-widgets-list {
+        li {
+            border-bottom: 1px solid #333;
+
+            &:hover {
+                background-color: transparent;
+            }
+        }
+    }
+
+    div.phpdebugbar-widgets-sqlqueries {
+    
+        .hljs-deletion, 
+        .hljs-number, 
+        .hljs-quote, 
+        .hljs-selector-class, 
+        .hljs-selector-id, 
+        .hljs-string, 
+        .hljs-template-tag, 
+        .hljs-type {
+            color: #34bcff;
+        }
+    
+        .phpdebugbar-widgets-sql {
+            color: #ccc;
+        }
+
+        li.phpdebugbar-widgets-list-item.phpdebugbar-widgets-sql-duplicate {
+            background-color: transparent;
+            color: #777;
+        }
+    }
+
+    dl.phpdebugbar-widgets-kvlist {
+        dt {
+            font-weight: 600;
+        }
+        dt, dd {
+            border-top: 1px solid #333;
+        }
+    }
+
+    ul.phpdebugbar-widgets-timeline {
+         .phpdebugbar-widgets-measure {
+              border-bottom: 1px solid #333;
+         }
+
+        li {
+            padding: 3px;
+            span.phpdebugbar-widgets-label, span.phpdebugbar-widgets-collector {
+                color: #999;
+            }
+
+            &:hover {
+                background-color: transparent;
+            }
+        } 
+
+        table.phpdebugbar-widgets-params {
+            td {
+                padding: 3px;
+                border: 1px solid #333 !important;
+                .phpdebugbar-widgets-measure {
+                    border: 0;
+                }
+            }
+        }
+    }
+}
+
+

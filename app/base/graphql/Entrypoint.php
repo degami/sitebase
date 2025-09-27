@@ -652,36 +652,6 @@ class Entrypoint extends BasePage
         return $attrs;
     }
 
-    protected function pluralize(string $word): string 
-    {
-        $lower = strtolower($word);
-
-        // Words ending in y preceded by a consonant → replace y with ies
-        if (preg_match('/([^aeiou])y$/i', $word)) {
-            return preg_replace('/y$/i', 'ies', $word);
-        }
-
-        // Common irregulars (optional, you can expand)
-        $irregulars = [
-            'person' => 'people',
-            'man' => 'men',
-            'woman' => 'women',
-            'child' => 'children',
-            'mouse' => 'mice',
-            'goose' => 'geese',
-        ];
-
-        if (isset($irregulars[$lower])) {
-            // preserve original casing
-            $firstUpper = ctype_upper($word[0]);
-            $plural = $irregulars[$lower];
-            return $firstUpper ? ucfirst($plural) : $plural;
-        }
-
-        // Default: just add 's'
-        return $word . (!str_ends_with($word, 's') ? 's' : '');
-    }
-
     public function getTypesByName(): array
     {
         return $this->typesByName;
@@ -747,7 +717,7 @@ class Entrypoint extends BasePage
         }
 
         // register collections query
-        $this->queryFields[strtolower($this->pluralize($typeName))] = [
+        $this->queryFields[strtolower($this->getUtils()->pluralize($typeName))] = [
             'type' => $this->typesByName[$collName],
             'args' => ['input' => ['type' => $this->typesByName['SearchCriteriaInput']]],
             'resolve' => function ($root, $args) use ($modelClass) {

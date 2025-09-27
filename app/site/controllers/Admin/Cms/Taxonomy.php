@@ -55,7 +55,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return TaxonomyModel::class;
     }

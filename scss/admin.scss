@@ -156,6 +156,14 @@ body {
     &.admin-dashboard  {
         .counters{
             .counter{
+                a {
+                    color: inherit;
+
+                    svg {
+                        zoom: 3;
+                    }
+                }
+
                 label{
                     font-weight: bold;
                 }

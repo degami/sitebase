@@ -70,7 +70,7 @@ abstract class FrontendPageWithObject extends FrontendPage
             throw new Exception('Missing "object" property');
         }
 
-        if (!($this->getObject() instanceof BaseModel && is_a($this->getObject(), $this->getObjectClass()) && $this->getObject()->isLoaded())) {
+        if (!($this->getObject() instanceof BaseModel && is_a($this->getObject(), static::getObjectClass()) && $this->getObject()->isLoaded())) {
             throw new NotFoundException();
         }
 

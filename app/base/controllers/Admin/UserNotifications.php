@@ -59,7 +59,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return UserNotification::class;
     }

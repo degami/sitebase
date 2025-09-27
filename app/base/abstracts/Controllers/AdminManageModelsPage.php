@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\PermissionDeniedException;
@@ -110,7 +111,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     protected function defaultOrder() : array
     {
         try {
-            $reflection = new ReflectionClass($this->getObjectClass());
+            $reflection = new ReflectionClass(static::getObjectClass());
             $docComment = $reflection->getDocComment();
             if ($docComment && strpos($docComment, 'getId') !== false) {
                 return ['id' => 'ASC'];
@@ -159,7 +160,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
         }
 
         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-        $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
+        $collection = $this->containerCall([static::getObjectClass(), 'getCollection']);
         $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
 
         return $collection;
@@ -210,7 +211,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getObject(): ?BaseModel
     {
-        if (($this->objectInstance != null) && (is_subclass_of($this->objectInstance, $this->getObjectClass()))) {
+        if (($this->objectInstance != null) && (is_subclass_of($this->objectInstance, static::getObjectClass()))) {
             return $this->objectInstance;
         }
 
@@ -262,11 +263,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     protected function loadObject(int $id): ?BaseModel
     {
-        if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
+        if (!is_subclass_of(static::getObjectClass(), BaseModel::class)) {
             return null;
         }
 
-        return $this->containerCall([$this->getObjectClass(), 'load'], ['id' => $id]);
+        return $this->containerCall([static::getObjectClass(), 'load'], ['id' => $id]);
     }
 
     /**
@@ -280,11 +281,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     protected function newEmptyObject(): ?BaseModel
     {
-        if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
+        if (!is_subclass_of(static::getObjectClass(), BaseModel::class)) {
             return null;
         }
 
-        return $this->containerMake($this->getObjectClass());
+        return $this->containerMake(static::getObjectClass());
     }
 
     /**
@@ -481,7 +482,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function getModelTableName(): mixed
     {
-        return $this->containerCall([$this->getObjectClass(), 'defaultTableName']);
+        return $this->containerCall([static::getObjectClass(), 'defaultTableName']);
     }
 
     /**
@@ -508,12 +509,18 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return parent::beforeRender();
     }
 
+    public static function exposeDataToDashboard() : mixed
+    {
+        return App::getInstance()->containerCall([static::getObjectClass(), 'getCollection'])->count();        
+    }
+
+
     /**
      * gets object to show class name for loading
      *
      * @return string
      */
-    abstract public function getObjectClass(): string;
+    abstract public static function getObjectClass(): string;
 
     /**
      * defines object id query param name

@@ -132,7 +132,7 @@ class Media extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return MediaElement::class;
     }
@@ -612,7 +612,7 @@ class Media extends AdminManageModelsPage
             return 0;
         }
 
-        $childrenCollection = $this->containerCall([$this->getObjectClass(), 'getCollection']);   
+        $childrenCollection = $this->containerCall([static::getObjectClass(), 'getCollection']);   
         $childrenCollection->addCondition(['parent_id' => $folder->getId()]);
         $childrenCollection->addSelect('*')->addSelect('IF(mimetype =\'inode/directory\', 1, 0) AS is_dir');
         $childrenCollection->addOrder(['is_dir' => 'DESC'], 'start');

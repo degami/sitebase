@@ -110,7 +110,7 @@ class Blocks extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return Block::class;
     }

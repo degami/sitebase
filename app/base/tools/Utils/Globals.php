@@ -1091,4 +1091,40 @@ class Globals extends ContainerAwareObject
 
         return $currenciesMap[$currencyCode] ?? $currencyCode;
     }
+
+    /**
+     * Pluralize word
+     * 
+     * @param string $word
+     * @return string
+     */
+    public function pluralize(string $word): string 
+    {
+        $lower = strtolower($word);
+
+        // Words ending in y preceded by a consonant → replace y with ies
+        if (preg_match('/([^aeiou])y$/i', $word)) {
+            return preg_replace('/y$/i', 'ies', $word);
+        }
+
+        // Common irregulars (optional, you can expand)
+        $irregulars = [
+            'person' => 'people',
+            'man' => 'men',
+            'woman' => 'women',
+            'child' => 'children',
+            'mouse' => 'mice',
+            'goose' => 'geese',
+        ];
+
+        if (isset($irregulars[$lower])) {
+            // preserve original casing
+            $firstUpper = ctype_upper($word[0]);
+            $plural = $irregulars[$lower];
+            return $firstUpper ? ucfirst($plural) : $plural;
+        }
+
+        // Default: just add 's'
+        return $word . (!str_ends_with($word, 's') ? 's' : '');
+    }
 }

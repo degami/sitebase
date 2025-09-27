@@ -80,7 +80,7 @@ class OrderPayments extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return OrderPaymentModel::class;
     }
@@ -309,5 +309,10 @@ class OrderPayments extends AdminManageFrontendModelsPage
             $this->addWarningFlashMessage($this->getUtils()->translate("Commerce functionallity is currently disabled"), true);
         }
         return parent::beforeRender();
+    }
+
+    public static function exposeDataToDashboard() : mixed
+    {
+        return null;
     }
 }

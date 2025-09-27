@@ -13,6 +13,7 @@
 
 namespace App\Base\Controllers\Admin;
 
+use App\App;
 use App\Base\Models\Block;
 use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
@@ -26,7 +27,10 @@ use App\Site\Models\Page;
 use App\Site\Models\News;
 use App\Site\Models\Taxonomy;
 use App\Base\Abstracts\Controllers\AdminPage;
+use App\Base\Abstracts\Models\FrontendModel;
+use App\Base\Tools\Utils\Globals;
 use App\Site\Models\Event;
+use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * "Dashboard" Admin Page
@@ -76,21 +80,63 @@ class Dashboard extends AdminPage
      */
     public function getTemplateData(): array
     {
+
+        $frontendClasses = array_filter(array_merge(
+            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+        ), function ($className) {
+            return is_subclass_of($className, FrontendModel::class);
+        });
+
         $this->template_data = [
             'websites' => Website::getCollection()->count(),
             'users' => User::getCollection()->count(),
-            'pages' => Page::getCollection()->count(),
             'contact_forms' => Contact::getCollection()->count(),
             'contact_submissions' => ContactSubmission::getCollection()->count(),
-            'taxonomy_terms' => Taxonomy::getCollection()->count(),
             'blocks' => Block::getCollection()->count(),
             'media' => MediaElement::getCollection()->count(),
             'page_views' => RequestLog::getCollection()->count(),
             'mails_sent' => MailLog::getCollection()->count(),
             'links' => LinkExchange::getCollection()->count(),
-            'news' => News::getCollection()->count(),
-            'events' => Event::getCollection()->count(),
+ //           'pages' => Page::getCollection()->count(),
+//            'taxonomy_terms' => Taxonomy::getCollection()->count(),
+//            'news' => News::getCollection()->count(),
+//            'events' => Event::getCollection()->count(),
         ];
+
+
+        foreach ($frontendClasses as $frontendClass) {
+            $key = $this->getUtils()->pluralize(Globals::getClassBasename($frontendClass));
+            $this->template_data[strtolower($key)] = $this->containerCall([$frontendClass, 'getCollection'])->count();
+        }
+
+
+        $adminControllers = array_filter(array_merge(
+            ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+            ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+        ), function ($className) {
+            return is_subclass_of($className, AdminPage::class);
+        });
+
+        $this->template_data['dashboard_links'] = [];
+        foreach ($adminControllers as $adminController) {
+            if (is_callable([$adminController, 'exposeDataToDashboard'])) {
+                $dashboardData = $this->containerCall([$adminController, 'exposeDataToDashboard']);
+                $key = $adminController;
+                $pageLink = $this->containerCall([$adminController, 'getAdminPageLink']);
+                if (!is_null($dashboardData) && is_array($pageLink)) {
+                    $this->template_data['dashboard_links'][$key] = [
+                        'icon' => $pageLink['icon'],
+                        'label' => $pageLink['text'],
+                        'route_name' => $pageLink['route_name'],
+                        'data' => $dashboardData,
+                    ];
+                }
+            }
+        }
+
+//        var_dump($this->template_data);
+
         return $this->template_data;
     }
 }

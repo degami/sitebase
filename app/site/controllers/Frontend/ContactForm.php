@@ -130,7 +130,7 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
      */
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
-        if (!($this->getObject() instanceof BaseModel && is_a($this->getObject(), $this->getObjectClass()) && $this->template_data['object']->isLoaded())) {
+        if (!($this->getObject() instanceof BaseModel && is_a($this->getObject(), static::getObjectClass()) && $this->template_data['object']->isLoaded())) {
             throw new NotFoundException();
         }
 

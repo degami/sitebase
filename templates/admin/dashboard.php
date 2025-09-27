@@ -30,26 +30,32 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
 
 <div class="counters h6">
     <div class="row justify-content-md-center">
-        <div class="col-md-5 text-center">
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('globe')?>&nbsp;<?= $this->sitebase()->translate('Websites');?></label> <?= $websites;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('user')?>&nbsp;<?= $this->sitebase()->translate('Users');?></label> <?= $users;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('book-open')?>&nbsp;<?= $this->sitebase()->translate('Pages');?></label> <?= $pages;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('file-text')?>&nbsp;<?= $this->sitebase()->translate('Contact Forms');?></label> <?= $contact_forms;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('file')?>&nbsp;<?= $this->sitebase()->translate('Contact Submissions');?></label> <?= $contact_submissions;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('list')?>&nbsp;<?= $this->sitebase()->translate('Taxonomy Terms');?></label> <?= $taxonomy_terms;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('file-text')?>&nbsp;<?= $this->sitebase()->translate('News');?></label> <?= $news;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('calendar')?>&nbsp;<?= $this->sitebase()->translate('Events');?></label> <?= $events;?></div>
-        </div>
-        <div class="col-md-5 text-center">
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('link')?>&nbsp;<?= $this->sitebase()->translate('Links');?></label> <?= $links;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('box')?>&nbsp;<?= $this->sitebase()->translate('Blocks');?></label> <?= $blocks;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('image')?>&nbsp;<?= $this->sitebase()->translate('Media');?></label> <?= $media;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><hr /></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('info')?>&nbsp;<?= $this->sitebase()->translate('Page Views');?></label> <?= $page_views;?></div>
-            <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('mail')?>&nbsp;<?= $this->sitebase()->translate('Mails sent');?></label> <?= $mails_sent;?></div>
-            <?php if ($controller->checkPermission('administer_logs')) :?>
-                <div class="text-left nowrap pl-5"><a class="btn btn-light d-flex align-items-center justify-content-center" href="<?= $this->sitebase()->getUrl('admin.stats');?>"><?php $this->sitebase()->drawIcon('bar-chart')?>&nbsp;<?= $this->sitebase()->translate('Stats');?></a></div>
+        <?php $chunks = array_chunk($dashboard_links, ceil(count($dashboard_links) / 3 + 2)); ?>
+        <?php foreach ($chunks as $chunkIndex => $chunk) : ?>
+            <div class="col-md-4 text-center">
+            <?php foreach ($chunk as $link): ?>
+                <div class="counter mb-2 d-flex justify-content-between align-items-center">
+                    <label class="text-left nowrap pl-5 d-inline-flex align-items-center">
+                        <a class="d-flex align-items-center" href="<?= $this->sitebase()->getUrl($link['route_name']);?>">
+                            <?php $this->sitebase()->drawIcon($link['icon'])?>&nbsp;<?= $this->sitebase()->translate($link['label']);?>
+                        </a>
+                    </label> 
+                    <?= $link['data'];?>
+                </div>
+            <?php endforeach; ?>
+
+            <?php if ($chunkIndex == 2) : ?>
+                <div class="counter mb-2 d-flex justify-content-between"><hr /></div>
+                <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('info')?>&nbsp;<?= $this->sitebase()->translate('Page Views');?></label> <?= $page_views;?></div>
+                <div class="counter mb-2 d-flex justify-content-between"><label class="text-left nowrap pl-5 d-inline-flex align-items-center"><?php $this->sitebase()->drawIcon('mail')?>&nbsp;<?= $this->sitebase()->translate('Mails sent');?></label> <?= $mails_sent;?></div>
+                <?php if ($controller->checkPermission('administer_logs')) :?>
+                    <div class="text-left nowrap pl-5"><a class="btn btn-light d-flex align-items-center justify-content-center" href="<?= $this->sitebase()->getUrl('admin.stats');?>"><?php $this->sitebase()->drawIcon('bar-chart')?>&nbsp;<?= $this->sitebase()->translate('Stats');?></a></div>
+                <?php endif; ?>
             <?php endif; ?>
-        </div>
+
+
+            </div>
+        <?php endforeach ?>
     </div>
+
 </div>

@@ -57,7 +57,7 @@ class Sitemaps extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return Sitemap::class;
     }

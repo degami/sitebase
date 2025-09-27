@@ -79,7 +79,7 @@ class MediaRewrites extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return MediaElementRewrite::class;
     }
@@ -281,5 +281,10 @@ class MediaRewrites extends AdminManageModelsPage
             },
             $data
         );
+    }
+
+    public static function exposeDataToDashboard() : mixed
+    {
+        return null;
     }
 }

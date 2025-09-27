@@ -85,6 +85,11 @@ abstract class AdminPage extends BaseHtmlPage
         return null;
     }
 
+    public static function exposeDataToDashboard() : mixed
+    {
+        return null;
+    }
+
     /**
      * before render hook
      *

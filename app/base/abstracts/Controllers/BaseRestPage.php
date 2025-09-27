@@ -99,11 +99,11 @@ abstract class BaseRestPage extends BasePage
      */
     protected function loadObject($id): ?BaseModel
     {
-        if (!is_subclass_of($this->getObjectClass(), BaseModel::class)) {
+        if (!is_subclass_of(static::getObjectClass(), BaseModel::class)) {
             return null;
         }
 
-        return $this->containerCall([$this->getObjectClass(), 'load'], ['id' => $id]);
+        return $this->containerCall([static::getObjectClass(), 'load'], ['id' => $id]);
     }
 
     /**
@@ -139,7 +139,7 @@ abstract class BaseRestPage extends BasePage
         }
 
         /** @var BaseModel $object */
-        $object = $this->containerCall([$this->getObjectClass(), 'new']);
+        $object = $this->containerCall([static::getObjectClass(), 'new']);
         if (in_array($this->getVerb(), ['GET', 'PUT', 'DELETE']) && isset($route_data['id'])) {
             $object = $this->loadObject($route_data['id']);
         }
@@ -160,7 +160,7 @@ abstract class BaseRestPage extends BasePage
                 if ($object->id == null) {
                     return $this->getUtils()->createJsonResponse(array_map(function ($object) {
                             return $object->getData();
-                        }, $this->containerCall([$this->getObjectClass(), 'getCollection'])->getItems()));
+                        }, $this->containerCall([static::getObjectClass(), 'getCollection'])->getItems()));
                 }
 
                 return $this->getUtils()->createJsonResponse($object->getData());

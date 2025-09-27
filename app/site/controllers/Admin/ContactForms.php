@@ -75,7 +75,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                 $this->addBackButton();
             }
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
-            $collection = $this->containerCall([$this->getObjectClass(), 'getCollection']);
+            $collection = $this->containerCall([static::getObjectClass(), 'getCollection']);
             $collection->addOrder($this->getRequest()->query->all('order'));
             if ($this->template_data['action'] == 'submissions') {
                 $collection->addCondition(['contact_id' => $this->getRequest()->get('contact_id')]);
@@ -128,9 +128,9 @@ class ContactForms extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
-        if (($this->getRequest()->get('action') ?? 'list') == 'submissions') {
+        if ((App::getInstance()->getEnvironment()->getRequest()->get('action') ?? 'list') == 'submissions') {
             return ContactSubmission::class;
         }
         return Contact::class;

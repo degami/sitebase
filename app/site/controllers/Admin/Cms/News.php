@@ -52,7 +52,7 @@ class News extends AdminManageFrontendModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return NewsModel::class;
     }

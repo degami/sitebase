@@ -53,7 +53,7 @@ class Menus extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return Menu::class;
     }
@@ -381,5 +381,10 @@ class Menus extends AdminManageModelsPage
             },
             $data
         );
+    }
+
+    public static function exposeDataToDashboard() : mixed
+    {
+        return null;
     }
 }

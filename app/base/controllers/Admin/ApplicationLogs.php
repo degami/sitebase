@@ -78,7 +78,7 @@ class ApplicationLogs extends AdminManageModelsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return ApplicationLog::class;
     }
@@ -268,5 +268,10 @@ class ApplicationLogs extends AdminManageModelsPage
             },
             $data
         );
+    }
+
+    public static function exposeDataToDashboard() : mixed
+    {
+        return null;
     }
 }

@@ -65,7 +65,7 @@ class DownloadableProducts extends AdminManageProductsPage
      *
      * @return string
      */
-    public function getObjectClass(): string
+    public static function getObjectClass(): string
     {
         return DownloadableProduct::class;
     }

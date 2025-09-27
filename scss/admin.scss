@@ -158,10 +158,11 @@ body {
             .counter{
                 a {
                     color: inherit;
+                }
 
-                    svg {
-                        zoom: 3;
-                    }
+                svg {
+                    zoom: 2.5;
+                    margin-right: 3px;
                 }
 
                 label{

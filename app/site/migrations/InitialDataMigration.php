@@ -77,9 +77,9 @@ class InitialDataMigration extends BaseMigration
     public static function addWebsite(): Website
     {
         $website_model = Website::new();
-        $website_model->setSiteName(App::getInstance()->getEnv('APPNAME'));
+        $website_model->setSiteName(App::getInstance()->getEnvironment()->getVariable('APPNAME'));
 
-        $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim(App::getInstance()->getEnv('APPDOMAIN')))), 'www.');
+        $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim(App::getInstance()->getEnvironment()->getVariable('APPDOMAIN')))), 'www.');
         $website_model->setDomain($site_domain);
         $website_model->setAliases('www.' . $site_domain);
         $website_model->setDefaultLocale('en');
@@ -101,9 +101,9 @@ class InitialDataMigration extends BaseMigration
     {
         $admin_model = User::new();
 
-        $admin_user = App::getInstance()->getEnv('ADMIN_USER', $_ENV['ADMIN_USER'] ?? null);
-        $admin_pass = App::getInstance()->getEnv('ADMIN_PASS', $_ENV['ADMIN_PASS'] ?? null);
-        $admin_email = App::getInstance()->getEnv('ADMIN_EMAIL', $_ENV['ADMIN_EMAIL'] ?? null);
+        $admin_user = App::getInstance()->getEnvironment()->getVariable('ADMIN_USER', $_ENV['ADMIN_USER'] ?? null);
+        $admin_pass = App::getInstance()->getEnvironment()->getVariable('ADMIN_PASS', $_ENV['ADMIN_PASS'] ?? null);
+        $admin_email = App::getInstance()->getEnvironment()->getVariable('ADMIN_EMAIL', $_ENV['ADMIN_EMAIL'] ?? null);
 
         if (empty($admin_user) || empty($admin_pass) || empty($admin_email)) {
             echo "\nmissing admin info. Using default values, please modify admin user after login.\n Admin User: \"admin\", Admin password:\"admin\", Admin email:\"admin@localhost\".\n\n";
@@ -288,12 +288,12 @@ class InitialDataMigration extends BaseMigration
 
         $page_model->setWebsiteId($website_model->getId());
         $page_model->setUrl('homepage');
-        $page_model->setTitle(App::getInstance()->getEnv('APPNAME') . ' home');
+        $page_model->setTitle(App::getInstance()->getEnvironment()->getVariable('APPNAME') . ' home');
         $page_model->setLocale($locale);
-        $page_model->setContent('<p>Welcome to '.App::getInstance()->getEnv('APPNAME').' - Empower Your Digital Presence</p>
-<p>'.App::getInstance()->getEnv('APPNAME').' provides the tools you need to effortlessly create, manage, and grow your online presence. Whether you\'re building a personal blog, a business website, or a robust e-commerce platform, '.App::getInstance()->getEnv('APPNAME').' is designed with simplicity, flexibility, and performance in mind.</p>
-<p>With '.App::getInstance()->getEnv('APPNAME').', you’ll enjoy a user-friendly interface, powerful customization options, and seamless integrations to enhance your website’s functionality. No coding skills? No problem. Our intuitive tools let you focus on what matters most: engaging your audience and achieving your goals.</p>
-<p>Get '.App::getInstance()->getEnv('APPNAME').' to bring their ideas to life. Start building your future online today!</p>');
+        $page_model->setContent('<p>Welcome to '.App::getInstance()->getEnvironment()->getVariable('APPNAME').' - Empower Your Digital Presence</p>
+<p>'.App::getInstance()->getEnvironment()->getVariable('APPNAME').' provides the tools you need to effortlessly create, manage, and grow your online presence. Whether you\'re building a personal blog, a business website, or a robust e-commerce platform, '.App::getInstance()->getEnvironment()->getVariable('APPNAME').' is designed with simplicity, flexibility, and performance in mind.</p>
+<p>With '.App::getInstance()->getEnvironment()->getVariable('APPNAME').', you’ll enjoy a user-friendly interface, powerful customization options, and seamless integrations to enhance your website’s functionality. No coding skills? No problem. Our intuitive tools let you focus on what matters most: engaging your audience and achieving your goals.</p>
+<p>Get '.App::getInstance()->getEnvironment()->getVariable('APPNAME').' to bring their ideas to life. Start building your future online today!</p>');
         $page_model->setUserId($owner_model->getId());
 
         $page_model->persist();

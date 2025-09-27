@@ -59,7 +59,7 @@ class Deploy extends BaseExecCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        if (App::getInstance()->getEnv('SALT') == "") {
+        if (App::getInstance()->getEnvironment()->getVariable('SALT') == "") {
             $this->getIo()->info("Missing SALT in .env, adding a random value");
             $application = $this->getApplication();
 

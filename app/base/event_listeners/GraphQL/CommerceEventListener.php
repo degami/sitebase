@@ -41,7 +41,7 @@ class CommerceEventListener implements EventListenerInterface
     public function RegisterGraphQLQueryFields(Event $e) 
     {
         $app = App::getInstance();
-        if (!$app->getenv('ENABLE_COMMERCE', false)) {
+        if (!$app->getEnvironment()->getVariable('ENABLE_COMMERCE', false)) {
             return; // Exit if commerce is not enabled
         }
 
@@ -113,7 +113,7 @@ class CommerceEventListener implements EventListenerInterface
     public function RegisterGraphQLMutationFields(Event $e) 
     {
         $app = App::getInstance();
-        if (!$app->getenv('ENABLE_COMMERCE', false)) {
+        if (!$app->getEnvironment()->getVariable('ENABLE_COMMERCE', false)) {
             return; // Exit if commerce is not enabled
         }
 
@@ -154,7 +154,7 @@ class CommerceEventListener implements EventListenerInterface
         return [
             'type' => $typesByName['Cart'],
             'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
-                if (!$app->getEnv('ENABLE_COMMERCE', false)) {
+                if (!$app->getEnvironment()->getVariable('ENABLE_COMMERCE', false)) {
                     return null;
                 }
 

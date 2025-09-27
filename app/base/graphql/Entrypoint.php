@@ -63,7 +63,7 @@ class Entrypoint extends BasePage
         $schemaDir = App::getDir(APP::GRAPHQL);
         $files = glob($schemaDir . DS . '*.graphql');
         foreach($files as $filePath) {
-            if (!$this->getEnv('ENABLE_COMMERCE') && basename($filePath) == 'commerce.graphql') {
+            if (!$this->getEnvironment()->getVariable('ENABLE_COMMERCE') && basename($filePath) == 'commerce.graphql') {
                 continue; // skip commerce schema if not enabled
             }
 
@@ -137,8 +137,8 @@ class Entrypoint extends BasePage
                     $log->persist();
                 } catch (Exception $e) {
                     $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
-                    if ($this->getEnv('DEBUG')) {
-                        return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
+                    if ($this->getEnvironment()->getVariable('DEBUG')) {
+                        return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
                     }
                 }
             }

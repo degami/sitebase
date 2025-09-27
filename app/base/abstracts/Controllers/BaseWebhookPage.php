@@ -81,8 +81,8 @@ abstract class BaseWebhookPage extends BasePage
                     $log->persist();
                 } catch (Exception $e) {
                     $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
-                    if ($this->getEnv('DEBUG')) {
-                        return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
+                    if ($this->getEnvironment()->getVariable('DEBUG')) {
+                        return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
                     }
                 }    
             }
@@ -91,7 +91,7 @@ abstract class BaseWebhookPage extends BasePage
                 array_merge(['success' => true,], $this->processWebhook($this->getWebhookData()))
             );
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionJson($e, $this->getRequest());
+            return $this->getUtils()->exceptionJson($e);
         }
     }
 

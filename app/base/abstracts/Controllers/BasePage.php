@@ -273,7 +273,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
         if (empty($destination_url)) {
             $destination_url = $this->getControllerUrl();
         }
-        return urlencode(base64_encode($destination_url . ':' . sha1($this->getEnv('SALT'))));
+        return urlencode(base64_encode($destination_url . ':' . sha1($this->getEnvironment()->getVariable('SALT'))));
     }
 
     /**

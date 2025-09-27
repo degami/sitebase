@@ -67,10 +67,10 @@ class Manager extends ContainerAwareObject implements CacheInterface
         if (self::$internalCacheInstance == null) {
             if ($this->getRedis()->isEnabled()) {
                 $config = new \Phpfastcache\Drivers\Redis\Config([
-                    'host' => $this->getEnv('REDIS_HOST', '127.0.0.1'),
-                    'port' => intval($this->getEnv('REDIS_PORT', 6379)),
-                    'password' => $this->getEnv('REDIS_PASSWORD', ''),
-                    'database' => intval($this->getEnv('REDIS_DATABASE', 0)),
+                    'host' => $this->getEnvironment()->getVariable('REDIS_HOST', '127.0.0.1'),
+                    'port' => intval($this->getEnvironment()->getVariable('REDIS_PORT', 6379)),
+                    'password' => $this->getEnvironment()->getVariable('REDIS_PASSWORD', ''),
+                    'database' => intval($this->getEnvironment()->getVariable('REDIS_DATABASE', 0)),
                 ]);
                 $cache = \Phpfastcache\CacheManager::getInstance('Redis', $config);
             } else {
@@ -96,7 +96,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      */
     public function get($key, $default = null) : mixed
     {
-        if ($this->getEnv('DISABLE_CACHE')) {
+        if ($this->getEnvironment()->getVariable('DISABLE_CACHE')) {
             return $default;
         }
 
@@ -121,7 +121,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      */
     public function getCacheLifetime(int|DateInterval|null $ttl = null): DateInterval|int
     {
-        return (is_int($ttl) || $ttl instanceof DateInterval) ? $ttl : ($this->getEnv('CACHE_LIFETIME') ?? 300);
+        return (is_int($ttl) || $ttl instanceof DateInterval) ? $ttl : ($this->getEnvironment()->getVariable('CACHE_LIFETIME') ?? 300);
     }
 
     /**
@@ -136,7 +136,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      */
     public function set($key, $value, $ttl = null): bool
     {
-        if ($this->getEnv('DISABLE_CACHE')) {
+        if ($this->getEnvironment()->getVariable('DISABLE_CACHE')) {
             return false;
         }
 
@@ -279,7 +279,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      */
     public function has($key): bool
     {
-        if ($this->getEnv('DISABLE_CACHE')) {
+        if ($this->getEnvironment()->getVariable('DISABLE_CACHE')) {
             return false;
         }
 

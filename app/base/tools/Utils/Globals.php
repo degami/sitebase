@@ -126,14 +126,18 @@ class Globals extends ContainerAwareObject
      * logs request (if needed)
      *
      * @param $status_code
-     * @param Request $request
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function logRequestIfNeeded(int $status_code, Request $request) : void
+    protected function logRequestIfNeeded(int $status_code) : void
     {
+        $request = $this->getEnvironment()->getRequest();
+        if (!$request) {
+            return;
+        }
+
         if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
             $route_info = $this->getAppRouteInfo();
             try {
@@ -156,7 +160,6 @@ class Globals extends ContainerAwareObject
      * return an error page
      *
      * @param int $error_code
-     * @param Request $request
      * @param RouteInfo|null $route_info
      * @param array $template_data
      * @param string|null $template_name
@@ -167,11 +170,13 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function errorPage(int $error_code, Request $request, ?RouteInfo $route_info = null, array $template_data = [], ?string $template_name = null): Response
+    public function errorPage(int $error_code, ?RouteInfo $route_info = null, array $template_data = [], ?string $template_name = null): Response
     {
         if (App::installDone()) {
-            $this->logRequestIfNeeded($error_code, $request);
+            $this->logRequestIfNeeded($error_code);
         }
+
+        $request = $this->getEnvironment()->getRequest();
 
         if ($route_info == null) {
             $route_info = $this->getEmptyRouteInfo();
@@ -228,7 +233,6 @@ class Globals extends ContainerAwareObject
      * returns a exception error page
      *
      * @param Throwable $exception
-     * @param Request $request
      * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
@@ -237,10 +241,10 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function exceptionPage(Throwable $exception, Request $request, ?RouteInfo $route_info = null): Response
+    public function exceptionPage(Throwable $exception, ?RouteInfo $route_info = null): Response
     {
         if (App::installDone()) {
-            $this->logException($exception, null, $request);
+            $this->logException($exception, null, $this->getEnvironment()->getRequest());
         }
 
         if ($route_info == null) {
@@ -259,13 +263,12 @@ class Globals extends ContainerAwareObject
         }
 
 
-        return $this->errorPage(500, $request, $route_info, $template_data, 'errors::exception');
+        return $this->errorPage(500, $route_info, $template_data, 'errors::exception');
     }
 
     /**
      * returns a blocked ip exception error page
      *
-     * @param Request $request
      * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
@@ -274,35 +277,35 @@ class Globals extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function blockedIpPage(Request $request, ?RouteInfo $route_info = null): Response
+    public function blockedIpPage(?RouteInfo $route_info = null): Response
     {
+        $request = $this->getEnvironment()->getRequest();
         $template_data = [
-            'ip_addr' => $request->getClientIp(),
+            'ip_addr' => $request?->getClientIp(),
         ];
 
         if ($route_info == null) {
             $route_info = $this->getEmptyRouteInfo();
         }
 
-        return $this->errorPage(503, $request, $route_info, $template_data, 'errors::blocked');
+        return $this->errorPage(503, $route_info, $template_data, 'errors::blocked');
     }
 
     /**
      * returns an exception error json
      *
      * @param Exception $exception
-     * @param Request $request
      * @return JsonResponse
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function exceptionJson(Exception $exception, Request $request): JsonResponse
+    public function exceptionJson(Exception $exception): JsonResponse
     {
-        $this->logRequestIfNeeded(500, $request);
+        $this->logRequestIfNeeded(500);
 
-        if ($this->getEnv('DEBUG')) {
+        if ($this->getEnvironment()->getVariable('DEBUG')) {
             $content = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -335,18 +338,17 @@ class Globals extends ContainerAwareObject
      * returns an exception error xml
      *
      * @param Exception $exception
-     * @param Request $request
      * @return Response
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function exceptionXML(Exception $exception, Request $request): Response
+    public function exceptionXML(Exception $exception): Response
     {
-        $this->logRequestIfNeeded(500, $request);
+        $this->logRequestIfNeeded(500);
 
-        if ($this->getEnv('DEBUG')) {
+        if ($this->getEnvironment()->getVariable('DEBUG')) {
             $content = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -400,7 +402,6 @@ class Globals extends ContainerAwareObject
     /**
      * returns a "site is offline" error page
      *
-     * @param Request $request
      * @param RouteInfo|null $route_info
      * @return Response
      * @throws BasicException
@@ -409,12 +410,12 @@ class Globals extends ContainerAwareObject
      * @throws PhpfastcacheSimpleCacheException
      * @throws Throwable
      */
-    public function offlinePage(Request $request, ?RouteInfo $route_info = null): Response
+    public function offlinePage(?RouteInfo $route_info = null): Response
     {
         if ($route_info == null) {
             $route_info = $this->getEmptyRouteInfo();
         }
-        return $this->errorPage(503, $request, $route_info);
+        return $this->errorPage(503, $route_info);
     }
 
     /**
@@ -506,7 +507,7 @@ class Globals extends ContainerAwareObject
     public function getEncodedPass(string $pass, ?string $salt = null): string
     {
         if (is_null($salt)) {
-            $salt = $this->getEnv('SALT');
+            $salt = $this->getEnvironment()->getVariable('SALT');
         }
 
         return sha1($salt . $pass) . ':' . $salt;

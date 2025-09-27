@@ -322,7 +322,7 @@ class SiteBase implements ExtensionInterface
      */
     public function env(string $variable, mixed $default = null): mixed
     {
-        return $this->getUtils()->getEnv($variable, $default);
+        return $this->getUtils()->getEnvironment()->getVariable($variable, $default);
     }
 
     /**
@@ -396,7 +396,7 @@ class SiteBase implements ExtensionInterface
     {
         $user = $controller->getCurrentUser();
         $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
-        $isDarkMode = $uiSettings['darkMode'] ?? $this->getUtils()->getEnv('ADMIN_DARK_MODE', false);
+        $isDarkMode = $uiSettings['darkMode'] ?? $this->getUtils()->getEnvironment()->getVariable('ADMIN_DARK_MODE', false);
 
         $checkbox = $this->getApp()->containerMake(TagElement::class, ['options' => [
             'tag' => 'input',
@@ -458,7 +458,7 @@ class SiteBase implements ExtensionInterface
 
     public function isCommerceAvailable() : bool
     {
-        return boolval($this->getSiteData()->getEnv('ENABLE_COMMERCE'));
+        return boolval($this->getSiteData()->getEnvironment()->getVariable('ENABLE_COMMERCE'));
     }
 
     public function formatPrice(float $price, string $currencyCode = '') : string

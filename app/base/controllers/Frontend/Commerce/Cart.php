@@ -39,7 +39,7 @@ class Cart extends FormPageWithLang
      */
     public static function isEnabled(): bool
     {
-        return App::installDone() && App::getInstance()->getEnv('ENABLE_COMMERCE', false);
+        return App::installDone() && App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false);
     }
 
     /**

@@ -32,8 +32,8 @@ class Manager extends ContainerAwareObject
         if (is_null($this->client)) {
             $this->client = new RedisClient();
             $this->connected = $this->client->connect(
-                $this->getEnv('REDIS_HOST', '127.0.0.1'), 
-                $this->getEnv('REDIS_PORT', 6379), 
+                $this->getEnvironment()->getVariable('REDIS_HOST', '127.0.0.1'), 
+                $this->getEnvironment()->getVariable('REDIS_PORT', 6379), 
                 self::REDIS_TIMEOUT
             );
     
@@ -41,10 +41,10 @@ class Manager extends ContainerAwareObject
                 throw new BasicException("Redis client is not connected");
             }
     
-            if (!empty($this->getEnv('REDIS_PASSWORD', ''))) {
-                $this->client->auth($this->getEnv('REDIS_PASSWORD',''));
+            if (!empty($this->getEnvironment()->getVariable('REDIS_PASSWORD', ''))) {
+                $this->client->auth($this->getEnvironment()->getVariable('REDIS_PASSWORD',''));
             }
-            $this->client->select($this->getEnv('REDIS_DATABASE', 0));
+            $this->client->select($this->getEnvironment()->getVariable('REDIS_DATABASE', 0));
         }
 
         return $this->client;
@@ -52,7 +52,7 @@ class Manager extends ContainerAwareObject
 
     public function isEnabled() : bool
     {
-        return $this->getEnv('REDIS_CACHE', 0) != 0;
+        return $this->getEnvironment()->getVariable('REDIS_CACHE', 0) != 0;
     }
 
     public function isConnected() : bool

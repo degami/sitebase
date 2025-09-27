@@ -40,7 +40,7 @@ class PasswordForgot extends FormPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('ENABLE_LOGGEDPAGES'));
+        return boolval(\App\App::getInstance()->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES'));
     }
 
     /**
@@ -124,7 +124,7 @@ class PasswordForgot extends FormPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+        if (!$this->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES')) {
             throw new PermissionDeniedException();
         }
 

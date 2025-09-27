@@ -42,7 +42,7 @@ class Webdav extends BaseRouter
      */
     public static function isEnabled(): bool
     {
-        return App::installDone() && boolval(\App\App::getInstance()->getEnv('WEBDAV'));
+        return App::installDone() && boolval(\App\App::getInstance()->getEnvironment()->getVariable('WEBDAV'));
     }
 
     /**

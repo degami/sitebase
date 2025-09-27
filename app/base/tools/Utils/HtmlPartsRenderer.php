@@ -237,7 +237,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     'tag' => 'img',
                     'attributes' => [
                         'class' => '',
-                        'title' => $this->getEnv('APPNAME'),
+                        'title' => $this->getEnvironment()->getVariable('APPNAME'),
                         'src' => $this->getAssets()->assetUrl('/sitebase_logo.png'),
                     ],
                 ]]
@@ -250,7 +250,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     'attributes' => [
                         'class' => 'navbar-brand',
                         'href' => $this->getWebRouter()->getUrl('frontend.root'),
-                        'title' => $this->getEnv('APPNAME'),
+                        'title' => $this->getEnvironment()->getVariable('APPNAME'),
                     ],
                 ]]
             );
@@ -1224,7 +1224,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 $htmlClasses[] = 'logged-in';
             }    
         }
-        $isDarkMode = $uiSettings['darkMode'] ?? $this->getEnv('ADMIN_DARK_MODE', false);
+        $isDarkMode = $uiSettings['darkMode'] ?? $this->getEnvironment()->getVariable('ADMIN_DARK_MODE', false);
 
 
         if ($isDarkMode) {

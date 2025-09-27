@@ -50,7 +50,6 @@ use Degami\Basics\Exceptions\BasicException;
 use HaydenPierce\ClassFinder\ClassFinder;
 use PHPGangsta_GoogleAuthenticator;
 use Swift_Mailer;
-use Symfony\Component\HttpFoundation\Request;
 use function DI\autowire;
 use DI\Container;
 
@@ -456,20 +455,6 @@ trait ContainerAwareTrait
     public function getApplicationLogger(): ApplicationLoggerManager
     {
         return $this->getService('application_logger');
-    }
-
-    /**
-     * gets env variable
-     *
-     * @param string $variable
-     * @param mixed $default
-     * @return mixed
-     * @throws BasicException
-     */
-    public function getEnv(string $variable, mixed $default = null)
-    {
-        $env = (array)$this->getService('env');
-        return $env[$variable] ?? $default;
     }
 
     /**

@@ -13,7 +13,9 @@
 
 namespace App\Base\Environment;
 
+use App\App;
 use Symfony\Component\HttpFoundation\Request;
+use Dotenv\Dotenv;
 
 /**
  * Environment Manager
@@ -21,6 +23,14 @@ use Symfony\Component\HttpFoundation\Request;
 class Manager
 {
     protected ?Request $request = null;
+
+    protected array $envVariables = [];
+
+    public function __construct()
+    {
+        // preload data
+        $this->loadDotEnv()->getRequest();
+    }
 
     /**
      * Check if the current environment is CLI
@@ -68,5 +78,40 @@ class Manager
         }
 
         return $this->request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+    }
+
+    /**
+     * gets env variable
+     *
+     * @param string $variable
+     * @param mixed $default
+     * @return mixed
+     * @throws BasicException
+     */
+    public function getVariable(string $variable, mixed $default = null) : mixed
+    {
+        $env = (array)$this->envVariables;
+        return $env[$variable] ?? $default;
+    }
+
+    protected function loadDotEnv() : self
+    {
+        // load environment variables
+        $dotenv = Dotenv::create(App::getDir(App::ROOT));
+        $dotenv->load();
+
+        if ($dotenv) {
+                $this->envVariables = array_combine(
+                $dotenv->getEnvironmentVariableNames(),
+                array_map(
+                    'getenv',
+                    $dotenv->getEnvironmentVariableNames()
+                )
+            );    
+        } else {
+            $this->envVariables = $_ENV;
+        }
+
+        return $this;
     }
 }

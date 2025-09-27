@@ -112,7 +112,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
 
             return $this->getUtils()->createJsonResponse($out);
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionJson($e, $this->getRequest());
+            return $this->getUtils()->exceptionJson($e);
         }
     }
 

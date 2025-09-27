@@ -69,7 +69,7 @@ class LinkToCart extends BaseCodeBlock
      */
     public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
-        if (!App::getInstance()->getEnv('ENABLE_COMMERCE', false)) {
+        if (!App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false)) {
             return '';
         }
 

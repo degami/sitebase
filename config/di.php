@@ -157,26 +157,6 @@ return [
     \Gplanchat\EventManager\SharedEventEmitter::class => DI\create(\Gplanchat\EventManager\SharedEventEmitter::class),
     'event_manager' => DI\get(\Gplanchat\EventManager\SharedEventEmitter::class),
 
-    // 'web_router'
-    \App\Base\Routers\Web::class => DI\autowire(\App\Base\Routers\Web::class),
-    'web_router' => DI\get(\App\Base\Routers\Web::class),
-
-    // 'admin_router'
-    \App\Base\Routers\Admin::class => DI\autowire(\App\Base\Routers\Admin::class),
-    'admin_router' => DI\get(\App\Base\Routers\Admin::class),
-
-    // 'crud_router'
-    \App\Base\Routers\Crud::class => DI\autowire(\App\Base\Routers\Crud::class),
-    'crud_router' => DI\get(\App\Base\Routers\Crud::class),
-
-    // 'webhooks_router'
-    \App\Base\Routers\Webhooks::class => DI\autowire(\App\Base\Routers\Webhooks::class),
-    'webhooks_router' => DI\get(\App\Base\Routers\Webhooks::class),
-
-    // 'graphql_router'
-    \App\Base\Routers\Graphql::class => DI\autowire(\App\Base\Routers\Graphql::class),
-    'graphql_router' => DI\get(\App\Base\Routers\Graphql::class),
-
     // 'site_data'
     \App\Base\Tools\Utils\SiteData::class => DI\autowire(\App\Base\Tools\Utils\SiteData::class),
     'site_data' => DI\get(\App\Base\Tools\Utils\SiteData::class),

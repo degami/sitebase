@@ -520,7 +520,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getPageRegions(): array
     {
-        return array_filter(array_map('trim', explode(",", $this->getEnv('PAGE_REGIONS', 'menu,header,content,footer'))));
+        return array_filter(array_map('trim', explode(",", $this->getEnvironment()->getVariable('PAGE_REGIONS', 'menu,header,content,footer'))));
     }
 
     /**

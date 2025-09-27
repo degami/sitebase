@@ -40,7 +40,7 @@ class Login extends FormPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('ENABLE_LOGGEDPAGES'));
+        return boolval(\App\App::getInstance()->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES'));
     }
 
     /**
@@ -122,7 +122,7 @@ class Login extends FormPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+        if (!$this->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES')) {
             throw new PermissionDeniedException();
         }
 
@@ -133,7 +133,7 @@ class Login extends FormPage
             $token = $parser->parse($result)->toString();
 
 
-            if ($this->getEnv('USE2FA_USERS') && $this->getAuth()->currentUserHasPassed2FA() != true) {
+            if ($this->getEnvironment()->getVariable('USE2FA_USERS') && $this->getAuth()->currentUserHasPassed2FA() != true) {
                 $goto_url = $this->getUrl('frontend.users.twofa');
 
                 if ($this->getRequest()->get('dest')) {
@@ -145,7 +145,7 @@ class Login extends FormPage
                 if ($this->getRequest()->get('dest')) {
                     $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
     
-                    if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnv('SALT'))) {
+                    if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnvironment()->getVariable('SALT'))) {
                         $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));
                     }
                 }

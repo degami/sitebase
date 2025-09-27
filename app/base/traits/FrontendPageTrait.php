@@ -102,7 +102,7 @@ trait FrontendPageTrait
      */
     protected function check2FA(): bool
     {
-        if ($this->getEnv('USE2FA_USERS') && !in_array($this->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && $this->getAuth()->currentUserHasPassed2FA() != true) {
+        if ($this->getEnvironment()->getVariable('USE2FA_USERS') && !in_array($this->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && $this->getAuth()->currentUserHasPassed2FA() != true) {
             return false;
         }
 

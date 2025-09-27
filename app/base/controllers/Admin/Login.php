@@ -201,7 +201,7 @@ class Login extends FormPage
             $parser = $this->getContainer()->get('jwt:configuration')->parser();
             $token = $parser->parse($result)->toString();
 
-            if ($this->getEnv('USE2FA_ADMIN') && $this->getAuth()->currentUserHasPassed2FA(true) != true) {
+            if ($this->getEnvironment()->getVariable('USE2FA_ADMIN') && $this->getAuth()->currentUserHasPassed2FA(true) != true) {
                 $goto_url = $this->getAdminRouter()->getUrl('admin.twofa');
 
                 if ($this->getRequest()->get('dest')) {
@@ -213,7 +213,7 @@ class Login extends FormPage
                 if ($this->getRequest()->get('dest')) {
                     $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
     
-                    if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnv('SALT'))) {
+                    if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnvironment()->getVariable('SALT'))) {
                         $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));
                     }
                 }    

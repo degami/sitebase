@@ -70,7 +70,7 @@ class DownloadbleDetail extends FrontendPageWithObject
      */
     public static function isEnabled(): bool
     {
-        return App::installDone() && boolval(\App\App::getInstance()->getEnv('ENABLE_COMMERCE'));
+        return App::installDone() && boolval(\App\App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE'));
     }
 
     /**

@@ -49,9 +49,9 @@ abstract class ModelWithLocation extends FrontendModel
     public static function addHeadDependencies() : void
     {
         if (!static::$headDependenciesAdded) {
-            if (App::getInstance()->getEnv('GOOGLE_API_KEY')) {
-                App::getInstance()->getAssets()->addHeadJs('https://maps.googleapis.com/maps/api/js?v=3.exp&amp&amp;libraries=geometry,places&amp;key='. App::getInstance()->getEnv('GOOGLE_API_KEY'));
-            } else if (App::getInstance()->getEnv('MAPBOX_API_KEY')) {
+            if (App::getInstance()->getEnvironment()->getVariable('GOOGLE_API_KEY')) {
+                App::getInstance()->getAssets()->addHeadJs('https://maps.googleapis.com/maps/api/js?v=3.exp&amp&amp;libraries=geometry,places&amp;key='. App::getInstance()->getEnvironment()->getVariable('GOOGLE_API_KEY'));
+            } else if (App::getInstance()->getEnvironment()->getVariable('MAPBOX_API_KEY')) {
                 App::getInstance()->getAssets()->addHeadJs('https://unpkg.com/leaflet@1.3.4/dist/leaflet.js', [
                     'integrity' => "sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==",
                     'crossorigin' => "1",
@@ -86,7 +86,7 @@ abstract class ModelWithLocation extends FrontendModel
 
         $css = ''; $script = '';
 
-        if (App::getInstance()->getEnv('GOOGLE_API_KEY') || App::getInstance()->getEnv('MAPBOX_API_KEY')) {
+        if (App::getInstance()->getEnvironment()->getVariable('GOOGLE_API_KEY') || App::getInstance()->getEnvironment()->getVariable('MAPBOX_API_KEY')) {
             $css = App::getInstance()->containerMake(TagElement::class, ['options' => [
                 'tag' => 'style',
                 'attributes' => [
@@ -99,7 +99,7 @@ abstract class ModelWithLocation extends FrontendModel
             ]]);            
         }
 
-        if (App::getInstance()->getEnv('GOOGLE_API_KEY')) {
+        if (App::getInstance()->getEnvironment()->getVariable('GOOGLE_API_KEY')) {
             $mapType = 'google.maps.MapTypeId.ROADMAP';
 
             $script = App::getInstance()->containerMake(TagElement::class, ['options' => [
@@ -131,9 +131,9 @@ abstract class ModelWithLocation extends FrontendModel
 
                ",
             ]]);
-        } else if (App::getInstance()->getEnv('MAPBOX_API_KEY')) {
+        } else if (App::getInstance()->getEnvironment()->getVariable('MAPBOX_API_KEY')) {
             $mapType = 'mapbox/streets-v12';
-            $accesToken = App::getInstance()->getEnv('MAPBOX_API_KEY');
+            $accesToken = App::getInstance()->getEnvironment()->getVariable('MAPBOX_API_KEY');
 
             $script = App::getInstance()->containerMake(TagElement::class, ['options' => [
                 'tag' => 'script',

@@ -137,7 +137,7 @@ class Manager extends ContainerAwareObject
     public function clearInteractions(?string $aiType = null) : self
     {
         if ($this->getRedis()->isEnabled()) {
-            // $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
+            // $this->getRedis()->select(intval($this->getEnvironment()->getVariable('REDIS_DATABASE')) + 1);
             $redis_key = $this->getRedisKey($aiType);
             $this->getRedis()->del($redis_key);
         }
@@ -149,7 +149,7 @@ class Manager extends ContainerAwareObject
     public function getInteractions(?string $aiType = null) : array
     {
         if ($this->getRedis()->isEnabled()) {
-            // $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
+            // $this->getRedis()->select(intval($this->getEnvironment()->getVariable('REDIS_DATABASE')) + 1);
             $redis_key = $this->getRedisKey($aiType);
 
             // get last MAX_INTERACTIONS_HISTORYLENGTH elements
@@ -191,7 +191,7 @@ class Manager extends ContainerAwareObject
         }
 
         if ($this->getRedis()->isEnabled()) {
-            // $this->getRedis()->select(intval($this->getEnv('REDIS_DATABASE')) + 1);
+            // $this->getRedis()->select(intval($this->getEnvironment()->getVariable('REDIS_DATABASE')) + 1);
             $redis_key = $this->getRedisKey($model);
 
             $this->getRedis()->rPush($redis_key, json_encode($userInteraction));

@@ -86,7 +86,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             $this->getApp()->setCurrentLocale($this->getCurrentLocale());
         }
 
-        if ($this->getEnv('DEBUG')) {
+        if ($this->getEnvironment()->getVariable('DEBUG')) {
             /** @var DebugBar $debugbar */
             $debugbar = $this->getContainer()->get('debugbar');
             if (!$debugbar->hasCollector("Page Data")) {
@@ -121,7 +121,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             $template_html = '';
             //$page_cache_key = 'site.fpc.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
             $page_cache_key = $this->getFpcCacheKey();
-            if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnv('DEBUG') && $this->getEnv('ENABLE_FPC')) {
+            if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->getVariable('DEBUG') && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
                 if ($this->canBeFPC() && $this->getCache()->has($page_cache_key)) {
                     $template_html = $this->getCache()->get($page_cache_key);
                 }
@@ -129,7 +129,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
 
             if (empty($template_html)) {
                 $template_html = $this->template->render();
-                if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnv('DEBUG') && $this->getEnv('ENABLE_FPC')) {
+                if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->getVariable('DEBUG') && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
                     if ($this->canBeFPC()) {
                         $this->getCache()->set($page_cache_key, $template_html);
                     }
@@ -138,7 +138,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
 
             return $this->getUtils()->createHtmlResponse($template_html, 200, $this);
         } catch (Throwable $e) {
-            return $this->getUtils()->exceptionPage($e, $this->getRequest());
+            return $this->getUtils()->exceptionPage($e);
         }
     }
 

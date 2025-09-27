@@ -36,7 +36,7 @@ class Profile extends LoggedUserFormPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('ENABLE_LOGGEDPAGES'));
+        return boolval(\App\App::getInstance()->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES'));
     }
 
     /**

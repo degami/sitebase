@@ -48,7 +48,7 @@ class Mailer extends ContainerAwareObject
      */
     public function sendMail(string $from, string $to, string $subject, string $body, string $content_type = 'text/html', bool $log = true): bool
     {
-        $use_ses = (trim($this->getEnv('SES_REGION')) != '' && trim($this->getSiteData()->getConfigValue('app/mail/ses_sender')) != '');
+        $use_ses = (trim($this->getEnvironment()->getVariable('SES_REGION')) != '' && trim($this->getSiteData()->getConfigValue('app/mail/ses_sender')) != '');
         if (!$use_ses || ($result = $this->sendSesMail($from, $to, $subject, $body, $content_type)) != true) {
             // use smtp or fallback to smtp
             $result = $this->sendSmtpMail($from, $to, $subject, $body, $content_type);

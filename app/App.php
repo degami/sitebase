@@ -20,7 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use FastRoute\Dispatcher;
 use Psr\Container\ContainerInterface;
 use Gplanchat\EventManager\Event;
-use Dotenv\Dotenv;
 use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
 use App\Base\Exceptions\OfflineException;
@@ -126,14 +125,7 @@ class App
         // do we need php sessions ?
         // session_start();
 
-        try {
-            $dotenv = null;
-            if (static::dotEnvPresent()) {
-                // load environment variables
-                $dotenv = Dotenv::create(static::getDir(self::ROOT));
-                $dotenv->load();
-            }
- 
+        try { 
             $builder = new ContainerBuilder();
             $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
 
@@ -160,18 +152,6 @@ class App
                 }
             }
 
-            if ($dotenv) {
-                $env_variables = array_combine(
-                    $dotenv->getEnvironmentVariableNames(),
-                    array_map(
-                        'getenv',
-                        $dotenv->getEnvironmentVariableNames()
-                    )
-                );    
-            } else {
-                $env_variables = $_ENV;
-            }
-
             // remove some sensible data from _SERVER
             if (!getenv('DEBUG')) {
                 $keys = [
@@ -190,9 +170,7 @@ class App
                 }
             }
 
-            $this->getContainer()->set('env', $env_variables);
-
-            if ($this->getEnv('DEBUG')) {
+            if ($this->getEnvironment()->getVariable('DEBUG')) {
                 $debugbar = $this->getDebugbar();
                 $debugbar['time']->startMeasure('app_construct', 'App construct');
             }
@@ -201,7 +179,7 @@ class App
             $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES) . DS . 'errors');
             $this->getTemplates()->addFolder('mails', static::getDir(static::TEMPLATES) . DS . 'mails');
 
-            if ($this->getEnv('DEBUG')) {
+            if ($this->getEnvironment()->getVariable('DEBUG')) {
                 $debugbar = $this->getDebugbar();
                 $debugbar->addCollector($this->getContainer()->get('db_collector'));
                 $debugbar->addCollector($this->getContainer()->get('monolog_collector'));
@@ -211,7 +189,7 @@ class App
             $this->getContainer()->set(App::class, $this);
             $this->getContainer()->set('app', $this->getContainer()->get(App::class));
 
-            if ($this->getEnv('DEBUG')) {
+            if ($this->getEnvironment()->getVariable('DEBUG')) {
                 $debugbar = $this->getDebugbar();
                 $debugbar['time']->stopMeasure('app_construct');
             }
@@ -240,7 +218,7 @@ class App
      */
     public function bootstrap()
     {
-        if ($this->getEnv('DEBUG')) {
+        if ($this->getEnvironment()->getVariable('DEBUG')) {
             $debugbar = $this->getDebugbar();
             $debugbar['time']->startMeasure('app_bootstrap', 'App bootstrap');
         }
@@ -286,7 +264,7 @@ class App
                 );
             } else {
                 // continue with execution
-                if (App::installDone() && $this->getEnv('PRELOAD_REWRITES')) {
+                if (App::installDone() && $this->getEnvironment()->getVariable('PRELOAD_REWRITES')) {
                     // preload all rewrites
                     Rewrite::getCollection()->getItems();
                 }
@@ -310,6 +288,7 @@ class App
                     }
                 }
 
+                // register routeinfo into container
                 $this->getContainer()->set(RouteInfo::class, $routeInfo);
 
                 switch ($routeInfo->getStatus()) {
@@ -339,7 +318,7 @@ class App
                             throw new OfflineException();
                         }
 
-                        if ($this->getEnv('DEBUG')) {
+                        if ($this->getEnvironment()->getVariable('DEBUG')) {
                             $debugbar = $this->getDebugbar();
                             $debugbar['time']->startMeasure('handler_action', implode('::', $handler));
                         }
@@ -352,7 +331,7 @@ class App
                             $response = new Response((string)$result, 200);
                         }
 
-                        if ($this->getEnv('DEBUG')) {
+                        if ($this->getEnvironment()->getVariable('DEBUG')) {
                             $debugbar = $this->getDebugbar();
                             if ($debugbar['time']->hasStartedMeasure('handler_action')) {
                                 $debugbar['time']->stopMeasure('handler_action');
@@ -390,7 +369,7 @@ class App
             'response' => $response
         ]);
 
-        if ($this->getEnv('DEBUG')) {
+        if ($this->getEnvironment()->getVariable('DEBUG')) {
             $debugbar = $this->getDebugbar();
             if ($debugbar['time']->hasStartedMeasure('app_bootstrap')) {
                 $debugbar['time']->stopMeasure('app_bootstrap');

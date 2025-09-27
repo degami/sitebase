@@ -36,7 +36,7 @@ class LinkToUserArea extends BaseCodeBlock
         try {
 //            $website = $this->containerCall([Website::class, 'load'], ['id' => $this->getSiteData()->getCurrentWebsiteId()]);
 
-            if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+            if (!$this->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES')) {
                 return "";
             }
 

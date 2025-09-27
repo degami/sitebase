@@ -68,7 +68,7 @@ class Manager extends ContainerAwareObject
      */
     public function isEnabled() : bool
     {
-        return $this->getEnv('ELASTICSEARCH', 0) != 0;
+        return $this->getEnvironment()->getVariable('ELASTICSEARCH', 0) != 0;
     }
 
     /**
@@ -79,8 +79,8 @@ class Manager extends ContainerAwareObject
     protected function getClient() : ElasticSearchClient
     {
         if (is_null($this->client)) {
-            $host = $this->getEnv('ELASTICSEARCH_HOST', 'localhost');
-            $port = $this->getEnv('ELASTICSEARCH_PORT', '9200');
+            $host = $this->getEnvironment()->getVariable('ELASTICSEARCH_HOST', 'localhost');
+            $port = $this->getEnvironment()->getVariable('ELASTICSEARCH_PORT', '9200');
     
             $hosts = [
                 $host.':'.$port,

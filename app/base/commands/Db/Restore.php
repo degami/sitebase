@@ -52,7 +52,7 @@ class Restore extends BaseExecCommand
                 throw new NotFoundException('necessary commands (zcat, mysql) missing!');
             }
 
-            $commandline = "zcat " . $input->getArgument('filename') . " | mysql -u" . $this->getEnv('DATABASE_USER') . " -p" . $this->getEnv('DATABASE_PASS') . " " . $this->getEnv('DATABASE_NAME');
+            $commandline = "zcat " . $input->getArgument('filename') . " | mysql -u" . $this->getEnvironment()->getVariable('DATABASE_USER') . " -p" . $this->getEnvironment()->getVariable('DATABASE_PASS') . " " . $this->getEnvironment()->getVariable('DATABASE_NAME');
 
             $this->executeCommand($commandline);
         } catch (NotFoundException $e) {

@@ -41,7 +41,7 @@ class InitialCommerceMigration extends BaseMigration
 
     public static function enabled() : bool
     {
-        return boolval(App::getInstance()->getEnv('ENABLE_COMMERCE'));
+        return boolval(App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE'));
     }
 
     /**

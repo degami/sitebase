@@ -250,8 +250,8 @@ abstract class FrontendPage extends BaseHtmlPage
                     $log->persist();
                 } catch (Exception $e) {
                     $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
-                    if ($this->getEnv('DEBUG')) {
-                        return $this->getUtils()->exceptionPage($e, $this->getRequest(), $this->getRouteInfo());
+                    if ($this->getEnvironment()->getVariable('DEBUG')) {
+                        return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
                     }
                 }
             }

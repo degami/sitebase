@@ -63,7 +63,7 @@ class TwoFa extends AdminFormPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(\App\App::getInstance()->getEnv('USE2FA_ADMIN'));
+        return boolval(\App\App::getInstance()->getEnvironment()->getVariable('USE2FA_ADMIN'));
     }
 
     /**
@@ -199,7 +199,7 @@ class TwoFa extends AdminFormPage
         }
         $form->getSessionBag()->googleAuthenticatorSecret = $secret;
 
-        $qrCodeIdentifier = $this->getEnv('APPNAME') . ' ' . $this->getEnv('ADMINPAGES_GROUP') . ': ' . $this->getCurrentUser()?->getUsername();
+        $qrCodeIdentifier = $this->getEnvironment()->getVariable('APPNAME') . ' ' . $this->getEnvironment()->getVariable('ADMINPAGES_GROUP') . ': ' . $this->getCurrentUser()?->getUsername();
 
         $qrCodeUrl = $this->getGoogleAuthenticator()->getQRCodeGoogleUrl($qrCodeIdentifier, $secret);
 
@@ -288,7 +288,7 @@ class TwoFa extends AdminFormPage
         if ($this->getRequest()->get('dest')) {
             $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
 
-            if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnv('SALT'))) {
+            if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnvironment()->getVariable('SALT'))) {
                 $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));
             }
         }

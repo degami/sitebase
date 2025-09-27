@@ -38,7 +38,7 @@ class Crud extends BaseRouter
      */
     public static function isEnabled(): bool
     {
-        return App::installDone() && boolval(\App\App::getInstance()->getEnv('CRUD'));
+        return App::installDone() && boolval(\App\App::getInstance()->getEnvironment()->getVariable('CRUD'));
     }
 
     /**

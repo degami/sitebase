@@ -36,9 +36,9 @@ class Countries extends AdminManageModelsPage
     ) {
         parent::__construct($container, $request, $route_info);
 
-        if ($this->getEnv('GOOGLE_API_KEY')) {
-            $this->getAssets()->addHeadJs('https://maps.googleapis.com/maps/api/js?v=3.exp&amp&amp;libraries=geometry,places&amp;key='. $this->getEnv('GOOGLE_API_KEY'));
-        } else if ($this->getEnv('MAPBOX_API_KEY')) {
+        if ($this->getEnvironment()->getVariable('GOOGLE_API_KEY')) {
+            $this->getAssets()->addHeadJs('https://maps.googleapis.com/maps/api/js?v=3.exp&amp&amp;libraries=geometry,places&amp;key='. $this->getEnvironment()->getVariable('GOOGLE_API_KEY'));
+        } else if ($this->getEnvironment()->getVariable('MAPBOX_API_KEY')) {
             $this->getAssets()->addHeadJs('https://unpkg.com/leaflet@1.3.4/dist/leaflet.js', [
                 'integrity' => "sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==",
                 'crossorigin' => "1",
@@ -145,13 +145,13 @@ class Countries extends AdminManageModelsPage
                 }
 
                $locationFieldType = 'geolocation'; $mapOptions = [];
-                if ($this->getEnv('GOOGLE_API_KEY')) {
+                if ($this->getEnvironment()->getVariable('GOOGLE_API_KEY')) {
                     $locationFieldType = 'gmaplocation';
                 }
-                else if ($this->getEnv('MAPBOX_API_KEY')) {
+                else if ($this->getEnvironment()->getVariable('MAPBOX_API_KEY')) {
                     $locationFieldType = 'leafletlocation';
                     $mapOptions = [
-                        'accessToken' => $this->getEnv('MAPBOX_API_KEY'),
+                        'accessToken' => $this->getEnvironment()->getVariable('MAPBOX_API_KEY'),
                         'scrollwheel' => true,
                         'maptype' => 'mapbox/streets-v12',
                     ];

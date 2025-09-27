@@ -76,7 +76,7 @@ abstract class LoggedUserPage extends FrontendPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if (!$this->getEnv('ENABLE_LOGGEDPAGES')) {
+        if (!$this->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES')) {
             throw new PermissionDeniedException();
         }
 

@@ -128,8 +128,8 @@ abstract class AdminPage extends BaseHtmlPage
                     $log->persist();
                 } catch (Exception $e) {
                     $this->getUtils()->logException($e, "Can't write AdminActionLog", $this->getRequest());
-                    if ($this->getEnv('DEBUG')) {
-                        return $this->getUtils()->exceptionPage($e, $this->getRequest());
+                    if ($this->getEnvironment()->getVariable('DEBUG')) {
+                        return $this->getUtils()->exceptionPage($e);
                     }
                 }
             }

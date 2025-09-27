@@ -26,7 +26,7 @@ class Addresses extends LoggedUserFormPage
      */
     public static function isEnabled(): bool
     {
-        return boolval(App::getInstance()->getEnv('ENABLE_COMMERCE', false)) && boolval(App::getInstance()->getEnv('ENABLE_LOGGEDPAGES', false));
+        return boolval(App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false)) && boolval(App::getInstance()->getEnvironment()->getVariable('ENABLE_LOGGEDPAGES', false));
     }
 
     /**

@@ -66,7 +66,7 @@ abstract class BaseXMLPage extends BasePage
                 ArrayToXml::convert($this->getXMLData())
             );
         } catch (Exception $e) {
-            return $this->getUtils()->exceptionXml($e, $this->getRequest());
+            return $this->getUtils()->exceptionXml($e);
         }
     }
 

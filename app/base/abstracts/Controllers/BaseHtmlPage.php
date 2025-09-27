@@ -21,6 +21,7 @@ use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Tools\DataCollector\RedisDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
 use App\Base\Models\Rewrite;
+use App\Base\Tools\DataCollector\EnvironmentDataCollector;
 use DebugBar\DebugBar;
 use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;
@@ -60,6 +61,21 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     }
 
     /**
+     * before render hook
+     *
+     * @return Response|self
+     * @throws PermissionDeniedException
+     */
+    protected function beforeRender(): BasePage|Response
+    {
+        if ($this->getEnvironment()->getVariable('DEBUG')) {
+            $this->getAssets()->addHeadJs($this->getAssets()->assetUrl('/js/debugbar-EnvironmentWidget.js'));            
+        }
+
+        return parent::beforeRender();
+    }
+
+    /**
      * controller entrypoint
      *
      * @param RouteInfo|null $route_info
@@ -88,7 +104,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
 
         if ($this->getEnvironment()->getVariable('DEBUG')) {
             /** @var DebugBar $debugbar */
-            $debugbar = $this->getContainer()->get('debugbar');
+            $debugbar = $this->getDebugbar();
             if (!$debugbar->hasCollector("Page Data")) {
                 $debugbar->addCollector(new PageDataCollector($this));
             }
@@ -99,6 +115,9 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
                 if (!$debugbar->hasCollector("Redis Data")) {
                     $debugbar->addCollector(new RedisDataCollector($this->getRedis()));
                 }
+            }
+            if (!$debugbar->hasCollector("Environment Data")) {
+                $debugbar->addCollector(new EnvironmentDataCollector($this->getEnvironment()));
             }
         }
 

@@ -86,12 +86,21 @@ class Manager
      * @param string $variable
      * @param mixed $default
      * @return mixed
-     * @throws BasicException
      */
     public function getVariable(string $variable, mixed $default = null) : mixed
     {
-        $env = (array)$this->envVariables;
+        $env = $this->getVariables();
         return $env[$variable] ?? $default;
+    }
+
+    /**
+     * get env variables
+     * 
+     * @return array
+     */
+    public function getVariables() : array
+    {
+        return (array) $this->envVariables;
     }
 
     protected function loadDotEnv() : self

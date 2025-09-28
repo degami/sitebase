@@ -389,12 +389,12 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $measure_key = 'load model: ' . static::defaultTableName();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
         if (isset(static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($id)]) && !$reset) {
-            if (getenv('DEBUG')) {
+            if (App::getInstance()->getEnvironment()->canDebug()) {
                 $debugbar['time']->stopMeasure($measure_key);
             }
             return static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($id)];
@@ -409,7 +409,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $object = App::getInstance()->containerCall([static::class, 'loadByCondition'], ['condition' => $condition]);
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
         return $object;
@@ -431,7 +431,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $measure_key = 'loadByCondition model: ' . static::defaultTableName();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
@@ -443,7 +443,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($db_row->id)] = App::getInstance()->containerMake(static::class, ['db_row' => $db_row]);
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 
@@ -733,7 +733,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $measure_key = 'persist model: ' . static::defaultTableName();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
@@ -754,7 +754,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $this->original_data = $this->getDbRow()->getData();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 
@@ -812,7 +812,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $measure_key = 'delete model: ' . static::defaultTableName();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
@@ -822,7 +822,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         $this->postRemove();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 

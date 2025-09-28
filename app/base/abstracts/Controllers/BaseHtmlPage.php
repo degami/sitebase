@@ -20,6 +20,7 @@ use App\Base\Interfaces\Controller\HtmlPageInterface;
 use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Tools\DataCollector\RedisDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
+use App\Base\Tools\DataCollector\BlocksDataCollector;
 use App\Base\Models\Rewrite;
 use App\Base\Tools\DataCollector\EnvironmentDataCollector;
 use DebugBar\DebugBar;
@@ -105,18 +106,21 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         if ($this->getEnvironment()->canDebug()) {
             /** @var DebugBar $debugbar */
             $debugbar = $this->getDebugbar();
-            if (!$debugbar->hasCollector("Page Data")) {
+            if (!$debugbar->hasCollector(PageDataCollector::NAME)) {
                 $debugbar->addCollector(new PageDataCollector($this));
             }
-            if (!$debugbar->hasCollector("User Data")) {
+            if (!$debugbar->hasCollector(BlocksDataCollector::NAME)) {
+                $debugbar->addCollector(new BlocksDataCollector());
+            }
+            if (!$debugbar->hasCollector(UserDataCollector::NAME)) {
                 $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
             }
             if ($this->getRedis()->isEnabled()) {
-                if (!$debugbar->hasCollector("Redis Data")) {
+                if (!$debugbar->hasCollector(RedisDataCollector::NAME)) {
                     $debugbar->addCollector(new RedisDataCollector($this->getRedis()));
                 }
             }
-            if (!$debugbar->hasCollector("Environment Data")) {
+            if (!$debugbar->hasCollector(EnvironmentDataCollector::NAME)) {
                 $debugbar->addCollector(new EnvironmentDataCollector($this->getEnvironment()));
             }
         }

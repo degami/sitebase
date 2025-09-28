@@ -35,7 +35,7 @@ class Fake implements PaymentMethodInterface
 
     public function isActive(Cart $cart): bool
     {
-        return App::getInstance()->getSiteData()->getConfigValue('payments/fake/active') == true && getenv('DEBUG') == 1;
+        return App::getInstance()->getSiteData()->getConfigValue('payments/fake/active') == true && App::getInstance()->getEnvironment()->canDebug();
     }
 
     public function getConfigurationForm(FAPI\Form $form, array &$form_state) : FAPI\Form

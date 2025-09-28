@@ -258,7 +258,7 @@ class Globals extends ContainerAwareObject
         /** @var DebugBar $debugbar */
         $debugbar = $this->getDebugbar();
 
-        if (getenv('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar['exceptions']->addThrowable($exception);
         }
 

@@ -1,4 +1,19 @@
 .phpdebugbar {
+
+    a.phpdebugbar-tab {
+        span.phpdebugbar-badge {
+            background-color: #555;
+            color: #ccc;
+        }
+
+        &.phpdebugbar-active {
+            span.phpdebugbar-badge {
+                background-color: #03791b;
+                color: #fff;
+            }
+        }
+    }
+
     .phpdebugbar-restore-btn {
         background-color: #444;
         border: 0;
@@ -18,6 +33,22 @@
 
     background: #1e1e1e !important;
     color: #ccc !important;
+
+    code, pre {
+        color: #ccc !important;
+
+        .hljs-deletion, 
+        .hljs-number, 
+        .hljs-quote, 
+        .hljs-selector-class, 
+        .hljs-selector-id, 
+        .hljs-string, 
+        .hljs-template-tag, 
+        .hljs-type {
+            color: #34bcff;
+        }
+
+    }
 
     .phpdebugbar-header,
     .phpdebugbar-tab {

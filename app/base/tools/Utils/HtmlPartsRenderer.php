@@ -35,6 +35,7 @@ use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Controllers\Admin\Login;
 use App\Base\Models\Block;
 use App\Base\Models\ProgressManagerProcess;
+use App\Base\Tools\DataCollector\BlocksDataCollector;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
 use chillerlan\QRCode\QRCode;
@@ -327,6 +328,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 
+        /** @var DebugBar $debugbar */
+        $debugbar = App::getInstance()->getDebugbar();
+
         $route_info = null;
         $cache_key = strtolower('site.' . $website_id  . '.' . $locale . '.blocks.' . $region);
         if ($current_page) {
@@ -345,6 +349,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         if (!empty($cache_key) && $this->getCache()->has($cache_key)) {
+
+            if ($debugbar->hasCollector(BlocksDataCollector::NAME)) {
+                /** @var BlocksDataCollector $dataCollector */
+                $dataCollector = $debugbar->getCollector(BlocksDataCollector::NAME);
+                $dataCollector->addElements($region, "In Cache", null, 0);
+            }
+
             return $this->getCache()->get($cache_key);
         }
 
@@ -359,13 +370,33 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $out = "";
         if (isset($pageBlocks[$region])) {
             foreach ($pageBlocks[$region] as $block) {
+                /** @var Block $block */
                 if ((!$block->isCodeBlock() && $locale != $block->locale) || (!is_null($current_rewrite) && !$block->checkValidRewrite($current_rewrite))) {
                     continue;
                 }
+
+                $measure_key = 'render block: ' . $block->getId();
+
+                if (App::getInstance()->getEnvironment()->canDebug()) {
+                    $debugbar['time']->startMeasure($measure_key);
+                }
+
+                $before = microtime(true);
                 if (is_callable([$block->getRealInstance(), 'isCachable']) && !$block->getRealInstance()->isCachable()) {
                     $out .= $this->renderUncachableBlockTag($block, $current_page, $locale);
                 } else {
                     $out .= $block->render($current_page);
+                }
+                $after = microtime(true);
+
+                if (App::getInstance()->getEnvironment()->canDebug()) {
+                    $debugbar['time']->stopMeasure($measure_key);
+
+                    if ($debugbar->hasCollector(BlocksDataCollector::NAME)) {
+                        /** @var BlocksDataCollector $dataCollector */
+                        $dataCollector = $debugbar->getCollector(BlocksDataCollector::NAME);
+                        $dataCollector->addElements($region, get_class($block), ['id' => $block->getId()], ($after - $before));
+                    }
                 }
             }
         }

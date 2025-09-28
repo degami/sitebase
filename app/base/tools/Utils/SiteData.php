@@ -76,7 +76,7 @@ class SiteData extends ContainerAwareObject
 
         $measure_key = 'SiteData getCurrentWebsite';
 
-        if (getenv('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
@@ -87,7 +87,7 @@ class SiteData extends ContainerAwareObject
             $website = Website::getCollection()->where('domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)')->getFirst();
         }
 
-        if (getenv('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 

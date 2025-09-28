@@ -153,7 +153,7 @@ class App
             }
 
             // remove some sensible data from _SERVER
-            if (!getenv('DEBUG')) {
+            if (!$this->getEnvironment()->canDebug()) {
                 $keys = [
                     'DATABASE_HOST',
                     'DATABASE_NAME',

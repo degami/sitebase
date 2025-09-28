@@ -282,7 +282,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
 
             $measure_key = 'load collection: ' . $this->getTableName();
 
-            if (getenv('DEBUG')) {
+            if (App::getInstance()->getEnvironment()->canDebug()) {
                 $debugbar['time']->startMeasure($measure_key);
             }
 
@@ -294,7 +294,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             }
             $after = memory_get_usage();
 
-            if (getenv('DEBUG')) {
+            if (App::getInstance()->getEnvironment()->canDebug()) {
                 $debugbar['time']->stopMeasure($measure_key);
 
                 if ($debugbar->hasCollector(CollectionDataCollector::NAME)) {
@@ -401,7 +401,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
 
         $measure_key = 'persist collection: ' . $this->getTableName();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
@@ -409,7 +409,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             $item->persist();
         }
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 
@@ -433,7 +433,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
 
         $measure_key = 'remove collection: ' . $this->getTableName();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
@@ -441,7 +441,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             $item->remove();
         }
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 
@@ -475,7 +475,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
 
         $measure_key = 'paginate collection: ' . $this->getTableName();
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->startMeasure($measure_key);
         }
 
@@ -491,7 +491,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
 
         $out = ['items' => $this->getItems(), 'page' => $page, 'total' => $total, 'page_size' => $page_size];
 
-        if (getenv('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
 

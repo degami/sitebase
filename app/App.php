@@ -223,6 +223,10 @@ class App
             $debugbar['time']->startMeasure('app_bootstrap', 'App bootstrap');
         }
 
+        // preload routers
+        $this->getRouters();
+
+        // register event listeners
         $this->registerEventListeners();
 
         $response = null;

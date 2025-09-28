@@ -228,6 +228,9 @@ return [
     \App\Base\Tools\Utils\Zip::class => DI\autowire(\App\Base\Tools\Utils\Zip::class),
     'zip' => DI\get(\App\Base\Tools\Utils\Zip::class),
 
+    \App\Base\Tools\Utils\GZip::class => DI\autowire(\App\Base\Tools\Utils\GZip::class),
+    'gzip' => DI\get(\App\Base\Tools\Utils\GZip::class),
+
     \App\Base\Tools\ApplicationLogger\Manager::class => DI\autowire(\App\Base\Tools\ApplicationLogger\Manager::class),
     'application_logger' => DI\get(\App\Base\Tools\ApplicationLogger\Manager::class),
 

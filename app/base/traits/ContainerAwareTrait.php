@@ -28,6 +28,7 @@ use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
 use App\Base\Tools\Utils\Zip;
+use App\Base\Tools\Utils\GZip;
 use App\Base\Models\Website;
 use App\Base\Routers\Admin;
 use App\Base\Routing\RouteInfo;
@@ -433,6 +434,17 @@ trait ContainerAwareTrait
     public function getZip(): Zip
     {
         return $this->getService('zip');
+    }
+
+    /**
+     * gets gzip service
+     * 
+     * @return GZip
+     * @throws BasicException
+     */
+    public function getGZip(): GZip
+    {
+        return $this->getService('gzip');
     }
 
     /**

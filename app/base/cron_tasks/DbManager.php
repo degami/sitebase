@@ -22,7 +22,7 @@ use App\Base\Models\QueueMessage;
 use App\App;
 
 /**
- * Cache manager cron
+ * Db manager cron
  */
 class DbManager extends ContainerAwareObject
 {

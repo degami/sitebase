@@ -170,7 +170,7 @@ class App
                 }
             }
 
-            if ($this->getEnvironment()->getVariable('DEBUG')) {
+            if ($this->getEnvironment()->canDebug()) {
                 $debugbar = $this->getDebugbar();
                 $debugbar['time']->startMeasure('app_construct', 'App construct');
             }
@@ -179,7 +179,7 @@ class App
             $this->getTemplates()->addFolder('errors', static::getDir(static::TEMPLATES) . DS . 'errors');
             $this->getTemplates()->addFolder('mails', static::getDir(static::TEMPLATES) . DS . 'mails');
 
-            if ($this->getEnvironment()->getVariable('DEBUG')) {
+            if ($this->getEnvironment()->canDebug()) {
                 $debugbar = $this->getDebugbar();
                 $debugbar->addCollector($this->getContainer()->get('db_collector'));
                 $debugbar->addCollector($this->getContainer()->get('monolog_collector'));
@@ -189,7 +189,7 @@ class App
             $this->getContainer()->set(App::class, $this);
             $this->getContainer()->set('app', $this->getContainer()->get(App::class));
 
-            if ($this->getEnvironment()->getVariable('DEBUG')) {
+            if ($this->getEnvironment()->canDebug()) {
                 $debugbar = $this->getDebugbar();
                 $debugbar['time']->stopMeasure('app_construct');
             }
@@ -218,7 +218,7 @@ class App
      */
     public function bootstrap()
     {
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar = $this->getDebugbar();
             $debugbar['time']->startMeasure('app_bootstrap', 'App bootstrap');
         }
@@ -318,7 +318,7 @@ class App
                             throw new OfflineException();
                         }
 
-                        if ($this->getEnvironment()->getVariable('DEBUG')) {
+                        if ($this->getEnvironment()->canDebug()) {
                             $debugbar = $this->getDebugbar();
                             $debugbar['time']->startMeasure('handler_action', implode('::', $handler));
                         }
@@ -331,7 +331,7 @@ class App
                             $response = new Response((string)$result, 200);
                         }
 
-                        if ($this->getEnvironment()->getVariable('DEBUG')) {
+                        if ($this->getEnvironment()->canDebug()) {
                             $debugbar = $this->getDebugbar();
                             if ($debugbar['time']->hasStartedMeasure('handler_action')) {
                                 $debugbar['time']->stopMeasure('handler_action');
@@ -369,7 +369,7 @@ class App
             'response' => $response
         ]);
 
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar = $this->getDebugbar();
             if ($debugbar['time']->hasStartedMeasure('app_bootstrap')) {
                 $debugbar['time']->stopMeasure('app_bootstrap');

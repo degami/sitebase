@@ -68,7 +68,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      */
     protected function beforeRender(): BasePage|Response
     {
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $this->getAssets()->addHeadJs($this->getAssets()->assetUrl('/js/debugbar-EnvironmentWidget.js'));            
         }
 
@@ -102,7 +102,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             $this->getApp()->setCurrentLocale($this->getCurrentLocale());
         }
 
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             /** @var DebugBar $debugbar */
             $debugbar = $this->getDebugbar();
             if (!$debugbar->hasCollector("Page Data")) {
@@ -140,7 +140,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             $template_html = '';
             //$page_cache_key = 'site.fpc.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
             $page_cache_key = $this->getFpcCacheKey();
-            if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->getVariable('DEBUG') && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
+            if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->isDebugActive() && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
                 if ($this->canBeFPC() && $this->getCache()->has($page_cache_key)) {
                     $template_html = $this->getCache()->get($page_cache_key);
                 }
@@ -148,7 +148,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
 
             if (empty($template_html)) {
                 $template_html = $this->template->render();
-                if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->getVariable('DEBUG') && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
+                if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->isDebugActive() && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
                     if ($this->canBeFPC()) {
                         $this->getCache()->set($page_cache_key, $template_html);
                     }

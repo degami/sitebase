@@ -85,12 +85,12 @@ class Page extends FrontendPageWithObject
      */
     public function showPage(int $id, ?RouteInfo $route_info = null): mixed
     {
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar = $this->getDebugbar();
             $debugbar['time']->startMeasure('showpage');
         }
         $this->setObject($this->containerCall([PageModel::class, 'load'], ['id' => $id]));
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar = $this->getDebugbar();
             $debugbar['time']->stopMeasure('showpage');
         }

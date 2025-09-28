@@ -132,7 +132,7 @@ abstract class BaseRestPage extends BasePage
                 $log->persist();
             } catch (Exception $e) {
                 $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
-                if ($this->getEnvironment()->getVariable('DEBUG')) {
+                if ($this->getEnvironment()->canDebug()) {
                     return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
                 }
             }

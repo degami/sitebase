@@ -19,7 +19,7 @@ $this->layout('base::html', get_defined_vars()) ?>
 <?= $this->section('head_styles'); ?>
 <script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/jquery/jquery.min.js');?>"></script>
 <meta name="viewport" content="minimum-scale=1.0, maximum-scale=1.0, width=device-width">
-<?= getenv('DEBUG') ? $debugbarRenderer->renderHead() : ''; ?>
+<?= $this->sitebase()->getEnvironment()->canDebug() ? $debugbarRenderer->renderHead() : ''; ?>
 <?= $this->section('head'); ?>
 <?= $this->section('head_scripts'); ?>
 <?php $this->stop() ?>
@@ -31,5 +31,5 @@ $this->layout('base::html', get_defined_vars()) ?>
 <script type="text/javascript" src="<?php echo $this->sitebase()->assetUrl('/bootstrap/js/bootstrap.min.js');?>"></script>
 <?= $this->section('scripts'); ?>
 <?= $this->section('styles'); ?>
-<?= getenv('DEBUG') ? $debugbarRenderer->render() : '' ?>
+<?= $this->sitebase()->getEnvironment()->canDebug() ? $debugbarRenderer->render() : '' ?>
 <?= $this->sitebase()->renderBlocks('before_body_close', $controller); ?>

@@ -305,7 +305,7 @@ class Globals extends ContainerAwareObject
     {
         $this->logRequestIfNeeded(500);
 
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $content = [
                 'success' => false,
                 'message' => $exception->getMessage(),
@@ -348,7 +348,7 @@ class Globals extends ContainerAwareObject
     {
         $this->logRequestIfNeeded(500);
 
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $content = [
                 'success' => false,
                 'message' => $exception->getMessage(),

@@ -63,6 +63,26 @@ class Manager
     }
 
     /**
+     * Check if the current environment in on docker
+     */
+    public function isDocker(): bool
+    {
+        if (getenv('IS_DOCKER') === '1') {
+            return true;
+        }
+
+        if (file_exists('/.dockerenv')) {
+            return true;
+        }
+
+        $cgroup = @file_get_contents('/proc/1/cgroup');
+        return $cgroup !== false && (
+            strpos($cgroup, 'docker') !== false ||
+            strpos($cgroup, 'containerd') !== false
+        );
+    }
+
+    /**
      * Get the current request
      * 
      * @return Request|null
@@ -101,6 +121,26 @@ class Manager
     public function getVariables() : array
     {
         return (array) $this->envVariables;
+    }
+
+    /**
+     * check if debug is active
+     * 
+     * @return bool
+     */
+    public function isDebugActive() : bool
+    {
+        return boolval($this->getVariable('DEBUG'));
+    }
+
+    /**
+     * check if debug is active and ip address is valid
+     * 
+     * @return bool
+     */
+    public function canDebug() : bool
+    {
+        return $this->isDebugActive() && ($this->isDocker() || in_array($this->getRequest()?->getClientIp(), ['127.0.0.1', '::1', 'localhost']));
     }
 
     protected function loadDotEnv() : self

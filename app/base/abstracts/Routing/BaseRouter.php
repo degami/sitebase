@@ -62,7 +62,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
 
         $router_name = $this->getRouterName();
 
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar = $this->getDebugbar();
             $debugbar['time']->startMeasure($router_name . '_construct', ucfirst($router_name) . ' construct');
         }
@@ -89,7 +89,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
             $this->getApp()->event('dispatcher_ready', ['router' => $this, 'dispatcher' => $this->dispatcher]);
         }
 
-        if ($this->getEnvironment()->getVariable('DEBUG')) {
+        if ($this->getEnvironment()->canDebug()) {
             $debugbar = $this->getDebugbar();
             $debugbar['time']->stopMeasure($router_name . '_construct');
         }

@@ -25,6 +25,8 @@ services:
       - redis
 #    ports:
 #      - 9003:9003
+    environment:
+      IS_DOCKER: "1"
     env_file:
       - ./.env
     extra_hosts:

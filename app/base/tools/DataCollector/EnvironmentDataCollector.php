@@ -52,6 +52,7 @@ class EnvironmentDataCollector extends DataCollector implements Renderable, Asse
                     'isCli' => $this->subject->isCli() ?: 'false',
                     'isCliServer' => $this->subject->isCliServer() ?: 'false',
                     'isWeb' => $this->subject->isWeb() ?: 'false',
+                    'isDocker' => $this->subject->isDocker() ?: 'false',
                 ],
                 'variables' => $this->subject->getVariables(),                
             ],

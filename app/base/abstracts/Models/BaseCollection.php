@@ -52,7 +52,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             throw new InvalidValueException("$className is not a subclass of BaseModel");
         }
 
-        if (App::getInstance()->getEnvironment()->getVariable('DEBUG')) {
+        if (App::getInstance()->getEnvironment()->canDebug()) {
             /** @var DebugBar $debugbar */
             $debugbar = App::getInstance()->getDebugbar();
             if (!$debugbar->hasCollector(CollectionDataCollector::NAME)) {

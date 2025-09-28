@@ -338,4 +338,12 @@ class Manager extends ContainerAwareObject implements CacheInterface
     {
         return $this->getItemsByTag($tagName);
     }
+
+    /**
+     * returns cache keys array
+     */
+    public function keys() : array
+    {
+        return array_keys($this->getAllItemsByTag(self::CACHE_TAG) ?? []);
+    }
 }

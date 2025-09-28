@@ -30,8 +30,6 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
 
     /**
      * PageDataCollector constructor.
-     *
-     * @param BasePage|null $page
      */
     public function __construct() { }
 

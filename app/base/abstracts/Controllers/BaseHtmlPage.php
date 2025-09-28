@@ -19,6 +19,7 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Interfaces\Controller\HtmlPageInterface;
 use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Tools\DataCollector\RouteInfoDataCollector;
+use App\Base\Tools\DataCollector\CacheDataCollector;
 use App\Base\Tools\DataCollector\RedisDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
 use App\Base\Tools\DataCollector\BlocksDataCollector;
@@ -118,6 +119,11 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             }
             if (!$debugbar->hasCollector(UserDataCollector::NAME)) {
                 $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
+            }
+            if ($this->getEnvironment()->getVariable('DISABLE_CACHE') != 1) {
+                if (!$debugbar->hasCollector(CacheDataCollector::NAME)) {
+                    $debugbar->addCollector(new CacheDataCollector($this->getCache()));
+                }
             }
             if ($this->getRedis()->isEnabled()) {
                 if (!$debugbar->hasCollector(RedisDataCollector::NAME)) {

@@ -13,25 +13,28 @@
 
 namespace App\Base\Tools\DataCollector;
 
+use App\App;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;
-use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Tools\Cache\Manager as CacheManager;
 
 /**
- * Blocks data collector for debugging
+ * Cache data collector for debugging
  */
-class BlocksDataCollector extends DataCollector implements Renderable, AssetProvider
+class CacheDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-
-    public const NAME = "Blocks";
-
-    protected $blocksInfo = [];
+    public const NAME = "Cache";
 
     /**
      * PageDataCollector constructor.
+     *
+     * @param CacheManager|null $subject
      */
-    public function __construct() { }
+    public function __construct(
+        protected ?CacheManager $subject = null
+    ) { }
+
 
     /**
      * collects data
@@ -40,15 +43,19 @@ class BlocksDataCollector extends DataCollector implements Renderable, AssetProv
      */
     public function collect(): array
     {
-        $out = ['n_blocks' => count($this->blocksInfo), 'blocks'];
-        foreach ($this->blocksInfo as $region => $info) {
-            $out['blocks'][$region] = implode(', ', array_map(fn($el) => trim(
-                $el['className'] . 
-                (!empty($el['params']) ? ':' . json_encode($el['params']) : '') . ' ' . 
-                ($el['renderTime'] ?: '')
-            ), $info));
+        if (!$this->subject) {
+            return [];
         }
-        return $out;
+
+        return [
+            'info' => [
+                'Info' => $this->subject->getStats()->getInfo(),
+                'Cache Size' => App::getInstance()->getUtils()->formatBytes($this->subject->getStats()->getSize()),
+                'Cache LifeTime' => $this->subject->getCacheLifetime(),
+                'keys' => '<ul><li>'.implode('</li><li>', $this->subject->keys()).'</li></ul>',
+            ],
+            'n_keys' => count($this->subject->keys())
+        ];
     }
 
     /**
@@ -72,14 +79,14 @@ class BlocksDataCollector extends DataCollector implements Renderable, AssetProv
             self::NAME => [
                 "icon" => "file-alt",
                 "tooltip" => self::NAME,
-                "widget" => "PhpDebugBar.Widgets.VariableListWidget",
-                "map" => self::NAME.'.blocks',
-                "default" => "[]",
+                "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
+                "map" => self::NAME.'.info',
+                "default" => "[]"
             ],
             self::NAME.':badge' => [
-                "map" => self::NAME.'.n_blocks',
+                "map" => self::NAME.'.n_keys',
                 "default" => 0,
-            ]
+            ],
         ];
     }
 
@@ -94,16 +101,5 @@ class BlocksDataCollector extends DataCollector implements Renderable, AssetProv
             //            'css' => '',
             //            'js' => ''
         ];
-    }
-
-    public function addElements($region, $className, $params, $renderTime) : self 
-    {
-        $this->blocksInfo[$region][] = [
-            'className' => $className,
-            'params' => $params,
-            'renderTime' => ($renderTime > 0) ? number_format($renderTime, 4) : 0,
-        ];
-
-        return $this;
     }
 }

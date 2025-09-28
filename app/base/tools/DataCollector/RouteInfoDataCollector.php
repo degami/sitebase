@@ -17,7 +17,6 @@ use App\Base\Routing\RouteInfo;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;
-use App\Base\Tools\Redis\Manager as RedisManager;
 use FastRoute\Dispatcher;
 
 /**

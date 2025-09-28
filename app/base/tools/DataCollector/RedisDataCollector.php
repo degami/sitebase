@@ -28,7 +28,7 @@ class RedisDataCollector extends DataCollector implements Renderable, AssetProvi
     /**
      * PageDataCollector constructor.
      *
-     * @param BasePage|null $page
+     * @param RedisManager|null $subject
      */
     public function __construct(
         protected ?RedisManager $subject = null

@@ -29,7 +29,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
     /**
      * PageDataCollector constructor.
      *
-     * @param AccountModel|null $user
+     * @param AccountModel|null $subject
      */
     public function __construct(
         protected ?AccountModel $subject = null

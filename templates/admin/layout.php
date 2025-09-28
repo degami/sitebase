@@ -5,7 +5,7 @@
  * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
  */
 
-$this->layout('base::page', ['title' => $title] + get_defined_vars());?>
+$this->layout('base::layout', ['title' => $title] + get_defined_vars());?>
 
 <?php $this->start('head') ?>
 <link rel="stylesheet" type="text/css" href="<?php echo $this->sitebase()->assetUrl('/css/admin.css');?>">

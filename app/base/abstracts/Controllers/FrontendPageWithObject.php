@@ -119,7 +119,7 @@ abstract class FrontendPageWithObject extends FrontendPage
      */
     public function getInfo() : array
     {
-        return parent::getInfo() + ['object_id' => $this->getObject()->getId()];
+        return parent::getInfo() + ['object_class' => static::getObjectClass(), 'object_id' => $this->getObject()->getId()];
     }
 
     /**

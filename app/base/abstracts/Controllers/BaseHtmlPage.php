@@ -18,6 +18,7 @@ use App\Base\Traits\PageTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Interfaces\Controller\HtmlPageInterface;
 use App\Base\Tools\DataCollector\PageDataCollector;
+use App\Base\Tools\DataCollector\RouteInfoDataCollector;
 use App\Base\Tools\DataCollector\RedisDataCollector;
 use App\Base\Tools\DataCollector\UserDataCollector;
 use App\Base\Tools\DataCollector\BlocksDataCollector;
@@ -106,6 +107,9 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         if ($this->getEnvironment()->canDebug()) {
             /** @var DebugBar $debugbar */
             $debugbar = $this->getDebugbar();
+            if (!$debugbar->hasCollector(RouteInfoDataCollector::NAME)) {
+                $debugbar->addCollector(new RouteInfoDataCollector($this->getRouteInfo()));
+            }
             if (!$debugbar->hasCollector(PageDataCollector::NAME)) {
                 $debugbar->addCollector(new PageDataCollector($this));
             }

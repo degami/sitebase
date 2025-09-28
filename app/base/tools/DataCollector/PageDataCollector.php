@@ -23,7 +23,7 @@ use App\Base\Abstracts\Controllers\BasePage;
  */
 class PageDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    public const NAME = "Page Data";
+    public const NAME = "Page";
 
     /**
      * PageDataCollector constructor.
@@ -64,7 +64,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "Page Variables",
+                "tooltip" => self::NAME,
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => self::NAME,
                 "default" => "''"

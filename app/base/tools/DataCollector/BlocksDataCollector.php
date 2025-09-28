@@ -24,7 +24,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 class BlocksDataCollector extends DataCollector implements Renderable, AssetProvider
 {
 
-    public const NAME = "Blocks Data";
+    public const NAME = "Blocks";
 
     protected $blocksInfo = [];
 
@@ -73,7 +73,7 @@ class BlocksDataCollector extends DataCollector implements Renderable, AssetProv
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "Blocks Data",
+                "tooltip" => self::NAME,
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => self::NAME.'.blocks',
                 "default" => "[]",

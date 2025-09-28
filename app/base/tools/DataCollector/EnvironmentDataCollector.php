@@ -23,7 +23,7 @@ use App\Base\Environment\Manager as EnvironmentManager;
  */
 class EnvironmentDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    public const NAME = "Environment Data";
+    public const NAME = "Environment";
 
     /**
      * PageDataCollector constructor.
@@ -79,7 +79,7 @@ class EnvironmentDataCollector extends DataCollector implements Renderable, Asse
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "Environment Data",
+                "tooltip" => self::NAME,
                 "widget" => "PhpDebugBar.Widgets.EnvironmentWidget",
                 "map" => self::NAME.'.info',
                 "default" => "[]"

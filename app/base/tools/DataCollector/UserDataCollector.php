@@ -24,7 +24,7 @@ use DebugBar\DataCollector\AssetProvider;
  */
 class UserDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    public const NAME = "User Data";
+    public const NAME = "User";
 
     /**
      * PageDataCollector constructor.
@@ -73,7 +73,7 @@ class UserDataCollector extends DataCollector implements Renderable, AssetProvid
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "User Data",
+                "tooltip" => self::NAME,
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => self::NAME,
                 "default" => "''"

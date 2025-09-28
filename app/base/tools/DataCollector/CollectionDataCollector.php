@@ -24,7 +24,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 class CollectionDataCollector extends DataCollector implements Renderable, AssetProvider
 {
 
-    public const NAME = "Collections Data";
+    public const NAME = "Collections";
 
     protected $collectionsInfo = [];
 
@@ -69,7 +69,7 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "Collections Data",
+                "tooltip" => self::NAME,
                 "widget" => "PhpDebugBar.Widgets.VariableListWidget",
                 "map" => self::NAME.'.collections',
                 "default" => "[]",

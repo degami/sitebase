@@ -23,7 +23,7 @@ use App\Base\Tools\Redis\Manager as RedisManager;
  */
 class RedisDataCollector extends DataCollector implements Renderable, AssetProvider
 {
-    public const NAME = "Redis Data";
+    public const NAME = "Redis";
 
     /**
      * PageDataCollector constructor.
@@ -78,7 +78,7 @@ class RedisDataCollector extends DataCollector implements Renderable, AssetProvi
         return [
             self::NAME => [
                 "icon" => "file-alt",
-                "tooltip" => "Redis Data",
+                "tooltip" => self::NAME,
                 "widget" => "PhpDebugBar.Widgets.HtmlVariableListWidget",
                 "map" => self::NAME.'.info',
                 "default" => "[]"

@@ -89,7 +89,7 @@ $this->layout('base::page', ['title' => $title] + get_defined_vars());?>
                     </select>
                     <a href="#" class="closebtn mr-2">&times;</a>
                 </div>
-                <div id="chatMessages" class="chat-messages px-3 py-2 overflow-auto" style="height: calc(100vh - 120px);">
+                <div id="chatMessages" class="chat-messages px-3 py-2 overflow-auto" style="height: calc(100vh - <?php if ($this->sitebase()->getEnvironment()->canDebug()): ?>155px<?php else: ?>120px<?php endif;?>);">
 
                 </div>
                 <div class="d-flex">

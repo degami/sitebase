@@ -1,6 +1,11 @@
 .phpdebugbar {
 
     a.phpdebugbar-tab {
+
+        &.phpdebugbar-active {
+            background-color: #555 !important;
+        }
+
         span.phpdebugbar-badge {
             background-color: #555;
             color: #ccc;

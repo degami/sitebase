@@ -20,6 +20,7 @@ use App\Base\Traits\FrontendPageWithObjectTrait;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Exceptions\NotFoundException;
+use App\Base\Tools\DataCollector\PageDataCollector;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
@@ -48,6 +49,14 @@ abstract class FrontendPageWithObject extends FrontendPage
 
         if (isset($route_data['id'])) {
             $this->setObject($this->containerCall([static::getObjectClass(), 'load'], ['id' => $route_data['id']]));
+        }
+
+        if ($this->getEnvironment()->canDebug()) {
+            $debugbar = $this->getDebugbar();
+            /** @var PageDataCollector $collector */
+            $collector = $debugbar->getCollector(PageDataCollector::NAME);
+            $collector->addAdditionalInfo('object_class', static::getObjectClass());
+            $collector->addAdditionalInfo('object_id', $this->getObject()->getId());
         }
 
         return parent::beforeRender();
@@ -112,14 +121,6 @@ abstract class FrontendPageWithObject extends FrontendPage
         }
 
         return $this->normalizeCacheKey($prefix . '.id.'. $this->getObject()->getId());
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function getInfo() : array
-    {
-        return parent::getInfo() + ['object_class' => static::getObjectClass(), 'object_id' => $this->getObject()->getId()];
     }
 
     /**

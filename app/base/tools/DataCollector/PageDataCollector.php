@@ -17,6 +17,7 @@ use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;
 use App\Base\Abstracts\Controllers\BasePage;
+use RuntimeException;
 
 /**
  * Page data collector for debugging
@@ -24,6 +25,8 @@ use App\Base\Abstracts\Controllers\BasePage;
 class PageDataCollector extends DataCollector implements Renderable, AssetProvider
 {
     public const NAME = "Page";
+
+    protected array $additionalInfo = [];
 
     /**
      * PageDataCollector constructor.
@@ -41,7 +44,7 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
      */
     public function collect(): array
     {
-        return $this->subject?->getInfo() ?? [];
+        return ($this->subject?->getInfo() ?? []) + $this->getAdditionalInfo();
     }
 
     /**
@@ -83,5 +86,32 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
             //            'css' => '',
             //            'js' => ''
         ];
+    }
+
+    public function getAdditionalInfo() : array
+    {
+        return $this->additionalInfo;
+    }
+
+    public function addAdditionalInfo(string $key, mixed $value) : self
+    {
+        if (isset($this->additionalInfo[$key])) {
+            throw new RuntimeException("key $key is already defined");
+        }
+
+        $this->additionalInfo[$key] = $value;
+
+        return $this;
+    }
+
+    public function setAdditionalInfo(string|array $key, mixed $value = null) : self
+    {
+        if (is_array($key)) {
+            $this->additionalInfo = $key;
+        } else {
+            $this->additionalInfo[$key] = $value;
+        }
+
+        return $this;
     }
 }

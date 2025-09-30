@@ -36,6 +36,8 @@ use Symfony\Component\HttpFoundation\Cookie;
 use League\Plates\Template\Template;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Throwable;
+use Symfony\Component\HttpFoundation\Request;
+use Psr\Container\ContainerInterface;
 
 /**
  * Base for pages rendering an html response
@@ -48,6 +50,54 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      * @var Template|null template object
      */
     protected ?Template $template = null;
+
+    /**
+     * BasePage constructor.
+     *
+     * @param ContainerInterface $container
+     * @param Request $request
+     * @param RouteInfo $route_info
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
+        parent::__construct($container, $request, $route_info);
+
+        if ($this->getEnvironment()->canDebug()) {
+            /** @var DebugBar $debugbar */
+            $debugbar = $this->getDebugbar();
+            if (!$debugbar->hasCollector(RouteInfoDataCollector::NAME)) {
+                $debugbar->addCollector(new RouteInfoDataCollector($this->getRouteInfo()));
+            }
+            if (!$debugbar->hasCollector(PageDataCollector::NAME)) {
+                $debugbar->addCollector(new PageDataCollector($this));
+            }
+            if (!$debugbar->hasCollector(BlocksDataCollector::NAME)) {
+                $debugbar->addCollector(new BlocksDataCollector());
+            }
+            if (!$debugbar->hasCollector(UserDataCollector::NAME)) {
+                $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
+            }
+            if ($this->getEnvironment()->getVariable('DISABLE_CACHE') != 1) {
+                if (!$debugbar->hasCollector(CacheDataCollector::NAME)) {
+                    $debugbar->addCollector(new CacheDataCollector($this->getCache()));
+                }
+            }
+            if ($this->getRedis()->isEnabled()) {
+                if (!$debugbar->hasCollector(RedisDataCollector::NAME)) {
+                    $debugbar->addCollector(new RedisDataCollector($this->getRedis()));
+                }
+            }
+            if (!$debugbar->hasCollector(EnvironmentDataCollector::NAME)) {
+                $debugbar->addCollector(new EnvironmentDataCollector($this->getEnvironment()));
+            }
+        }        
+    }
 
     /**
      * prepare template object
@@ -103,36 +153,6 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         $this->template = $this->prepareTemplate();
         if (method_exists($this, 'getCurrentLocale')) {
             $this->getApp()->setCurrentLocale($this->getCurrentLocale());
-        }
-
-        if ($this->getEnvironment()->canDebug()) {
-            /** @var DebugBar $debugbar */
-            $debugbar = $this->getDebugbar();
-            if (!$debugbar->hasCollector(RouteInfoDataCollector::NAME)) {
-                $debugbar->addCollector(new RouteInfoDataCollector($this->getRouteInfo()));
-            }
-            if (!$debugbar->hasCollector(PageDataCollector::NAME)) {
-                $debugbar->addCollector(new PageDataCollector($this));
-            }
-            if (!$debugbar->hasCollector(BlocksDataCollector::NAME)) {
-                $debugbar->addCollector(new BlocksDataCollector());
-            }
-            if (!$debugbar->hasCollector(UserDataCollector::NAME)) {
-                $debugbar->addCollector(new UserDataCollector($this->getCurrentUser()));
-            }
-            if ($this->getEnvironment()->getVariable('DISABLE_CACHE') != 1) {
-                if (!$debugbar->hasCollector(CacheDataCollector::NAME)) {
-                    $debugbar->addCollector(new CacheDataCollector($this->getCache()));
-                }
-            }
-            if ($this->getRedis()->isEnabled()) {
-                if (!$debugbar->hasCollector(RedisDataCollector::NAME)) {
-                    $debugbar->addCollector(new RedisDataCollector($this->getRedis()));
-                }
-            }
-            if (!$debugbar->hasCollector(EnvironmentDataCollector::NAME)) {
-                $debugbar->addCollector(new EnvironmentDataCollector($this->getEnvironment()));
-            }
         }
 
         return $this->process($route_info, $route_data);

@@ -26,7 +26,7 @@ class LoggerManager extends ContainerAwareObject
     public const DEFAULT_SCHEDULE = '0 0 1 * *';
 
     /**
-     * flush cache method
+     * rotates logger.log
      *
      * @return bool
      */
@@ -64,7 +64,11 @@ class LoggerManager extends ContainerAwareObject
         return true;
     }
 
-
+    /**
+     * archives application_log db entries to logfile
+     *
+     * @return bool
+     */
     public function exportApplicationLogs(): bool
     {
         try {

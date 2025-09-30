@@ -30,6 +30,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Exception;
 use App\Base\Exceptions\NotFoundException;
+use App\Base\Tools\DataCollector\PageDataCollector;
 use App\Base\Traits\FrontendPageWithObjectTrait;
 use Throwable;
 
@@ -114,6 +115,15 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
                     ->setSubmit([[$this, 'formSubmitted']]),
             ];
         }
+
+        if ($this->getEnvironment()->canDebug()) {
+            $debugbar = $this->getDebugbar();
+            /** @var PageDataCollector $collector */
+            $collector = $debugbar->getCollector(PageDataCollector::NAME);
+            $collector->addAdditionalInfo('object_class', static::getObjectClass());
+            $collector->addAdditionalInfo('object_id', $this->getObject()->getId());
+        }
+
 
         return parent::beforeRender();
     }

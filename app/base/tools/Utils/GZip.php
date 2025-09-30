@@ -64,6 +64,8 @@ class GZip extends ContainerAwareObject
         fclose($in);
         gzclose($out);
 
+        @unlink($sourceFile);
+
         return $targetFile;
     }
 
@@ -108,6 +110,8 @@ class GZip extends ContainerAwareObject
 
         gzclose($in);
         fclose($out);
+
+        @unlink($gzipFile);
 
         return $targetFile;
     }

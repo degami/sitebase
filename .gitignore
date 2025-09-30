@@ -20,7 +20,7 @@ node_modules/
 .install_done
 .sass-cache
 .vscode
-var/log/*.log
+var/log/*
 var/cache/*
 var/dumps/*
 var/tmp/*

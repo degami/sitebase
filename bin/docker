@@ -1,5 +1,4 @@
 #!/bin/bash
-
 root_dir=`pwd`
 php_bin=`which php`
 docker_compose_bin=`which docker-compose`
@@ -21,7 +20,9 @@ function dockerps {
 }
 
 function dockerexec {
-  $docker_compose_bin exec "$@"
+  target=$1
+  shift
+  $docker_compose_bin exec $target $@
 }
 
 function dockershell {
@@ -75,6 +76,9 @@ if ! [ -e $docker_bin ]; then
     echo "This script should be run from the root dir"
     exit
 fi
+
+# load project env variables
+source .env
 
 ###########
 ## start ##
@@ -151,7 +155,7 @@ case "$1" in
     ;;
   dbshell|db)
       if [[ $(dockerps database) = 1 ]]; then
-        dockerexec database mariadb -u root -pdocker
+        dockerexec database mariadb -u $DATABASE_USER -p$DATABASE_PASS -A $DATABASE_NAME
       else
         echo "container database is down"
       fi

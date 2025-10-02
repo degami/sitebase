@@ -20,6 +20,7 @@ use App\Base\AI\Models\ChatGPT;
 use App\Base\AI\Models\Claude;
 use App\Base\AI\Models\GoogleGemini;
 use App\Base\AI\Models\Mistral;
+use App\Base\AI\Models\Perplexity;
 use Exception;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -88,6 +89,7 @@ class Ai extends BaseCommand
                 App::getInstance()->getSiteData()->setConfigValue(ChatGPT::CHATGPT_TOKEN_PATH, null);
                 App::getInstance()->getSiteData()->setConfigValue(Claude::CLAUDE_TOKEN_PATH, null);
                 App::getInstance()->getSiteData()->setConfigValue(Mistral::MISTRAL_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(Perplexity::PERPLEXITY_TOKEN_PATH, null);
             }
 
             $this->getIo()->success('Ai support has been disabled');
@@ -95,7 +97,17 @@ class Ai extends BaseCommand
         }
 
         if ($doEnable) {
-            $aiType = $this->keepAsking('Which AI do you want to enable? ('.implode(', ', $this->getAI()->getAvailableAIs()).') ', $this->getAI()->getAvailableAIs());
+            $availableAIs = $this->getAI()->getAvailableAIs();
+            $enabledAIs = $this->getAI()->getEnabledAIs();
+
+            $availableAIs = array_diff($availableAIs, $enabledAIs);
+
+            if (count($availableAIs) == 0) {
+                $this->getIo()->info("No more AI integrations are available to be enabled.");
+                return Command::SUCCESS;
+            }
+
+            $aiType = $this->selectElementFromList($availableAIs, 'Which AI do you want to enable?'); // $this->keepAsking('Which AI do you want to enable? ('.implode(', ', $this->getAI()->getAvailableAIs()).') ', $this->getAI()->getAvailableAIs());
             $apiTokenValue = $this->keepAsking($aiType . ' token value? ');
 
             switch ($aiType) {
@@ -148,7 +160,7 @@ class Ai extends BaseCommand
         $availableAIs = $this->getAI()->getEnabledAIs();
 
         if (count($availableAIs) > 1) {
-            $aiType = $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);
+            $aiType = $this->selectElementFromList($availableAIs, 'Which AI do you want to use?'); // $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);
         } else {
             $aiType = reset($availableAIs);
         }

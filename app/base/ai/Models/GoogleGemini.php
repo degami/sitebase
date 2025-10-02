@@ -23,7 +23,7 @@ use Exception;
  */
 class GoogleGemini extends ContainerAwareObject implements AIModelInterface
 {
-    public const GEMINI_MODEL = 'gemini-1.5-flash-latest';
+    public const GEMINI_MODEL = 'gemini-flash-latest';
     public const GEMINI_MODEL_PATH = 'app/gemini/model';
     public const GEMINI_VERSION = 'v1beta';
     public const GEMINI_VERSION_PATH = 'app/gemini/version';

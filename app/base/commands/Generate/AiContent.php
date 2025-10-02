@@ -35,7 +35,8 @@ class AiContent extends BaseCommand
     {
         $this->setDescription('Generate content using AI')
         ->addOption('contenttype', 't', InputOption::VALUE_OPTIONAL, 'Content Type')
-        ->addOption('locale', 'l', InputOption::VALUE_OPTIONAL, 'Locale');
+        ->addOption('locale', 'l', InputOption::VALUE_OPTIONAL, 'Locale')
+        ->addOption('ai', null, InputOption::VALUE_OPTIONAL, 'AI type');
     }
 
     /**
@@ -69,7 +70,11 @@ class AiContent extends BaseCommand
             array_map(fn($el) => strtolower(basename(str_replace("\\", '/', $el))), $contentTypes)
         );
 
-        $contentType = $this->selectElementFromList(array_values($contentTypes), 'Choose content type'); // $this->keepAskingForOption('contenttype', 'Content Type ('.implode(', ', array_values($contentTypes)).')? ', array_values($contentTypes));
+        if (!$input->getOption('contenttype')) {
+            $contentType = $this->selectElementFromList(array_values($contentTypes), 'Choose content type'); // $this->keepAskingForOption('contenttype', 'Content Type ('.implode(', ', array_values($contentTypes)).')? ', array_values($contentTypes));
+        } else {
+            $contentType = $input->getOption('contenttype');
+        }
 
         $class = array_search($contentType, $contentTypes);
 
@@ -113,12 +118,29 @@ class AiContent extends BaseCommand
 
 
         $availableLocales = $this->getSiteData()->getSiteLocales();
-        $locale = $this->selectElementFromList($availableLocales, 'Select locale'); // $this->keepAskingForOption('locale', "Locale (".implode(', ', $availableLocales).")", $availableLocales);
+        if (!$input->getOption('locale')) {
+            $locale = $this->selectElementFromList($availableLocales, 'Select locale'); // $this->keepAskingForOption('locale', "Locale (".implode(', ', $availableLocales).")", $availableLocales);
+        } else {
+            $locale = $input->getOption('locale');
+        }
+
+        if (!in_array($locale, $availableLocales)) {
+            $this->getIo()->error("Invalid locale : ".$locale);
+            return Command::FAILURE;
+        }
 
         $availableAIs = $this->getAI()->getEnabledAIs();
 
         if (count($availableAIs) > 1) {
-            $aiType = $this->selectElementFromList($availableAIs, 'Select which AI'); // $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);
+            if (!$input->getOption('ai')) {
+                $aiType = $this->selectElementFromList($availableAIs, 'Select which AI'); // $this->keepAsking('Which AI do you want to use? (' . implode(', ', $availableAIs) . ') ', $availableAIs);
+            } else {
+                $aiType = $input->getOption('ai');
+                if (!in_array($aiType, $availableAIs)) {
+                    $this->getIo()->error("Invalid AI: " . $aiType);
+                    return Command::FAILURE;
+                }
+            }
         } else {
             $aiType = reset($availableAIs);
         }

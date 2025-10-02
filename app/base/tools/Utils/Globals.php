@@ -655,8 +655,8 @@ class Globals extends ContainerAwareObject
      */
     public function getAuthorizationHeader(): ?string
     {
-        $token = $this->getEnvironment()->getRequest()->headers->get('Authorization');
-        return (string) ($token ?: $this->getEnvironment()->getRequest()->cookies->get('Authorization'));
+        $token = $this->getEnvironment()->getRequest()?->headers->get('Authorization');
+        return (string) ($token ?: $this->getEnvironment()->getRequest()?->cookies->get('Authorization'));
     }
 
     /**

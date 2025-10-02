@@ -16,8 +16,6 @@ namespace App\Base\Tools\AI;
 use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Interfaces\AI\AIModelInterface;
-use App\Base\Tools\Utils\Globals;
-use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
@@ -166,7 +164,7 @@ class Manager extends ContainerAwareObject
     {       
         $modelRole = match($model) {
             'googlegemini', 'claude' => 'model',
-            'chatgpt', 'mistral' => 'assistant',
+            'chatgpt', 'mistral', 'perplexity' => 'assistant',
             default => 'model',
         };
 
@@ -236,7 +234,7 @@ class Manager extends ContainerAwareObject
 
         // Testo del messaggio
         $text = match($aiType) {
-            'mistral','claude','chatgpt' => $interaction['content'] ?? 'n/a',
+            'mistral','claude','chatgpt','perplexity' => $interaction['content'] ?? 'n/a',
             'googlegemini' => $interaction['parts'][0]['text'] ?? 'n/a',
             default => 'Unknown ' . $aiType .' model',
         };

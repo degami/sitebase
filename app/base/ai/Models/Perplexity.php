@@ -117,5 +117,5 @@ class Perplexity extends ContainerAwareObject implements AIModelInterface
     public function getVersion() : string
     {
         return 'none';
-    }    
+    }
 }

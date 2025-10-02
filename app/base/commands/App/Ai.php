@@ -19,6 +19,7 @@ use App\Base\AI\Manager as AIManager;
 use App\Base\AI\Models\ChatGPT;
 use App\Base\AI\Models\Claude;
 use App\Base\AI\Models\GoogleGemini;
+use App\Base\AI\Models\Groq;
 use App\Base\AI\Models\Mistral;
 use App\Base\AI\Models\Perplexity;
 use Exception;
@@ -90,6 +91,7 @@ class Ai extends BaseCommand
                 App::getInstance()->getSiteData()->setConfigValue(Claude::CLAUDE_TOKEN_PATH, null);
                 App::getInstance()->getSiteData()->setConfigValue(Mistral::MISTRAL_TOKEN_PATH, null);
                 App::getInstance()->getSiteData()->setConfigValue(Perplexity::PERPLEXITY_TOKEN_PATH, null);
+                App::getInstance()->getSiteData()->setConfigValue(Groq::GROQ_MODEL_PATH, null);
             }
 
             $this->getIo()->success('Ai support has been disabled');
@@ -123,6 +125,12 @@ class Ai extends BaseCommand
                 case 'mistral':
                     App::getInstance()->getSiteData()->setConfigValue(Mistral::MISTRAL_TOKEN_PATH, $apiTokenValue);
                     break;
+                case 'perplexity':
+                    App::getInstance()->getSiteData()->setConfigValue(Perplexity::PERPLEXITY_TOKEN_PATH, $apiTokenValue);
+                    break;
+                case 'groq':
+                    App::getInstance()->getSiteData()->setConfigValue(Groq::GROQ_TOKEN_PATH, $apiTokenValue);
+                    break;
             }
 
             $selectModel = $this->keepAsking('Do you want to select a specific model? (y/n) ', ['y', 'n']) == 'y';
@@ -143,6 +151,12 @@ class Ai extends BaseCommand
                             break;
                         case 'mistral':
                             App::getInstance()->getSiteData()->setConfigValue(Mistral::MISTRAL_MODEL_PATH, $model);
+                            break;
+                        case 'perplexity':
+                            App::getInstance()->getSiteData()->setConfigValue(Perplexity::PERPLEXITY_MODEL_PATH, $model);
+                            break;
+                        case 'groq':
+                            App::getInstance()->getSiteData()->setConfigValue(Groq::GROQ_MODEL_PATH, $model);
                             break;
                     }
                 }

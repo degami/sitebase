@@ -34,19 +34,29 @@ class ContainerDataCollector extends DataCollector implements Renderable
 
         // Se il container implementa un metodo per elencare i servizi, usalo:
         if (method_exists($this->container, 'getServiceIds')) {
-            foreach ($this->container->getServiceIds() as $id) {
+            foreach (call_user_func([$this->container, 'getServiceIds']) as $id) {
                 $services[] = $id;
             }
         } elseif (method_exists($this->container, 'getRegisteredServices')) {
             // Adatta se Sitebase espone metodi personalizzati
-            $services = array_keys($this->container->getRegisteredServices());
+            $services = array_keys(call_user_func([$this->container, 'getRegisteredServices']));
         } elseif (method_exists($this->container, 'getKnownEntryNames')) {
-            $services = $this->container->getKnownEntryNames();
+            $services = call_user_func([$this->container, 'getKnownEntryNames']);
         }
 
         return [
             'service_count' => count($services),
-            'services' => '<ul><li>'.implode('</li><li>', array_map(fn($el) => $el . ' - ' . $this->container->debugEntry($el), $services)).'</li></ul>',
+            'services' => '<ul><li>' . 
+                            implode('</li><li>', 
+                                array_map(
+                                    fn($el) => $el . (
+                                        is_callable([$this->container, 'debugEntry']) ? 
+                                            ' - ' . call_user_func_array([$this->container, 'debugEntry'], [$el]) : 
+                                            ''
+                                    ), $services
+                                )
+                            ) . 
+                          '</li></ul>',
         ];
     }
 

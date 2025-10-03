@@ -44,7 +44,13 @@ class PageDataCollector extends DataCollector implements Renderable, AssetProvid
      */
     public function collect(): array
     {
-        return ($this->subject?->getInfo() ?? []) + $this->getAdditionalInfo();
+        return array_map(function ($el) {
+            if (is_array($el)) {
+                return '<ul><li>' . implode('</li><li>', $el) . '</li></ul>';
+            }
+
+            return $el;
+        }, ($this->subject?->getInfo() ?? []) + $this->getAdditionalInfo());
     }
 
     /**

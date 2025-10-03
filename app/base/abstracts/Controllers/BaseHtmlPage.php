@@ -25,6 +25,7 @@ use App\Base\Tools\DataCollector\UserDataCollector;
 use App\Base\Tools\DataCollector\BlocksDataCollector;
 use App\Base\Models\Rewrite;
 use App\Base\Tools\DataCollector\EnvironmentDataCollector;
+use App\Base\Tools\DataCollector\ContainerDataCollector;
 use DebugBar\DebugBar;
 use DebugBar\DebugBarException;
 use Degami\Basics\Exceptions\BasicException;
@@ -71,6 +72,9 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         if ($this->getEnvironment()->canDebug()) {
             /** @var DebugBar $debugbar */
             $debugbar = $this->getDebugbar();
+            if (!$debugbar->hasCollector(ContainerDataCollector::NAME)) {
+                $debugbar->addCollector(new ContainerDataCollector($this->getContainer()));
+            }
             if (!$debugbar->hasCollector(RouteInfoDataCollector::NAME)) {
                 $debugbar->addCollector(new RouteInfoDataCollector($this->getRouteInfo()));
             }
@@ -276,7 +280,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         }
 
         foreach ($template_data as $index => $elem) {
-            $variablesInfo[] = "{$index}[" . ((is_object($elem)) ? get_class($elem) : gettype($elem)) . "]";
+            $variablesInfo[] = "{$index}[" . ((is_object($elem)) ? get_class($elem) : gettype($elem)) . "]" . 
+            ' (' . (is_object($elem) ? '#'.spl_object_id($elem) : (is_scalar($elem) ? $elem : '')) . ')';
         }
 
         $out = [
@@ -292,7 +297,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             $out['path'] = $this->getTemplate()->path();
         }
 
-        $out['variables'] = implode(", ", $variablesInfo);
+        //$out['variables'] = implode(", ", $variablesInfo);
+        $out['variables'] = $variablesInfo;
         return $out;
     }
 

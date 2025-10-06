@@ -196,6 +196,16 @@ class Globals extends ContainerAwareObject
             case 404:
             case 405:
                 $template = $this->getTemplates()->make($template_name ?: 'errors::' . $error_code);
+
+                $template->start('head_styles');
+                echo $this->getAssets()->renderHeadCSS();
+                $template->stop();
+
+                $template->start('head_scripts');
+                echo $this->getAssets()->renderHeadJsScripts();
+                echo $this->getAssets()->renderHeadInlineJS();
+                $template->stop();
+
                 $template->data($template_data);
 
                 return $this->createHtmlResponse(
@@ -205,6 +215,17 @@ class Globals extends ContainerAwareObject
             case 503:
                 $template = $this->getTemplates()->make($template_name ?: 'errors::offline');
                 $template_data['body_class'] = 'maintenance';
+
+
+                $template->start('head_styles');
+                echo $this->getAssets()->renderHeadCSS();
+                $template->stop();
+
+                $template->start('head_scripts');
+                echo $this->getAssets()->renderHeadJsScripts();
+                echo $this->getAssets()->renderHeadInlineJS();
+                $template->stop();
+
                 $template->data($template_data);
 
                 return $this->createHtmlResponse(

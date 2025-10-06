@@ -418,9 +418,13 @@ class RouteInfo
      *
      * @return string
      */
-    public function toString(): string
+    public function toString(): ?string
     {
-        return implode("::", $this->handler) . "(" . serialize($this->vars) . ")";
+        if (!$this->handler) {
+            return null;
+        }
+
+        return implode("::", (array) $this->handler) . "(" . serialize($this->vars) . ")";
     }
 
     /**

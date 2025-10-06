@@ -98,6 +98,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
                 }
             }
             if (!$debugbar->hasCollector(EnvironmentDataCollector::NAME)) {
+                $this->getAssets()->addHeadJs($this->getAssets()->assetUrl('/js/debugbar-EnvironmentWidget.js'));
                 $debugbar->addCollector(new EnvironmentDataCollector($this->getEnvironment()));
             }
         }        
@@ -114,6 +115,23 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         $template = $this->getTemplates()->make($this->getTemplateName());
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());
 
+        $template->start('head_styles');
+        echo $this->getAssets()->renderHeadCSS();
+        $template->stop();
+
+        $template->start('head_scripts');
+        echo $this->getAssets()->renderHeadJsScripts();
+        echo $this->getAssets()->renderHeadInlineJS();
+        $template->stop();
+
+        $template->start('scripts');
+        echo $this->getAssets()->renderPageInlineJS();
+        $template->stop();
+
+        $template->start('styles');
+        echo $this->getAssets()->renderPageInlineCSS();
+        $template->stop();
+
         return $template;
     }
 
@@ -126,7 +144,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     protected function beforeRender(): BasePage|Response
     {
         if ($this->getEnvironment()->canDebug()) {
-            $this->getAssets()->addHeadJs($this->getAssets()->assetUrl('/js/debugbar-EnvironmentWidget.js'));            
+
         }
 
         return parent::beforeRender();

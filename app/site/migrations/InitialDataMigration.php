@@ -152,7 +152,7 @@ class InitialDataMigration extends BaseMigration
         /** @var Permission $permission_model */
         $permission_model = null;
         try {
-            $permission_model = App::getInstance()->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+            $permission_model = Permission::getCollection()->where(['name' => $permission_name])->getFirst();
             if (!$permission_model) {
                 throw new ExceptionsNotFoundException();
             }

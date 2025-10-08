@@ -22,6 +22,7 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Abstracts\Models\BaseModel;
 use App\App;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 
 /**
  * "Imports" Admin Page
@@ -178,7 +179,20 @@ class Imports extends AdminFormPage
 
                 // load or create object
                 try {
-                    $object = $this->containerCall([$className, 'load'], ['id' => $id]);
+//                    $object = $this->containerCall([$className, 'load'], ['id' => $id]);
+                    $collection = $this->containerCall([$className, 'getCollection']);
+
+                    $conditions = [];
+                    if (is_array($id)) {
+                        $conditions = array_combine($primaryKey, $id);
+                    } else {
+                        $conditions[reset($primaryKey)] = $id;
+                    }
+
+                    $object = $collection->where($conditions)->getFirst();
+                    if (!$object) {
+                        throw new ExceptionsNotFoundException();
+                    }
                 } catch (\Exception $e) {
                     $object = $this->containerCall([$className, 'new']);
                 }

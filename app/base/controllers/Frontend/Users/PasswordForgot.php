@@ -20,6 +20,7 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FormPage;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use App\Base\Traits\FrontendPageTrait;
 use App\Base\Models\User;
 use App\Base\Exceptions\PermissionDeniedException;
@@ -160,7 +161,7 @@ class PasswordForgot extends FormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        if ($this->getRequest()->get('confirmation_code') && ($user = $this->containerCall([User::class, 'loadBy'], ['field' => 'confirmation_code', 'value' => $this->getRequest()->get('confirmation_code')])) && $user->getId()) {
+        if ($this->getRequest()->get('confirmation_code') && ($user = User::getCollection()->where(['confirmation_code' => $this->getRequest()->get('confirmation_code')])->getFirst()) && $user->getId()) {
             $form
                 ->setFormId('changepass')
                 ->addField('user_id', [
@@ -213,7 +214,10 @@ class PasswordForgot extends FormPage
         if ($form->getFormId() == 'confirmemail') {
             try {
                 /** @var User $user */
-                $user = $this->containerCall([User::class, 'loadBy'], ['field' => 'email', 'value' => $values['email']]);
+                $user = User::getCollection()->where(['email' => $values['email']])->getFirst();
+                if (!$user) {
+                    throw new ExceptionsNotFoundException();
+                }
                 $form_state['found_user'] = $user;
             } catch (\Exception $e) {
                 return $this->getUtils()->translate("Invalid email", locale: $this->getCurrentLocale());

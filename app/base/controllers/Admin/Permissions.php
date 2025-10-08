@@ -184,8 +184,8 @@ class Permissions extends AdminFormPage
             if (count($tmp) == 3) {
                 $permission_name = $tmp[0];
                 $role_name = $tmp[1];
-                $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
-                $role_model = $this->containerCall([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role_name]);
+                $permission_model = Permission::getCollection()->where(['name' => $permission_name])->getFirst();
+                $role_model = Role::getCollection()->where(['name' => $role_name])->getFirst();
                 $role_permission_model = $this->loadRolePermission($role_model, $permission_model);
 
                 if ($value == true && $role_permission_model == null) {

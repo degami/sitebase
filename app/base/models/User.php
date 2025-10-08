@@ -116,10 +116,9 @@ class User extends AccountModel
         } elseif (is_string($role)) {
             try {
                 /** @var Role $role */
-                $role = App::getInstance()->containerCall([Role::class, 'loadBy'], ['field' => 'name', 'value' => $role]);
-                $this->setRoleId($role->getId());
-            } catch (Exception $e) {
-            }
+                $role = Role::getCollection()->where(['name' => $role])->getFirst();
+                $this->setRoleId($role?->getId());
+            } catch (Exception $e) { }
         }
 
         return $this;

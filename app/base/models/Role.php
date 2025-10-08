@@ -95,8 +95,8 @@ class Role extends BaseModel
     {
         $pivot_model = $this->containerCall([RolePermission::class, 'new']);
 
-        $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
-        if (!$permission_model->isLoaded()) {
+        $permission_model = Permission::getCollection()->where(['name' => $permission_name])->getFirst();
+        if (!$permission_model || !$permission_model->isLoaded()) {
             throw new InvalidValueException("permission not found: " . $permission_name);
         }
 
@@ -122,8 +122,8 @@ class Role extends BaseModel
             throw new InvalidValueException("permission not found in role: " . $permission_name);
         }
 
-        $permission_model = $this->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
-        if (!$permission_model->isLoaded()) {
+        $permission_model = Permission::getCollection()->where(['name' => $permission_name])->getFirst();
+        if (!$permission_model || !$permission_model->isLoaded()) {
             throw new InvalidValueException("permission not found: " . $permission_name);
         }
 

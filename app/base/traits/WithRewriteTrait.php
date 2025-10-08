@@ -18,6 +18,7 @@ use App\Base\Routing\RouteInfo;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Exceptions\NotFoundException;
 use Exception;
 use App\Base\GraphQl\GraphQLExport;
 
@@ -45,7 +46,11 @@ trait WithRewriteTrait
 
         if (!($this->rewriteObj instanceof Rewrite)) {
             try {
-                $this->rewriteObj = App::getInstance()->containerCall([Rewrite::class, 'loadBy'], ['field' => 'route', 'value' => '/' . $this->getRewritePrefix() . '/' . $this->getId()]);
+                $rewriteObj = Rewrite::getCollection()->where(['route' => '/' . $this->getRewritePrefix() . '/' . $this->getId()])->getFirst();
+                if (!$rewriteObj) {
+                    throw new NotFoundException();
+                }
+                $this->rewriteObj = $rewriteObj;
             } catch (Exception $e) {
                 $this->rewriteObj = App::getInstance()->containerCall([Rewrite::class, 'new']);
             }

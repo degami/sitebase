@@ -62,8 +62,8 @@ class ChangeLanguage extends BaseCodeBlock
                                 $text = $key;
                             }
                             if (isset($config['show-language']) && $config['show-language'] == 'full') {
-                                $language = $this->containerCall([Language::class, 'loadBy'], ['field' => 'locale', 'value' => $key]);
-                                $text = $language->native;
+                                $language = Language::getCollection()->where(['locale' => $key])->getFirst();
+                                $text = $language?->native;
                             }
                             if (isset($config['show-flags']) && boolval($config['show-flags'])) {
                                 $text .= ' ' . $this->getHtmlRenderer()->renderFlag($key);

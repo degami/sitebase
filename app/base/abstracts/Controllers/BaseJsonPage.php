@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\App;
 use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -80,6 +81,11 @@ abstract class BaseJsonPage extends BasePage
         $route_name = 'crud.' . str_replace("/", ".", trim($path, "/"));
 
         return $route_name;
+    }
+
+    public function getCurrentLocale() : ?string
+    {
+        return App::getInstance()->getCurrentLocale();
     }
 
     /**

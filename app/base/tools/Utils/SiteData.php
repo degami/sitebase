@@ -274,7 +274,7 @@ class SiteData extends ContainerAwareObject
         }
 
         try {
-            $result = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])]]);
+            $result = Configuration::getCollection()->where(['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])])->getFirst();
             if ($result instanceof Configuration) {
                 $cached_configuration[$website_id][$config_path][$result->getLocale() ?? 'default'] = $result->getValue();
                 $this->getCache()->set(self::CONFIGURATION_CACHE_KEY, $cached_configuration);
@@ -311,7 +311,7 @@ class SiteData extends ContainerAwareObject
 */
         try {
             /** @var Configuration $result */
-            $result = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])]]);
+            $result = Configuration::getCollection()->where(['path' => $config_path, 'website_id' => $website_id, 'locale' => array_unique([$locale, null])])->getFirst();
             if ($result instanceof Configuration) {
                 $result->setValue($value);
                 $result->persist();

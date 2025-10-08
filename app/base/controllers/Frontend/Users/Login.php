@@ -225,10 +225,7 @@ class Login extends FormPage
 
             try {
                 /** @var User $user */
-                $user = $this->containerCall([User::class, 'loadByCondition'], ['condition' => [
-                    'username' => $values['username'],
-                ]]);
-
+                $user = User::getCollection()->where(['username' => $values['username']])->getFirst();
                 $user->incrementLoginTries()->persist();
 
                 if ($user->getLocked() == true) {

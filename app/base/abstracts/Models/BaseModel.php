@@ -407,47 +407,12 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             $condition = [$keyField => $id];
         }
 
-        $object = App::getInstance()->containerCall([static::class, 'loadByCondition'], ['condition' => $condition]);
+        $object = static::getCollection()->where($condition)->getFirst();
 
         if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
         return $object;
-    }
-
-    /**
-     * loads model by condition
-     *
-     * @param array $condition
-     * @return self|null
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public static function loadByCondition(array $condition): ?BaseModel
-    {
-        /** @var DebugBar $debugbar */
-        $debugbar = App::getInstance()->getDebugbar();
-
-        $measure_key = 'loadByCondition model: ' . static::defaultTableName();
-
-        if (App::getInstance()->getEnvironment()->canDebug()) {
-            $debugbar['time']->startMeasure($measure_key);
-        }
-
-        $stmt = static::getModelBasicWhere($condition);
-        $db_row = $stmt->limit(1)->fetch();
-        if (!$db_row || !$db_row->id) {
-            throw new BasicException('Model not found');
-        }
-
-        static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($db_row->id)] = App::getInstance()->containerMake(static::class, ['db_row' => $db_row]);
-
-        if (App::getInstance()->getEnvironment()->canDebug()) {
-            $debugbar['time']->stopMeasure($measure_key);
-        }
-
-        return static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($db_row->id)];
     }
 
     /**
@@ -475,9 +440,9 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public static function loadBy(string $field, mixed $value): BaseModel
+    public static function loadBy(string $field, mixed $value): ?BaseModel
     {
-        return static::loadByCondition([$field => $value]);
+        return static::getCollection()->where([$field => $value])->getFirst();
     }
 
     /**
@@ -608,6 +573,12 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
         foreach ($this->getData() as $key => $value) {
             if ($value instanceof BaseModel) {
                 $out[$key] = $value->toJson($level++);
+            } else if(is_array($value)) {
+                foreach ($value as &$v) {
+                    if ($v instanceof BaseModel) {
+                        $v = $v->toJson($level++);
+                    }
+                }
             } else {
                 $out[$key] = $value;
             }

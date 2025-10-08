@@ -462,14 +462,16 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
     /**
      * return subset of found items (useful for paginate)
      *
-     * @param Request $request
      * @param int $page_size
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function paginate(Request $request, int $page_size = self::ITEMS_PER_PAGE): array
+    public function paginate(int $page_size = self::ITEMS_PER_PAGE): array
     {
+        /** @var Request $request */
+        $request = App::getInstance()->getEnvironment()->getRequest();
+
         /** @var DebugBar $debugbar */
         $debugbar = App::getInstance()->getDebugbar();
 
@@ -479,7 +481,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        $page = $request->get('page') ?? 0;
+        $page = $request?->get('page') ?? 0;
         $start = (int)$page * $page_size;
 
         $total = $this->count();

@@ -16,6 +16,7 @@ namespace App\Base\Crud\Admin;
 use App\Base\Abstracts\Controllers\BaseJsonPage;
 use App\Base\Exceptions\NotAllowedException;
 use App\Base\Models\User;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -50,21 +51,25 @@ class Token extends BaseJsonPage
 
     protected function getToken(Request $request) : ?string
     {
-        $username = $request->request->get('username');
-        $password = $request->request->get('password');
+        $username = (string) $request->request->get('username');
+        $password = (string) $request->request->get('password');
 
         $token = null;
         try {
-            $user = $this->containerCall([User::class, 'loadByCondition'], ['condition' => [
+            /** @var User $user */
+            $user = User::getCollection()->where([
                 'username' => $username,
                 'password' => $this->getUtils()->getEncodedPass($password),
-            ]]);
+            ])->getFirst();
+
+            if (!$user) {
+                throw new Exception("No user found");
+            }
 
             // dispatch "user_logged_in" event
             $this->getApp()->event('user_logged_in', [
                 'logged_user' => $user
             ]);
-
 
             $user->getUserSession()->addSessionData('last_login', new \DateTime())->persist();
             $jwt = "" . $user->getJWT();

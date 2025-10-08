@@ -413,7 +413,7 @@ class FakeDataMigration extends BaseMigration
                 /** @var Configuration $config */
                 $config = null;
                 try {
-                    $config = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path]]);
+                    $config = Configuration::getCollection()->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path])->getFirst();
                 } catch (Exception $e) {
                     $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
                         'website_id' => $this->website_id,
@@ -431,7 +431,7 @@ class FakeDataMigration extends BaseMigration
             if ($locale != $website->getDefaultLocale()) {
                 $path = 'app/frontend/homepage';
                 try {
-                    $config = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path]]);
+                    $config = Configuration::getCollection()->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path])->getFirst();
                 } catch (Exception $e) {
                     $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
                         'website_id' => $this->website_id,
@@ -455,7 +455,7 @@ class FakeDataMigration extends BaseMigration
             /** @var Configuration $config */
             $config = null;
             try {
-                $config = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => ['website_id' => $this->website_id, 'path' => $path]]);
+                $config = Configuration::getCollection()->where(['website_id' => $this->website_id, 'path' => $path])->getFirst();
             } catch (Exception $e) {
                 $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
                     'website_id' => $this->website_id,

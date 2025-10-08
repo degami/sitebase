@@ -87,16 +87,18 @@ class TokenEventListener implements EventListenerInterface
                     } catch (Exception $e) {
                         try {
                             /** @var User $user */
-                            $user = $app->containerCall([User::class, 'loadByCondition'], ['condition' => [
-                                'username' => $args['username'],
-                            ]]);                            
-
+                            $user = User::getCollection()->where(['username' => $args['username']])->getFirst();
                             $user->incrementLoginTries()->persist();
 
                             if ($user->getLocked() == true) {
                                 throw new RuntimeException("Account locked. try again lated.");
                             }
-                        } catch (\Exception $e) {}
+                        } catch (\Exception $e) {
+                            throw $e;
+                        }
+
+                        // user is not found with provided username / password. we need to empty $user variable
+                        $user = null;
                     }
 
                     if (!$user) {

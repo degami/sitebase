@@ -69,7 +69,7 @@ class Edit extends BaseCommand
                 if (is_numeric($website)) {
                     $condition['website_id'] = $website;
                 }
-                $configuration = $this->containerCall([Configuration::class, 'loadByCondition'], ['condition' => $condition]);
+                $configuration = Configuration::getCollection()->where($condition)->getFirst();
             }
 
             if (!$configuration || !$configuration->getId()) {

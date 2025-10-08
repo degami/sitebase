@@ -260,7 +260,7 @@ class User extends AccountModel
 
         try {
             /** @var UserSession $user_session */
-            $user_session = App::getInstance()->containerCall([UserSession::class, 'loadByCondition'], ['condition' => ['user_id' => $this->getId(), 'website_id' => $current_website_id]]);
+            $user_session = UserSession::getCollection()->where(['user_id' => $this->getId(), 'website_id' => $current_website_id])->getFirst();
         } catch (Exception $e) {
         }
 

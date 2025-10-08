@@ -211,7 +211,7 @@ class Permissions extends AdminFormPage
     private function loadRolePermission(Role $role_model, Permission $permission_model): ?RolePermission
     {
         try {
-            return $this->containerCall([RolePermission::class, 'loadByCondition'], ['condition' => ['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()]]);
+            return RolePermission::getCollection()->where(['role_id' => $role_model->getId(), 'permission_id' => $permission_model->getId()])->getFirst();
         } catch (\Exception $e) {
         }
 

@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Abstracts\Migrations\BaseMigration;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Exceptions\InvalidValueException;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use App\Base\Models\Configuration;
 use App\Base\Models\Language;
 use App\Base\Models\Country;
@@ -152,6 +153,9 @@ class InitialDataMigration extends BaseMigration
         $permission_model = null;
         try {
             $permission_model = App::getInstance()->containerCall([Permission::class, 'loadBy'], ['field' => 'name', 'value' => $permission_name]);
+            if (!$permission_model) {
+                throw new ExceptionsNotFoundException();
+            }
         } catch (\Exception $e) {
             $permission_model = App::getInstance()->containerCall([Permission::class, 'new'], ['initial_data' => ['name' => $permission_name]]);
             $permission_model->persist();

@@ -24,6 +24,7 @@ use LessQL\Result;
 use LessQL\Row;
 use PDOStatement;
 use App\Base\Exceptions\InvalidValueException;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use App\Base\Tools\Search\Manager as SearchManager;
 use Exception;
 use Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
@@ -438,11 +439,17 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      * @return self
      * @throws BasicException
      * @throws DependencyException
-     * @throws NotFoundException
+     * @throws ExceptionsNotFoundException
      */
-    public static function loadBy(string $field, mixed $value): ?BaseModel
+    public static function loadBy(string $field, mixed $value): BaseModel
     {
-        return static::getCollection()->where([$field => $value])->getFirst();
+        $item = static::getCollection()->where([$field => $value])->getFirst();
+
+        if (!$item) {
+            throw new ExceptionsNotFoundException();
+        }
+
+        return $item;
     }
 
     /**

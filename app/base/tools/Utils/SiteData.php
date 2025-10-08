@@ -16,6 +16,7 @@ namespace App\Base\Tools\Utils;
 use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\AdminPage;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use App\Base\Models\Block;
 use App\Base\Models\Configuration;
 use App\Base\Models\Menu;
@@ -315,6 +316,8 @@ class SiteData extends ContainerAwareObject
             if ($result instanceof Configuration) {
                 $result->setValue($value);
                 $result->persist();
+            } else {
+                throw new ExceptionsNotFoundException();
             }
         } catch (Exception $e) {
 //            return false;

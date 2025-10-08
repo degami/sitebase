@@ -46,7 +46,7 @@ class AiContent extends BaseCommand
      */
     public static function registerCommand(): bool
     {
-        return App::getInstance()->getAI()->isAiAvailable();
+        return App::installDone() && App::getInstance()->getAI()->isAiAvailable();
     }
 
     /**

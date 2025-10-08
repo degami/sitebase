@@ -15,6 +15,7 @@ namespace App\Site\Migrations;
 
 use App\App;
 use App\Base\Abstracts\Migrations\BaseMigration;
+use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
 use App\Base\Models\Block;
 use App\Base\Models\Configuration;
 use App\Site\Models\Contact;
@@ -414,6 +415,9 @@ class FakeDataMigration extends BaseMigration
                 $config = null;
                 try {
                     $config = Configuration::getCollection()->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path])->getFirst();
+                    if (!$config) {
+                        throw new ExceptionsNotFoundException();
+                    }
                 } catch (Exception $e) {
                     $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
                         'website_id' => $this->website_id,
@@ -432,6 +436,9 @@ class FakeDataMigration extends BaseMigration
                 $path = 'app/frontend/homepage';
                 try {
                     $config = Configuration::getCollection()->where(['website_id' => $this->website_id, 'locale' => $locale, 'path' => $path])->getFirst();
+                    if (!$config) {
+                        throw new ExceptionsNotFoundException();
+                    }
                 } catch (Exception $e) {
                     $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
                         'website_id' => $this->website_id,
@@ -456,6 +463,9 @@ class FakeDataMigration extends BaseMigration
             $config = null;
             try {
                 $config = Configuration::getCollection()->where(['website_id' => $this->website_id, 'path' => $path])->getFirst();
+                if (!$config) {
+                    throw new ExceptionsNotFoundException();
+                }
             } catch (Exception $e) {
                 $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
                     'website_id' => $this->website_id,

@@ -94,6 +94,10 @@ trait FrontendModelTrait
     public function postPersist(): BaseModel
     {
         $rewrite = $this->getRewrite();
+        if (!$rewrite) {
+            return parent::postPersist();
+        }
+
         $rewrite->setWebsiteId($this->getWebsiteId());
 
         // check if a rewrite with the same url already exists, if so, append a counter to the url until a free one is found. change the frontend_url too

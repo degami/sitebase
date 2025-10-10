@@ -207,7 +207,7 @@ trait AdminFormTrait
             $ai_options = [];
             foreach ($this->getAI()->getAvailableAIs(true) as $aiCode => $aiName) {
                 if ($this->getAI()->isAiAvailable($aiCode)) {
-                    $ai_options[$aiCode] = $aiName;
+                    $ai_options[$aiCode] = $aiName['name'];
                 }
             }
 
@@ -222,7 +222,7 @@ trait AdminFormTrait
                 ->addField('ai_generator_chooser', [
                     'type' => 'select',
                     'title' => '',
-                    'default_value' => '',
+                    'default_value' => $this->getAuth()->getCurrentUser()->getUserSession()->getSessionKey('uiSettings')['preferredAI'] ?? '',
                     'options' => $ai_options,
                 ])
                 ->addField('ai_meta_generate', [

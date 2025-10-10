@@ -62,7 +62,7 @@ class Media extends AdminManageModelsPage
                 'make_folder', 
                 $this->getHtmlRenderer()->getIcon('folder-plus') . '&nbsp;' .$this->getUtils()->translate('Create Folder'),
                 $this->getControllerUrl().'?action=addfolder&parent_id='.$this->getRequest()->get('parent_id'),
-                'btn btn-sm btn-warning',
+                'btn btn-sm btn-outline-warning',
             );
 
             if ($this->getRequest()->get('parent_id')) {
@@ -75,7 +75,7 @@ class Media extends AdminManageModelsPage
                         'go-up',
                         $this->getHtmlRenderer()->getIcon('corner-left-up') . ' ' . __('Up'),
                         $this->getControllerUrl().'?parent_id='.$parentObj->parent_id,
-                        'btn btn-sm btn-light'
+                        'btn btn-sm btn-outline-dark'
                     );
                 }
             }
@@ -717,7 +717,7 @@ class Media extends AdminManageModelsPage
      */
     public function addNewButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new' . ($this->getRequest()->get('parent_id') ? '&parent_id='.$this->getRequest()->get('parent_id') : ''), 'btn btn-sm btn-success');
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new' . ($this->getRequest()->get('parent_id') ? '&parent_id='.$this->getRequest()->get('parent_id') : ''), 'btn btn-sm btn-outline-success');
     }
 
 

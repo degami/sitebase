@@ -64,6 +64,16 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
     }
 
     /**
+     * returns class name
+     * 
+     * @return string
+     */
+    public function getClassName() : string
+    {
+        return $this->className;
+    }
+
+    /**
      * gets collection objects table name
      * 
      * @return string

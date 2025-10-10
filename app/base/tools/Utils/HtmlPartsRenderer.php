@@ -663,9 +663,15 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function renderAdminTable(array $elements, ?array $header = null, ?BasePage $current_page = null): string
+    public function renderAdminTable(array $elements, ?array $header = null, ?BasePage $current_page = null, string $table_id = 'listing-table'): string
     {
-        $table_id = 'listing-table';
+        $selectCheckboxes = false;
+        foreach ($elements as $elem) {
+            if (isset($elem['_admin_table_item_pk'])) {
+                $selectCheckboxes = true;
+                break;
+            }
+        }
 
 
         $table = $this->containerMake(
@@ -720,6 +726,22 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     'tag' => 'tr',
                 ]]
             );
+
+            if ($selectCheckboxes == true) {
+                $search_row->addChild(
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'td',
+                            'text' => '&nbsp;',
+                            'scope' => 'col',
+                            'attributes' => ['class' => 'nowrap'],
+                        ]]
+                    )
+                );
+            }
+
+
             //$style="max-width:100%;font-size: 9px;line-height: 11px;min-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
             foreach ($header as $k => $v) {
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
@@ -809,17 +831,31 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $rownum = 0;
             foreach ($elements as $key => $elem) {
                 // ensure all header cols are in row cols
-                $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
+                //$elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
                 $row = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'tr',
-                        'attributes' => ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'],
+                        'attributes' => ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'] + (isset($elem['_admin_table_item_pk']) ? ['data-_item_pk' => $elem['_admin_table_item_pk']] : []),
                     ]]
                 );
 
+                if ($selectCheckboxes == true) {
+                    $row->addChild(
+                        $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'td',
+                                'text' => '<input class="table-row-selector" type="checkbox" />',
+                                'scope' => 'col',
+                                'attributes' => ['class' => 'nowrap'],
+                            ]]
+                        )
+                    );
+                }
+
                 foreach ($elem as $tk => $td) {
-                    if ($tk == 'actions') {
+                    if ($tk == 'actions' || $tk == '_admin_table_item_pk') {
                         continue;
                     }
                     $row->addChild(
@@ -886,6 +922,20 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
+        if ($selectCheckboxes == true) {            
+            $row->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'th',
+                        'text' => '<input type="checkbox" onChange="$(\'#admin\').appAdmin(\'listingTableToggleAll\', \'#'.$table_id.'\', this)"/>',
+                        'scope' => 'col',
+                        'attributes' => ['class' => 'nowrap'],
+                    ]]
+                )
+            );
+        }
+
         foreach ($header as $th => $column) {
             $th = $this->getUtils()->translate($th, locale: $current_page?->getCurrentLocale());
             if ($current_page instanceof BasePage) {
@@ -937,7 +987,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 if (strlen($add_query_parameters)) {
                     $add_query_parameters = '?' . $add_query_parameters;
                 }
-                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . $add_query_parameters, 'btn btn-sm btn-warning');
+                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . $add_query_parameters, 'btn btn-sm btn-outline-warning');
             }
             if ($add_searchrow) {
                 $query_params = '';
@@ -946,7 +996,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     unset($query_params['search']);
                     $query_params = http_build_query($query_params);
                 }
-                $current_page->addActionLink('search-btn', 'search-btn', $this->getIcon('zoom-in') . $this->getUtils()->translate('Search', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-primary', ['data-target' => '#' . $table_id]);
+                $current_page->addActionLink('search-btn', 'search-btn', $this->getIcon('zoom-in') . $this->getUtils()->translate('Search', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-outline-primary', ['data-target' => '#' . $table_id]);
             }
         }
 

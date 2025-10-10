@@ -277,13 +277,22 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
     protected static function loadedObjectsIdentifier(mixed $id) : string
     {
-        if (is_array(static::getKeyField())) {
+        $keyField = static::getKeyField();
+
+        if (is_array($keyField)) {
             return implode("|", array_map(function($column, $value) {
                 return $column.':'.$value;
-            }, static::getKeyField(), $id));
+            }, $keyField, $id));
         }
 
-        return static::getKeyField().':'.$id;
+        // $id can't be an array here
+        if (is_array($id) && isset($id[$keyField])) {
+            $id = $id[$keyField];
+        } else if (is_array($id)) {
+            $id = reset($id);
+        }
+
+        return $keyField.':'.$id;
     }
 
     public function getKeyFieldValue() : mixed
@@ -394,6 +403,19 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             $debugbar['time']->startMeasure($measure_key);
         }
 
+        $keyField = static::getKeyField();
+        if (is_array($keyField)) {
+            $condition = array_combine($keyField, $id);
+        } else {
+            if (is_array($id) && isset($id[$keyField])) {
+                $id = $id[$keyField];
+            } else if (is_array($id)) {
+                $id = reset($id);
+            }
+
+            $condition = [$keyField => $id];
+        }
+
         if (isset(static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($id)]) && !$reset) {
             if (App::getInstance()->getEnvironment()->canDebug()) {
                 $debugbar['time']->stopMeasure($measure_key);
@@ -401,14 +423,10 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             return static::$loadedObjects[static::defaultTableName()][static::loadedObjectsIdentifier($id)];
         }
 
-        $keyField = static::getKeyField();
-        if (is_array($keyField)) {
-            $condition = array_combine($keyField, $id);
-        } else {
-            $condition = [$keyField => $id];
-        }
-
         $object = static::getCollection()->where($condition)->getFirst();
+        if (!$object) {
+            throw new ExceptionsNotFoundException();
+        }
 
         if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);

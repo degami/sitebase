@@ -72,11 +72,30 @@ abstract class AdminManageModelsPage extends AdminFormPage
             $this->addPaginationSizeSelector();
             $this->addNewButton();
 
+            $adminTableId = 'listing-table-' . strtolower($this->getUtils()->getClassBasename($this->getObjectClass()));
+
+            $controllerClassName = str_replace("\\","\\\\", static::class);
+            $modelClassName = str_replace("\\","\\\\", $this->getObjectClass());
+
             $itemsPerPage = $this->getItemsPerPage();
             $data = $this->getTableItems($itemsPerPage);
-            
+
+            if (static::hasMassActions() && !empty($data['items'])) {
+                $this->addBatchDeleteButton($modelClassName, $adminTableId);
+                $this->addBatchEditButton($controllerClassName, $modelClassName, $adminTableId);
+            }
+
+            $tableElements = $this->getTableElements($data['items']);
+
+            if (static::hasMassActions()) {
+                // copy "_admin_table_item_pk" from data['items'] into tableElements
+                foreach($tableElements as $k => $v) {
+                    $tableElements[$k]['_admin_table_item_pk'] = $data['items'][$k]->getData('_admin_table_item_pk');
+                }
+            }
+
             $this->template_data += [
-                'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
+                'table' => $this->getHtmlRenderer()->renderAdminTable($tableElements, $this->getTableHeader(), $this, $adminTableId),
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
@@ -99,6 +118,22 @@ abstract class AdminManageModelsPage extends AdminFormPage
     {
         $collection = $this->getCollection();
         $data = $this->containerCall([$collection, 'paginate'], ['page_size' => $itemsPerPage]);
+
+        /** @var BaseModel $firstElem */
+        $primaryKey = App::getInstance()->containerCall([$collection->getClassName(), 'getKeyField']);
+
+        $resolvePrimaryKey = function(BaseModel $elem, $primaryKey) {
+            $out = [];
+            foreach ((array)$primaryKey as $pk) {
+                $out[$pk] = $elem->getData($pk);
+            }
+
+            return $out;
+        };
+
+        foreach ($data['items'] as &$datum) {
+            $datum->setData(['_admin_table_item_pk' => json_encode($resolvePrimaryKey($datum, $primaryKey))]);
+        }
 
         return $data;
     }
@@ -299,7 +334,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addNewButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-success');
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-outline-success');
     }
 
     /**
@@ -313,7 +348,35 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addDuplicateButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-light');
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-outline-dark');
+    }
+
+    /**
+     * adds a "delete selected" button
+     *
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * 
+     * @return void
+     */
+    public function addBatchDeleteButton(string $className, string $tableId)
+    {
+        $this->addActionLink('delete-batch-btn', 'delete-batch-btn', $this->getHtmlRenderer()->getIcon('delete') . ' ' . $this->getUtils()->translate('Mass Delete', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-danger', attributes: ['onClick' => '$("#admin").appAdmin(\'listingTableDeleteSelected\', \'#'.$tableId.'\', \''.$className.'\'); return false;']);
+    }
+
+    /**
+     * adds a "edit selected" button
+     *
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * 
+     * @return void
+     */
+    public function addBatchEditButton(string $controllerClassName, string $modelClassName, string $tableId)
+    {
+        $this->addActionLink('edit-batch-btn', 'edit-batch-btn', $this->getHtmlRenderer()->getIcon('edit') . ' ' . $this->getUtils()->translate('Mass Edit', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-dark', attributes: ['onClick' => '$("#admin").appAdmin(\'listingTableEditSelected\', \'#'.$tableId.'\', \''.$controllerClassName.'\', \''.$modelClassName.'\', this); return false;']);
     }
 
     /**
@@ -514,6 +577,10 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return App::getInstance()->containerCall([static::getObjectClass(), 'getCollection'])->count();        
     }
 
+    protected function hasMassActions(): bool
+    {
+        return true;
+    }
 
     /**
      * gets object to show class name for loading

@@ -12,8 +12,13 @@
 
     flex-direction: row;
     align-items: center;
-    justify-content: center
-}
+    justify-content: center;
+
+    &.btn-sm {
+        line-height: 1.5 !important;
+        padding: 5px !important;
+    }
+  }
 
 .jumbotron {
     @include transition(box-shadow);

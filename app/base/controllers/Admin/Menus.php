@@ -387,4 +387,9 @@ class Menus extends AdminManageModelsPage
     {
         return null;
     }
+
+    protected function hasMassActions(): bool
+    {
+        return false;
+    }    
 }

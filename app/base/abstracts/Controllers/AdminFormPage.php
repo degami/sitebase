@@ -129,4 +129,9 @@ abstract class AdminFormPage extends AdminPage
         }
         return parent::beforeRender();
     }
+
+    protected function hasMassActions(): bool
+    {
+        return false;
+    }
 }

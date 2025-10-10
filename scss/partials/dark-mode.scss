@@ -95,10 +95,19 @@ body.dark-mode {
         &.btn-light {
             background-color: $color-darkgrey3 !important;
             color: $color-almostwhite3 !important;
-            border: $color-darkgrey2;
+            border: 1px solid $color-darkgrey2;
 
             &:hover {
                 background-color: $color-lightgray3 !important;
+            }
+        }
+        &.btn-outline-dark {
+            color: $color-lightgray3 !important;
+            border: 1px solid $color-lightgray3;
+            &:hover {
+                color: $color-almostwhite3 !important;
+                border: 1px solid $color-almostwhite3;
+                background-color: $color-almostblack !important;
             }
         }
     }

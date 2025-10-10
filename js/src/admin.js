@@ -6,6 +6,24 @@
 //=include ./tinymce-plugin-aitranslate.js
 
 (function($){
+    if (window.tinymce && typeof tinymce.on === 'function') {
+        tinymce.on('AddEditor', function(e) {
+            const ed = e && (e.editor || e);
+            if (!ed || !ed.id) return;
+
+            const $ta = $('#' + ed.id);
+            if ($ta.length && $ta.data('initiallyDisabled')) {
+                if (ed.mode && typeof ed.mode.set === 'function') {
+                    ed.mode.set('readonly');
+                } else if (typeof ed.setMode === 'function') {
+                    ed.setMode('readonly');
+                } else if (ed.options && typeof ed.options.set === 'function') {
+                    ed.options.set('disabled', true);
+                }
+            }
+        });
+    }
+
     $.fn.appAdmin = function (methodOrOptions) {
         if ( $.fn.appAdmin.methods[methodOrOptions] ) {
             return $.fn.appAdmin.methods[ methodOrOptions ].apply( this, Array.prototype.slice.call( arguments, 1 ));
@@ -175,7 +193,7 @@
         openSidePanel: function() {
             let that = this;
 
-            $(this).appAdmin('showOverlay');
+            $(that).appAdmin('showOverlay');
             $('.sidepanel', this).css({'width': '95%'});
 
             $(that).data('sidePanelEscUnbind', $(that).appAdmin('createEscHandler', function() {
@@ -186,8 +204,20 @@
             let that = this;
 
             $('.sidepanel', this).data('lastLoadedUrl', false);
-            $(this).appAdmin('hideOverlay');
-            $('.sidepanel', this).css({'width': 0});
+            $(that).appAdmin('hideOverlay');
+            $('.sidepanel', that).css({'width': 0});
+
+            $('.sidepanel textarea').each(function() {
+                const id = $(this).attr('id');
+                if (id && tinymce.get(id)) {
+                    tinymce.get(id).remove();
+                }
+            });
+
+            $('.sidepanel', that).find('.card-title').html('');
+            $('.sidepanel', that).find('.card-block').html('');
+            $('.sidepanel', that).find('.card').css({'min-height': 'auto'});
+            $('.sidepanel', that).find('.card-block').css({'height': 'auto'});
 
             const unbindEsc = $(this).data('sidePanelEscUnbind');
             if (unbindEsc) {
@@ -201,7 +231,7 @@
                 return;
             }
 
-            $(this).appAdmin('showOverlay');
+            $(that).appAdmin('showOverlay');
 
             let chatPanelWidth = '350px';
             $(that).appAdmin('getUserUiSettings', function(data) {
@@ -247,7 +277,7 @@
                         $('#chatInput').val('');
                         let messageId = 'message_' + moment(new Date()).unix();
 
-                        $('#chatMessages').append('<div id="'+messageId+'" class="d-flex p-5 justify-content-center"><div class="loader" /></div>');
+                        $('#chatMessages').append('<div id="'+messageId+'" class="d-flex p-5 justify-content-center"><div class="spinner-border me-2" style="width: 3rem; height: 3rem;" /></div>');
 
                         $(that).appAdmin('askAI', $('#chatAISelector').val(), {'prompt': text, 'messageId': messageId}, callbackFunc);
                     }
@@ -313,7 +343,7 @@
         closeAIChat: function() {
             let that = this;
 
-            $(this).appAdmin('hideOverlay');
+            $(that).appAdmin('hideOverlay');
             $('.sideChat', this).css({'width': 0}).removeClass('open');
 
             const unbindEsc = $(this).data('aiChatEscUnbind');
@@ -342,7 +372,7 @@
         getElem: function() {
             return $(this).data('appAdmin').$elem;
         },
-        loadPanelContent: function(title, url, open_panel, store_last_url) {
+        loadPanelContent: function(title, url, open_panel, store_last_url, afterloadCallback = null) {
             let that = this;
             if (undefined == open_panel) {
                 open_panel = true;
@@ -378,7 +408,11 @@
                             $(that).appAdmin('reloadPanelContent');
                         },
                         error: function() {
-                            alert("Error");
+                            $(that).appAdmin('showAlertDialog', {
+                                title: 'Error',
+                                message: 'Generic Error',
+                                type: 'error',
+                            });
                         }
                     });
                     return false;
@@ -401,17 +435,21 @@
                        $(that).appAdmin('loadPanelContent', title, $(this).attr('href'), false, false);
                     }
                 });
+                if (typeof afterloadCallback === 'function') {
+                    afterloadCallback();
+                }
             });
         },
         reloadPanelContent: function() {
+            let that = this;
             let url = $('.sidepanel', this).data('lastLoadedUrl');
-            $(this).appAdmin('loadPanelContent', $('.sidepanel', this).find('.card-title').text(), url, false);
+            $(that).appAdmin('loadPanelContent', $('.sidepanel', this).find('.card-title').text(), url, false);
         },
         checkLoggedStatus: function() {
             let that = this;
 
-            let checkUrl = $(this).appAdmin('getSettings').checkLoggedUrl;
-            let logoutUrl = $(this).appAdmin('getSettings').logoutUrl;
+            let checkUrl = $(that).appAdmin('getSettings').checkLoggedUrl;
+            let logoutUrl = $(that).appAdmin('getSettings').logoutUrl;
 
             $.ajax({
                 type: "GET",
@@ -437,14 +475,184 @@
             let href = $(btn).attr('href');
             document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
+        listingTableToggleAll: function(tableSelector, element) {
+            let $element = $(element);
+            let $table = $(tableSelector);
+            let $checkboxes = $('input[type="checkbox"].table-row-selector', $table);
+            $checkboxes.prop('checked', $element.prop('checked'));
+        },
+        listingTableGetSelected: function(tableSelector) {
+            let $table = $(tableSelector);
+            let $checkboxes = $('input[type="checkbox"].table-row-selector:checked', $table);
+            return $checkboxes.map(function(index, checkbox) {
+                let $checkbox = $(checkbox);
+                let identifier = $($checkbox.closest('tr')).data('_item_pk');
+                if (undefined !== identifier) {
+                    return identifier;
+                }
+                return null;
+            }).get().filter((el) => el);
+        },
+        listingTableDeleteSelected: function(tableSelector, className) {
+            let that = this;
+            let identifiers = $(that).appAdmin('listingTableGetSelected', tableSelector);
+            if (identifiers.length == 0) {
+                $(that).appAdmin('showAlertDialog', {
+                    title: 'No elements selected',
+                    message: 'Please choose at least one element to delete',
+                    type: 'warning',
+                });
+
+                return;
+            }
+
+            let currentRoute = $(that).appAdmin('getSettings').currentRoute;
+            let massDeleteUrl = $(that).appAdmin('getSettings').massDeleteUrl;
+
+            let form = $('<form action="'+massDeleteUrl+'" method="post">').appendTo('body');
+            $('<input type="hidden" value="'+encodeURIComponent(currentRoute)+'" name="return_route" />').appendTo(form);
+            $('<input type="hidden" value="'+encodeURIComponent(className.replaceAll("\\","\\\\"))+'" name="class_name" />').appendTo(form);
+            $.each(identifiers, function(index, identifier){
+                const json = encodeURIComponent(JSON.stringify(identifier));
+                $('<input type="hidden" value="' + json + '" name="items['+index+']" />').appendTo(form);
+            });
+
+//            console.log(form);
+            form.submit();
+        },
+        listingTableEditSelected: function(tableSelector, controllerClassName, modelClassName, btnElement = null) {
+            let that = this;
+            let identifiers = $(that).appAdmin('listingTableGetSelected', tableSelector);
+            if (identifiers.length == 0) {
+                $(that).appAdmin('showAlertDialog', {
+                    title: 'No elements selected',
+                    message: 'Please choose at least one element to edit',
+                    type: 'warning',
+                });
+
+                return;
+            }
+
+            if (btnElement) {
+                $('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>').prependTo(btnElement);
+            }
+
+            let massEditUrl = $(that).appAdmin('getSettings').massEditUrl +
+                '?controller_class_name=' + encodeURIComponent(controllerClassName) +
+                '&model_class_name=' + encodeURIComponent(modelClassName);
+
+            $(that).appAdmin('loadPanelContent', 'Mass Edit', massEditUrl, true, true, function() {
+
+                if (btnElement) {
+                    $('.spinner-border', btnElement).remove();
+                }
+
+                $('.sidepanel form')
+                .off('submit')
+                .on('submit', function(evt) {
+                    evt.preventDefault();
+                    if (window.tinymce) tinymce.triggerSave();
+                })
+                .find('div.form-item')
+                .each(function() {
+                    const $item = $(this);
+
+                    if ($item.html().trim() === '') return;
+
+                    if ($item.find('> .toggle-enable').length) return;
+
+                    const $checkbox = $('<input type="checkbox" class="toggle-enable" />');
+                    $item.find('label:eq(0)').prepend($checkbox);
+
+                    $item.find('input:not(\'.toggle-enable\'), select, textarea').each(function() {
+                        const $elem = $(this);
+
+                        if ($elem.is('textarea') && !$elem.attr('id')) {
+                            $elem.attr('id', 'ta_' + Math.random().toString(36).substr(2, 9));
+                        }
+
+                        $elem.prop('disabled', true);
+                        $elem.data('initiallyDisabled', true);
+                    });
+
+                    function toggleFields(enable) {
+                        $item.find('input:not(\'.toggle-enable\'), select').prop('disabled', !enable);
+
+                        $item.find('textarea').each(function() {
+                            const $ta = $(this);
+                            $ta.prop('disabled', !enable);
+
+                            if (window.tinymce) {
+                                const editor = tinymce.get($ta.attr('id'));
+                                if (editor) {
+                                    if (editor.mode && typeof editor.mode.set === 'function') {
+                                        editor.mode.set(enable ? 'design' : 'readonly');
+                                    } else if (typeof editor.setMode === 'function') {
+                                        editor.setMode(enable ? 'design' : 'readonly');
+                                    } else if (editor.options && typeof editor.options.set === 'function') {
+                                        editor.options.set('disabled', !enable);
+                                    }
+                                }
+                            }
+                        });
+                    }
+
+                    $checkbox.on('change', function() {
+                        toggleFields(this.checked);
+                    });
+                });
+
+
+                $('.sidepanel form', that).on('submit', function(){
+                    let formData = new FormData(this);
+                    formData.delete('form_id');
+                    formData.delete('form_token');
+
+                    let finalData = new FormData();
+
+                    for (let [key, value] of formData.entries()) {
+                        finalData.append(`data[${key}]`, value);
+                    }
+
+                    identifiers.forEach((identifier, index) => {
+                        finalData.append(`items[${index}]`, encodeURIComponent(JSON.stringify(identifier)));
+                    });
+
+                    $.ajax({
+                        type: "POST",
+                        url: massEditUrl,
+                        data: finalData,
+                        processData: false,
+                        contentType: false,
+                        success: function(data) {
+                            $(that).appAdmin('closeSidePanel');
+                        },
+                        error: function() {
+                            $(that).appAdmin('showAlertDialog', {
+                                title: 'Error',
+                                message: 'Generic Error',
+                                type: 'error',
+                            });
+                        }
+                    });
+
+                });
+            });
+
+        },
         askAI: function(type, params, targetOrCallback) {
+            let that = this;
             let AIUrl = null;
 
-            const aiModel = $(this).appAdmin('getSettings').availableAImodels.find((model) => model.code == type);
+            const aiModel = $(that).appAdmin('getSettings').availableAImodels.find((model) => model.code == type);
             if (aiModel) {
                 AIUrl = aiModel.aiURL;
             } else {
-                alert('AI model ' + type + ' is not available');
+                $(that).appAdmin('showAlertDialog', {
+                    title: 'Not available',
+                    message: 'AI model ' + type + ' is not available',
+                    type: 'warning',
+                });
                 return;
             }
 
@@ -486,7 +694,7 @@
         },
         updateUserUiSettings: function(settings, succesCallback) {
             let that = this;
-            let uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
+            let uIsettingsUrl = $(that).appAdmin('getSettings').uIsettingsUrl;
             $.ajax({
                 type: "POST",
                 url: uIsettingsUrl,
@@ -507,7 +715,7 @@
                 return;
             }
 
-            let uIsettingsUrl = $(this).appAdmin('getSettings').uIsettingsUrl;
+            let uIsettingsUrl = $(that).appAdmin('getSettings').uIsettingsUrl;
             $.ajax({
                 type: "GET",
                 url: uIsettingsUrl,
@@ -523,8 +731,8 @@
         fetchNotifications: function() {
             let that = this;
         
-            let notificationsUrl = $(this).appAdmin('getSettings').notificationsUrl;
-            let notificationDismissUrl = $(this).appAdmin('getSettings').notificationCrudUrl;
+            let notificationsUrl = $(that).appAdmin('getSettings').notificationsUrl;
+            let notificationDismissUrl = $(that).appAdmin('getSettings').notificationCrudUrl;
 
             $.ajax({
                 type: "GET",
@@ -583,6 +791,84 @@
                 $(that).appAdmin('fetchNotifications');
             }, 30000);
         },
+        showAlertDialog: function(options) {
+            const defaults = {
+                title: 'Alert',
+                message: '',
+                type: 'info', // info | success | warning | danger
+                okText: 'OK',
+                cancelText: null,
+                onConfirm: null,
+                onCancel: null
+            };
+            const settings = $.extend({}, defaults, options);
+
+            // Rimuove eventuali dialog precedenti
+            $('#appAdminAlertDialog').remove();
+
+            // Scelta classe bootstrap in base al tipo
+            let alertClass = 'primary';
+            switch (settings.type) {
+                case 'success': alertClass = 'success'; break;
+                case 'warning': alertClass = 'warning'; break;
+                case 'danger':  alertClass = 'danger'; break;
+                case 'info': 
+                default: alertClass = 'info'; break;
+            }
+
+            // Costruzione dialog
+            const dialogHtml = `
+                <div id="appAdminAlertDialog" class="modal fade" tabindex="-1" role="dialog" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content border-${alertClass}">
+                    <div class="modal-header bg-${alertClass} text-white">
+                        <h5 class="modal-title">${settings.title}</h5>
+                        <button type="button" class="close text-white" data-dismiss="modal" aria-label="Chiudi">
+                        <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>${settings.message}</p>
+                    </div>
+                    <div class="modal-footer">
+                        ${settings.cancelText ? `<button type="button" class="btn btn-secondary" id="alertCancelBtn">${settings.cancelText}</button>` : ''}
+                        <button type="button" class="btn btn-${alertClass}" id="alertOkBtn">${settings.okText}</button>
+                    </div>
+                    </div>
+                </div>
+                </div>
+            `;
+
+            $('body').append(dialogHtml);
+
+            const $dialog = $('#appAdminAlertDialog');
+
+            $dialog.modal({ backdrop: 'static', keyboard: true }).modal('show');
+
+            // Eventi pulsanti
+            $('#alertOkBtn', $dialog).on('click', function() {
+                $dialog.modal('hide');
+                if (typeof settings.onConfirm === 'function') settings.onConfirm();
+            });
+            $('#alertCancelBtn', $dialog).on('click', function() {
+                $dialog.modal('hide');
+                if (typeof settings.onCancel === 'function') settings.onCancel();
+            });
+
+            // Cleanup dopo chiusura
+            $dialog.on('hidden.bs.modal', function () {
+                $dialog.remove();
+            });
+        },
+        fullPageLoader: function(add = true) {
+            let that = this;
+            if ($('#fullPageLoader').length > 0) {
+                $('#fullPageLoader').remove();
+            }
+            if (add) {
+                $('body').append('<div id="fullPageLoader" class="overlay d-flex align-items-center align-content-center"><div class="m-auto d-flex flex-column align-items-center align-content-center"><span class="spinner-border text-primary" style="width: 4rem; height: 4rem;" role="status"></span><span class="sr-only">Loading...</span></div></div>');
+            }
+        },
         logout: function () {
             let that = this;
             if (that.notificationTimeout != null) {
@@ -607,5 +893,7 @@
         'notificationCrudUrl': null,
         'aiAvailable': null,
         'availableAImodels': [],
+        'massDeleteUrl': null,
+        'massEditUrl': null,
     }
 })(jQuery);

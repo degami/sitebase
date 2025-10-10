@@ -168,6 +168,8 @@ abstract class AdminPage extends BaseHtmlPage
                     'notificationCrudUrl' => $this->getCrudRouter()->getUrl('crud.admin.usernotifications'),
                     'aiAvailable' => $this->getAI()->isAiAvailable(),
                     'availableAImodels' => array_values($this->getAI()->getEnabledAIs(true)),
+                    'massDeleteUrl' => $this->getUrl('admin.massdelete'),
+                    'massEditUrl' => $this->getUrl('crud.app.base.controllers.admin.json.massedit'),
                 ]
             ) . ");"
         );
@@ -261,7 +263,7 @@ abstract class AdminPage extends BaseHtmlPage
             }
         }
 
-        $this->addActionLink('back-btn', 'back-btn', $this->getHtmlRenderer()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', locale: $this->getCurrentLocale()), $this->getControllerUrl() . $query_params);
+        $this->addActionLink('back-btn', 'back-btn', $this->getHtmlRenderer()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', locale: $this->getCurrentLocale()), $this->getControllerUrl() . $query_params, 'btn btn-sm btn-outline-dark');
     }
 
     /**

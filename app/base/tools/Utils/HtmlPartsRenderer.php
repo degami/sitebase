@@ -846,7 +846,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'td',
-                                'text' => '<input class="table-row-selector" type="checkbox" />',
+                                'text' => '<label class="checkbox"><input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span></label>',
                                 'scope' => 'col',
                                 'attributes' => ['class' => 'nowrap'],
                             ]]
@@ -928,7 +928,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     TagElement::class,
                     ['options' => [
                         'tag' => 'th',
-                        'text' => '<input type="checkbox" onChange="$(\'#admin\').appAdmin(\'listingTableToggleAll\', \'#'.$table_id.'\', this)"/>',
+                        'text' => '<label class="checkbox"><input type="checkbox" onChange="$(\'#admin\').appAdmin(\'listingTableToggleAll\', \'#'.$table_id.'\', this)"/><span class="checkbox__icon"></span></label>',
                         'scope' => 'col',
                         'attributes' => ['class' => 'nowrap'],
                     ]]

@@ -561,8 +561,10 @@
 
                     if ($item.find('> .toggle-enable').length) return;
 
-                    const $checkbox = $('<input type="checkbox" class="toggle-enable" />');
-                    $item.find('label:eq(0)').prepend($checkbox);
+//                    const $checkbox = $('<label class="checkbox"><input type="checkbox" class="toggle-enable" /><span class="checkbox__icon"></span></label>');
+//                    $item.find('label:eq(0)').prepend($checkbox);
+                    $('<label class="checkbox"><input type="checkbox" class="toggle-enable" /><span class="checkbox__icon"></span></label>').prependTo($item.find('label:eq(0)'));
+                    const $checkbox = $item.find('.toggle-enable');
 
                     $item.find('input:not(\'.toggle-enable\'), select, textarea').each(function() {
                         const $elem = $(this);

@@ -102,7 +102,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
         $this->page_title = 'Notifications';
         if ($this->getCollection()->count() > 0) {
             if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
-                $this->addActionLink('readall-btn', 'readall-btn', $this->getHtmlRenderer()->getIcon('user-check') . $this->getUtils()->translate('Mark all as read', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=markallasread', 'btn btn-sm btn-warning');
+                $this->addActionLink('readall-btn', 'readall-btn', $this->getHtmlRenderer()->getIcon('user-check') . $this->getUtils()->translate('Mark all as read', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=markallasread', 'btn btn-sm btn-outline-warning');
             }    
         }
     }

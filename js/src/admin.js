@@ -53,6 +53,11 @@
 
                 $elem.data('appAdmin', instance);
 
+                $(window).on('beforeunload', function() {
+                    alert('unload');
+                    $elem.appAdmin('fullPageLoader');
+                });
+
                 $('select:not(".select-processed")', $elem).each(function(index, select){
                     $(select).select2({'width': $(select).css('width') ? $(select).css('width') : '100%'}).addClass('select-processed');
                 });
@@ -79,7 +84,14 @@
                 $('a.inToolSidePanel[href]', $elem).click(function(evt){
                     if($(this).attr('href') != '#') {
                        evt.preventDefault();
-                       $elem.appAdmin('loadPanelContent', $(this).attr('title') || '', $(this).attr('href'), true, true);
+
+                       let $btnElement = $(this);
+                       if ($btnElement) {
+                           $('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>').prependTo($btnElement);
+                       }
+                       $elem.appAdmin('loadPanelContent', $(this).attr('title') || '', $(this).attr('href'), true, true, function() {
+                            $('.spinner-border', $btnElement).remove();
+                       });
                     }
                 });
                 $('#toolsSidePanel .closebtn', $elem).click(function(evt){

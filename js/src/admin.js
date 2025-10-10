@@ -54,7 +54,6 @@
                 $elem.data('appAdmin', instance);
 
                 $(window).on('beforeunload', function() {
-                    alert('unload');
                     $elem.appAdmin('fullPageLoader');
                 });
 

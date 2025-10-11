@@ -13,6 +13,7 @@
 
 namespace App\Base\Controllers\Admin\Json;
 
+use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use DI\DependencyException;
@@ -102,6 +103,32 @@ class Versions extends AdminJsonPage
                     </div>
                 </div>';
 
+        $preselect = '';
+        if ($diffTable !== null) {
+            $preselect = <<<JS
+\$rows.each(function() {
+    const \$row = $(this);
+    const id = \$row.find('td:first').text().trim();
+    if (id === '{$this->getRequest()->query->get('version_a')}'
+        || id === '{$this->getRequest()->query->get('version_b')}') {
+        \$row.css('background', '#d0e8ff');
+    }
+});
+JS;
+        }
+
+        $cancelStr = App::getInstance()->getUtils()->translate('Cancel');
+        $restoreStr = App::getInstance()->getUtils()->translate('Restore');
+        $removeStr = App::getInstance()->getUtils()->translate('Remove');
+        $confirmRestoreTitleStr = App::getInstance()->getUtils()->translate('Confirm Restore');
+        $confirmRemoveTitleStr = App::getInstance()->getUtils()->translate('Confirm Remove');
+        $confirmRestoreContentStr = App::getInstance()->getUtils()->translate('Are you sure you want to restore this version?');
+        $confirmRemoveContentStr = App::getInstance()->getUtils()->translate('Are you sure you want to remove this version?');
+
+        $versionControllerUrl = $this->getUrl('admin.versions');
+        $versionDeleteUrl = $versionControllerUrl . '?action=delete&version_id=';
+        $versionRestoreUrl = $versionControllerUrl . '?action=restore&version_id=';
+
         return [
             'success' => true,
             'params' => $this->getRequest()->query->all(),
@@ -113,12 +140,19 @@ $(function() {
     const \$table = $('#versions-table');
     const \$rows = \$table.find('tbody tr');
 
+    $preselect
+
     \$rows.on('click', function(e) {
         const \$row = $(this);
         const id = \$row.find('td:first').text().trim();
         if (!id) return;
 
         if (e.ctrlKey) {
+
+            if (selected.length === 0) {
+                \$rows.css('background', '');
+            }
+
             const index = selected.indexOf(id);
             if (index !== -1) {
                 selected.splice(index, 1);
@@ -153,6 +187,107 @@ $(function() {
                 );
             }
         }
+    });
+
+    let \$contextMenu = null;
+
+    function hideContextMenu() {
+        console.log('Hide context menu');
+        if (\$contextMenu) {
+            \$contextMenu.remove();
+            \$contextMenu = null;
+        }
+    }
+
+    $(document)
+    .off('click contextmenu scroll.hideContextMenu')
+    .on('click contextmenu scroll.hideContextMenu', function (ev) {
+        if (!$(ev.target).closest('#versionsContextMenu').length) {
+            hideContextMenu();
+        }
+    });
+
+    \$rows.on('contextmenu', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        hideContextMenu();
+
+        const \$row = $(this);
+        const id = \$row.find('td:first').text().trim();
+        if (!id) return;
+
+        \$contextMenu = $(`
+            <div class="card shadow border bg-white" id="versionsContextMenu"
+                style="z-index:99999; position:fixed; width:180px;">
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action text-danger" data-action="remove">
+                        <i class="fa fa-trash me-2"></i> $removeStr
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action text-success" data-action="restore">
+                        <i class="fa fa-undo me-2"></i> $restoreStr
+                    </a>
+                </div>
+            </div>
+        `);
+
+        $('body').append(\$contextMenu);
+
+        const menuWidth = 180;
+        const menuHeight = \$contextMenu.outerHeight() || 90;
+        let posX = e.clientX;
+        let posY = e.clientY;
+
+        if (posX + menuWidth > window.innerWidth) posX = window.innerWidth - menuWidth - 10;
+        if (posY + menuHeight > window.innerHeight) posY = window.innerHeight - menuHeight - 10;
+
+        \$contextMenu.css({
+            top: posY + 'px',
+            left: posX + 'px'
+        });
+
+        \$contextMenu.find('[data-action]').on('click', function(ev) {
+            ev.preventDefault();
+            const action = $(this).data('action');
+            hideContextMenu();
+
+            if (action === 'remove') {
+                let currentRoute = $(that).appAdmin('getSettings').currentRoute;
+                let form = $('<form action="{$versionDeleteUrl}'+id+'" method="post">').appendTo('body');
+                $('<input type="hidden" value="'+encodeURIComponent(currentRoute)+'" name="return_route" />').appendTo(form);
+                form.submit();
+
+                /*
+                $(that).appAdmin('showAlertDialog', {
+                    title: '$confirmRemoveTitleStr',
+                    message: '$confirmRemoveContentStr <b>' + id + '</b>',
+                    type: 'danger',
+                    okText: '$removeStr',
+                    cancelText: '$cancelStr',
+                    onConfirm: function() {
+                        console.log('TODO: rimuovi versione ' + id);
+                    }
+                });
+                */
+            } else if (action === 'restore') {
+                let currentRoute = $(that).appAdmin('getSettings').currentRoute;
+                let form = $('<form action="{$versionRestoreUrl}'+id+'" method="post">').appendTo('body');
+                $('<input type="hidden" value="'+encodeURIComponent(currentRoute)+'" name="return_route" />').appendTo(form);
+                form.submit();
+
+                /*
+                $(that).appAdmin('showAlertDialog', {
+                    title: '$confirmRestoreTitleStr',
+                    message: '$confirmRestoreContentStr <b>' + id + '</b>',
+                    type: 'warning',
+                    okText: '$restoreStr',
+                    cancelText: '$cancelStr',
+                    onConfirm: function() {
+                        console.log('TODO: ripristina versione ' + id);
+                    }
+                });
+                */
+            }
+        });
     });
 });
 JS

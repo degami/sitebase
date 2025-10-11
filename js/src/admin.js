@@ -54,6 +54,7 @@
                 $elem.data('appAdmin', instance);
 
                 $(window).on('beforeunload', function() {
+                    $elem.appAdmin('closeSidePanel');
                     $elem.appAdmin('fullPageLoader');
                 });
 
@@ -81,16 +82,22 @@
                 });
 
                 $('a.inToolSidePanel[href]', $elem).click(function(evt){
-                    if($(this).attr('href') != '#') {
-                       evt.preventDefault();
+                    const $btnElement = $(this);
 
-                       let $btnElement = $(this);
-                       if ($btnElement) {
-                           $('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>').prependTo($btnElement);
-                       }
-                       $elem.appAdmin('loadPanelContent', $(this).attr('title') || '', $(this).attr('href'), true, true, function() {
+                    if ($btnElement.attr('href') != '#') {
+                        evt.preventDefault();
+
+                        if ($btnElement.hasClass('loading')) {
+                            return;
+                        }
+
+                        $btnElement.addClass('loading disabled').css('pointer-events', 'none');
+                        $('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>').prependTo($btnElement);
+
+                        $elem.appAdmin('loadPanelContent', $(this).attr('title') || '', $(this).attr('href'), true, true, function() {
                             $('.spinner-border', $btnElement).remove();
-                       });
+                            $btnElement.removeClass('loading disabled').css('pointer-events', '');
+                        });
                     }
                 });
                 $('#toolsSidePanel .closebtn', $elem).click(function(evt){

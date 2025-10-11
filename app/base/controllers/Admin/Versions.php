@@ -15,12 +15,13 @@ namespace App\Base\Controllers\Admin;
 
 use App\Base\Abstracts\Controllers\AdminFormPage;
 use Degami\PHPFormsApi as FAPI;
-use Exception;
+use App\Base\Models\ModelVersion;
+use App\Base\Abstracts\Models\BaseModel;
 
 /**
- * "Mass Delete" Admin Page
+ * "Versions" Admin Page
  */
-class Massdelete extends AdminFormPage
+class Versions extends AdminFormPage
 {
     
     /**
@@ -32,31 +33,18 @@ class Massdelete extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $this->fillConfirmationForm('Do you confirm the deletion of the selected elements?', $form, $this->getUrl($this->getRequest()->request->get('return_route')));
+        if ($this->getRequest()->query->get('action') == 'delete') {
+            $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form, $this->getUrl($this->getRequest()->request->get('return_route')));
+        }
 
-        $form->addField('class_name', [
-            'type' => 'hidden',
-            'value' => $this->getRequest()->request->get('class_name'),
-        ]);
-        
+        if ($this->getRequest()->query->get('action') == 'restore') {
+            $this->fillConfirmationForm('Do you confirm the restore of the selected element?', $form, $this->getUrl($this->getRequest()->request->get('return_route')));
+        }
+
         $form->addField('return_route', [
             'type' => 'hidden',
             'value' => $this->getRequest()->request->get('return_route'),
         ]);
-
-        $items = $this->getRequest()->request->all('items');
-
-        $formItems = $form->addField('items', [
-            'type' => 'seamless_container',
-            'container_tag' => '',
-        ]);
-
-        foreach ((array)$items as $k => $item) {
-            $formItems->addField('items['.$k.']', [
-                'type' => 'hidden',
-                'value' => $item,
-            ]);
-        }
 
         return $form;
     }
@@ -82,22 +70,24 @@ class Massdelete extends AdminFormPage
      */
     public function formSubmitted(FAPI\Form $form, array &$form_state): mixed
     {
-        $values = $form->values();
-        $items = $values->items;
+        $version = ModelVersion::load($this->getRequest()->query->get('version_id'));
+        $action = $this->getRequest()->query->get('action');
 
-        $returnRoute = $values->return_route;
-        $className = str_replace("\\\\","\\",$values->class_name);
-        $removed = 0;
-        foreach ($items as $item) {
-            $pk = json_decode($item, true);
-            $obj = $this->containerCall([$className, 'load'], ['id' => $pk]);
-            try {
-                $obj->remove();
-                $removed++;
-            } catch (Exception $e) {}
+        if ($action == 'delete') {
+            $message = 'The version has been deleted';
+            $version->remove();
+        } else {
+            $message = 'The version has been restored';
+            /** @var BaseModel $object */
+            $object = $version->getObject();
+            $object->restoreVersion($version, true);
         }
 
-        $this->addInfoFlashMessage($this->getUtils()->translate("%d elements deleted.", [$removed]));
+        $values = $form->values();
+
+        $returnRoute = $values->return_route;
+
+        $this->addInfoFlashMessage($this->getUtils()->translate($message));
 
         return $this->doRedirect($this->getUrl($returnRoute));
     }

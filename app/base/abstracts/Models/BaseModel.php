@@ -1200,16 +1200,11 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      * @return static
      * @throws \Exception
      */
-    public function restoreVersion($version_id, bool $deep = true): static
+    public function restoreVersion(ModelVersion $version, bool $deep = true): static
     {
-        $version = $this->getVersionById($version_id);
-        if (!$version) {
-            throw new \Exception("Version {$version_id} not found");
-        }
-
-        $data = json_decode($version->getData(), true);
+        $data = json_decode($version->getVersionData(), true);
         if (empty($data) || !isset($data['__data'])) {
-            throw new \Exception("Invalid version data for {$version_id}");
+            throw new \Exception("Invalid version data for {$version->getId()}");
         }
 
         $this->emitEvent('pre_restore', ['version' => $version]);

@@ -49,7 +49,17 @@ class ModelVersion extends BaseModel
         return false;
     }
 
-    public function getObjectFromVersionData() : ?BaseModel
+    public function getObject() : ?BaseModel
+    {
+        try {
+            $object = App::getInstance()->containerCall([$this->getClassName(), 'load'], ['id' => json_decode($this->getPrimaryKey(), true)]);
+            return $object;
+        } catch (Exception $e) {}
+
+        return null;
+    }
+
+    public function getNewObjectFromVersionData() : ?BaseModel
     {
         try {
             $object = App::getInstance()->containerMake($this->getClassName());

@@ -142,7 +142,6 @@ class Discounts extends AdminManageFrontendModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $form->addField('website_id', [
                     'type' => 'select',

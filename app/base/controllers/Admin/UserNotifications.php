@@ -156,7 +156,6 @@ class UserNotifications extends AdminManageFrontendModelsPage
             // intentional fall-trough
             // no break
             case 'new':
-                $this->addBackButton();
 
                 $usersOptions = [];
 

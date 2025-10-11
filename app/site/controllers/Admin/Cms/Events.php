@@ -133,7 +133,6 @@ class Events extends AdminManageFrontendModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $locationFieldType = 'geolocation'; $mapOptions = [];
                 if ($this->getEnvironment()->getVariable('GOOGLE_API_KEY')) {

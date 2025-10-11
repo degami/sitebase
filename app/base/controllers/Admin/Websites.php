@@ -108,7 +108,6 @@ class Websites extends AdminManageModelsPage
             case 'edit':
                 // intentional fall-trough
             case 'new':
-                $this->addBackButton();
 
                 if ($website->isLoaded()) {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions($website->getId());

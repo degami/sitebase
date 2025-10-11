@@ -116,7 +116,6 @@ class Users extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 if ($type == 'edit') {
 

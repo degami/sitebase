@@ -131,7 +131,6 @@ class Countries extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $country_iso2 = $country_iso3 = $country_name_en = $country_name_native = $country_capital = $country_latitude = $country_longitude = '';
                 $capital_location = ['latitude' => null, 'longitude' => null];

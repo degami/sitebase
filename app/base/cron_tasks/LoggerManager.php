@@ -153,7 +153,7 @@ class LoggerManager extends ContainerAwareObject
 
             return true;
         } catch (\Throwable $e) {
-            $this->getLogger()->error("Errore nell'esportazione applicationlog: " . $e->getMessage());
+            $this->getLog()->error("Errore nell'esportazione applicationlog: " . $e->getMessage());
             return false;
         }
     }    

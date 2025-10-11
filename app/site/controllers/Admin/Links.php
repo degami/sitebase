@@ -117,7 +117,6 @@ class Links extends AdminManageFrontendModelsPage
             // intentional fall-trough
             // no break
             case 'new':
-                $this->addBackButton();
 
                 if ($link->isLoaded()) {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions($link->getWebsiteId());

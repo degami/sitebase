@@ -138,7 +138,6 @@ class ApplicationLogs extends AdminManageModelsPage
         $out = parent::getTemplateData();
 
         if ($this->getRequest()->get('action') == 'details' && $this->getRequest()->get('log_id')) {
-            $this->addBackButton();
             $log = $this->containerCall([ApplicationLog::class, 'load'], ['id' => $this->getRequest()->get('log_id')]);
             $out += [
                 'log' => $log,

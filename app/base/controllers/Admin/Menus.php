@@ -183,7 +183,6 @@ class Menus extends AdminManageModelsPage
                 break;
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
                 $websites = $this->getUtils()->getWebsitesSelectOptions();

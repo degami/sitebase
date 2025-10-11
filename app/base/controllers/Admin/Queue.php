@@ -115,7 +115,6 @@ class Queue extends AdminManageModelsPage
         $out = parent::getTemplateData();
 
         if ($this->getRequest()->get('action') == 'details' && $this->getRequest()->get('message_id')) {
-            $this->addBackButton();
             $message = $this->containerCall([QueueMessage::class, 'load'], ['id' => $this->getRequest()->get('message_id')]);
             $out += [
                 'message' => $message,

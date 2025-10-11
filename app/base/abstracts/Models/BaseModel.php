@@ -25,11 +25,16 @@ use LessQL\Row;
 use PDOStatement;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
+use App\Base\Models\GuestUser;
 use App\Base\Tools\Search\Manager as SearchManager;
 use Exception;
+use Throwable;
 use Degami\Basics\Traits\ToolsTrait as BasicToolsTrait;
 use RuntimeException;
 use Degami\SqlSchema\IndexColumn;
+use ReflectionClass;
+use ReflectionMethod;
+use App\Base\Models\ModelVersion;
 
 /**
  * A wrapper for LessQL Row
@@ -782,6 +787,15 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
     public function postPersist(): BaseModel
     {
         $this->emitEvent('post_persist');
+
+        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_VERSIONING', false) && 
+            static::class != ModelVersion::class && 
+            !is_subclass_of($this, ModelVersion::class) && 
+            static::canSaveVersions() == true
+        ) {
+            $this->saveVersion();
+        }
+
         return $this;
     }
 
@@ -965,14 +979,14 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      * 
      * @return void
      */
-    protected function emitEvent($eventName) : void
+    protected function emitEvent($eventName, array $additionalData = []) : void
     {
         // ensure event name is lowercase
         $eventName = trim(strtolower($eventName));
 
         // emit event post persist
-        App::getInstance()->event('model_'.$eventName, ['object' => $this]);
-        App::getInstance()->event(strtolower(static::getClassBasename($this)) . '_' . $eventName, ['object' => $this]);
+        App::getInstance()->event('model_'.$eventName, ['object' => $this] + $additionalData);
+        App::getInstance()->event(strtolower(static::getClassBasename($this)) . '_' . $eventName, ['object' => $this] + $additionalData);
     }
 
     /**
@@ -1035,4 +1049,393 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
         return $out;
     }
+
+    public static function serializeForVersioning(
+        BaseModel $model,
+        array &$visited = [],
+        int $depth = 0,
+        int $maxDepth = 1 // default 1 level, -1 = no limits
+    ): array
+    {
+        $visited['obj'] ??= [];
+        $visited['key'] ??= [];
+
+        $className = get_class($model);
+        $primaryKeyValue = $model->getKeyFieldValue();
+        $uniqueKey = $className . ':' . json_encode($primaryKeyValue);
+
+        $objectId = spl_object_id($model);
+        if (isset($visited['obj'][$objectId])) {
+            return [
+                '__class' => $className, 
+                '__primaryKey' => $primaryKeyValue,
+                '__reference' => "object#$objectId", 
+            ];
+        }
+
+        if ($maxDepth >= 0 && $depth > $maxDepth) {
+            return [
+                '__class' => $className, 
+                '__primaryKey' => $primaryKeyValue,
+                '__maxDepthReached' => true,
+            ];
+        }
+
+        $visited['obj'][$objectId] = $uniqueKey;
+
+        if (isset($visited['key'][$uniqueKey])) {
+            return [
+                '__class' => $className, 
+                '__primaryKey' => $primaryKeyValue,
+                '__reference' => "key#$uniqueKey"
+            ];
+        }
+        $visited['key'][$uniqueKey] = true;
+
+        $data = [
+            '__class' => $className,
+            '__primaryKey' => $primaryKeyValue,
+            '__objectId' => $objectId,
+            '__data' => $model->getData(),
+        ];
+
+        $reflection = new ReflectionClass($className);
+        $methods = array_filter(
+            $reflection->getMethods(ReflectionMethod::IS_PUBLIC),
+            fn($m) => str_starts_with($m->getName(), 'get')
+                && $m->getDeclaringClass()->getName() === $className
+                && $m->getNumberOfRequiredParameters() === 0
+        );
+
+        foreach ($methods as $method) {
+            $name = lcfirst(substr($method->getName(), 3));
+
+            try {
+                $value = $method->invoke($model);
+            } catch (Throwable $e) {
+                continue;
+            }
+
+            if ($value instanceof BaseModel) {
+                $data[$name] = static::serializeForVersioning($value, $visited, $depth + 1, $maxDepth);
+            } elseif (is_array($value)) {
+                $data[$name] = [];
+                foreach ($value as $key => $item) {
+                    if ($item instanceof BaseModel) {
+                        $data[$name][$key] = static::serializeForVersioning($item, $visited, $depth + 1, $maxDepth);
+                    } elseif (is_object($item)) {
+                        if (method_exists($item, 'toArray')) {
+                            $data[$name][$key] = $item->toArray();
+                        } elseif ($item instanceof \JsonSerializable) {
+                            $data[$name][$key] = $item->jsonSerialize();
+                        } else {
+                            $data[$name][$key] = get_object_vars($item);
+                        }
+                    } else {
+                        $data[$name][$key] = $item;
+                    }
+                }
+            } elseif (is_object($value)) {
+                if (method_exists($value, 'toArray')) {
+                    $data[$name] = $value->toArray();
+                } elseif ($value instanceof \JsonSerializable) {
+                    $data[$name] = $value->jsonSerialize();
+                } else {
+                    $data[$name] = get_object_vars($value);
+                }
+            } else {
+                $data[$name] = $value;
+            }
+        }
+
+        return $data;
+    }
+
+
+    /**
+     * determines if varsion data should be saved on postPersist hook
+     * 
+     * @return bool
+     */
+    public Function canSaveVersions() : bool
+    {
+        return false;
+    }
+
+    /**
+     * creates a version of current model
+     */
+    public function saveVersion() : ModelVersion
+    {
+        if (!App::getInstance()->getEnvironment()->getVariable('ENABLE_VERSIONING', false)) {
+            throw new RuntimeException("Versioning is disabled");
+        }
+
+        /** @var ModelVersion $version */
+        $version = App::getInstance()->containerMake(ModelVersion::class);
+
+        $serialization = static::serializeForVersioning($this);
+
+        $version
+            ->setClassName($serialization['__class'])
+            ->setPrimaryKey($serialization['__primaryKey'])
+            ->setVersionData(json_encode($serialization));
+
+        if ($user = App::getInstance()->getAuth()->getCurrentUser()) {
+            if (!$user?->getId() || ($user instanceof GuestUser)) {
+                $version->setUserId(null);
+            } else {
+                $version->setUserId($user->getId());
+            }
+        }
+
+        return $version->persist();
+    }
+
+    /**
+     * Restore a previous version of the model
+     *
+     * @param int|string $version_id
+     * @param bool $deep
+     * @return static
+     * @throws \Exception
+     */
+    public function restoreVersion($version_id, bool $deep = true): static
+    {
+        $version = $this->getVersionById($version_id);
+        if (!$version) {
+            throw new \Exception("Version {$version_id} not found");
+        }
+
+        $data = json_decode($version->getData(), true);
+        if (empty($data) || !isset($data['__data'])) {
+            throw new \Exception("Invalid version data for {$version_id}");
+        }
+
+        $this->emitEvent('pre_restore', ['version' => $version]);
+
+        $restoreData = $data['__data'] ?? [];
+
+        if ($deep) {
+            foreach ($restoreData as $k => &$v) {
+                if (is_array($v) && isset($v['__class']) && is_subclass_of($v['__class'], BaseModel::class)) {
+                    $class = $v['__class'];
+                    try {
+                        $related = null;
+                        $pkField = (new $class())->getKeyFieldName();
+                        if (isset($v['__data'][$pkField])) {
+                            $related = $class::load($v['__data'][$pkField]);
+                        }
+                        if (empty($related) && !empty($v['__data'])) {
+                            $related = App::getInstance()->containerMake($class);
+                            $related->setData($v['__data'])->persist();
+                        }
+                        if ($related) {
+                            $v = $related;
+                        } else {
+                            unset($restoreData[$k]);
+                        }
+                    } catch (\Throwable $e) {
+                        App::getInstance()->getLog()->warning("Deep restore failed for {$k}: " . $e->getMessage());
+                        unset($restoreData[$k]);
+                    }
+                }
+
+                if (is_array($v) && !empty($v)) {
+                    $first = reset($v);
+                    if (is_array($first) && isset($first['__class']) && is_subclass_of($first['__class'], BaseModel::class)) {
+                        $newArr = [];
+                        foreach ($v as $idx => $item) {
+                            if (!is_array($item) || !isset($item['__class'])) {
+                                continue;
+                            }
+                            $class = $item['__class'];
+                            try {
+                                $related = null;
+                                $pkField = (new $class())->getKeyFieldName();
+                                if (isset($item['__data'][$pkField])) {
+                                    $related = $class::load($item['__data'][$pkField]);
+                                }
+                                if (empty($related) && !empty($item['__data'])) {
+                                    $related = App::getInstance()->containerMake($class);
+                                    $related->setData($item['__data'])->persist();
+                                }
+                                if ($related) {
+                                    $newArr[] = $related;
+                                }
+                            } catch (\Throwable $e) {
+                                App::getInstance()->getLog()->warning("Deep restore array element failed for {$k}#{$idx}: " . $e->getMessage());
+                            }
+                        }
+                        $v = $newArr;
+                    }
+                }
+            }
+            unset($v);
+        } else {
+            $restoreData = array_filter(
+                $restoreData,
+                fn($v) => is_scalar($v) || is_null($v),
+            );
+        }
+
+        $scalarData = [];
+        $structuredData = [];
+
+        foreach ($restoreData as $key => $value) {
+            if (is_scalar($value) || is_null($value)) {
+                $scalarData[$key] = $value;
+            } else {
+                $structuredData[$key] = $value;
+            }
+        }
+
+        if (!empty($scalarData)) {
+            try {
+                $this->setData($scalarData);
+            } catch (\Throwable $e) {
+                App::getInstance()->getLog()->warning("restore:setData failed: " . $e->getMessage());
+            }
+        }
+
+        if ($deep) {
+            foreach ($structuredData as $key => $value) {
+                $this->applyRestoredField($key, $value);
+            }
+        }
+
+        $this->persist();
+
+        $this->emitEvent('post_restore', ['version' => $version]);
+
+        return $this;
+    }
+
+    /**
+     * Apply a restored field to the current model
+     *
+     * @param string $key
+     * @param mixed $value
+     * @return void
+     */
+    protected function applyRestoredField(string $key, mixed $value): void
+    {
+        $utils = App::getInstance()->getUtils();
+        $log = App::getInstance()->getLog();
+
+        $pascal = static::snakeCaseToPascalCase($key);
+        $setter = 'set' . $pascal;
+        $getter = 'get' . $pascal;
+
+        // usa la tua funzione di singolarizzazione
+        $singular = $utils->singularize($key);
+        $singularPascal = static::snakeCaseToPascalCase($singular);
+        $adder = 'add' . $singularPascal;
+        $remover = 'remove' . $singularPascal;
+
+        // === 1) Valore singolo BaseModel ===
+        if ($value instanceof BaseModel) {
+            if (method_exists($this, $setter)) {
+                try {
+                    $this->$setter($value);
+                    return;
+                } catch (\Throwable $e) {
+                    $log->warning("restore:setter failed for {$key}: " . $e->getMessage());
+                }
+            }
+
+            try {
+                $this->setData([$key => $value]);
+            } catch (\Throwable $e) {
+                $log->warning("restore:assign failed for {$key}: " . $e->getMessage());
+            }
+            return;
+        }
+
+        // === 2) Array (relazione multipla o lista di scalari) ===
+        if (is_array($value)) {
+            // se esiste setXXX, usalo (anche per array vuoti)
+            if (method_exists($this, $setter)) {
+                try {
+                    $this->$setter($value);
+                    return;
+                } catch (\Throwable $e) {
+                    $log->warning("restore:setter(array) failed for {$key}: " . $e->getMessage());
+                }
+            }
+
+            // se esiste addXXX, prova a svuotare e riaggiungere
+            if (method_exists($this, $adder)) {
+                // svuotamento tramite setter, getter/remover o proprietà diretta
+                if (method_exists($this, $setter)) {
+                    try {
+                        $this->$setter([]);
+                    } catch (\Throwable $e) {
+                        $log->info("restore: couldn't clear via setter for {$key}: " . $e->getMessage());
+                    }
+                } elseif (method_exists($this, $getter) && method_exists($this, $remover)) {
+                    try {
+                        $current = $this->$getter();
+                        if (is_iterable($current)) {
+                            foreach ($current as $item) {
+                                try {
+                                    $this->$remover($item);
+                                } catch (\Throwable) {
+                                    // ignora singoli errori
+                                }
+                            }
+                        }
+                    } catch (\Throwable $e) {
+                        $log->info("restore: couldn't clear via getter/remover for {$key}: " . $e->getMessage());
+                    }
+                } else {
+                    try {
+                        $this->setData([$key => []]);
+                    } catch (\Throwable $e) {
+                        $log->info("restore: couldn't clear property {$key}: " . $e->getMessage());
+                    }
+                }
+
+                // aggiungi i nuovi elementi
+                foreach ($value as $item) {
+                    try {
+                        $this->$adder($item);
+                    } catch (\Throwable $e) {
+                        $log->warning("restore:add failed for {$key}: " . $e->getMessage());
+                    }
+                }
+
+                return;
+            }
+
+            // fallback: assegna la proprietà direttamente
+            try {
+                $this->setData([$key => $value]);
+            } catch (\Throwable $e) {
+                $log->info("restore: skipped array for {$key}: " . $e->getMessage());
+            }
+
+            return;
+        }
+
+        // === 3) Tipo non supportato ===
+        $log->info("restore: ignored field {$key} (unsupported type)");
+    }
+
+
+    /**
+     * get the collection of version available for current model
+     */
+    public function getVersions() : BaseCollection
+    {
+        if (!App::getInstance()->getEnvironment()->getVariable('ENABLE_VERSIONING', false)) {
+            throw new RuntimeException("Versioning is disabled");
+        }
+
+        return ModelVersion::getCollection()->where([
+            'class_name' => static::class, 
+            'primary_key' => is_array($this->getKeyFieldValue()) ? json_encode($this->getKeyFieldValue()) : $this->getKeyFieldValue()
+        ])->addOrder(['created_at' => 'DESC']);
+    }
 }
+ 

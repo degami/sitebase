@@ -102,10 +102,17 @@ abstract class AdminManageModelsPage extends AdminFormPage
             ];
         }
 
-        if ($this->template_data['action'] == 'edit') {
+        if (($this->template_data['action'] ?? 'list') == 'edit') {
+            if ($this->containerCall([$this->getObject(), 'canSaveVersions'])) {
+                $this->addVersionsButton($this->getObject());
+            }
             if ($this->containerCall([$this->getObject(), 'canBeDuplicated'])) {
                 $this->addDuplicateButton();
             }
+        }
+
+        if (($this->template_data['action'] ?? 'list') != 'list') {
+            $this->addBackButton();
         }
     }
 
@@ -348,7 +355,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addDuplicateButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-outline-dark');
+        $this->addActionLink('duplicate-btn', 'duplicate-btn', $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-light');
     }
 
     /**
@@ -378,6 +385,31 @@ abstract class AdminManageModelsPage extends AdminFormPage
     {
         $this->addActionLink('edit-batch-btn', 'edit-batch-btn', $this->getHtmlRenderer()->getIcon('edit') . ' ' . $this->getUtils()->translate('Mass Edit', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-dark', attributes: ['onClick' => '$("#admin").appAdmin(\'listingTableEditSelected\', \'#'.$tableId.'\', \''.$controllerClassName.'\', \''.$modelClassName.'\', this); return false;']);
     }
+
+    /**
+     * adds a "duplicate" button
+     *
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * 
+     * @return void
+     */
+    public function addVersionsButton(?BaseModel $object = null)
+    {
+        if ($object) {
+            $primaryKey = $object->getKeyFieldValue();
+        } else {
+            $primaryKey = $this->getRequest()->get($this->getObjectIdQueryParam());
+        }
+
+        if (is_array($primaryKey)) {
+            $primaryKey = json_encode($primaryKey);
+        }
+
+        $this->addActionLink('versions-btn', 'versions-btn', '&#9776; Versions', $this->getUrl('crud.app.base.controllers.admin.json.versions', ['class' => base64_encode(get_class($object)), 'key' => base64_encode($primaryKey) ]), 'btn btn-sm btn-light inToolSidePanel');
+    }
+
 
     /**
      * adds a paginator selecton

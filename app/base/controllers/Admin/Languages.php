@@ -106,7 +106,6 @@ class Languages extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $language_locale = $language_639_1 = $language_639_2 = $language_name = $language_native = $language_family = '';
                 if ($language->isLoaded()) {

@@ -1148,4 +1148,56 @@ class Globals extends ContainerAwareObject
         // Default: just add 's'
         return $word . (!str_ends_with($word, 's') ? 's' : '');
     }
+
+    /**
+     * Singularize word
+     * 
+     * @param string $word
+     * @return string
+     */
+    public function singularize(string $word): string
+    {
+        $lower = strtolower($word);
+
+        // Common irregulars (reverse map)
+        $irregulars = [
+            'people' => 'person',
+            'men' => 'man',
+            'women' => 'woman',
+            'children' => 'child',
+            'mice' => 'mouse',
+            'geese' => 'goose',
+        ];
+
+        if (isset($irregulars[$lower])) {
+            // preserve original casing
+            $firstUpper = ctype_upper($word[0]);
+            $singular = $irregulars[$lower];
+            return $firstUpper ? ucfirst($singular) : $singular;
+        }
+
+        // Words ending in 'ies' → replace with 'y'
+        if (preg_match('/ies$/i', $word)) {
+            return preg_replace('/ies$/i', 'y', $word);
+        }
+
+        // Words ending in 'sses' or 'shes' or 'ches' → remove 'es'
+        if (preg_match('/(sses|shes|ches)$/i', $word)) {
+            return preg_replace('/es$/i', '', $word);
+        }
+
+        // Words ending in 'es' but not 'ses'/'shes'/'ches' → remove 'es'
+        if (preg_match('/[^aeiou]es$/i', $word)) {
+            return preg_replace('/es$/i', '', $word);
+        }
+
+        // Words ending in 's' (but not 'ss') → remove 's'
+        if (preg_match('/(?<!s)s$/i', $word)) {
+            return substr($word, 0, -1);
+        }
+
+        // Default: unchanged
+        return $word;
+    }
+
 }

@@ -120,7 +120,6 @@ class Orders extends AdminManageFrontendModelsPage
                 // intenitional fallthrough
 
             case 'view':
-                $this->addBackButton();
 
                 if (in_array($order->getOrderStatus()?->getStatus(), [OrderStatus::PAID, OrderStatus::WAITING_FOR_PAYMENT])) {
                     $orderPayment = OrderPayment::getCollection()->where(['order_id' => $order->getId()])->addOrder(['created_at' => 'DESC'])->getFirst();

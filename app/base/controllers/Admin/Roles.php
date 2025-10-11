@@ -88,7 +88,6 @@ class Roles extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $role_name = '';
                 if ($role->isLoaded()) {

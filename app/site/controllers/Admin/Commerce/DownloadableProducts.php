@@ -124,7 +124,6 @@ class DownloadableProducts extends AdminManageProductsPage
                 );
 
             case 'new':
-                $this->addBackButton();
 
                 $product_title = $product_content = $product_media = '';
                 $product_price = 0.0;

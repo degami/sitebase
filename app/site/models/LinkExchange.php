@@ -126,4 +126,9 @@ class LinkExchange extends BaseModel
         $parsed = parse_url($this->getUrl());
         return $parsed['scheme'].'://'.$parsed['host'];
     }
+
+    public Function canSaveVersions() : bool
+    {
+        return true;
+    }
 }

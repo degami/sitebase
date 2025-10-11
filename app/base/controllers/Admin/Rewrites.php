@@ -110,7 +110,6 @@ class Rewrites extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $descendantIds = [];
                 $rewrite_url = $rewrite_route = $rewrite_website = $rewrite_locale = $rewrite_parent = '';
@@ -177,7 +176,6 @@ class Rewrites extends AdminManageModelsPage
                 break;
 
             case 'translations':
-                $this->addBackButton();
 
                 $form->addMarkup(
                     '<h4>' . $this->getUtils()->translate('Translations for <strong>%s</strong>', locale: $this->getCurrentLocale(), params: [$rewrite->getUrl()]) . '</h4>'

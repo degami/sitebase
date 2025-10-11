@@ -127,7 +127,6 @@ class Sitemaps extends AdminManageModelsPage
             case 'edit':
                 // intentional fall-trough
             case 'new':
-                $this->addBackButton();
 
                 if ($sitemap->isLoaded()) {
                     $languages = $this->getUtils()->getSiteLanguagesSelectOptions($sitemap->getAppWebsite()?->getId());

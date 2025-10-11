@@ -110,4 +110,9 @@ abstract class FrontendModel extends BaseModel
 
         return $content;
     }
+
+    public Function canSaveVersions() : bool
+    {
+        return true;
+    }
 }

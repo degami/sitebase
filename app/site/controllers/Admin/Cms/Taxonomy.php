@@ -121,7 +121,6 @@ class Taxonomy extends AdminManageFrontendModelsPage
             // intentional fall trough
             // no break
             case 'new':
-                $this->addBackButton();
 
                 $templates = [];
                 $initial_dir = App::getDir(App::TEMPLATES) . DS . 'frontend' . DS;

@@ -135,7 +135,6 @@ class Config extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $languages = [null => $this->getUtils()->translate('All languages', locale: $this->getCurrentLocale())] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
                 $websites = $this->getUtils()->getWebsitesSelectOptions();

@@ -149,4 +149,9 @@ class Event extends ModelWithLocation
     {
         return $this->html_title ?: $this->title;
     }
+
+    public Function canSaveVersions() : bool
+    {
+        return true;
+    }
 }

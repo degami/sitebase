@@ -382,4 +382,9 @@ class MediaElement extends BaseModel
 
         return $this;
     }
+
+    public Function canSaveVersions() : bool
+    {
+        return true;
+    }
 }

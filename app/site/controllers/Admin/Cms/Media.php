@@ -54,7 +54,7 @@ class Media extends AdminManageModelsPage
         protected ?RouteInfo $route_info = null
     ) {
         AdminFormPage::__construct($container, $request, $route_info);
-        if ($this->template_data['action'] == 'list') {
+        if (($this->template_data['action'] ?? 'list') == 'list') {
             parent::__construct($container, $request, $route_info);
 
             $this->addActionLink(
@@ -80,8 +80,7 @@ class Media extends AdminManageModelsPage
                 }
             }
 
-        } elseif ($this->template_data['action'] == 'usage') {
-            $this->addBackButton();
+        } elseif (($this->template_data['action'] ?? 'list') == 'usage') {
             $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
             $elem_data = $media->getData();
             $elem_data['owner'] = $media->getOwner()->username;
@@ -104,6 +103,20 @@ class Media extends AdminManageModelsPage
                     $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->get('media_id'))->page()->fetchAll()
                 ),
             ];
+        }
+
+
+        if (($this->template_data['action'] ?? 'list') == 'edit') {
+            if ($this->containerCall([$this->getObject(), 'canSaveVersions'])) {
+                $this->addVersionsButton();
+            }
+            if ($this->containerCall([$this->getObject(), 'canBeDuplicated'])) {
+                $this->addDuplicateButton();
+            }
+        }
+
+        if (($this->template_data['action'] ?? 'list') != 'list') {
+            $this->addBackButton();
         }
     }
 
@@ -207,7 +220,6 @@ class Media extends AdminManageModelsPage
         //        $form->addMarkup('<pre>'.var_export($type, true)."\n".var_export($_POST, true)."\n".var_export($_FILES, true).'</pre>');
         switch ($type) {
             case 'addfolder':
-                $this->addBackButton();
 
                 $parentName = 'Root Folder';
                 $parent_id = $this->getRequest()->get('parent_id');
@@ -289,7 +301,6 @@ class Media extends AdminManageModelsPage
             // intentional fall trough
             // no break
             case 'new':
-                $this->addBackButton();
 
                 $destinationDir = App::getDir(App::MEDIA);
                 if ($this->getRequest()->get('parent_id')) {

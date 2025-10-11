@@ -169,7 +169,6 @@ class Blocks extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $languages = $this->getUtils()->getSiteLanguagesSelectOptions();
 

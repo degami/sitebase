@@ -141,14 +141,12 @@ class OrderPayments extends AdminManageFrontendModelsPage
 
         switch ($type) {
             case 'view' :
-                $this->addBackButton();
                 
                 $form->addMarkup($this->renderPaymentInfo($orderPayment));
 
                 break;
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $form->addField('website_id', [
                     'type' => 'select',

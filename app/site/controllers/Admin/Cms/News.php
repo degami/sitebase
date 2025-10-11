@@ -108,7 +108,6 @@ class News extends AdminManageFrontendModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $news_title = $news_content = $news_date = '';
                 if ($news->isLoaded()) {

@@ -109,7 +109,6 @@ class Redirects extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $redirect_url_from = $redirect_url_to = $redirect_website = $redirect_code = '';
                 if ($redirect instanceof Redirect) {

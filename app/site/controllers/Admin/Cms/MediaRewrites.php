@@ -134,7 +134,6 @@ class MediaRewrites extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 $rewrites = ['none' => ''];
                 foreach (Rewrite::getCollection() as $rewrite) {

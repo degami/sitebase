@@ -214,7 +214,6 @@ class Cron extends AdminManageModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
 
                 //$container = $this->getContainer();
 

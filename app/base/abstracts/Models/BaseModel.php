@@ -300,9 +300,13 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
         return $keyField.':'.$id;
     }
 
-    public function getKeyFieldValue() : mixed
+    public function getKeyFieldValue(bool $forceAsArray = false) : mixed
     {
         if (!is_array(static::getKeyField())) {
+            if ($forceAsArray) {
+                return [static::getKeyField() => $this->getData(static::getKeyField())];
+            }
+
             return $this->getData(static::getKeyField());
         }
 

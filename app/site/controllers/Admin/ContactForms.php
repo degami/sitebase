@@ -96,25 +96,11 @@ class ContactForms extends AdminManageFrontendModelsPage
             $tableElements = $this->getTableElements($data['items']);
 
             if ($this->template_data['action'] != 'submissions' && static::hasMassActions()) {
-                /** @var BaseModel $firstElem */
-                $primaryKey = App::getInstance()->containerCall([$collection->getClassName(), 'getKeyField']);
-
-                $resolvePrimaryKey = function(BaseModel $elem, $primaryKey) {
-                    $out = [];
-                    foreach ((array)$primaryKey as $pk) {
-                        $out[$pk] = $elem->getData($pk);
-                    }
-
-                    return $out;
-                };
-
-                foreach ($data['items'] as &$datum) {
-                    $datum->setData(['_admin_table_item_pk' => json_encode($resolvePrimaryKey($datum, $primaryKey))]);
-                }
-
                 // copy "_admin_table_item_pk" from data['items'] into tableElements
                 foreach($tableElements as $k => $v) {
-                    $tableElements[$k]['_admin_table_item_pk'] = $data['items'][$k]->getData('_admin_table_item_pk');
+                    /** @var BaseModel $object */
+                    $object = $data['items'][$k];
+                    $tableElements[$k]['_admin_table_item_pk'] = json_encode($object->getKeyFieldValue(forceAsArray: true));
                 }
             }
 

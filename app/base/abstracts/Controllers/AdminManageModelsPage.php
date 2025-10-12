@@ -31,6 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Degami\Basics\Html\TagElement;
 use ReflectionClass;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Site\Models\MediaElement;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -114,7 +115,14 @@ abstract class AdminManageModelsPage extends AdminFormPage
             if (static::hasMassActions()) {
                 // copy "_admin_table_item_pk" from data['items'] into tableElements
                 foreach($tableElements as $k => $v) {
-                    $tableElements[$k]['_admin_table_item_pk'] = $data['items'][$k]->getData('_admin_table_item_pk');
+                    /** @var BaseModel $object */
+                    $object = $data['items'][$k];
+
+                    if ($object instanceof MediaElement && $object->isDirectory()) {
+                        continue;
+                    }
+
+                    $tableElements[$k]['_admin_table_item_pk'] = json_encode($object->getKeyFieldValue(forceAsArray: true));
                 }
             }
 
@@ -149,22 +157,6 @@ abstract class AdminManageModelsPage extends AdminFormPage
     {
         $collection = $this->getCollection();
         $data = $this->containerCall([$collection, 'paginate'], ['page_size' => $itemsPerPage]);
-
-        /** @var BaseModel $firstElem */
-        $primaryKey = App::getInstance()->containerCall([$collection->getClassName(), 'getKeyField']);
-
-        $resolvePrimaryKey = function(BaseModel $elem, $primaryKey) {
-            $out = [];
-            foreach ((array)$primaryKey as $pk) {
-                $out[$pk] = $elem->getData($pk);
-            }
-
-            return $out;
-        };
-
-        foreach ($data['items'] as &$datum) {
-            $datum->setData(['_admin_table_item_pk' => json_encode($resolvePrimaryKey($datum, $primaryKey))]);
-        }
 
         return $data;
     }

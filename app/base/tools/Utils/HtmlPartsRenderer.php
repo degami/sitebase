@@ -745,6 +745,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
             //$style="max-width:100%;font-size: 9px;line-height: 11px;min-width: 100%;padding: 3px 1px;margin: 0;border: 1px solid #555;border-radius: 2px;";
             foreach ($header as $k => $v) {
+                $className = strtolower($k);
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
                     $searchqueryparam = (is_array($current_page->getRequest()->query->all('search')) && isset($current_page->getRequest()->query->all('search')[$v['search']])) ? $current_page->getRequest()->query->all('search')[$v['search']] : '';
 
@@ -760,8 +761,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'td',
-                                'attributes' => ['class' => 'small'],
-                                'text' => '<select name="search[' . $v['search'] . ']">' . implode("", $select_options) . '</select>',
+                                'attributes' => ['class' => 'small '. $className, 'style' => 'width: 100px;'],
+                                'text' => '<select name="search[' . $v['search'] . ']" style="width: 100px;">' . implode("", $select_options) . '</select>',
                             ]]
                         );    
                     } else {
@@ -769,7 +770,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'td',
-                                'attributes' => ['class' => 'small'],
+                                'attributes' => ['class' => 'small '. $className],
                                 'text' => '<input class="form-control" name="search[' . $v['search'] . ']" value="' . $searchqueryparam . '"/>',
                             ]]
                         );
@@ -842,12 +843,21 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 );
 
                 if ($selectCheckboxes == true) {
+
+                    $checkboxText = '&nbsp;';
+                    if (isset($elem['_admin_table_item_pk']) && (
+                        isset($elem['actions'][AdminManageModelsPage::EDIT_BTN]) ||
+                        isset($elem['actions'][AdminManageModelsPage::DELETE_BTN])                        
+                    )) {
+                        $checkboxText = '<label class="checkbox"><input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span></label>';
+                    }
+
                     $row->addChild(
                         $this->containerMake(
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'td',
-                                'text' => isset($elem['actions'][AdminManageModelsPage::EDIT_BTN]) || isset($elem['actions'][AdminManageModelsPage::DELETE_BTN]) ? '<label class="checkbox"><input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span></label>' : '',
+                                'text' => $checkboxText,
                                 'scope' => 'col',
                                 'attributes' => ['class' => 'nowrap'],
                             ]]
@@ -865,7 +875,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
                                 TagElement::class,
                                 ['options' => [
                                     'tag' => 'td',
-                                    'text' => (string)$td
+                                    'text' => (string)$td,
+                                    'attributes' => ['class' => in_array(strtolower($tk), ['website', 'locale']) ? 'nowrap' : 'text-break'],
                                 ]]
                             )
                     );
@@ -939,6 +950,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         foreach ($header as $th => $column) {
+            $className = strtolower($th);
             $th = $this->getUtils()->translate($th, locale: $current_page?->getCurrentLocale());
             if ($current_page instanceof BasePage) {
                 $request_params = $current_page->getRequest()->query->all();
@@ -973,7 +985,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         'tag' => 'th',
                         'text' => $th,
                         'scope' => 'col',
-                        'attributes' => ['class' => 'nowrap'],
+                        'attributes' => ['class' => 'nowrap '.$className],
                     ]]
                 )
             );

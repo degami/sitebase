@@ -298,8 +298,12 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         }
 
         foreach ($template_data as $index => $elem) {
-            $variablesInfo[] = "{$index}[" . ((is_object($elem)) ? get_class($elem) : gettype($elem)) . "]" . 
-            ' (' . (is_object($elem) ? '#'.spl_object_id($elem) : (is_scalar($elem) ? $elem : '')) . ')';
+            if (is_string($elem) && $elem != strip_tags($elem)) {
+                $elem = htmlspecialchars($elem);
+            }
+
+            $variablesInfo[] = "{$index}[" . ((is_object($elem)) ? get_class($elem) : gettype($elem)) . (is_string($elem) ? ':'.strlen($elem) : '') . "]" . 
+            ' (' . (is_object($elem) ? '#'.spl_object_id($elem) : (is_scalar($elem) ? trim(substr((string)$elem , 0, 150) . (strlen((string) $elem) > 150 ? '...' : '')) : '')) . ')';
         }
 
         $out = [

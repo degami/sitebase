@@ -528,6 +528,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
 
     /**
      * {@inheritdoc}
+     * 
      * @param string $name
      * @param $arguments
      * @return mixed
@@ -553,12 +554,27 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
                         return isset($this->{$prop});
                 }
             }
-            if (str_starts_with($method_name, 'load_by_')) {
-                return $this->loadBy(substr($method_name, 8), ...$arguments);
-            }
         }
 
         return call_user_func_array([$this->getDbRow(), $name], $arguments);
+    }
+
+    /**
+     * {@inheritdoc}
+     * 
+     * @param string $name
+     * @param $arguments
+     * @return mixed
+     * @throws RuntimeException
+     */
+    public static function __callStatic($name, $arguments)
+    {
+        $method_name = static::pascalCaseToSnakeCase($name);
+        if (str_starts_with($method_name, 'load_by_')) {
+            return static::loadBy(substr($method_name, 8), ...$arguments);
+        }
+
+        throw new RuntimeException("Call to undefined method " . static::class . "::$name()");
     }
 
     /**

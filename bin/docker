@@ -168,6 +168,14 @@ case "$1" in
         echo "container php-fpm is down"
       fi
     ;;
+  supervisorctl)
+      if [[ $(dockerps supervisor) = 1 ]]; then
+        shift
+        dockerexec supervisor supervisorctl "$@"
+      else
+        echo "container supervisor is down"
+      fi
+    ;;
   phpshell|php)
       if [[ $(dockerps php-fpm) = 1 ]]; then
         shift
@@ -177,6 +185,6 @@ case "$1" in
       fi
     ;;
   *)
-      echo $"Usage: $0 {build, start|go|up, stop|k|down, restart|r, status|st, sh[ell] <web|database|php-fpm>, console <command>}"
+      echo $"Usage: $0 {build, start|go|up, stop|k|down, restart|r, status|st, sh[ell] <web|database|php-fpm|redis|elasticsearch|supervisor|mailhog>, console <command>, composer <command>, supervisorctl <command>, dbshell|db, phpshell|php}"
       exit 1
 esac

@@ -713,7 +713,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         if (empty($header)) {
             $header = [];
             foreach ($elements as $key => $elem) {
-                $header = array_unique(array_merge($header, array_keys($elem)));
+                $header = array_unique(array_merge($header, array_filter(array_keys($elem), fn ($el) => !str_starts_with($el, '_'))));
             }
             $header = array_flip($header);
         }
@@ -831,7 +831,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $rownum = 0;
             foreach ($elements as $key => $elem) {
                 // ensure all header cols are in row cols
-                //$elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
+                $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
                 $row = $this->containerMake(
                     TagElement::class,
                     ['options' => [
@@ -870,17 +870,18 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     );
                 }
 
-                $row->addChild(
-                    $this->containerMake(
-                        TagElement::class,
-                        ['options' => [
-                            'tag' => 'td',
-                            'text' => $elem['actions'] ?? '',
-                            'attributes' => ['class' => 'text-right nowrap'],
-                        ]]
-                    )
-                );
-
+                if (array_key_exists('actions', $header)) {
+                    $row->addChild(
+                        $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'td',
+                                'text' => $elem['actions'] ?? '',
+                                'attributes' => ['class' => 'text-right nowrap'],
+                            ]]
+                        )
+                    );
+                }
 
                 $tbody->addChild($row);
             }

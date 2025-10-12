@@ -66,9 +66,11 @@ class Versions extends AdminJsonPage
         $versions = $object->getVersions();
         $versionsTable = [];
         foreach ($versions as $version) {
+            /** @var ModelVersion $version */
             $versionsTable[] = [
                 'id' => $version->id,
                 'Date' => $version->created_at,
+                'User' => $version->getOwner()?->getUsername() ?? 'System',
             ];
         }
 
@@ -97,7 +99,7 @@ class Versions extends AdminJsonPage
                             <div class="version-instructions p-2 text-center small text-muted border-bottom">
                                 <i class="fa fa-info-circle"></i> Ctrl+Click on two versions to compare them
                             </div>
-                            '.$this->getHtmlRenderer()->renderAdminTable($versionsTable, ['id' => [], 'Date' => [], '' => []], table_id: 'versions-table').'
+                            '.$this->getHtmlRenderer()->renderAdminTable($versionsTable, ['id' => [], 'Date' => [], 'User' => []], table_id: 'versions-table').'
                         </div>
                         <div class="col-9 border vh-100 overflow-auto diff-content">'.($diffTable ?? '').'</div>
                     </div>

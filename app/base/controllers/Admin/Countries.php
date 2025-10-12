@@ -306,8 +306,8 @@ class Countries extends AdminManageModelsPage
             function ($country) {
                 return [
                     'ID' => $country->id,
-                    'iso2' => $country->iso2,
-                    'iso3' => $country->iso3,
+                    'Iso2' => $country->iso2,
+                    'Iso3' => $country->iso3,
                     'Name En' => $country->name_en,
                     'Name Native' => $country->name_native,
                     'Capital' => $country->capital,

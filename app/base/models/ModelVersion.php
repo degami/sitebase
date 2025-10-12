@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Commands\Generate\Model;
+use App\Base\Traits\WithOwnerTrait;
 use DateTime;
 use Exception;
 use RuntimeException;
@@ -41,6 +42,8 @@ use RuntimeException;
  */
 class ModelVersion extends BaseModel
 {
+    use WithOwnerTrait;
+    
     /**
      * {@inheritdoc}
      */

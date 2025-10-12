@@ -91,6 +91,10 @@ class ModelVersion extends BaseModel
 
     public function compareWith(ModelVersion $other_version) : array
     {
+        if (!($this->getClassName() === $other_version->getClassName() && $this->getPrimaryKey() === $other_version->getPrimaryKey())) {
+            throw new RuntimeException("Cannot compare versions of different objects");
+        }
+
         $current_data = json_decode($this->getVersionData(), true);
         $other_data = json_decode($other_version->getVersionData(), true);
 

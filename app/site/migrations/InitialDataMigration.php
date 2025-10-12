@@ -328,6 +328,7 @@ class InitialDataMigration extends BaseMigration
             'app/frontend/assets_domain' => ['locale' => null, 'value' => 'https://' . $website_model->getDomain()],
             'app/frontend/date_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d'],
             'app/frontend/date_time_format' => ['locale' => $website_model->getDefaultLocale(), 'value' => 'Y-m-d H:i'],
+            'app/versions/keep_num' => ['locale' => null, 'value' => 20],
         ];
         foreach ($variables as $path => $info) {
             $configuration_model = App::getInstance()->containerCall([Configuration::class, 'new']);

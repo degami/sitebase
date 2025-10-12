@@ -117,13 +117,8 @@ class Versions extends AdminJsonPage
 JS;
         }
 
-        $cancelStr = App::getInstance()->getUtils()->translate('Cancel');
         $restoreStr = App::getInstance()->getUtils()->translate('Restore');
         $removeStr = App::getInstance()->getUtils()->translate('Remove');
-        $confirmRestoreTitleStr = App::getInstance()->getUtils()->translate('Confirm Restore');
-        $confirmRemoveTitleStr = App::getInstance()->getUtils()->translate('Confirm Remove');
-        $confirmRestoreContentStr = App::getInstance()->getUtils()->translate('Are you sure you want to restore this version?');
-        $confirmRemoveContentStr = App::getInstance()->getUtils()->translate('Are you sure you want to remove this version?');
 
         $versionControllerUrl = $this->getUrl('admin.versions');
         $versionDeleteUrl = $versionControllerUrl . '?action=delete&version_id=';
@@ -255,37 +250,11 @@ $(function() {
                 let form = $('<form action="{$versionDeleteUrl}'+id+'" method="post">').appendTo('body');
                 $('<input type="hidden" value="'+encodeURIComponent(currentRoute)+'" name="return_route" />').appendTo(form);
                 form.submit();
-
-                /*
-                $(that).appAdmin('showAlertDialog', {
-                    title: '$confirmRemoveTitleStr',
-                    message: '$confirmRemoveContentStr <b>' + id + '</b>',
-                    type: 'danger',
-                    okText: '$removeStr',
-                    cancelText: '$cancelStr',
-                    onConfirm: function() {
-                        console.log('TODO: rimuovi versione ' + id);
-                    }
-                });
-                */
             } else if (action === 'restore') {
                 let currentRoute = $(that).appAdmin('getSettings').currentRoute;
                 let form = $('<form action="{$versionRestoreUrl}'+id+'" method="post">').appendTo('body');
                 $('<input type="hidden" value="'+encodeURIComponent(currentRoute)+'" name="return_route" />').appendTo(form);
                 form.submit();
-
-                /*
-                $(that).appAdmin('showAlertDialog', {
-                    title: '$confirmRestoreTitleStr',
-                    message: '$confirmRestoreContentStr <b>' + id + '</b>',
-                    type: 'warning',
-                    okText: '$restoreStr',
-                    cancelText: '$cancelStr',
-                    onConfirm: function() {
-                        console.log('TODO: ripristina versione ' + id);
-                    }
-                });
-                */
             }
         });
     });

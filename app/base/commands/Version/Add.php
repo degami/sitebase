@@ -74,11 +74,16 @@ class Add extends BaseCommand
         }
 
         foreach ($classnames as $className) {
-            /** @var BaseCollection $collection */
-            $collection = $this->containerCall([$className, 'getCollection']);
+            try {
+                /** @var BaseCollection $collection */
+                $collection = $this->containerCall([$className, 'getCollection']);
 
-            // persisting the collection will create a new version for all objects in it
-            $collection->persist();
+                // persisting the collection will create a new version for all objects in it
+                $collection->persist();
+            } catch (\Throwable $e) {
+                $this->getIo()->error('Error adding version for class ' . $className . ': ' . $e->getMessage());
+                continue;
+            }
         }
 
         $this->getIo()->success('Version added');

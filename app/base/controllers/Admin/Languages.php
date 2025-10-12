@@ -229,7 +229,7 @@ class Languages extends AdminManageModelsPage
     {
         return [
             'ID' => 'id',
-            'Locale' => ['order' => 'locale', 'search' => 'locale'],
+            'Locale' => ['order' => 'locale', 'search' => 'locale', 'input_type' => 'text'],
             'Flag' => null,
             '639-1' => ['order' => '639-1', 'search' => '639-1'],
             '639-2' => ['order' => '639-2', 'search' => '639-2'],

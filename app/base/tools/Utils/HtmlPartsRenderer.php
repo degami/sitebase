@@ -749,7 +749,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
                     $searchqueryparam = (is_array($current_page->getRequest()->query->all('search')) && isset($current_page->getRequest()->query->all('search')[$v['search']])) ? $current_page->getRequest()->query->all('search')[$v['search']] : '';
 
-                    if ($v['search'] == 'locale') {
+                    // locale is a well known special case - but can be overridden
+                    if ($v['search'] == 'locale' && ($v['input_type'] ?? 'select') == 'select') {
                         $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'] + $this->getUtils()->getSiteLanguagesSelectOptions();
                         $select_options = array_map(function ($val, $key) use ($searchqueryparam) {
                             $selected = ($key == $searchqueryparam) ? ' selected="selected"': '';

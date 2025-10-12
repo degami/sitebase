@@ -21,6 +21,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\Console\Command\Command;
+use App\Base\Abstracts\Models\BaseCollection;
 
 /**
  * Add ModelVersion Command
@@ -73,11 +74,11 @@ class Add extends BaseCommand
         }
 
         foreach ($classnames as $className) {
+            /** @var BaseCollection $collection */
             $collection = $this->containerCall([$className, 'getCollection']);
-            foreach ($collection as $object) {
-                // saving object creates a new version
-                $object->save();
-            }
+
+            // persisting the collection will create a new version for all objects in it
+            $collection->persist();
         }
 
         $this->getIo()->success('Version added');

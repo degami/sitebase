@@ -131,4 +131,9 @@ class LinkExchange extends BaseModel
     {
         return true;
     }
+
+    public static function isExportable() : bool
+    {
+        return true;
+    }
 }

@@ -331,14 +331,11 @@ class Rewrites extends AdminManageModelsPage
                     'URL' => $rewrite->url,
                     'Route' => $rewrite->route,
                     'Locale' => $rewrite->getLocale(),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getActionButton('translations', $rewrite->id, 'success', 'tag', 'Translations'),
-                            $this->getEditButton($rewrite->id),
-                            $this->getDeleteButton($rewrite->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::TRANSLATIONS_BTN => $this->getActionButton('translations', $rewrite->id, 'success', 'tag', 'Translations'),
+                        static::EDIT_BTN => $this->getEditButton($rewrite->id),
+                        static::DELETE_BTN => $this->getDeleteButton($rewrite->id),
+                    ],
                 ];
             },
             $data

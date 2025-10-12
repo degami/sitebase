@@ -496,13 +496,10 @@ class Carts extends AdminManageFrontendModelsPage
                     'Total' => $this->getUtils()->formatPrice($cart->getTotalInclTax(), $cart->getCurrencyCode()),
                     'Created At' => $cart->getCreatedAt(),
                     'Updated At' => $cart->getUpdatedAt(),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($cart->id),
-                            $this->getDeleteButton($cart->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($cart->id),
+                        static::DELETE_BTN => $this->getDeleteButton($cart->id),
+                    ],
                 ];
             },
             $data

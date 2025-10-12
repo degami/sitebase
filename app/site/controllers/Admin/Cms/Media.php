@@ -690,13 +690,13 @@ class Media extends AdminManageModelsPage
             function (MediaElement $elem) {
                 $actions = match($elem->isDirectory()) {
                     true => [
-                        $this->getChangeDirButton($elem->id),
-                        $this->getDeleteButton($elem->id),
+                        'chdir-btn' => $this->getChangeDirButton($elem->id),
+                        static::DELETE_BTN => $this->getDeleteButton($elem->id),
                     ],
                     default => [
-                        $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
-                        $this->getEditButton($elem->id),
-                        $this->getDeleteButton($elem->id),
+                        'usage-btn' => $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
+                        static::EDIT_BTN => $this->getEditButton($elem->id),
+                        static::DELETE_BTN => $this->getDeleteButton($elem->id),
                     ]
                 };
                 return [
@@ -709,10 +709,7 @@ class Media extends AdminManageModelsPage
                     'Height' => $elem->isImage() ? $elem->getImageBox()?->getHeight() . ' px' : '',
                     'Width' => $elem->isImage() ? $elem->getImageBox()?->getWidth() . ' px' : '',
                     'Lazyload' => $elem->isImage() ? $this->getUtils()->translate($elem->getLazyload() ? 'Yes' : 'No', locale: $this->getCurrentLocale()) : '',
-                    'actions' => implode(
-                        " ",
-                        $actions
-                    ),
+                    'actions' => $actions,
                 ];
             },
             $data

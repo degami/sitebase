@@ -246,14 +246,11 @@ class Queue extends AdminManageModelsPage
                     'Result' => $message->result,
                     'Created At' => $message->created_at,
                     'Executed At' => $message->executed_at,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getActionButton('details', $message->id, 'primary', 'zoom-in', 'Details'),
-                            $this->getActionButton('requeue', $message->id, 'primary', 'rotate-cw', 'ReQueue'),
-                            $this->getDeleteButton($message->id),
-                        ]
-                    ),
+                    'actions' => [
+                        'details-btn' => $this->getActionButton('details', $message->id, 'primary', 'zoom-in', 'Details'),
+                        'requeue-btn' => $this->getActionButton('requeue', $message->id, 'primary', 'rotate-cw', 'ReQueue'),
+                        static::DELETE_BTN => $this->getDeleteButton($message->id),
+                    ],
                 ];
             },
             $data
@@ -275,4 +272,10 @@ class Queue extends AdminManageModelsPage
 
         return true;
     }
+
+    protected function hasMassActions(): bool
+    {
+        return false;
+    }
+
 }

@@ -438,15 +438,12 @@ class Sitemaps extends AdminManageModelsPage
                     'Locale' => $sitemap->locale,
                     'Title' => $sitemap->title,
                     'Is Published' => $this->getUtils()->translate($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
-                    'actions' => implode(
-                        " ",
-                        [
-                            ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? $this->getFrontendModelButton($sitemap) : ''),
-                            $this->getActionButton('generate', $sitemap->getId(), 'btn btn-warning generate', 'rss', 'Generate'),
-                            $this->getEditButton($sitemap->id),
-                            $this->getDeleteButton($sitemap->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::FRONTEND_BTN => ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? $this->getFrontendModelButton($sitemap) : ''),
+                        'generate-btn' => $this->getActionButton('generate', $sitemap->getId(), 'btn btn-warning generate', 'rss', 'Generate'),
+                        static::EDIT_BTN => $this->getEditButton($sitemap->id),
+                        static::DELETE_BTN => $this->getDeleteButton($sitemap->id),
+                    ],
                 ];
             },
             $data

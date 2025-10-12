@@ -261,13 +261,10 @@ class TaxClasses extends AdminManageFrontendModelsPage
                     'ID' => $taxClass->id,
                     'Website' => $taxClass->getWebsiteId() == null ? 'All websites' : $taxClass->getWebsite()->domain,
                     'Class Name' => $taxClass->getClassName(),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($taxClass->id),
-                            $this->getDeleteButton($taxClass->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($taxClass->id),
+                        static::DELETE_BTN => $this->getDeleteButton($taxClass->id),
+                    ],
                 ];
             },
             $data

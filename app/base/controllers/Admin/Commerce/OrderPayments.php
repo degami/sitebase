@@ -266,14 +266,11 @@ class OrderPayments extends AdminManageFrontendModelsPage
                     'Payment Method' => $orderPayment->getPaymentMethod(),
                     'Transaction Id' => $orderPayment->getTransactionId(),
                     'Transaction Amount' => $this->getUtils()->formatPrice($orderPayment->getTransactionAmount(), $orderPayment->getCurrencyCode()),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getViewButton($orderPayment->id),                            
-                            $this->getEditButton($orderPayment->id),
-                            $this->getDeleteButton($orderPayment->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::VIEW_BTN => $this->getViewButton($orderPayment->id),                            
+                        static::EDIT_BTN => $this->getEditButton($orderPayment->id),
+                        static::DELETE_BTN => $this->getDeleteButton($orderPayment->id),
+                    ],
                 ];
             },
             $data

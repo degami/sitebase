@@ -262,13 +262,10 @@ class OrderStatuses extends AdminManageFrontendModelsPage
                     'ID' => $orderStatus->id,
                     'Website' => $orderStatus->getWebsiteId() == null ? 'All websites' : $orderStatus->getWebsite()->domain,
                     'Status' => $orderStatus->getStatus(),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($orderStatus->id),
-                            $this->getDeleteButton($orderStatus->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($orderStatus->id),
+                        static::DELETE_BTN => $this->getDeleteButton($orderStatus->id),
+                    ],
                 ];
             },
             $data

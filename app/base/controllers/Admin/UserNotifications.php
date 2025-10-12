@@ -312,13 +312,10 @@ class UserNotifications extends AdminManageFrontendModelsPage
                     'User From' => $notification->getSender()?->getNickname() ?? __('System'),
                     'Message' => $notification->message,
                     'Read' => $notification->getRead() ? __('Yes') : __('No'),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getActionButton('reply', $notification->id, 'secondary', 'corner-down-left', 'Reply'),
-                            $this->getDeleteButton($notification->id),
-                        ]
-                    ),
+                    'actions' => [
+                        'reply-btn' => $this->getActionButton('reply', $notification->id, 'secondary', 'corner-down-left', 'Reply'),
+                        static::DELETE_BTN => $this->getDeleteButton($notification->id),
+                    ],
                 ];
             },
             $data

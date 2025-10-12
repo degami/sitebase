@@ -442,13 +442,10 @@ class Blocks extends AdminManageModelsPage
                         )
                     ),
                     'Order' => $block->order,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($block->id),
-                            $this->getDeleteButton($block->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($block->id),
+                        static::DELETE_BTN => $this->getDeleteButton($block->id),
+                    ],
                 ];
             },
             $data

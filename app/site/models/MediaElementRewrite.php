@@ -73,4 +73,9 @@ class MediaElementRewrite extends BaseModel
 
         return App::getInstance()->containerMake(Rewrite::class, ['db_row' => $this->rewrite()->fetch()]);
     }
+
+    public static function isExportable() : bool
+    {
+        return false;
+    }
 }

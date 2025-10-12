@@ -476,13 +476,10 @@ class Users extends AdminManageModelsPage
                     'Nickname' => $user->nickname,
                     'Is Locked' => $user->locked ? $this->getUtils()->translate('Yes', locale: $this->getCurrentLocale()) : $this->getUtils()->translate('No', locale: $this->getCurrentLocale()),
                     'Created at' => $user->created_at,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($user->id),
-                            $this->getDeleteButton($user->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($user->id),
+                        static::DELETE_BTN => $this->getDeleteButton($user->id),
+                    ],
                 ];
             },
             $data

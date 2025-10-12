@@ -293,13 +293,10 @@ class Config extends AdminManageModelsPage
                     'Path' => $config->path,
                     'Value' => $config->value,
                     'Is System' => $config->is_system ? $this->getHtmlRenderer()->getIcon('check') : '&nbsp;',
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($config->id),
-                            (!$config->getIsSystem()) ? $this->getDeleteButton($config->id) : '',
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($config->id),
+                        static::DELETE_BTN => (!$config->getIsSystem()) ? $this->getDeleteButton($config->id) : '',
+                    ],
                 ];
             },
             $data

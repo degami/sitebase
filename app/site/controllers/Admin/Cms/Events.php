@@ -296,15 +296,12 @@ class Events extends AdminManageFrontendModelsPage
                     'Locale' => $event->locale,
                     'Title' => $event->title,
                     'Date' => $event->date,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getFrontendModelButton($event),
-                            $this->getTranslationsButton($event),
-                            $this->getEditButton($event->id),
-                            $this->getDeleteButton($event->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::FRONTEND_BTN => $this->getFrontendModelButton($event),
+                        static::TRANSLATIONS_BTN => $this->getTranslationsButton($event),
+                        static::EDIT_BTN => $this->getEditButton($event->id),
+                        static::DELETE_BTN => $this->getDeleteButton($event->id),
+                    ],
                 ];
             },
             $data

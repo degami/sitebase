@@ -82,4 +82,9 @@ class UserDownload extends BaseModel
 
         return $out;
     }
+
+    public static function isExportable() : bool
+    {
+        return false;
+    }
 }

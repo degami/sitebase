@@ -269,13 +269,10 @@ class MediaRewrites extends AdminManageModelsPage
                     'Rewrite - Url' => $elem->getRewrite()?->getUrl() ?? 'Everywhere',
                     'Locale' => $elem->getRewrite()?->getLocale() ?? 'Any',
                     'Owner' => $elem->getOwner()->username,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($elem->id),
-                            $this->getDeleteButton($elem->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($elem->id),
+                        static::DELETE_BTN => $this->getDeleteButton($elem->id),
+                    ],
                 ];
             },
             $data

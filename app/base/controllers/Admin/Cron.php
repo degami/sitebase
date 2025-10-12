@@ -410,14 +410,11 @@ class Cron extends AdminManageModelsPage
                     'Callable' => $task->cron_task_callable,
                     'Schedule' => '<a href="' . $task->getInfoUrl() . '" target="_blank">' . $task->schedule . '</a>',
                     'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($task->id),
-                            $this->getDeleteButton($task->id),
-                            $this->getRunButton($task->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($task->id),
+                        static::DELETE_BTN => $this->getDeleteButton($task->id),
+                        'run-btn' => $this->getRunButton($task->id),
+                    ],
                 ];
             },
             $data

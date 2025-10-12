@@ -135,9 +135,9 @@ class Elasticsearch extends AdminPage
             $tableContents[] = [
                 'Type' => $type, 
                 'Count' => 0, 
-                'actions' => implode("", [
-                    $this->getActionButton('reindex', $type, 'secondary', 'refresh-cw', 'Reindex'),
-                ])
+                'actions' => [
+                    'reindex-btn' => $this->getActionButton('reindex', $type, 'secondary', 'refresh-cw', 'Reindex'),
+                ],
             ];
         }
 

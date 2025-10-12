@@ -247,13 +247,10 @@ class Websites extends AdminManageModelsPage
                     'Domain' => $website->domain,
                     'Aliases' => $website->aliases,
                     'Default Locale' => $website->default_locale,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($website->id),
-                            $this->getDeleteButton($website->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($website->id),
+                        static::DELETE_BTN => $this->getDeleteButton($website->id),
+                    ],
                 ];
             },
             $data

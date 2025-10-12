@@ -393,14 +393,11 @@ class Orders extends AdminManageFrontendModelsPage
                     'Admin Total' => $this->getUtils()->formatPrice($order->getAdminTotalInclTax(), $order->getAdminCurrencyCode()),
                     'Created At' => $order->getCreatedAt(),
                     'Updated At' => $order->getUpdatedAt(),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getActionButton('view', $order->id, 'info', 'search', 'View'),
-                            $this->getEditButton($order->id),
-                            $this->getActionButton('cancel', $order->id, 'danger', 'x-circle', 'Cancel'),
-                        ]
-                    ),
+                    'actions' => [
+                        static::VIEW_BTN => $this->getActionButton('view', $order->id, 'info', 'search', 'View'),
+                        static::EDIT_BTN => $this->getEditButton($order->id),
+                        'cancel-btn' => $this->getActionButton('cancel', $order->id, 'danger', 'x-circle', 'Cancel'),
+                    ],
                 ];
             },
             $data

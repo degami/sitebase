@@ -286,13 +286,10 @@ class TaxRates extends AdminManageFrontendModelsPage
                     'Tax Class' => $taxRate->getTaxClass() ? $taxRate->getTaxClass()->getClassName() : 'N/A',
                     'Country' => $taxRate->getCountryCode(),
                     'Rate' => $taxRate->getRate() . ' %',
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($taxRate->id),
-                            $this->getDeleteButton($taxRate->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($taxRate->id),
+                        static::DELETE_BTN => $this->getDeleteButton($taxRate->id),
+                    ],
                 ];
             },
             $data

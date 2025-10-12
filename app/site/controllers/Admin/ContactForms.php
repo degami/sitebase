@@ -32,6 +32,7 @@ use App\Site\Models\ContactSubmission;
 use App\Site\Controllers\Admin\Json\ContactCallback;
 use App\App;
 use App\Site\Models\ContactDefinition;
+use App\Base\Abstracts\Models\BaseModel;
 
 /**
  * "ContactForms" Admin Page
@@ -80,10 +81,45 @@ class ContactForms extends AdminManageFrontendModelsPage
             if ($this->template_data['action'] == 'submissions') {
                 $collection->addCondition(['contact_id' => $this->getRequest()->get('contact_id')]);
             }
+
             $data = $this->containerCall([$collection, 'paginate']);
 
+            $adminTableId = 'listing-table-' . strtolower($this->getUtils()->getClassBasename($this->getObjectClass()));
+            $controllerClassName = str_replace("\\","\\\\", static::class);
+            $modelClassName = str_replace("\\","\\\\", $this->getObjectClass());
+
+            if ($this->template_data['action'] != 'submissions' && static::hasMassActions() && !empty($data['items'])) {
+                $this->addBatchDeleteButton($modelClassName, $adminTableId);
+                $this->addBatchEditButton($controllerClassName, $modelClassName, $adminTableId);
+            }
+
+            $tableElements = $this->getTableElements($data['items']);
+
+            if ($this->template_data['action'] != 'submissions' && static::hasMassActions()) {
+                /** @var BaseModel $firstElem */
+                $primaryKey = App::getInstance()->containerCall([$collection->getClassName(), 'getKeyField']);
+
+                $resolvePrimaryKey = function(BaseModel $elem, $primaryKey) {
+                    $out = [];
+                    foreach ((array)$primaryKey as $pk) {
+                        $out[$pk] = $elem->getData($pk);
+                    }
+
+                    return $out;
+                };
+
+                foreach ($data['items'] as &$datum) {
+                    $datum->setData(['_admin_table_item_pk' => json_encode($resolvePrimaryKey($datum, $primaryKey))]);
+                }
+
+                // copy "_admin_table_item_pk" from data['items'] into tableElements
+                foreach($tableElements as $k => $v) {
+                    $tableElements[$k]['_admin_table_item_pk'] = $data['items'][$k]->getData('_admin_table_item_pk');
+                }
+            }
+
             $this->template_data += [
-                'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items']), $this->getTableHeader(), $this),
+                'table' => $this->getHtmlRenderer()->renderAdminTable($tableElements, $this->getTableHeader(), $this, $adminTableId),
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $data['page_size']),
@@ -98,7 +134,7 @@ class ContactForms extends AdminManageFrontendModelsPage
             ]);
 
             $this->template_data += [
-                'submission_data' => $contact->getContactSubmission($this->getRequest()->get('submission_id'))
+                'submission_data' => $contact->getContactSubmission($this->getRequest()->query->get('submission_id'))
             ];
         }
     }
@@ -520,7 +556,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                         'ID' => $submission->id,
                         'User' => $submission->getUserId() > 0 ? $submission->getOwner()->email : 'guest',
                         'Created At' => $submission->created_at,
-                        'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&contact_id='.$this->getRequest()->get('contact_id').'&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>'
+                        'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&contact_id='.$this->getRequest()->query->get('contact_id').'&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>'
                     ];
                 },
                 $data
@@ -536,16 +572,13 @@ class ContactForms extends AdminManageFrontendModelsPage
                     'Locale' => $contact->locale,
                     'URL' => $contact->url,
                     '# Submissions' => count($contact->getContactSubmissions()),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getFrontendModelButton($contact),
-                            $this->getTranslationsButton($contact),
-                            $this->getActionButton('submissions', $contact->id, 'warning', 'list', 'Submissions'),
-                            $this->getEditButton($contact->id),
-                            $this->getDeleteButton($contact->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::FRONTEND_BTN => $this->getFrontendModelButton($contact),
+                        static::TRANSLATIONS_BTN => $this->getTranslationsButton($contact),
+                        'submissions-btn' => $this->getActionButton('submissions', $contact->id, 'warning', 'list', 'Submissions'),
+                        static::EDIT_BTN => $this->getEditButton($contact->id),
+                        static::DELETE_BTN => $this->getDeleteButton($contact->id),
+                    ],
                 ];
             },
             $data

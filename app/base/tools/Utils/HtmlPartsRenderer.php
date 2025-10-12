@@ -30,6 +30,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Models\Rewrite;
 use App\Base\Routing\RouteInfo;
 use App\App;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Controllers\Admin\Login;
@@ -846,7 +847,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'td',
-                                'text' => '<label class="checkbox"><input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span></label>',
+                                'text' => isset($elem['actions'][AdminManageModelsPage::EDIT_BTN]) || isset($elem['actions'][AdminManageModelsPage::DELETE_BTN]) ? '<label class="checkbox"><input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span></label>' : '',
                                 'scope' => 'col',
                                 'attributes' => ['class' => 'nowrap'],
                             ]]
@@ -876,7 +877,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             TagElement::class,
                             ['options' => [
                                 'tag' => 'td',
-                                'text' => $elem['actions'] ?? '',
+                                'text' => is_array($elem['actions']) ? implode(" ", $elem['actions']) : $elem['actions'] ?? '',
                                 'attributes' => ['class' => 'text-right nowrap'],
                             ]]
                         )

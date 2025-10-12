@@ -38,4 +38,8 @@ use DateTime;
  */
 class ContactDefinition extends BaseModel
 {
+    public static function isExportable() : bool
+    {
+        return false;
+    }
 }

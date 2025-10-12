@@ -313,13 +313,10 @@ class Links extends AdminManageFrontendModelsPage
                     'Locale' => $link->locale,
                     'Title' => $link->title,
                     'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($link->id),
-                            $this->getDeleteButton($link->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($link->id),
+                        static::DELETE_BTN => $this->getDeleteButton($link->id),
+                    ],
                 ];
             },
             $data

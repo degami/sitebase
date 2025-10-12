@@ -68,7 +68,7 @@ class Downloads extends LoggedUserPage
      */
     public function getTemplateData(): array
     {
-        $page = $this->getRequest()->get('page') ?? 0;
+        $page = $this->getRequest()->query->get('page') ?? 0;
         $total = $this->getDownloads()?->count() ?? 0;
 
         $downloads = $this->getDownloads()?->limit(self::ITEMS_PER_PAGE, $page * self::ITEMS_PER_PAGE)->getItems() ?? [];

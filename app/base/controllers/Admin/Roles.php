@@ -193,13 +193,10 @@ class Roles extends AdminManageModelsPage
                 return [
                     'ID' => $role->id,
                     'Name' => $role->name,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($role->id),
-                            $this->getDeleteButton($role->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($role->id),
+                        static::DELETE_BTN => $this->getDeleteButton($role->id),
+                    ],
                 ];
             },
             $data

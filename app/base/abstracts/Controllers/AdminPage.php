@@ -36,6 +36,8 @@ abstract class AdminPage extends BaseHtmlPage
 {
     use AdminTrait;
 
+    const BACK_BTN = 'back-btn';
+
     /**
      * @var string page title
      */
@@ -263,7 +265,7 @@ abstract class AdminPage extends BaseHtmlPage
             }
         }
 
-        $this->addActionLink('back-btn', 'back-btn', $this->getHtmlRenderer()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', locale: $this->getCurrentLocale()), $this->getControllerUrl() . $query_params, 'btn btn-sm btn-outline-dark');
+        $this->addActionLink(static::BACK_BTN, static::BACK_BTN, $this->getHtmlRenderer()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', locale: $this->getCurrentLocale()), $this->getControllerUrl() . $query_params, 'btn btn-sm btn-outline-dark');
     }
 
     /**

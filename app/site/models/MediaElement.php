@@ -387,4 +387,9 @@ class MediaElement extends BaseModel
     {
         return true;
     }
+
+    public static function isExportable() : bool
+    {
+        return true;
+    }
 }

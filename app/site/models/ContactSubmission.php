@@ -108,4 +108,9 @@ class ContactSubmission extends BaseModel
         }
         return $data;
     }
+
+    public static function isExportable() : bool
+    {
+        return true;
+    }
 }

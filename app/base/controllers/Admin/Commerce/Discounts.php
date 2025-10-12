@@ -296,13 +296,10 @@ class Discounts extends AdminManageFrontendModelsPage
                     'Active' => $discount->getActive() ? 'Yes' : 'No',
                     'Discount Amount' => $discount->getDiscountAmount(),
                     'Discount Type' => $discount->getDiscountType(),
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getEditButton($discount->id),
-                            $this->getDeleteButton($discount->id),
-                        ]
-                    ),
+                    'actions' => [
+                        static::EDIT_BTN => $this->getEditButton($discount->id),
+                        static::DELETE_BTN => $this->getDeleteButton($discount->id),
+                    ],
                 ];
             },
             $data

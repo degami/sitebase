@@ -256,13 +256,10 @@ class ApplicationLogs extends AdminManageModelsPage
                     'Level' => $log->level,
                     'Is Exception' => $log->is_exception ? 'true' : 'false',
                     'Created At' => $log->created_at,
-                    'actions' => implode(
-                        " ",
-                        [
-                            $this->getActionButton('details', $log->id, 'primary', 'zoom-in', 'Details'),
-                            $this->getDeleteButton($log->id),
-                        ]
-                    ),
+                    'actions' => [
+                        'details-btn' => $this->getActionButton('details', $log->id, 'primary', 'zoom-in', 'Details'),
+                        static::DELETE_BTN => $this->getDeleteButton($log->id),
+                    ],
                 ];
             },
             $data

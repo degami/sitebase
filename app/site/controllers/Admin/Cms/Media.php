@@ -107,7 +107,7 @@ class Media extends AdminManageModelsPage
 
 
         if (($this->template_data['action'] ?? 'list') == 'edit') {
-            if ($this->containerCall([$this->getObject(), 'canSaveVersions'])) {
+            if ($this->getEnvironment()->getVariable('ENABLE_VERSIONING') && $this->containerCall([$this->getObject(), 'canSaveVersions'])) {
                 $this->addVersionsButton();
             }
             if ($this->containerCall([$this->getObject(), 'canBeDuplicated'])) {

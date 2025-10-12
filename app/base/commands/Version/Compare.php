@@ -37,29 +37,19 @@ class Compare extends BaseCommand
             return self::FAILURE;
         }
 
-        // Ottieni diff tramite il metodo del model
         $diff = $v1->compareWith($v2);
 
-        // Trasforma il diff ricorsivo in righe flat per la tabella
         $rows = $this->flattenDiffForTable($diff);
 
-        // Mostra tabella
         $this->renderTitle("Compare Version $id1 vs $id2");
         $this->renderTable(
-            ['Campo', "Versione $id1", "Versione $id2"],
+            ['Field', "Version $id1", "Version $id2"],
             $rows
         );
 
         return self::SUCCESS;
     }
 
- /**
-     * Trasforma il diff ricorsivo in righe flat per la tabella
-     *
-     * @param array $diff
-     * @param string $prefix
-     * @return array
-     */
     private function flattenDiffForTable($diff, string $prefix = ''): array
     {
         $rows = [];
@@ -90,12 +80,6 @@ class Compare extends BaseCommand
         return $rows;
     }
 
-    /**
-     * Converte i valori in stringhe leggibili
-     *
-     * @param mixed $value
-     * @return string
-     */
     private function formatValue($value): string
     {
         if (is_array($value) && isset($value['__class'], $value['__primaryKey'])) {
@@ -111,16 +95,13 @@ class Compare extends BaseCommand
 
     private function wrapCliText(string $text, int $width = 50): string
     {
-        // togli markup temporaneamente per calcolare correttamente la larghezza
         $plain = strip_tags(preg_replace('/<[^>]+>/', '', $text));
         if (mb_strlen($plain) <= $width) {
             return $text;
         }
 
-        // wordwrap con \n → Symfony Table gestisce bene le nuove righe
         $wrapped = wordwrap($plain, $width, "\n", true);
 
-        // riapplica markup se serve
         if (str_contains($text, '<fg=red>')) {
             $wrapped = "<fg=red>$wrapped</>";
         } elseif (str_contains($text, '<fg=green>')) {

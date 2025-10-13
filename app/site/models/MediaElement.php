@@ -313,7 +313,7 @@ class MediaElement extends BaseModel
     {
         $this->checkLoaded();
 
-        return preg_match("/^image\/.*?/", $this->getMimetype());
+        return preg_match("/^image\/.*?/", (string) $this->getMimetype());
     }
 
     /**

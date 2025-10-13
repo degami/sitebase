@@ -79,7 +79,7 @@ class ContactForms extends AdminManageFrontendModelsPage
             $collection = $this->containerCall([static::getObjectClass(), 'getCollection']);
             $collection->addOrder($this->getRequest()->query->all('order'));
             if ($this->template_data['action'] == 'submissions') {
-                $collection->addCondition(['contact_id' => $this->getRequest()->get('contact_id')]);
+                $collection->addCondition(['contact_id' => $this->getRequest()->query->get('contact_id')]);
             }
 
             $data = $this->containerCall([$collection, 'paginate']);
@@ -152,7 +152,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      */
     public static function getObjectClass(): string
     {
-        if ((App::getInstance()->getEnvironment()->getRequest()->get('action') ?? 'list') == 'submissions') {
+        if ((App::getInstance()->getEnvironment()->getRequest()->query->get('action') ?? 'list') == 'submissions') {
             return ContactSubmission::class;
         }
         return Contact::class;
@@ -165,7 +165,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      */
     protected function getObjectIdQueryParam(): string
     {
-        if (($this->getRequest()->get('action') ?? 'list') == 'submissions') {
+        if (($this->getRequest()->query->get('action') ?? 'list') == 'submissions') {
             return 'submission_id';
         }
         return 'contact_id';
@@ -200,7 +200,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         /** @var Contact $contact */
         $contact = $this->getObject();
 
@@ -306,7 +306,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                     $form->addField('addmore', [
                         'type' => 'submit',
                         'value' => 'Add more',
-                        'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.contactcallback') . '?action=' . $this->getRequest()->get('action') . '&contact_id=' . $this->getRequest()->get('contact_id'),
+                        'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.contactcallback') . '?action=' . $this->getRequest()->query->get('action') . '&contact_id=' . $this->getRequest()->query->get('contact_id'),
                         'event' => [
                             [
                                 'event' => 'click',

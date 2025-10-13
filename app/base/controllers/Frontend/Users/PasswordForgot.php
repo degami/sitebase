@@ -161,7 +161,7 @@ class PasswordForgot extends FormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        if ($this->getRequest()->get('confirmation_code') && ($user = User::getCollection()->where(['confirmation_code' => $this->getRequest()->get('confirmation_code')])->getFirst()) && $user->getId()) {
+        if ($this->getRequest()->query->get('confirmation_code') && ($user = User::getCollection()->where(['confirmation_code' => $this->getRequest()->query->get('confirmation_code')])->getFirst()) && $user->getId()) {
             $form
                 ->setFormId('changepass')
                 ->addField('user_id', [

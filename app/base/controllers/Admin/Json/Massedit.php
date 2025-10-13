@@ -57,8 +57,8 @@ class Massedit extends AdminJsonPage
     protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
-        $modelClassName = $this->getRequest()->get('model_class_name');
-        $controllerClassName = $this->getRequest()->get('controller_class_name');
+        $modelClassName = $this->getRequest()->query->get('model_class_name');
+        $controllerClassName = $this->getRequest()->query->get('controller_class_name');
 
         if (strtoupper($this->getRequest()->getMethod()) == 'POST') {
             $data = $this->getRequest()->request->all()['data'];

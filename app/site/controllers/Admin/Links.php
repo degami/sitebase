@@ -97,7 +97,7 @@ class Links extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $link = $this->getObject();
 
         $form->addField('action', [
@@ -111,7 +111,7 @@ class Links extends AdminManageFrontendModelsPage
                     'taxonomy-btn',
                     'taxonomy-btn',
                     '&#9776; Terms',
-                    $this->getUrl('crud.app.site.controllers.admin.json.linkterms', ['id' => $this->getRequest()->get('link_id')]) . '?link_id=' . $this->getRequest()->get('link_id') . '&action=new',
+                    $this->getUrl('crud.app.site.controllers.admin.json.linkterms', ['id' => $this->getRequest()->query->get('link_id')]) . '?link_id=' . $this->getRequest()->query->get('link_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall-trough
@@ -180,7 +180,7 @@ class Links extends AdminManageFrontendModelsPage
                 break;
 
             case 'term_deassoc':
-                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
+                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->query->get('term_id')]);
                 $form->addField('link_id', [
                     'type' => 'hidden',
                     'default_value' => $link->id,

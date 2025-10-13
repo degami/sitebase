@@ -78,7 +78,7 @@ class PageMedia extends AdminJsonPage
         $mediaController = $this->containerMake(Media::class);
         $form = $mediaController->getForm();
 
-        $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->get('action') . ($this->getRequest()->get('media_id') ? '&media_id=' . $this->getRequest()->get('media_id') : ''));
+        $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->query->get('action') . ($this->getRequest()->query->get('media_id') ? '&media_id=' . $this->getRequest()->query->get('media_id') : ''));
         $form->addField(
             'page_id',
             [
@@ -91,7 +91,7 @@ class PageMedia extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'gallery' => $galleryData,
-            'html' => ($this->getRequest()->get('action') == 'new' ? "<div class=\"page-gallery\">" . implode("", $gallery) . "</div><hr />" : '') . $form->render(),
+            'html' => ($this->getRequest()->query->get('action') == 'new' ? "<div class=\"page-gallery\">" . implode("", $gallery) . "</div><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

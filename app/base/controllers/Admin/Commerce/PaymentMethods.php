@@ -247,12 +247,12 @@ class PaymentMethods extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
 
         if ($type == 'config') {
             $this->addBackButton();
 
-            $code = $this->getRequest()->get('code');
+            $code = $this->getRequest()->query->get('code');
 
             $form->addField('action', [
                 'type' => 'value',
@@ -302,7 +302,7 @@ class PaymentMethods extends AdminFormPage
      */
     public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
-        $code = $this->getRequest()->get('code');
+        $code = $this->getRequest()->query->get('code');
         $values = $form->values()->toArray();
 
         unset($values['action']);

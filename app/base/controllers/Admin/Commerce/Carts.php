@@ -106,7 +106,7 @@ class Carts extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
 
         /**
          * @var CartModel $cart
@@ -133,7 +133,7 @@ class Carts extends AdminManageFrontendModelsPage
                     'discount-btn',
                     'discount-btn',
                     $this->getHtmlRenderer()->getIcon('percent') . 'Discounts',
-                    $this->getUrl('crud.app.base.controllers.admin.json.cartdiscounts', ['id' => $this->getRequest()->get('cart_id')]) . '?cart_id=' . $this->getRequest()->get('cart_id') . '&action=new_discount',
+                    $this->getUrl('crud.app.base.controllers.admin.json.cartdiscounts', ['id' => $this->getRequest()->query->get('cart_id')]) . '?cart_id=' . $this->getRequest()->query->get('cart_id') . '&action=new_discount',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
 
@@ -141,7 +141,7 @@ class Carts extends AdminManageFrontendModelsPage
                     'billing-btn',
                     'billing-btn',
                     $this->getHtmlRenderer()->getIcon('credit-card') . 'Billing',
-                    $this->getUrl('crud.app.base.controllers.admin.json.cartbilling', ['id' => $this->getRequest()->get('cart_id')]) . '?cart_id=' . $this->getRequest()->get('cart_id') . '&action=billing',
+                    $this->getUrl('crud.app.base.controllers.admin.json.cartbilling', ['id' => $this->getRequest()->query->get('cart_id')]) . '?cart_id=' . $this->getRequest()->query->get('cart_id') . '&action=billing',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
 
@@ -150,7 +150,7 @@ class Carts extends AdminManageFrontendModelsPage
                         'shipping-btn',
                         'shipping-btn',
                         $this->getHtmlRenderer()->getIcon('truck') . 'Shipping',
-                        $this->getUrl('crud.app.base.controllers.admin.json.cartshipping', ['id' => $this->getRequest()->get('cart_id')]) . '?cart_id=' . $this->getRequest()->get('cart_id') . '&action=shipping',
+                        $this->getUrl('crud.app.base.controllers.admin.json.cartshipping', ['id' => $this->getRequest()->query->get('cart_id')]) . '?cart_id=' . $this->getRequest()->query->get('cart_id') . '&action=shipping',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
                 }
@@ -261,7 +261,7 @@ class Carts extends AdminManageFrontendModelsPage
             case 'remove_discount':
                 $form->addField('discount_id', [
                     'type' => 'hidden',
-                    'default_value' => $this->getRequest()->get('discount_id'),
+                    'default_value' => $this->getRequest()->query->get('discount_id'),
                 ]);
                 $form->addField('is_json', [
                     'type' => 'hidden',
@@ -375,7 +375,7 @@ class Carts extends AdminManageFrontendModelsPage
                 $this->addSuccessFlashMessage($this->getUtils()->translate("Cart Saved."));
                 break;
             case 'delete_cart_item':
-                $cartItemId = $this->getRequest()->get('cart_item_id');
+                $cartItemId = $this->getRequest()->query->get('cart_item_id');
                 if ($cartItemId) {
                     if ($cart->getCartItem($cartItemId)) {
                         $cart->removeItem($cartItemId)->calculate()->persist();

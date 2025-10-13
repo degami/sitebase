@@ -87,7 +87,7 @@ class UserAddresses extends AdminJsonPage
         $userController = $this->containerMake(Users::class);
         $form = $userController->getForm();
 
-        $form->setAction($this->getUrl('admin.users') . '?user_id=' . $user->getId() . ($this->getRequest()->get('address_id') ? '&address_id' . $this->getRequest()->get('address_id') : '') . '&action=' . $this->getRequest()->get('action'));
+        $form->setAction($this->getUrl('admin.users') . '?user_id=' . $user->getId() . ($this->getRequest()->query->get('address_id') ? '&address_id' . $this->getRequest()->query->get('address_id') : '') . '&action=' . $this->getRequest()->query->get('action'));
         $form->addField(
             'user_id',
             [
@@ -100,7 +100,7 @@ class UserAddresses extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'addresses' => $addressesData,
-            'html' => ($this->getRequest()->get('action') == 'newaddress' ? "<div class=\"user-addresses\">" . implode("", $addresses) . "</div><hr /><h4>" . $this->getUtils()->translate("Add a new one") . "</h4>" : '') . $form->render(),
+            'html' => ($this->getRequest()->query->get('action') == 'newaddress' ? "<div class=\"user-addresses\">" . implode("", $addresses) . "</div><hr /><h4>" . $this->getUtils()->translate("Add a new one") . "</h4>" : '') . $form->render(),
             'js' => "",
         ];
     }

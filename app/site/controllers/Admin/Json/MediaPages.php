@@ -77,11 +77,11 @@ class MediaPages extends AdminJsonPage
         );
 
 
-        if ($this->getRequest()->get('action') == 'media_deassoc') {
+        if ($this->getRequest()->query->get('action') == 'media_deassoc') {
             $pagesController = $this->containerMake(Pages::class);
             $form = $pagesController->getForm();
 
-            $form->setAction($this->getUrl('admin.pages') . '?action=' . $this->getRequest()->get('action'). ($this->getRequest()->get('page_id') ? '&page_id=' . $this->getRequest()->get('page_id') : ''));
+            $form->setAction($this->getUrl('admin.pages') . '?action=' . $this->getRequest()->query->get('action'). ($this->getRequest()->query->get('page_id') ? '&page_id=' . $this->getRequest()->query->get('page_id') : ''));
             $form->addField(
                 'media_id',
                 [
@@ -93,7 +93,7 @@ class MediaPages extends AdminJsonPage
             $mediaController = $this->containerMake(\App\Site\Controllers\Admin\Cms\Media::class);
             $form = $mediaController->getForm();
 
-            $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->get('action') . ($this->getRequest()->get('page_id') ? '&page_id=' . $this->getRequest()->get('page_id') : ''));
+            $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->query->get('action') . ($this->getRequest()->query->get('page_id') ? '&page_id=' . $this->getRequest()->query->get('page_id') : ''));
             $form->addField(
                 'media_id',
                 [
@@ -107,7 +107,7 @@ class MediaPages extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'pages' => $pagesData,
-            'html' => ($this->getRequest()->get('action') == 'page_assoc' ? "<ul class=\"elements_list list-group\"><li class=\"list-group-item d-flex flex-row align-items-center\">" . implode("</li><li class=\"list-group-item d-flex flex-row align-items-center\">", $pages) . "</li></ul><hr />" : '') . $form->render(),
+            'html' => ($this->getRequest()->query->get('action') == 'page_assoc' ? "<ul class=\"elements_list list-group\"><li class=\"list-group-item d-flex flex-row align-items-center\">" . implode("</li><li class=\"list-group-item d-flex flex-row align-items-center\">", $pages) . "</li></ul><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

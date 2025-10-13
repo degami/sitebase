@@ -122,7 +122,7 @@ class Events extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $event = $this->getObject();
 
         $form->addField('action', [

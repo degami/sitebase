@@ -62,7 +62,7 @@ class CartBilling extends AdminJsonPage
         $cartsController = $this->containerMake(Carts::class);
         $form = $cartsController->getForm();
 
-        $form->setAction($this->getUrl('admin.carts') . '?action=' . $this->getRequest()->get('action').'&cart_id='.$this->getRequest()->get('cart_id'));
+        $form->setAction($this->getUrl('admin.carts') . '?action=' . $this->getRequest()->query->get('action').'&cart_id='.$this->getRequest()->query->get('cart_id'));
         $form->addField(
             'cart_id',
             [

@@ -46,7 +46,7 @@ class BanIP extends AdminFormPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if ($this->getRequest()->get('ip') == null) {
+        if ($this->getRequest()->query->get('ip') == null) {
             $this->addWarningFlashMessage('Missing IP address');
             return $this->doRedirect($this->getUrl('admin.dashboard'));
         }
@@ -90,7 +90,7 @@ class BanIP extends AdminFormPage
     {
         $form->addField('ip', [
             'type' => 'hidden',
-            'default_value' => $this->getRequest()->get('ip'),
+            'default_value' => $this->getRequest()->query->get('ip'),
         ])
         ->addField('delete_fromdb', [
             'title' => 'Remove also request log entries',
@@ -100,7 +100,7 @@ class BanIP extends AdminFormPage
             'default_value' => 1,
         ]);
 
-        $this->fillConfirmationForm("Do you really want to ban IP: " . $this->getRequest()->get('ip'), $form, $this->getUrl('admin.dashboard'));
+        $this->fillConfirmationForm("Do you really want to ban IP: " . $this->getRequest()->query->get('ip'), $form, $this->getUrl('admin.dashboard'));
 
         return $form;
     }

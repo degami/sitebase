@@ -78,16 +78,16 @@ class Logs extends AdminPage
     public function getTemplateData(): array
     {
         $this->template_data = [
-            'logtype' => $this->getRequest()->get('logtype') ?? null,
-            'action' => $this->getRequest()->get('logtype') ? 'logs' : 'buttons',
+            'logtype' => $this->getRequest()->query->get('logtype') ?? null,
+            'action' => $this->getRequest()->query->get('logtype') ? 'logs' : 'buttons',
         ];
 
         $header = $data = [];
         $log = null;
 
-        if ($this->getRequest()->get('logtype')) {
-            if ($this->getRequest()->get('id')) {
-                $this->addBackButton(['logtype' => $this->getRequest()->get('logtype')]);
+        if ($this->getRequest()->query->get('logtype')) {
+            if ($this->getRequest()->query->get('id')) {
+                $this->addBackButton(['logtype' => $this->getRequest()->query->get('logtype')]);
             } else {
                 $this->addBackButton();
             }
@@ -119,7 +119,7 @@ class Logs extends AdminPage
                 $paginate_params['condition'] = array_filter($conditions);
             }
 
-            switch ($this->getRequest()->get('logtype')) {
+            switch ($this->getRequest()->query->get('logtype')) {
                 case 'request':
                     $this->page_title = 'Requests Logs';
 

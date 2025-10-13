@@ -52,7 +52,7 @@ abstract class AdminFormPage extends AdminPage
     ) {
         parent::__construct($container, $request, $route_info);
         $this->template_data = [
-            'action' => $this->getRequest()->get('action') ?? 'list',
+            'action' => $this->getRequest()->query->get('action') ?? 'list',
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
                 ->setValidate([[$this, 'formValidate']])
                 ->setSubmit([[$this, 'formSubmitted']]),
@@ -87,7 +87,7 @@ abstract class AdminFormPage extends AdminPage
      */
     protected function beforeRender(): BasePage|Response
     {
-        if ($this->getForm() && $this->getRequest()->get('asJson') == 1) {
+        if ($this->getForm() && $this->getRequest()->query->get('asJson') == 1) {
             if ($this->getForm()->isSubmitted()) {
                 $this->getApp()->event('form_submitted', ['form' => $this->getForm()]);
                 $formResults = $this->getForm()->getSubmitResults(get_class($this) . '::formSubmitted');

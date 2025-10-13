@@ -44,7 +44,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      */
     public function getObjectClass(): mixed
     {
-        return $this->getRequest()->get('object_class');
+        return $this->getRequest()->query->get('object_class');
     }
 
     /**
@@ -56,7 +56,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      */
     public function getObject() : mixed
     {
-        return $this->containerMake($this->getRequest()->get('object_class'));
+        return $this->containerMake($this->getRequest()->query->get('object_class'));
     }
 
     /**

@@ -123,7 +123,7 @@ class Cron extends AdminManageModelsPage
 
     public function beforeRender() : BasePage|Response
     {
-        if (($this->getRequest()->get('action') ?? 'list') == 'list') {
+        if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
             $baseTaskClasses = ClassFinder::getClassesInNamespace(App::BASE_CRON_TASKS_NAMESPACE);
             $taskClasses = ClassFinder::getClassesInNamespace(App::CRON_TASKS_NAMESPACE);
             foreach (array_merge($baseTaskClasses, $taskClasses) as $taskClass) {
@@ -203,7 +203,7 @@ class Cron extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $task = $this->getObject();
 
         $form->addField('action', [

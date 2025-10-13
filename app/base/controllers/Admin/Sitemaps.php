@@ -90,7 +90,7 @@ class Sitemaps extends AdminManageModelsPage
 
     protected function beforeRender() : BasePage|Response
     {
-        if ($this->getRequest()->get('action') == 'generate') {
+        if ($this->getRequest()->query->get('action') == 'generate') {
             $this->addSuccessFlashMessage($this->getUtils()->translate('Sitemap Generated.'));
             /** @var Sitemap $sitemap */
             $sitemap = $this->getObject();
@@ -115,7 +115,7 @@ class Sitemaps extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $sitemap = $this->getObject();
 
         $form->addField('action', [
@@ -219,7 +219,7 @@ class Sitemaps extends AdminManageModelsPage
                     $form->addField('addmore', [
                         'type' => 'submit',
                         'value' => 'Add more',
-                        'ajax_url' => $this->getUrl('crud.app.base.controllers.admin.json.sitemapcallback') . '?action=' . $this->getRequest()->get('action') . '&sitemap_id=' . $this->getRequest()->get('sitemap_id'),
+                        'ajax_url' => $this->getUrl('crud.app.base.controllers.admin.json.sitemapcallback') . '?action=' . $this->getRequest()->query->get('action') . '&sitemap_id=' . $this->getRequest()->query->get('sitemap_id'),
                         'event' => [
                             [
                                 'event' => 'click',

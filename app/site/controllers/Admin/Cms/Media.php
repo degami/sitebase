@@ -61,12 +61,12 @@ class Media extends AdminManageModelsPage
                 'make_folder', 
                 'make_folder', 
                 $this->getHtmlRenderer()->getIcon('folder-plus') . '&nbsp;' .$this->getUtils()->translate('Create Folder'),
-                $this->getControllerUrl().'?action=addfolder&parent_id='.$this->getRequest()->get('parent_id'),
+                $this->getControllerUrl().'?action=addfolder&parent_id='.$this->getRequest()->query->get('parent_id'),
                 'btn btn-sm btn-outline-warning',
             );
 
-            if ($this->getRequest()->get('parent_id')) {
-                $parent_id = $this->getRequest()->get('parent_id');
+            if ($this->getRequest()->query->get('parent_id')) {
+                $parent_id = $this->getRequest()->query->get('parent_id');
                 if (is_numeric($parent_id)) {
                     $parentObj = MediaElement::load($parent_id);
 
@@ -81,7 +81,7 @@ class Media extends AdminManageModelsPage
             }
 
         } elseif (($this->template_data['action'] ?? 'list') == 'usage') {
-            $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
+            $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
             $elem_data = $media->getData();
             $elem_data['owner'] = $media->getOwner()->username;
 
@@ -100,7 +100,7 @@ class Media extends AdminManageModelsPage
                         $page = $this->containerMake(Page::class, ['db_row' => $el]);
                         return ['url' => $page->getRewrite()->getUrl(), 'title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                     },
-                    $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->get('media_id'))->page()->fetchAll()
+                    $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->query->get('media_id'))->page()->fetchAll()
                 ),
             ];
         }
@@ -181,8 +181,8 @@ class Media extends AdminManageModelsPage
     {
         $collection = parent::getCollection();
 
-        if ($this->getRequest()->get('parent_id')) {
-            $parent_id = $this->getRequest()->get('parent_id');
+        if ($this->getRequest()->query->get('parent_id')) {
+            $parent_id = $this->getRequest()->query->get('parent_id');
             if (is_numeric($parent_id)) {
                 $collection->addCondition(['parent_id' => $parent_id]);
             }
@@ -209,7 +209,7 @@ class Media extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         /** @var MediaElement $media */
         $media = $this->getObject();
 
@@ -222,7 +222,7 @@ class Media extends AdminManageModelsPage
             case 'addfolder':
 
                 $parentName = 'Root Folder';
-                $parent_id = $this->getRequest()->get('parent_id');
+                $parent_id = $this->getRequest()->query->get('parent_id');
                 if (is_numeric($parent_id)) {
                     $parentObj = MediaElement::load($parent_id);
 
@@ -289,7 +289,7 @@ class Media extends AdminManageModelsPage
                     'pages-btn',
                     'pages-btn',
                     '&#9776; Pages',
-                    $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $this->getRequest()->get('media_id')]) . '?media_id=' . $this->getRequest()->get('media_id') . '&action=page_assoc',
+                    $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $this->getRequest()->query->get('media_id')]) . '?media_id=' . $this->getRequest()->query->get('media_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
 
@@ -303,8 +303,8 @@ class Media extends AdminManageModelsPage
             case 'new':
 
                 $destinationDir = App::getDir(App::MEDIA);
-                if ($this->getRequest()->get('parent_id')) {
-                    $parent_id = $this->getRequest()->get('parent_id');
+                if ($this->getRequest()->query->get('parent_id')) {
+                    $parent_id = $this->getRequest()->query->get('parent_id');
                     if (is_numeric($parent_id)) {
                         $parentFolder = MediaElement::load($parent_id);
                         $destinationDir = $parentFolder->getPath();
@@ -316,11 +316,19 @@ class Media extends AdminManageModelsPage
                     }
                 }
 
-                $form->addField('upload_file', [
+                $form->addField('media', [
+                    'type' => 'tag_container',
+                    'attributes' => [
+                        'class' => 'row',
+                    ],
+                ])
+                //$form
+                ->addField('upload_file', [
                     'type' => 'file',
                     'destination' => $destinationDir,
                     'rename_on_existing' => true,
                     'title' => 'Upload new file',
+                    'container_class' => 'col-9',
                 ])
                 ->addField('lazyload', [
                     'type' => 'switchbox',
@@ -331,22 +339,23 @@ class Media extends AdminManageModelsPage
                     'no_value' => 0,
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
+                    'container_class' => 'col-3',
                 ]);
 
                 $this->addSubmitButton($form);
 
-                if ($this->getRequest()->get('page_id')) {
+                if ($this->getRequest()->query->get('page_id')) {
                     /** @var Page $page */
-                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
                     $form->addField('page_id', [
                         'type' => 'hidden',
                         'default_value' => $page->getId(),
                     ]);
                 }
 
-                if ($this->getRequest()->get('product_id')) {
+                if ($this->getRequest()->query->get('product_id')) {
                     /** @var DownloadableProduct $product */
-                    $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->get('product_id')]);
+                    $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
                     $form->addField('product_id', [
                         'type' => 'hidden',
                         'default_value' => $product->getId(),
@@ -391,7 +400,7 @@ class Media extends AdminManageModelsPage
                 break;
             case 'page_deassoc':
                 /** @var Page $page */
-                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->getId(),
@@ -443,7 +452,7 @@ class Media extends AdminManageModelsPage
                 break;
             case 'downloadable_product_deassoc':
                 /** @var DownloadableProduct $product */
-                $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->get('product_id')]);
+                $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
                 $form->addField('product_id', [
                     'type' => 'hidden',
                     'default_value' => $product->getId(),
@@ -531,19 +540,19 @@ class Media extends AdminManageModelsPage
             // intentional fall trough
             // no break
             case 'edit':
-                if ($values->upload_file->filepath) {
-                    $media->setPath($values->upload_file->filepath);
+                if ($values->media->upload_file->filepath) {
+                    $media->setPath($values->media->upload_file->filepath);
                 }
-                if ($values->upload_file->filename) {
-                    $media->setFilename($values->upload_file->filename);
+                if ($values->media->upload_file->filename) {
+                    $media->setFilename($values->media->upload_file->filename);
                 }
-                if ($values->upload_file->mimetype) {
-                    $media->setMimetype($values->upload_file->mimetype);
+                if ($values->media->upload_file->mimetype) {
+                    $media->setMimetype($values->media->upload_file->mimetype);
                 }
-                if ($values->upload_file->filesize) {
-                    $media->setFilesize($values->upload_file->filesize);
+                if ($values->media->upload_file->filesize) {
+                    $media->setFilesize($values->media->upload_file->filesize);
                 }
-                if ($values->upload_file->renamed) {
+                if ($values->media->upload_file->renamed) {
                     $this->addInfoFlashMessage(
                         $this->getUtils()->translate(
                             "File was renamed to %s",
@@ -551,7 +560,7 @@ class Media extends AdminManageModelsPage
                         )
                     );
                 }
-                $media->setLazyload($values->lazyload);
+                $media->setLazyload($values->media->lazyload);
 
                 $this->setAdminActionLogData($media->getChangedData());
 
@@ -613,6 +622,10 @@ class Media extends AdminManageModelsPage
         }
         if ($this->getRequest()->request->get('page_id') != null) {
             return new JsonResponse(['success' => true]);
+        }
+        $parent_id = $this->getRequest()->query->get('parent_id') ?? $media->parent_id;
+        if ($parent_id) {
+            return $this->doRedirect($this->getControllerUrl().'?parent_id='.$parent_id);
         }
         return $this->refreshPage();
     }
@@ -704,7 +717,7 @@ class Media extends AdminManageModelsPage
                     'Preview' => $this->getMediaPreview($elem),
                     'Filename - Path' => $elem->getFilename() . '<br /><abbr style="font-size: 0.6rem;">' . $elem->getPath() . '</abbr>',
                     'Mimetype' => $elem->getMimetype(),
-                    'Filesize' => $elem->isDirectory() ? '' : $this->formatBytes($elem->getFilesize()),
+                    'Filesize' => $elem->isDirectory() ? '' : $this->formatBytes((int) $elem->getFilesize()),
                     'Owner' => $elem->getOwner()->username,
                     'Height' => $elem->isImage() ? $elem->getImageBox()?->getHeight() . ' px' : '',
                     'Width' => $elem->isImage() ? $elem->getImageBox()?->getWidth() . ' px' : '',
@@ -725,7 +738,7 @@ class Media extends AdminManageModelsPage
      */
     public function addNewButton()
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new' . ($this->getRequest()->get('parent_id') ? '&parent_id='.$this->getRequest()->get('parent_id') : ''), 'btn btn-sm btn-outline-success');
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new' . ($this->getRequest()->query->get('parent_id') ? '&parent_id='.$this->getRequest()->query->get('parent_id') : ''), 'btn btn-sm btn-outline-success');
     }
 
 

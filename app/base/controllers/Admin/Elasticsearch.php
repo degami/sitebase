@@ -177,13 +177,13 @@ class Elasticsearch extends AdminPage
     {
         $out = parent::beforeRender();
 
-        if ($this->getRequest()->get('action') == 'reindex') {
+        if ($this->getRequest()->query->get('action') == 'reindex') {
             $results = [];
 
             $classes = ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
             foreach ($classes as $modelClass) {
                 $type = strtolower(static::getClassBasename($modelClass));
-                if ($this->getRequest()->get('type') && $type != $this->getRequest()->get('type')) {
+                if ($this->getRequest()->query->get('type') && $type != $this->getRequest()->query->get('type')) {
                     continue;
                 }
     

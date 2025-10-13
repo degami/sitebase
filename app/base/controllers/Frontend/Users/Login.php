@@ -136,14 +136,14 @@ class Login extends FormPage
             if ($this->getEnvironment()->getVariable('USE2FA_USERS') && $this->getAuth()->currentUserHasPassed2FA() != true) {
                 $goto_url = $this->getUrl('frontend.users.twofa');
 
-                if ($this->getRequest()->get('dest')) {
-                    $goto_url .= '?dest'.$this->getRequest()->get('dest');
+                if ($this->getRequest()->query->get('dest')) {
+                    $goto_url .= '?dest'.$this->getRequest()->query->get('dest');
                 }
             } else {
                 $goto_url = $this->getUrl("frontend.users.profile");
 
-                if ($this->getRequest()->get('dest')) {
-                    $tmp = explode(':', base64_decode($this->getRequest()->get('dest')));
+                if ($this->getRequest()->query->get('dest')) {
+                    $tmp = explode(':', base64_decode($this->getRequest()->query->get('dest')));
     
                     if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnvironment()->getVariable('SALT'))) {
                         $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));

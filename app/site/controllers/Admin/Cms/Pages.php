@@ -102,7 +102,7 @@ class Pages extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $page = $this->getObject();
 
         $form->addField('action', [
@@ -116,14 +116,14 @@ class Pages extends AdminManageFrontendModelsPage
                     'media-btn',
                     'media-btn',
                     '&#9776; Media',
-                    $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
+                    $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
                 $this->addActionLink(
                     'taxonomy-btn',
                     'taxonomy-btn',
                     '&#9776; Terms',
-                    $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getRequest()->get('page_id')]) . '?page_id=' . $this->getRequest()->get('page_id') . '&action=new',
+                    $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall-trough
@@ -182,7 +182,7 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
 
             case 'media_deassoc':
-                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getRequest()->get('media_id')]);
+                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
@@ -199,7 +199,7 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
 
             case 'term_deassoc':
-                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->get('term_id')]);
+                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->query->get('term_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,

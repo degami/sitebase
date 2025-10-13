@@ -93,7 +93,7 @@ class Queue extends AdminManageModelsPage
     public function beforeRender() : BasePage|Response
     {
         $this->removeAction('new-btn');
-        if (($this->getRequest()->get('action') ?? 'list') == 'list') {
+        if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
             if ($this->checkQueueIsRunning()) {
                 $this->addInfoFlashMessage($this->getUtils()->translate('Queue is running.'), true);
             } else {
@@ -114,8 +114,8 @@ class Queue extends AdminManageModelsPage
     {
         $out = parent::getTemplateData();
 
-        if ($this->getRequest()->get('action') == 'details' && $this->getRequest()->get('message_id')) {
-            $message = $this->containerCall([QueueMessage::class, 'load'], ['id' => $this->getRequest()->get('message_id')]);
+        if ($this->getRequest()->query->get('action') == 'details' && $this->getRequest()->query->get('message_id')) {
+            $message = $this->containerCall([QueueMessage::class, 'load'], ['id' => $this->getRequest()->query->get('message_id')]);
             $out += [
                 'message' => $message,
                 'messageHtml' => $this->getHtmlRenderer()->renderQueueMessage($message),
@@ -137,7 +137,7 @@ class Queue extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         //$message = $this->getObject();
 
         $form->addField('action', [

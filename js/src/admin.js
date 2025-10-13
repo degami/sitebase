@@ -222,10 +222,6 @@
             $(that).appAdmin('showOverlay');
             $('.sidepanel', this).css({'width': '95%'});
 
-//            $(that).data('sidePanelEscUnbind', $(that).appAdmin('createEscHandler', function() {
-//                $(that).appAdmin('closeSidePanel');
-//            }, 'sidePanel'));
-
             if (!$(that).data('sidePanelUnbinders')) {
                 $(that).data('sidePanelUnbinders', []);
             }
@@ -256,11 +252,6 @@
             $('.sidepanel', that).find('.card-block').html('');
             $('.sidepanel', that).find('.card').css({'min-height': 'auto'});
             $('.sidepanel', that).find('.card-block').css({'height': 'auto'});
-
-//            const unbindEsc = $(this).data('sidePanelEscUnbind');
-//            if (unbindEsc) {
-//                unbindEsc();
-//            }
 
             const unbinders = $(this).data('sidePanelUnbinders') || [];
             unbinders.forEach(unbind => {

@@ -120,7 +120,7 @@ class Config extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $configuration = $this->getObject();
 
         $form->addField('action', [
@@ -218,7 +218,7 @@ class Config extends AdminManageModelsPage
          */
         $configuration = $this->getObject();
 
-        if ($this->getRequest()->get('config_id')) {
+        if ($this->getRequest()->query->get('config_id')) {
             if (($values['action'] == 'edit' || $values['action'] == 'delete') && $this->getCache()->has('site.configuration')) {
                 $cached_config = $this->getSiteData()->getCachedConfig();
                 if (isset($cached_config[$configuration->path])) {

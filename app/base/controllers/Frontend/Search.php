@@ -81,7 +81,7 @@ class Search extends FrontendPageWithLang
      */
     public function getTemplateData(): array
     {
-        $page = $this->getRequest()->get('page') ?? 0;
+        $page = $this->getRequest()->query->get('page') ?? 0;
         $search_result = $this->getSearchResult($this->getSearchQuery(), $page);
 
         return [
@@ -100,7 +100,7 @@ class Search extends FrontendPageWithLang
      */
     protected function getSearchQuery(): mixed
     {
-        return $this->getRequest()->get('q');
+        return $this->getRequest()->query->get('q');
     }
 
     /**
@@ -151,7 +151,7 @@ class Search extends FrontendPageWithLang
 
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $locale = $this->getRewrite()?->getLocale() ?? $this->getSiteData()->getDefaultLocale();
-        $page = $this->getRequest()->get('page') ?? 0;
+        $page = $this->getRequest()->query->get('page') ?? 0;
 
         $prefix = 'site.'.$website_id.'.'.$locale.'.';
 

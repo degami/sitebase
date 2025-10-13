@@ -371,7 +371,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addDuplicateButton()
     {
-        $this->addActionLink(static::DUPLICATE_BTN, static::DUPLICATE_BTN, $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-light');
+        $this->addActionLink(static::DUPLICATE_BTN, static::DUPLICATE_BTN, $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->query->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-light');
     }
 
     /**

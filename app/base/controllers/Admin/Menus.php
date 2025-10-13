@@ -161,7 +161,7 @@ class Menus extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $menu = $this->getObject();
 
         $form->addField('action', [
@@ -171,14 +171,14 @@ class Menus extends AdminManageModelsPage
 
         switch ($type) {
             case 'view-menu-name':
-                $this->addLevel($form, $this->getRequest()->get('menu_name'), null);
+                $this->addLevel($form, $this->getRequest()->query->get('menu_name'), null);
 
                 $form
                     ->addMarkup('<div class="clear"></div>')
                     ->addMarkup('<hr />')
                     ->addMarkup('<a class="btn btn-link btn-sm" href="' . $this->getControllerUrl() . '">' . $this->getHtmlRenderer()->getIcon('chevron-left') . 'Back</a>');
                 $this->addSubmitButton($form, true);
-                $form->addMarkup(' <a class="btn btn-success btn-sm" href="' . $this->getControllerUrl() . '?action=new&menu_name=' . $this->getRequest()->get('menu_name') . '">' . $this->getHtmlRenderer()->getIcon('plus') . ' Add new Element</a>');
+                $form->addMarkup(' <a class="btn btn-success btn-sm" href="' . $this->getControllerUrl() . '?action=new&menu_name=' . $this->getRequest()->query->get('menu_name') . '">' . $this->getHtmlRenderer()->getIcon('plus') . ' Add new Element</a>');
 
                 break;
             case 'edit':
@@ -204,8 +204,8 @@ class Menus extends AdminManageModelsPage
                     $menu_position = $menu->position;
                     $menu_breadcrumb = $menu->breadcrumb;
                     $menu_website = $menu->website_id;
-                } elseif ($this->getRequest()->get('menu_name')) {
-                    $menu_menuname = $this->getRequest()->get('menu_name');
+                } elseif ($this->getRequest()->query->get('menu_name')) {
+                    $menu_menuname = $this->getRequest()->query->get('menu_name');
                 }
 
                 $form->addField('title', [

@@ -87,7 +87,7 @@ class Minipaint extends AdminPage
         $content = file_get_contents($filepath);
 
         if (basename($filepath) == 'index.html') {
-            $media = MediaElement::load($this->getRequest()->get('media_id'));
+            $media = MediaElement::load($this->getRequest()->query->get('media_id'));
             $mediaMimeType = $media->getMimetype();
             $minipaintSaveUrl = $this->getUrl('crud.app.site.controllers.admin.minipaintsave', ['media_id' => $media->getId()]);
             $backUrl = $this->getUrl('admin.media'). '?' . http_build_query(['action' => 'edit', 'media_id' => $media->getId()]);

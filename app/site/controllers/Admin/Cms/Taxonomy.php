@@ -101,7 +101,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         $term = $this->getObject();
 
         $form->addField('action', [
@@ -115,7 +115,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'pages-btn',
                     'pages-btn',
                     '&#9776; Pages',
-                    $this->getUrl('crud.app.site.controllers.admin.json.termpages', ['id' => $this->getRequest()->get('term_id')]) . '?term_id=' . $this->getRequest()->get('term_id') . '&action=page_assoc',
+                    $this->getUrl('crud.app.site.controllers.admin.json.termpages', ['id' => $this->getRequest()->query->get('term_id')]) . '?term_id=' . $this->getRequest()->query->get('term_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall trough
@@ -172,8 +172,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 $this->addSubmitButton($form);
 
 
-                if ($this->getRequest()->get('page_id')) {
-                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                if ($this->getRequest()->query->get('page_id')) {
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
                     $form->addField('page_id', [
                         'type' => 'hidden',
                         'default_value' => $page->id,
@@ -181,7 +181,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 }
                 break;
             case 'deassoc':
-                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->get('page_id')]);
+                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,

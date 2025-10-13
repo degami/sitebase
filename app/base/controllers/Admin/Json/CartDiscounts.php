@@ -80,7 +80,7 @@ class CartDiscounts extends AdminJsonPage
         $cartsController = $this->containerMake(Carts::class);
         $form = $cartsController->getForm();
 
-        $form->setAction($this->getUrl('admin.carts') . '?action=' . $this->getRequest()->get('action').'&cart_id='.$this->getRequest()->get('cart_id'));
+        $form->setAction($this->getUrl('admin.carts') . '?action=' . $this->getRequest()->query->get('action').'&cart_id='.$this->getRequest()->query->get('cart_id'));
         $form->addField(
             'cart_id',
             [
@@ -93,7 +93,7 @@ class CartDiscounts extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'discounts' => $discountsArr,
-            'html' => ($this->getRequest()->get('action') == 'new_discount' ? "<div class=\"items-list\">" . implode("", $discounts) . "</div><hr />" : '') . $form->render(),
+            'html' => ($this->getRequest()->query->get('action') == 'new_discount' ? "<div class=\"items-list\">" . implode("", $discounts) . "</div><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

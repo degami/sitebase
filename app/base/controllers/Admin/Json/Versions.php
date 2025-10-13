@@ -77,8 +77,8 @@ class Versions extends AdminJsonPage
         $diffTable = null;
         if ($this->getRequest()->query->get('version_a') && $this->getRequest()->query->get('version_b')) {
             $compare = $object->getVersions()->where(['id' => [
-                $this->getRequest()->get('version_a'),
-                $this->getRequest()->get('version_b'),
+                $this->getRequest()->query->get('version_a'),
+                $this->getRequest()->query->get('version_b'),
             ]])->getItems();
             /** @var ModelVersion $second */
             $second = reset($compare);

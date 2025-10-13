@@ -48,9 +48,9 @@ class GetBlockPreview extends AdminJsonPage
     protected function getJsonData(): array
     {
         /** @var Block $block */
-        $block = Block::load($this->getRequest()->get('block_id'));
+        $block = Block::load($this->getRequest()->query->get('block_id'));
         /** @var Page $page */
-        $page = Page::load($this->getRequest()->get('page_id'));
+        $page = Page::load($this->getRequest()->query->get('page_id'));
 
         $app = App::getInstance();
 

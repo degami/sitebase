@@ -132,8 +132,8 @@ class Downloads extends LoggedUserPage
     {
         $out = parent::beforeRender();
 
-        if ($this->getRequest()->get('action') == 'download') {
-            $id = $this->getRequest()->get('id');
+        if ($this->getRequest()->query->get('action') == 'download') {
+            $id = $this->getRequest()->query->get('id');
 
             if (!in_array($id, array_map(fn ($download) => $download->getId(), $this->getDownloads()->getItems()))) {
                 throw new PermissionDeniedException();

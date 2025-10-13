@@ -99,7 +99,7 @@ class Users extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->get('action') ?? 'list';
+        $type = $this->getRequest()->query->get('action') ?? 'list';
         /** @var User $user */
         $user = $this->getObject();
         /** @var Role $role */
@@ -123,7 +123,7 @@ class Users extends AdminManageModelsPage
                         'addresses-btn',
                         'addresses-btn',
                         '<i class="fas fa-address-book"></i> Addresses',
-                        $this->getUrl('crud.app.base.controllers.admin.json.useraddresses', ['id' => $this->getRequest()->get('user_id')]) . '?user_id=' . $this->getRequest()->get('user_id') . '&action=newaddress',
+                        $this->getUrl('crud.app.base.controllers.admin.json.useraddresses', ['id' => $this->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getRequest()->query->get('user_id') . '&action=newaddress',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
  
@@ -221,8 +221,8 @@ class Users extends AdminManageModelsPage
                 $countries = $this->getUtils()->getCountriesSelectOptions();
 
                 $address = $this->containerMake(Address::class);
-                if ($this->getRequest()->get('address_id')) {
-                    $address = Address::load($this->getRequest()->get('address_id'));
+                if ($this->getRequest()->query->get('address_id')) {
+                    $address = Address::load($this->getRequest()->query->get('address_id'));
                 }
 
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
@@ -319,7 +319,7 @@ class Users extends AdminManageModelsPage
             case 'deleteaddress':
                 $form->addField('address_id', [
                     'type' => 'hidden',
-                    'default_value' => $this->getRequest()->get('address_id'),
+                    'default_value' => $this->getRequest()->query->get('address_id'),
                 ]);
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
                 break;
@@ -401,8 +401,8 @@ class Users extends AdminManageModelsPage
             case 'editaddress':
 
                 $address = $this->containerMake(Address::class);
-                if ($this->getRequest()->get('address_id')) {
-                    $address = Address::load($this->getRequest()->get('address_id'));
+                if ($this->getRequest()->query->get('address_id')) {
+                    $address = Address::load($this->getRequest()->query->get('address_id'));
                 }
 
                 $address->setUserId($user->getId());
@@ -426,7 +426,7 @@ class Users extends AdminManageModelsPage
                 break;
             case 'deleteaddress':
 
-                $address = Address::load($this->getRequest()->get('address_id'));
+                $address = Address::load($this->getRequest()->query->get('address_id'));
 
                 $this->setAdminActionLogData('Deleted user ' . $user->getId());
                 $address->delete();

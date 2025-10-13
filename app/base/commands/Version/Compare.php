@@ -54,7 +54,11 @@ class Compare extends BaseCommand
 
         $this->renderTitle("Compare Version $id1 vs $id2");
         $this->renderTable(
-            ['Field', "Version $id1", "Version $id2"],
+            [
+                'Field', 
+                "Version $id1 " . $v1->getCreatedAt() . ' - ' . ($v1->getOwner()?->getUsername() ?? 'System'), 
+                "Version $id2 " . $v2->getCreatedAt() . ' - ' . ($v2->getOwner()?->getUsername() ?? 'System')
+            ],
             $rows
         );
 
@@ -68,9 +72,13 @@ class Compare extends BaseCommand
             return $rows;
         }
         foreach ($diff as $key => $value) {
+            if (is_null($value)) {
+                continue;
+            }
+
             $field = $prefix . $key;
 
-            if (isset($value['current']) && isset($value['other'])) {
+            if (array_key_exists('current', $value) && array_key_exists('other', $value) && $value['current'] != $value['other']) {
                 $current = $this->formatValue($value['current']);
                 $other   = $this->formatValue($value['other']);
 
@@ -106,12 +114,11 @@ class Compare extends BaseCommand
 
     private function wrapCliText(string $text, int $width = 50): string
     {
-        $plain = strip_tags(preg_replace('/<[^>]+>/', '', $text));
-        if (mb_strlen($plain) <= $width) {
+        if (mb_strlen($text) <= $width) {
             return $text;
         }
 
-        $wrapped = wordwrap($plain, $width, "\n", true);
+        $wrapped = wordwrap($text, $width, "\n", true);
 
         if (str_contains($text, '<fg=red>')) {
             $wrapped = "<fg=red>$wrapped</>";

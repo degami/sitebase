@@ -110,6 +110,13 @@ trait FormPageTrait
             ? ['attributes' => ['class' => 'btn btn-primary btn-sm'], 'weight' => 100]
             : ['attributes' => ['class' => 'btn btn-primary btn-lg btn-block'], 'container_class' => 'form-item mt-3', 'weight' => 110];
 
+/*
+        if (!$inline_button) {
+            $options['prefix'] = '<div class="row"><div class="col-4">&nbsp;</div><div class="col-4">';
+            $options['suffix'] = '</div><div class="col-4">&nbsp;</div></div>';
+        }
+*/
+
         $this->addButton(
             $form,
             'button',

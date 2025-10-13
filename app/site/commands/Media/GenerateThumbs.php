@@ -14,6 +14,8 @@
 namespace App\Site\Commands\Media;
 
 use App\Base\Abstracts\Commands\BaseCommand;
+use App\Base\Abstracts\Models\BaseCollection;
+use App\Site\Controllers\Admin\Cms\Media;
 use App\Site\Models\MediaElement;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -22,19 +24,25 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
-use App\Base\Abstracts\Models\BaseCollection;
+use Symfony\Component\Console\Input\InputOption;
 
 /**
- * Clear Thumbnails Command
+ * Generate Thumbnails Command
  */
-class ClearThumbs extends BaseCommand
+class GenerateThumbs extends BaseCommand
 {
     /**
      * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setDescription('Clear All Media Thumbnails');
+        $this->setDescription('Generate missing Media Thumbnails')
+        ->addOption(
+            'size',
+            's',
+            InputOption::VALUE_OPTIONAL,
+            'Thumbnail size (e.g. 100x100) or "original" for original size'
+        );
     }
 
     /**
@@ -51,17 +59,21 @@ class ClearThumbs extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        /** @var BaseCollection $medias */
-        $medias = MediaElement::getCollection();
-        $confirm = $this->confirmDelete('Confirm thumbnail deletion for medias? ');
-        if ($confirm) {
-            $medias->map(function($item) {
-                /** @var MediaElement $item */
-                return $item->clearThumbs();
-            });
+        $thumbSize = $this->keepAskingForOption('size', 'Enter thumbnail size (e.g. 100x100) or "original" for original size: ');
 
-            $this->getIo()->success('Thumbnails Cleared');
+        if (!preg_match("/^([0-9]+)x([0-9]+)$/i", $thumbSize) && $thumbSize !== 'original') {
+            $this->getIo()->error('Invalid size format. Use WIDTHxHEIGHT or "original"');
+            return Command::FAILURE;
         }
+
+        /** @var BaseCollection $medias */
+        MediaElement::getCollection()->map(function($item) use ($thumbSize) {
+            /** @var MediaElement $item */
+            if ($thumbSize === 'original') {
+                $thumbSize = MediaElement::ORIGINAL_SIZE;
+            }
+            return $item->isImage() ? $item->getThumb($thumbSize, null, null, ['for_admin' => '']) : '';
+        });
 
         return Command::SUCCESS;
     }

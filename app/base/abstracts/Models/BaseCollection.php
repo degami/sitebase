@@ -509,4 +509,16 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
 
         return $out;
     }
+
+    /**
+     * maps a callback function to collection items
+     *
+     * @param callable $callback
+     * @return array
+     */
+    public function map(callable $callback) : array
+    {
+        $this->load();
+        return array_map($callback, $this->items);
+    }
 }

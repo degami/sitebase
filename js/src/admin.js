@@ -58,6 +58,10 @@
                     $elem.appAdmin('fullPageLoader');
                 });
 
+                $(window).on('pageshow', function() {
+                    $elem.appAdmin('fullPageLoader', false);
+                });
+
                 $('select:not(".select-processed")', $elem).each(function(index, select){
                     $(select).select2({'width': $(select).css('width') ? $(select).css('width') : '100%'}).addClass('select-processed');
                 });

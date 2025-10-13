@@ -231,8 +231,9 @@ class MediaElement extends BaseModel
                     continue;
                 }
                 if (is_dir($thumb_path . DS . $dirent)) {
-                    if (is_file($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()))) {
-                        @unlink($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()));
+                    $thumbFilePath = $thumb_path . DS . $dirent . DS . ltrim(preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()), DS);
+                    if (is_file($thumbFilePath)) {
+                        @unlink($thumbFilePath);
                     }
                 }
             }

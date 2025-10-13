@@ -282,7 +282,7 @@ class Order extends BaseModel
         return $order;
     }
 
-    public function postPersist(): BaseModel
+    public function postPersist(array $persistOptions = []): BaseModel
     {
         // propagate order_id to order items
         foreach ($this->getItems() as $item) {
@@ -307,7 +307,7 @@ class Order extends BaseModel
             App::getInstance()->getDb()->update('order', ['order_number' => $this->getOrderNumber()], ['id = ' . $this->getId()]);
         }
 
-        return parent::postPersist();
+        return parent::postPersist($persistOptions);
     }
 
     /**

@@ -404,7 +404,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
      * 
      * @return static
      */
-    public function persist() : static 
+    public function persist(array $persistOptions = []) : static 
     {
         /** @var DebugBar $debugbar */
         $debugbar = App::getInstance()->getDebugbar();
@@ -415,9 +415,10 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        foreach ($this->getItems() as $item) {
-            $item->persist();
-        }
+        $this->map(function ($item) use ($persistOptions) {
+            $item->persist($persistOptions);
+            return $item;
+        });
 
         if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);

@@ -46,11 +46,11 @@ class Website extends BaseModel
      *
      * @return self
      */
-    public function prePersist(): BaseModel
+    public function prePersist(array $persistOptions = []): BaseModel
     {
         $this->aliases = implode(",", array_filter(array_map('trim', explode(",", (string)$this->aliases))));
 
-        return parent::prePersist();
+        return parent::prePersist($persistOptions);
     }
 
     /**
@@ -58,7 +58,7 @@ class Website extends BaseModel
      *
      * @return self
      */
-    public function postPersist(): BaseModel
+    public function postPersist(array $persistOptions = []): BaseModel
     {
         if ($this->isFirstSave()) {
             $first_website = App::getInstance()->containerCall([Website::class, 'select'], ['options' => ['expr' => 'id', 'limitCount' => 1]])->fetch();
@@ -81,6 +81,6 @@ class Website extends BaseModel
             }
         }
 
-        return parent::postPersist();
+        return parent::postPersist($persistOptions);
     }
 }

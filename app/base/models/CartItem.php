@@ -300,13 +300,13 @@ class CartItem extends BaseModel
         return $tax_amount;
     }
     
-    public function prePersist() : BaseModel
+    public function prePersist(array $persistOptions = []) : BaseModel
     {
         $this->calculate();
-        return parent::prePersist();
+        return parent::prePersist($persistOptions);
     }
 
-    public function postPersist(): BaseModel
+    public function postPersist(array $persistOptions = []): BaseModel
     {
         // propagate cart_item_id to cart discounts
         foreach ($this->getDiscounts() ?? [] as $discount) {
@@ -314,7 +314,7 @@ class CartItem extends BaseModel
             $discount->setCartItem($this)->persist();
         }
 
-        return parent::postPersist();
+        return parent::postPersist($persistOptions);
     }
 
     /**

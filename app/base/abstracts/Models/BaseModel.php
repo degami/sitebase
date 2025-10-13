@@ -736,9 +736,9 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      * @return self
      * @throws BasicException
      */
-    public function save(): BaseModel
+    public function save(array $persistOptions = []): BaseModel
     {
-        return $this->persist();
+        return $this->persist($persistOptions);
     }
 
     /**
@@ -747,7 +747,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      * @return self
      * @throws BasicException
      */
-    public function persist(bool $recursive = true): BaseModel
+    public function persist(array $persistOptions = []): BaseModel
     {
         /** @var DebugBar $debugbar */
         $debugbar = App::getInstance()->getDebugbar();
@@ -758,7 +758,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        $this->prePersist();
+        $this->prePersist($persistOptions);
 
         if (!$this->getDbRow()->exists() && in_array('created_at', static::getTableColumns()) && $this->getData('created_at') == null) {
             $this->getDbRow()->created_at = date("Y-m-d H:i:s", time());
@@ -767,9 +767,9 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             $this->getDbRow()->updated_at = date("Y-m-d H:i:s", time());
         }
 
-        $this->getDbRow()->update($this->getData(), $recursive);
+        $this->getDbRow()->update($this->getData(), $persistOptions['recursive'] ?? true);
 
-        $this->postPersist();
+        $this->postPersist($persistOptions);
 
         $this->setIsFirstSave(false);
 
@@ -787,7 +787,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      *
      * @return self
      */
-    public function prePersist(): BaseModel
+    public function prePersist(array $persistOptions = []): BaseModel
     {
         if (in_array('created_at', static::getTableColumns()) && $this->getData('created_at') == null) {
             $this->getDbRow()->created_at = date("Y-m-d H:i:s", time());
@@ -795,7 +795,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
         if (in_array('updated_at', static::getTableColumns())) {
             $this->getDbRow()->updated_at = date("Y-m-d H:i:s", time());
         }
-        $this->emitEvent('pre_persist');
+        $this->emitEvent('pre_persist', ['persistOptions' => $persistOptions]);
         return $this;
     }
 
@@ -804,14 +804,15 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
      *
      * @return self
      */
-    public function postPersist(): BaseModel
+    public function postPersist(array $persistOptions = []): BaseModel
     {
-        $this->emitEvent('post_persist');
+        $this->emitEvent('post_persist', ['persistOptions' => $persistOptions]);
 
         if (App::getInstance()->getEnvironment()->getVariable('ENABLE_VERSIONING', false) && 
             static::class != ModelVersion::class && 
             !is_subclass_of($this, ModelVersion::class) && 
-            static::canSaveVersions() == true
+            static::canSaveVersions() == true &&
+            ($this->hasChanged() || ($persistOptions['force_versioning'] ?? false) == true)
         ) {
             $this->saveVersion();
         }
@@ -982,6 +983,13 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
         }
 
         return $changed;
+    }
+
+    public function hasChanged(): bool
+    {
+        $changed = $this->getChangedData();
+        unset($changed['updated_at'], $changed['created_at']);
+        return !empty($changed);
     }
 
     /**

@@ -355,7 +355,7 @@ class Menus extends AdminManageModelsPage
                     $menu_elem->setParentId($parent_id);
                     $menu_elem->setPosition($position);
 //                $menu_elem->breadcrumb = $menu_elem->getParentIds();
-                    $menu_elem->save();
+                    $menu_elem->persist();
                 }
             } catch (\Exception $e) {
             }

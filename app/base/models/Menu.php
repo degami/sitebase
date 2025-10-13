@@ -120,10 +120,10 @@ class Menu extends ModelWithChildren
         );
     }
 
-    public function prePersist(): BaseModel
+    public function prePersist(array $persistOptions = []): BaseModel
     {
         $this->setBreadcrumb($this->getParentIds());
         $this->setLevel(max(count(explode("/", (string) $this->breadcrumb)) - 1, 0));
-        return parent::prePersist();
+        return parent::prePersist($persistOptions);
     }
 }

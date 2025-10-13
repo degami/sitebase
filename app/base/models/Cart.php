@@ -369,7 +369,7 @@ class Cart extends BaseModel
             $cartItem->delete();
         }
 
-        return $this->save();
+        return $this->persist();
     }
 
     /**
@@ -409,13 +409,13 @@ class Cart extends BaseModel
         return $this;
     }
     
-    public function prePersist() : BaseModel
+    public function prePersist(array $persistOptions = []) : BaseModel
     {
         $this->calculate();
-        return parent::prePersist();
+        return parent::prePersist($persistOptions);
     }
 
-    public function postPersist(): BaseModel
+    public function postPersist(array $persistOptions = []): BaseModel
     {
         // propagate cart_id to cart items
         foreach ($this->getItems() as $item) {
@@ -429,7 +429,7 @@ class Cart extends BaseModel
             $discount->setCart($this)->persist();
         }
 
-        return parent::postPersist();
+        return parent::postPersist($persistOptions);
     }
 
     /**

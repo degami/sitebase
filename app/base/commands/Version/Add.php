@@ -79,7 +79,7 @@ class Add extends BaseCommand
                 $collection = $this->containerCall([$className, 'getCollection']);
 
                 // persisting the collection will create a new version for all objects in it
-                $collection->persist();
+                $collection->persist(['force_versioning' => true]);
             } catch (\Throwable $e) {
                 $this->getIo()->error('Error adding version for class ' . $className . ': ' . $e->getMessage());
                 continue;

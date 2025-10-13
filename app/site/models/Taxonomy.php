@@ -105,19 +105,19 @@ class Taxonomy extends FrontendModelWithChildren
         return $this->pages;
     }
 
-    public function prePersist(): BaseModel
+    public function prePersist(array $persistOptions = []): BaseModel
     {
         $this->setPath($this->getParentIds());
         $this->setLevel(max(count(explode("/", (string) $this->path)) - 1, 0));
-        return parent::prePersist();
+        return parent::prePersist($persistOptions);
     }
 
-    public function persist(bool $recursive = true): BaseModel
+    public function persist(array $persistOptions = []): BaseModel
     {
         $alsoChildren = array_key_exists('parent_id', $this->getChangedData()) || array_key_exists('level', $this->getChangedData());
-        $out = parent::persist($recursive);
+        $out = parent::persist($persistOptions);
 
-        if ($recursive && $alsoChildren) {
+        if (($persistOptions['recursive'] ?? true) && $alsoChildren) {
             foreach($this->getChildren() as $child) {
                 $child->persist();
             }

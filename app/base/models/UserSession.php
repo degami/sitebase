@@ -62,10 +62,10 @@ class UserSession extends BaseModel
      *
      * @return BaseModel
      */
-    public function prePersist(): BaseModel
+    public function prePersist(array $persistOptions = []): BaseModel
     {
         $this->setSessionData(json_encode($this->getNormalizedSessionData()));
-        return parent::prePersist();
+        return parent::prePersist($persistOptions);
     }
 
     /**

@@ -118,7 +118,7 @@ class MediaDirectory extends Collection
     public function setName($name)
     {
         $this->element->name = $name;
-        $this->element->save();
+        $this->element->persist();
     }
 
     /**

@@ -46,7 +46,7 @@ trait FrontendModelTrait
      * @return self
      * @throws Exception
      */
-    public function prePersist(): BaseModel
+    public function prePersist(array $persistOptions = []): BaseModel
     {
 
         $table = $this->getTableName();
@@ -82,7 +82,7 @@ trait FrontendModelTrait
             }
         } catch (Exception $e) {}
 
-        return parent::prePersist();
+        return parent::prePersist($persistOptions);
     }
 
     /**
@@ -91,11 +91,11 @@ trait FrontendModelTrait
      * @return self
      * @throws Exception
      */
-    public function postPersist(): BaseModel
+    public function postPersist(array $persistOptions = []): BaseModel
     {
         $rewrite = $this->getRewrite();
         if (!$rewrite) {
-            return parent::postPersist();
+            return parent::postPersist($persistOptions);
         }
 
         $rewrite->setWebsiteId($this->getWebsiteId());
@@ -142,7 +142,7 @@ trait FrontendModelTrait
         $rewrite->setLocale($this->getLocale());
         $rewrite->persist();
 
-        return parent::postPersist();
+        return parent::postPersist($persistOptions);
     }
 
     /**

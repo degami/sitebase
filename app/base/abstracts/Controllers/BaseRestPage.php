@@ -151,7 +151,7 @@ abstract class BaseRestPage extends BasePage
                 // Update
 
                 $object->setData($data);
-                $object->save();
+                $object->persist();
 
                 return $this->getUtils()->createJsonResponse($object->getData());
             case 'GET':

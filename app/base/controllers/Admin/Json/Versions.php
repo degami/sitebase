@@ -197,12 +197,19 @@ $(function() {
     }
 
     $(document)
-    .off('click contextmenu scroll.hideContextMenu')
-    .on('click contextmenu scroll.hideContextMenu', function (ev) {
+    .off('.hideContextMenu')
+    .on('click.hideContextMenu contextmenu.hideContextMenu scroll.hideContextMenu', function (ev) {
         if (!$(ev.target).closest('#versionsContextMenu').length) {
             hideContextMenu();
         }
     });
+
+    let unbinders = $(that).data('sidePanelUnbinders') || [];
+    unbinders.push(() => {
+        $(document).off('.hideContextMenu');
+        console.log('Context menu listener removed');
+    });
+    $(that).data('sidePanelUnbinders', unbinders);
 
     \$rows.on('contextmenu', function(e) {
         e.preventDefault();

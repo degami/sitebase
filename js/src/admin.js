@@ -214,7 +214,7 @@
             $(overlayId).addClass('d-none').removeClass('d-block');
         },
         getSettings: function() {
-            return $(this).data('appAdmin').settings;
+            return $(this).data('appAdmin').settings || $(this).data('appAdmin').defaults;
         },
         openSidePanel: function() {
             let that = this;
@@ -222,9 +222,21 @@
             $(that).appAdmin('showOverlay');
             $('.sidepanel', this).css({'width': '95%'});
 
-            $(that).data('sidePanelEscUnbind', $(that).appAdmin('createEscHandler', function() {
+//            $(that).data('sidePanelEscUnbind', $(that).appAdmin('createEscHandler', function() {
+//                $(that).appAdmin('closeSidePanel');
+//            }, 'sidePanel'));
+
+            if (!$(that).data('sidePanelUnbinders')) {
+                $(that).data('sidePanelUnbinders', []);
+            }
+
+            const unbindEsc = $(that).appAdmin('createEscHandler', function() {
                 $(that).appAdmin('closeSidePanel');
-            }, 'sidePanel'));
+            }, 'sidePanel');
+
+            const unbinders = $(that).data('sidePanelUnbinders');
+            unbinders.push(unbindEsc);
+            $(that).data('sidePanelUnbinders', unbinders);            
         },
         closeSidePanel: function() {
             let that = this;
@@ -245,10 +257,18 @@
             $('.sidepanel', that).find('.card').css({'min-height': 'auto'});
             $('.sidepanel', that).find('.card-block').css({'height': 'auto'});
 
-            const unbindEsc = $(this).data('sidePanelEscUnbind');
-            if (unbindEsc) {
-                unbindEsc();
-            }
+//            const unbindEsc = $(this).data('sidePanelEscUnbind');
+//            if (unbindEsc) {
+//                unbindEsc();
+//            }
+
+            const unbinders = $(this).data('sidePanelUnbinders') || [];
+            unbinders.forEach(unbind => {
+                if (typeof unbind === 'function') {
+                    unbind();
+                }
+            });
+            $(this).removeData('sidePanelUnbinders');
         },
         openAIChat: function() {
             let that = this;

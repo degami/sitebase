@@ -416,7 +416,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
         if ($object) {
             $primaryKey = $object->getKeyFieldValue();
         } else {
-            $primaryKey = $this->getRequest()->get($this->getObjectIdQueryParam());
+            $primaryKey = $this->getRequest()->query->get($this->getObjectIdQueryParam());
+            $object = $this->getObject();
         }
 
         if (is_array($primaryKey)) {

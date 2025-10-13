@@ -835,11 +835,24 @@ class HtmlPartsRenderer extends ContainerAwareObject
             foreach ($elements as $key => $elem) {
                 // ensure all header cols are in row cols
                 $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
+
+                $trAttribites = ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'];
+                if (isset($elem['_admin_table_row_class'])) {
+                    $trAttributes['data-_item_pk'] = $elem['_admin_table_item_pk'];
+                }
+                if (isset($elem['actions'][AdminManageModelsPage::EDIT_BTN])) {
+                    if (preg_match('/<a .*?href=["\'](.*?)["\'].*?>/', $elem['actions'][AdminManageModelsPage::EDIT_BTN], $matches)) {
+                        $trAttribites['data-dblclick'] = $matches[1];
+                    }
+                    $trAttribites['data-_item_pk'] = $elem['_admin_table_item_pk'];
+                    $trAttribites['class'] .= ' selectable-row';
+                }
+
                 $row = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'tr',
-                        'attributes' => ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'] + (isset($elem['_admin_table_item_pk']) ? ['data-_item_pk' => $elem['_admin_table_item_pk']] : []),
+                        'attributes' =>  $trAttribites,
                     ]]
                 );
 
@@ -942,7 +955,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     TagElement::class,
                     ['options' => [
                         'tag' => 'th',
-                        'text' => '<label class="checkbox"><input type="checkbox" onChange="$(\'#admin\').appAdmin(\'listingTableToggleAll\', \'#'.$table_id.'\', this)"/><span class="checkbox__icon"></span></label>',
+                        'text' => '<label class="checkbox"><input type="checkbox" id="listing-table-toggle-all" /><span class="checkbox__icon"></span></label>',
                         'scope' => 'col',
                         'attributes' => ['class' => 'nowrap'],
                     ]]

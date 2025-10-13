@@ -169,3 +169,13 @@
 #appAdminAlertDialog {
   z-index: 10001;
 }
+
+.table.table-striped {
+  tr.selected {
+    background-color: hsl(208, 88%, 76%);
+
+    &.odd {
+      background-color: hsl(207.9, 78.4%, 85.5%);
+    }
+  }
+}

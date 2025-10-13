@@ -164,7 +164,11 @@
                 $('#search-btn').click(function(evt){
                     evt.preventDefault();
                     $elem.appAdmin('searchTableColumns', this);
-                })
+                });
+
+                $('table[id^="listing-table-"]').each(function(index, table) {
+                    $elem.appAdmin('listingTable', table);
+                });
             
                 if ($elem.appAdmin('getSettings').aiAvailable) {
                     document.addEventListener('keydown', function(e) {
@@ -497,11 +501,60 @@
             let href = $(btn).attr('href');
             document.location = href + (href.indexOf('?') != -1 ? '&' : '?') + query;
         },
+        listingTable: function(table) {
+            let that = this;
+
+            let $table = $(table);
+            let clickTimer = null;
+            const delay = 250;
+
+            // initially uncheck every row selector
+            $('.table-row-selector, #listing-table-toggle-all', table).prop('checked', false);
+
+            $('#listing-table-toggle-all', table).on('change', function() {
+                $(that).appAdmin('listingTableToggleAll', '#'+$table.attr('id'), this);
+            });
+
+            $('.table-row-selector', table).on('change', function(evt) {
+                let $tr = $(evt.target).closest('tr');
+                if ($(this).is(':checked')) {
+                    $tr.addClass('selected');
+                } else {
+                    $tr.removeClass('selected');
+                }
+            });
+
+            $table.find('tbody tr').on('click', function(evt){
+                if ($(evt.target).is('td, tr')) {
+                    clearTimeout(clickTimer);
+
+                    let $tr = $(evt.target).closest('tr');
+
+                    clickTimer = setTimeout(function() {                        
+                        let identifier = $tr.data('_item_pk');
+                        if (undefined !== identifier) {
+                            let $checkbox = $('input[type="checkbox"].table-row-selector:eq(0)', $tr);
+                            $checkbox.prop('checked', !$checkbox.prop('checked')).trigger('change');
+                        }
+                    }, delay);
+                }
+            }).on('dblclick', function(evt){
+                if ($(evt.target).is('td, tr')) {
+                    clearTimeout(clickTimer);
+
+                    let $tr = $(evt.target).closest('tr');
+
+                    if ($tr.data('dblclick')) {
+                        document.location = $tr.data('dblclick').replace("&amp;","&");
+                    }
+                }
+            });
+        },
         listingTableToggleAll: function(tableSelector, element) {
             let $element = $(element);
             let $table = $(tableSelector);
             let $checkboxes = $('input[type="checkbox"].table-row-selector', $table);
-            $checkboxes.prop('checked', $element.prop('checked'));
+            $checkboxes.prop('checked', $element.prop('checked')).trigger('change');
         },
         listingTableGetSelected: function(tableSelector) {
             let $table = $(tableSelector);
@@ -583,8 +636,6 @@
 
                     if ($item.find('> .toggle-enable').length) return;
 
-//                    const $checkbox = $('<label class="checkbox"><input type="checkbox" class="toggle-enable" /><span class="checkbox__icon"></span></label>');
-//                    $item.find('label:eq(0)').prepend($checkbox);
                     $('<label class="checkbox"><input type="checkbox" class="toggle-enable" /><span class="checkbox__icon"></span></label>').prependTo($item.find('label:eq(0)'));
                     const $checkbox = $item.find('.toggle-enable');
 
@@ -650,6 +701,9 @@
                         contentType: false,
                         success: function(data) {
                             $(that).appAdmin('closeSidePanel');
+
+                            // reload page in order to update table content if needed
+                            document.location.reload();
                         },
                         error: function() {
                             $(that).appAdmin('showAlertDialog', {

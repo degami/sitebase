@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Base\Commands\Version;
 
 use App\Base\Abstracts\Commands\BaseCommand;
@@ -32,20 +43,18 @@ class Detail extends BaseCommand
             return self::FAILURE;
         }
 
-        // Intestazione
         $this->renderTitle("Model Version #$id");
 
-        // 🟢 Metadati principali
         $metadata = [
             ['Class Name', $version->getClassName()],
             ['Primary Key', $version->getPrimaryKey()],
             ['Created At', $version->getCreatedAt()],
             ['Updated At', $version->getUpdatedAt()],
+            ['Created by', $version->getOwner()?->getUsername() ?? 'System'],
         ];
 
         $this->renderTable(['Field', 'Value'], $metadata);
 
-        // 🟢 Dati serializzati
         $data = json_decode($version->getVersionData(), true);
 
         if (!is_array($data)) {
@@ -53,8 +62,8 @@ class Detail extends BaseCommand
             return self::SUCCESS;
         }
 
-        // Appiattisci i dati per tabella
         $rows = $this->flattenArrayForTable($data);
+        $this->getIo()->writeln("");
 
         $this->renderTitle('Version Data');
         $this->renderTable(['Key', 'Value'], $rows);
@@ -62,9 +71,6 @@ class Detail extends BaseCommand
         return self::SUCCESS;
     }
 
-    /**
-     * Appiattisce un array multidimensionale per visualizzarlo in tabella
-     */
     private function flattenArrayForTable(array $data, string $prefix = ''): array
     {
         $rows = [];
@@ -79,7 +85,6 @@ class Detail extends BaseCommand
                     ? ($value ? 'true' : 'false')
                     : (string) $value;
 
-                // 🧩 Evita overflow con wrapping
                 $text = $this->wrapCliText($text);
                 $rows[] = [$field, $text];
             }
@@ -88,15 +93,11 @@ class Detail extends BaseCommand
         return $rows;
     }
 
-    /**
-     * Wrappa testo lungo per non sfasciare la tabella
-     */
     private function wrapCliText(string $text, int $width = 80): string
     {
-        $plain = strip_tags(preg_replace('/<[^>]+>/', '', $text));
-        if (mb_strlen($plain) <= $width) {
+        if (mb_strlen($text) <= $width) {
             return $text;
         }
-        return wordwrap($plain, $width, "\n", true);
+        return wordwrap($text, $width, "\n", true);
     }
 }

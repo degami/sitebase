@@ -184,9 +184,10 @@ class Roles extends AdminManageModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
             function ($role) {

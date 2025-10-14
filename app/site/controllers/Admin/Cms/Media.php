@@ -51,11 +51,12 @@ class Media extends AdminManageModelsPage
     public function __construct(
         protected ContainerInterface $container, 
         protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ?RouteInfo $route_info = null,
+        bool $asGrid = true,
     ) {
         AdminFormPage::__construct($container, $request, $route_info);
         if (($this->template_data['action'] ?? 'list') == 'list') {
-            parent::__construct($container, $request, $route_info);
+            parent::__construct($container, $request, $route_info, $asGrid);
 
             $this->addActionLink(
                 'make_folder', 
@@ -680,12 +681,21 @@ class Media extends AdminManageModelsPage
         ];
     }
 
-    protected function getMediaPreview(MediaElement $elem) : string
+    protected function getMediaPreview(MediaElement $elem, array $options = []) : string
     {
         if ($elem->isDirectory()) {
+            if (($options['layout'] ?? 'table') == 'grid') {
+                return '<h2 style="font-size: 5rem;">'.$elem->getMimeIcon('solid').'</h2>';
+            }
             return '<h2>'.$elem->getMimeIcon('solid').'</h2>';
         }
-        return $elem->isImage() ? $elem->getThumb('50x50', null, null, ['for_admin' => '']) : '';
+
+        $thumbSize = '50x50';
+        if (($options['layout'] ?? 'table') == 'grid') {
+            $thumbSize = '100x100';
+        }
+
+        return $elem->isImage() ? $elem->getThumb($thumbSize, null, null, ['for_admin' => '']) : '';
     }
 
     /**
@@ -697,10 +707,10 @@ class Media extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
-            function (MediaElement $elem) {
+            function (MediaElement $elem) use ($options) {
                 $actions = match($elem->isDirectory()) {
                     true => [
                         'chdir-btn' => $this->getChangeDirButton($elem->id),
@@ -714,7 +724,7 @@ class Media extends AdminManageModelsPage
                 };
                 return [
                     'ID' => $elem->getId(),
-                    'Preview' => $this->getMediaPreview($elem),
+                    'Preview' => $this->getMediaPreview($elem, $options),
                     'Filename - Path' => $elem->getFilename() . '<br /><abbr style="font-size: 0.6rem;">' . $elem->getPath() . '</abbr>',
                     'Mimetype' => $elem->getMimetype(),
                     'Filesize' => $elem->isDirectory() ? '' : $this->formatBytes((int) $elem->getFilesize()),
@@ -760,5 +770,101 @@ class Media extends AdminManageModelsPage
         }
 
         return '';
+    }
+
+    public function getGridCardBody(array $element, bool $selectCheckboxes = false) : TagElement
+    {
+        /** @var TagElement $cardBody */
+        $cardBody = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'div',
+                'attributes' => ['class' => "card-body pb-0 container"],
+            ]]
+        );
+
+        if ($selectCheckboxes == true) {
+            if (isset($element['_admin_table_item_pk']) && (
+                isset($element['actions'][AdminManageModelsPage::EDIT_BTN]) ||
+                isset($element['actions'][AdminManageModelsPage::DELETE_BTN])                        
+            )) {
+                $cardBody->addChild(
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'label',
+                            'text' => '<input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span>',
+                            'attributes' => ['class' => 'checkbox position-absolute', 'style' => 'top: 10px; right: 10px'],
+                        ]]
+                    )
+                );
+            }
+        }
+
+        /** @var TagElement $target */
+        $target = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'div',
+                'attributes' => ['class' => 'row'],
+            ]]
+        );
+        $cardBody->addChild($target);
+
+        if (isset($element['Filename - Path'])) {
+            $cardBody->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'text' => $element['Filename - Path'],
+                        'attributes' => ['class' => 'mt-2 word-break'],
+                    ]]
+                )
+            );
+        }
+
+        if (isset($element['Preview'])) {
+            $target->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'text' => $element['Preview'],
+                        'attributes' => ['class' => 'col-auto p-1'],
+                    ]]
+                )
+            );
+
+            $newtarget = $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'div',
+                    'attributes' => ['class' => 'col'],
+                ]]
+            );
+
+            $target->addChild($newtarget);
+            $target = $newtarget;
+        }
+
+        foreach ($element as $tk => $dd) {
+            if ($tk == 'actions' || $tk == '_admin_table_item_pk' || $tk == 'Preview' || $tk == 'Filename - Path') {
+                continue;
+            }
+            $target->addChild(
+                ($dd instanceof TagElement) ? $dd :
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'div',
+                            'text' => '<label class="mb-0 mr-2 font-weight-bold">'.(string)$tk . ':</label>' . (string)$dd,
+                            'attributes' => ['class' => in_array(strtolower($tk), ['website', 'locale']) ? 'nowrap' : 'text-break'],
+                        ]]
+                    )
+            );
+        }
+
+        return $cardBody;
     }
 }

@@ -54,9 +54,10 @@ class DownloadableProducts extends AdminManageProductsPage
     public function __construct(
         protected ContainerInterface $container, 
         protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ?RouteInfo $route_info = null,
+        bool $asGrid = false,
     ) {
-        AdminManageModelsPage::__construct($container, $request, $route_info);
+        AdminManageModelsPage::__construct($container, $request, $route_info, $asGrid);
         $this->page_title = 'Downloadable Products';
     }
 

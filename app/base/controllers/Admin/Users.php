@@ -460,11 +460,12 @@ class Users extends AdminManageModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
             function ($user) {

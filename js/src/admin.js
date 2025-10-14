@@ -166,10 +166,24 @@
                     $elem.appAdmin('searchTableColumns', this);
                 });
 
+                $('#pagination-layout-selector a').on('click', function(evt){
+                    evt.preventDefault();
+                    $elem.appAdmin('updateUserUiSettings', 
+                        {'currentRoute': $elem.appAdmin('getSettings').currentRoute, 'layout': $(this).data('layout')},
+                        function (data) {
+                            document.location.reload();
+                        }
+                    );
+                });
+
                 $('table[id^="listing-table-"]').each(function(index, table) {
                     $elem.appAdmin('listingTable', table);
                 });
-            
+
+                $('div[id^="listing-grid-"], div[id^="listing-compact_grid-"]').each(function(index, grid) {
+                    $elem.appAdmin('listingGrid', grid);
+                });
+
                 if ($elem.appAdmin('getSettings').aiAvailable) {
                     document.addEventListener('keydown', function(e) {
                         if (e.ctrlKey && e.shiftKey && e.code === 'KeyC') {
@@ -561,6 +575,62 @@
                 }
             });
         },
+        listingGrid: function(grid) {
+            let that = this;
+
+            let $grid = $(grid);
+
+            let clickTimer = null;
+            const delay = 250;
+
+            $('[data-bs-toggle="collapse"]', $grid).on('click', (e) => {
+                e.preventDefault();
+                const target = document.querySelector($(e.target).data('bsTarget'));
+                if (target) new bootstrap.Collapse(target);
+           });
+
+            // initially uncheck every row selector
+            $('.table-row-selector, #listing-table-toggle-all', grid).prop('checked', false);
+
+            $('#listing-table-toggle-all', grid).on('change', function() {
+                $(that).appAdmin('listingTableToggleAll', '#'+$grid.attr('id'), this);
+            });
+
+            $('.table-row-selector', grid).on('change', function(evt) {
+                let $selectable = $(evt.target).closest('.selectable');
+                if ($(this).is(':checked')) {
+                    $selectable.addClass('selected');
+                } else {
+                    $selectable.removeClass('selected');
+                }
+            });
+
+            $grid.find('.selectable').on('click', function(evt){
+                if ($(evt.target).is('div')) {
+                    clearTimeout(clickTimer);
+
+                    let $selectable = $(evt.target).closest('.selectable');
+
+                    clickTimer = setTimeout(function() {                        
+                        let identifier = $selectable.data('_item_pk');
+                        if (undefined !== identifier) {
+                            let $checkbox = $('input[type="checkbox"].table-row-selector:eq(0)', $selectable);
+                            $checkbox.prop('checked', !$checkbox.prop('checked')).trigger('change');
+                        }
+                    }, delay);
+                }
+            }).on('dblclick', function(evt){
+                if ($(evt.target).is('div')) {
+                    clearTimeout(clickTimer);
+
+                    let $selectable = $(evt.target).closest('.selectable');
+
+                    if ($selectable.data('dblclick')) {
+                        document.location = $selectable.data('dblclick').replace("&amp;","&");
+                    }
+                }
+            });
+        },
         listingTableToggleAll: function(tableSelector, element) {
             let $element = $(element);
             let $table = $(tableSelector);
@@ -572,7 +642,7 @@
             let $checkboxes = $('input[type="checkbox"].table-row-selector:checked', $table);
             return $checkboxes.map(function(index, checkbox) {
                 let $checkbox = $(checkbox);
-                let identifier = $($checkbox.closest('tr')).data('_item_pk');
+                let identifier = $($checkbox.closest('.selectable')).data('_item_pk');
                 if (undefined !== identifier) {
                     return identifier;
                 }

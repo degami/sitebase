@@ -50,6 +50,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     const TRANSLATIONS_BTN = 'translations-btn';
     const VIEW_BTN = 'view-btn';
     const PAGINATION_SIZE_SELECTOR = 'pagination-size-selector';
+    const LAYOUT_SELECTOR = 'pagination-layout-selector';
 
     /**
      * @var BaseModel|null object instance
@@ -77,15 +78,26 @@ abstract class AdminManageModelsPage extends AdminFormPage
     public function __construct(
         protected ContainerInterface $container, 
         protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ?RouteInfo $route_info = null,
+        bool $asGrid = false,
     ) {
         parent::__construct($container, $request, $route_info);
 
         if (($this->template_data['action'] ?? 'list') == 'list') {
+
+            $layout = $this->getLayout();
+            if (!$layout) {
+                $layout = $asGrid ? 'grid' : 'table';
+            }
+
+            if (static::hasLayoutSelector()) {
+                $this->addLayoutSelector($layout);
+            }
+    
             $this->addPaginationSizeSelector();
             $this->addNewButton();
 
-            $adminTableId = 'listing-table-' . strtolower($this->getUtils()->getClassBasename($this->getObjectClass()));
+            $adminTableId = 'listing-'.$layout.'-' . strtolower($this->getUtils()->getClassBasename($this->getObjectClass()));
 
             $controllerClassName = str_replace("\\","\\\\", static::class);
             $modelClassName = str_replace("\\","\\\\", $this->getObjectClass());
@@ -110,7 +122,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 }
             }
 
-            $tableElements = $this->getTableElements($data['items']);
+            $tableElements = $this->getTableElements($data['items'], ['layout' => $layout]);
 
             if (static::hasMassActions()) {
                 // copy "_admin_table_item_pk" from data['items'] into tableElements
@@ -126,8 +138,14 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 }
             }
 
+            if ($layout == 'grid' || $layout == 'compact_grid') {
+                $tableContents = $this->getHtmlRenderer()->renderAdminGrid($tableElements, numCols: ($layout == 'compact_grid' ? 4 : 3), header: $this->getTableHeader(), current_page: $this, grid_id: $adminTableId);
+            } else {
+                $tableContents = $this->getHtmlRenderer()->renderAdminTable($tableElements, $this->getTableHeader(), $this, $adminTableId);
+            }
+
             $this->template_data += [
-                'table' => $this->getHtmlRenderer()->renderAdminTable($tableElements, $this->getTableHeader(), $this, $adminTableId),
+                'table' => $tableContents,
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
@@ -244,6 +262,26 @@ abstract class AdminManageModelsPage extends AdminFormPage
         }
 
         return BaseCollection::ITEMS_PER_PAGE;
+    }
+
+    /**
+     * get layout on listing
+     */
+    protected function getLayout() : ?string
+    {
+        /** @var User $user */
+        $user = $this->getCurrentUser();
+
+        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
+        $currentRoute = $this->getRouteInfo()->getRouteName();
+
+        if (is_array($uiSettings) && isset($uiSettings[$currentRoute])) {
+            if (isset($uiSettings[$currentRoute]['layout'])) {
+                return $uiSettings[$currentRoute]['layout'];
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -465,6 +503,54 @@ abstract class AdminManageModelsPage extends AdminFormPage
     }
 
     /**
+     * adds a layout selecton
+     * 
+     * @return void
+     */
+    public function addLayoutSelector(string $selectedLayout = 'table')
+    {
+        $options = [
+            'grid' => ['icon' => '<i class="fas fa-th-large"></i>', 'text' => $this->getUtils()->translate('Grid', locale: $this->getCurrentLocale())], 
+            'compact_grid' => ['icon' => '<i class="fas fa-th"></i>', 'text' => $this->getUtils()->translate('Compact Grid', locale: $this->getCurrentLocale())], 
+            'table' => ['icon' => '<i class="fas fa-list"></i>', 'text' => $this->getUtils()->translate('Table', locale: $this->getCurrentLocale())],
+        ];
+
+        $selector = $this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'ul',
+            'id' => static::LAYOUT_SELECTOR,
+            'attributes' => [
+                'class' => 'nav nav-tabs nav-sm layout-items-choice',
+                'style' => 'border-bottom: none;',
+            ],
+            'children' => array_map(function($val, $key) use ($selectedLayout) {
+                return $this->containerMake(TagElement::class, ['options' => [
+                    'tag' => 'li',
+                    'attributes' => [
+                        'class' => 'nav-item',
+                        'style' => 'padding: 5px; padding-bottom: 0;',
+                    ],
+                    'children' => [
+                        $this->containerMake(TagElement::class, ['options' => [
+                            'tag' => 'a',
+                            'id' => 'layout-'.$key.'-tab',
+                            'href' => '#',
+                            'attributes' => [
+                                'class' => 'nav-link' . (($key == $selectedLayout) ? ' active' : ''),
+                                'role' => 'tab',
+                                'data-toggle' => 'tab',
+                                'data-layout' => $key,
+                                'title' => $val['text'],
+                            ],
+                            'text' => $val['icon'],
+                        ]]),
+                    ],
+                ]]);
+            }, $options, array_keys($options)),
+        ]]);
+        $this->action_buttons[] = $this->getUtils()->translate('Layout', locale: $this->getCurrentLocale()). ':' . $selector;
+    }
+
+    /**
      * gets action button html
      *
      * @param string $action
@@ -631,6 +717,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return true;
     }
 
+    protected function hasLayoutSelector(): bool
+    {
+        return true;
+    }
+
     /**
      * gets object to show class name for loading
      *
@@ -649,7 +740,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * defines table rows
      *
      * @param array $data
+     * @param array $options
      * @return array
      */
-    abstract protected function getTableElements(array $data): array;    
+    abstract protected function getTableElements(array $data, array $options = []): array;    
 }

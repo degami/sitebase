@@ -65,9 +65,10 @@ class ContactForms extends AdminManageFrontendModelsPage
     public function __construct(
         protected ContainerInterface $container, 
         protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ?RouteInfo $route_info = null,
+        bool $asGrid = false,
     ) {
-        AdminFormPage::__construct($container, $request, $route_info);
+        AdminFormPage::__construct($container, $request, $route_info, $asGrid);
         $this->page_title = 'Contact Forms';
         if ($this->template_data['action'] == 'list' || $this->template_data['action'] == 'submissions') {
             if ($this->template_data['action'] == 'list') {
@@ -530,10 +531,11 @@ class ContactForms extends AdminManageFrontendModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      * @throws Exception
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         if ($this->template_data['action'] == 'submissions') {
             return array_map(

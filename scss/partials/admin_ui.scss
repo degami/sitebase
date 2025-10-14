@@ -183,3 +183,19 @@
 .form-item.switchbox-container {
   max-width: 150px;
 }
+
+.selectable.selected .card {
+  background-color: hsl(207.9, 78.4%, 85.5%);
+
+  .card-footer {
+    background-color: hsl(208, 88%, 76%);
+  }
+}
+
+div[id^="listing-grid-"] {
+  #searchBox {
+    select, input {
+      width:  100%;
+    }
+  }
+}

@@ -49,9 +49,10 @@ class Discounts extends AdminManageFrontendModelsPage
     public function __construct(
         protected ContainerInterface $container, 
         protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ?RouteInfo $route_info = null,
+        bool $asGrid = false,
     ) {
-        parent::__construct($container, $request, $route_info);
+        parent::__construct($container, $request, $route_info, $asGrid);
         $this->page_title = 'Cart Discounts';
     }
 
@@ -280,11 +281,12 @@ class Discounts extends AdminManageFrontendModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
             function ($discount) {

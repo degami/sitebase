@@ -40,6 +40,7 @@ use App\Base\Tools\DataCollector\BlocksDataCollector;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
 use chillerlan\QRCode\QRCode;
+use Exception;
 
 /**
  * Html Parts Renderer Helper Class
@@ -845,7 +846,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         $trAttribites['data-dblclick'] = $matches[1];
                     }
                     $trAttribites['data-_item_pk'] = $elem['_admin_table_item_pk'];
-                    $trAttribites['class'] .= ' selectable-row';
+                    $trAttribites['class'] .= ' selectable';
                 }
 
                 $row = $this->containerMake(
@@ -1031,6 +1032,333 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return $table;
     }
 
+
+    /**
+     * renders admin grid
+     *
+     * @param array $elements
+     * @param null $header
+     * @param BasePage|null $current_page
+     * @return string
+     * @throws BasicException
+     * @throws OutOfRangeException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function renderAdminGrid(array $elements, int $numCols = 3, ?array $header = null, ?BasePage $current_page = null, string $grid_id = 'listing-grid'): string
+    {
+        $selectCheckboxes = false;
+        foreach ($elements as $elem) {
+            if (isset($elem['_admin_table_item_pk'])) {
+                $selectCheckboxes = true;
+                break;
+            }
+        }
+
+        if (empty($header)) {
+            $header = [];
+            foreach ($elements as $key => $elem) {
+                $header = array_unique(array_merge($header, array_filter(array_keys($elem), fn ($el) => !str_starts_with($el, '_'))));
+            }
+            $header = array_flip($header);
+        }
+
+        $grid = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'div',
+                'id' => $grid_id,
+                'attributes' => ['class' => "container-fluid"],
+            ]]
+        );
+
+        $searchBox = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'div',
+                'id' => 'searchBox',
+                'attributes' => ['class' => "collapse container-fluid bg-light p-3 mb-3"],
+            ]]
+        );
+
+        $grid->addChild($this->containerMake(TagElement::class, ['options' => [
+            'tag' => 'div',
+            'attributes' => ['class' => 'row row-cols-2 mb-2'],
+            'children' => [
+                $this->containerMake(TagElement::class, ['options' => [
+                    'tag' => 'div',
+                    'attributes' => ['class' => 'col'],
+                    'children' => [
+                        '<button class="btn btn-sm btn-light" data-bs-toggle="collapse" data-bs-target="#searchBox" role="button" aria-expanded="false" aria-controls="searchBox">'.$this->getUtils()->translate('Search & Sort').'</button>',
+                        $searchBox
+                    ],
+                ]]),
+                '<div class="col text-right"><label class="checkbox"><input type="checkbox" id="listing-table-toggle-all" /><span class="checkbox__icon"></span></label>'.$this->getUtils()->translate('Select All').'</div>',
+            ],
+        ]]));
+
+        // grid elements
+
+        $rows = array_chunk($elements, $numCols);
+        foreach ($rows as $row) {
+            $gridRow = $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'div',
+                    'attributes' => ['class' => "row row-cols-".$numCols." mb-3"],
+                ]]
+            );
+            $grid->addChild($gridRow);
+
+            foreach ($row as $key => $elem) {
+
+                $gridCOlAttributes = ['class' => "col"];
+                if (isset($elem['_admin_table_row_class'])) {
+                    $gridCOlAttributes['data-_item_pk'] = $elem['_admin_table_item_pk'];
+                }
+                if (isset($elem['actions'][AdminManageModelsPage::EDIT_BTN])) {
+                    if (preg_match('/<a .*?href=["\'](.*?)["\'].*?>/', $elem['actions'][AdminManageModelsPage::EDIT_BTN], $matches)) {
+                        $gridCOlAttributes['data-dblclick'] = $matches[1];
+                    }
+                    $gridCOlAttributes['data-_item_pk'] = $elem['_admin_table_item_pk'];
+                    $gridCOlAttributes['class'] .= ' selectable';
+                }
+
+                $gridCol = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'attributes' => $gridCOlAttributes,
+                    ]]
+                );
+                $gridRow->addChild($gridCol);
+
+                $card = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'attributes' => ['class' => "card position-relative"],
+                    ]]
+                );
+                $gridCol->addChild($card);
+
+                try {
+                    // in a try / catch , as is_callable([$current_page, 'getGridCardBody']) will return true because of the __call method, but will raise an exception
+                    $cardBody = ($current_page && is_callable([$current_page, 'getGridCardBody'])) ? $current_page->getGridCardBody($elem, $selectCheckboxes) : $this->getGridCardBody($elem, $selectCheckboxes);
+                } catch (Exception $e) {
+                    $cardBody = $this->getGridCardBody($elem, $selectCheckboxes);
+                }
+
+                $card->addChild($cardBody);
+
+                if (array_key_exists('actions', $header)) {
+                    $card->addChild(
+                        $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'div',
+                                'text' => is_array($elem['actions']) ? implode(" ", $elem['actions']) : $elem['actions'] ?? '',
+                                'attributes' => ['class' => 'card-footer text-muted text-right nowrap'],
+                            ]]
+                        )
+                    );
+                }
+
+            }
+        }
+
+        // searchbox
+        $add_searchrow = false;
+        if (count($elements) > 0 && $current_page instanceof BasePage) {
+
+            foreach ($header as $k => $v) {
+                $className = strtolower($k);
+                $th = $k; $column = $v;
+
+                $th = $this->getUtils()->translate($th, locale: $current_page?->getCurrentLocale());
+
+                $request_params = $current_page->getRequest()->query->all();
+
+                if (!empty($column)) {
+                    $orderby = null;
+                    if (is_array($column)) {
+                        if (isset($column['order'])) {
+                            $orderby = $column['order'];
+                        }
+                    } else {
+                        $orderby = $column;
+                    }
+                    if (!empty($orderby)) {
+                        $val = 'DESC';
+                        if (isset($request_params['order'][$orderby])) {
+                            $val = ($request_params['order'][$orderby] == 'ASC') ? 'DESC' : 'ASC';
+                        }
+                        $request_params['order'][$orderby] = $val;
+                        $th = '<a class="ordering" href="' . ($current_page->getControllerUrl() . '?' . http_build_query($request_params)) . '">' . $th . $this->getIcon($val == 'DESC' ? 'arrow-down' : 'arrow-up') . '</a>';
+                    }
+                }
+                
+                if ($k == 'actions') {
+                    $th = '';
+                }
+
+
+                $div = null;
+                if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
+                    $searchqueryparam = (is_array($current_page->getRequest()->query->all('search')) && isset($current_page->getRequest()->query->all('search')[$v['search']])) ? $current_page->getRequest()->query->all('search')[$v['search']] : '';
+
+                    // locale is a well known special case - but can be overridden
+                    if ($v['search'] == 'locale' && ($v['input_type'] ?? 'select') == 'select') {
+                        $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'] + $this->getUtils()->getSiteLanguagesSelectOptions();
+                        $select_options = array_map(function ($val, $key) use ($searchqueryparam) {
+                            $selected = ($key == $searchqueryparam) ? ' selected="selected"': '';
+                            return '<option value="' . $key . '"'.$selected.'>' . $val . '</option>';
+                        }, $select_options, array_keys($select_options));
+    
+                        $div = $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'div',
+                                'attributes' => ['class' => 'row row-cols-2 small mb-1 '. $className],
+                                'text' => '<div class="col-2">' . $th . '</div><div class="col"><select class="select-processed" name="search[' . $v['search'] . ']">' . implode("", $select_options) . '</select></div>',
+                            ]]
+                        );    
+                    } else {
+                        $div = $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'div',
+                                'attributes' => ['class' => 'row row-cols-2 small mb-1 '. $className],
+                                'text' => '<div class="col-2">' . $th . '</div><div class="col"><input class="form-control" name="search[' . $v['search'] . ']" value="' . $searchqueryparam . '"/></div>',
+                            ]]
+                        );
+                    }
+                    $add_searchrow = true;
+                } else if (is_array($v) && isset($v['foreign']) && boolval($v['foreign']) == true) {
+                    $foreignqueryparam = (is_array($current_page->getRequest()->query->all('foreign')) && isset($current_page->getRequest()->query->all('foreign')[$v['foreign']])) ? $current_page->getRequest()->query->all('foreign')[$v['foreign']] : '';
+
+                    $dbtable = $this->getSchema()->getTable($v['table']);
+                    $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'];
+                    foreach ($dbtable->getForeignKeys() as $fkobj) {
+                        if (in_array($v['foreign'], $fkobj->getColumns())) {
+                            $foreign_key = $fkobj->getTargetColumns()[0];
+                            $stmt = $this->getDb()->table(
+                                $fkobj->getTargetTable()
+                            );
+
+                            foreach ($stmt as $row) {
+                                $select_options[$row->{$foreign_key}] = $row->{$v['view']};
+                            }
+                        }
+                    }
+
+                    $select_options = array_map(function ($val, $key) use ($foreignqueryparam) {
+                        $selected = ($key == $foreignqueryparam) ? ' selected="selected"': '';
+                        return '<option value="' . $key . '"'.$selected.'>' . $val . '</option>';
+                    }, $select_options, array_keys($select_options));
+
+                    $div = $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'div',
+                            'attributes' => ['class' => 'row row-cols-2 small mb-1'],
+                            'text' => '<div class="col-2">' . $th . '</div><div class="col"><select class="select-processed" name="foreign[' . $v['foreign'] . ']">' . implode("", $select_options) . '</select></div>',
+                        ]]
+                    );
+
+                    $add_searchrow = true;
+                } else {
+                    if (preg_match("/<a .*?href=/", $th)) {
+                        $div = $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'div',
+                                'attributes' => ['class' => 'row small mb-1'],
+                                'text' => '<div class="col-auto">' . $th . '</div>',
+                            ]]
+                        );
+                        $add_searchrow = true;
+                    }
+                }
+
+                if ($div) {
+                    $searchBox->addChild($div);
+                }
+            }
+        }
+
+        if (($current_page instanceof BasePage)) {
+            $request_params = $current_page->getRequest()->query->all();
+            if (isset($request_params['order']) || isset($request_params['search'])) {
+                $request_params_nosearch = $request_params;
+                unset($request_params_nosearch['search']);
+                $add_query_parameters = http_build_query($request_params_nosearch);
+                if (strlen($add_query_parameters)) {
+                    $add_query_parameters = '?' . $add_query_parameters;
+                }
+                $current_page->addActionLink('reset-btn', 'reset-btn', $this->getUtils()->translate('Reset', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . $add_query_parameters, 'btn btn-sm btn-outline-warning');
+            }
+            if ($add_searchrow) {
+                $query_params = '';
+                if (!empty($request_params)) {
+                    $query_params = (array)$request_params;
+                    unset($query_params['search']);
+                    $query_params = http_build_query($query_params);
+                }
+                $current_page->addActionLink('search-btn', 'search-btn', $this->getIcon('zoom-in') . $this->getUtils()->translate('Search', locale: $current_page->getCurrentLocale()), $current_page->getControllerUrl() . (!empty($query_params) ? '?' : '') . $query_params, 'btn btn-sm btn-outline-primary', ['data-target' => '#' . $grid_id]);
+            }
+        }
+
+        return $grid;
+    }
+
+    protected function getGridCardBody(array $element, bool $selectCheckboxes = false) : TagElement
+    {
+        $cardBody = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'div',
+                'attributes' => ['class' => "card-body"],
+            ]]
+        );
+
+        if ($selectCheckboxes == true) {
+            if (isset($element['_admin_table_item_pk']) && (
+                isset($element['actions'][AdminManageModelsPage::EDIT_BTN]) ||
+                isset($element['actions'][AdminManageModelsPage::DELETE_BTN])                        
+            )) {
+                $cardBody->addChild(
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'label',
+                            'text' => '<input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span>',
+                            'attributes' => ['class' => 'checkbox position-absolute', 'style' => 'top: 10px; right: 10px'],
+                        ]]
+                    )
+                );
+            }
+        }
+
+        foreach ($element as $tk => $dd) {
+            if ($tk == 'actions' || $tk == '_admin_table_item_pk') {
+                continue;
+            }
+            $cardBody->addChild(
+                ($dd instanceof TagElement) ? $dd :
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'div',
+                            'text' => '<label class="mb-0 mr-2 font-weight-bold">'.(string)$tk . ':</label>' . (string)$dd,
+                            'attributes' => ['class' => in_array(strtolower($tk), ['website', 'locale']) ? 'nowrap' : 'text-break'],
+                        ]]
+                    )
+            );
+        }
+
+        return $cardBody;
+    }
 
     /**
      * Renders array as table field name - field value

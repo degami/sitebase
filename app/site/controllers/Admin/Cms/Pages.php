@@ -323,11 +323,12 @@ class Pages extends AdminManageFrontendModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
             function ($page) {

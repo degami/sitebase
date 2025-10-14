@@ -33,9 +33,10 @@ class Events extends AdminManageFrontendModelsPage
     public function __construct(
         protected ContainerInterface $container, 
         protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ?RouteInfo $route_info = null,
+        bool $asGrid = false,
     ) {
-        parent::__construct($container, $request, $route_info);
+        parent::__construct($container, $request, $route_info, $asGrid);
 
         if ($this->getEnvironment()->getVariable('GOOGLE_API_KEY')) {
             $this->getAssets()->addHeadJs('https://maps.googleapis.com/maps/api/js?v=3.exp&amp&amp;libraries=geometry,places&amp;key='. $this->getEnvironment()->getVariable('GOOGLE_API_KEY'));
@@ -281,11 +282,12 @@ class Events extends AdminManageFrontendModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      * @throws BasicException
      * @throws Exception
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
             function ($event) {

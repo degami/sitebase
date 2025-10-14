@@ -26,6 +26,7 @@ use Symfony\Component\HttpFoundation\Request;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\MediaElementRewrite;
+use Degami\Basics\Html\TagElement;
 
 /**
  * "MediaRewrites" Admin Page
@@ -255,9 +256,10 @@ class MediaRewrites extends AdminManageModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
             function ($elem) {
@@ -277,6 +279,102 @@ class MediaRewrites extends AdminManageModelsPage
             },
             $data
         );
+    }
+
+    public function getGridCardBody(array $element, bool $selectCheckboxes = false) : TagElement
+    {
+        /** @var TagElement $cardBody */
+        $cardBody = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'div',
+                'attributes' => ['class' => "card-body pb-0 container"],
+            ]]
+        );
+
+        if ($selectCheckboxes == true) {
+            if (isset($element['_admin_table_item_pk']) && (
+                isset($element['actions'][AdminManageModelsPage::EDIT_BTN]) ||
+                isset($element['actions'][AdminManageModelsPage::DELETE_BTN])                        
+            )) {
+                $cardBody->addChild(
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'label',
+                            'text' => '<input class="table-row-selector" type="checkbox" /><span class="checkbox__icon"></span>',
+                            'attributes' => ['class' => 'checkbox position-absolute', 'style' => 'top: 10px; right: 10px'],
+                        ]]
+                    )
+                );
+            }
+        }
+
+        /** @var TagElement $target */
+        $target = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'div',
+                'attributes' => ['class' => 'row'],
+            ]]
+        );
+        $cardBody->addChild($target);
+
+        if (isset($element['Filename - Path'])) {
+            $cardBody->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'text' => $element['Filename - Path'],
+                        'attributes' => ['class' => 'mt-2 word-break'],
+                    ]]
+                )
+            );
+        }
+
+        if (isset($element['Preview'])) {
+            $target->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'text' => $element['Preview'],
+                        'attributes' => ['class' => 'col-auto p-1'],
+                    ]]
+                )
+            );
+
+            $newtarget = $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'div',
+                    'attributes' => ['class' => 'col'],
+                ]]
+            );
+
+            $target->addChild($newtarget);
+            $target = $newtarget;
+        }
+
+        foreach ($element as $tk => $dd) {
+            if ($tk == 'actions' || $tk == '_admin_table_item_pk' || $tk == 'Preview' || $tk == 'Filename - Path') {
+                continue;
+            }
+            $target->addChild(
+                ($dd instanceof TagElement) ? $dd :
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'div',
+                            'text' => '<label class="mb-0 mr-2 font-weight-bold">'.(string)$tk . ':</label>' . (string)$dd,
+                            'attributes' => ['class' => in_array(strtolower($tk), ['website', 'locale']) ? 'nowrap' : 'text-break'],
+                        ]]
+                    )
+            );
+        }
+
+        return $cardBody;
     }
 
     public static function exposeDataToDashboard() : mixed

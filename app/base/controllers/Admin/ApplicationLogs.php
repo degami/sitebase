@@ -241,11 +241,12 @@ class ApplicationLogs extends AdminManageModelsPage
      * {@inheritdoc}
      *
      * @param array $data
+     * @param array $options
      * @return array
      * @throws DependencyException
      * @throws NotFoundException
      */
-    protected function getTableElements(array $data): array
+    protected function getTableElements(array $data, array $options = []): array
     {
         return array_map(
             function ($log) {
@@ -269,5 +270,10 @@ class ApplicationLogs extends AdminManageModelsPage
     public static function exposeDataToDashboard() : mixed
     {
         return null;
+    }
+
+    protected function hasLayoutSelector(): bool
+    {
+        return false;
     }
 }

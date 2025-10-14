@@ -153,9 +153,7 @@ class TwoFa extends LoggedUserFormPage
             'value' => $secret,
         ]);
 
-        $this->addSubmitButton($form);
-
-        
+        $this->addSubmitButton($form, isConfirmation: true);
 
         return $form;
     }

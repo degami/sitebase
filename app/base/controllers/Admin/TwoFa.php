@@ -231,7 +231,7 @@ class TwoFa extends AdminFormPage
             'value' => $secret,
         ]);
 
-        $this->addSubmitButton($form);
+        $this->addSubmitButton($form, isConfirmation: true);
 
         return $form;
     }

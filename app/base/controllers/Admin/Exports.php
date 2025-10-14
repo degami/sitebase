@@ -100,7 +100,7 @@ class Exports extends AdminFormPage
             'validate' => ['required'],
         ]);
 
-        $this->addSubmitButton($form);
+        $this->addSubmitButton($form, isConfirmation: true);
 
         return $form;
     }

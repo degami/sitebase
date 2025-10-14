@@ -14,16 +14,11 @@
 namespace App\Base\Controllers\Admin;
 
 use App\App;
-use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Models\CronLog;
-use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Abstracts\Controllers\AdminFormPage;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use HaydenPierce\ClassFinder\ClassFinder;
@@ -41,28 +36,9 @@ class Cron extends AdminManageModelsPage
     public const ATTENTION_SPAN = 1800;
 
     /**
-     * {@inheritdoc}
-     *
-     * @param ContainerInterface $container
-     * @param Request|null $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws Exception
+     * @var string page title
      */
-    public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
-    ) {
-        AdminFormPage::__construct($container, $request, $route_info);
-        $this->page_title = 'Cron Tasks';
-        
-        parent::__construct($container, $request, $route_info);
-    }
+    protected ?string $page_title = 'Cron Tasks';
 
     /**
      * {@inheritdoc}

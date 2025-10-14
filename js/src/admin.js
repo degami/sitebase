@@ -204,6 +204,20 @@
                     }
                 });
 
+                $('#duplicate-btn', $elem).on('click', function(evt) {
+                    evt.preventDefault();
+
+                    $elem.appAdmin('showAlertDialog', {
+                        title: 'Confirm duplicate?',
+                        message: 'Do you confirm element duplication?',
+                        okText: 'Yes, Continue',
+                        cancelText: 'No, Cancel',
+                        onConfirm: function() {
+                            document.location.href = $(evt.target).attr('href');
+                        }
+                    });
+                });
+
             });
         },
         showOverlay: function(namespace) {

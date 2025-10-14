@@ -14,9 +14,6 @@
 namespace App\Base\Controllers\Admin\Commerce;
 
 use App\App;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -35,27 +32,9 @@ use App\Base\Abstracts\Controllers\BasePage;
 class TaxRates extends AdminManageFrontendModelsPage
 {
     /**
-     * {@inherithdocs}
-     *
-     * @param ContainerInterface $container
-     * @param Request|null $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws OutOfRangeException
+     * @var string page title
      */
-    public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null,
-        bool $asGrid = false,
-    ) {
-        parent::__construct($container, $request, $route_info, $asGrid);
-        $this->page_title = 'Tax Rates';
-    }
+    protected ?string $page_title = 'Tax Rates';
 
     /**
      * {@inheritdoc}

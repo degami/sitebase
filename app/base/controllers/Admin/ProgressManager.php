@@ -15,11 +15,6 @@ namespace App\Base\Controllers\Admin;
 
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
-use DI\DependencyException;
-use DI\NotFoundException;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Controllers\AdminFormPage;
 use App\Base\Models\ProgressManagerProcess;
@@ -30,26 +25,9 @@ use App\Base\Models\ProgressManagerProcess;
 class ProgressManager extends AdminFormPage
 {
     /**
-     * {@inherithdocs}
-     *
-     * @param ContainerInterface $container
-     * @param Request|null $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws OutOfRangeException
+     * @var string page title
      */
-    public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
-    ) {
-        parent::__construct($container, $request, $route_info);
-        $this->page_title = 'Progress Manager';
-    }
+    protected ?string $page_title = 'Progress Manager';
 
     /**
      * {@inheritdoc}

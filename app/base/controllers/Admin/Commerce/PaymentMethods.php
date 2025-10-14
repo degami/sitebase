@@ -37,6 +37,11 @@ use App\Base\Abstracts\Controllers\BasePage;
 class PaymentMethods extends AdminFormPage
 {
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Payment Methods';
+
+    /**
      * @var array|null admin_log data
      */
     protected ?array $admin_action_log_data = null;
@@ -65,7 +70,6 @@ class PaymentMethods extends AdminFormPage
                 'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableItems(), $this->getTableHeader(), $this),
             ];
         }
-        $this->page_title = 'Payment Methods';
     }
 
     /**

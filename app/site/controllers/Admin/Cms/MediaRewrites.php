@@ -13,16 +13,11 @@
 
 namespace App\Site\Controllers\Admin\Cms;
 
-use App\Base\Exceptions\PermissionDeniedException;
 use App\Site\Models\MediaElement;
 use App\Base\Models\Rewrite;
-use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
-use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\MediaElementRewrite;
@@ -34,26 +29,9 @@ use Degami\Basics\Html\TagElement;
 class MediaRewrites extends AdminManageModelsPage
 {
     /**
-     * {@inherithdocs}
-     *
-     * @param ContainerInterface $container
-     * @param Request|null $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws OutOfRangeException
+     * @var string page title
      */
-    public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
-    ) {
-        parent::__construct($container, $request, $route_info);
-        $this->page_title = 'Rewrite / Media';
-    }
+    protected ?string $page_title = 'Rewrite / Media';
 
     /**
      * {@inheritdoc}

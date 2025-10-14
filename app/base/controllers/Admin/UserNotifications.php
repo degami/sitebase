@@ -21,19 +21,22 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\UserNotification;
-use App\App;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Models\User;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
 use DateTime;
+use App\Base\Abstracts\Controllers\BasePage;
+use Symfony\Component\HttpFoundation\Response;
 
 /**
  * "User Notifications" Admin Page
  */
 class UserNotifications extends AdminManageFrontendModelsPage
 {
+    /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Notifications';
+
     /**
      * {@inheritdoc}
      *
@@ -92,22 +95,23 @@ class UserNotifications extends AdminManageFrontendModelsPage
         ];
     }
 
-    function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null,
-        bool $asGrid = false,
-
-    ) {
-        parent::__construct($container, $request, $route_info,$asGrid);
-        $this->page_title = 'Notifications';
+    /**
+     * {@inheritdoc}
+     *
+     * @return Response|self
+     * @throws PermissionDeniedException
+     * @throws BasicException
+     */
+    protected function beforeRender(): BasePage|Response
+    {
         if ($this->getCollection()->count() > 0) {
             if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
                 $this->addActionLink('readall-btn', 'readall-btn', $this->getHtmlRenderer()->getIcon('user-check') . $this->getUtils()->translate('Mark all as read', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=markallasread', 'btn btn-sm btn-outline-warning');
             }    
         }
+        return parent::beforeRender();
     }
-    
+
     protected function getCollection() : BaseCollection
     {
         $collection = parent::getCollection();
@@ -179,7 +183,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
                 ]);
 
                 $this->addFrontendFormElements($form, $form_state, ['website_id']);
-                $this->addSubmitButton($form);
+                $this->addSubmitButton($form, isConfirmation: true);
 
                 break;
             case 'markallasread':

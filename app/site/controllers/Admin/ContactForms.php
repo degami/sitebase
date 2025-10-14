@@ -40,6 +40,11 @@ use App\Base\Abstracts\Models\BaseModel;
 class ContactForms extends AdminManageFrontendModelsPage
 {
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Contact Forms';
+
+    /**
      * @var array available form field types
      */
     protected $available_form_field_types = [
@@ -69,7 +74,6 @@ class ContactForms extends AdminManageFrontendModelsPage
         bool $asGrid = false,
     ) {
         AdminFormPage::__construct($container, $request, $route_info, $asGrid);
-        $this->page_title = 'Contact Forms';
         if ($this->template_data['action'] == 'list' || $this->template_data['action'] == 'submissions') {
             if ($this->template_data['action'] == 'list') {
                 $this->addNewButton();

@@ -19,9 +19,6 @@ use App\Base\Abstracts\Controllers\AdminPage;
 use Degami\SqlSchema\Exceptions\OutOfRangeException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
 use Degami\Basics\Html\TagElement;
 
 /**
@@ -29,6 +26,11 @@ use Degami\Basics\Html\TagElement;
  */
 class Routes extends AdminPage
 {
+    /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'App Routes';
+
     /**
      * {@inheritdoc}
      *
@@ -64,16 +66,6 @@ class Routes extends AdminPage
             'section' => 'tools',
             'order' => 100,
         ];
-    }
-
-    function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
-
-    ) {
-        parent::__construct($container, $request, $route_info);
-        $this->page_title = 'App Routes';
     }
 
     /**

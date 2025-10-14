@@ -222,7 +222,7 @@ class Elasticsearch extends AdminPage
         $results = [];
 
         $response = $this->getSearch()->indexFrontendCollection($this->containerCall([$modelClass, 'getCollection']));
-        foreach ($response['items'] as $item) {
+        foreach (($response['items'] ?? []) as $item) {
             if (isset($item['index']['result'])) {
                 if (!isset($results[$item['index']['result']])) {
                     $results[$item['index']['result']] = 0;

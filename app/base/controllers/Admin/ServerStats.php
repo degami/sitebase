@@ -25,6 +25,11 @@ use DI\NotFoundException;
 class ServerStats extends AdminPage
 {
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Server Status';
+
+    /**
      * {@inheritdoc}
      *
      * @return string
@@ -72,8 +77,6 @@ class ServerStats extends AdminPage
      */
     public function getTemplateData(): array
     {
-        $this->page_title = 'Server Status';
-        
         $memoryInfo = file_get_contents('/proc/meminfo');
         preg_match('/MemTotal:\s+(\d+) kB/', $memoryInfo, $totalMemoryMatches);
         preg_match('/MemAvailable:\s+(\d+) kB/', $memoryInfo, $availableMemoryMatches);

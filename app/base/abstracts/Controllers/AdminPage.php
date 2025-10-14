@@ -41,7 +41,7 @@ abstract class AdminPage extends BaseHtmlPage
     /**
      * @var string page title
      */
-    protected string $page_title;
+    protected ?string $page_title = null;
 
     /**
      * {@inheritdoc}
@@ -58,8 +58,6 @@ abstract class AdminPage extends BaseHtmlPage
         protected ?Request $request = null, 
         protected ?RouteInfo $route_info = null
     ) {
-        $this->page_title = ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
-
         parent::__construct($container, $request, $route_info);
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
             $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');
@@ -223,7 +221,7 @@ abstract class AdminPage extends BaseHtmlPage
      */
     public function getPageTitle(): string
     {
-        return $this->page_title;
+        return $this->page_title ?? ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
     }
 
     /**

@@ -355,11 +355,15 @@ class Manager extends ContainerAwareObject
      * 
      * @param BaseCollection $collection collection to index
      * 
-     * @return array The response from Elasticsearch after indexing.
+     * @return array|null The response from Elasticsearch after indexing.
      */
-    public function indexFrontendCollection(BaseCollection $collection) : array
+    public function indexFrontendCollection(BaseCollection $collection) : ?array
     {
-        $items = array_map(fn($object) => $this->getIndexDataForFrontendModel($object), $collection->getItems());
+        $items = $collection->map(fn($object) => $this->getIndexDataForFrontendModel($object), $collection->getItems());
+        if (empty($items)) {
+            return null;
+        }
+
         return $this->bulkIndexData($items);
     }
 
@@ -1518,7 +1522,7 @@ class Manager extends ContainerAwareObject
         foreach ($classes as $className) {
             $process->progress()->persist();
             $response = App::getInstance()->getSearch()->indexFrontendCollection(App::getInstance()->containerCall([$className, 'getCollection']));
-            foreach ($response['items'] as $item) {
+            foreach (($response['items'] ?? []) as $item) {
                 if (isset($item['index']['result'])) {
                     if (!isset($results[$item['index']['result']])) {
                         $results[$item['index']['result']] = 0;

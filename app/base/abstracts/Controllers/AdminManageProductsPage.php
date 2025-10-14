@@ -14,21 +14,11 @@
 namespace App\Base\Abstracts\Controllers;
 
 use App\App;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
-use DI\DependencyException;
-use DI\NotFoundException;
 use Exception;
 use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
-use Degami\PHPFormsApi as FAPI;
 use App\Base\Interfaces\Model\ProductInterface;
-use App\Site\Models\DownloadableProduct;
 use HaydenPierce\ClassFinder\ClassFinder;
-use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use App\Site\Models\MediaElement;
-use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Models\TaxClass;
 
 /**

@@ -13,7 +13,6 @@
 
 namespace App\Base\Controllers\Admin;
 
-use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Abstracts\Controllers\BasePage;
@@ -22,9 +21,6 @@ use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
 
 /**
  * "Application Logs" Admin Page
@@ -32,26 +28,9 @@ use App\Base\Routing\RouteInfo;
 class ApplicationLogs extends AdminManageModelsPage
 {
     /**
-     * {@inherithdocs}
-     *
-     * @param ContainerInterface $container
-     * @param Request|null $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws PermissionDeniedException
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws OutOfRangeException
+     * @var string page title
      */
-    public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
-    ) {
-        parent::__construct($container, $request, $route_info);
-        $this->page_title = 'Application Logs';
-    }
+    protected ?string $page_title = 'Application Logs';
 
     /**
      * {@inheritdoc}

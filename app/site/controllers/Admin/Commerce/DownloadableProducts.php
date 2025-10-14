@@ -13,22 +13,14 @@
 
 namespace App\Site\Controllers\Admin\Commerce;
 
-use App\App;
-use Psr\Container\ContainerInterface;
-use Symfony\Component\HttpFoundation\Request;
-use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Exception;
 use App\Base\Abstracts\Controllers\AdminManageProductsPage;
 use Degami\PHPFormsApi as FAPI;
-use App\Base\Interfaces\Model\ProductInterface;
 use App\Site\Models\DownloadableProduct;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Site\Models\MediaElement;
-use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Models\TaxClass;
 use App\Site\Models\MediaElement as Media;
 
@@ -37,29 +29,10 @@ use App\Site\Models\MediaElement as Media;
  */
 class DownloadableProducts extends AdminManageProductsPage
 {
-
     /**
-     * {@inheritdoc}
-     *
-     * @param ContainerInterface $container
-     * @param Request|null $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws FAPI\Exceptions\FormException
-     * @throws OutOfRangeException
-     * @throws PermissionDeniedException
-     * @throws DependencyException
-     * @throws NotFoundException
+     * @var string page title
      */
-    public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null,
-        bool $asGrid = false,
-    ) {
-        AdminManageModelsPage::__construct($container, $request, $route_info, $asGrid);
-        $this->page_title = 'Downloadable Products';
-    }
+    protected ?string $page_title = 'Downloadable Products';
 
     /**
      * {@inheritdoc}

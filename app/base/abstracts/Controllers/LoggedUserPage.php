@@ -13,16 +13,10 @@
 
 namespace App\Base\Abstracts\Controllers;
 
-use App\Base\Routing\RouteInfo;
 use App\Base\Traits\FrontendPageTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
-use DI\DependencyException;
-use DI\NotFoundException;
-use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Psr\Container\ContainerInterface;
 
 /**
  * Base for admin pages
@@ -34,28 +28,7 @@ abstract class LoggedUserPage extends FrontendPage
     /**
      * @var string page title
      */
-    protected string $page_title;
-
-    /**
-     * {@inheritdoc}
-     *
-     * @param ContainerInterface $container
-     * @param Request $request
-     * @param RouteInfo $route_info
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     * @throws PhpfastcacheSimpleCacheException
-     */
-    public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
-    ) {
-        $this->page_title = ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
-
-        parent::__construct($container, $request, $route_info);
-    }
+    protected ?string $page_title = null;
 
     /**
      * returns valid route HTTP verbs
@@ -94,7 +67,7 @@ abstract class LoggedUserPage extends FrontendPage
      */
     public function getPageTitle(): string
     {
-        return $this->page_title;
+        return $this->page_title ?? ucwords(str_replace("_", " ", implode("", array_slice(explode("\\", get_class($this)), -1, 1))));
     }
 
     /**

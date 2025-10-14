@@ -107,7 +107,7 @@ class Imports extends AdminFormPage
             'destination' => $this->getApp()->getDir(App::TMP),
         ]);
 
-        $this->addSubmitButton($form);
+        $this->addSubmitButton($form, isConfirmation: true);
 
         return $form;
     }

@@ -45,7 +45,7 @@ class ReadDocs extends AdminJsonPage
         $pageContents = null;
 
         if (file_exists($localPage)) {
-            $pageContents = "<iframe style=\"width: 100%; height: 100%;\" src=\"$page\"></iframe>";
+            $pageContents = "<iframe style=\"width: 100%; height: 80vh;\" src=\"$page\"></iframe>";
         }
 
         return ['success' => true, 'html' => $pageContents];

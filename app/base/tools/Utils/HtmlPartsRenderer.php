@@ -837,23 +837,24 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 // ensure all header cols are in row cols
                 $elem += array_combine(array_keys($header), array_fill(0, count($header), ''));
 
-                $trAttribites = ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'];
-                if (isset($elem['_admin_table_row_class'])) {
+                $trAttributes = ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'];
+                if (isset($elem['_admin_table_item_pk'])) {
                     $trAttributes['data-_item_pk'] = $elem['_admin_table_item_pk'];
+                    $trAttributes['class'] .= ' selectable';
                 }
-                if (isset($elem['actions'][AdminManageModelsPage::EDIT_BTN])) {
-                    if (preg_match('/<a .*?href=["\'](.*?)["\'].*?>/', $elem['actions'][AdminManageModelsPage::EDIT_BTN], $matches)) {
-                        $trAttribites['data-dblclick'] = $matches[1];
+                $dblClicElem = current(array_filter(array_keys((array) ($elem['actions'] ?? [])), fn($el) => str_ends_with($el, '.dblclick')));
+                if ($dblClicElem || isset($elem['actions'][AdminManageModelsPage::EDIT_BTN])) {
+                    $linkHtml = $elem['actions'][$dblClicElem ? $dblClicElem : AdminManageModelsPage::EDIT_BTN];
+                    if (preg_match('/<a .*?href=["\'](.*?)["\'].*?>/', $linkHtml, $matches)) {
+                        $trAttributes['data-dblclick'] = $matches[1];
                     }
-                    $trAttribites['data-_item_pk'] = $elem['_admin_table_item_pk'];
-                    $trAttribites['class'] .= ' selectable';
                 }
 
                 $row = $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'tr',
-                        'attributes' =>  $trAttribites,
+                        'attributes' =>  $trAttributes,
                     ]]
                 );
 
@@ -1107,60 +1108,79 @@ class HtmlPartsRenderer extends ContainerAwareObject
         );
         $grid->addChild($gridRow);
 
-        foreach ($elements as $key => $elem) {
-
-            $gridCOlAttributes = ['class' => "col mb-3"];
-            if (isset($elem['_admin_table_row_class'])) {
-                $gridCOlAttributes['data-_item_pk'] = $elem['_admin_table_item_pk'];
-            }
-            if (isset($elem['actions'][AdminManageModelsPage::EDIT_BTN])) {
-                if (preg_match('/<a .*?href=["\'](.*?)["\'].*?>/', $elem['actions'][AdminManageModelsPage::EDIT_BTN], $matches)) {
-                    $gridCOlAttributes['data-dblclick'] = $matches[1];
+        if (!empty($elements)) {
+            foreach ($elements as $key => $elem) {
+                $gridCOlAttributes = ['class' => "col mb-3"];
+                if (isset($elem['_admin_table_item_pk'])) {
+                    $gridCOlAttributes['data-_item_pk'] = $elem['_admin_table_item_pk'];
+                    $gridCOlAttributes['class'] .= ' selectable';
                 }
-                $gridCOlAttributes['data-_item_pk'] = $elem['_admin_table_item_pk'];
-                $gridCOlAttributes['class'] .= ' selectable';
-            }
+                $dblClicElem = current(array_filter(array_keys($elem['actions'] ?? []), fn($el) => str_ends_with($el, '.dblclick')));
+                if ($dblClicElem || isset($elem['actions'][AdminManageModelsPage::EDIT_BTN])) {
+                    $linkHtml = $elem['actions'][$dblClicElem ? $dblClicElem : AdminManageModelsPage::EDIT_BTN];
+                    if (preg_match('/<a .*?href=["\'](.*?)["\'].*?>/', $linkHtml, $matches)) {
+                        $gridCOlAttributes['data-dblclick'] = $matches[1];
+                        $gridCOlAttributes['class'] .= ' dblclick';
+                    }
+                }
 
-            $gridCol = $this->containerMake(
-                TagElement::class,
-                ['options' => [
-                    'tag' => 'div',
-                    'attributes' => $gridCOlAttributes,
-                ]]
-            );
-            $gridRow->addChild($gridCol);
-
-            $card = $this->containerMake(
-                TagElement::class,
-                ['options' => [
-                    'tag' => 'div',
-                    'attributes' => ['class' => "card position-relative"],
-                ]]
-            );
-            $gridCol->addChild($card);
-
-            try {
-                // in a try / catch , as is_callable([$current_page, 'getGridCardBody']) will return true because of the __call method, but will raise an exception
-                $cardBody = ($current_page && is_callable([$current_page, 'getGridCardBody'])) ? $current_page->getGridCardBody($elem, $selectCheckboxes) : $this->getGridCardBody($elem, $selectCheckboxes);
-            } catch (Exception $e) {
-                $cardBody = $this->getGridCardBody($elem, $selectCheckboxes);
-            }
-
-            $card->addChild($cardBody);
-
-            if (array_key_exists('actions', $header)) {
-                $card->addChild(
-                    $this->containerMake(
-                        TagElement::class,
-                        ['options' => [
-                            'tag' => 'div',
-                            'text' => is_array($elem['actions']) ? implode(" ", $elem['actions']) : $elem['actions'] ?? '',
-                            'attributes' => ['class' => 'card-footer text-muted text-right nowrap'],
-                        ]]
-                    )
+                $gridCol = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'attributes' => $gridCOlAttributes,
+                    ]]
                 );
+                $gridRow->addChild($gridCol);
+
+                $card = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'attributes' => ['class' => "card position-relative"],
+                    ]]
+                );
+                $gridCol->addChild($card);
+
+                try {
+                    // in a try / catch , as is_callable([$current_page, 'getGridCardBody']) will return true because of the __call method, but will raise an exception
+                    $cardBody = ($current_page && is_callable([$current_page, 'getGridCardBody'])) ? $current_page->getGridCardBody($elem, $selectCheckboxes) : $this->getGridCardBody($elem, $selectCheckboxes);
+                } catch (Exception $e) {
+                    $cardBody = $this->getGridCardBody($elem, $selectCheckboxes);
+                }
+
+                $card->addChild($cardBody);
+
+                if (array_key_exists('actions', $header)) {
+                    $card->addChild(
+                        $this->containerMake(
+                            TagElement::class,
+                            ['options' => [
+                                'tag' => 'div',
+                                'text' => is_array($elem['actions']) ? implode(" ", $elem['actions']) : $elem['actions'] ?? '',
+                                'attributes' => ['class' => 'card-footer text-muted text-right nowrap'],
+                            ]]
+                        )
+                    );
+                }
+
+            }
+        } else {
+            $text = 'No elements found!';
+            if (($current_page instanceof BasePage)) {
+                $text = $this->getUtils()->translate($text, locale: $current_page?->getCurrentLocale());
             }
 
+            $gridRow->setAttribute('class', 'row row-cols-1')->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'div',
+                        'attributes' => ['class' => 'col text-center'],
+                        'text' => $text,
+                    ]]
+                )
+            );
         }
 
             // searchbox

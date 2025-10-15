@@ -102,6 +102,7 @@ class Routes extends AdminPage
                                 'attributes' => [
                                     'href' => $linkTo,
                                     'class' => 'inToolSidePanel',
+                                    'data-panelWidth' => '95%',
                                 ],
                                 'text' => $callable
                             ]

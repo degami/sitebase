@@ -317,19 +317,12 @@ class Media extends AdminManageModelsPage
                     }
                 }
 
-                $form->addField('media', [
-                    'type' => 'tag_container',
-                    'attributes' => [
-                        'class' => 'row',
-                    ],
-                ])
-                //$form
+                $form
                 ->addField('upload_file', [
                     'type' => 'file',
                     'destination' => $destinationDir,
                     'rename_on_existing' => true,
                     'title' => 'Upload new file',
-                    'container_class' => 'col-9',
                 ])
                 ->addField('lazyload', [
                     'type' => 'switchbox',
@@ -340,7 +333,6 @@ class Media extends AdminManageModelsPage
                     'no_value' => 0,
                     'no_label' => 'No',
                     'field_class' => 'switchbox',
-                    'container_class' => 'col-3',
                 ]);
 
                 $this->addSubmitButton($form);
@@ -527,6 +519,7 @@ class Media extends AdminManageModelsPage
                 
                 $folder->setFilesize(0);
                 $folder->setMimetype('inode/directory');
+                $folder->setUserId($this->getCurrentUser()->getId());
 
                 $this->setAdminActionLogData($folder->getChangedData());
 
@@ -541,19 +534,19 @@ class Media extends AdminManageModelsPage
             // intentional fall trough
             // no break
             case 'edit':
-                if ($values->media->upload_file->filepath) {
-                    $media->setPath($values->media->upload_file->filepath);
+                if ($values->upload_file->filepath) {
+                    $media->setPath($values->upload_file->filepath);
                 }
-                if ($values->media->upload_file->filename) {
-                    $media->setFilename($values->media->upload_file->filename);
+                if ($values->upload_file->filename) {
+                    $media->setFilename($values->upload_file->filename);
                 }
-                if ($values->media->upload_file->mimetype) {
-                    $media->setMimetype($values->media->upload_file->mimetype);
+                if ($values->upload_file->mimetype) {
+                    $media->setMimetype($values->upload_file->mimetype);
                 }
-                if ($values->media->upload_file->filesize) {
-                    $media->setFilesize($values->media->upload_file->filesize);
+                if ($values->upload_file->filesize) {
+                    $media->setFilesize($values->upload_file->filesize);
                 }
-                if ($values->media->upload_file->renamed) {
+                if ($values->upload_file->renamed) {
                     $this->addInfoFlashMessage(
                         $this->getUtils()->translate(
                             "File was renamed to %s",
@@ -561,7 +554,7 @@ class Media extends AdminManageModelsPage
                         )
                     );
                 }
-                $media->setLazyload($values->media->lazyload);
+                $media->setLazyload($values->lazyload);
 
                 $this->setAdminActionLogData($media->getChangedData());
 
@@ -713,7 +706,7 @@ class Media extends AdminManageModelsPage
             function (MediaElement $elem) use ($options) {
                 $actions = match($elem->isDirectory()) {
                     true => [
-                        'chdir-btn' => $this->getChangeDirButton($elem->id),
+                        'chdir-btn.dblclick' => $this->getChangeDirButton($elem->id),
                         static::DELETE_BTN => $this->getDeleteButton($elem->id),
                     ],
                     default => [

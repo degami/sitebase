@@ -551,7 +551,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                         'ID' => $submission->id,
                         'User' => $submission->getUserId() > 0 ? $submission->getOwner()->email : 'guest',
                         'Created At' => $submission->created_at,
-                        'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&contact_id='.$this->getRequest()->query->get('contact_id').'&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>'
+                        'actions' => ['<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&contact_id='.$this->getRequest()->query->get('contact_id').'&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>']
                     ];
                 },
                 $data

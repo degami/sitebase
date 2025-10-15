@@ -176,6 +176,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
         $collection = $this->getCollection();
         $data = $this->containerCall([$collection, 'paginate'], ['page_size' => $itemsPerPage]);
 
+        // force array indexes to be sequential
+        $data['items'] = array_values($data['items']);
         return $data;
     }
 
@@ -462,7 +464,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             $primaryKey = json_encode($primaryKey);
         }
 
-        $this->addActionLink(static::VERSIONS_BTN, static::VERSIONS_BTN, '&#9776; Versions', $this->getUrl('crud.app.base.controllers.admin.json.versions', ['class' => base64_encode(get_class($object)), 'key' => base64_encode($primaryKey) ]), 'btn btn-sm btn-light inToolSidePanel');
+        $this->addActionLink(static::VERSIONS_BTN, static::VERSIONS_BTN, '&#9776; Versions', $this->getUrl('crud.app.base.controllers.admin.json.versions', ['class' => base64_encode(get_class($object)), 'key' => base64_encode($primaryKey) ]), 'btn btn-sm btn-light inToolSidePanel', ['data-panelWidth' => '80%']);
     }
 
 

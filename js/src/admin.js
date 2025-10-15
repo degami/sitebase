@@ -98,10 +98,11 @@
                         $btnElement.addClass('loading disabled').css('pointer-events', 'none');
                         $('<span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>').prependTo($btnElement);
 
+                        let openPanelWidth = $btnElement.data('panelwidth') || $btnElement.data('panelWidth') || '60%';
                         $elem.appAdmin('loadPanelContent', $(this).attr('title') || '', $(this).attr('href'), true, true, function() {
                             $('.spinner-border', $btnElement).remove();
                             $btnElement.removeClass('loading disabled').css('pointer-events', '');
-                        });
+                        }, openPanelWidth);
                     }
                 });
                 $('#toolsSidePanel .closebtn', $elem).click(function(evt){
@@ -248,11 +249,11 @@
         getSettings: function() {
             return $(this).data('appAdmin').settings || $(this).data('appAdmin').defaults;
         },
-        openSidePanel: function() {
+        openSidePanel: function(openPanelWidth = '60%') {
             let that = this;
 
             $(that).appAdmin('showOverlay');
-            $('.sidepanel', this).css({'width': '95%'});
+            $('.sidepanel', this).css({'width': openPanelWidth});
 
             if (!$(that).data('sidePanelUnbinders')) {
                 $(that).data('sidePanelUnbinders', []);
@@ -441,7 +442,7 @@
         getElem: function() {
             return $(this).data('appAdmin').$elem;
         },
-        loadPanelContent: function(title, url, open_panel, store_last_url, afterloadCallback = null) {
+        loadPanelContent: function(title, url, open_panel, store_last_url, afterloadCallback = null, openPanelWidth = '60%') {
             let that = this;
             if (undefined == open_panel) {
                 open_panel = true;
@@ -491,7 +492,7 @@
                     eval(response.js);
                 };
                 if (open_panel) {
-                    $(that).appAdmin('openSidePanel');
+                    $(that).appAdmin('openSidePanel', openPanelWidth);
                 }
                 $('.sidepanel', that).find('.card-block a[href]').click(function(evt){
                     if($(this).attr('href') != '#') {
@@ -567,7 +568,7 @@
                 }
             });
 
-            $table.find('tbody tr').on('click', function(evt){
+            $table.find('tbody tr.selectable').on('click', function(evt){
                 if ($(evt.target).is('td, tr')) {
                     clearTimeout(clickTimer);
 
@@ -581,7 +582,8 @@
                         }
                     }, delay);
                 }
-            }).on('dblclick', function(evt){
+            });
+            $table.find('tr[data-dblclick]').on('dblclick', function(evt){
                 if ($(evt.target).is('td, tr')) {
                     clearTimeout(clickTimer);
 
@@ -637,14 +639,15 @@
                         }
                     }, delay);
                 }
-            }).on('dblclick', function(evt){
+            });
+            $grid.find('[data-dblclick]').on('dblclick', function(evt){
                 if ($(evt.target).is('div')) {
                     clearTimeout(clickTimer);
 
-                    let $selectable = $(evt.target).closest('.selectable');
+                    let $containerTarget = $(evt.target).closest('.dblclick, .selectable');
 
-                    if ($selectable.data('dblclick')) {
-                        document.location = $selectable.data('dblclick').replace("&amp;","&");
+                    if ($containerTarget.data('dblclick')) {
+                        document.location = $containerTarget.data('dblclick').replace("&amp;","&");
                     }
                 }
             });
@@ -691,7 +694,6 @@
                 $('<input type="hidden" value="' + json + '" name="items['+index+']" />').appendTo(form);
             });
 
-//            console.log(form);
             form.submit();
         },
         listingTableEditSelected: function(tableSelector, controllerClassName, modelClassName, btnElement = null) {
@@ -947,7 +949,6 @@
                                 data: JSON.stringify({ id: notificationId, read: true, read_at: moment(new Date()).format('YYYY-MM-DD HH:mm:ss') }),
                                 contentType: 'application/json',
                                 success: function(response) {
-                                    console.log(response, "we can remove #"+dialogId);
                                     $('#' + dialogId).fadeOut(function(){
                                         $(this).remove();
                                     });

@@ -376,7 +376,7 @@ class Menus extends AdminManageModelsPage
             function ($menu) {
                 return [
                     'Menu Name' => $menu->menu_name,
-                    'actions' => '<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view-menu-name&menu_name=' . $menu->menu_name . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>'
+                    'actions' => ['<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view-menu-name&menu_name=' . $menu->menu_name . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>']
                 ];
             },
             $data

@@ -75,6 +75,9 @@ class ContactForms extends AdminManageFrontendModelsPage
     ) {
         AdminFormPage::__construct($container, $request, $route_info, $asGrid);
         if ($this->template_data['action'] == 'list' || $this->template_data['action'] == 'submissions') {
+
+            $this->addPaginationSizeSelector();
+
             if ($this->template_data['action'] == 'list') {
                 $this->addNewButton();
             } else {

@@ -150,6 +150,10 @@
                     $('.sidebar', $elem).removeClass('active');
                 });
 
+                $('#actionButtonsCollapse').on('click', function () {
+                    $('#nav-action-buttons ul.navbar-nav').toggleClass('d-none');
+                });
+
                 $elem.appAdmin('checkLoggedStatus');
 
                 // no need to fetch notifications in notification page

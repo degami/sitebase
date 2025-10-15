@@ -187,6 +187,10 @@ abstract class AdminPage extends BaseHtmlPage
         echo $this->getAssets()->renderHeadInlineJS();
         $template->stop();
 
+        $template->start('layout_buttons');
+        echo $this->renderLayoutButtons();
+        $template->stop();
+
         $template->start('action_buttons');
         echo $this->renderActionButtons();
         $template->stop();

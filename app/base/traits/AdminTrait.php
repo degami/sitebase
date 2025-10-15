@@ -37,6 +37,11 @@ trait AdminTrait
     protected array $action_buttons = [];
 
     /**
+     * @var array layout_buttons
+     */
+    protected array $layout_buttons = [];
+
+    /**
      * gets route group
      *
      * @return string|null
@@ -112,7 +117,7 @@ trait AdminTrait
             TagElement::class,
             ['options' => [
                 'tag' => 'ul',
-                'attributes' => ['class' => 'navbar-nav mr-auto'],
+                'attributes' => ['class' => 'navbar-nav mr-auto d-none d-md-block d-lg-block'],
             ]]
         );
 
@@ -123,7 +128,7 @@ trait AdminTrait
                     TagElement::class,
                     ['options' => [
                         'tag' => 'li',
-                        'attributes' => ['class' => 'nav-item ml-1 text-nowrap d-inline-flex align-items-center'],
+                        'attributes' => ['class' => 'nav-item ml-2 mb-1 text-nowrap d-inline-flex align-items-center'],
                         'text' => $button_html
                     ]]
                 )
@@ -133,6 +138,37 @@ trait AdminTrait
         return (string)$ul;
     }
 
+    protected function renderLayoutButtons(): string
+    {
+        if (empty($this->layout_buttons)) {
+            return '';
+        }
+
+        $ul = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'ul',
+                'attributes' => ['class' => 'navbar-nav mr-auto'],
+            ]]
+        );
+
+
+        foreach ($this->layout_buttons as $key => $button_html) {
+            $ul->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'li',
+                        'attributes' => ['class' => 'nav-item ml-2 mb-md-1 text-nowrap d-inline-flex align-items-center'],
+                        'text' => $button_html
+                    ]]
+                )
+            );
+        }
+
+        return (string)$ul;
+    }
+    
     /**
      * adds an action button
      *
@@ -148,7 +184,7 @@ trait AdminTrait
             'tag' => 'button',
             'id' => $button_id,
             'attributes' => [
-                'class' => $button_class,
+                'class' => $button_class . ' w-100',
                 'title' => $button_text,
             ],
             'text' => $button_text,
@@ -178,7 +214,7 @@ trait AdminTrait
             'tag' => 'a',
             'id' => $link_id,
             'attributes' => [
-                    'class' => $link_class,
+                    'class' => $link_class . ' w-100',
                     'href' => $link_href,
                     'title' => strip_tags($link_text),
                 ] + $attributes,

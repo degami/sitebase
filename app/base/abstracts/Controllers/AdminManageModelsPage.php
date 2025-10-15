@@ -499,7 +499,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 ]]);
             }, $options),
         ]]);
-        $this->action_buttons[] = $this->getUtils()->translate('Items per page', locale: $this->getCurrentLocale()). ':' . $select;
+        $this->layout_buttons[] = $this->getUtils()->translate('Items per page', locale: $this->getCurrentLocale()). ':' . $select;
     }
 
     /**
@@ -547,7 +547,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
                 ]]);
             }, $options, array_keys($options)),
         ]]);
-        $this->action_buttons[] = $this->getUtils()->translate('Layout', locale: $this->getCurrentLocale()). ':' . $selector;
+        $this->layout_buttons[] = $this->getUtils()->translate('Layout', locale: $this->getCurrentLocale()). ':' . $selector;
     }
 
     /**

@@ -57,10 +57,19 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars());?>
 
             <?php $this->sitebase()->renderFlashMessages($controller); ?>
 
-            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center mb-2 border-bottom">
-                <span>&nbsp;</span>
-                <nav class="navbar navbar-expand-md navbar-light m-1 p-0">
-                    <?= $this->section('action_buttons'); ?>                    
+            <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-start mb-2 border-bottom justify-content-lg-space-between">
+                <nav id="nav-layout-buttons" class="navbar navbar-expand-lg navbar-light m-1 p-0">
+                    <?= $this->section('layout_buttons'); ?>
+                </nav>
+
+                <nav id="nav-action-buttons" class="navbar navbar-expand-lg navbar-light m-1 p-0">
+                    <div class="d-flex align-items-end flex-column">
+                        <button type="button" id="actionButtonsCollapse" class="btn btn-sm d-sm-block d-md-none">
+                            <span class="navbar-toggler-icon"></span> <?= $this->sitebase()->translate('Actions');?>
+                        </button>
+
+                        <?= $this->section('action_buttons'); ?>
+                    </div>
                 </nav>
             </div>
 

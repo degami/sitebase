@@ -114,6 +114,21 @@ class Manager
     }
 
     /**
+     * puts a new variable into env
+     * 
+     * @param string $variable
+     * @param mixed $value
+     * @return self
+     */
+    public function putVariable(string $variable, mixed $value) : self
+    {
+        putenv($variable.'='.$value);
+        $this->envVariables[$variable] = $value;
+
+        return $this;
+    }
+
+    /**
      * get env variables
      * 
      * @return array

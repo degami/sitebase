@@ -237,7 +237,7 @@ class ApplicationLogs extends AdminManageModelsPage
                     'Is Exception' => $log->is_exception ? 'true' : 'false',
                     'Created At' => $log->created_at,
                     'actions' => [
-                        'details-btn' => $this->getActionButton('details', $log->id, 'primary', 'zoom-in', 'Details'),
+                        'details-btn.dblclick' => $this->getActionButton('details', $log->id, 'primary', 'zoom-in', 'Details'),
                         static::DELETE_BTN => $this->getDeleteButton($log->id),
                     ],
                 ];

@@ -51,7 +51,11 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars());?>
                 <a href="#" class="closebtn d-sm-block d-md-none">&times;</a>
                 <?php $this->insert('admin::partials/sidemenu', ['controller' => $controller]); ?>
             </div>
-        </nav>            
+            <a href="#" id="sidebar-minimize-btn">
+                <span class="close-arrow"><?php $this->sitebase()->drawIcon('chevrons-left'); ?></span>
+                <span class="open-arrow"><?php $this->sitebase()->drawIcon('chevrons-right'); ?></span>
+            </a>
+        </nav>          
 
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
 

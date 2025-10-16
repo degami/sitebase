@@ -85,6 +85,15 @@
                     );
                 });
 
+                $('#dashboard-layout-selector').on('change', function () {
+                    $elem.appAdmin('updateUserUiSettings', 
+                        {'dashboardLayout': $(this).is(':checked') ? 'by_section' : 'list'},
+                        function (data) {
+                            document.location.reload();
+                        }
+                    );
+                });
+
                 $('a.inToolSidePanel[href]', $elem).click(function(evt){
                     const $btnElement = $(this);
 

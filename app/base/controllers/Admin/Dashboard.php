@@ -129,6 +129,7 @@ class Dashboard extends AdminPage
                         'icon' => $pageLink['icon'],
                         'label' => $pageLink['text'],
                         'route_name' => $pageLink['route_name'],
+                        'section' => $pageLink['section'],
                         'data' => $dashboardData,
                     ];
                 }

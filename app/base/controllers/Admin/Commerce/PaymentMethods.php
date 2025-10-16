@@ -137,7 +137,7 @@ class PaymentMethods extends AdminFormPage
             'permission_name' => static::getAccessPermission(),
             'route_name' => static::getPageRouteName(),
             'icon' => 'credit-card',
-            'text' => 'Payments Methods',
+            'text' => 'Payment Methods',
             'section' => 'commerce',
             'order' => 15,
         ];

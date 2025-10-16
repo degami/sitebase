@@ -51,8 +51,3 @@
     </div>
 <?php endif;?>
 </div>
-
-<a href="#" id="sidebar-minimize-btn">
-    <span class="close-arrow"><?php $this->sitebase()->drawIcon('chevrons-left'); ?></span>
-    <span class="open-arrow"><?php $this->sitebase()->drawIcon('chevrons-right'); ?></span>
-</a>

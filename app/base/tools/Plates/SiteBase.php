@@ -403,6 +403,14 @@ class SiteBase implements ExtensionInterface
         return $this->getHtmlRenderer()->renderAdminTable($elements, $header, $current_page);    
     }
 
+    public function getUseruISetting(AdminPage $controller, string $setting) : mixed
+    {
+        $user = $controller->getCurrentUser();
+        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
+
+        return $uiSettings[$setting] ?? null;
+    }
+
     public function getDarkModeSwitch(AdminPage $controller) : string
     {
         $user = $controller->getCurrentUser();

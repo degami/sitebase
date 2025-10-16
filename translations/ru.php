@@ -290,4 +290,10 @@ return [
     'Position' => 'Позиция',
     'Url key' => 'Ключ URL',
     'Frontend' => 'Фронтенд',
+    'Group By Section' => 'Группировать по разделу',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'Сгенерировать Meta Description / Meta Keywords / Html Title с помощью ИИ',
+    'Generate' => 'Сгенерировать',
+    'Meta Description' => 'Мета-описание',
+    'Meta Keywords' => 'Мета-ключевые слова',
+    'Html Title' => 'HTML-заголовок',
 ];

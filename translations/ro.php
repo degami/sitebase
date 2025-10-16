@@ -290,4 +290,10 @@ return [
     'Position' => 'Poziție',
     'Url key' => 'Cheie URL',
     'Frontend' => 'Frontend',
+    'Group By Section' => 'Grupează după secțiune',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'Generează Meta Description / Meta Keywords / Html Title folosind AI',
+    'Generate' => 'Generează',
+    'Meta Description' => 'Meta Descriere',
+    'Meta Keywords' => 'Meta Cuvinte cheie',
+    'Html Title' => 'Titlu HTML',
 ];

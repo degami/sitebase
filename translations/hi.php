@@ -290,4 +290,10 @@ return [
     'Position' => 'स्थिति',
     'Url key' => 'यूआरएल कुंजी',
     'Frontend' => 'फ्रंटएंड',
+    'Group By Section' => 'खंड के अनुसार समूहित करें',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'AI का उपयोग करके मेटा विवरण / मेटा कीवर्ड / HTML शीर्षक उत्पन्न करें',
+    'Generate' => 'उत्पन्न करें',
+    'Meta Description' => 'मेटा विवरण',
+    'Meta Keywords' => 'मेटा कीवर्ड',
+    'Html Title' => 'HTML शीर्षक',
 ];

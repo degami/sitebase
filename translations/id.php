@@ -290,4 +290,10 @@ return [
     'Position' => 'Posisi',
     'Url key' => 'Kunci URL',
     'Frontend' => 'Frontend',
+    'Group By Section' => 'Kelompokkan berdasarkan bagian',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'Hasilkan Meta Description / Meta Keywords / Html Title menggunakan AI',
+    'Generate' => 'Hasilkan',
+    'Meta Description' => 'Deskripsi Meta',
+    'Meta Keywords' => 'Kata Kunci Meta',
+    'Html Title' => 'Judul HTML',
 ];

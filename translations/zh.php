@@ -290,4 +290,10 @@ return [
     'Position' => '位置',
     'Url key' => 'URL 键',
     'Frontend' => '前端',
+    'Group By Section' => '按部分分组',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => '使用 AI 生成 Meta Description / Meta Keywords / Html Title',
+    'Generate' => '生成',
+    'Meta Description' => 'Meta 描述',
+    'Meta Keywords' => 'Meta 关键字',
+    'Html Title' => 'HTML 标题',
 ];

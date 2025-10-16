@@ -290,4 +290,10 @@ return [
     'Position' => 'Pozisyon',
     'Url key' => 'URL anahtarı',
     'Frontend' => 'Önyüz',
+    'Group By Section' => 'Bölüme göre gruplandır',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'AI kullanarak Meta Description / Meta Keywords / Html Title oluştur',
+    'Generate' => 'Oluştur',
+    'Meta Description' => 'Meta Açıklama',
+    'Meta Keywords' => 'Meta Anahtar Kelimeler',
+    'Html Title' => 'HTML Başlık',
 ];

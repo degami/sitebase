@@ -292,4 +292,10 @@ return [
     'Position' => 'অবস্থান',
     'Url key' => 'URL কী',
     'Frontend' => 'ফ্রন্টএন্ড',
+    'Group By Section' => 'বিভাগ অনুযায়ী গ্রুপ করুন',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'AI ব্যবহার করে মেটা বিবরণ / মেটা কীওয়ার্ড / HTML শিরোনাম তৈরি করুন',
+    'Generate' => 'তৈরি করুন',
+    'Meta Description' => 'মেটা বিবরণ',
+    'Meta Keywords' => 'মেটা কীওয়ার্ড',
+    'Html Title' => 'HTML শিরোনাম',
 ];

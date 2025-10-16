@@ -290,4 +290,10 @@ return [
     'Position' => 'Pozíció',
     'Url key' => 'URL-kulcs',
     'Frontend' => 'Frontend',
+    'Group By Section' => 'Csoportosítás szakaszonként',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'Meta Description / Meta Keywords / Html Title generálása AI segítségével',
+    'Generate' => 'Generálás',
+    'Meta Description' => 'Meta leírás',
+    'Meta Keywords' => 'Meta kulcsszavak',
+    'Html Title' => 'HTML cím',
 ];

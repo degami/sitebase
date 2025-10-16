@@ -290,4 +290,10 @@ return [
     'Position' => 'Vị trí',
     'Url key' => 'Khóa URL',
     'Frontend' => 'Giao diện người dùng',
+    'Group By Section' => 'Nhóm theo phần',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'Tạo Meta Description / Meta Keywords / Html Title bằng AI',
+    'Generate' => 'Tạo',
+    'Meta Description' => 'Mô tả Meta',
+    'Meta Keywords' => 'Từ khóa Meta',
+    'Html Title' => 'Tiêu đề HTML',
 ];

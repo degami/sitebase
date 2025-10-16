@@ -290,4 +290,10 @@ return [
     'Position' => 'Positie',
     'Url key' => 'URL-sleutel',
     'Frontend' => 'Frontend',
+    'Group By Section' => 'Groepeer per sectie',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'Genereer Meta Description / Meta Keywords / Html Title met AI',
+    'Generate' => 'Genereren',
+    'Meta Description' => 'Meta Beschrijving',
+    'Meta Keywords' => 'Meta Sleutelwoorden',
+    'Html Title' => 'HTML Titel',
 ];

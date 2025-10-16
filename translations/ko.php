@@ -290,4 +290,10 @@ return [
     'Position' => '위치',
     'Url key' => 'URL 키',
     'Frontend' => '프런트엔드',
+    'Group By Section' => '섹션별 그룹화',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'AI를 사용하여 메타 설명 / 메타 키워드 / HTML 제목 생성',
+    'Generate' => '생성',
+    'Meta Description' => '메타 설명',
+    'Meta Keywords' => '메타 키워드',
+    'Html Title' => 'HTML 제목',
 ];

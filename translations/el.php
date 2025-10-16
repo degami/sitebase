@@ -290,4 +290,10 @@ return [
     'Position' => 'Θέση',
     'Url key' => 'Κλειδί URL',
     'Frontend' => 'Frontend',
+    'Group By Section' => 'Ομαδοποίηση ανά ενότητα',
+    'Generate Meta Description / Meta Keywords / Html Title using AI' => 'Δημιουργία Meta Description / Meta Keywords / Html Title με χρήση AI',
+    'Generate' => 'Δημιουργία',
+    'Meta Description' => 'Meta Περιγραφή',
+    'Meta Keywords' => 'Meta Λέξεις-κλειδιά',
+    'Html Title' => 'HTML Τίτλος',
 ];

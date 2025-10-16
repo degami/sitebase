@@ -122,7 +122,7 @@ class Users extends AdminManageModelsPage
                     $this->addActionLink(
                         'addresses-btn',
                         'addresses-btn',
-                        '<i class="fas fa-address-book"></i> Addresses',
+                        '<i class="fas fa-address-book"></i> ' . $this->getUtils()->translate('Addresses', locale: $this->getCurrentLocale()),
                         $this->getUrl('crud.app.base.controllers.admin.json.useraddresses', ['id' => $this->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getRequest()->query->get('user_id') . '&action=newaddress',
                         'btn btn-sm btn-light inToolSidePanel'
                     );

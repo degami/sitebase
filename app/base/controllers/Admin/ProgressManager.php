@@ -223,7 +223,7 @@ class ProgressManager extends AdminFormPage
         $this->addButton(
             $form,
             'abort',
-            $buttonText ?? 'Abort selected process(es)',
+            'Abort selected process(es)',
             'ban',
             [
                 'attributes' => ['class' => 'btn btn-danger'],

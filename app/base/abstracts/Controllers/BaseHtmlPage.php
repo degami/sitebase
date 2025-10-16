@@ -143,8 +143,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      */
     protected function beforeRender(): BasePage|Response
     {
-        if ($this->getEnvironment()->canDebug()) {
-
+        if (method_exists($this, 'getCurrentLocale')) {
+            $this->getApp()->setCurrentLocale($this->getCurrentLocale());
         }
 
         return parent::beforeRender();
@@ -173,9 +173,6 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         }
 
         $this->template = $this->prepareTemplate();
-        if (method_exists($this, 'getCurrentLocale')) {
-            $this->getApp()->setCurrentLocale($this->getCurrentLocale());
-        }
 
         return $this->process($route_info, $route_data);
     }

@@ -13,6 +13,10 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\Base\Routing\RouteInfo;
+use Symfony\Component\HttpFoundation\Request;
+use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Base\Traits\AdminTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
@@ -28,6 +32,29 @@ abstract class AdminJsonPage extends BaseJsonPage
     /**
      * {@inheritdoc}
      *
+     * @param ContainerInterface $container
+     * @param Request $request
+     * @param RouteInfo $route_info
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function __construct(
+        protected ContainerInterface $container, 
+        protected ?Request $request = null, 
+        protected ?RouteInfo $route_info = null
+    ) {
+        parent::__construct($container, $request, $route_info);
+
+        // this call is here to force current locale set
+        $this->getCurrentLocale();
+
+        $this->response = $this->getContainer()->get(JsonResponse::class);
+    }
+
+    /**
+     * {@inheritdoc}
+     *
      * @return Response|self
      * @throws PermissionDeniedException
      * @throws BasicException
@@ -39,6 +66,24 @@ abstract class AdminJsonPage extends BaseJsonPage
         }
 
         return parent::beforeRender();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string|null
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     */
+    public function getCurrentLocale(): ?string
+    {
+        if ($this->locale == null) {
+            $this->locale = $this->getCurrentUser()->getLocale() ?? 'en';
+        }
+
+        $this->getApp()->setCurrentLocale($this->locale);
+        return $this->locale;
     }
 
     /**

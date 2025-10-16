@@ -59,6 +59,10 @@ abstract class AdminPage extends BaseHtmlPage
         protected ?RouteInfo $route_info = null
     ) {
         parent::__construct($container, $request, $route_info);
+
+        // this call is here to force current locale set
+        $this->getCurrentLocale();
+
         if (!$this->getTemplates()->getFolders()->exists('admin')) {
             $this->getTemplates()->addFolder('admin', App::getDir(App::TEMPLATES) . DS . 'admin');
         }

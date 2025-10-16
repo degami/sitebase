@@ -1,5 +1,7 @@
 <?php
 
+use App\App;
+
 /**
  * translate string
  *
@@ -10,13 +12,11 @@
  */
 function __(string $string, array $params = [], ?string $locale = null)
 {
-    global $app;
-
     if ($locale == null) {
-        $locale = $app->getCurrentLocale();
+        $locale = App::getInstance()->getCurrentLocale();
     }
 
-    return $app->getUtils()->translate($string, params: $params, locale: $locale);
+    return App::getInstance()->getUtils()->translate($string, params: $params, locale: $locale);
 }
 
 /**
@@ -27,9 +27,7 @@ function __(string $string, array $params = [], ?string $locale = null)
  */
 function k($variable, $level = 'debug')
 {
-    global $app;
-
-    $app->getContainer()->get('debugbar')['messages']->log($level, $variable);
+    App::getInstance()->getContainer()->get('debugbar')['messages']->log($level, $variable);
 }
 
 /**
@@ -41,10 +39,8 @@ function k($variable, $level = 'debug')
  */
 function dbq($query_string, mixed $params = null)
 {
-    global $app;
-
     try {
-        $stmt = $app->getContainer()->get('pdo')->prepare($query_string);
+        $stmt = App::getInstance()->getPdo()->prepare($query_string);
         $stmt->execute($params);
         return $stmt;
     } catch (\PDOException $e) {

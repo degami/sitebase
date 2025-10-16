@@ -264,5 +264,11 @@ return [
     'State' => 'Estado/Provincia',
     'Post Code' => 'Código Postal',
     'Country' => 'País',
-    'Phone' => 'Teléfono',    
+    'Phone' => 'Teléfono',
+    'Get into folder' => 'Entrar en la carpeta',
+    'Select All' => 'Seleccionar todo',
+    'Search & Sort' => 'Buscar y ordenar',
+    'Layout' => 'Diseño',
+    'Create Folder' => 'Crear carpeta',
+    'Up' => 'Arriba',
 ];

@@ -265,4 +265,10 @@ return [
     'Post Code' => 'डाक कोड',
     'Country' => 'देश',
     'Phone' => 'फोन',
+    'Get into folder' => 'फ़ोल्डर में जाएँ',
+    'Select All' => 'सभी चुनें',
+    'Search & Sort' => 'खोजें और क्रमबद्ध करें',
+    'Layout' => 'लेआउट',
+    'Create Folder' => 'फ़ोल्डर बनाएँ',
+    'Up' => 'ऊपर',
 ];

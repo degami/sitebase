@@ -265,4 +265,10 @@ return [
     'Post Code' => '郵便番号',
     'Country' => '国',
     'Phone' => '電話番号',
+    'Get into folder' => 'フォルダに入る',
+    'Select All' => 'すべて選択',
+    'Search & Sort' => '検索＆並べ替え',
+    'Layout' => 'レイアウト',
+    'Create Folder' => 'フォルダを作成',
+    'Up' => '上へ',
 ];

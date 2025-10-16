@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Posta Kodu',
     'Country' => 'Ülke',
     'Phone' => 'Telefon',
+    'Get into folder' => 'Klasöre gir',
+    'Select All' => 'Tümünü Seç',
+    'Search & Sort' => 'Ara & Sırala',
+    'Layout' => 'Düzen',
+    'Create Folder' => 'Klasör Oluştur',
+    'Up' => 'Yukarı',
 ];

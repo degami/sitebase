@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Irányítószám',
     'Country' => 'Ország',
     'Phone' => 'Telefon',
+    'Get into folder' => 'Mappába lépés',
+    'Select All' => 'Összes kijelölése',
+    'Search & Sort' => 'Keresés & Rendezés',
+    'Layout' => 'Elrendezés',
+    'Create Folder' => 'Mappa létrehozása',
+    'Up' => 'Fel',
 ];

@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Postcode',
     'Country' => 'Land',
     'Phone' => 'Telefoon',
+    'Get into folder' => 'Ga naar map',
+    'Select All' => 'Alles selecteren',
+    'Search & Sort' => 'Zoeken & Sorteren',
+    'Layout' => 'Indeling',
+    'Create Folder' => 'Map aanmaken',
+    'Up' => 'Omhoog',
 ];

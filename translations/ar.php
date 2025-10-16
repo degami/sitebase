@@ -265,4 +265,10 @@ return [
     'Post Code' => 'الرمز البريدي',
     'Country' => 'البلد',
     'Phone' => 'الهاتف',
+    'Get into folder' => 'ادخل المجلد',
+    'Select All' => 'تحديد الكل',
+    'Search & Sort' => 'بحث وفرز',
+    'Layout' => 'تخطيط',
+    'Create Folder' => 'إنشاء مجلد',
+    'Up' => 'أعلى',
 ];

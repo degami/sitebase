@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Postleitzahl',
     'Country' => 'Land',
     'Phone' => 'Telefon',
+    'Get into folder' => 'In Ordner wechseln',
+    'Select All' => 'Alles auswählen',
+    'Search & Sort' => 'Suchen & Sortieren',
+    'Layout' => 'Layout',
+    'Create Folder' => 'Ordner erstellen',
+    'Up' => 'Nach oben',
 ];

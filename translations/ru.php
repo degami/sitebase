@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Почтовый индекс',
     'Country' => 'Страна',
     'Phone' => 'Телефон',
+    'Get into folder' => 'Перейти в папку',
+    'Select All' => 'Выбрать всё',
+    'Search & Sort' => 'Поиск и сортировка',
+    'Layout' => 'Макет',
+    'Create Folder' => 'Создать папку',
+    'Up' => 'Вверх',
 ];

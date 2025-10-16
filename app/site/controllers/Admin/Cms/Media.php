@@ -61,7 +61,7 @@ class Media extends AdminManageModelsPage
             $this->addActionLink(
                 'make_folder', 
                 'make_folder', 
-                $this->getHtmlRenderer()->getIcon('folder-plus') . '&nbsp;' .$this->getUtils()->translate('Create Folder'),
+                $this->getHtmlRenderer()->getIcon('folder-plus') . ' ' .$this->getUtils()->translate('Create Folder'),
                 $this->getControllerUrl().'?action=addfolder&parent_id='.$this->getRequest()->query->get('parent_id'),
                 'btn btn-sm btn-outline-warning',
             );

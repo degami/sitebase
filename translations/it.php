@@ -265,4 +265,10 @@ return [
     'Post Code' => 'CAP',
     'Country' => 'Paese',
     'Phone' => 'Telefono',
+    'Get into folder' => 'Apri cartella',
+    'Select All' => 'Seleziona tutto',
+    'Search & Sort' => 'Cerca e ordina',
+    'Layout' => 'Layout',
+    'Create Folder' => 'Crea cartella',
+    'Up' => 'Su',
 ];

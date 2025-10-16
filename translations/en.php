@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Post Code',
     'Country' => 'Country',
     'Phone' => 'Phone',
+    'Get into folder' => 'Get into folder',
+    'Select All' => 'Select All',
+    'Search & Sort' => 'Search & Sort',
+    'Layout' => 'Layout',
+    'Create Folder' => 'Create Folder',
+    'Up' => 'Up',
 ];

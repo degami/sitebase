@@ -267,4 +267,10 @@ return [
     'Post Code' => 'পোস্ট কোড',
     'Country' => 'দেশ',
     'Phone' => 'ফোন',
+    'Get into folder' => 'ফোল্ডারে প্রবেশ করুন',
+    'Select All' => 'সব নির্বাচন করুন',
+    'Search & Sort' => 'অনুসন্ধান এবং সাজান',
+    'Layout' => 'লেআউট',
+    'Create Folder' => 'ফোল্ডার তৈরি করুন',
+    'Up' => 'উপর',
 ];

@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Kode Pos',
     'Country' => 'Negara',
     'Phone' => 'Telepon',
+    'Get into folder' => 'Masuk folder',
+    'Select All' => 'Pilih Semua',
+    'Search & Sort' => 'Cari & Urutkan',
+    'Layout' => 'Tata Letak',
+    'Create Folder' => 'Buat Folder',
+    'Up' => 'Naik',
 ];

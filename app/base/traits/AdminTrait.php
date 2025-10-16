@@ -185,7 +185,7 @@ trait AdminTrait
             'id' => $button_id,
             'attributes' => [
                 'class' => $button_class . ' w-100',
-                'title' => $button_text,
+                'title' => strip_tags($button_text),
             ],
             'text' => $button_text,
         ]]);

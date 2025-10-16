@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Cod poștal',
     'Country' => 'Țară',
     'Phone' => 'Telefon',
+    'Get into folder' => 'Intrați în folder',
+    'Select All' => 'Selectează tot',
+    'Search & Sort' => 'Căutare și sortare',
+    'Layout' => 'Aspect',
+    'Create Folder' => 'Creează folder',
+    'Up' => 'Sus',
 ];

@@ -265,4 +265,10 @@ return [
     'Post Code' => 'Mã bưu điện',
     'Country' => 'Quốc gia',
     'Phone' => 'Điện thoại',
+    'Get into folder' => 'Vào thư mục',
+    'Select All' => 'Chọn tất cả',
+    'Search & Sort' => 'Tìm & Sắp xếp',
+    'Layout' => 'Bố cục',
+    'Create Folder' => 'Tạo thư mục',
+    'Up' => 'Lên',
 ];

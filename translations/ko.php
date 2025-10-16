@@ -265,4 +265,10 @@ return [
     'Post Code' => '우편번호',
     'Country' => '국가',
     'Phone' => '전화번호',
+    'Get into folder' => '폴더로 이동',
+    'Select All' => '모두 선택',
+    'Search & Sort' => '검색 및 정렬',
+    'Layout' => '레이아웃',
+    'Create Folder' => '폴더 만들기',
+    'Up' => '위로',
 ];

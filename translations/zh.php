@@ -265,4 +265,10 @@ return [
     'Post Code' => '邮政编码',
     'Country' => '国家',
     'Phone' => '电话',
+    'Get into folder' => '进入文件夹',
+    'Select All' => '全选',
+    'Search & Sort' => '搜索与排序',
+    'Layout' => '布局',
+    'Create Folder' => '创建文件夹',
+    'Up' => '上一级',
 ];

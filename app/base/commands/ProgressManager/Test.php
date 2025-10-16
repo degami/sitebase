@@ -37,7 +37,8 @@ class Test extends BaseCommand
         $this
             ->setDescription('Test Progress Manager. This command only counts up to a number with a defined interval')
             ->addArgument('upTo', InputArgument::OPTIONAL, 'Count up to', 20)
-            ->addOption('time', 't', InputOption::VALUE_OPTIONAL, 'sleep time', 5);
+            ->addOption('time', 't', InputOption::VALUE_OPTIONAL, 'sleep time', 2)
+            ->addOption('exception', 'e', InputOption::VALUE_NONE, 'Throw an error during execution');
     }
 
         /**
@@ -61,24 +62,34 @@ class Test extends BaseCommand
     {
         $upTo = $input->getArgument('upTo');
         $sleep = $input->getOption('time');
+        $exception = boolval($input->getOption('exception'));
+
+        $this->getIo()->info("Counting up to $upTo, with $sleep second of sleep on each iteration". ($exception ? ', throwing an exeption on run' : ''));
 
         /** @var ProgressManagerProcess $progressProcess */
-        $progressProcess = ProgressManagerProcess::createForCallable([static::class, 'count'])->persist()->run($upTo, $sleep);
+        $progressProcess = ProgressManagerProcess::createForCallable([static::class, 'count'])->persist()->run($upTo, $sleep, $exception);
+
+        $this->getIo()->info('done');
 
         return Command::SUCCESS;
     }
 
-    public static function count(ProgressManagerProcess $process, int $countUpTo, int $sleep)
+    public static function count(ProgressManagerProcess $process, int $countUpTo, int $sleep, bool $throwError = false)
     {
         sleep(1);
         if ($countUpTo <= 0) {
-            throw new Exception("wrong count up o value");
+            throw new Exception("wrong count up to value");
         }
 
         $process->setTotal($countUpTo)->persist();
 
+        $indexError = rand(0, $countUpTo - 1);
+
         for ($i = 0; $i < $countUpTo; $i++) {
             $process->progress()->persist();
+            if ($throwError && $i == $indexError) {
+                throw new Exception("Throwing a generic error");
+            }
             echo $i."\n";
             sleep($sleep);
         }

@@ -285,4 +285,9 @@ class ProgressManager extends AdminFormPage
     {
         return ProgressManagerProcess::getCollection()->addOrder(['started_at' => 'desc'])->addOrder(['started_at' => 'asc'])->getItems();
     }
+
+    public static function exposeDataToDashboard() : mixed
+    {
+        return ProgressManagerProcess::getCollection()->where(['started_at:not' => null, 'ended_at' => null])->count();        
+    }
 }

@@ -202,7 +202,7 @@ class ProgressManagerProcess extends BaseModel
             /** @var array $callable */
             $callable = json_decode($this->getCallable(), true);
             if (!$callable || !is_callable($callable)) {
-                return $this->invalid();
+                throw new Exception(((string)$this->getCallable()) . ' is not a valid callable', self::INVALID);
             }
 
             $reflection = new ReflectionMethod(...$callable);
@@ -210,7 +210,7 @@ class ProgressManagerProcess extends BaseModel
 
             // check if first parameter in callable is a ProgressManagerProcess
             if ($parameters[0]->getType()?->getName() !== ProgressManagerProcess::class) {
-                throw new Exception('First parameter of callable must be a ProgressManagerProcess instance');
+                throw new Exception('First parameter of callable must be a ProgressManagerProcess instance', self::INVALID);
             }
 
             $this->setPid($pid)->start()->persist();
@@ -219,7 +219,14 @@ class ProgressManagerProcess extends BaseModel
 
             $this->setMessage('Run complete.')->success();
         } catch (Exception $e) {
-            $this->setMessage($e->getMessage())->setExitStatus(ProgressManagerProcess::FAILURE)->persist();
+            $this->setMessage($e->getMessage());
+
+            if ($e->getCode() == self::INVALID || !$this->isStarted()) {
+                $this->invalid();
+            } else {
+                $this->failure()->persist();
+            }
+
             throw $e;
         }
 

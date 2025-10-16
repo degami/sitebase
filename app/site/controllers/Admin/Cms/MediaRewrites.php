@@ -19,6 +19,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use App\Base\Abstracts\Controllers\BasePage;
 use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\MediaElementRewrite;
 use Degami\Basics\Html\TagElement;
@@ -345,7 +346,7 @@ class MediaRewrites extends AdminManageModelsPage
                         TagElement::class,
                         ['options' => [
                             'tag' => 'div',
-                            'text' => '<label class="mb-0 mr-2 font-weight-bold">'.(string)$tk . ':</label>' . (string)$dd,
+                            'text' => '<label class="mb-0 mr-2 font-weight-bold">' . $this->getUtils()->translate((string)$tk, locale: $this->getCurrentLocale()) . ':</label>' . (string)$dd,
                             'attributes' => ['class' => in_array(strtolower($tk), ['website', 'locale']) ? 'nowrap' : 'text-break'],
                         ]]
                     )

@@ -1144,9 +1144,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
                 try {
                     // in a try / catch , as is_callable([$current_page, 'getGridCardBody']) will return true because of the __call method, but will raise an exception
-                    $cardBody = ($current_page && is_callable([$current_page, 'getGridCardBody'])) ? $current_page->getGridCardBody($elem, $selectCheckboxes) : $this->getGridCardBody($elem, $selectCheckboxes);
+                    $cardBody = ($current_page && is_callable([$current_page, 'getGridCardBody'])) ? $current_page->getGridCardBody($elem, $selectCheckboxes) : $this->getGridCardBody($elem, $selectCheckboxes, $current_page);
                 } catch (Exception $e) {
-                    $cardBody = $this->getGridCardBody($elem, $selectCheckboxes);
+                    $cardBody = $this->getGridCardBody($elem, $selectCheckboxes, $current_page);
                 }
 
                 $card->addChild($cardBody);
@@ -1328,7 +1328,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return $grid;
     }
 
-    protected function getGridCardBody(array $element, bool $selectCheckboxes = false) : TagElement
+    protected function getGridCardBody(array $element, bool $selectCheckboxes = false, ?BasePage $current_page = null) : TagElement
     {
         $cardBody = $this->containerMake(
             TagElement::class,
@@ -1366,7 +1366,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         TagElement::class,
                         ['options' => [
                             'tag' => 'div',
-                            'text' => '<label class="mb-0 mr-2 font-weight-bold">'.(string)$tk . ':</label>' . (string)$dd,
+                            'text' => '<label class="mb-0 mr-2 font-weight-bold">'. $this->getUtils()->translate((string)$tk, locale: $current_page?->getCurrentLocale()) . ':</label>' . (string)$dd,
                             'attributes' => ['class' => in_array(strtolower($tk), ['website', 'locale']) ? 'nowrap' : 'text-break'],
                         ]]
                     )

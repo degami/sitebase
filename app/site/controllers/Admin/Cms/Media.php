@@ -27,6 +27,7 @@ use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\MediaElement;
 use App\Site\Models\Page;
 use App\App;
+use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\BaseCollection;
 use Degami\Basics\Html\TagElement;
 use App\Site\Models\DownloadableProduct;
@@ -851,7 +852,7 @@ class Media extends AdminManageModelsPage
                         TagElement::class,
                         ['options' => [
                             'tag' => 'div',
-                            'text' => '<label class="mb-0 mr-2 font-weight-bold">'.(string)$tk . ':</label>' . (string)$dd,
+                            'text' => '<label class="mb-0 mr-2 font-weight-bold">' . $this->getUtils()->translate((string)$tk, locale: $this->getCurrentLocale()) . ':</label>' . (string)$dd,
                             'attributes' => ['class' => in_array(strtolower($tk), ['website', 'locale']) ? 'nowrap' : 'text-break'],
                         ]]
                     )

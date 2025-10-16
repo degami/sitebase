@@ -18,6 +18,9 @@ use App\Base\Abstracts\Models\BaseModel;
 use DateTime;
 use Exception;
 use InvalidArgumentException;
+use Reflection;
+use ReflectionFunction;
+use ReflectionMethod;
 
 /**
  * ProgressManager Process Model
@@ -199,6 +202,14 @@ class ProgressManagerProcess extends BaseModel
             $callable = json_decode($this->getCallable(), true);
             if (!$callable || !is_callable($callable)) {
                 return $this->invalid();
+            }
+
+            $reflection = new ReflectionMethod(...$callable);
+            $parameters = $reflection->getParameters();
+
+            // check if first parameter in callable is a ProgressManagerProcess
+            if (!$parameters[0]->getType()?->getName() === ProgressManagerProcess::class) {
+                throw new Exception('First parameter of callable must be a ProgressManagerProcess instance');
             }
 
             $this->setPid($pid)->start()->persist();

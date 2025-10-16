@@ -199,6 +199,7 @@ class ProgressManagerProcess extends BaseModel
 
         $result = null;
         try {
+            /** @var array $callable */
             $callable = json_decode($this->getCallable(), true);
             if (!$callable || !is_callable($callable)) {
                 return $this->invalid();

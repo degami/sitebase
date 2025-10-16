@@ -49,11 +49,13 @@ pub/sitebase_logo.png
 pub/sitebase_logo_small.png
 pub/favicon.ico
 pub/webfonts
+pub/translations
 js/dest/*
 assets/rsa_private.key
 assets/rsa_private.csr
 assets/rsa_private.pem
 assets/minipaint
+assets/translations
 docker/database/data
 docker/elasticsearch/data
 docker/data/*

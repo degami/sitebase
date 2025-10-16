@@ -174,6 +174,7 @@ abstract class AdminPage extends BaseHtmlPage
                     'availableAImodels' => array_values($this->getAI()->getEnabledAIs(true)),
                     'massDeleteUrl' => $this->getUrl('admin.massdelete'),
                     'massEditUrl' => $this->getUrl('crud.app.base.controllers.admin.json.massedit'),
+                    'currentLocale' => $this->getCurrentLocale(),
                 ]
             ) . ");"
         );

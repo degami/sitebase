@@ -22,6 +22,7 @@ use App\App;
 use App\Base\Abstracts\Commands\BaseExecCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
+use Fisharebest\Localization\Translation;
 
 /**
  * App Deploy Command
@@ -82,6 +83,8 @@ class Deploy extends BaseExecCommand
                 return Command::FAILURE;
             }
         }
+
+        $this->exportTranslations();
 
         $this->executeCommand("npm install && gulp 2> /dev/null");
 
@@ -145,6 +148,7 @@ class Deploy extends BaseExecCommand
                 App::getDir(App::ASSETS) . DS . 'sitebase_logo.png' => App::getDir('pub') . DS . 'sitebase_logo.png',
                 App::getDir(App::ASSETS) . DS . 'sitebase_logo_small.png' => App::getDir('pub') . DS . 'sitebase_logo_small.png',
                 App::getDir(App::ASSETS) . DS . 'favicon.ico' => App::getDir('pub') . DS . 'favicon.ico',
+                App::getDir(App::ASSETS) . DS . 'translations' => App::getDir('pub') . DS . 'translations',
             ];
         } else {
             $symlinks = [
@@ -160,6 +164,7 @@ class Deploy extends BaseExecCommand
                 '..' . DS . 'assets' . DS . 'sitebase_logo.png' => App::getDir('pub') . DS . 'sitebase_logo.png',
                 '..' . DS . 'assets' . DS . 'sitebase_logo_small.png' => App::getDir('pub') . DS . 'sitebase_logo_small.png',
                 '..' . DS . 'assets' . DS . 'favicon.ico' => App::getDir('pub') . DS . 'favicon.ico',
+                '..' . DS . 'assets' . DS . 'translations' => App::getDir('pub') . DS . 'translations',
             ];
         }
 
@@ -208,5 +213,32 @@ class Deploy extends BaseExecCommand
         }
 
         return true;
+    }
+
+    protected function exportTranslations(): void
+    {
+        $locales = ['en'];
+        foreach(glob(App::getDir(App::TRANSLATIONS) . DS .'*.php') as $translationFile) {
+            $locales[] = str_replace('.php', '', basename($translationFile));
+        }
+
+        $locales = array_unique($locales);
+
+        $dir = App::getDir(App::ASSETS) . DS . 'translations';
+        if (!is_dir($dir)) {
+            mkdir($dir, 0755, true);
+        }
+
+        foreach ($locales as $locale) {
+            /** @var Translation $translation */
+            $translation = $this->containerMake(Translation::class, [
+                'filename' => App::getDir(App::TRANSLATIONS) . DS . $locale . '.php',
+            ]);
+            $translations = $translation->asArray();
+            file_put_contents(
+                $dir . DS . $locale . '.json',
+                json_encode($translations, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT)
+            );
+        }
     }
 }

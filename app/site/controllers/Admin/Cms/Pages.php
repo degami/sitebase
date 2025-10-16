@@ -115,14 +115,14 @@ class Pages extends AdminManageFrontendModelsPage
                 $this->addActionLink(
                     'media-btn',
                     'media-btn',
-                    '&#9776; Media',
+                    '&#9776; ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
                     $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
                 $this->addActionLink(
                     'taxonomy-btn',
                     'taxonomy-btn',
-                    '&#9776; Terms',
+                    '&#9776; ' . $this->getUtils()->translate('Terms', locale: $this->getCurrentLocale()),
                     $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );

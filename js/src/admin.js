@@ -4,6 +4,7 @@
 //=include ../../node_modules/moment/min/moment-with-locales.min.js
 //=include ./tinymce-plugin-block.js
 //=include ./tinymce-plugin-aitranslate.js
+//=include ./i18n.js
 
 (function($){
     if (window.tinymce && typeof tinymce.on === 'function') {
@@ -222,16 +223,17 @@
                     evt.preventDefault();
 
                     $elem.appAdmin('showAlertDialog', {
-                        title: 'Confirm duplicate?',
-                        message: 'Do you confirm element duplication?',
-                        okText: 'Yes, Continue',
-                        cancelText: 'No, Cancel',
+                        title: __('Confirm duplicate?'),
+                        message: __('Do you confirm element duplication?'),
+                        okText: __('Yes, Continue'),
+                        cancelText: __('No, Cancel'),
                         onConfirm: function() {
                             document.location.href = $(evt.target).attr('href');
                         }
                     });
                 });
 
+                loadTranslations($elem.appAdmin('getSettings').currentLocale);
             });
         },
         showOverlay: function(namespace) {
@@ -684,8 +686,8 @@
             let identifiers = $(that).appAdmin('listingTableGetSelected', tableSelector);
             if (identifiers.length == 0) {
                 $(that).appAdmin('showAlertDialog', {
-                    title: 'No elements selected',
-                    message: 'Please choose at least one element to delete',
+                    title: __('No elements selected'),
+                    message: __('Please choose at least one element to delete'),
                     type: 'warning',
                 });
 
@@ -710,8 +712,8 @@
             let identifiers = $(that).appAdmin('listingTableGetSelected', tableSelector);
             if (identifiers.length == 0) {
                 $(that).appAdmin('showAlertDialog', {
-                    title: 'No elements selected',
-                    message: 'Please choose at least one element to edit',
+                    title: __('No elements selected'),
+                    message: __('Please choose at least one element to edit'),
                     type: 'warning',
                 });
 
@@ -837,8 +839,8 @@
                 AIUrl = aiModel.aiURL;
             } else {
                 $(that).appAdmin('showAlertDialog', {
-                    title: 'Not available',
-                    message: 'AI model ' + type + ' is not available',
+                    title: __('Not available'),
+                    message: __('AI model %s is not available', type),
                     type: 'warning',
                 });
                 return;
@@ -963,7 +965,7 @@
                                     });
                                 },
                                 error: function(xhr) {
-                                    console.error('Errore durante la chiusura della notifica:', dialogId);
+                                    console.error('Errors on notification close:', dialogId);
                                 }
                             });
                         });
@@ -980,7 +982,7 @@
         },
         showAlertDialog: function(options) {
             const defaults = {
-                title: 'Alert',
+                title: __('Alert'),
                 message: '',
                 type: 'info', // info | success | warning | danger
                 okText: 'OK',
@@ -1032,7 +1034,6 @@
 
             $dialog.modal({ backdrop: 'static', keyboard: true }).modal('show');
 
-            // Eventi pulsanti
             $('#alertOkBtn', $dialog).on('click', function() {
                 $dialog.modal('hide');
                 if (typeof settings.onConfirm === 'function') settings.onConfirm();

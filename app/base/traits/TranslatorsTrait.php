@@ -28,7 +28,7 @@ trait TranslatorsTrait
      */
     public static array $translators = [];
 
-        /**
+    /**
      * gets translator
      *
      * @param string|null $locale_code

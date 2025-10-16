@@ -208,7 +208,7 @@ class ProgressManagerProcess extends BaseModel
             $parameters = $reflection->getParameters();
 
             // check if first parameter in callable is a ProgressManagerProcess
-            if (!$parameters[0]->getType()?->getName() === ProgressManagerProcess::class) {
+            if ($parameters[0]->getType()?->getName() !== ProgressManagerProcess::class) {
                 throw new Exception('First parameter of callable must be a ProgressManagerProcess instance');
             }
 
@@ -218,7 +218,8 @@ class ProgressManagerProcess extends BaseModel
 
             $this->setMessage('Run complete.')->success();
         } catch (Exception $e) {
-            $this->setMessage($e->getMessage())->failure();
+            $this->setMessage($e->getMessage())->setExitStatus(ProgressManagerProcess::FAILURE)->persist();
+            throw $e;
         }
 
         $this->persist();

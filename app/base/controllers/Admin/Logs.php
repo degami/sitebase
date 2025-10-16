@@ -181,11 +181,27 @@ class Logs extends AdminPage
 
                     if (is_numeric($this->getRequest()->query->get('id'))) {
                         $log = $this->containerCall([ProgressManagerProcess::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                        $log['exit_status'] = match ($log['exit_status']) {
+                            ProgressManagerProcess::SUCCESS => 'Success',
+                            ProgressManagerProcess::FAILURE => 'Failure',
+                            ProgressManagerProcess::INVALID => 'Invalid',
+                            ProgressManagerProcess::ABORT => 'Aborted',
+                            default => 'Running',
+                        };
                     } else {
                         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
                         $collection = $this->containerCall([ProgressManagerProcess::class, 'getCollection']);
                         $collection->addCondition($paginate_params['condition'])->addOrder($paginate_params['order']);
                         $data = $this->containerCall([$collection, 'paginate']);
+                        foreach ($data['items'] as &$item) {
+                            $item['exit_status'] = match ($item['exit_status']) {
+                                ProgressManagerProcess::SUCCESS => 'Success',
+                                ProgressManagerProcess::FAILURE => 'Failure',
+                                ProgressManagerProcess::INVALID => 'Invalid',
+                                ProgressManagerProcess::ABORT => 'Aborted',
+                                default => 'Running',
+                            };
+                        }
                         $header = ['id', 'callable', 'exit_status', 'message', 'created_at', 'started_at', 'ended_at'];
                     }
 

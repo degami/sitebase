@@ -16,6 +16,20 @@
     padding: 0;
     box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
 
+    .scrollable {
+        overflow: hidden;
+        .scrollable-content {
+            height: 100vh;
+            width: calc( 100% + 20px);
+            overflow-y: auto;
+            scrollbar-width: none; /* Firefox */
+            &::-webkit-scrollbar {
+                display: none; /* Chrome, Safari, Edge */
+            }
+        }
+    }
+
+
     @media (max-width: 768px) {
         z-index: 10000;
 
@@ -51,6 +65,9 @@
     .sidebar-sticky {
         top: 0;
         height: calc(100vh - 25px);
+        @media (max-width: 768px) {
+            padding-top: 25px;
+        }
     }
 
     .nav {
@@ -128,11 +145,15 @@
             }
         }
 
-        .card-header .btn {
-            .text {
-                display: none;
-                @media (max-width: 768px) {
-                    display: inline-block;
+        .card-header {
+            padding-left: 5px;
+
+            .btn {
+                .text {
+                    display: none;
+                    @media (max-width: 768px) {
+                        display: inline-block;
+                    }
                 }
             }
         }

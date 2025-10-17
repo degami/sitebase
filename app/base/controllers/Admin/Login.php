@@ -357,4 +357,14 @@ class Login extends FormPage
     {
         return $this->getSiteData()->getDefaultLocale();
     }
+
+    /**
+     * specifies if this controller is eligible for full page cache
+     *
+     * @return bool
+     */
+    public function canBeFPC(): bool
+    {
+        return false;
+    }
 }

@@ -135,6 +135,19 @@ class Login extends FormPage
     {
         $out = parent::getBaseTemplateData();
         $out['body_class'] = $this->getHtmlRenderer()->getHtmlAdminClasses($this);
+
+        $picsumKey = 'picsum.pictures.list';
+        if ($this->getCache()->has($picsumKey)) {
+            $picsumIds = $this->getCache()->get($picsumKey);
+        } else {
+            $picsumIds = json_decode($this->getUtils()->requestUrl('https://picsum.photos/v2/list?page'.rand(0, 10).'&limit=100'), true);
+            $this->getCache()->set($picsumKey, $picsumIds, 3600);
+        }
+
+        $image = current(array_slice($picsumIds, rand(0, count($picsumIds)), 1));
+
+        $out['bgUrl'] = 'https://picsum.photos/id/' . $image['id'] . '/1920/1080';
+        $out['bgAuthor'] = $image['author'];
         return $out;
     }
 

@@ -57,7 +57,7 @@ trait ToolsTrait
                     ]
                 );
                 /** @var Response $request */
-                $response = $client->request($method, $request_uri, $options);
+                $response = $client->request($method, $url, $options);
 
                 return $response->getBody();
             }

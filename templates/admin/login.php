@@ -11,10 +11,10 @@ $this->layout('frontend::layout', ['title' => 'Login'] + get_defined_vars()) ?>
 
 <div class="container-fluid">
     <div class="row" style="height: 100vh;align-content: center;">
-        <div class="col-4" style="height: 80vh;background-color: #333;align-content: center;">
+        <div class="col" style="height: 80vh;background-color: #333;align-content: center;">
             <?php print $form;?>
         </div>
-        <div class="col-8" style="position: relative;height: 80vh;background: url(<?= $bgUrl; ?>) center center;background-size: auto;background-size: cover;">
+        <div class="col-8 d-none d-lg-block" style="position: relative;height: 80vh;background: url(<?= $bgUrl; ?>) center center;background-size: auto;background-size: cover;">
              <div style="
                 position: absolute;
                 bottom: 10px;

@@ -192,7 +192,11 @@ class TwoFa extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $userHasPassed2Fa = ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
+        try {
+            $userHasPassed2Fa = ($this->getCurrentUser()->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
+        } catch (\Exception $e) {
+            $userHasPassed2Fa = false;
+        }
         $secret = $form->getSessionBag()?->googleAuthenticatorSecret ?? null;
         if (!$secret) {
             $secret = $this->getSecret($this->getCurrentUser());
@@ -321,9 +325,13 @@ class TwoFa extends AdminFormPage
         }*/
 
         $secret = null;
-        if ($user->getUser2Fa(self::ADMIN_WEBSITE_ID)?->getSecret()) {
-            $secret = $user->getUser2Fa(0)->getSecret();
-        } else {
+        try {
+            if ($user->getUser2Fa(self::ADMIN_WEBSITE_ID)?->getSecret()) {
+                $secret = $user->getUser2Fa(0)->getSecret();
+            } else {
+                $secret = $this->getGoogleAuthenticator()->createSecret();
+            }
+        } catch (\Exception $e) {
             $secret = $this->getGoogleAuthenticator()->createSecret();
         }
 

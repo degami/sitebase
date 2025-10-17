@@ -202,6 +202,10 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     public function getUrl(string $route_name, array $route_params = []): string
     {
+        if (str_starts_with($route_name, 'admin.')) {
+            return $this->getAdminRouter()->getUrl($route_name, $route_params);
+        }
+
         return $this->getWebRouter()->getUrl($route_name, $route_params);
     }
 

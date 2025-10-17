@@ -84,6 +84,10 @@ class Manager extends ContainerAwareObject
         }
 
         try {
+            if (is_object($this->getTokenData()) && ($this->getTokenData()?->passed2fa ?? false) == true) {
+                return true;
+            }
+
             if ($onAdmin) {
                 return ($this->getCurrentUser()?->getUser2Fa(self::ADMIN_WEBSITE_ID) != null);
             }

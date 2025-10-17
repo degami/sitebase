@@ -233,6 +233,23 @@
                     });
                 });
 
+                $('#login-as-btn').on('click', function(evt) {
+                    evt.preventDefault();
+                    $elem.appAdmin('showAlertDialog', {
+                        title: __('Login as user'),
+                        message: __('In order to login as this user, copy the following link and open it in a new browser window or incognito mode:\n\n') + '<textarea id="login-as-textarea" style="width: 100%; height: 200px;">' + $(evt.target).attr('href') + '</textarea><div class="text-right mt-2"><button data-target="login-as-textarea" class="btn btn-sm btn-secondary copy-to-clipboard">' + __('Copy to clipboard') + '</button></div>',
+                        type: 'info',
+                    });
+                });
+
+                $(document).on('click', '.copy-to-clipboard', function(evt) {
+                    const $target = $('#'+$(evt.target).data('target'));
+                    if ($target) {
+                        $elem.appAdmin('copyToClipboard', $target.text());
+                        $elem.appAdmin('showTooltip', evt.target, __('Copied!'));
+                    }
+                });
+
                 loadTranslations($elem.appAdmin('getSettings').currentLocale);
             });
         },
@@ -1065,6 +1082,41 @@
             if (that.sessionTimeout != null) {
                 window.clearTimeout(that.sessionTimeout);
             }
+        },
+        copyToClipboard: function(text) {
+            if (navigator.clipboard && window.isSecureContext) {
+                return navigator.clipboard.writeText(text);
+            } else {
+                let textArea = document.createElement("textarea");
+                textArea.value = text;
+                textArea.style.position = "absolute";
+                textArea.style.left = "-999999px";
+                document.body.appendChild(textArea);
+                textArea.select();
+                return new Promise((res, rej) => {
+                    document.execCommand('copy') ? res() : rej();
+                    textArea.remove();
+                });
+            }
+        },
+        showTooltip: function(element, message) {
+            $('.simple-tooltip').remove();
+
+            let $element = $(element);
+            const offset = $element.offset();
+            const tooltip = $('<div class="simple-tooltip"></div>').text(message).appendTo('body');
+
+            tooltip.css({
+                top: offset.top - tooltip.outerHeight() - 10,
+                left: offset.left + $element.outerWidth() / 2 - tooltip.outerWidth() / 2
+            });
+
+            tooltip.addClass('show');
+
+            setTimeout(() => {
+                tooltip.removeClass('show');
+                setTimeout(() => tooltip.remove(), 200);
+            }, 1500);
         },
         show : function( ) {    },// IS
         hide : function( ) {  },// GOOD

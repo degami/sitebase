@@ -199,3 +199,38 @@ div[id^="listing-grid-"] {
     }
   }
 }
+
+
+.simple-tooltip {
+  position: absolute;
+  background: #333;
+  color: #fff;
+  font-size: 13px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  opacity: 0;
+  transform: translateY(5px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+  z-index: 100000;
+  white-space: nowrap;
+
+  /* animazione in entrata */
+  &.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* freccetta sotto il tooltip */
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-width: 5px;
+    border-style: solid;
+    border-color: #333 transparent transparent transparent;
+  }
+}
+

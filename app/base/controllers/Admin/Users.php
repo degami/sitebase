@@ -142,6 +142,15 @@ class Users extends AdminManageModelsPage
                             $this->getUrl('admin.users') . '?' . http_build_query(['action' => 'lock', 'user_id' => $user->id]),
                         );
                     }
+
+                    if ($user->getId() != $this->getAuth()->getCurrentUser()?->getId()) {
+                        $this->addActionLink(
+                            'login-as-btn',
+                            'login-as-btn',
+                            $this->getHtmlRenderer()->getIcon('log-in') . ' ' . $this->getUtils()->translate('Login in as', locale: $this->getCurrentLocale()),
+                            $this->getUrl('admin.loginas', ['token' => $user->getJwt(boolval($this->getEnvironment()->getVariable('USE2FA_ADMIN')) ? ['passed2fa' => true] : [])]),
+                        );
+                    }
                 }
 
                 $roles = [];

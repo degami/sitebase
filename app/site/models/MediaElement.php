@@ -393,4 +393,15 @@ class MediaElement extends BaseModel
     {
         return true;
     }
+
+    public function getStream() : mixed
+    {
+        $this->checkLoaded();
+
+        if ($this->isDirectory()) {
+            return opendir($this->getPath());
+        }
+
+        return fopen($this->getPath(), 'rb');
+    }
 }

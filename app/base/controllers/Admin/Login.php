@@ -145,6 +145,12 @@ class Login extends FormPage
         }
 
         $image = current(array_slice($picsumIds, rand(0, count($picsumIds)), 1));
+        if (!$image) {
+            $image = $this->getDefaultSplashImage();
+            $out['bgUrl'] = $image['url'];
+            $out['bgAuthor'] = $image['author'];
+            return $out;
+        }
 
         $out['bgUrl'] = 'https://picsum.photos/id/' . $image['id'] . '/1920/1080';
         $out['bgAuthor'] = $image['author'];
@@ -366,5 +372,13 @@ class Login extends FormPage
     public function canBeFPC(): bool
     {
         return false;
+    }
+
+    protected function getDefaultSplashImage(): array
+    {
+        return [
+            'url' => $this->getAssets()->assetUrl('/images/default_splash.jpg'),
+            'author' => 'Picsum Photos',
+        ];
     }
 }

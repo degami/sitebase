@@ -149,6 +149,7 @@ class Deploy extends BaseExecCommand
                 App::getDir(App::ASSETS) . DS . 'sitebase_logo_small.png' => App::getDir('pub') . DS . 'sitebase_logo_small.png',
                 App::getDir(App::ASSETS) . DS . 'favicon.ico' => App::getDir('pub') . DS . 'favicon.ico',
                 App::getDir(App::ASSETS) . DS . 'translations' => App::getDir('pub') . DS . 'translations',
+                App::getDir(App::ASSETS) . DS . 'default_splash.jpg' => App::getDir('pub') . DS . 'images' . DS . 'default_splash.jpg',
             ];
         } else {
             $symlinks = [
@@ -165,6 +166,7 @@ class Deploy extends BaseExecCommand
                 '..' . DS . 'assets' . DS . 'sitebase_logo_small.png' => App::getDir('pub') . DS . 'sitebase_logo_small.png',
                 '..' . DS . 'assets' . DS . 'favicon.ico' => App::getDir('pub') . DS . 'favicon.ico',
                 '..' . DS . 'assets' . DS . 'translations' => App::getDir('pub') . DS . 'translations',
+                '..' . DS . '..' . DS . 'assets' . DS . 'default_splash.jpg' => App::getDir('pub') . DS . 'images' . DS . 'default_splash.jpg',
             ];
         }
 

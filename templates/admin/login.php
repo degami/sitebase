@@ -11,20 +11,11 @@ $this->layout('frontend::layout', ['title' => 'Login'] + get_defined_vars()) ?>
 
 <div class="container-fluid">
     <div class="row" style="height: 100vh;align-content: center;">
-        <div class="col" style="height: 80vh;background-color: #333;align-content: center;">
+        <div class="col form-container">
             <?php print $form;?>
         </div>
-        <div class="col-8 d-none d-lg-block" style="position: relative;height: 80vh;background: url(<?= $bgUrl; ?>) center center;background-size: auto;background-size: cover;">
-             <div style="
-                position: absolute;
-                bottom: 10px;
-                right: 10px;
-                color: white;
-                font-size: 0.8rem;
-                background: rgba(0,0,0,0.3);
-                padding: 2px 6px;
-                border-radius: 4px;
-            ">
+        <div class="col-8 d-none d-lg-block splash-container" style="background-image: url(<?= $bgUrl; ?>)">
+             <div class="author-info">
                 Photo by <?= $bgAuthor; ?>
             </div>
         </div>

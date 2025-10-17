@@ -29,7 +29,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         </div>
     </div>
 
-    <div class="dashboard-bysection-switch position-absolute" style="top: 15px; right: 15px;">Group By Section 
+    <div class="dashboard-bysection-switch position-absolute" style="top: 15px; right: 15px;"><?= $this->sitebase()->translate('Group By Section');?> 
         <label class="switch">
             <input type="checkbox" id="dashboard-layout-selector" value="" class="paginator-items-choice" style="width: 50px"<?php if ($bySection) :?> checked="checked"<?php endif;?>>
             <span class="slider"></span>

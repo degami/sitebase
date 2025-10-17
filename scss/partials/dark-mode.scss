@@ -194,4 +194,15 @@ body.dark-mode {
             color: $color-almostwhite;
         }
     }
+
+    &.admin-page.admin-login {
+        .form-container {
+            background-color: $color-gray !important;
+
+            @media (max-width: 992px) { 
+                background-color: transparent !important;
+            }
+        }
+    }
+
 }

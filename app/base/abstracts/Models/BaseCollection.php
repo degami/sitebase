@@ -24,6 +24,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use IteratorAggregate;
 use LessQL\Result;
+use LessQL\Row;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -40,11 +41,16 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
     protected array $items = [];
 
     /**
-     * @var Result|null collection statement
+     * @var Result|Row|null collection statement
      */
-    protected ?Result $stmt = null;
+    protected Result|Row|null $stmt = null;
 
+    /**
+     * @var string|null last executed query string
+     */
+    protected ?string $lastQueryString = null;
 
+    
     public function __construct(
         protected string $className
     ) {
@@ -96,15 +102,53 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
      * 
      * @return Result
      */
-    public function getSelect() : Result 
+    public function getSelect() : Result|Row|null 
     {
         if (is_null($this->stmt)) {
             $this->stmt = $this->getDb()->table(
                 $this->getTableName()
             );
+            // register query collector callback
+            $this->stmt->getDatabase()->setQueryCallback(function($query, $parameters){
+                $this->lastQueryString = $this->interpolateQuery($query, $parameters);
+            });
         }
 
         return $this->stmt;
+    }
+
+    /**
+     * hopefully return last executed query
+     * 
+     * @return string|null
+     */
+    public function getLastQueryString() : ?string
+    {
+        return $this->lastQueryString;
+    }
+
+    /**
+     * Interpolates query with parameters (for debugging only)
+     */
+    protected function interpolateQuery(string $query, array $params): string
+    {
+        $indexed = $params === array_values($params);
+        foreach ($params as $key => $value) {
+            if (is_string($value)) {
+                $value = "'" . addslashes($value) . "'";
+            } elseif ($value === null) {
+                $value = 'NULL';
+            } elseif (is_bool($value)) {
+                $value = $value ? 'TRUE' : 'FALSE';
+            }
+
+            if ($indexed) {
+                $query = preg_replace('/\?/', $value, $query, 1);
+            } else {
+                $query = str_replace(":$key", $value, $query);
+            }
+        }
+        return $query;
     }
 
     public function addSelect(string $select): static
@@ -427,9 +471,9 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
         return $this;
     }
 
-    public function save() : static 
+    public function save(array $persistOptions = []) : static 
     {
-        return $this->persist();
+        return $this->persist($persistOptions);
     }
 
     /**
@@ -448,9 +492,10 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        foreach ($this->getItems() as $item) {
+        $this->map(function ($item) {
             $item->remove();
-        }
+            return $item;
+        });
 
         if (App::getInstance()->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);

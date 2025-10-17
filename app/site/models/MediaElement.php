@@ -16,6 +16,7 @@ namespace App\Site\Models;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithOwnerTrait;
 use App\App;
+use App\Base\Abstracts\Models\BaseCollection;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
@@ -24,6 +25,7 @@ use Degami\Basics\Html\TagElement;
 use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use App\Base\GraphQl\GraphQLExport;
+use App\Base\Traits\WithChildrenTrait;
 
 /**
  * Media Element Model
@@ -56,7 +58,7 @@ use App\Base\GraphQl\GraphQLExport;
 #[GraphQLExport]
 class MediaElement extends BaseModel
 {
-    use WithOwnerTrait;
+    use WithOwnerTrait, WithChildrenTrait;
 
     public const TRANSPARENT_PIXEL = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
@@ -403,5 +405,16 @@ class MediaElement extends BaseModel
         }
 
         return fopen($this->getPath(), 'rb');
+    }
+
+    public function getSubTree() : ?BaseCollection
+    {
+        if (!$this->isDirectory()) {
+            return null;
+        }
+
+        $collection = static::getCollection();
+        $collection->orWhere(['`path` LIKE ?' => rtrim($this->getPath(), DS) . DS . '%', 'parent_id' => $this->getId()]);
+        return $collection;
     }
 }

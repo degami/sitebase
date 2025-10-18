@@ -140,8 +140,12 @@ class Login extends FormPage
         if ($this->getCache()->has($picsumKey)) {
             $picsumIds = $this->getCache()->get($picsumKey);
         } else {
-            $picsumIds = json_decode($this->getUtils()->requestUrl('https://picsum.photos/v2/list?page'.rand(0, 10).'&limit=100'), true);
-            $this->getCache()->set($picsumKey, $picsumIds, 3600);
+            try {
+                $picsumIds = json_decode($this->getUtils()->requestUrl('https://picsum.photos/v2/list?page'.rand(0, 10).'&limit=100'), true);
+                $this->getCache()->set($picsumKey, $picsumIds, 3600);
+            } catch (Exception $e) {
+                $picsumIds = [];
+            }
         }
 
         $image = current(array_slice($picsumIds, rand(0, count($picsumIds)), 1));

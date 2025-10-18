@@ -296,4 +296,9 @@ return [
     'Meta Description' => '메타 설명',
     'Meta Keywords' => '메타 키워드',
     'Html Title' => 'HTML 제목',
+    'Login as user' => '사용자 계정으로 로그인',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => '이 사용자로 로그인하려면 아래 링크를 복사하여 새 브라우저 창이나 시크릿 모드에서 여세요:',
+    'Copy to clipboard' => '클립보드에 복사',
+    'Copied!' => '복사됨!',
+    'Log-in as' => '다음으로 로그인',
 ];

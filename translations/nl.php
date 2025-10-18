@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Meta Beschrijving',
     'Meta Keywords' => 'Meta Sleutelwoorden',
     'Html Title' => 'HTML Titel',
+    'Login as user' => 'Inloggen als gebruiker',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'Om in te loggen als deze gebruiker, kopieer de volgende link en open deze in een nieuw browservenster of in incognitomodus:',
+    'Copy to clipboard' => 'Kopiëren naar klembord',
+    'Copied!' => 'Gekopieerd!',
+    'Log-in as' => 'Inloggen als',
 ];

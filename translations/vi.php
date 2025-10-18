@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Mô tả Meta',
     'Meta Keywords' => 'Từ khóa Meta',
     'Html Title' => 'Tiêu đề HTML',
+    'Login as user' => 'Đăng nhập với tư cách người dùng',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'Để đăng nhập với tư cách người dùng này, sao chép liên kết sau và mở nó trong cửa sổ trình duyệt mới hoặc chế độ ẩn danh:',
+    'Copy to clipboard' => 'Sao chép vào clipboard',
+    'Copied!' => 'Đã sao chép!',
+    'Log-in as' => 'Đăng nhập với tư cách',
 ];

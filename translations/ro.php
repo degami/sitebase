@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Meta Descriere',
     'Meta Keywords' => 'Meta Cuvinte cheie',
     'Html Title' => 'Titlu HTML',
+    'Login as user' => 'Autentificare ca utilizator',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'Pentru a vă autentifica ca acest utilizator, copiați linkul de mai jos și deschideți-l într-o fereastră nouă a browserului sau în modul incognito:',
+    'Copy to clipboard' => 'Copiază în clipboard',
+    'Copied!' => 'Copiat!',
+    'Log-in as' => 'Autentificare ca',
 ];

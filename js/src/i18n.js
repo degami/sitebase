@@ -4,7 +4,7 @@
     var Translations = {};
 
     function loadTranslations(locale, callback) {
-        var url = '/translations/' + locale + '.json';
+        var url = '/translations/' + locale + '.json?t=' + (Math.floor(Date.now() / 1000));
 
         $.getJSON(url)
             .done(function (data) {

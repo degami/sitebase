@@ -271,4 +271,9 @@ return [
     'Layout' => 'تخطيط',
     'Create Folder' => 'إنشاء مجلد',
     'Up' => 'أعلى',
+    'Login as user' => 'تسجيل الدخول كمستخدم',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'لتسجيل الدخول كمستخدم هذا، انسخ الرابط التالي وافتحه في نافذة متصفح جديدة أو وضع التصفح المتخفي:',
+    'Copy to clipboard' => 'نسخ إلى الحافظة',
+    'Copied!' => 'تم النسخ!',
+    'Log-in as' => 'تسجيل الدخول باسم',
 ];

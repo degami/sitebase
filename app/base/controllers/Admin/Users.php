@@ -147,7 +147,7 @@ class Users extends AdminManageModelsPage
                         $this->addActionLink(
                             'login-as-btn',
                             'login-as-btn',
-                            $this->getHtmlRenderer()->getIcon('log-in') . ' ' . $this->getUtils()->translate('Login in as', locale: $this->getCurrentLocale()),
+                            $this->getHtmlRenderer()->getIcon('log-in') . ' ' . $this->getUtils()->translate('Log-in as', locale: $this->getCurrentLocale()),
                             $this->getUrl('admin.loginas', ['token' => $user->getJwt(boolval($this->getEnvironment()->getVariable('USE2FA_ADMIN')) ? ['passed2fa' => true] : [])]),
                         );
                     }

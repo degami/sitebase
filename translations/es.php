@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Meta Descripción',
     'Meta Keywords' => 'Meta Palabras clave',
     'Html Title' => 'Título HTML',
+    'Login as user' => 'Iniciar sesión como usuario',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'Para iniciar sesión como este usuario, copie el siguiente enlace y ábralo en una nueva ventana del navegador o en modo incógnito:',
+    'Copy to clipboard' => 'Copiar al portapapeles',
+    'Copied!' => '¡Copiado!',
+    'Log-in as' => 'Iniciar sesión como',
 ];

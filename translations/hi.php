@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'मेटा विवरण',
     'Meta Keywords' => 'मेटा कीवर्ड',
     'Html Title' => 'HTML शीर्षक',
+    'Login as user' => 'उपयोगकर्ता के रूप में लॉगिन करें',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'इस उपयोगकर्ता के रूप में लॉगिन करने के लिए, निम्न लिंक कॉपी करें और इसे नए ब्राउज़र विंडो या इन्कॉग्निटो मोड में खोलें:',
+    'Copy to clipboard' => 'क्लिपबोर्ड पर कॉपी करें',
+    'Copied!' => 'कॉपी किया गया!',
+    'Log-in as' => 'के रूप में लॉगिन करें',
 ];

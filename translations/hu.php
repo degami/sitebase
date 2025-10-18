@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Meta leírás',
     'Meta Keywords' => 'Meta kulcsszavak',
     'Html Title' => 'HTML cím',
+    'Login as user' => 'Bejelentkezés felhasználóként',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'A felhasználóként történő bejelentkezéshez másolja az alábbi linket, és nyissa meg új böngészőablakban vagy inkognitó módban:',
+    'Copy to clipboard' => 'Másolás a vágólapra',
+    'Copied!' => 'Másolva!',
+    'Log-in as' => 'Bejelentkezés mint',
 ];

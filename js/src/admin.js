@@ -237,7 +237,7 @@
                     evt.preventDefault();
                     $elem.appAdmin('showAlertDialog', {
                         title: __('Login as user'),
-                        message: __('In order to login as this user, copy the following link and open it in a new browser window or incognito mode:\n\n') + '<textarea id="login-as-textarea" style="width: 100%; height: 200px;">' + $(evt.target).attr('href') + '</textarea><div class="text-right mt-2"><button data-target="login-as-textarea" class="btn btn-sm btn-secondary copy-to-clipboard">' + __('Copy to clipboard') + '</button></div>',
+                        message: __('In order to login as this user, copy the following link and open it in a new browser window or incognito mode:') + '\n\n<textarea id="login-as-textarea" style="width: 100%; height: 200px;">' + $(evt.target).attr('href') + '</textarea><div class="text-right mt-2"><button data-target="login-as-textarea" class="btn btn-sm btn-secondary copy-to-clipboard">' + __('Copy to clipboard') + '</button></div>',
                         type: 'info',
                     });
                 });

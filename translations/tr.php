@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Meta Açıklama',
     'Meta Keywords' => 'Meta Anahtar Kelimeler',
     'Html Title' => 'HTML Başlık',
+    'Login as user' => 'Kullanıcı olarak giriş yap',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'Bu kullanıcı olarak giriş yapmak için aşağıdaki bağlantıyı kopyalayın ve yeni bir tarayıcı penceresinde veya gizli modda açın:',
+    'Copy to clipboard' => 'Panoya kopyala',
+    'Copied!' => 'Kopyalandı!',
+    'Log-in as' => 'Olarak giriş yap',
 ];

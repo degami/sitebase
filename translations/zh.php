@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Meta 描述',
     'Meta Keywords' => 'Meta 关键字',
     'Html Title' => 'HTML 标题',
+    'Login as user' => '以用户身份登录',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => '要以此用户身份登录，请复制以下链接并在新的浏览器窗口或隐私模式中打开：',
+    'Copy to clipboard' => '复制到剪贴板',
+    'Copied!' => '已复制！',
+    'Log-in as' => '以…身份登录',
 ];

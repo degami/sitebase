@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Deskripsi Meta',
     'Meta Keywords' => 'Kata Kunci Meta',
     'Html Title' => 'Judul HTML',
+    'Login as user' => 'Masuk sebagai pengguna',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'Untuk masuk sebagai pengguna ini, salin tautan berikut dan buka di jendela browser baru atau mode penyamaran:',
+    'Copy to clipboard' => 'Salin ke clipboard',
+    'Copied!' => 'Disalin!',
+    'Log-in as' => 'Masuk sebagai',
 ];

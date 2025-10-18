@@ -26,6 +26,7 @@ use Imagine\Image\Box;
 use Imagine\Image\ImageInterface;
 use App\Base\GraphQl\GraphQLExport;
 use App\Base\Traits\WithChildrenTrait;
+use App\Base\Exceptions\NotFoundException;
 
 /**
  * Media Element Model
@@ -64,12 +65,120 @@ class MediaElement extends BaseModel
 
     public const ORIGINAL_SIZE = 'originals';
 
+    public const MIMETYPE_INODE_DIRECTORY = 'inode/directory';
+
+    public const MIMETYPE_TEXT_PLAIN = 'text/plain';
+    public const MIMETYPE_TEXT_HTML = 'text/html';
+    public const MIMETYPE_TEXT_CSS = 'text/css';
+    public const MIMETYPE_TEXT_CSV = 'text/csv';
+    public const MIMETYPE_TEXT_RICHTEXT = 'text/richtext';
+    public const MIMETYPE_TEXT_XML = 'text/xml';
+    public const MIMETYPE_TEXT_MARKDOWN = 'text/markdown';
+    public const MIMETYPE_TEXT_VCARD = 'text/vcard';
+    public const MIMETYPE_TEXT_VTT = 'text/vtt';
+
+    public const MIMETYPE_APPLICATION_JAVASCRIPT = 'application/javascript';
+    public const MIMETYPE_APPLICATION_JSON = 'application/json';
+    public const MIMETYPE_APPLICATION_XML = 'application/xml';
+    public const MIMETYPE_APPLICATION_PDF = 'application/pdf';
+    public const MIMETYPE_APPLICATION_ZIP = 'application/zip';
+    public const MIMETYPE_APPLICATION_GZIP = 'application/gzip';
+    public const MIMETYPE_APPLICATION_TAR = 'application/x-tar';
+    public const MIMETYPE_APPLICATION_BZIP2 = 'application/x-bzip2';
+    public const MIMETYPE_APPLICATION_MSWORD = 'application/msword';
+    public const MIMETYPE_APPLICATION_VND_OPENXML_WORD = 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    public const MIMETYPE_APPLICATION_VND_MS_EXCEL = 'application/vnd.ms-excel';
+    public const MIMETYPE_APPLICATION_VND_OPENXML_EXCEL = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+    public const MIMETYPE_APPLICATION_VND_MS_POWERPOINT = 'application/vnd.ms-powerpoint';
+    public const MIMETYPE_APPLICATION_VND_OPENXML_POWERPOINT = 'application/vnd.openxmlformats-officedocument.presentationml.presentation';
+    public const MIMETYPE_APPLICATION_RTF = 'application/rtf';
+    public const MIMETYPE_APPLICATION_SQL = 'application/sql';
+    public const MIMETYPE_APPLICATION_YAML = 'application/x-yaml';
+    public const MIMETYPE_APPLICATION_XHTML = 'application/xhtml+xml';
+    public const MIMETYPE_APPLICATION_OGG = 'application/ogg';
+    public const MIMETYPE_APPLICATION_MP4 = 'application/mp4';
+    public const MIMETYPE_APPLICATION_OCTET_STREAM = 'application/octet-stream';
+    public const MIMETYPE_APPLICATION_JAVA_ARCHIVE = 'application/java-archive';
+    public const MIMETYPE_APPLICATION_PHP = 'application/x-httpd-php';
+    public const MIMETYPE_APPLICATION_FONT_WOFF = 'application/font-woff';
+    public const MIMETYPE_APPLICATION_FONT_WOFF2 = 'font/woff2';
+    public const MIMETYPE_APPLICATION_FONT_TTF = 'font/ttf';
+    public const MIMETYPE_APPLICATION_FONT_OTF = 'font/otf';
+
+    public const MIMETYPE_IMAGE_JPEG = 'image/jpeg';
+    public const MIMETYPE_IMAGE_PNG = 'image/png';
+    public const MIMETYPE_IMAGE_GIF = 'image/gif';
+    public const MIMETYPE_IMAGE_SVG = 'image/svg+xml';
+    public const MIMETYPE_IMAGE_WEBP = 'image/webp';
+    public const MIMETYPE_IMAGE_BMP = 'image/bmp';
+    public const MIMETYPE_IMAGE_TIFF = 'image/tiff';
+    public const MIMETYPE_IMAGE_X_ICON = 'image/x-icon';
+    public const MIMETYPE_IMAGE_HEIC = 'image/heic';
+    public const MIMETYPE_IMAGE_AVIF = 'image/avif';
+
+    public const MIMETYPE_AUDIO_MPEG = 'audio/mpeg';
+    public const MIMETYPE_AUDIO_MP4 = 'audio/mp4';
+    public const MIMETYPE_AUDIO_OGG = 'audio/ogg';
+    public const MIMETYPE_AUDIO_WEBM = 'audio/webm';
+    public const MIMETYPE_AUDIO_WAV = 'audio/wav';
+    public const MIMETYPE_AUDIO_AAC = 'audio/aac';
+    public const MIMETYPE_AUDIO_FLAC = 'audio/flac';
+    public const MIMETYPE_AUDIO_MID = 'audio/midi';
+    public const MIMETYPE_AUDIO_X_MATROSKA = 'audio/x-matroska';
+
+    public const MIMETYPE_VIDEO_MP4 = 'video/mp4';
+    public const MIMETYPE_VIDEO_OGG = 'video/ogg';
+    public const MIMETYPE_VIDEO_WEBM = 'video/webm';
+    public const MIMETYPE_VIDEO_X_FLV = 'video/x-flv';
+    public const MIMETYPE_VIDEO_X_MSVIDEO = 'video/x-msvideo';
+    public const MIMETYPE_VIDEO_X_MATROSKA = 'video/x-matroska';
+    public const MIMETYPE_VIDEO_QUICKTIME = 'video/quicktime';
+
+    public const MIMETYPE_MULTIPART_FORMDATA = 'multipart/form-data';
+    public const MIMETYPE_MULTIPART_MIXED = 'multipart/mixed';
+    public const MIMETYPE_MULTIPART_ALTERNATIVE = 'multipart/alternative';
+    public const MIMETYPE_MULTIPART_RELATED = 'multipart/related';
+
+    public const MIMETYPE_MESSAGE_RFC822 = 'message/rfc822';
+
+    public const MIMETYPE_APPLICATION_X_SHOCKWAVE_FLASH = 'application/x-shockwave-flash';
+    public const MIMETYPE_APPLICATION_X_MS_DOWNLOAD = 'application/x-msdownload';
+    public const MIMETYPE_APPLICATION_X_DEB = 'application/vnd.debian.binary-package';
+    public const MIMETYPE_APPLICATION_X_RAR = 'application/vnd.rar';
+    public const MIMETYPE_APPLICATION_X_7Z = 'application/x-7z-compressed';
+    public const MIMETYPE_APPLICATION_X_APPIMAGE = 'application/x-appimage';
+
+    public const MIMETYPE_CHEMICAL_X_PDB = 'chemical/x-pdb';
+    public const MIMETYPE_CHEMICAL_X_CIF = 'chemical/x-cif';
+
+    public const MIMETYPE_MODEL_STL = 'model/stl';
+    public const MIMETYPE_MODEL_OBJ = 'model/obj';
+    public const MIMETYPE_MODEL_GLB = 'model/gltf-binary';
+    public const MIMETYPE_MODEL_GLTF = 'model/gltf+json';
+
+
     /**
      * {@inheritdoc}
      */
     public static function canBeDuplicated() : bool
     {
         return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function canSaveVersions() : bool
+    {
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function isExportable() : bool
+    {
+        return true;
     }
 
     /**
@@ -82,7 +191,7 @@ class MediaElement extends BaseModel
     {
         $this->checkLoaded();
 
-        return str_replace(App::getDir(App::ROOT), "", $this->path);
+        return preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath());
     }
 
     /**
@@ -154,7 +263,7 @@ class MediaElement extends BaseModel
             $this->setPath(rtrim($this->getPath(), DS) . DS . $this->getFilename());
         }
 
-        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath());
+        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . $this->getRelativePath();
         if (!preg_match("/^image\/(.*?)/", $this->getMimetype())) {
             $thumb_path .= '.svg';
         }
@@ -166,13 +275,13 @@ class MediaElement extends BaseModel
             }
 
             try {
-                if ($this->getMimetype() == 'image/svg+xml') {
+                if ($this->getMimetype() == self::MIMETYPE_IMAGE_SVG) {
                     // copy file to destination, does not need resampling
                     if (!copy($this->getPath(), $thumb_path)) {
                         throw new Exception("Errors copying file " . $this->getPath() . " into " . $thumb_path);
                     }
                 } else {
-                    if (preg_match("/^image\/(.*?)/", $this->getMimetype()) && ($image = App::getInstance()->getImagine()->open($this->getPath()))) {
+                    if ($this->isImage() && ($image = App::getInstance()->getImagine()->open($this->getPath()))) {
                         if ($thumb_sizes) {
                             $w = $thumb_sizes[1];
                             $h = $thumb_sizes[2];
@@ -233,7 +342,7 @@ class MediaElement extends BaseModel
                     continue;
                 }
                 if (is_dir($thumb_path . DS . $dirent)) {
-                    $thumbFilePath = $thumb_path . DS . $dirent . DS . ltrim(preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()), DS);
+                    $thumbFilePath = $thumb_path . DS . $dirent . DS . ltrim($this->getRelativePath(), DS);
                     if (is_file($thumbFilePath)) {
                         @unlink($thumbFilePath);
                     }
@@ -307,15 +416,48 @@ class MediaElement extends BaseModel
     }
 
     /**
+     * Checks if the current mimetype matches the given pattern.
+     * Accepts either a full mimetype string (e.g. "image/png")
+     * or a partial regex (e.g. "^image/").
+     *
+     * @param string $pattern MIME type or regular expression fragment
+     * @return bool
+     */
+    public function isMimetype(string $regexp) : bool
+    {
+        $this->checkLoaded();
+
+        return boolval(preg_match("/" . str_replace("/", "\\/", trim(str_replace('\/', '/', $regexp), '/')) . "/", (string) $this->getMimetype()));
+    }
+
+    /**
      * check if media is an image
      * 
      * @return bool
      */
     public function isImage() : bool
     {
-        $this->checkLoaded();
+        return $this->isMimetype("/^image\/.*?/");
+    }
 
-        return preg_match("/^image\/.*?/", (string) $this->getMimetype());
+    /**
+     * check if media is an audio
+     * 
+     * @return bool
+     */
+    public function isAudio() : bool
+    {
+        return $this->isMimetype("/^audio\/.*?/");
+    }
+
+    /**
+     * check if media is a video
+     * 
+     * @return bool
+     */
+    public function isVideo() : bool
+    {
+        return $this->isMimetype("/^video\/.*?/");
     }
 
     /**
@@ -325,9 +467,7 @@ class MediaElement extends BaseModel
      */
     public function isDirectory() : bool
     {
-        $this->checkLoaded();
-
-        return $this->getMimetype() == 'inode/directory';
+        return $this->isMimetype(self::MIMETYPE_INODE_DIRECTORY);
     }
 
     /**
@@ -353,6 +493,9 @@ class MediaElement extends BaseModel
         return App::getInstance()->getHtmlRenderer()->getIcon('file');
     }
 
+    /**
+     * {@inheritdoc}
+     */    
     public function preRemove() : BaseModel
     {
         if ($this->isDirectory()) {
@@ -365,8 +508,8 @@ class MediaElement extends BaseModel
                         continue;
                     }
                     if (is_dir($thumb_path . DS . $dirent)) {
-                        if (is_dir($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()))) {
-                            @rmdir($thumb_path . DS . $dirent . DS . preg_replace("#^".App::getDir(App::MEDIA)."#", "", $this->getPath()));
+                        if (is_dir($thumb_path . DS . $dirent . DS . $this->getRelativePath())) {
+                            @rmdir($thumb_path . DS . $dirent . DS . $this->getRelativePath());
                         }
                     }
                 }
@@ -386,19 +529,33 @@ class MediaElement extends BaseModel
         return $this;
     }
 
-    public Function canSaveVersions() : bool
-    {
-        return true;
-    }
-
-    public static function isExportable() : bool
-    {
-        return true;
-    }
-
-    public function getStream() : mixed
+    /**
+     * ensure directory / file is existing
+     * 
+     * @return self
+     */
+    public function ensureConsistency() : self
     {
         $this->checkLoaded();
+
+        if ($this->isDirectory()) {
+            @mkdir($this->getPath(), 0777, true);
+        } else {
+            @mkdir(dirname($this->getPath()), 0777, true);
+            @touch($this->getPath());
+        }
+
+        return $this;
+    }
+
+    /**
+     * return file / directory stream
+     * 
+     * @return resource|false
+     */
+    public function getStream() : mixed
+    {
+        $this->ensureConsistency();
 
         if ($this->isDirectory()) {
             return opendir($this->getPath());
@@ -407,8 +564,15 @@ class MediaElement extends BaseModel
         return fopen($this->getPath(), 'rb');
     }
 
+    /**
+     * returns a collection of MEdiaElements contained into the current subtree
+     * 
+     * @return BaseCollection|null
+     */
     public function getSubTree() : ?BaseCollection
     {
+        $this->checkLoaded();
+
         if (!$this->isDirectory()) {
             return null;
         }
@@ -417,4 +581,186 @@ class MediaElement extends BaseModel
         $collection->orWhere(['`path` LIKE ?' => rtrim($this->getPath(), DS) . DS . '%', 'parent_id' => $this->getId()]);
         return $collection;
     }
+
+    /**
+     * checks if element is plain text file
+     * 
+     * @return bool
+     */
+    public function isPlainText() : bool
+    {
+        return !$this->isDirectory() && $this->isMimetype(self::MIMETYPE_TEXT_PLAIN);
+    }
+
+    /**
+     * checks if element is csv file
+     * 
+     * @return bool
+     */
+    public function isCsv() : bool
+    {
+        return !$this->isDirectory() && $this->isMimetype(self::MIMETYPE_TEXT_CSV);
+    }
+
+    /**
+     * checks if element is and archive file
+     * 
+     * @return bool
+     */
+    public function isArchive() : bool
+    {
+        $archiveTypes = [
+            self::MIMETYPE_APPLICATION_BZIP2,
+            self::MIMETYPE_APPLICATION_GZIP,
+            self::MIMETYPE_APPLICATION_TAR,
+            self::MIMETYPE_APPLICATION_X_7Z,
+            self::MIMETYPE_APPLICATION_X_RAR,
+            self::MIMETYPE_APPLICATION_ZIP,
+        ];
+        return $this->isMimetype("(".implode("|", $archiveTypes).")");
+    }
+
+    public function copy(string $destination): MediaElement
+    {
+        $this->checkLoaded();
+
+        $destination = rtrim($destination, DS);
+        $mediaRoot = App::getDir(App::MEDIA);
+
+        if ($destination === $mediaRoot) {
+            $destinationObj = null;
+            $parentPath = $mediaRoot;
+            $destinationFilename = $this->getFilename();
+        } else {
+            try {
+                $destinationObj = MediaElement::loadByPath($destination);
+
+                if (!$destinationObj->isDirectory()) {
+                    throw new Exception("Destination $destination esiste già come file");
+                }
+
+                $parentPath = $destinationObj->getPath();
+                $destinationFilename = $this->getFilename();
+            } catch (NotFoundException $e) {
+                $parentDir = dirname($destination);
+
+                if ($parentDir === $mediaRoot) {
+                    $destinationObj = null;
+                } else {
+                    try {
+                        $destinationObj = MediaElement::loadByPath($parentDir);
+                    } catch (NotFoundException $e2) {
+                        throw new Exception("Cartella di destinazione $parentDir non esiste");
+                    }
+                }
+
+                if ($destinationObj && !$destinationObj->isDirectory()) {
+                    throw new Exception("$parentDir non è una cartella");
+                }
+
+                $parentPath = $destinationObj ? $destinationObj->getPath() : $mediaRoot;
+                $destinationFilename = basename($destination);
+            }
+        }
+
+        $media = new static();
+        $media->setUserId(App::getInstance()->getAuth()->getCurrentUser()?->getId());
+        $media->setParentId($destinationObj?->getId() ?? null);
+        $media->setPath($parentPath . DS . $destinationFilename);
+        $media->setFilename($destinationFilename);
+        $media->setMimetype($this->getMimetype());
+        $media->setFilesize($this->getFilesize());
+        $media->setLazyload($this->getLazyload());
+        $media->persist();
+
+        if ($this->isDirectory()) {
+            @mkdir($media->getPath(), 0777, true);
+            foreach ($this->getChildren() as $child) {
+                /** @var MediaElement $child */
+                $child->copy($media->getPath() . DS . $child->getFilename());
+            }
+        } else {
+            if (!@copy($this->getPath(), $media->getPath())) {
+                throw new Exception("Errore copiando {$this->getPath()} in {$media->getPath()}");
+            }
+        }
+
+        $media->ensureConsistency();
+        return $media;
+    }
+
+    public function move(string $destination): self
+    {
+        $this->checkLoaded();
+
+        $destination = rtrim($destination, DS);
+        $mediaRoot = App::getDir(App::MEDIA);
+
+        if ($this->isImage()) {
+            $this->clearThumbs();
+        }
+
+        if ($destination === $mediaRoot) {
+            $destinationObj = null;
+            $parentPath = $mediaRoot;
+            $destinationFilename = $this->getFilename();
+        } else {
+            try {
+                $destinationObj = MediaElement::loadByPath($destination);
+
+                if (!$destinationObj->isDirectory()) {
+                    throw new Exception("Destination $destination esiste già come file");
+                }
+
+                $parentPath = $destinationObj->getPath();
+                $destinationFilename = $this->getFilename();
+            } catch (NotFoundException $e) {
+                $parentDir = dirname($destination);
+
+                if ($parentDir === $mediaRoot) {
+                    $destinationObj = null;
+                } else {
+                    try {
+                        $destinationObj = MediaElement::loadByPath($parentDir);
+                    } catch (NotFoundException $e2) {
+                        throw new Exception("Cartella di destinazione $parentDir non esiste");
+                    }
+                }
+
+                if ($destinationObj && !$destinationObj->isDirectory()) {
+                    throw new Exception("$parentDir non è una cartella");
+                }
+
+                $parentPath = $destinationObj ? $destinationObj->getPath() : $mediaRoot;
+                $destinationFilename = basename($destination);
+            }
+        }
+
+        $newPath = $parentPath . DS . $destinationFilename;
+
+        if (!@rename($this->getPath(), $newPath)) {
+            throw new Exception("Error moving {$this->getPath()} to $newPath");
+        }
+
+        $oldPath = $this->getPath();
+
+        $this->setPath($newPath);
+        $this->setFilename($destinationFilename);
+        $this->setParentId($destinationObj?->getId() ?? null);
+        $this->persist();
+
+        if ($this->isDirectory()) {
+            $subTree = $this->getSubTree();
+            if ($subTree) {
+                $subTree->map(function(MediaElement $child) use ($oldPath, $newPath) {
+                    $relative = ltrim(str_replace($oldPath, '', $child->getPath()), DS);
+                    $child->setPath($newPath . DS . $relative);
+                    $child->persist();
+                });
+            }
+        }
+
+        return $this;
+    }
+
 }

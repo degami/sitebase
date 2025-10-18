@@ -296,4 +296,9 @@ return [
     'Meta Description' => 'Meta Περιγραφή',
     'Meta Keywords' => 'Meta Λέξεις-κλειδιά',
     'Html Title' => 'HTML Τίτλος',
+    'Login as user' => 'Σύνδεση ως χρήστης',
+    'In order to login as this user, copy the following link and open it in a new browser window or incognito mode:' => 'Για να συνδεθείτε ως αυτός ο χρήστης, αντιγράψτε τον παρακάτω σύνδεσμο και ανοίξτε τον σε νέο παράθυρο του προγράμματος περιήγησης ή σε κατάσταση ανώνυμης περιήγησης:',
+    'Copy to clipboard' => 'Αντιγραφή στο πρόχειρο',
+    'Copied!' => 'Αντιγράφηκε!',
+    'Log-in as' => 'Σύνδεση ως',
 ];

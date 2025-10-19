@@ -17,6 +17,7 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithOwnerTrait;
 use App\App;
 use App\Base\Abstracts\Models\BaseCollection;
+use App\Base\Exceptions\InvalidValueException;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
@@ -27,6 +28,8 @@ use Imagine\Image\ImageInterface;
 use App\Base\GraphQl\GraphQLExport;
 use App\Base\Traits\WithChildrenTrait;
 use App\Base\Exceptions\NotFoundException;
+use Degami\SqlSchema\Exceptions\DuplicateException;
+use RuntimeException;
 
 /**
  * Media Element Model
@@ -633,10 +636,10 @@ class MediaElement extends BaseModel
             $destinationFilename = $this->getFilename();
         } else {
             try {
-                $destinationObj = MediaElement::loadByPath($destination);
+                $destinationObj = static::loadBy('path', $destination);
 
                 if (!$destinationObj->isDirectory()) {
-                    throw new Exception("Destination $destination esiste già come file");
+                    throw new DuplicateException(App::getInstance()->getUtils()->translate("%s is already existing into destination path", [$destination]));
                 }
 
                 $parentPath = $destinationObj->getPath();
@@ -650,17 +653,28 @@ class MediaElement extends BaseModel
                     try {
                         $destinationObj = MediaElement::loadByPath($parentDir);
                     } catch (NotFoundException $e2) {
-                        throw new Exception("Cartella di destinazione $parentDir non esiste");
+                        throw new NotFoundException(App::getInstance()->getUtils()->translate("Destination folder %s is not existing", [$parentDir]));
                     }
                 }
 
                 if ($destinationObj && !$destinationObj->isDirectory()) {
-                    throw new Exception("$parentDir non è una cartella");
+                    throw new InvalidValueException(App::getInstance()->getUtils()->translate("%s is not a folder", [$parentDir]));
                 }
 
                 $parentPath = $destinationObj ? $destinationObj->getPath() : $mediaRoot;
                 $destinationFilename = basename($destination);
             }
+        }
+
+        $existing = null;
+        try {
+            $existing = static::loadBy('path', $parentPath . DS . $destinationFilename);
+        } catch (Exception $e) {
+            // if not existing, is fine
+        }
+
+        if ($existing) {
+            throw new DuplicateException(App::getInstance()->getUtils()->translate("%s is already existing into destination path", [$destinationFilename]));
         }
 
         $media = new static();
@@ -674,14 +688,16 @@ class MediaElement extends BaseModel
         $media->persist();
 
         if ($this->isDirectory()) {
-            @mkdir($media->getPath(), 0777, true);
+            if (!@mkdir($media->getPath(), 0777, true)) {
+                throw new RuntimeException(App::getInstance()->getUtils()->translate("Error creating directory %s into %s", [$destinationFilename, $$parentPath]));
+            }
             foreach ($this->getChildren() as $child) {
                 /** @var MediaElement $child */
                 $child->copy($media->getPath() . DS . $child->getFilename());
             }
         } else {
             if (!@copy($this->getPath(), $media->getPath())) {
-                throw new Exception("Errore copiando {$this->getPath()} in {$media->getPath()}");
+                throw new RuntimeException(App::getInstance()->getUtils()->translate("Error copying %s into %s", [$this->getPath(), $media->getPath()]));
             }
         }
 
@@ -706,10 +722,10 @@ class MediaElement extends BaseModel
             $destinationFilename = $this->getFilename();
         } else {
             try {
-                $destinationObj = MediaElement::loadByPath($destination);
+                $destinationObj = static::loadBy('path', $destination);
 
                 if (!$destinationObj->isDirectory()) {
-                    throw new Exception("Destination $destination esiste già come file");
+                    throw new DuplicateException(App::getInstance()->getUtils()->translate("%s is already existing into destination path", [$destination]));
                 }
 
                 $parentPath = $destinationObj->getPath();
@@ -723,12 +739,12 @@ class MediaElement extends BaseModel
                     try {
                         $destinationObj = MediaElement::loadByPath($parentDir);
                     } catch (NotFoundException $e2) {
-                        throw new Exception("Cartella di destinazione $parentDir non esiste");
+                        throw new NotFoundException(App::getInstance()->getUtils()->translate("Destination folder %s is not existing", [$parentDir]));
                     }
                 }
 
                 if ($destinationObj && !$destinationObj->isDirectory()) {
-                    throw new Exception("$parentDir non è una cartella");
+                    throw new InvalidValueException(App::getInstance()->getUtils()->translate("%s is not a folder", [$parentDir]));
                 }
 
                 $parentPath = $destinationObj ? $destinationObj->getPath() : $mediaRoot;
@@ -736,10 +752,21 @@ class MediaElement extends BaseModel
             }
         }
 
+        $existing = null;
+        try {
+            $existing = static::loadBy('path', $parentPath . DS . $destinationFilename);
+        } catch (Exception $e) {
+            // if not existing, is fine
+        }
+
+        if ($existing) {
+            throw new DuplicateException(App::getInstance()->getUtils()->translate("%s is already existing into destination path", [$destinationFilename]));
+        }
+
         $newPath = $parentPath . DS . $destinationFilename;
 
         if (!@rename($this->getPath(), $newPath)) {
-            throw new Exception("Error moving {$this->getPath()} to $newPath");
+            throw new RuntimeException(App::getInstance()->getUtils()->translate("Error moving %s into %s", [$this->getPath(), $newPath]));
         }
 
         $oldPath = $this->getPath();

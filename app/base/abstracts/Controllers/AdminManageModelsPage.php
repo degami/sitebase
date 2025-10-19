@@ -425,7 +425,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addBatchDeleteButton(string $className, string $tableId)
     {
-        $this->addActionLink(static::DELETE_BATCH_BTN, self::DELETE_BATCH_BTN, $this->getHtmlRenderer()->getIcon('delete') . ' ' . $this->getUtils()->translate('Mass Delete', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-danger', attributes: ['onClick' => '$("#admin").appAdmin(\'listingTableDeleteSelected\', \'#'.$tableId.'\', \''.$className.'\'); return false;']);
+        $this->addActionLink(static::DELETE_BATCH_BTN, self::DELETE_BATCH_BTN, $this->getHtmlRenderer()->getIcon('delete') . ' ' . $this->getUtils()->translate('Mass Delete', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-danger', attributes: ['onClick' => '$("#admin").appAdmin(\'listingDeleteSelected\', \'#'.$tableId.'\', \''.$className.'\'); return false;']);
     }
 
     /**
@@ -439,7 +439,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addBatchEditButton(string $controllerClassName, string $modelClassName, string $tableId)
     {
-        $this->addActionLink(static::EDIT_BATCH_BTN, static::EDIT_BATCH_BTN, $this->getHtmlRenderer()->getIcon('edit') . ' ' . $this->getUtils()->translate('Mass Edit', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-dark', attributes: ['onClick' => '$("#admin").appAdmin(\'listingTableEditSelected\', \'#'.$tableId.'\', \''.$controllerClassName.'\', \''.$modelClassName.'\', this); return false;']);
+        $this->addActionLink(static::EDIT_BATCH_BTN, static::EDIT_BATCH_BTN, $this->getHtmlRenderer()->getIcon('edit') . ' ' . $this->getUtils()->translate('Mass Edit', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-dark', attributes: ['onClick' => '$("#admin").appAdmin(\'listingEditSelected\', \'#'.$tableId.'\', \''.$controllerClassName.'\', \''.$modelClassName.'\', this); return false;']);
     }
 
     /**

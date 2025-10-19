@@ -5,6 +5,7 @@
 //=include ../../node_modules/jquery.cycle2/src/jquery.cycle2.min.js
 //=include ../../node_modules/jquery.cookie/jquery.cookie.js
 //=include ../../node_modules/gallery/lib/gallery.js
+//=include ../i18n.js
 
 (function($){
     $(document).ready(function(){

@@ -105,9 +105,9 @@ body.dark-mode {
             color: $color-lightgray3 !important;
             border: 1px solid $color-lightgray3;
             &:hover {
-                color: $color-almostwhite3 !important;
+                color: $color-almostblack !important;
                 border: 1px solid $color-almostwhite3;
-                background-color: $color-almostblack !important;
+                background-color: $color-almostwhite3 !important;
             }
         }
     }
@@ -205,4 +205,36 @@ body.dark-mode {
         }
     }
 
+    #pagination-layout-selector {
+        .nav-link {
+            color: $color-lightergray;
+        }
+    }
+
+    .border {
+        border: solid 1px $color-darkgrey !important;
+    }
+
+    #versions-table {
+        tr {
+            &.selected {
+                background-color: #6db1f0;
+                color: #000;
+            }
+        }
+    }
+
+    table.compare_versions {
+        tr {
+            th {
+                color:$color-almostwhite3;
+                background-color: $color-darkblue;
+
+                &.prefix {
+                    background-color: $color-darkgrey;
+                    color:$color-almostwhite3;
+                }                
+            }
+        }
+    }
 }

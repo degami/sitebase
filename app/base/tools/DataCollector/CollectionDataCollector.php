@@ -107,6 +107,9 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
     protected function convert($size)
     {
         $unit=array('b','kb','mb','gb','tb','pb');
+        if ($size <= 0) {
+            return '0';
+        }
         return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
     }
 

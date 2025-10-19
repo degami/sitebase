@@ -234,3 +234,45 @@ div[id^="listing-grid-"] {
   }
 }
 
+table.compare_versions {
+  border-collapse:collapse;
+  width:100%;
+  border-top: solid 1px $color-darkgrey;
+  border-left: solid 1px $color-darkgrey;
+
+  tr {
+    th {
+      border-bottom: solid 1px $color-darkgrey;
+      border-right: solid 1px $color-darkgrey;
+      color: $color-darkgrey;
+    }
+
+    &.selected {
+      background-color: #d0e8ff;
+    }
+
+    td {
+      border-bottom: solid 1px $color-darkgrey;
+      border-right: solid 1px $color-darkgrey;
+
+      &.prefix {
+        background-color:#f0f0f0;
+      }
+
+      &.version_a, &.versiob_b {
+        width: 35%;
+        color: $color-darkgrey;
+      }
+
+      &.version_a {
+        background-color:#ffecec;
+        color: $color-darkgrey;
+      }
+
+      &.version_b {
+        background-color:#ecffec;
+        color: $color-darkgrey;
+      }
+    }
+  }
+}

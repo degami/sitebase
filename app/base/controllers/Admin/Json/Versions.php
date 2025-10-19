@@ -87,7 +87,7 @@ class Versions extends AdminJsonPage
 
             $diff = $first->compareWith($second);
 
-            $diffTable = '<table border="1" cellpadding="6" cellspacing="0" style="border-collapse:collapse;width:100%;">';
+            $diffTable = '<table class="compare_versions" border="0" cellpadding="6" cellspacing="0">';
             $diffTable .= '<thead><tr style="background:#ddd;"><th>Field</th><th>'.$first->getCreatedAt().'</th><th>'.$second->getCreatedAt().'</th></tr></thead><tbody>';
             $diffTable .= $this->renderDiffTable($diff);
             $diffTable .= '</tbody></table>';
@@ -95,7 +95,7 @@ class Versions extends AdminJsonPage
 
         $html = '<div class="container-fluid">
                     <div class="row">
-                        <div class="col-3 p-0 border vh-100 overflow-auto">
+                        <div class="col-3 p-0 border vh-100 overflow-auto" style="border-right: 0 !important;">
                             <div class="version-instructions p-2 text-center small text-muted border-bottom">
                                 <i class="fa fa-info-circle"></i> Ctrl+Click on two versions to compare them
                             </div>
@@ -113,7 +113,7 @@ class Versions extends AdminJsonPage
     const id = \$row.find('td:first').text().trim();
     if (id === '{$this->getRequest()->query->get('version_a')}'
         || id === '{$this->getRequest()->query->get('version_b')}') {
-        \$row.css('background', '#d0e8ff');
+        \$row.addClass('selected');
     }
 });
 JS;
@@ -156,7 +156,7 @@ $(function() {
                 \$row.css('background', '');
             } else {
                 selected.push(id);
-                \$row.css('background', '#d0e8ff');
+                \$row.addClass('selected');
             }
 
             if (selected.length > 2) {
@@ -164,7 +164,7 @@ $(function() {
                 \$rows.each(function() {
                     const rowId = $(this).find('td:first').text().trim();
                     if (rowId === first) {
-                        $(this).css('background', '');
+                        $(this).removeClass('selected');
                     }
                 });
             }
@@ -278,7 +278,7 @@ JS
 
         foreach ($diff as $key => $value) {
             if (is_array($value) && array_keys($value) !== ['current', 'other']) {
-                $html .= '<tr><th colspan="3" style="background:#f0f0f0;">' . htmlspecialchars($prefix . $key) . '</th></tr>';
+                $html .= '<tr><th colspan="3" class="prefix">' . htmlspecialchars($prefix . $key) . '</th></tr>';
                 $html .= $this->renderDiffTable($value, $prefix . $key . '.');
             } else {
                 $current = $value['current'] ?? '';
@@ -288,10 +288,10 @@ JS
                 $other = $this->formatCellValue($other);
 
                 $html .= sprintf(
-                    '<tr><td style="width:30%%;"><b>%s</b></td><td style="width:35%%;background:#ffecec;">%s</td><td style="width:35%%;background:#ecffec;">%s</td></tr>',
+                    '<tr><td><b>%s</b></td><td class="version_a">%s</td><td class="version_b">%s</td></tr>',
                     htmlspecialchars($prefix . $key),
-                    $current,
-                    $other
+                    $current ?? 'no-value',
+                    $other ?? 'no-value'
                 );
             }
         }

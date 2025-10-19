@@ -318,4 +318,9 @@ return [
     'Success' => 'सफलता',
     'Warning' => 'चेतावनी',
     'Notice' => 'सूचना',
+    'Ctrl+Click on two versions to compare them' => 'दो संस्करणों की तुलना करने के लिए Ctrl+क्लिक करें',
+    'Restore' => 'पुनर्स्थापित करें',
+    'Remove' => 'हटाएं',
+    'Pages' => 'पृष्ठ',
+    'Image Editor' => 'छवि संपादक',
 ];

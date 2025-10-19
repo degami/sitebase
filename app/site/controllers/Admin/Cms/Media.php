@@ -280,7 +280,7 @@ class Media extends AdminManageModelsPage
                         $this->addActionLink(
                             'minipaint',
                             'minipaint',
-                            $this->getHtmlRenderer()->getIcon('edit') . ' ' . 'Image Editor',
+                            $this->getHtmlRenderer()->getIcon('edit') . ' ' . $this->getUtils()->translate('Image Editor', locale: $this->getCurrentLocale()),
                             $linkTo,
                             'btn btn-sm btn-light'
                         );    
@@ -290,7 +290,7 @@ class Media extends AdminManageModelsPage
                 $this->addActionLink(
                     'pages-btn',
                     'pages-btn',
-                    '&#9776; Pages',
+                    '&#9776; ' . $this->getUtils()->translate('Pages', locale: $this->getCurrentLocale()),
                     $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $this->getRequest()->query->get('media_id')]) . '?media_id=' . $this->getRequest()->query->get('media_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );

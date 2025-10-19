@@ -318,4 +318,9 @@ return [
     'Success' => 'Succes',
     'Warning' => 'Atenție',
     'Notice' => 'Notificare',
+    'Ctrl+Click on two versions to compare them' => 'Ctrl+Click pe două versiuni pentru a le compara',
+    'Restore' => 'Restaurează',
+    'Remove' => 'Elimină',
+    'Pages' => 'Pagini',
+    'Image Editor' => 'Editor de Imagini',
 ];

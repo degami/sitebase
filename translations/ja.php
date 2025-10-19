@@ -318,4 +318,9 @@ return [
     'Success' => '成功',
     'Warning' => '警告',
     'Notice' => '通知',
+    'Ctrl+Click on two versions to compare them' => 'Ctrlを押しながら2つのバージョンをクリックして比較します',
+    'Restore' => '復元',
+    'Remove' => '削除',
+    'Pages' => 'ページ',
+    'Image Editor' => '画像エディター',
 ];

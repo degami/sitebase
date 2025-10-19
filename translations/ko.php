@@ -318,4 +318,9 @@ return [
     'Success' => '성공',
     'Warning' => '경고',
     'Notice' => '알림',
+    'Ctrl+Click on two versions to compare them' => 'Ctrl을 누른 상태에서 두 버전을 클릭하여 비교합니다',
+    'Restore' => '복원',
+    'Remove' => '제거',
+    'Pages' => '페이지',
+    'Image Editor' => '이미지 편집기',
 ];

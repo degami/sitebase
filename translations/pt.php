@@ -318,4 +318,9 @@ return [
     'Success' => 'Erfolg',
     'Warning' => 'Warnung',
     'Notice' => 'Hinweis',
+    'Ctrl+Click on two versions to compare them' => 'Ctrl+Clique em duas versões para compará-las',
+    'Restore' => 'Restaurar',
+    'Remove' => 'Remover',
+    'Pages' => 'Páginas',
+    'Image Editor' => 'Editor de Imagens',
 ];

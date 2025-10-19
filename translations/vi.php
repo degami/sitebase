@@ -318,4 +318,9 @@ return [
     'Success' => 'Thành công',
     'Warning' => 'Cảnh báo',
     'Notice' => 'Thông báo',
+    'Ctrl+Click on two versions to compare them' => 'Nhấn Ctrl và nhấp vào hai phiên bản để so sánh',
+    'Restore' => 'Khôi phục',
+    'Remove' => 'Xóa',
+    'Pages' => 'Trang',
+    'Image Editor' => 'Trình chỉnh sửa hình ảnh',
 ];

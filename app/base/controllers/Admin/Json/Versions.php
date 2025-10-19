@@ -97,7 +97,7 @@ class Versions extends AdminJsonPage
                     <div class="row">
                         <div class="col-3 p-0 border vh-100 overflow-auto" style="border-right: 0 !important;">
                             <div class="version-instructions p-2 text-center small text-muted border-bottom">
-                                <i class="fa fa-info-circle"></i> Ctrl+Click on two versions to compare them
+                                <i class="fa fa-info-circle"></i> '.$this->getUtils()->translate('Ctrl+Click on two versions to compare them').'
                             </div>
                             '.$this->getHtmlRenderer()->renderAdminTable($versionsTable, ['id' => [], 'Date' => [], 'User' => []], table_id: 'versions-table').'
                         </div>
@@ -189,7 +189,6 @@ $(function() {
     let \$contextMenu = null;
 
     function hideContextMenu() {
-        console.log('Hide context menu');
         if (\$contextMenu) {
             \$contextMenu.remove();
             \$contextMenu = null;

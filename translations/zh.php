@@ -318,4 +318,9 @@ return [
     'Success' => '成功',
     'Warning' => '警告',
     'Notice' => '通知',
+    'Ctrl+Click on two versions to compare them' => '按住Ctrl并点击两个版本进行比较',
+    'Restore' => '恢复',
+    'Remove' => '删除',
+    'Pages' => '页面',
+    'Image Editor' => '图片编辑器',
 ];

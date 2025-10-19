@@ -318,4 +318,9 @@ return [
     'Success' => 'Siker',
     'Warning' => 'Figyelmeztetés',
     'Notice' => 'Értesítés',
+    'Ctrl+Click on two versions to compare them' => 'Ctrl+kattintson két verzióra az összehasonlításhoz',
+    'Restore' => 'Visszaállítás',
+    'Remove' => 'Eltávolítás',
+    'Pages' => 'Oldalak',
+    'Image Editor' => 'Képszerkesztő',
 ];

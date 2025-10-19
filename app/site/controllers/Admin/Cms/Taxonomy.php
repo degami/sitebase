@@ -114,7 +114,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 $this->addActionLink(
                     'pages-btn',
                     'pages-btn',
-                    '&#9776; Pages',
+                    '&#9776; ' . $this->getUtils()->translate('Pages', locale: $this->getCurrentLocale()),
                     $this->getUrl('crud.app.site.controllers.admin.json.termpages', ['id' => $this->getRequest()->query->get('term_id')]) . '?term_id=' . $this->getRequest()->query->get('term_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );

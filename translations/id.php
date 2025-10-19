@@ -318,4 +318,9 @@ return [
     'Success' => 'Berhasil',
     'Warning' => 'Peringatan',
     'Notice' => 'Pemberitahuan',
+    'Ctrl+Click on two versions to compare them' => 'Ctrl+Klik dua versi untuk membandingkannya',
+    'Restore' => 'Pulihkan',
+    'Remove' => 'Hapus',
+    'Pages' => 'Halaman',
+    'Image Editor' => 'Editor Gambar',
 ];

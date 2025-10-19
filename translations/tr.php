@@ -318,4 +318,9 @@ return [
     'Success' => 'Başarılı',
     'Warning' => 'Uyarı',
     'Notice' => 'Bildirim',
+    'Ctrl+Click on two versions to compare them' => 'Ctrl+İki sürüme tıklayarak karşılaştırın',
+    'Restore' => 'Geri yükle',
+    'Remove' => 'Kaldır',
+    'Pages' => 'Sayfalar',
+    'Image Editor' => 'Görüntü Düzenleyici',
 ];

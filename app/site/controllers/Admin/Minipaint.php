@@ -90,7 +90,7 @@ class Minipaint extends AdminPage
             $media = MediaElement::load($this->getRequest()->query->get('media_id'));
             $mediaMimeType = $media->getMimetype();
             $minipaintSaveUrl = $this->getUrl('crud.app.site.controllers.admin.minipaintsave', ['media_id' => $media->getId()]);
-            $backUrl = $this->getUrl('admin.media'). '?' . http_build_query(['action' => 'edit', 'media_id' => $media->getId()]);
+            $backUrl = $this->getUrl('admin.cms.media'). '?' . http_build_query(['action' => 'edit', 'media_id' => $media->getId()]);
 
             $saveMessage = $this->getUtils()->translate("Save on server");
             $backMessage = $this->getHtmlRenderer()->getIcon('rewind', ['height' => 16]) . '&nbsp;' . $this->getUtils()->translate("Back");

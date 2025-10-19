@@ -293,4 +293,9 @@ return [
     'Success' => 'نجاح',
     'Warning' => 'تحذير',
     'Notice' => 'إشعار',
+    'Ctrl+Click on two versions to compare them' => 'اضغط Ctrl وانقر على إصدارين لمقارنتهما',
+    'Restore' => 'استعادة',
+    'Remove' => 'إزالة',
+    'Pages' => 'الصفحات',
+    'Image Editor' => 'محرر الصور',
 ];

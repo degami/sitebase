@@ -318,4 +318,9 @@ return [
     'Success' => 'Επιτυχία',
     'Warning' => 'Προειδοποίηση',
     'Notice' => 'Ειδοποίηση',
+    'Ctrl+Click on two versions to compare them' => 'Ctrl+Κλικ σε δύο εκδόσεις για να τις συγκρίνετε',
+    'Restore' => 'Επαναφορά',
+    'Remove' => 'Κατάργηση',
+    'Pages' => 'Σελίδες',
+    'Image Editor' => 'Επεξεργαστής εικόνων',
 ];

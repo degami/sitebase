@@ -320,4 +320,9 @@ return [
     'Success' => 'সফল',
     'Warning' => 'সতর্কতা',
     'Notice' => 'বিজ্ঞপ্তি',
+    'Ctrl+Click on two versions to compare them' => 'দুটি সংস্করণ তুলনা করতে Ctrl+ক্লিক করুন',
+    'Restore' => 'পুনরুদ্ধার',
+    'Remove' => 'অপসারণ',
+    'Pages' => 'পৃষ্ঠা',
+    'Image Editor' => 'ছবি সম্পাদক',
 ];

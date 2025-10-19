@@ -110,7 +110,7 @@ class Links extends AdminManageFrontendModelsPage
                 $this->addActionLink(
                     'taxonomy-btn',
                     'taxonomy-btn',
-                    '&#9776; Terms',
+                    '&#9776; ' . $this->getUtils()->translate('Terms', locale: $this->getCurrentLocale()),
                     $this->getUrl('crud.app.site.controllers.admin.json.linkterms', ['id' => $this->getRequest()->query->get('link_id')]) . '?link_id=' . $this->getRequest()->query->get('link_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );

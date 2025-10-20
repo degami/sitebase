@@ -108,7 +108,7 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars());?>
 
                 </div>
                 <div class="d-flex">
-                    <input type="text" id="chatInput" class="form-control me-2" placeholder="<?= $this->sitebase()->translate('ask a question');?>" />
+                    <input type="text" id="chatInput" class="form-control me-2" placeholder="<?= $this->sitebase()->translate('Ask a Question');?>" />
                     <button id="chatSendBtn" class="btn btn-primary"><?= $this->sitebase()->translate('Send');?></button>
                 </div>
             </div>

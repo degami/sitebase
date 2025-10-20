@@ -323,4 +323,5 @@ return [
     'Remove' => 'हटाएं',
     'Pages' => 'पृष्ठ',
     'Image Editor' => 'छवि संपादक',
+    'Ask a Question' => 'एक प्रश्न पूछें',
 ];

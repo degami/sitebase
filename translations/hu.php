@@ -323,4 +323,5 @@ return [
     'Remove' => 'Eltávolítás',
     'Pages' => 'Oldalak',
     'Image Editor' => 'Képszerkesztő',
+    'Ask a Question' => 'Tegyél fel egy kérdést',
 ];

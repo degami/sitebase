@@ -323,4 +323,5 @@ return [
     'Remove' => 'Xóa',
     'Pages' => 'Trang',
     'Image Editor' => 'Trình chỉnh sửa hình ảnh',
+    'Ask a Question' => 'Đặt câu hỏi',
 ];

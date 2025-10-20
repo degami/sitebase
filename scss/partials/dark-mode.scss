@@ -19,11 +19,19 @@ body.dark-mode {
 
     .sidebar {
         background-color: $color-darkgrey2 !important;
-        box-shadow: 3px 3px 15px $color-darkgrey3;
+        box-shadow: 3px 3px 15px $color-darkgrey3 !important;
         color: $color-almostwhite !important;
 
         .nav-link {
-            color: $color-almostwhite;
+/*
+            color: #999 !important;
+            &:hover {
+                color: $color-almostwhite !important;
+            }
+*/
+            &.active {
+                color: $color-lightblue !important;
+            }
         }
     }
 
@@ -36,16 +44,22 @@ body.dark-mode {
         color: $color-almostwhite3;
 
         .card-header {
-            color:inherit;
+            color: $color-almostwhite;
             background-color: inherit;
             border: none;
     
             svg {
-                color: $color-almostwhite3;
+                color: $color-almostwhite;
             }
 
             .btn {
                 color: $color-almostwhite;
+            }
+        }
+
+        .card-body {
+            .nav-link {
+                color: $color-almostwhite3;
             }
         }
     }
@@ -218,8 +232,8 @@ body.dark-mode {
     #versions-table {
         tr {
             &.selected {
-                background-color: #6db1f0;
-                color: #000;
+                background-color: $color-lightblue;
+                color: $color-black;
             }
         }
     }
@@ -227,7 +241,7 @@ body.dark-mode {
     table.compare_versions {
         tr {
             th {
-                color:$color-almostwhite3;
+                color: $color-almostwhite3;
                 background-color: $color-darkblue;
 
                 &.prefix {
@@ -244,7 +258,7 @@ body.dark-mode {
 
     #sidebar-minimize-btn {
         span {
-            color: #6db1f0;
+            color: $color-lightblue;
         }
     }
 

@@ -323,4 +323,5 @@ return [
     'Remove' => '제거',
     'Pages' => '페이지',
     'Image Editor' => '이미지 편집기',
+    'Ask a Question' => '질문하기',
 ];

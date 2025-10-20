@@ -298,4 +298,5 @@ return [
     'Remove' => 'إزالة',
     'Pages' => 'الصفحات',
     'Image Editor' => 'محرر الصور',
+    'Ask a Question' => 'اطرح سؤالاً',
 ];

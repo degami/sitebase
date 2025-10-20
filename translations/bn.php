@@ -325,4 +325,5 @@ return [
     'Remove' => 'অপসারণ',
     'Pages' => 'পৃষ্ঠা',
     'Image Editor' => 'ছবি সম্পাদক',
+    'Ask a Question' => 'একটি প্রশ্ন জিজ্ঞাসা করুন',
 ];

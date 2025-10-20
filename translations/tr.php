@@ -323,4 +323,5 @@ return [
     'Remove' => 'Kaldır',
     'Pages' => 'Sayfalar',
     'Image Editor' => 'Görüntü Düzenleyici',
+    'Ask a Question' => 'Bir Soru Sor',
 ];

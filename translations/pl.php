@@ -323,4 +323,5 @@ return [
     'Remove' => 'Usuń',
     'Pages' => 'Strony',
     'Image Editor' => 'Edytor obrazów',
+    'Ask a Question' => 'Zadaj pytanie',
 ];

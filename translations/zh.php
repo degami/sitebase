@@ -323,4 +323,5 @@ return [
     'Remove' => '删除',
     'Pages' => '页面',
     'Image Editor' => '图片编辑器',
+    'Ask a Question' => '提出问题',
 ];

@@ -846,6 +846,9 @@ class Media extends AdminManageModelsPage
             if ($tk == 'actions' || $tk == '_admin_table_item_pk' || $tk == 'Preview' || $tk == 'Filename - Path') {
                 continue;
             }
+            if (in_array($tk, ['Lazyload', 'Width', 'Height']) && ($element['Mimetype'] ?? '') == MediaElement::MIMETYPE_INODE_DIRECTORY) {
+                continue;
+            }
             $target->addChild(
                 ($dd instanceof TagElement) ? $dd :
                     $this->containerMake(

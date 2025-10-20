@@ -241,4 +241,21 @@ body.dark-mode {
     .modal-body {
         color: $color-darkgrey;
     }
+
+    #sidebar-minimize-btn {
+        span {
+            color: #6db1f0;
+        }
+    }
+
+    .sidepanel {
+        background-color: $color-darkgrey !important;
+        color: $color-almostwhite3;
+
+        .closebtn {
+            &:hover {
+                color: $color-almostwhite3;
+            }
+        }
+    }
 }

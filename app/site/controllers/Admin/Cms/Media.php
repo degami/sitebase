@@ -318,17 +318,22 @@ class Media extends AdminManageModelsPage
             case 'new':
 
                 $destinationDir = App::getDir(App::MEDIA);
+                $parent_id = null;
                 if ($this->getRequest()->query->get('parent_id')) {
                     $parent_id = $this->getRequest()->query->get('parent_id');
-                    if (is_numeric($parent_id)) {
-                        $parentFolder = MediaElement::load($parent_id);
-                        $destinationDir = $parentFolder->getPath();
+                }
+                if ($media->getParentId()) {
+                    $parent_id = $media->getParentId();
+                }
 
-                        $form->addField('parent_id', [
-                            'type' => 'hidden',
-                            'default_value' => $parentFolder->getId(),
-                        ]);  
-                    }
+                if (is_numeric($parent_id) && $parent_id > 0) {
+                    $parentFolder = MediaElement::load($parent_id);
+                    $destinationDir = $parentFolder->getPath();
+
+                    $form->addField('parent_id', [
+                        'type' => 'hidden',
+                        'default_value' => $parentFolder->getId(),
+                    ]);  
                 }
 
                 $form

@@ -456,8 +456,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      *
      * @return RedirectResponse
      */
-    protected function refreshPage() : RedirectResponse 
+    protected function refreshPage(array $urlParams = []) : RedirectResponse 
     {
-        return $this->doRedirect($this->getControllerUrl());
+        return $this->doRedirect($this->getControllerUrl() . (!empty($urlParams) ? '?' . http_build_query($urlParams) : ''));
     }
 }

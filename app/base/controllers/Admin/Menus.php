@@ -173,12 +173,8 @@ class Menus extends AdminManageModelsPage
             case 'view-menu-name':
                 $this->addLevel($form, $this->getRequest()->query->get('menu_name'), null);
 
-                $form
-                    ->addMarkup('<div class="clear"></div>')
-                    ->addMarkup('<hr />')
-                    ->addMarkup('<a class="btn btn-link btn-sm" href="' . $this->getControllerUrl() . '">' . $this->getHtmlRenderer()->getIcon('chevron-left') . 'Back</a>');
-                $this->addSubmitButton($form, true);
-                $form->addMarkup(' <a class="btn btn-success btn-sm" href="' . $this->getControllerUrl() . '?action=new&menu_name=' . $this->getRequest()->query->get('menu_name') . '">' . $this->getHtmlRenderer()->getIcon('plus') . ' Add new Element</a>');
+                $this->addSubmitButton($form);
+                $this->addNewButton(['menu_name' => $this->getRequest()->query->get('menu_name')]);
 
                 break;
             case 'edit':
@@ -292,10 +288,13 @@ class Menus extends AdminManageModelsPage
         $values = $form->values();
         switch ($values['action']) {
             case 'view-menu-name':
-                $menu_name = $values->menu_name;
+                $menu_name = $values['menu_name'];
                 $tree = $values->{'menu_item_' . $menu_name}->_value0->toArray();
 
                 $this->saveLevel($menu_name, $tree, null);
+
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Menu Saved."));
+
                 break;
             case 'new':
             case 'edit':
@@ -313,6 +312,7 @@ class Menus extends AdminManageModelsPage
                 $menu->persist();
 
                 $this->addSuccessFlashMessage($this->getUtils()->translate("Menu Saved."));
+
                 break;
             case 'delete':
                 $menu->delete();
@@ -322,7 +322,7 @@ class Menus extends AdminManageModelsPage
                 break;
         }
 
-        return $this->refreshPage();
+        return $this->refreshPage(['menu_name' => $values['menu_name'], 'action' => 'view-menu-name']);
     }
 
     /**

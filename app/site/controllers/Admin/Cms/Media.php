@@ -740,9 +740,9 @@ class Media extends AdminManageModelsPage
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function addNewButton()
+    public function addNewButton(array $urlParams = [])
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new' . ($this->getRequest()->query->get('parent_id') ? '&parent_id='.$this->getRequest()->query->get('parent_id') : ''), 'btn btn-sm btn-outline-success');
+        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?' . http_build_query(['action' => 'new'] + $urlParams ) . ($this->getRequest()->query->get('parent_id') ? '&parent_id='.$this->getRequest()->query->get('parent_id') : ''), 'btn btn-sm btn-outline-success');
     }
 
 

@@ -395,9 +395,15 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * 
      * @return void
      */
-    public function addNewButton()
+    public function addNewButton(array $urlParams = [])
     {
-        $this->addActionLink(static::NEW_BTN, static::NEW_BTN, $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=new', 'btn btn-sm btn-outline-success');
+        $this->addActionLink(
+            static::NEW_BTN, 
+            static::NEW_BTN, 
+            $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), 
+            $this->getControllerUrl() . '?'. http_build_query(['action' => 'new'] + $urlParams), 
+            'btn btn-sm btn-outline-success'
+        );
     }
 
     /**
@@ -409,9 +415,15 @@ abstract class AdminManageModelsPage extends AdminFormPage
      * 
      * @return void
      */
-    public function addDuplicateButton()
+    public function addDuplicateButton(array $urlParams = [])
     {
-        $this->addActionLink(static::DUPLICATE_BTN, static::DUPLICATE_BTN, $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?action=duplicate&' . $this->getObjectIdQueryParam() . '='.$this->getRequest()->query->get($this->getObjectIdQueryParam()), 'btn btn-sm btn-light');
+        $this->addActionLink(
+            static::DUPLICATE_BTN, 
+            static::DUPLICATE_BTN, 
+            $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), 
+            $this->getControllerUrl() . '?'. http_build_query(['action' => 'duplicate', $this->getObjectIdQueryParam() => $this->getRequest()->query->get($this->getObjectIdQueryParam())] + $urlParams), 
+            'btn btn-sm btn-light')
+        ;
     }
 
     /**
@@ -425,7 +437,13 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addBatchDeleteButton(string $className, string $tableId)
     {
-        $this->addActionLink(static::DELETE_BATCH_BTN, self::DELETE_BATCH_BTN, $this->getHtmlRenderer()->getIcon('delete') . ' ' . $this->getUtils()->translate('Mass Delete', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-danger', attributes: ['onClick' => '$("#admin").appAdmin(\'listingDeleteSelected\', \'#'.$tableId.'\', \''.$className.'\'); return false;']);
+        $this->addActionLink(
+            static::DELETE_BATCH_BTN, 
+            self::DELETE_BATCH_BTN, 
+            $this->getHtmlRenderer()->getIcon('delete') . ' ' . $this->getUtils()->translate('Mass Delete', locale: $this->getCurrentLocale()), 
+            link_class: 'btn btn-sm btn-outline-danger', 
+            attributes: ['onClick' => '$("#admin").appAdmin(\'listingDeleteSelected\', \'#'.$tableId.'\', \''.$className.'\'); return false;']
+        );
     }
 
     /**
@@ -439,7 +457,13 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     public function addBatchEditButton(string $controllerClassName, string $modelClassName, string $tableId)
     {
-        $this->addActionLink(static::EDIT_BATCH_BTN, static::EDIT_BATCH_BTN, $this->getHtmlRenderer()->getIcon('edit') . ' ' . $this->getUtils()->translate('Mass Edit', locale: $this->getCurrentLocale()), link_class: 'btn btn-sm btn-outline-dark', attributes: ['onClick' => '$("#admin").appAdmin(\'listingEditSelected\', \'#'.$tableId.'\', \''.$controllerClassName.'\', \''.$modelClassName.'\', this); return false;']);
+        $this->addActionLink(
+            static::EDIT_BATCH_BTN, 
+            static::EDIT_BATCH_BTN, 
+            $this->getHtmlRenderer()->getIcon('edit') . ' ' . $this->getUtils()->translate('Mass Edit', locale: $this->getCurrentLocale()), 
+            link_class: 'btn btn-sm btn-outline-dark', 
+            attributes: ['onClick' => '$("#admin").appAdmin(\'listingEditSelected\', \'#'.$tableId.'\', \''.$controllerClassName.'\', \''.$modelClassName.'\', this); return false;']
+        );
     }
 
     /**
@@ -464,7 +488,13 @@ abstract class AdminManageModelsPage extends AdminFormPage
             $primaryKey = json_encode($primaryKey);
         }
 
-        $this->addActionLink(static::VERSIONS_BTN, static::VERSIONS_BTN, '&#9776; ' . $this->getUtils()->translate('Versions', locale: $this->getCurrentLocale()), $this->getUrl('crud.app.base.controllers.admin.json.versions', ['class' => base64_encode(get_class($object)), 'key' => base64_encode($primaryKey) ]), 'btn btn-sm btn-light inToolSidePanel', ['data-panelWidth' => '80%']);
+        $this->addActionLink(
+            static::VERSIONS_BTN, 
+            static::VERSIONS_BTN, '&#9776; ' . $this->getUtils()->translate('Versions', locale: $this->getCurrentLocale()), 
+            $this->getUrl('crud.app.base.controllers.admin.json.versions', ['class' => base64_encode(get_class($object)), 'key' => base64_encode($primaryKey) ]), 
+            'btn btn-sm btn-light inToolSidePanel', 
+            ['data-panelWidth' => '80%']
+        );
     }
 
 

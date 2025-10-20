@@ -742,7 +742,18 @@ class Media extends AdminManageModelsPage
      */
     public function addNewButton(array $urlParams = [])
     {
-        $this->addActionLink('new-btn', 'new-btn', $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), $this->getControllerUrl() . '?' . http_build_query(['action' => 'new'] + $urlParams ) . ($this->getRequest()->query->get('parent_id') ? '&parent_id='.$this->getRequest()->query->get('parent_id') : ''), 'btn btn-sm btn-outline-success');
+        $queryParams = ['action' => 'new'];
+        if ($this->getRequest()->query->get('parent_id')) {
+            $queryParams['parent_id'] = $this->getRequest()->query->get('parent_id');
+        }
+
+        $this->addActionLink(
+            'new-btn', 
+            'new-btn', 
+            $this->getHtmlRenderer()->getIcon('plus') . ' ' . $this->getUtils()->translate('New', locale: $this->getCurrentLocale()), 
+            $this->getControllerUrl() . '?' . http_build_query($queryParams + $urlParams ), 
+            'btn btn-sm btn-outline-success'
+        );
     }
 
 

@@ -118,7 +118,20 @@ class Media extends AdminManageModelsPage
         }
 
         if (($this->template_data['action'] ?? 'list') != 'list') {
-            $this->addBackButton();
+
+            $queryParams = null;
+            if ($this->getRequest()->query->get('parent_id')) {
+                $queryParams = ['parent_id' => $this->getRequest()->query->get('parent_id')];
+            }
+
+            if ($this->getRequest()->query->get('media_id')) {
+                $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
+                if ($media->getParentId()) {
+                    $queryParams = ['parent_id' => $media->getParentId()];
+                }
+            }
+
+            $this->addBackButton($queryParams);
         }
     }
 
@@ -466,7 +479,8 @@ class Media extends AdminManageModelsPage
                 if ($media->isDirectory()) {
                     $confirmMessage = 'Do you confirm the deletion of the selected folder and any included element or folder?';
                 }
-                $this->fillConfirmationForm($confirmMessage, $form);
+                $cancelUrl = $this->getControllerUrl() . ($media->getParentId() ? '?' . http_build_query(['parent_id' => $media->getParentId()]) : '');
+                $this->fillConfirmationForm($confirmMessage, $form, $cancelUrl);
                 break;
         }
 
@@ -535,26 +549,29 @@ class Media extends AdminManageModelsPage
             // intentional fall trough
             // no break
             case 'edit':
-                if ($values->upload_file->filepath) {
-                    $media->setPath($values->upload_file->filepath);
+                if ($form->getField('upload_file')->isUploaded()) {
+                    if ($values->upload_file->filepath) {
+                        $media->setPath($values->upload_file->filepath);
+                    }
+                    if ($values->upload_file->filename) {
+                        $media->setFilename($values->upload_file->filename);
+                    }
+                    if ($values->upload_file->mimetype) {
+                        $media->setMimetype($values->upload_file->mimetype);
+                    }
+                    if ($values->upload_file->filesize) {
+                        $media->setFilesize($values->upload_file->filesize);
+                    }
+                    if ($values->upload_file->renamed) {
+                        $this->addInfoFlashMessage(
+                            $this->getUtils()->translate(
+                                "File was renamed to %s",
+                                [$values->upload_file->filename]
+                            )
+                        );
+                    }
                 }
-                if ($values->upload_file->filename) {
-                    $media->setFilename($values->upload_file->filename);
-                }
-                if ($values->upload_file->mimetype) {
-                    $media->setMimetype($values->upload_file->mimetype);
-                }
-                if ($values->upload_file->filesize) {
-                    $media->setFilesize($values->upload_file->filesize);
-                }
-                if ($values->upload_file->renamed) {
-                    $this->addInfoFlashMessage(
-                        $this->getUtils()->translate(
-                            "File was renamed to %s",
-                            [$values->upload_file->filename]
-                        )
-                    );
-                }
+
                 $media->setLazyload($values->lazyload);
 
                 $this->setAdminActionLogData($media->getChangedData());
@@ -620,7 +637,7 @@ class Media extends AdminManageModelsPage
         }
         $parent_id = $this->getRequest()->query->get('parent_id') ?? $media->parent_id;
         if ($parent_id) {
-            return $this->doRedirect($this->getControllerUrl().'?parent_id='.$parent_id);
+            return $this->refreshPage(['parent_id' => $parent_id]);
         }
         return $this->refreshPage();
     }

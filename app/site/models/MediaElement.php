@@ -371,12 +371,16 @@ class MediaElement extends BaseModel
             return null;
         }
 
-        $image = App::getInstance()->getImagine()->open($this->getPath());
-        $sizes = $image->getSize();
-        $w = $sizes->getWidth();
-        $h = $sizes->getHeight();
+        try {
+            $image = App::getInstance()->getImagine()->open($this->getPath());
+            $sizes = $image->getSize();
+            $w = $sizes->getWidth();
+            $h = $sizes->getHeight();
 
-        return new Box($w, $h);
+            return new Box($w, $h);
+        } catch (Exception $e) { }
+
+        return null;
     }
 
     /**

@@ -31,6 +31,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\BaseCollection;
 use Degami\Basics\Html\TagElement;
 use App\Site\Models\DownloadableProduct;
+use Exception;
 
 /**
  * "Media" Admin Page
@@ -125,9 +126,14 @@ class Media extends AdminManageModelsPage
             }
 
             if ($this->getRequest()->query->get('media_id')) {
-                $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
-                if ($media->getParentId()) {
-                    $queryParams = ['parent_id' => $media->getParentId()];
+                try {
+                    $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
+                    if ($media->getParentId()) {
+                        $queryParams = ['parent_id' => $media->getParentId()];
+                    }
+                } catch (Exception $e) {
+                    // in case of media deletion, construct is called even after deletion with the same media_id, causing a 404 not found
+                    // if this catch is not here
                 }
             }
 

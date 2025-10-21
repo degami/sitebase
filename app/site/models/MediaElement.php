@@ -820,6 +820,11 @@ class MediaElement extends BaseModel
             if (!$contents) {
                 throw new NotFoundException("No contents to download found on url " . $url);
             }
+            $im = new \Imagick();
+            $im->readImageBlob($contents);  // carica l'immagine dalla stringa
+            $im->stripImage();                // rimuove EXIF, ICC e altri metadati
+            $cleanData = $im->getImageBlob(); // ottieni l'immagine pulita come stringa
+
 
             $destinationPath = rtrim($path, DS) . DS . ltrim($filename, DS);
 
@@ -834,7 +839,7 @@ class MediaElement extends BaseModel
                 throw new DuplicateException(App::getInstance()->getUtils()->translate("%s is already existing into destination path", [$destinationPath]));
             }
 
-            @file_put_contents($destinationPath, $contents);
+            @file_put_contents($destinationPath, $cleanData);
 
             $out
                 ->setPath($destinationPath)
@@ -842,7 +847,7 @@ class MediaElement extends BaseModel
                 ->setFilesize(intval(@filesize($destinationPath)))
                 ->setMimetype(@mime_content_type($destinationPath) ?: null)
                 ->setLazyload(false)
-                ->setUserId(App::getInstance()->getAuth()->getCurrentUser()?->getId())
+                ->setUserId(App::getInstance()->getAuth()->getCurrentUser()?->getId() ?: null)
                 ->setParentId($parent_id);
             
             return $out;

@@ -655,7 +655,7 @@ class MediaElement extends BaseModel
                     $destinationObj = null;
                 } else {
                     try {
-                        $destinationObj = MediaElement::loadByPath($parentDir);
+                        $destinationObj = static::loadBy('path', $parentDir);
                     } catch (NotFoundException $e2) {
                         throw new NotFoundException(App::getInstance()->getUtils()->translate("Destination folder %s is not existing", [$parentDir]));
                     }
@@ -741,7 +741,7 @@ class MediaElement extends BaseModel
                     $destinationObj = null;
                 } else {
                     try {
-                        $destinationObj = MediaElement::loadByPath($parentDir);
+                        $destinationObj = static::loadBy('path', $parentDir);
                     } catch (NotFoundException $e2) {
                         throw new NotFoundException(App::getInstance()->getUtils()->translate("Destination folder %s is not existing", [$parentDir]));
                     }
@@ -792,6 +792,65 @@ class MediaElement extends BaseModel
         }
 
         return $this;
+    }
+
+    public static function createFromUrl(string $url, ?string $destinationPath = null) : ?MediaElement
+    {
+        try {
+            /** @var MediaElement $out */
+            $out = new static();
+
+            if (!is_null($destinationPath)) {
+                $filename = basename($destinationPath);
+                $path = dirname($destinationPath);
+                try {
+                    $parent = static::loadBy('path', $path);
+                    $parent_id = $parent->getId();
+                } catch (Exception $e) {
+                    $parent_id = null;
+                }
+            } else {
+                $parsed = parse_url($url);
+                $filename = basename($parsed['path']);
+                $path = App::getDir(App::MEDIA);
+                $parent_id = null;
+            }
+
+            $contents = App::getInstance()->getUtils()->requestUrl($url);
+            if (!$contents) {
+                throw new NotFoundException("No contents to download found on url " . $url);
+            }
+
+            $destinationPath = rtrim($path, DS) . DS . ltrim($filename, DS);
+
+            $existing = null;
+            try {
+                $existing = static::loadBy('path', $destinationPath);
+            } catch (Exception $e) {
+                // if not existing, is fine
+            }
+
+            if ($existing) {
+                throw new DuplicateException(App::getInstance()->getUtils()->translate("%s is already existing into destination path", [$destinationPath]));
+            }
+
+            @file_put_contents($destinationPath, $contents);
+
+            $out
+                ->setPath($destinationPath)
+                ->setFilename($filename)
+                ->setFilesize(intval(@filesize($destinationPath)))
+                ->setMimetype(@mime_content_type($destinationPath) ?: null)
+                ->setLazyload(false)
+                ->setUserId(App::getInstance()->getAuth()->getCurrentUser()?->getId())
+                ->setParentId($parent_id);
+            
+            return $out;
+        } catch (Exception $e) {
+            App::getInstance()->getLog()->error($e->getMessage());
+        }
+        
+        return null;
     }
 
 }

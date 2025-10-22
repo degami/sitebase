@@ -84,20 +84,11 @@ class Media extends AdminManageModelsPage
             }
 
         } elseif (($this->template_data['action'] ?? 'list') == 'usage') {
-            $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
-            $elem_data = $media->getData();
-            $elem_data['owner'] = $media->getOwner()->username;
-
-            unset($elem_data['id']);
-            unset($elem_data['user_id']);
-
-            array_walk($elem_data, function (&$el, $key) {
-                $el = '<strong>' . $key . '</strong>: ' . $el;
-            });
+            $media = $this->getObject();
 
             $this->template_data += [
                 'media_elem' => $media,
-                'elem_data' => $elem_data,
+                'info_table' => $this->getMediaInfoTable(),
                 'pages' => array_map(
                     function ($el) {
                         $page = $this->containerMake(Page::class, ['db_row' => $el]);
@@ -264,34 +255,6 @@ class Media extends AdminManageModelsPage
                 $this->addSubmitButton($form);
                 break;
             case 'edit':
-                $elem_data = $media->getData();
-                try {
-                    $elem_data['owner'] = $media->getOwner()->getUsername();
-                } catch (\Exception $e) {}
-
-                unset($elem_data['id']);
-                unset($elem_data['user_id']);
-
-                try {
-                    if ($media->isImage()) {
-                        $box = $media->getImageBox();
-                        if ($box) {
-                            $elem_data += [
-                                'width' => $box->getWidth() . ' px',
-                                'height' => $box->getHeight() . ' px',
-                            ];    
-                        }
-                    }    
-                } catch (\Exception $e) {}
-
-                array_walk(
-                    $elem_data,
-                    function (&$el, $key) {
-                        $el = '<strong>' . $key . '</strong>: ' . $el;
-                    }
-                );
-
-
                 try {
                     if ($media->isImage()) {
                         $linkTo = $this->getUrl('admin.minipaint', ['path' => '']) . "?media_id=".$media->getId()."&imageUrl=".urlencode($media->getImageUrl())."&ts=".microtime();
@@ -316,7 +279,7 @@ class Media extends AdminManageModelsPage
 
                 $form->addField('pre', [
                     'type' => 'markup',
-                    'value' => '<ul><li>' . implode('</li><li>', $elem_data) . '</li></ul>',
+                    'value' => $this->getMediaInfoTable('horizontal'),
                 ]);
 
             // intentional fall trough
@@ -799,8 +762,7 @@ class Media extends AdminManageModelsPage
             ]]);
 
             return (string)$button;
-        } catch (BasicException $e) {
-        }
+        } catch (BasicException $e) {}
 
         return '';
     }
@@ -902,5 +864,117 @@ class Media extends AdminManageModelsPage
         }
 
         return $cardBody;
+    }
+
+    protected function getMediaInfoTable(string $mode = 'vertical') : TagElement
+    {
+        /** @var MediaElement $mediaElement */
+        $mediaElement = $this->getObject();
+
+        $elem_data = $mediaElement->getData();
+        $elem_data['owner'] = $mediaElement->getOwner()?->getUsername();
+
+        try {
+            if ($mediaElement->isImage()) {
+                $box = $mediaElement->getImageBox();
+                if ($box) {
+                    $elem_data += [
+                        'width' => $box->getWidth() . ' px',
+                        'height' => $box->getHeight() . ' px',
+                    ];    
+                }
+            }    
+        } catch (\Exception $e) {}
+
+        array_walk(
+            $elem_data,
+            function (&$el, $key) {
+                $el = '<strong>' . $key . '</strong>: ' . $el;
+            }
+        );
+
+        unset($elem_data['id']);
+        unset($elem_data['user_id']);
+        unset($elem_data['parent_id']);
+
+        $imageSize = '600x300';
+
+        if ($mode == 'horizontal') {
+            $mainContainer = $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'div',
+                    'attributes' => ['class' => 'row m-0 p-3'],
+                    'children' => [
+                        $this->containerMake(TagElement::class, [
+                            'options' => [
+                                'tag' => 'div',
+                                'attributes' => ['class' => 'col-auto text-center'],
+                                'text' => ($mediaElement->isImage()) ? $mediaElement->getThumb($imageSize) : '<h2 style="font-size: 5rem;">' . $mediaElement->getMimeIcon('solid') . '</h2>'
+                            ]
+                        ]),
+                        $this->containerMake(TagElement::class, [
+                            'options' => [
+                                'tag' => 'div',
+                                'attributes' => ['class' => 'col'],
+                                'children' => [
+                                    $this->containerMake(TagElement::class, [
+                                        'options' => [
+                                            'tag' => 'ul',
+                                            'attributes' => ['class' => 'list-group m-0 p-0'],
+                                            'children' => array_map(
+                                                function ($el) {
+                                                    return $this->containerMake(
+                                                        TagElement::class,
+                                                        ['options' => [
+                                                            'tag' => 'li',
+                                                            'attributes' => ['class' => 'list-group-item'],
+                                                            'text' => $el,
+                                                        ]]
+                                                    );
+                                                },
+                                                $elem_data
+                                            )
+                                        ]
+                                    ])
+                                ],
+                            ]
+                        ]),
+                    ],
+                ]]
+            );
+        } else {
+            $mainContainer = $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'ul',
+                    'attributes' => ['class' => 'list-group m-0 p-3'],
+                    'children' => [
+                            $this->containerMake(TagElement::class, [
+                                'options' => [
+                                    'tag' => 'li',
+                                    'attributes' => ['class' => 'list-group-item text-center'],
+                                    'text' => ($mediaElement->isImage()) ? $mediaElement->getThumb($imageSize) : '<h2 style="font-size: 5rem;">' . $mediaElement->getMimeIcon('solid') . '</h2>'
+                                ]
+                            ]),
+                        ] + array_map(
+                        function ($el) {
+                            return $this->containerMake(
+                                TagElement::class,
+                                ['options' => [
+                                    'tag' => 'li',
+                                    'attributes' => ['class' => 'list-group-item'],
+                                    'text' => $el,
+                                ]]
+                            );
+                        },
+                        $elem_data
+                    ),
+                ]]
+            );
+        }
+
+
+        return $mainContainer;
     }
 }

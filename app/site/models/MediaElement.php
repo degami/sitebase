@@ -258,7 +258,7 @@ class MediaElement extends BaseModel
         $thumb_sizes = null;
         if ($size != self::ORIGINAL_SIZE) {
             if (!preg_match("/^([0-9]+)x([0-9]+)$/i", $size, $thumb_sizes)) {
-                return $this->getPath();
+                return $this->getImageUrl();
             }
         }
 
@@ -266,7 +266,7 @@ class MediaElement extends BaseModel
             $this->setPath(rtrim($this->getPath(), DS) . DS . $this->getFilename());
         }
 
-        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . $this->getRelativePath();
+        $thumb_path = App::getDir(App::WEBROOT) . DS . 'thumbs' . DS . $size . DS . ltrim($this->getRelativePath(), DS);
         if (!preg_match("/^image\/(.*?)/", $this->getMimetype())) {
             $thumb_path .= '.svg';
         }
@@ -295,6 +295,11 @@ class MediaElement extends BaseModel
                         }
 
                         $size = new Box($w, $h);
+                        $imageBox = $this->getImageBox();
+
+                        if (!$imageBox->contains($size)) {
+                            return $this->getImageUrl();
+                        }
 
                         if (!in_array($mode, [ImageInterface::THUMBNAIL_INSET, ImageInterface::THUMBNAIL_OUTBOUND])) {
                             $mode = ImageInterface::THUMBNAIL_INSET;

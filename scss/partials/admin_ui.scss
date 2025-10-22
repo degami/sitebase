@@ -196,7 +196,7 @@
   }
 }
 
-div[id^="listing-grid-"] {
+div[id^="listing-grid-"], div[id^="listing-compact_grid-"] {
   #searchBox {
     select, input {
       width:  100%;

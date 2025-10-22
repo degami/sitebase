@@ -883,7 +883,7 @@ class Media extends AdminManageModelsPage
                         'height' => $box->getHeight() . ' px',
                     ];    
                 }
-            }    
+            }
         } catch (\Exception $e) {}
 
         array_walk(

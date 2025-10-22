@@ -191,7 +191,7 @@
                     $elem.appAdmin('listingGrid', grid);
                 });
 
-                $('#listing-grid-mediaelement, #listing-table-mediaelement').each(function(index, element) {
+                $('#listing-grid-mediaelement, #listing-compact_grid-mediaelement, #listing-table-mediaelement').each(function(index, element) {
                     $elem.appAdmin('initMediaContextMenu', element);
                 });
 

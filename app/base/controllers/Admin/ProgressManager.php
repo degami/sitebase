@@ -155,6 +155,16 @@ class ProgressManager extends AdminFormPage
                     data: JSON.stringify({ids : visibleIds}),
                     success: function(response) {
                         $(response.data).each(function(index, process) {
+
+                            let hasActive = false;
+                            $(response.data).each(function(index, process) {
+                                if (!process.ended_at || process.ended_at === "") {
+                                    hasActive = true;
+                                }
+                            });
+
+                            $(\'#abort\').prop(\'disabled\', !hasActive);
+
                             if ($("#processes_"+process.id+"").length == 0) {
                                 let newRow = `
                                     <tr id="table-row-${process.id}" class="tr">
@@ -226,7 +236,7 @@ class ProgressManager extends AdminFormPage
             'Abort selected process(es)',
             'ban',
             [
-                'attributes' => ['class' => 'btn btn-danger'],
+                'attributes' => ['class' => 'btn btn-danger'] + (count($this->getActiveProcesses()) == 0 ? ['disabled' => 'disabled'] : []),
                 'weight' => 130,
             ]
         );

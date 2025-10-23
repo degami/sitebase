@@ -216,7 +216,7 @@ class Logs extends AdminPage
                 ];
             } else {
                 $this->template_data += [
-                    'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items'], $header), $this->getTableHeader($header), $this),
+                    'listing' => $this->getHtmlRenderer()->renderAdminTable($this->getTableElements($data['items'], $header), $this->getTableHeader($header), $this),
                     'header' => $header,
                     'logs' => $data['items'],
                     'total' => $data['total'],

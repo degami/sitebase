@@ -145,8 +145,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
             }
 
             $this->template_data += [
-                'before_table' => $this->getBeforeListing(),
-                'table' => $tableContents,
+                'before_listing' => $this->getBeforeListing(),
+                'listing' => $tableContents,
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
@@ -324,13 +324,13 @@ abstract class AdminManageModelsPage extends AdminFormPage
     }
 
     /**
-     * gets model table html
+     * gets model listing html
      *
      * @return string|null
      */
-    public function getTable(): ?string
+    public function getListring(): ?string
     {
-        return $this->getTemplate()?->data()['table'] ?? ($this->getTemplateData()['table'] ?? null);
+        return $this->getTemplate()?->data()['listing'] ?? ($this->getTemplateData()['listing'] ?? null);
     }
 
     /**

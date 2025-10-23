@@ -67,7 +67,7 @@ class PaymentMethods extends AdminFormPage
         parent::__construct($container, $request, $route_info);
         if (($this->template_data['action'] ?? 'list') == 'list') {            
             $this->template_data += [
-                'table' => $this->getHtmlRenderer()->renderAdminTable($this->getTableItems(), $this->getTableHeader(), $this),
+                'listing' => $this->getHtmlRenderer()->renderAdminTable($this->getTableItems(), $this->getTableHeader(), $this),
             ];
         }
     }
@@ -107,7 +107,7 @@ class PaymentMethods extends AdminFormPage
      */
     public function getTable(): ?string
     {
-        return $this->getTemplate()?->data()['table'] ?? ($this->getTemplateData()['table'] ?? null);
+        return $this->getTemplate()?->data()['listing'] ?? ($this->getTemplateData()['listing'] ?? null);
     }
 
     /**

@@ -4,7 +4,8 @@
  * @var $action string
  * @var $request \Symfony\Component\HttpFoundation\Request
  * @var $logHtml string
- * @var $table string
+ * @var $listing string
+ * @var $before_listing string
  * @var $paginator string
  */
 $icon_style = 'vertical-align: text-top; width: 24px; height: 24px;';
@@ -13,10 +14,11 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
 <?php if ($action == 'logs' && is_numeric($request->query->get('id'))) : ?>
     <?= $logHtml; ?>
 <?php elseif ($action == 'logs') : ?>
+   <?= $before_listing ?? ''; ?>
     <div class="table-responsive">
-        <?= $table; ?>
+        <?= $listing; ?>
     </div>
-    <?= $paginator; ?>
+    <?= $paginator ?? ''; ?>
 <?php else : ?>
     <div class="row m-4 pt-4">
         <div class="col-2">&nbsp;</div>

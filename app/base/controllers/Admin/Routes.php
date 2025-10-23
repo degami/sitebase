@@ -122,7 +122,7 @@ class Routes extends AdminPage
 
         $this->template_data = [
             'action' => 'list',
-            'table' => $this->getHtmlRenderer()->renderAdminTable($tableContents, [
+            'listing' => $this->getHtmlRenderer()->renderAdminTable($tableContents, [
                 'Router' => null,
                 'Name' => null,
                 'Group' => null,

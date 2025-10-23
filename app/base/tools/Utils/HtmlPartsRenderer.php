@@ -1236,7 +1236,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             ['options' => [
                                 'tag' => 'div',
                                 'attributes' => ['class' => 'row row-cols-2 small mb-1 '. $className],
-                                'text' => '<div class="col-2">' . $th . '</div><div class="col"><select class="select-processed" name="search[' . $v['search'] . ']">' . implode("", $select_options) . '</select></div>',
+                                'text' => '<div class="col-3 text-nowrap">' . $th . '</div><div class="col"><select class="select-processed" name="search[' . $v['search'] . ']">' . implode("", $select_options) . '</select></div>',
                             ]]
                         );    
                     } else {
@@ -1245,7 +1245,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             ['options' => [
                                 'tag' => 'div',
                                 'attributes' => ['class' => 'row row-cols-2 small mb-1 '. $className],
-                                'text' => '<div class="col-2">' . $th . '</div><div class="col"><input class="form-control" name="search[' . $v['search'] . ']" value="' . $searchqueryparam . '"/></div>',
+                                'text' => '<div class="col-3 text-nowrap">' . $th . '</div><div class="col"><input class="form-control" name="search[' . $v['search'] . ']" value="' . $searchqueryparam . '"/></div>',
                             ]]
                         );
                     }
@@ -1278,7 +1278,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                         ['options' => [
                             'tag' => 'div',
                             'attributes' => ['class' => 'row row-cols-2 small mb-1'],
-                            'text' => '<div class="col-2">' . $th . '</div><div class="col"><select class="select-processed" name="foreign[' . $v['foreign'] . ']">' . implode("", $select_options) . '</select></div>',
+                            'text' => '<div class="col-3 text-nowrap">' . $th . '</div><div class="col"><select class="select-processed" name="foreign[' . $v['foreign'] . ']">' . implode("", $select_options) . '</select></div>',
                         ]]
                     );
 

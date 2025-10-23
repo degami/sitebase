@@ -2,7 +2,8 @@
 /**
  * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
  * @var $action string
- * @var $table string
+ * @var $listing string
+ * @var $before_listing string
  * @var $paginator string
  * @var $form \Degami\PHPFormsApi\Form
  * @var $submission_data array
@@ -10,10 +11,11 @@
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
 <?php if (in_array($action, ['list', 'submissions'])) : ?>
+    <?= $before_listing ?? ''; ?>
     <div class="table-responsive">
-        <?= $table; ?>
+        <?= $listing; ?>
     </div>
-    <?= $paginator; ?>
+    <?= $paginator ?? ''; ?>
 <?php elseif ($action == 'view_submission') : ?>
     <div class="card card-inverse m-2">
         <div class="card-header">

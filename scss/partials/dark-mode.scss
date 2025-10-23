@@ -272,4 +272,18 @@ body.dark-mode {
             }
         }
     }
+
+    .breadcrumb {
+        background-color: $color-darkblue3;
+        color: $color-almostwhite3;
+        a {
+            color: $color-lightblue;
+        }
+    }
+
+    div[id^="listing-grid-"], div[id^="listing-compact_grid-"] {
+        #searchBox {
+            background-color: $color-darkblue2 !important;
+        }
+    }
 }

@@ -2,8 +2,8 @@
 /**
  * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
  * @var $action string
- * @var $before_table string
- * @var $table string
+ * @var $before_listing string
+ * @var $listing string
  * @var $paginator string
  * @var $media_elem \App\Site\Models\MediaElement
  * @var $elem_data array
@@ -14,11 +14,11 @@
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
 <?php if ($action == 'list') : ?>
-    <?= $before_table; ?>
+    <?= $before_listing ?? ''; ?>
     <div class="table-responsive">
-        <?= $table; ?>
+        <?= $listing; ?>
     </div>
-    <?= $paginator; ?>
+    <?= $paginator ?? ''; ?>
 <?php elseif ($action == 'usage') : ?>
     <div class="container">
         <h3 class="text-center m-3"><?= $this->sitebase()->translate('Media Element Usage');?></h3>

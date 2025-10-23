@@ -113,7 +113,8 @@ class ContactForms extends AdminManageFrontendModelsPage
             }
 
             $this->template_data += [
-                'table' => $this->getHtmlRenderer()->renderAdminTable($tableElements, $this->getTableHeader(), $this, $adminTableId),
+                'before_listing' => $this->getBeforeListing(),
+                'listing' => $this->getHtmlRenderer()->renderAdminTable($tableElements, $this->getTableHeader(), $this, $adminTableId),
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $data['page_size']),

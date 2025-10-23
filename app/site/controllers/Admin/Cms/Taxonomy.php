@@ -153,6 +153,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 ])->addField('content', [
                     'type' => 'tinymce',
                     'title' => 'Content',
+                    'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
                     'default_value' => $term_content,
                     'rows' => 2,
                 ])->addField('parent_id', [

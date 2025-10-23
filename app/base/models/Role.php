@@ -93,7 +93,7 @@ class Role extends BaseModel
      */
     public function grantPermission(string $permission_name): Role
     {
-        $pivot_model = $this->containerCall([RolePermission::class, 'new']);
+        $pivot_model = App::getInstance()->containerCall([RolePermission::class, 'new']);
 
         $permission_model = Permission::getCollection()->where(['name' => $permission_name])->getFirst();
         if (!$permission_model || !$permission_model->isLoaded()) {

@@ -168,14 +168,6 @@ class Block extends BaseModel
         $this->checkLoaded();
 
         if (!(is_array($this->rewrites) && !empty($this->rewrites)) || $reset == true) {
-            /*
-                        $this->rewrites = array_map(
-                            function ($el) {
-                                return $this->containerMake(Rewrite::class, ['db_row' => $el]);
-                            },
-                            $this->block_rewriteList()->rewrite()->fetchAll()
-                        );
-            */
             $query = App::getInstance()->getDb()->prepare("SELECT rewrite_id FROM block_rewrite WHERE block_id = :id");
             $query->execute(['id' => $this->getId()]);
             $ids = $query->fetchAll(\PDO::FETCH_COLUMN, 0);

@@ -70,7 +70,6 @@ class UserNotification extends BaseModel
             return null;
         }
 
-        return $this->containerCall([User::class, 'load'], ['id' => $this->getSenderId()]);
-        //return $this->containerMake(User::class, ['db_row' => $this->referenced('user', ['id' => $this->getSenderId()])->fetch()]);
+        return User::load($this->getSenderId());
     }
 }

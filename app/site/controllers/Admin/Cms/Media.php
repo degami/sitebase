@@ -990,4 +990,84 @@ class Media extends AdminManageModelsPage
 
         return $mainContainer;
     }
+
+    protected function getBeforeListing() : ?TagElement
+    {
+/*
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item"><a href="#">Library</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Data</li>
+  </ol>
+</nav>
+*/
+
+        if ($this->getRequest()->query->get('parent_id')) {
+
+            $breadbcrumb = $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'ol',
+                    'attributes' => ['class' => 'breadcrumb w-100'],
+                ]]
+            );
+
+            $paths = [];
+
+            $parent_id = $this->getRequest()->query->get('parent_id');
+            do {
+                $folder = MediaElement::load($parent_id);
+                $paths[] = [
+                    'text' => $folder->getFilename(),
+                    'href' => $this->getControllerUrl() . '?parent_id=' . $folder->getId(),
+                    'id' => $folder->getId(),
+                ];
+            } while ($parent_id = $folder->getParentId());
+
+
+            $paths[] = [
+                'text' => $this->getHtmlRenderer()->getIcon('home'),
+                'href' => $this->getControllerUrl(),
+                'id' => null,
+            ];
+
+
+            foreach (array_reverse($paths) as $idx => $path) {
+                $breadbcrumb->addChild(
+                    $this->containerMake(
+                        TagElement::class,
+                        ['options' => [
+                            'tag' => 'li',
+                            'attributes' => ['class' => 'breadcrumb-item' . (($idx == count($paths) - 1) ? ' active" aria-current="page"' : '')],
+                            'text' => ($idx == count($paths) - 1) ?
+                                $path['text'] :
+                                $this->containerMake(
+                                    TagElement::class,
+                                    ['options' => [
+                                        'tag' => 'a',
+                                        'attributes' => ['href' => $path['href']],
+                                        'text' => $path['text'],
+                                    ]]
+                                ),
+                        ]]
+                    )
+                );
+            }
+
+            return $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'nav',
+                    'attributes' => [
+                        'aria-label' => 'breadcrumb',
+                        'style' => '--bs-breadcrumb-divider: \'>\'',
+                    ],
+                    'children' => [$breadbcrumb],
+                ]]
+            );
+        }
+        return null;
+    }
+
 }

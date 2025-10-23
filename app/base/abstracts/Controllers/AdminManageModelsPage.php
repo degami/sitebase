@@ -145,6 +145,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             }
 
             $this->template_data += [
+                'before_table' => $this->getBeforeListing(),
                 'table' => $tableContents,
                 'total' => $data['total'],
                 'current_page' => $data['page'],
@@ -752,6 +753,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
     protected function hasLayoutSelector(): bool
     {
         return true;
+    }
+
+    protected function getBeforeListing() : ?TagElement
+    {
+        return null;
     }
 
     /**

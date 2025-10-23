@@ -2,6 +2,7 @@
 /**
  * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
  * @var $action string
+ * @var $before_table string
  * @var $table string
  * @var $paginator string
  * @var $media_elem \App\Site\Models\MediaElement
@@ -13,6 +14,7 @@
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 
 <?php if ($action == 'list') : ?>
+    <?= $before_table; ?>
     <div class="table-responsive">
         <?= $table; ?>
     </div>

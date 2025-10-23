@@ -872,15 +872,31 @@ class Media extends AdminManageModelsPage
         $mediaElement = $this->getObject();
 
         $elem_data = $mediaElement->getData();
-        $elem_data['owner'] = $mediaElement->getOwner()?->getUsername();
+
+        unset($elem_data['id']);
+        unset($elem_data['user_id']);
+        unset($elem_data['parent_id']);
+
+        // change keys to ucwords , renaming created_at to Created At, etc.
+        $elem_data = array_combine(
+            array_map(
+                function ($el) {
+                    return ucwords(str_replace('_', ' ', $el));
+                },
+                array_keys($elem_data)
+            ),
+            $elem_data
+        );
+
+        $elem_data['Owner'] = $mediaElement->getOwner()?->getUsername();
 
         try {
             if ($mediaElement->isImage()) {
                 $box = $mediaElement->getImageBox();
                 if ($box) {
                     $elem_data += [
-                        'width' => $box->getWidth() . ' px',
-                        'height' => $box->getHeight() . ' px',
+                        'Width' => $box->getWidth() . ' px',
+                        'Height' => $box->getHeight() . ' px',
                     ];    
                 }
             }
@@ -889,13 +905,10 @@ class Media extends AdminManageModelsPage
         array_walk(
             $elem_data,
             function (&$el, $key) {
-                $el = '<strong>' . $key . '</strong>: ' . $el;
+                $el = '<strong>' . $this->getUtils()->translate((string)$key, locale: $this->getCurrentLocale()) . '</strong>: ' . $el;
             }
         );
 
-        unset($elem_data['id']);
-        unset($elem_data['user_id']);
-        unset($elem_data['parent_id']);
 
         $imageSize = '600x300';
 

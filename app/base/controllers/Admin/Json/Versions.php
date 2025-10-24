@@ -87,10 +87,14 @@ class Versions extends AdminJsonPage
 
             $diff = $first->compareWith($second);
 
-            $diffTable = '<table class="compare_versions" border="0" cellpadding="6" cellspacing="0">';
-            $diffTable .= '<thead><tr style="background:#ddd;"><th>Field</th><th>'.$first->getCreatedAt().'</th><th>'.$second->getCreatedAt().'</th></tr></thead><tbody>';
+            $diffTable = '<table class="table compare_versions" border="0" cellpadding="6" cellspacing="0">';
+            $diffTable .= '<thead class="thead-dark"><tr><th>Field</th><th>'.$first->getCreatedAt().'</th><th>'.$second->getCreatedAt().'</th></tr></thead><tbody>';
             $diffTable .= $this->renderDiffTable($diff);
             $diffTable .= '</tbody></table>';
+        } else if ($this->getRequest()->query->get('details')) {
+            /** @var ModelVersion $version */
+            $version = $object->getVersions()->where(['id' => $this->getRequest()->query->get('details')])->getFirst();
+            $diffTable = $this->renderVersionTable($version);
         }
 
         $html = '<div class="container-fluid">
@@ -112,7 +116,9 @@ class Versions extends AdminJsonPage
     const \$row = $(this);
     const id = \$row.find('td:first').text().trim();
     if (id === '{$this->getRequest()->query->get('version_a')}'
-        || id === '{$this->getRequest()->query->get('version_b')}') {
+        || id === '{$this->getRequest()->query->get('version_b')}'
+        || id === '{$this->getRequest()->query->get('details')}'
+    ) {
         \$row.addClass('selected');
     }
 });
@@ -121,6 +127,7 @@ JS;
 
         $restoreStr = App::getInstance()->getUtils()->translate('Restore');
         $removeStr = App::getInstance()->getUtils()->translate('Remove');
+        $detailsStr = App::getInstance()->getUtils()->translate('Details');
 
         $versionControllerUrl = $this->getUrl('admin.versions');
         $versionDeleteUrl = $versionControllerUrl . '?action=delete&version_id=';
@@ -229,6 +236,9 @@ $(function() {
                     <a href="#" class="list-group-item list-group-item-action text-success" data-action="restore">
                         <i class="fa fa-undo me-2"></i> $restoreStr
                     </a>
+                    <a href="#" class="list-group-item list-group-item-action text-info" data-action="details">
+                        <i class="fa fa-info me-2"></i> $detailsStr
+                    </a>
                 </div>
             </div>
         `);
@@ -263,6 +273,17 @@ $(function() {
                 let form = $('<form action="{$versionRestoreUrl}'+id+'" method="post">').appendTo('body');
                 $('<input type="hidden" value="'+encodeURIComponent(currentRoute)+'" name="return_route" />').appendTo(form);
                 form.submit();
+            } else if (action === 'details') {
+                const url = new URL($('#versions-btn').attr('href'));
+                url.searchParams.set('details', id);
+
+                $('.sidepanel', that).find('.diff-content').html('<span class="spinner-border spinner-border-sm me-2 m-2" style="width: 3rem; height: 3rem;" role="status" aria-hidden="true"></span>');
+                $(that).appAdmin(
+                    'loadPanelContent',
+                    $(that).attr('title') || '',
+                    url.toString(),
+                    false
+                );
             }
         });
     });
@@ -296,6 +317,33 @@ JS
         }
 
         return $html;
+    }
+
+    private function renderVersionTable(ModelVersion $version) : string
+    {
+        $data = $this->flattenArrayForTable(json_decode($version->getVersionData(), true));
+        return $this->getHtmlRenderer()->renderArrayOnTable(array_combine(array_column($data, 0), array_column($data, 1)), false);
+    }
+
+    private function flattenArrayForTable(array $data, string $prefix = ''): array
+    {
+        $rows = [];
+
+        foreach ($data as $key => $value) {
+            $field = $prefix . $key;
+
+            if (is_array($value)) {
+                $rows = array_merge($rows, $this->flattenArrayForTable($value, $field . '.'));
+            } else {
+                $text = is_bool($value)
+                    ? ($value ? 'true' : 'false')
+                    : (string) $value;
+
+                $rows[] = [$field, $text];
+            }
+        }
+
+        return $rows;
     }
 
     private function formatCellValue($value): string

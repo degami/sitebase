@@ -284,3 +284,19 @@ table.compare_versions {
     }
   }
 }
+
+#versions-table {
+  tr {
+    td {
+      cursor: pointer;
+
+      &:focus {
+        outline: none !important;
+        box-shadow: none !important;
+        --bs-table-active-bg: inherit !important;
+        --bs-table-bg: inherit !important;
+        --bs-table-border-color: transparent !important;
+      }
+    }
+  }
+}

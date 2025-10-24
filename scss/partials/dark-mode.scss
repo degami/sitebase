@@ -240,6 +240,12 @@ body.dark-mode {
 
     table.compare_versions {
         tr {
+            td {
+                color: $color-almostwhite3;
+                &.version_a, &.version_b {
+                    color: $color-black;
+                }
+            }
             th {
                 color: $color-almostwhite3;
                 background-color: $color-darkblue;

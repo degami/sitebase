@@ -92,6 +92,7 @@
       "App\\Base\\Commerce\\": "app/base/commerce",
       "App\\Base\\EventListeners\\": "app/base/event_listeners",
       "App\\Base\\AI\\": "app/base/ai",
+      "App\\Base\\Versions\\": "app/base/versions",
       "App\\Site\\": "app/site",
       "App\\Site\\Routers\\": "app/site/routers",
       "App\\Site\\Controllers\\": "app/site/controllers",

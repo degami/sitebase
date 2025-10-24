@@ -35,6 +35,7 @@ use Degami\SqlSchema\IndexColumn;
 use ReflectionClass;
 use ReflectionMethod;
 use App\Base\Models\ModelVersion;
+use App\Base\Versions\VersionExclude;
 
 /**
  * A wrapper for LessQL Row
@@ -1136,6 +1137,11 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
         );
 
         foreach ($methods as $method) {
+            $attrs = $method->getAttributes(VersionExclude::class);
+            if (!empty($attrs)) {
+                continue;
+            }
+
             $name = lcfirst(substr($method->getName(), 3));
 
             try {

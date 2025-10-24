@@ -344,6 +344,28 @@ class Media extends AdminManageModelsPage
                 }
 
                 break;
+            case 'rename':
+
+                $parent_id = $media->getParentId();
+                if (is_numeric($parent_id)) {
+                    $parentObj = MediaElement::load($parent_id);
+
+                    $parentName = $parentObj->getFilename();
+
+                    $form->addField('parent_id', [
+                        'type' => 'hidden',
+                        'default_value' => $parentObj->getId(),
+                    ]);    
+                }
+                $form
+                ->addMarkup('<h3>'.__('Rename "%s"', [$media->getFilename()]).'</h3>')
+                ->addField('name', [
+                    'type' => 'textfield',
+                    'title' => 'Name',
+                ]);
+
+                $this->addSubmitButton($form);
+                break;
             case 'page_assoc':
                 $not_in = array_map(
                     function ($el) {
@@ -560,6 +582,10 @@ class Media extends AdminManageModelsPage
                     $this->addSuccessFlashMessage($this->getUtils()->translate("Media Saved."));
                 }
                 break;
+            case 'rename':
+                $dirName = dirname($media->getPath());
+                $media->move(rtrim($dirName, DS) . DS . $values['name']);
+                break;
             case 'page_deassoc':
                 if ($values['page_id']) {
                     /** @var Page $page */
@@ -699,10 +725,12 @@ class Media extends AdminManageModelsPage
                 $actions = match($elem->isDirectory()) {
                     true => [
                         'chdir-btn.dblclick' => $this->getChangeDirButton($elem->id),
+                        'rename-btn' => $this->getActionButton('rename', $elem->id, 'warning','pen-tool', 'Rename'),
                         static::DELETE_BTN => $this->getDeleteButton($elem->id),
                     ],
                     default => [
                         'usage-btn' => $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
+                        'rename-btn' => $this->getActionButton('rename', $elem->id, 'warning','pen-tool', 'Rename'),
                         static::EDIT_BTN => $this->getEditButton($elem->id),
                         static::DELETE_BTN => $this->getDeleteButton($elem->id),
                     ]
@@ -993,16 +1021,6 @@ class Media extends AdminManageModelsPage
 
     protected function getBeforeListing() : ?TagElement
     {
-/*
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Home</a></li>
-    <li class="breadcrumb-item"><a href="#">Library</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Data</li>
-  </ol>
-</nav>
-*/
-
         if ($this->getRequest()->query->get('parent_id')) {
 
             $breadbcrumb = $this->containerMake(

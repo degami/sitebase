@@ -18,6 +18,7 @@ use App\Base\Models\User;
 use DI\DependencyException;
 use DI\NotFoundException;
 use App\Base\GraphQl\GraphQLExport;
+use App\Base\Versions\VersionExclude;
 
 /**
  * Trait for elements with getOwner
@@ -32,6 +33,7 @@ trait WithOwnerTrait
      * @throws NotFoundException
      */
     #[GraphQLExport]
+    #[VersionExclude]
     public function getOwner(): User
     {
         $this->checkLoaded();

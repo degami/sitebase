@@ -30,6 +30,7 @@ use App\Base\Traits\WithChildrenTrait;
 use App\Base\Exceptions\NotFoundException;
 use Degami\SqlSchema\Exceptions\DuplicateException;
 use RuntimeException;
+use App\Base\Versions\VersionExclude;
 
 /**
  * Media Element Model
@@ -208,6 +209,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws BasicException
      */
+    #[VersionExclude]
     public function getThumb(string $size, ?string $mode = null, ?string $class = null, array $img_attributes = []): string
     {
         $this->checkLoaded();
@@ -247,6 +249,7 @@ class MediaElement extends BaseModel
      * @throws PermissionDeniedException
      * @throws Exception
      */
+    #[VersionExclude]
     public function getThumbUrl(string $size, ?string $mode = null): string
     {
         $this->checkLoaded();
@@ -364,6 +367,7 @@ class MediaElement extends BaseModel
     /**
      * gets Image Box
      */
+    #[VersionExclude]
     public function getImageBox() : ?Box
     {
         $this->checkLoaded();
@@ -397,6 +401,7 @@ class MediaElement extends BaseModel
      * @throws BasicException
      */
     #[GraphQLExport]
+    #[VersionExclude]
     public function getImage(string $class = 'img-fluid'): string
     {
         $this->checkLoaded();
@@ -416,6 +421,7 @@ class MediaElement extends BaseModel
      * @throws BasicException
      */
     #[GraphQLExport]
+    #[VersionExclude]
     public function getImageUrl(): string
     {
         $this->checkLoaded();
@@ -565,6 +571,7 @@ class MediaElement extends BaseModel
      * 
      * @return resource|false
      */
+    #[VersionExclude]
     public function getStream() : mixed
     {
         $this->ensureConsistency();

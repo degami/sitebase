@@ -92,9 +92,9 @@ class PaymentMethods extends AdminFormPage
         return array_map(function($el) {
             return [
                 'Code' => $el->getCode(),
-                'Name' => $el->getName(),
+                'Name' => $this->getUtils()->translate($el->getName()),
                 'Class' => get_class($el),
-                'Is Active' => $this->getSiteData()->getConfigValue('payments/'.$el->getCode().'/active') ? 'yes' : 'no',
+                'Is Active' => $this->getUtils()->translate($this->getSiteData()->getConfigValue('payments/'.$el->getCode().'/active') ? 'Yes' : 'No'),
                 'actions' => $this->getConfigButton($el->getCode())
             ];
         }, $this->getPaymentMethods());

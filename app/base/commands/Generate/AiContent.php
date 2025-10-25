@@ -22,6 +22,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
 use HaydenPierce\ClassFinder\ClassFinder;
 use Degami\SqlSchema\Column;
+use Degami\SqlSchema\ForeignKey;
 
 /**
  * Generate Contents with AI Command
@@ -86,13 +87,26 @@ class AiContent extends BaseCommand
         $table = $this->containerCall([$class, 'defaultTableName']);
         $tableInfo = $this->getSchema()->getTable($table);
         $primaryKey = $this->containerCall([$class, 'getKeyField']);
-        $fields = array_filter($tableInfo->getColumns(), function(Column $col) use ($primaryKey) {
+
+        $fkColumns = [];
+        foreach ($tableInfo->getForeignKeys() as $fk) {
+            $columns = $fk->getColumns();
+            $fkColumns = array_unique(array_merge($fkColumns, $columns));
+        }
+
+        $fields = array_filter($tableInfo->getColumns(), function(Column $col) use ($primaryKey, $tableInfo, $fkColumns) {
             $skipCols = ['id', 'website_id', 'user_id', 'url', 'url_key', 'created_at', 'updated_at'];
             if (is_array($primaryKey)) {
                 $skipCols = array_merge($skipCols, $primaryKey);
             } else {
                 $skipCols[] = $primaryKey;
             }
+
+            if (in_array($col->getName(), $fkColumns)) {
+                // it is too dangerous to generate foreign key content, save will problably fail
+                $skipCols[] = $col->getName();
+            }
+
             return !$col->isAutoIncrement() && !in_array($col->getName(), $skipCols);
         });
 
@@ -180,6 +194,8 @@ class AiContent extends BaseCommand
             $output->writeln('Full response: ' . $response);
             return Command::FAILURE;
         }
+
+
 
         $data['locale'] = $locale;
         $data['website_id'] = $this->getAppWebsite()?->getId();

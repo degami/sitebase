@@ -445,7 +445,7 @@ class Cart extends BaseModel
         foreach ($this->getDiscounts() ?? [] as $discount) {
             /** @var CartDiscount $discount */
             $discount_amount += -1* abs($discount->getDiscountAmount());
-            $admin_discount_amount += $discount->getAdminDiscountAmount() ?: App::getInstance()->getUtils()->convertFromCurrencyToCurrency($discount->getDiscountAmount(), $discount->getCurrencyCode(), $discount->getAdminCurrencyCode());
+            $admin_discount_amount += -1* abs($discount->getAdminDiscountAmount() ?: App::getInstance()->getUtils()->convertFromCurrencyToCurrency($discount->getDiscountAmount(), $discount->getCurrencyCode(), $discount->getAdminCurrencyCode()));
         }
 
         foreach ($this->getItems() as $cartItem) {
@@ -457,7 +457,7 @@ class Cart extends BaseModel
             $tax_amount += $cartItem->getTaxAmount();
 
             $admin_sub_total += $cartItem->getAdminSubTotal();
-            $admin_discount_amount += $cartItem->getAdminDiscountAmount();
+            $admin_discount_amount += -1 * abs($cartItem->getAdminDiscountAmount());
             $admin_tax_amount += $cartItem->getAdminTaxAmount();
         }
 

@@ -258,7 +258,7 @@ class CartItem extends BaseModel
         }
 
         $this->setDiscountAmount(-1 * abs($discount_amount));
-        $this->setAdminDiscountAmount(App::getInstance()->getUtils()->convertFromCurrencyToCurrency($discount_amount, $this->getCurrencyCode(), $this->getAdminCurrencyCode()));
+        $this->setAdminDiscountAmount(-1 * abs(App::getInstance()->getUtils()->convertFromCurrencyToCurrency($discount_amount, $this->getCurrencyCode(), $this->getAdminCurrencyCode())));
         return $discount_amount;
     }
 

@@ -111,6 +111,15 @@ class Payment extends FormPageWithLang
                 ->addField($this->getPaymentMethodCode($paymentMethod), $paymentMethod->getPaymentFormFieldset($this->getCart(), $form, $form_state));
         }
 
+        if (!$this->getPaymentMethods()) {
+            $accordion
+                ->addAccordion('Configure')
+                ->addField('info', [
+                    'type' => 'markup',
+                    'value' => 'No payment methods configured. Please configure!',
+                ]);
+        }
+
         $accordion->addJs('
             $("#payment_methods").on("accordionactivate", function(event, ui) {
                 var activeIndex = $(this).accordion("option", "active");
@@ -120,10 +129,12 @@ class Payment extends FormPageWithLang
 
         $form->addField('selected_payment_method', [
             'type' => 'hidden',
-            'default_value' => $this->getPaymentMethodCode($this->getPaymentMethods()[$accordion->getActive()]),
+            'default_value' => $this->getPaymentMethods() ? $this->getPaymentMethodCode($this->getPaymentMethods()[$accordion->getActive()]) : '',
         ]);
 
-        $this->addSubmitButton($form, isConfirmation: true, buttonText: 'Submit Payment');
+        if ($this->getPaymentMethods()) {
+            $this->addSubmitButton($form, isConfirmation: true, buttonText: 'Submit Payment');
+        }
 
         return $form;
     }

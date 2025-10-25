@@ -250,6 +250,7 @@ class Media extends AdminManageModelsPage
                 ->addField('name', [
                     'type' => 'textfield',
                     'title' => 'Folder name',
+                    'validate' => ['required'],
                 ]);
 
                 $this->addSubmitButton($form);
@@ -362,6 +363,7 @@ class Media extends AdminManageModelsPage
                 ->addField('name', [
                     'type' => 'textfield',
                     'title' => 'Name',
+                    'validate' => ['required'],
                 ]);
 
                 $this->addSubmitButton($form);

@@ -178,7 +178,7 @@ class Orders extends AdminManageFrontendModelsPage
                 foreach ($order->getItems() as $item) {
                     $table->addRow()
                         ->addField('item_id_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getId()])
-                        ->addField('product_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getProduct()->getTitle()])
+                        ->addField('product_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getProduct()->getName()])
                         ->addField('quantity_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getQuantity()])
                         ->addField('unit_price_'.$table->numRows(), ['type' => 'markup', 'value' => $this->getUtils()->formatPrice($item->getUnitPrice(), $item->getCurrencyCode())])
                         ->addField('subtotal_'.$table->numRows(), ['type' => 'markup', 'value' => $this->getUtils()->formatPrice($item->getSubTotal(), $item->getCurrencyCode())])

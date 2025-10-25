@@ -102,7 +102,7 @@ class Orders extends LoggedUserFormPage
 
                 $form->addMarkup(
                     $this->getCardHtml(
-                        $this->getUtils()->translate('Billing:'),
+                        $this->getUtils()->translate('Billing Address', locale: $this->getCurrentLocale()),
                         $order->getBillingAddress()->getFullContact() . '<br />' .
                         $order->getBillingAddress()->getFullAddress()
                     )
@@ -111,7 +111,7 @@ class Orders extends LoggedUserFormPage
                 if ($order->getShippingAddress()) {
                     $form->addMarkup(
                         $this->getCardHtml(
-                            $this->getUtils()->translate('Shipping:'),
+                            $this->getUtils()->translate('Shipping Address', locale: $this->getCurrentLocale()),
                             $order->getShippingAddress()->getFullContact() . '<br />' .
                             $order->getShippingAddress()->getFullAddress()
                         )
@@ -124,7 +124,7 @@ class Orders extends LoggedUserFormPage
                     'attributes' => [
                         'class' => 'table table-striped',
                     ],
-                    'prefix' => '<div class="card mt-3"><div class="card-header"><h6 class="cart-title">'.$this->getUtils()->translate('Order Items:').'</h6></div><div class="card-body">',
+                    'prefix' => '<div class="card mt-3"><div class="card-header"><h6 class="cart-title">'.$this->getUtils()->translate('Order Items').'</h6></div><div class="card-body">',
                     'suffix' => '</div></div>',
                 ]);
 
@@ -141,7 +141,7 @@ class Orders extends LoggedUserFormPage
                 foreach ($order->getItems() as $item) {
                     $table->addRow()
                         ->addField('item_id_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getId()])
-                        ->addField('product_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getProduct()->getTitle()])
+                        ->addField('product_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getProduct()->getName()])
                         ->addField('quantity_'.$table->numRows(), ['type' => 'markup', 'value' => $item->getQuantity()])
                         ->addField('unit_price_'.$table->numRows(), ['type' => 'markup', 'value' => $this->getUtils()->formatPrice($item->getUnitPrice(), $item->getCurrencyCode())])
                         ->addField('subtotal_'.$table->numRows(), ['type' => 'markup', 'value' => $this->getUtils()->formatPrice($item->getSubTotal(), $item->getCurrencyCode())])
@@ -151,39 +151,39 @@ class Orders extends LoggedUserFormPage
 
                 $form->addMarkup(
                     '<h5 class="mt-3">' .
-                        $this->getUtils()->translate('Order Total:') . ' ' .
+                        $this->getUtils()->translate('Order Total') . ': ' .
                         $this->getUtils()->formatPrice($order->getTotalInclTax(), $order->getCurrencyCode()) . 
                     '</h5>' 
                 );
                 $form->addMarkup(
                     '<h6>' .
-                        $this->getUtils()->translate('Subtotal:') . ' ' .
+                        $this->getUtils()->translate('Subtotal') . ': ' .
                         $this->getUtils()->formatPrice($order->getSubTotal(), $order->getCurrencyCode()) . 
                     '</h6>' 
                 );
                 $form->addMarkup(
                     '<h6>' .
-                        $this->getUtils()->translate('Discount:') . ' ' .
+                        $this->getUtils()->translate('Discounts') . ': ' .
                         $this->getUtils()->formatPrice($order->getDiscountAmount(), $order->getCurrencyCode()) . 
                     '</h6>' 
                 );
                 $form->addMarkup(
                     '<h6>' .
-                        $this->getUtils()->translate('Tax:') . ' ' .
+                        $this->getUtils()->translate('Tax') . ': ' .
                         $this->getUtils()->formatPrice($order->getTaxAmount(), $order->getCurrencyCode()) . 
                     '</h6>'
                 );
                 if ($order->getShippingAddress()) {
                     $form->addMarkup(
                         '<h6>' .
-                            $this->getUtils()->translate('Shipping:') . ' ' .
+                            $this->getUtils()->translate('Shipping') . ': ' .
                             $this->getUtils()->formatPrice($order->getShippingAmount(), $order->getCurrencyCode()) . 
                         '</h6>'
                     );
                 }
 
                if (!empty($order->getComments()->getItems())) {
-                    $form->addMarkup('<hr /><h5>' . $this->getUtils()->translate('Comments:') . '</h5>');
+                    $form->addMarkup('<hr /><h5>' . $this->getUtils()->translate('Comments') . ':</h5>');
                     foreach ($order->getComments()->getItems() as $orderComment) {
                         /** @var OrderComment $orderComment */
 

@@ -49,6 +49,9 @@ abstract class FormPage extends FrontendPage
     ) {
         parent::__construct($container, $request, $route_info);
 
+        // force locale loading
+        $this->getCurrentLocale();
+
         $this->template_data += [
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'])
                 ->setValidate([[$this, 'formValidate']])

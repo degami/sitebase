@@ -26,8 +26,8 @@ $this->layout('frontend::layout', ['title' => 'Downloads'] + get_defined_vars())
                 <?php else:?>
                     <table class="table table-striped">
                         <thead>
-                            <th><?= $this->sitebase()->translate('File name') ?></th>
-                            <th><?= $this->sitebase()->translate('File size') ?></th>
+                            <th><?= $this->sitebase()->translate('Filename - Path') ?></th>
+                            <th><?= $this->sitebase()->translate('Filesize') ?></th>
                             <th>&nbsp;</th>
                         </thead>
                         <tbody>

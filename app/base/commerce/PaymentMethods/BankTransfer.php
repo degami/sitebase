@@ -62,9 +62,9 @@ class BankTransfer implements PaymentMethodInterface
             'type' => 'seamless_container',
         ]);
 
-        $paymentInfo = '<div>' . App::getInstance()->getUtils()->translate('Please make the bank transfer using the following IBAN:') . ' <strong>' . App::getInstance()->getSiteData()->getConfigValue('payments/bank_transfer/iban') . '</strong></div>';
+        $paymentInfo = '<div>' . App::getInstance()->getUtils()->translate('Please make the bank transfer using the following IBAN') . ': <strong>' . App::getInstance()->getSiteData()->getConfigValue('payments/bank_transfer/iban') . '</strong></div>';
         if ($reason = App::getInstance()->getSiteData()->getConfigValue('payments/bank_transfer/reason')) {
-            $paymentInfo .= '<div>' . App::getInstance()->getUtils()->translate('Specify the following bank transfer reason:') . ' <strong>' . $reason . '</strong></div>';
+            $paymentInfo .= '<div>' . App::getInstance()->getUtils()->translate('Specify the following bank transfer reason') . ': <strong>' . $reason . '</strong></div>';
         }
 
         $out->addMarkup($paymentInfo);

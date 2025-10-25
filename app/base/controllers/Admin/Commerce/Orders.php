@@ -132,14 +132,14 @@ class Orders extends AdminManageFrontendModelsPage
 
                 $form->addMarkup(
                     $this->getCardHtml(
-                        $this->getUtils()->translate('Customer:'),
+                        $this->getUtils()->translate('Customer'),
                         $order->getOwner()->getEmail() . ' (' . $order->getOwner()->getFullName() . ')'
                     )
                 );
 
                 $form->addMarkup(
                     $this->getCardHtml(
-                        $this->getUtils()->translate('Billing:'),
+                        $this->getUtils()->translate('Billing'),
                         $order->getBillingAddress()->getFullContact() . '<br />' .
                         $order->getBillingAddress()->getFullAddress()
                     )
@@ -148,7 +148,7 @@ class Orders extends AdminManageFrontendModelsPage
                 if ($order->getShippingAddress()) {
                     $form->addMarkup(
                         $this->getCardHtml(
-                            $this->getUtils()->translate('Shipping:'),
+                            $this->getUtils()->translate('Shipping'),
                             $order->getShippingAddress()->getFullContact() . '<br />' .
                             $order->getShippingAddress()->getFullAddress()
                         )
@@ -161,7 +161,7 @@ class Orders extends AdminManageFrontendModelsPage
                     'attributes' => [
                         'class' => 'table table-striped',
                     ],
-                    'prefix' => '<div class="card mt-3"><div class="card-header"><h6 class="cart-title">'.$this->getUtils()->translate('Order Items:').'</h6></div><div class="card-body">',
+                    'prefix' => '<div class="card mt-3"><div class="card-header"><h6 class="cart-title">'.$this->getUtils()->translate('Order Items').'</h6></div><div class="card-body">',
                     'suffix' => '</div></div>',
                 ]);
 
@@ -188,39 +188,39 @@ class Orders extends AdminManageFrontendModelsPage
 
                 $form->addMarkup(
                     '<h5>' .
-                        $this->getUtils()->translate('Order Total:') . ' ' .
+                        $this->getUtils()->translate('Order Total') . ': ' .
                         $this->getUtils()->formatPrice($order->getTotalInclTax(), $order->getCurrencyCode()) . 
                     '</h5>' 
                 );
                 $form->addMarkup(
                     '<h6>' .
-                        $this->getUtils()->translate('Subtotal:') . ' ' .
+                        $this->getUtils()->translate('Subtotal') . ': ' .
                         $this->getUtils()->formatPrice($order->getSubTotal(), $order->getCurrencyCode()) . 
                     '</h6>' 
                 );
                 $form->addMarkup(
                     '<h6>' .
-                        $this->getUtils()->translate('Discount:') . ' ' .
+                        $this->getUtils()->translate('Discounts') . ': ' .
                         $this->getUtils()->formatPrice($order->getDiscountAmount(), $order->getCurrencyCode()) . 
                     '</h6>' 
                 );
                 $form->addMarkup(
                     '<h6>' .
-                        $this->getUtils()->translate('Tax:') . ' ' .
+                        $this->getUtils()->translate('Tax') . ': ' .
                         $this->getUtils()->formatPrice($order->getTaxAmount(), $order->getCurrencyCode()) . 
                     '</h6>'
                 );
                 if ($order->getShippingAddress()) {
                     $form->addMarkup(
                         '<h6>' .
-                            $this->getUtils()->translate('Shipping:') . ' ' .
+                            $this->getUtils()->translate('Shipping') . ': ' .
                             $this->getUtils()->formatPrice($order->getShippingAmount(), $order->getCurrencyCode()) . 
                         '</h6>'
                     );
                 }
 
                 if (!empty($order->getComments()->getItems())) {
-                    $form->addMarkup('<hr /><h5>' . $this->getUtils()->translate('Comments:') . '</h5>');
+                    $form->addMarkup('<hr /><h5>' . $this->getUtils()->translate('Comments') . ':</h5>');
                     foreach ($order->getComments()->getItems() as $orderComment) {
                         /** @var OrderComment $orderComment */
 

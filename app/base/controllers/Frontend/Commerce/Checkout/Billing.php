@@ -106,13 +106,15 @@ class Billing extends FormPageWithLang
             ->addMarkup('<div class="row mt-3">')
             ->addField('first_name', [
                 'type' => 'textfield',
-                'title' => 'First Name <span class="required">*</span>',
+                'title' => 'First Name',
+                'title_suffix' => '<span class="required">*</span>',
                 'container_class' => 'col-sm-6 pb-2',
                 'default_value' => '',
             ])
             ->addField('last_name', [
                 'type' => 'textfield',
-                'title' => 'Last Name <span class="required">*</span>',
+                'title' => 'Last Name',
+                'title_suffix' => '<span class="required">*</span>',
                 'container_class' => 'col-sm-6 pb-2',
                 'default_value' => '',
             ])
@@ -124,7 +126,8 @@ class Billing extends FormPageWithLang
             ])
             ->addField('address1', [
                 'type' => 'textfield',
-                'title' => 'Address 1 <span class="required">*</span>',
+                'title' => 'Address 1',
+                'title_suffix' => '<span class="required">*</span>',
                 'container_class' => 'col-sm-6 pb-2',
                 'default_value' => '',
             ])
@@ -136,7 +139,8 @@ class Billing extends FormPageWithLang
             ])
             ->addField('city', [
                 'type' => 'textfield',
-                'title' => 'City <span class="required">*</span>',
+                'title' => 'City',
+                'title_suffix' => '<span class="required">*</span>',
                 'container_class' => 'col-sm-6 pb-2',
                 'default_value' => '',
             ])
@@ -148,13 +152,14 @@ class Billing extends FormPageWithLang
             ])
             ->addField('postcode', [
                 'type' => 'textfield',
-                'title' => 'Post Code <span class="required">*</span>',
+                'title' => 'Post Code',
+                'title_suffix' => '<span class="required">*</span>',
                 'container_class' => 'col-sm-6 pb-2',
                 'default_value' => '',
             ])
             ->addField('country_code', [
                 'type' => 'select',
-                'title' => 'Country <span class="required">*</span>',
+                'title' => 'Country',
                 'container_class' => 'col-sm-6 pb-2',
                 'options' => ['' => '-- Select --'] + $countries,
                 'default_value' => '',
@@ -167,7 +172,8 @@ class Billing extends FormPageWithLang
             ])
             ->addField('email', [
                 'type' => 'textfield',
-                'title' => 'Email <span class="required">*</span>',
+                'title' => 'Email',
+                'title_suffix' => '<span class="required">*</span>',
                 'container_class' => 'col-sm-6',
                 'default_value' => '',
             ])

@@ -21,33 +21,33 @@ $this->layout('frontend::layout', ['title' => 'Cart'] + get_defined_vars()) ?>
             <div class="text-right mb-2">
 
                 <div class="mt-1">
-                    <strong class="cart-summary"><?= $this->sitebase()->translate('Cart Subtotal:') ?></strong>
+                    <strong class="cart-summary"><?= $this->sitebase()->translate('Cart Subtotal') ?>:</strong>
                     <?= $this->sitebase()->formatPrice($cart->getSubTotal(), $cart->getCurrencyCode()) ?>
                 </div>
 
                 <?php if (abs($cart->getDiscountAmount()) > 0): ?>
                     <div class="mt-1">
-                        <strong class="cart-summary"><?= $this->sitebase()->translate('Discount Amount:') ?></strong>
+                        <strong class="cart-summary"><?= $this->sitebase()->translate('Discount Amount') ?>:</strong>
                         <?= $this->sitebase()->formatPrice($cart->getDiscountAmount(), $cart->getCurrencyCode()) ?>
                     </div>
                 <?php endif; ?>
 
                 <?php if ($cart->getTaxAmount() > 0): ?>
                     <div class="mt-1">
-                        <strong class="cart-summary"><?= $this->sitebase()->translate('Tax Amount:') ?></strong>
+                        <strong class="cart-summary"><?= $this->sitebase()->translate('Tax Amount') ?>:</strong>
                         <?= $this->sitebase()->formatPrice($cart->getTaxAmount(), $cart->getCurrencyCode()) ?>
                     </div class="mt-1">
                 <?php endif; ?>
 
                 <?php if ($cart->getShippingAmount() > 0): ?>
                     <div class="mt-1">
-                        <strong class="cart-summary"><?= $this->sitebase()->translate('Shipping Amount:') ?></strong>
+                        <strong class="cart-summary"><?= $this->sitebase()->translate('Shipping Amount') ?>:</strong>
                         <?= $this->sitebase()->formatPrice($cart->getShippingAmount(), $cart->getCurrencyCode()) ?>
                     </div class="mt-1">
                 <?php endif; ?>
 
                 <div class="mt-1 mb-2">
-                    <strong class="cart-summary"><?= $this->sitebase()->translate('Cart Total:') ?></strong>
+                    <strong class="cart-summary"><?= $this->sitebase()->translate('Cart Total') ?>:</strong>
                     <?= $this->sitebase()->formatPrice($cart->getTotalInclTax(), $cart->getCurrencyCode()) ?>
                 </div>
 
@@ -73,7 +73,7 @@ $this->layout('frontend::layout', ['title' => 'Cart'] + get_defined_vars()) ?>
 
             <hr />
 
-            <h5><?= $this->sitebase()->translate('Applied Discounts:') ?></h5>
+            <h5><?= $this->sitebase()->translate('Applied Discounts') ?>:</h5>
             <?php foreach ($discounts ?? [] as $discount): ?>
                 <?php /** @var \App\Base\Models\CartDiscount $discount */ ?>
                 <div class="alert alert-info d-flex">

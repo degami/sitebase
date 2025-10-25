@@ -18,6 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Base\Routing\RouteInfo;
+use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\DownloadableProduct;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -111,7 +112,7 @@ class DownloadablesList extends FrontendPageWithLang
         if (!$this->locale) {
             $this->locale = parent::getCurrentLocale();
             if ($this->locale == null) {
-                $this->locale = 'en';
+                $this->locale = SiteData::DEFAULT_LOCALE;
             }
         }
         $this->getApp()->setCurrentLocale($this->locale);

@@ -19,6 +19,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Base\Traits\AdminTrait;
 use App\Base\Exceptions\PermissionDeniedException;
+use App\Base\Tools\Utils\SiteData;
 use Degami\Basics\Exceptions\BasicException;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -79,7 +80,7 @@ abstract class AdminJsonPage extends BaseJsonPage
     public function getCurrentLocale(): ?string
     {
         if ($this->locale == null) {
-            $this->locale = $this->getCurrentUser()->getLocale() ?? 'en';
+            $this->locale = $this->getCurrentUser()->getLocale() ?? SiteData::DEFAULT_LOCALE;
         }
 
         $this->getApp()->setCurrentLocale($this->locale);

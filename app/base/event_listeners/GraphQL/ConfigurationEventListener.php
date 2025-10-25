@@ -19,6 +19,7 @@ use Gplanchat\EventManager\Event;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 use App\Base\Models\Website;
+use App\Base\Tools\Utils\SiteData;
 use GraphQL\Type\Definition\ResolveInfo;
 
 class ConfigurationEventListener implements EventListenerInterface
@@ -87,7 +88,7 @@ class ConfigurationEventListener implements EventListenerInterface
                             foreach ($configPaths as $path) {
                                 $value = $app->getSiteData()->getConfigValue($path, $website_id, $locale);
                                 if ($value == null && $path == 'app/frontend/homepage') {
-                                    $configs[] = ['path' => $path, 'value' => $app->getSiteData()->getConfigValue($path, $website_id, 'en')];
+                                    $configs[] = ['path' => $path, 'value' => $app->getSiteData()->getConfigValue($path, $website_id, SiteData::DEFAULT_LOCALE)];
                                 } else {
                                     $configs[] = ['path' => $path, 'value' => $value];
                                 }

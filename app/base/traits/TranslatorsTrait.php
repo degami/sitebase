@@ -14,6 +14,7 @@
 namespace App\Base\Traits;
 
 use App\App;
+use App\Base\Tools\Utils\SiteData;
 use Fisharebest\Localization\Locale;
 use Fisharebest\Localization\Translation;
 use Fisharebest\Localization\Translator;
@@ -39,7 +40,7 @@ trait TranslatorsTrait
     public function getTranslator(?string $locale_code = null): Translator
     {
         if ($locale_code == null) {
-            $locale_code = 'en';
+            $locale_code = SiteData::DEFAULT_LOCALE;
         }
 
         if (isset(static::$translators[$locale_code])) {
@@ -50,7 +51,7 @@ trait TranslatorsTrait
         $locale = Locale::create($locale_code);
 
         if (!file_exists(App::getDir(App::TRANSLATIONS) . DS . $locale->language()->code() . '.php')) {
-            $locale_code = 'en';
+            $locale_code = SiteData::DEFAULT_LOCALE;
             $locale = Locale::create($locale_code);
         }
 

@@ -16,6 +16,7 @@ namespace App\Base\Models;
 use App\App;
 use App\Base\Abstracts\Models\AccountModel;
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Tools\Utils\SiteData;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -195,7 +196,7 @@ class GuestUser extends AccountModel
      */
     public function getLocale(): string
     {
-        return App::getInstance()->getSiteData()->getDefaultLocale();
+        return App::getInstance()->getSiteData()->getDefaultLocale() ?? SiteData::DEFAULT_LOCALE;
     }
 
     /**

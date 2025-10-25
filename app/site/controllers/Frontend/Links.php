@@ -19,6 +19,7 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Abstracts\Controllers\FormPageWithLang;
+use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\LinkExchange;
 use Throwable;
 
@@ -183,7 +184,7 @@ class Links extends FormPageWithLang
         if (!$this->locale) {
             $this->locale = parent::getCurrentLocale();
             if ($this->locale == null) {
-                $this->locale = 'en';
+                $this->locale = SiteData::DEFAULT_LOCALE;
             }
         }
         $this->getApp()->setCurrentLocale($this->locale);

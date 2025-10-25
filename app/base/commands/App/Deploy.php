@@ -20,6 +20,7 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use App\App;
 use App\Base\Abstracts\Commands\BaseExecCommand;
+use App\Base\Tools\Utils\SiteData;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\ArrayInput;
 use Fisharebest\Localization\Translation;
@@ -219,7 +220,8 @@ class Deploy extends BaseExecCommand
 
     protected function exportTranslations(): void
     {
-        $locales = ['en'];
+        
+        $locales = [SiteData::DEFAULT_LOCALE];
         foreach(glob(App::getDir(App::TRANSLATIONS) . DS .'*.php') as $translationFile) {
             $locales[] = str_replace('.php', '', basename($translationFile));
         }

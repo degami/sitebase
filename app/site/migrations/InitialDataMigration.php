@@ -27,6 +27,7 @@ use App\Base\Models\Role;
 use App\Base\Models\RolePermission;
 use App\Base\Models\User;
 use App\Base\Models\Website;
+use App\Base\Tools\Utils\SiteData;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -83,7 +84,7 @@ class InitialDataMigration extends BaseMigration
         $site_domain = ltrim(strtolower(preg_replace("/https?:\/\//i", "", trim(App::getInstance()->getEnvironment()->getVariable('APPDOMAIN')))), 'www.');
         $website_model->setDomain($site_domain);
         $website_model->setAliases('www.' . $site_domain);
-        $website_model->setDefaultLocale('en');
+        $website_model->setDefaultLocale(SiteData::DEFAULT_LOCALE);
         $website_model->setDefaultCurrencyCode('EUR');
 
         $website_model->persist();
@@ -117,7 +118,7 @@ class InitialDataMigration extends BaseMigration
         $admin_model->setNickname($admin_user);
         $admin_model->setPassword(App::getInstance()->getUtils()->getEncodedPass($admin_pass));
         $admin_model->setEmail($admin_email);
-        $admin_model->setLocale('en');
+        $admin_model->setLocale(SiteData::DEFAULT_LOCALE);
 
         $admin_model->setRole('admin');
         $admin_model->persist();

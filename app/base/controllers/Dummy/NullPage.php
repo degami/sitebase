@@ -15,6 +15,7 @@ namespace App\Base\Controllers\Dummy;
 
 use App\Base\Abstracts\Controllers\BaseHtmlPage;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Tools\Utils\SiteData;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
@@ -48,6 +49,6 @@ class NullPage extends BaseHtmlPage
 
     public function getCurrentLocale() : ?string
     {
-        return 'en';
+        return SiteData::DEFAULT_LOCALE;
     }
 }

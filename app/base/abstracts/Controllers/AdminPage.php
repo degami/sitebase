@@ -18,6 +18,7 @@ use App\Base\Traits\AdminTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Routing\RouteInfo;
 use App\Base\Models\AdminActionLog;
+use App\Base\Tools\Utils\SiteData;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -245,7 +246,7 @@ abstract class AdminPage extends BaseHtmlPage
     public function getCurrentLocale(): ?string
     {
         if ($this->locale == null) {
-            $this->locale = $this->getCurrentUser()->getLocale() ?? 'en';
+            $this->locale = $this->getCurrentUser()->getLocale() ?? SiteData::DEFAULT_LOCALE;
         }
 
         $this->getApp()->setCurrentLocale($this->locale);

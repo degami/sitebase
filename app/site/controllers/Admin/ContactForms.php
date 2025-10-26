@@ -132,6 +132,18 @@ class ContactForms extends AdminManageFrontendModelsPage
                 'submission_data' => $contact->getContactSubmission($this->getRequest()->query->get('submission_id'))
             ];
         }
+
+        if (($this->template_data['action'] ?? 'list') == 'edit') {
+            if ($this->getEnvironment()->getVariable('ENABLE_VERSIONING') && $this->containerCall([$this->getObject(), 'canSaveVersions'])) {
+                $this->addVersionsButton($this->getObject());
+            }
+            if ($this->containerCall([$this->getObject(), 'canBeDuplicated'])) {
+                $this->addDuplicateButton();
+            }
+
+            $this->addBackButton();
+        }
+
     }
 
     /**
@@ -229,8 +241,6 @@ class ContactForms extends AdminManageFrontendModelsPage
         switch ($type) {
             case 'edit':
             case 'new':
-                $this->addBackButton();
-
                 $templates = [];
                 $initial_dir = App::getDir(App::TEMPLATES) . DS . 'frontend' . DS;
                 foreach (glob($initial_dir . 'contacts' . DS . '*.php') as $template) {

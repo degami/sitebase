@@ -109,7 +109,7 @@ class Add extends FrontendPageWithLang
 
 
             $this->addSuccessFlashMessage(
-                $this->getUtils()->translate('Product added to cart successfully.')
+                $this->getUtils()->translate('Product added to cart successfully.', locale: $this->getCurrentLocale())
             );
 
             if ($this->hasLang()) {
@@ -121,7 +121,7 @@ class Add extends FrontendPageWithLang
 
 
         $this->addErrorFlashMessage(
-            $this->getUtils()->translate('No product details provided.')
+            $this->getUtils()->translate('No product details provided.', locale: $this->getCurrentLocale())
         );
 
         if ($this->hasLang()) {

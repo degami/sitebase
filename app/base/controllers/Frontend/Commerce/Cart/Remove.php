@@ -88,7 +88,7 @@ class Remove extends FrontendPageWithLang
             $this->getCart()->calculate()->persist();
 
             $this->addSuccessFlashMessage(
-                $this->getUtils()->translate('Cart Item removed successfully.')
+                $this->getUtils()->translate('Cart Item removed successfully.', locale: $this->getCurrentLocale())
             );
 
             if ($this->hasLang()) {

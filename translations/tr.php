@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => 'Teslimat sırasında yapılacak iletişimler için',
     'Notes for delivery' => 'Teslimat notları',
     'Order Confirmation' => 'Sipariş Onayı',
+    'Website is currently offline' => 'Web sitesi şu anda çevrimdışı',
 ];

@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => 'Pour toute communication à la livraison',
     'Notes for delivery' => 'Notes pour la livraison',
     'Order Confirmation' => 'Confirmation de commande',
+    'Website is currently offline' => 'Le site est actuellement hors ligne',
 ];

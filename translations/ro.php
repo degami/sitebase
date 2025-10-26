@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => 'Pentru orice comunicări la livrare',
     'Notes for delivery' => 'Note pentru livrare',
     'Order Confirmation' => 'Confirmare comandă',
+    'Website is currently offline' => 'Site-ul este în prezent offline',
 ];

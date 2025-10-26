@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => '配達時の連絡用',
     'Notes for delivery' => '配達の注意事項',
     'Order Confirmation' => '注文確認',
+    'Website is currently offline' => '現在ウェブサイトはオフラインです',
 ];

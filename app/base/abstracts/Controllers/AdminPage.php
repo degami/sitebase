@@ -158,6 +158,10 @@ abstract class AdminPage extends BaseHtmlPage
      */
     protected function prepareTemplate(): Template
     {
+        if (is_file(App::getDir(App::APP) . DS . 'offline.flag')) {
+            $this->addWarningFlashMessage($this->getUtils()->translate('Website is currentrly offline', locale: $this->getCurrentLocale()), true);
+        }
+
         $template = $this->getTemplates()->make('admin::' . $this->getTemplateName());
         $template->data($this->getTemplateData() + $this->getBaseTemplateData());
 

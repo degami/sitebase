@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => 'Για οποιαδήποτε επικοινωνία κατά την παράδοση',
     'Notes for delivery' => 'Σημειώσεις για την παράδοση',
     'Order Confirmation' => 'Επιβεβαίωση Παραγγελίας',
+    'Website is currently offline' => 'Ο ιστότοπος είναι προσωρινά εκτός λειτουργίας',
 ];

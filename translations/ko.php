@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => '배송 시 모든 커뮤니케이션을 위해',
     'Notes for delivery' => '배송 메모',
     'Order Confirmation' => '주문 확인',
+    'Website is currently offline' => '웹사이트가 현재 오프라인 상태입니다',
 ];

@@ -379,4 +379,5 @@ return [
     'For any communications upon delivery' => 'ডেলিভারির সময় যেকোনো যোগাযোগের জন্য',
     'Notes for delivery' => 'ডেলিভারির জন্য নোট',
     'Order Confirmation' => 'অর্ডার নিশ্চিতকরণ',
+    'Website is currently offline' => 'ওয়েবসাইট বর্তমানে অফলাইনে আছে',
 ];

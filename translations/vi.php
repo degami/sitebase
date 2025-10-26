@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => 'Cho mọi liên lạc khi giao hàng',
     'Notes for delivery' => 'Ghi chú giao hàng',
     'Order Confirmation' => 'Xác nhận đơn hàng',
+    'Website is currently offline' => 'Trang web hiện đang ngoại tuyến',
 ];

@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => 'Voor eventuele communicatie bij levering',
     'Notes for delivery' => 'Notities voor levering',
     'Order Confirmation' => 'Orderbevestiging',
+    'Website is currently offline' => 'Website is momenteel offline',
 ];

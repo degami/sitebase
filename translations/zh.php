@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => '交付时的任何沟通',
     'Notes for delivery' => '交付备注',
     'Order Confirmation' => '订单确认',
+    'Website is currently offline' => '网站当前处于离线状态',
 ];

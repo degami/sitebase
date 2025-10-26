@@ -352,4 +352,5 @@ return [
     'For any communications upon delivery' => 'لأي اتصالات عند التسليم',
     'Notes for delivery' => 'ملاحظات للتسليم',
     'Order Confirmation' => 'تأكيد الطلب',
+    'Website is currently offline' => 'الموقع غير متصل حالياً',
 ];

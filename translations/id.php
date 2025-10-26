@@ -377,4 +377,5 @@ return [
     'For any communications upon delivery' => 'Bármilyen kommunikációhoz a szállítás során',
     'Notes for delivery' => 'Megjegyzések a szállításhoz',
     'Order Confirmation' => 'Rendelés megerősítése',
+    'Website is currently offline' => 'Situs web saat ini offline',
 ];

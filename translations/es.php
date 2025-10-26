@@ -378,4 +378,11 @@ return [
     'Notes for delivery' => 'Notas para la entrega',
     'Order Confirmation' => 'Confirmación de pedido',
     'Website is currently offline' => 'El sitio web está actualmente fuera de línea',
+    'Tax Amount' => 'Importe del impuesto',
+    'Discount code already applied.' => 'Código de descuento ya aplicado.',
+    'No action details provided.' => 'No se proporcionaron detalles de la acción.',
+    'Discount code is required.' => 'Se requiere código de descuento.',
+    'Failed to apply discount: %s' => 'No se pudo aplicar el descuento: %s',
+    'Discount ID is required to remove a discount.' => 'Se requiere el ID del descuento para eliminar un descuento.',
+    'Discount does not belong to this cart.' => 'El descuento no pertenece a este carrito.',
 ];

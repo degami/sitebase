@@ -19,6 +19,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Controllers\FrontendPageWithLang;
 use App\Base\Models\CartDiscount;
 use App\Base\Models\Discount as DiscountModel;
+use App\Base\Models\Language;
 use Symfony\Component\HttpFoundation\Response;
 use RuntimeException;
 
@@ -84,7 +85,7 @@ class Discount extends FrontendPageWithLang
 
         try {
             if (!isJson($actionDetails)) { 
-                throw new RuntimeException($this->getUtils()->translate('No action details provided.'));
+                throw new RuntimeException($this->getUtils()->translate('No action details provided.', locale: $this->getCurrentLocale()));
             }
 
             $actionDetails = json_decode($actionDetails, true);
@@ -95,7 +96,7 @@ class Discount extends FrontendPageWithLang
             if (isset($actionDetails['action']) && $actionDetails['action'] === 'apply_discount') {
                 $discountCode = $actionDetails['discount_code'] ?? '';
                 if (empty($discountCode)) {
-                    throw new RuntimeException($this->getUtils()->translate('Discount code is required.'));
+                    throw new RuntimeException($this->getUtils()->translate('Discount code is required.', locale: $this->getCurrentLocale()));
                 }
 
                 $discount = DiscountModel::getCollection()
@@ -107,13 +108,13 @@ class Discount extends FrontendPageWithLang
                     ->getFirst();
 
                 if (!$discount) {
-                    throw new RuntimeException($this->getUtils()->translate('Invalid or inactive discount code.'));
+                    throw new RuntimeException($this->getUtils()->translate('Invalid or inactive discount code.', locale: $this->getCurrentLocale()));
                 }
 
                 $this->getCart()->fullLoad();
                 
                 if (in_array($discount->getId(), array_map(fn($d) => $d->getInitialDiscountId(), $this->getCart()->getDiscounts() ?? []))) {
-                    throw new RuntimeException($this->getUtils()->translate('Discount code already applied.'));
+                    throw new RuntimeException($this->getUtils()->translate('Discount code already applied.', locale: $this->getCurrentLocale()));
                 }
 
                 try {
@@ -127,11 +128,11 @@ class Discount extends FrontendPageWithLang
                     $this->getCart()->calculate()->persist();
 
                     $this->addSuccessFlashMessage(
-                        $this->getUtils()->translate('Discount applied successfully.')
+                        $this->getUtils()->translate('Discount applied successfully.', locale: $this->getCurrentLocale())
                     );
                 } catch (\Exception $e) {
                     throw new RuntimeException(
-                        $this->getUtils()->translate('Failed to apply discount: ' . $e->getMessage())
+                        $this->getUtils()->translate('Failed to apply discount: ' . $e->getMessage(), locale: $this->getCurrentLocale())
                     );
                 }              
             }
@@ -139,7 +140,7 @@ class Discount extends FrontendPageWithLang
             if (isset($actionDetails['action']) && $actionDetails['action'] === 'remove_discount') {
                 $discountId = $actionDetails['discount_id'] ?? null;
                 if (!$discountId) {
-                    throw new RuntimeException($this->getUtils()->translate('Discount ID is required to remove a discount.'));
+                    throw new RuntimeException($this->getUtils()->translate('Discount ID is required to remove a discount.', locale: $this->getCurrentLocale()));
                 }
 
                 $cartDiscount = CartDiscount::load($discountId);
@@ -147,13 +148,13 @@ class Discount extends FrontendPageWithLang
                     throw new RuntimeException($this->getUtils()->translate('Discount not found.'));
                 }
                 if ($cartDiscount->getCartId() !== $this->getCart()->getId()) {
-                    throw new RuntimeException($this->getUtils()->translate('Discount does not belong to this cart.'));
+                    throw new RuntimeException($this->getUtils()->translate('Discount does not belong to this cart.', locale: $this->getCurrentLocale()));
                 }
 
                 $cartDiscount->delete();
                 $this->getCart()->calculate()->persist();
                 $this->addSuccessFlashMessage(
-                    $this->getUtils()->translate('Discount removed successfully.')
+                    $this->getUtils()->translate('Discount removed successfully.', locale: $this->getCurrentLocale())
                 );
             }
 

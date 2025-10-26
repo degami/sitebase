@@ -43,6 +43,7 @@ pub/bootstrap
 pub/jqueryui
 pub/jquery
 pub/flags
+pub/svg_errors
 pub/tinymce
 pub/debugbar
 pub/sitebase_logo.png

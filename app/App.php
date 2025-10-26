@@ -61,6 +61,7 @@ class App
     public const MEDIA = 'media';
     public const ASSETS = 'assets';
     public const FLAGS = 'flags';
+    public const SVG_ERRORS = 'svg_errors';
     public const TEMPLATES = 'templates';
     public const TRANSLATIONS = 'translations';
     public const GRAPHQL = 'graphql';
@@ -483,6 +484,7 @@ class App
             self::WEBROOT => $rootPath . DS . 'pub',
             self::MEDIA => $rootPath . DS . 'media',
             self::ASSETS => $rootPath . DS . 'assets',
+            self::SVG_ERRORS => $rootPath . DS . 'assets' . DS . 'svg_errors',
             self::FLAGS => $rootPath . DS . 'assets' . DS . 'flags',
             self::TEMPLATES => $rootPath . DS . 'templates',
             self::TRANSLATIONS => $rootPath . DS . 'translations',
@@ -606,6 +608,7 @@ class App
      */
     protected function genericErrorPage(string $title, string $errorMessage, ?Throwable $t = null) : string
     {
+        $exceptionSvg = file_get_contents(static::getDir(static::SVG_ERRORS) . DS . 'exception.svg');
         $traceDetails = "";
         if ($t) {
             $traceDetails = $t->getTraceAsString();
@@ -645,6 +648,7 @@ class App
 </head>
 <body>
     <div class="container">
+        {$exceptionSvg}
         <h1>{$title}</h1>
         <p>{$errorMessage}</p>
         {$traceDetails}

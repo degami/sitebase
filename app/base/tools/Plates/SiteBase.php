@@ -489,4 +489,9 @@ class SiteBase implements ExtensionInterface
     {
         return $this->getUtils()->formatBytes($size);
     }
+
+    public function canDebug() : bool
+    {
+        return $this->getEnvironment()->canDebug();
+    }
 }

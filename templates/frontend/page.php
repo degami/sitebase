@@ -16,9 +16,9 @@ $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_def
 
 <?php if (($gallery = $object->getGallery()) && count($gallery)) : ?>
 <div class="page-gallery">
-    <div class="row gallery">
+    <div class="d-flex gallery">
     <?php foreach ($gallery as $image) : ?>
-        <?php echo $image->getThumb("300x200", null, 'img-fluid img-thumbnail', ['data-gallery-id' => 'gallery-'.$object->getId(), "data-gallery-src" => $image->getImageUrl(), 'data-gallery-desc' => $image->getFileName()]); ?>
+        <?php echo $image->getThumb("300x200", null, 'img-fluid img-thumbnail mr-2', ['data-gallery-id' => 'gallery-'.$object->getId(), "data-gallery-src" => $image->getImageUrl(), 'data-gallery-desc' => $image->getFileName()]); ?>
     <?php endforeach; ?>
     </div>
 </div>

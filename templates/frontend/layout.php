@@ -19,13 +19,27 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars()) ?>
 <div class="container-fluid">
     <?php foreach ($this->sitebase()->getPageRegions() as $region) :?>
         <div class="<?= $region; ?>">
-            <?php if ($region == 'content') {
-                $this->sitebase()->renderFlashMessages($controller);
-            }
-            ?>
-            <?= $this->sitebase()->renderBlocks('pre_'.$region, $controller); ?>
-            <?= $this->section($region); ?>
-            <?= $this->sitebase()->renderBlocks('post_'.$region, $controller); ?>
+            <?php if ($region == 'content') :?>
+                <?php $this->sitebase()->renderFlashMessages($controller); ?>
+            <?php endif;?>
+
+            <?php if ($region != 'menu') : ?>
+            <div class="pre-<?= $region;?>">
+            <?php endif;?>
+                <?= $this->sitebase()->renderBlocks('pre_'.$region, $controller); ?>
+            <?php if ($region != 'menu') : ?>
+            </div>
+            <div class="content-<?= $region;?>">
+            <?php endif;?>
+                <?= $this->section($region); ?>
+            <?php if ($region != 'menu') : ?>
+            </div>
+            <div class="post-<?= $region;?>">
+            <?php endif; ?>
+                <?= $this->sitebase()->renderBlocks('post_'.$region, $controller); ?>
+            <?php if ($region != 'menu') : ?>
+            </div>
+            <?php endif;?>
         </div>
     <?php endforeach; ?>
 </div>

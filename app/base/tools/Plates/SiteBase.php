@@ -494,4 +494,14 @@ class SiteBase implements ExtensionInterface
     {
         return $this->getEnvironment()->canDebug();
     }
+
+    public function getShowLogoOnMenu() : bool
+    {
+        return $this->getSiteData()->getShowLogoOnMenu($this->getSiteData()->getCurrentWebsiteId());
+    }
+
+    public function renderSiteLogo() : string
+    {
+        return $this->getHtmlRenderer()->renderSiteLogo();
+    }
 }

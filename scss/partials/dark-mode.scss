@@ -1,8 +1,47 @@
 @use "colors" as *;
 
 body.dark-mode {
+
     background-color: $color-darkgrey;
     color: $color-almostwhite;
+
+    &.frontend-page {
+        a {
+            color: $color-lightblue;
+
+            &.btn {
+                color: $color-almostwhite;   
+            }
+        }
+    }
+
+    .menu {
+        background-color: $color-darkgrey2 !important;
+        color: inherit;
+
+        a.nav-link {
+            color: $color-lightblue;
+            &:visited {
+                color: $color-lightblue;
+            }
+            &:hover,&:active {
+                color: $color-almostwhite;
+            }
+        }
+
+        .dropdown-menu {
+            background-color: $color-darkgrey2 !important;
+            border:solid 1px $color-darkgrey3;
+
+            a.nav-link {
+                color: $color-lightblue;
+                &:hover,&:active {
+                    color: $color-almostwhite;
+                }
+            }
+
+        }
+    }
 
     pre {
         color: inherit;
@@ -21,6 +60,10 @@ body.dark-mode {
         background-color: $color-darkgrey2 !important;
         box-shadow: 3px 3px 15px $color-darkgrey3 !important;
         color: $color-almostwhite !important;
+
+        .card-header {
+            background-color: $color-darkgrey2 !important;
+        }
 
         .nav-link {
 /*
@@ -45,7 +88,7 @@ body.dark-mode {
 
         .card-header {
             color: $color-almostwhite;
-            background-color: inherit;
+            background-color: $color-darkgrey3;
             border: none;
     
             svg {
@@ -279,11 +322,37 @@ body.dark-mode {
         }
     }
 
-    .breadcrumb {
-        background-color: $color-darkblue3;
-        color: $color-almostwhite3;
-        a {
-            color: $color-lightblue;
+    &.frontend-page {
+        .breadcrumb {
+            background-color: inherit;
+        }
+
+        .searchbtn {
+            color: $color-almostwhite;
+        }
+
+        #payment_methods {
+            .ui-widget-content {
+                color: $color-almostwhite;
+                background-color: $color-darkgrey2;
+            }
+            .ui-accordion-header {
+                border: $color-darkgrey3;
+                &.ui-accordion-header-collapsed {
+                    background-color: $color-darkblue2;
+                    color: $color-almostwhite;
+                }
+            }
+        }
+    }
+
+    &.admin-page {
+        .breadcrumb {
+            background-color: $color-darkblue3;
+            color: $color-almostwhite3;
+            a {
+                color: $color-lightblue;
+            }
         }
     }
 

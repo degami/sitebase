@@ -79,7 +79,9 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars());?>
                 </nav>
             </div>
 
-            <?=$this->section('content');?>
+            <div class="p-3">
+                <?=$this->section('content');?>
+            </div>
 
             <div id="toolsSidePanel" class="sidepanel">
                 <a href="#" class="closebtn">&times;</a>

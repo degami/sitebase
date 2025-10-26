@@ -105,8 +105,14 @@ abstract class FrontendPage extends BaseHtmlPage
 
         return parent::getBaseTemplateData() + [
                 'locale' => $this->getCurrentLocale(),
-                'body_class' => str_replace('.', '-', $this->getRouteName()),
+                'body_class' => $this->getHtmlBodyClasses($this),
             ];
+    }
+
+    protected function getHtmlBodyClasses() : string
+    {
+        $darkMode = boolval($this->getRequest()->cookies->get('darkmode'));
+        return str_replace('.', '-', $this->getRouteName()) .' frontend-page' . ($darkMode ? ' dark-mode' : '');
     }
 
     /**

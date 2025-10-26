@@ -95,14 +95,11 @@ class EventDetail extends FrontendPageWithObject
     /**
      * {@inheritdoc}
      *
-     * @return array
-     * @throws BasicException
+     * @return string
      */
-    public function getBaseTemplateData(): array
+    protected function getHtmlBodyClasses() : string
     {
-        $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' event-' . $this->getObject()->id;
-        return $out;
+        return parent::getHtmlBodyClasses() . ' event-' . $this->getObject()->id;
     }
 
     /**

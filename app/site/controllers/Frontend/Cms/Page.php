@@ -170,16 +170,11 @@ class Page extends FrontendPageWithObject
     /**
      * {@inheritdoc}
      *
-     * @return array
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
+     * @return string
      */
-    public function getBaseTemplateData(): array
+    protected function getHtmlBodyClasses() : string
     {
-        $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' page-' . $this->getObject()->id;
-        return $out;
+        return parent::getHtmlBodyClasses() . ' page-' . $this->getObject()->id;
     }
 
     /**

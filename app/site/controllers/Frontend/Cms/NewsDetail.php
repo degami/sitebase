@@ -79,14 +79,11 @@ class NewsDetail extends FrontendPageWithObject
     /**
      * {@inheritdoc}
      *
-     * @return array
-     * @throws BasicException
+     * @return string
      */
-    public function getBaseTemplateData(): array
+    protected function getHtmlBodyClasses() : string
     {
-        $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' news-' . $this->getObject()->id;
-        return $out;
+        return parent::getHtmlBodyClasses() . ' news-' . $this->getObject()->id;
     }
 
     /**

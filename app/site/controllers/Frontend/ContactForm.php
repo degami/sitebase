@@ -152,16 +152,11 @@ class ContactForm extends FormPage // and and is similar to FrontendPageWithObje
     /**
      * {@inheritdoc}
      *
-     * @return array
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws \DI\NotFoundException
+     * @return string
      */
-    public function getBaseTemplateData(): array
+    protected function getHtmlBodyClasses() : string
     {
-        $out = parent::getBaseTemplateData();
-        $out ['body_class'] = str_replace('.', '-', $this->getRouteName()) . ' contact-' . $this->template_data['object']->id;
-        return $out;
+        return parent::getHtmlBodyClasses() . ' contact-' . $this->template_data['object']->id;
     }
 
     /**

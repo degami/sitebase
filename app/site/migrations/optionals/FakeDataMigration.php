@@ -855,7 +855,7 @@ class FakeDataMigration extends BaseMigration
         $color3 = $palette->color([rand(0, 255), rand(0, 255), rand(0, 255)], 100);
         $color4 = $palette->color([rand(0, 255), rand(0, 255), rand(0, 255)], 100);
 
-        $image = $this->getImagine()->create($size, $white);
+        $image = $this->getImagine()->create($size, null);
         $image
             ->draw()
             ->rectangle(new Point(1, 1), new Point(($w / 2) - 1, ($h / 2) - 1), $color1, true)

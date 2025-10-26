@@ -231,35 +231,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-
         if ($this->getSiteData()->getShowLogoOnMenu($website_id)) {
-            // add logo
-            $logo = $this->containerMake(
-                TagElement::class,
-                ['options' => [
-                    'tag' => 'img',
-                    'attributes' => [
-                        'class' => '',
-                        'title' => $this->getEnvironment()->getVariable('APPNAME'),
-                        'src' => $this->getAssets()->assetUrl('/sitebase_logo.png'),
-                    ],
-                ]]
-            );
-
-            $atag = $this->containerMake(
-                TagElement::class,
-                ['options' => [
-                    'tag' => 'a',
-                    'attributes' => [
-                        'class' => 'navbar-brand',
-                        'href' => $this->getWebRouter()->getUrl('frontend.root'),
-                        'title' => $this->getEnvironment()->getVariable('APPNAME'),
-                    ],
-                ]]
-            );
-
-            $atag->addChild($logo);
-            $menu->addChild($atag);
+            $menu->addChild($this->renderSiteLogo());
         }
 
         // add mobile toggle button
@@ -309,6 +282,37 @@ class HtmlPartsRenderer extends ContainerAwareObject
         // store into cache
         $this->getCache()->set($cache_key, (string)$menu);
         return (string)$menu;
+    }
+
+    public function renderSiteLogo() : TagElement
+    {
+        // add logo
+        $logo = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'img',
+                'attributes' => [
+                    'class' => '',
+                    'title' => $this->getEnvironment()->getVariable('APPNAME'),
+                    'src' => $this->getAssets()->assetUrl('/sitebase_logo.png'),
+                ],
+            ]]
+        );
+
+        $atag = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'a',
+                'attributes' => [
+                    'class' => 'navbar-brand',
+                    'href' => $this->getWebRouter()->getUrl('frontend.root'),
+                    'title' => $this->getEnvironment()->getVariable('APPNAME'),
+                ],
+            ]]
+        );
+
+        $atag->addChild($logo);
+        return $atag;
     }
 
     /**

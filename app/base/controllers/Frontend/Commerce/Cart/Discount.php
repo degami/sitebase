@@ -132,7 +132,7 @@ class Discount extends FrontendPageWithLang
                     );
                 } catch (\Exception $e) {
                     throw new RuntimeException(
-                        $this->getUtils()->translate('Failed to apply discount: ' . $e->getMessage(), locale: $this->getCurrentLocale())
+                        $this->getUtils()->translate('Failed to apply discount: %s', [$e->getMessage()], locale: $this->getCurrentLocale())
                     );
                 }              
             }

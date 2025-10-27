@@ -87,6 +87,16 @@ abstract class FrontendPage extends BaseHtmlPage
             $this->regions[$region] = [];
         }
 
+        $this->getAssets()->addJs("
+            cookieStore.get('darkmode').then(function(data){
+                if (undefined !== data.value) {
+                    \$('body').addClass('dark-mode');
+                } else {
+                    \$('body').removeClass('dark-mode');
+                }
+            });
+        ");
+
         // 'content' is reserved for Plates
         unset($this->regions['content']);
     }
@@ -111,8 +121,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
     protected function getHtmlBodyClasses() : string
     {
-        $darkMode = boolval($this->getRequest()->cookies->get('darkmode'));
-        return str_replace('.', '-', $this->getRouteName()) .' frontend-page' . ($darkMode ? ' dark-mode' : '');
+        return str_replace('.', '-', $this->getRouteName()) .' frontend-page';
     }
 
     /**

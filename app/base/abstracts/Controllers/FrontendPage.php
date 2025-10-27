@@ -89,7 +89,7 @@ abstract class FrontendPage extends BaseHtmlPage
 
         $this->getAssets()->addJs("
             cookieStore.get('darkmode').then(function(data){
-                if (undefined !== data.value) {
+                if (data?.value) {
                     \$('body').addClass('dark-mode');
                 } else {
                     \$('body').removeClass('dark-mode');

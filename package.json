@@ -17,7 +17,8 @@
     "jquery.cycle2": "^2.1.7",
     "moment": "^2.24.0",
     "pretty-checkbox": "^3.0.3",
-    "select2": "^4.1.0-rc.0"
+    "select2": "^4.1.0-rc.0",
+    "tiny-slider": "^2.9.4"
   },
   "devDependencies": {
     "del": "^8.0.0",

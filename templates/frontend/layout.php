@@ -24,7 +24,7 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars()) ?>
             <?php endif;?>
 
             <?php if ($region != 'menu') : ?>
-            <div class="pre-<?= $region;?>">
+            <div class="pre_<?= $region;?>">
             <?php endif;?>
                 <?= $this->sitebase()->renderBlocks('pre_'.$region, $controller); ?>
             <?php if ($region != 'menu') : ?>
@@ -34,7 +34,7 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars()) ?>
                 <?= $this->section($region); ?>
             <?php if ($region != 'menu') : ?>
             </div>
-            <div class="post-<?= $region;?>">
+            <div class="post_<?= $region;?>">
             <?php endif; ?>
                 <?= $this->sitebase()->renderBlocks('post_'.$region, $controller); ?>
             <?php if ($region != 'menu') : ?>

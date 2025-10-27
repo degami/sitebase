@@ -7,8 +7,8 @@
       <div class="page-content" v-html="pages[id]?.content"></div>
 
       <div v-if="pages[id]?.gallery?.length" class="page-gallery" ref="galleryContainer">
-        <div class="row gallery">
-          <img v-for="galleryItem in pages[id]?.gallery" class="img-fluid img-thumbnail" :src="galleryItem.thumb_url__300x200" :data-gallery-id="'gallery-'+id" :data-gallery-src="galleryItem.image_url" :data-gallery-desc="galleryItem.filename" />
+        <div class="d-flex gallery">
+          <img v-for="galleryItem in pages[id]?.gallery" class="img-fluid img-thumbnail mr-2" :src="galleryItem.thumb_url__300x200" :data-gallery-id="'gallery-'+id" :data-gallery-src="galleryItem.image_url" :data-gallery-desc="galleryItem.filename" />
         </div>
       </div>
     </div>

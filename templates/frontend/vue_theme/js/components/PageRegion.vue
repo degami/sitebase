@@ -266,6 +266,31 @@
             });
           }
 
+          if (this.pageRegion && this.pageRegion.includes('darkmode-selector')) {
+            this.$nextTick(() => {
+              // Imposta lo stato iniziale del selettore basandosi su cookieStore
+              if (typeof cookieStore !== 'undefined') {
+                cookieStore.get('darkmode').then(function(data) {
+                  $('#darkmode-selector').prop('checked', data?.value);
+                  if (data?.value) {
+                    $('body').addClass('dark-mode');
+                  }
+                });
+              }
+
+              // Gestisci i cambiamenti del selettore
+              $('#darkmode-selector').off('change').on('change', function(evt) {
+                if ($(this).prop('checked')) {
+                  $.cookie('darkmode', true, { expires: 365, path: '/' });
+                  $('body').addClass('dark-mode');
+                } else {
+                  $.removeCookie('darkmode', { path: '/' });
+                  $('body').removeClass('dark-mode');
+                }
+              });
+            });
+          }
+
           if (this.pageRegion && this.pageRegion.includes('form')) {
             this.$nextTick(() => {
               this.$refs.content.addEventListener("submit", this._onDelegatedSubmit, { passive: false });

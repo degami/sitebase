@@ -87,15 +87,17 @@ abstract class FrontendPage extends BaseHtmlPage
             $this->regions[$region] = [];
         }
 
-        $this->getAssets()->addJs("
-            cookieStore.get('darkmode').then(function(data){
-                if (data?.value) {
-                    \$('body').addClass('dark-mode');
-                } else {
-                    \$('body').removeClass('dark-mode');
-                }
-            });
-        ");
+        if (!str_starts_with($this->getRouteName(), 'admin.')) {
+            $this->getAssets()->addJs("
+                cookieStore.get('darkmode').then(function(data){
+                    if (data?.value) {
+                        \$('body').addClass('dark-mode');
+                    } else {
+                        \$('body').removeClass('dark-mode');
+                    }
+                });
+            ");
+        }
 
         // 'content' is reserved for Plates
         unset($this->regions['content']);

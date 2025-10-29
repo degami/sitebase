@@ -3,7 +3,10 @@
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\FrontendModel;
-use App\Base\Interfaces\Model\ProductInterface;
+use App\Base\Interfaces\Model\PhysicalProductInterface;
+use App\Base\Traits\PhysicalProductTrait;
+use App\Base\Traits\ProductTrait;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * @method string getSku()
@@ -19,6 +22,9 @@ use App\Base\Interfaces\Model\ProductInterface;
  * @method string getMetaDescription()
  * @method string getHtmlTitle()
  * @method float getWeight()
+ * @method float getLength()
+ * @method float getWidth()
+ * @method float getHeight()
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  * @method self setSku(string $sku)
@@ -34,36 +40,29 @@ use App\Base\Interfaces\Model\ProductInterface;
  * @method self setMetaDescription(string $meta_description)
  * @method self setHtmlTitle(string $html_title)
  * @method self setWeight(float $weight)
+ * @method self setLength(float $length)
+ * @method self setWidth(float $width)
+ * @method self setHeight(float $height)
  * @method self setCreatedAt(\DateTime $created_at)
  * @method self setUpdatedAt(\DateTime $updated_at)
  */
-class Book extends FrontendModel implements ProductInterface
+#[GraphQLExport]
+class Book extends FrontendModel implements PhysicalProductInterface
 {
+    use ProductTrait;
+    use PhysicalProductTrait;
+
     public function isPhysical(): bool
     {
         return true;
     }
 
-    public function getId(): int
-    {
-        return $this->getData('id');
-    }
-
-    public function getPrice(): float
-    {
-        return $this->getData('price') ?? 0.0;
-    }
-
-    public function getTaxClassId(): ?int
-    {
-        return $this->getData('tax_class_id');
-    }
-
-    public function getName() : ?string
-    {
-        return $this->getData('title');
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    #[GraphQLExport]
     public function getSku(): string
     {
         return $this->getData('sku')?? 'book_' . $this->getId();

@@ -3,7 +3,6 @@
 namespace App\Site\Migrations;
 
 use App\Base\Abstracts\Migrations\DBMigration;
-use Psr\Container\ContainerInterface;
 use Degami\SqlSchema\Index;
 use Degami\SqlSchema\Table;
 
@@ -32,7 +31,10 @@ class CreateBookTableMigration extends DBMigration
              ->addColumn('meta_description', 'VARCHAR', [1024], [], true, null)
              ->addColumn('html_title', 'VARCHAR', [1024], [], true, null)
              ->addColumn('weight', 'FLOAT', null, [], true, null)
-            ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
+             ->addColumn('length', 'FLOAT', null, [], true, null)
+             ->addColumn('width', 'FLOAT', null, [], true, null)
+             ->addColumn('height', 'FLOAT', null, [], true, null)
+             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)
             ->addForeignKey('fk_book_website_id', ['website_id'], 'website', ['id'])

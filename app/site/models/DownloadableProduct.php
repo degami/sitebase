@@ -21,6 +21,7 @@ use App\Base\Interfaces\Model\ProductInterface;
 use App\Site\Models\MediaElement;
 use Exception;
 use App\Base\GraphQl\GraphQLExport;
+use App\Base\Traits\ProductTrait;
 
 /**
  * Downloadable Product Model
@@ -61,6 +62,8 @@ use App\Base\GraphQl\GraphQLExport;
 #[GraphQLExport]
 class DownloadableProduct extends FrontendModel implements ProductInterface
 {
+    use ProductTrait;
+
     /**
      * @var MediaElement media element
      */
@@ -170,30 +173,6 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
     public function getRewritePrefix(): string
     {
         return 'downloadable';
-    }
-
-    #[GraphQLExport]
-    public function getId(): int
-    {
-        return $this->getData('id');
-    }
-
-    #[GraphQLExport]
-    public function getPrice(): float
-    {
-        return $this->getData('price');
-    }
-
-    #[GraphQLExport]
-    public function getTaxClassId(): ?int
-    {
-        return $this->getData('tax_class_id');
-    }
-
-    #[GraphQLExport]
-    public function getName() : ?string
-    {
-        return $this->getTitle();
     }
 
     #[GraphQLExport]

@@ -146,6 +146,48 @@ class Product extends CodeGeneratorCommand
         ],
     ];
 
+    protected $physical_columns = [
+        'weight' => [
+            'col_name' => 'weight',
+            'php_type' => 'float',
+            'mysql_type' => 'FLOAT',
+            'col_parameters' => null,
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'length' => [
+            'col_name' => 'length',
+            'php_type' => 'float',
+            'mysql_type' => 'FLOAT',
+            'col_parameters' => null,
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'width' => [
+            'col_name' => 'width',
+            'php_type' => 'float',
+            'mysql_type' => 'FLOAT',
+            'col_parameters' => null,
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'height' => [
+            'col_name' => 'height',
+            'php_type' => 'float',
+            'mysql_type' => 'FLOAT',
+            'col_parameters' => null,
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+    ];
+
+    protected $interface = 'App\Base\Interfaces\Model\ProductInterface';
+    protected $traits = ['App\Base\Traits\ProductTrait'];
+
     /**
      * {@inheritdoc}
      */
@@ -184,6 +226,13 @@ class Product extends CodeGeneratorCommand
             }
 
             $migration_order = 100 + $last_migration_id;
+        }
+
+        $isPhysical = $this->confirmMessage('Is a physical product?', 'Creating a virtual product');
+        if ($isPhysical) {
+            $this->columns = array_merge($this->columns, $this->physical_columns);
+            $this->interface = 'App\Base\Interfaces\Model\PhysicalProductInterface';
+            $this->traits[] = 'App\Base\Traits\PhysicalProductTrait';
         }
 
         do {
@@ -336,36 +385,22 @@ class Product extends CodeGeneratorCommand
 namespace App\\Site\\Models;
 
 use App\\Base\\Abstracts\\Models\\FrontendModel;
-use App\Base\Interfaces\Model\ProductInterface;
+use ".str_replace('\\','\\\\', $this->interface).";
+use ".implode(";\nuse ", $this->traits).";
+use App\Base\GraphQl\GraphQLExport;
 
 /**\n" . $comment . " */
-class " . $className . " extends FrontendModel implements ProductInterface
+#[GraphQLExport]
+class " . $className . " extends FrontendModel implements ".$this->getUtils()->getClassBasename($this->interface)."
 {
-    public function isPhysical(): bool
-    {
-        return true;
-    }
+    use ".implode(";\n    use ", array_map(fn($t) => $this->getUtils()->getClassBasename($t), $this->traits)).";
 
-    public function getId(): int
-    {
-        return \$this->getData('id');
-    }
-
-    public function getPrice(): float
-    {
-        return \$this->getData('price') ?? 0.0;
-    }
-
-    public function getTaxClassId(): ?int
-    {
-        return \$this->getData('tax_class_id');
-    }
-
-    public function getName() : ?string
-    {
-        return \$this->getData('title');
-    }
-
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    #[GraphQLExport]
     public function getSku(): string
     {
         return \$this->getData('sku')?? '".$this->getUtils()->pascalCaseToSnakeCase($className)."_' . \$this->getId();

@@ -90,12 +90,15 @@ class Books extends AdminManageProductsPage
             case 'new':
 
                 $product_title = $product_content = '';
-                $product_price = $product_weight = 0.0;
+                $product_price = $product_weight = $product_length =$product_width = $product_height = 0.0;
                 if ($product->isLoaded()) {
                     $product_title = $product->title;
                     $product_content = $product->content;
                     $product_price = $product->price;
                     $product_weight = $product->weight;
+                    $product_length = $product->length;
+                    $product_width = $product->width;
+                    $product_height = $product->height;
                 }
 
                 $tax_classes = ['' => '-- Select --'];
@@ -123,6 +126,33 @@ class Books extends AdminManageProductsPage
                     'max' => '1000000.00',
                     'step' => '0.01',
                     'description' => 'in Kilograms',
+                    'validate' => ['required'],
+                ])->addField('length', [
+                    'type' => 'number',
+                    'title' => 'Box Length',
+                    'default_value' => $product_length,
+                    'min' => '0.00',
+                    'max' => '1000000.00',
+                    'step' => '0.01',
+                    'description' => 'in cm',
+                    'validate' => ['required'],
+                ])->addField('width', [
+                    'type' => 'number',
+                    'title' => 'Box Width',
+                    'default_value' => $product_width,
+                    'min' => '0.00',
+                    'max' => '1000000.00',
+                    'step' => '0.01',
+                    'description' => 'in cm',
+                    'validate' => ['required'],
+                ])->addField('height', [
+                    'type' => 'number',
+                    'title' => 'Box Height',
+                    'default_value' => $product_height,
+                    'min' => '0.00',
+                    'max' => '1000000.00',
+                    'step' => '0.01',
+                    'description' => 'in cm',
                     'validate' => ['required'],
                 ])->addField('price', [
                     'type' => 'number',
@@ -201,6 +231,9 @@ class Books extends AdminManageProductsPage
                 $product->setContent($values['content']);
                 $product->setWebsiteId($values['frontend']['website_id']);
                 $product->setWeight((float)$values['weight']);
+                $product->setHeight((float)$values['height']);
+                $product->setLength((float)$values['length']);
+                $product->setWidth((float)$values['width']);
                 $product->setPrice((float)$values['price']);
                 $product->setTaxClassId($values['tax_class_id']);
 

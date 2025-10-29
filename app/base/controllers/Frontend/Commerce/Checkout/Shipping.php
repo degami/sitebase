@@ -62,7 +62,7 @@ class Shipping extends FormPageWithLang
      */
     public function getRouteName(): string
     {
-        return $this->getUtils()->translate('Shippning Address', locale: $this->getCurrentLocale());
+        return $this->getUtils()->translate('Shipping Address', locale: $this->getCurrentLocale());
     }
 
     /**
@@ -341,7 +341,7 @@ class Shipping extends FormPageWithLang
 
         $selected_shipping_method = $values['selected_shipping_method'] ?? null;
         if ($selected_shipping_method) {
-            $shippingValues = $values['payment_methods'][$selected_shipping_method];
+            $shippingValues = $values['shipping_methods'][$selected_shipping_method];
 
             /** @var ShippingMethodInterface $shippingMethod */
             $shippingMethod = current(array_filter($this->getShippingMethods(), function($shippingMethod) use ($selected_shipping_method) {

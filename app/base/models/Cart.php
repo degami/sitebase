@@ -555,4 +555,21 @@ class Cart extends BaseModel
 
         return $copy;
     }
+
+    public function getBillableWeight(float $divisor = 5000): float
+    {
+        $total = 0.0;
+
+        foreach ($this->getItems() as $item) {
+            $product = $item->getProduct();
+
+            if ($product instanceof \App\Base\Interfaces\Model\PhysicalProductInterface) {
+                $real = $product->getWeight() * $item->getQuantity();
+                $volumetric = $product->getVolumetricWeight($divisor) * $item->getQuantity();
+                $total += max($real, $volumetric);
+            }
+        }
+
+        return $total;
+    }
 }

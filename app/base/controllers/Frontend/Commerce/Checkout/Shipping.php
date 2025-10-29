@@ -210,6 +210,23 @@ class Shipping extends FormPageWithLang
 
     protected function addShippingMethodsAccordion(FAPI\Form $form, array &$form_state) : FAPI\Form
     {
+        $shippingMethods = array_filter($this->getShippingMethods(), function(ShippingMethodInterface $shippingMethod) {
+            /** @var ShippingMethodInterface $shippingMethod */
+            if (!$shippingMethod->isActive($this->getCart())) {
+                return false;
+            }
+
+            if (!$shippingMethod->isApplicable($this->getCart())) {
+                return false;
+            }
+
+            return $shippingMethod;
+        });
+
+        if (empty($shippingMethods)) {
+            return $form;
+        }
+
         $form->addMarkup('<h4 class="mt-3">'.$this->getUtils()->translate('Choose your shipping method').'</h4>');
 
         /** @var FAPI\Containers\Accordion $accordion */
@@ -218,16 +235,24 @@ class Shipping extends FormPageWithLang
             'container_class' => 'mt-2',
         ]);
 
-        foreach ($this->getShippingMethods() as $key => $shippingMethod) {
-            /** @var ShippingMethodInterface $shippingMethod */
-            if (!$shippingMethod->isActive($this->getCart())) {
-                continue;
+        $methodsWithCost = array_map(function(ShippingMethodInterface $shippingMethod) {
+            return [
+                'cost' => $shippingMethod->evaluateShippingCosts($this->getCart()->getShippingAddress(), $this->getCart()),
+                'method' => $shippingMethod,
+            ];
+        }, $shippingMethods);
+
+        $minShippingCost = min(array_column($methodsWithCost, 'cost'));
+
+        $shippingMethods = array_values(array_map(fn($item) => $item['method'], array_filter($methodsWithCost, function ($item) use ($minShippingCost) {
+            if ($item['cost'] > $minShippingCost && !$item['method']->showEvenIfNotCheapest()) {
+                return false;
             }
 
-            if (!$shippingMethod->isApplicable($this->getCart())) {
-                continue;
-            }
+            return $item;
+        })));
 
+        foreach ($shippingMethods as $key => $shippingMethod) {
             $accordion
                 ->addAccordion($shippingMethod->getName())
                 ->addField('shipping_'.$key.'_code', [
@@ -246,7 +271,7 @@ class Shipping extends FormPageWithLang
 
         $form->addField('selected_shipping_method', [
             'type' => 'hidden',
-            'default_value' => $this->getShippingMethods() ? $this->getShippingMethodCode($this->getShippingMethods()[$accordion->getActive()]) : '',
+            'default_value' => $this->getShippingMethods() ? $this->getShippingMethodCode($shippingMethods[$accordion->getActive()]) : '',
         ]);
 
         return $form;
@@ -311,20 +336,26 @@ class Shipping extends FormPageWithLang
                 ->persist();
         }
 
-        $selected_shipping_method = $values['selected_shipping_method'];
-        $shippingValues = $values['payment_methods'][$selected_shipping_method];
+        $this->getCart()
+            ->setShippingAddressId($address->getId());
 
-        /** @var ShippingMethodInterface $shippingMethod */
-        $shippingMethod = current(array_filter($this->getShippingMethods(), function($shippingMethod) use ($selected_shipping_method) {
-            return $this->getShippingMethodCode($shippingMethod) == $selected_shipping_method;
-        }));
+        $selected_shipping_method = $values['selected_shipping_method'] ?? null;
+        if ($selected_shipping_method) {
+            $shippingValues = $values['payment_methods'][$selected_shipping_method];
 
-        $shippingResult = $shippingMethod?->calculateShipping($shippingValues, $this->getCart());
+            /** @var ShippingMethodInterface $shippingMethod */
+            $shippingMethod = current(array_filter($this->getShippingMethods(), function($shippingMethod) use ($selected_shipping_method) {
+                return $this->getShippingMethodCode($shippingMethod) == $selected_shipping_method;
+            }));
+
+            $shippingResult = $shippingMethod?->calculateShipping($shippingValues, $this->getCart());
+
+            $this->getCart()
+                ->setShippingMethod($shippingMethod?->getCode())
+                ->setShippingAmount($shippingResult['shipping_cost'] ?? 0);
+        }
 
         $this->getCart()
-            ->setShippingAddressId($address->getId())
-            ->setShippingMethod($shippingMethod?->getCode())
-            ->setShippingAmount($shippingResult['shipping_cost'] ?? 0)
             ->persist();
 
         if ($this->hasLang()) {

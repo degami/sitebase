@@ -14,14 +14,15 @@
 namespace App\Base\Commerce\ShippingMethods;
 
 use App\App;
-use App\Base\Interfaces\Commerce\ShippingMethodInterface;
 use Degami\PHPFormsApi as FAPI;
 use Degami\PHPFormsApi\Containers\SeamlessContainer;
 use App\Base\Models\Cart;
 use App\Base\Models\CartItem;
 use Degami\PHPFormsApi\Accessories\FormValues;
+use App\Base\Abstracts\Commerce\BaseShippingMethod;
+use App\Base\Models\Address;
 
-class FlatRate implements ShippingMethodInterface
+class FlatRate extends BaseShippingMethod
 {
     /**
      * {@inheritdoc}
@@ -37,22 +38,6 @@ class FlatRate implements ShippingMethodInterface
     public function getName(): string
     {
         return 'Flat Rate';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isActive(Cart $cart): bool
-    {
-        return App::getInstance()->getSiteData()->getConfigValue('shipping/flatrate/active') == true;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function isApplicable(Cart $cart): bool
-    {
-        return $cart->requireShipping();
     }
 
     /**
@@ -103,10 +88,7 @@ class FlatRate implements ShippingMethodInterface
         return $out;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function calculateShipping(?FormValues $values, Cart $cart) : array
+    public function evaluateShippingCosts(Address $shippingAddress, Cart $cart) : float
     {
         $cost = App::getInstance()->getSiteData()->getConfigValue('shipping/flatrate/cost');
         $applyTo = App::getInstance()->getSiteData()->getConfigValue('shipping/flatrate/apply_to');
@@ -117,6 +99,16 @@ class FlatRate implements ShippingMethodInterface
             'cart' => $cost,
             default => $cost,
         };
+
+        return $totalCosts;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function calculateShipping(?FormValues $values, Cart $cart) : array
+    {
+        $totalCosts = $this->evaluateShippingCosts($cart->getShippingAddress(), $cart);
 
         return [
             'shipping_cost' => $totalCosts, 

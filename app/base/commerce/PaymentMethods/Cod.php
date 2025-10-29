@@ -13,15 +13,14 @@
 
 namespace App\Base\Commerce\PaymentMethods;
 
-use App\App;
-use App\Base\Interfaces\Commerce\PaymentMethodInterface;
 use Degami\PHPFormsApi as FAPI;
 use Degami\PHPFormsApi\Containers\SeamlessContainer;
 use App\Base\Models\Cart;
 use Degami\PHPFormsApi\Accessories\FormValues;
 use App\Base\Models\OrderStatus;
+use App\Base\Abstracts\Commerce\BasePaymentMethod;
 
-class Cod implements PaymentMethodInterface
+class Cod extends BasePaymentMethod
 {
     public function getCode() : string
     {
@@ -31,11 +30,6 @@ class Cod implements PaymentMethodInterface
     public function getName(): string
     {
         return 'Cash on Delivery';
-    }
-
-    public function isActive(Cart $cart): bool
-    {
-        return App::getInstance()->getSiteData()->getConfigValue('payments/cod/active') == true;
     }
 
     public function getConfigurationForm(FAPI\Form $form, array &$form_state) : FAPI\Form

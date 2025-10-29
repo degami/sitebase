@@ -14,7 +14,6 @@
 namespace App\Base\Commerce\PaymentMethods;
 
 use App\App;
-use App\Base\Interfaces\Commerce\PaymentMethodInterface;
 use Degami\PHPFormsApi as FAPI;
 use Degami\PHPFormsApi\Containers\SeamlessContainer;
 use App\Base\Models\Cart;
@@ -24,8 +23,9 @@ use PayPalCheckoutSdk\Orders\OrdersCaptureRequest;
 use PayPalCheckoutSdk\Core\PayPalHttpClient;
 use PayPalCheckoutSdk\Core\SandboxEnvironment;
 use PayPalCheckoutSdk\Core\PayPalEnvironment;
+use App\Base\Abstracts\Commerce\BasePaymentMethod;
 
-class PayPal implements PaymentMethodInterface
+class PayPal extends BasePaymentMethod
 {
     public function getCode() : string
     {
@@ -35,11 +35,6 @@ class PayPal implements PaymentMethodInterface
     public function getName(): string
     {
         return 'PayPal';
-    }
-
-    public function isActive(Cart $cart): bool
-    {
-        return App::getInstance()->getSiteData()->getConfigValue('payments/paypal/active') == true;
     }
 
     public function getConfigurationForm(FAPI\Form $form, array &$form_state) : FAPI\Form

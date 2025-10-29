@@ -26,4 +26,6 @@ interface ProductInterface
     public function getTaxClassId() : ?int;
 
     public function isPhysical() : bool;
+
+    public function getFrontendUrl(): string;
 }

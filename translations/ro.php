@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Aplicarea reducerii a eșuat: %s',
     'Discount ID is required to remove a discount.' => 'ID-ul reducerii este necesar pentru a elimina o reducere.',
     'Discount does not belong to this cart.' => 'Reducerea nu aparține acestui coș.',
+    'Shipping Amount' => 'Cost livrare',
+    'Choose your shipping method' => 'Alege metoda de livrare',
+    'Flat Rate' => 'Tarif fix',
+    'Total Shipping costs: %s' => 'Cost total de livrare: %s',
+    'Books' => 'Cărți',
+    'Weight' => 'Greutate',
+    'in Kilograms' => 'în kilograme',
 ];

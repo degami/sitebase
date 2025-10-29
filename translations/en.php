@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Failed to apply discount: %s',
     'Discount ID is required to remove a discount.' => 'Discount ID is required to remove a discount.',
     'Discount does not belong to this cart.' => 'Discount does not belong to this cart.',
+    'Shipping Amount' => 'Shipping Amount',
+    'Choose your shipping method' => 'Choose your shipping method',
+    'Flat Rate' => 'Flat Rate',
+    'Total Shipping costs: %s' => 'Total Shipping costs: %s',
+    'Books' => 'Books',
+    'Weight' => 'Weight',
+    'in Kilograms' => 'in Kilograms',
 ];

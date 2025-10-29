@@ -19,6 +19,8 @@ use App\Base\Traits\CommercePageTrait;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Country;
 use App\Base\Models\Address;
+use App\Base\Interfaces\Commerce\ShippingMethodInterface;
+use HaydenPierce\ClassFinder\ClassFinder;
 
 class Shipping extends FormPageWithLang
 {
@@ -84,12 +86,6 @@ class Shipping extends FormPageWithLang
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $countriesItems = Country::getCollection()->getItems();
-        $countries = array_combine(
-            array_map(fn($el) => $el->getIso2(), $countriesItems),
-            array_map(fn($el) => $el->getNameEn(), $countriesItems),
-        );
-
         $addressesItems = $this->getAddresses();
         $addresses = array_combine(
             array_map(fn($el) => $el->getId(), $addressesItems),
@@ -106,6 +102,30 @@ class Shipping extends FormPageWithLang
         ]);
 
         $form->addMarkup('<div class="row mt-3">'.$this->getUtils()->translate('or create a new one').'</div>');
+
+        $this->addNewAddressFields($form, $form_state);
+
+        $this->addShippingMethodsAccordion($form, $form_state);
+
+        $form->addField('submit', [
+            'type' => 'submit',
+            'value' => $this->getUtils()->translate('Continue'),
+            'attributes' => [
+                'class' => 'btn btn-primary',
+            ],
+            'container_class' => 'col-12 mt-3',
+        ]);
+
+        return $form;
+    }
+
+    protected function addNewAddressFields(FAPI\Form $form, array &$form_state) : FAPI\Form
+    {
+        $countriesItems = Country::getCollection()->getItems();
+        $countries = array_combine(
+            array_map(fn($el) => $el->getIso2(), $countriesItems),
+            array_map(fn($el) => $el->getNameEn(), $countriesItems),
+        );
 
         $form
             ->addMarkup('<div class="row mt-3">')
@@ -185,13 +205,48 @@ class Shipping extends FormPageWithLang
             ])
             ->addMarkup('</div>');
 
-        $form->addField('submit', [
-            'type' => 'submit',
-            'value' => $this->getUtils()->translate('Continue'),
-            'attributes' => [
-                'class' => 'btn btn-primary',
-            ],
-            'container_class' => 'col-12 mt-3',
+        return $form;
+    }
+
+    protected function addShippingMethodsAccordion(FAPI\Form $form, array &$form_state) : FAPI\Form
+    {
+        $form->addMarkup('<h4 class="mt-3">'.$this->getUtils()->translate('Choose your shipping method').'</h4>');
+
+        /** @var FAPI\Containers\Accordion $accordion */
+        $accordion = $form->addField('shipping_methods', [
+            'type' => 'accordion',
+            'container_class' => 'mt-2',
+        ]);
+
+        foreach ($this->getShippingMethods() as $key => $shippingMethod) {
+            /** @var ShippingMethodInterface $shippingMethod */
+            if (!$shippingMethod->isActive($this->getCart())) {
+                continue;
+            }
+
+            if (!$shippingMethod->isApplicable($this->getCart())) {
+                continue;
+            }
+
+            $accordion
+                ->addAccordion($shippingMethod->getName())
+                ->addField('shipping_'.$key.'_code', [
+                    'type' => 'hidden',
+                    'default_value' => $this->getShippingMethodCode($shippingMethod),
+                ])
+                ->addField($this->getShippingMethodCode($shippingMethod), $shippingMethod->getShippingFormFieldset($this->getCart(), $form, $form_state));
+        }
+
+        $accordion->addJs('
+            $("#shipping_methods").on("accordionactivate", function(event, ui) {
+                var activeIndex = $(this).accordion("option", "active");
+                $("#selected_shipping_method").val($("#shipping_"+activeIndex+"_code").val());
+            });
+        ');
+
+        $form->addField('selected_shipping_method', [
+            'type' => 'hidden',
+            'default_value' => $this->getShippingMethods() ? $this->getShippingMethodCode($this->getShippingMethods()[$accordion->getActive()]) : '',
         ]);
 
         return $form;
@@ -256,8 +311,20 @@ class Shipping extends FormPageWithLang
                 ->persist();
         }
 
+        $selected_shipping_method = $values['selected_shipping_method'];
+        $shippingValues = $values['payment_methods'][$selected_shipping_method];
+
+        /** @var ShippingMethodInterface $shippingMethod */
+        $shippingMethod = current(array_filter($this->getShippingMethods(), function($shippingMethod) use ($selected_shipping_method) {
+            return $this->getShippingMethodCode($shippingMethod) == $selected_shipping_method;
+        }));
+
+        $shippingResult = $shippingMethod?->calculateShipping($shippingValues, $this->getCart());
+
         $this->getCart()
             ->setShippingAddressId($address->getId())
+            ->setShippingMethod($shippingMethod?->getCode())
+            ->setShippingAmount($shippingResult['shipping_cost'] ?? 0)
             ->persist();
 
         if ($this->hasLang()) {
@@ -265,5 +332,27 @@ class Shipping extends FormPageWithLang
         }
 
         return $this->doRedirect($this->getUrl('frontend.commerce.checkout.payment'));
+    }
+
+    protected function getShippingMethods() : array
+    {
+        return array_values(array_map(function($shippingClassName) {
+            return $this->containerMake($shippingClassName);
+        }, array_filter(array_merge(
+            ClassFinder::getClassesInNamespace(App::BASE_COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+            ClassFinder::getClassesInNamespace(App::COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE)
+        ), function($className) {
+            if (!is_subclass_of($className, ShippingMethodInterface::class)) {
+                return false;
+            }
+
+            $method = $this->containerMake($className);
+            return App::getInstance()->getSiteData()->getConfigValue('shipping/'.$method->getCode().'/active') == 1;
+        })));
+    }
+
+    protected function getShippingMethodCode(ShippingMethodInterface $shipping_method) : string
+    {
+        return $shipping_method->getCode() ?: strtolower(str_replace("\\",'_', trim(str_replace([App::BASE_COMMERCE_NAMESPACE, App::COMMERCE_NAMESPACE], '', get_class($shipping_method)), "\\")));
     }
 }

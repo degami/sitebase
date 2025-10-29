@@ -38,6 +38,7 @@ class CreateOrderTableMigration extends DBMigration
             ->addColumn('discount_amount', 'DECIMAL', ['12, 4'])
             ->addColumn('sub_total', 'DECIMAL', ['12, 4'])
             ->addColumn('tax_amount', 'DECIMAL', ['12, 4'])
+            ->addColumn('shipping_method', 'VARCHAR', [255])
             ->addColumn('shipping_amount', 'DECIMAL', ['12, 4'])
             ->addColumn('total_incl_tax', 'DECIMAL', ['12, 4'])
             ->addColumn('currency_code', 'VARCHAR', [255])

@@ -272,7 +272,7 @@ use Degami\\SqlSchema\\Table;
 
 class " . $className . " extends DBMigration
 {
-    protected \$tableName = '" . $migration_table . "';
+    protected string \$tableName = '" . $migration_table . "';
 
     public function getName(): string
     {

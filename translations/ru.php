@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Не удалось применить скидку: %s',
     'Discount ID is required to remove a discount.' => 'Для удаления скидки требуется ID скидки.',
     'Discount does not belong to this cart.' => 'Скидка не относится к этой корзине.',
+    'Shipping Amount' => 'Стоимость доставки',
+    'Choose your shipping method' => 'Выберите способ доставки',
+    'Flat Rate' => 'Фиксированная ставка',
+    'Total Shipping costs: %s' => 'Общая стоимость доставки: %s',
+    'Books' => 'Книги',
+    'Weight' => 'Вес',
+    'in Kilograms' => 'в килограммах',
 ];

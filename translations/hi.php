@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'डिस्काउंट लागू करने में विफल: %s',
     'Discount ID is required to remove a discount.' => 'डिस्काउंट हटाने के लिए डिस्काउंट ID आवश्यक है।',
     'Discount does not belong to this cart.' => 'डिस्काउंट इस कार्ट का हिस्सा नहीं है।',
+    'Shipping Amount' => 'शिपिंग राशि',
+    'Choose your shipping method' => 'अपनी शिपिंग विधि चुनें',
+    'Flat Rate' => 'निश्चित दर',
+    'Total Shipping costs: %s' => 'कुल शिपिंग लागत: %s',
+    'Books' => 'पुस्तकें',
+    'Weight' => 'वज़न',
+    'in Kilograms' => 'किलोग्राम में',
 ];

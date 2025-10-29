@@ -45,11 +45,20 @@ class Product extends CodeGeneratorCommand
             'nullable' => true,
             'default_value' => null,
         ],
-        'name' => [
-            'col_name' => 'name',
+        'title' => [
+            'col_name' => 'title',
             'php_type' => 'string',
             'mysql_type' => 'VARCHAR',
             'col_parameters' => [255],
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'content' => [
+            'col_name' => 'content',
+            'php_type' => 'string',
+            'mysql_type' => 'TEXT',
+            'col_parameters' => null,
             'col_options' => [],
             'nullable' => true,
             'default_value' => null,
@@ -59,7 +68,25 @@ class Product extends CodeGeneratorCommand
             'php_type' => 'int',
             'mysql_type' => 'INT',
             'col_parameters' => null,
-            'col_options' => ['UNSIGNED'],
+            'col_options' => ['\'UNSIGNED\''],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'website_id' => [
+            'col_name' => 'website_id',
+            'php_type' => 'int',
+            'mysql_type' => 'INT',
+            'col_parameters' => null,
+            'col_options' => ['\'UNSIGNED\''],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'user_id' => [
+            'col_name' => 'user_id',
+            'php_type' => 'int',
+            'mysql_type' => 'INT',
+            'col_parameters' => null,
+            'col_options' => ['\'UNSIGNED\''],
             'nullable' => true,
             'default_value' => null,
         ],
@@ -68,6 +95,51 @@ class Product extends CodeGeneratorCommand
             'php_type' => 'float',
             'mysql_type' => 'FLOAT',
             'col_parameters' => null,
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'url' => [
+            'col_name' => 'url',
+            'php_type' => 'string',
+            'mysql_type' => 'VARCHAR',
+            'col_parameters' => [255],
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'locale' => [
+            'col_name' => 'locale',
+            'php_type' => 'string',
+            'mysql_type' => 'VARCHAR',
+            'col_parameters' => [10],
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'meta_keywords' => [
+            'col_name' => 'meta_keywords',
+            'php_type' => 'string',
+            'mysql_type' => 'VARCHAR',
+            'col_parameters' => [1024],
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'meta_description' => [
+            'col_name' => 'meta_description',
+            'php_type' => 'string',
+            'mysql_type' => 'VARCHAR',
+            'col_parameters' => [1024],
+            'col_options' => [],
+            'nullable' => true,
+            'default_value' => null,
+        ],
+        'html_title' => [
+            'col_name' => 'html_title',
+            'php_type' => 'string',
+            'mysql_type' => 'VARCHAR',
+            'col_parameters' => [1024],
             'col_options' => [],
             'nullable' => true,
             'default_value' => null,
@@ -220,7 +292,7 @@ class Product extends CodeGeneratorCommand
         }
 
         $question = new Question('Column options (comma separated): ');
-        $options = array_map("strtoupper", array_filter(array_map("trim", explode(",", $helper->ask($this->input, $this->output, $question)))));
+        $options = array_map("strtoupper", array_filter(array_map("trim", explode(",", (string) $helper->ask($this->input, $this->output, $question)))));
         foreach ($options as $k => $option) {
             if (!is_numeric($option) && !empty($option) && $option != 'NULL') {
                 $options[$k] = "'" . $option . "'";
@@ -263,11 +335,11 @@ class Product extends CodeGeneratorCommand
 
 namespace App\\Site\\Models;
 
-use App\\Base\\Abstracts\\Models\\BaseModel;
+use App\\Base\\Abstracts\\Models\\FrontendModel;
 use App\Base\Interfaces\Model\ProductInterface;
 
 /**\n" . $comment . " */
-class " . $className . " extends BaseModel implements ProductInterface
+class " . $className . " extends FrontendModel implements ProductInterface
 {
     public function isPhysical(): bool
     {
@@ -291,12 +363,22 @@ class " . $className . " extends BaseModel implements ProductInterface
 
     public function getName() : ?string
     {
-        return \$this->getData('name');
+        return \$this->getData('title');
     }
 
     public function getSku(): string
     {
-        return \$this->getData('sku')?? 'product_' . \$this->getId();
+        return \$this->getData('sku')?? '".$this->getUtils()->pascalCaseToSnakeCase($className)."_' . \$this->getId();
+    }
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return string
+     */
+    public function getRewritePrefix(): string
+    {
+        return '".$this->getUtils()->pascalCaseToSnakeCase($className)."';
     }
 }
 ";
@@ -338,7 +420,7 @@ use Degami\\SqlSchema\\Table;
 
 class " . $className . " extends DBMigration
 {
-    protected \$tableName = '" . $migration_table . "';
+    protected string \$tableName = '" . $migration_table . "';
 
     public function getName(): string
     {
@@ -352,6 +434,9 @@ class " . $className . " extends DBMigration
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addForeignKey('fk_".$migration_table."_website_id', ['website_id'], 'website', ['id'])
+            ->addForeignKey('fk_".$migration_table."_owner_id', ['user_id'], 'user', ['id'])
+            ->addForeignKey('fk_".$migration_table."_language_locale', ['locale'], 'language', ['locale'])
             ->setAutoIncrementColumn('id');
 
         return \$table;

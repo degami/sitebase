@@ -89,11 +89,12 @@ class Payment extends FormPageWithLang
     {
         $form->setFormId('payment-form');
 
-        $form->addMarkup('<h4>'.$this->getUtils()->translate('Choose your payment method').'</h4>');
+        $form->addMarkup('<h4 class="mt-3">'.$this->getUtils()->translate('Choose your payment method').'</h4>');
 
         /** @var FAPI\Containers\Accordion $accordion */
         $accordion = $form->addField('payment_methods', [
             'type' => 'accordion',
+            'container_class' => 'mt-2',
         ]);
 
         foreach ($this->getPaymentMethods() as $key => $paymentMethod) {

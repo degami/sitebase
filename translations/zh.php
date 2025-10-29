@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => '应用折扣失败：%s',
     'Discount ID is required to remove a discount.' => '需要折扣ID以移除折扣。',
     'Discount does not belong to this cart.' => '折扣不属于此购物车。',
+    'Shipping Amount' => '运费金额',
+    'Choose your shipping method' => '选择您的运输方式',
+    'Flat Rate' => '固定运费',
+    'Total Shipping costs: %s' => '总运费：%s',
+    'Books' => '书籍',
+    'Weight' => '重量',
+    'in Kilograms' => '以千克为单位',
 ];

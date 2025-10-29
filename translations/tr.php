@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'İndirim uygulanamadı: %s',
     'Discount ID is required to remove a discount.' => 'Bir indirimi kaldırmak için indirim ID’si gereklidir.',
     'Discount does not belong to this cart.' => 'İndirim bu sepete ait değil.',
+    'Shipping Amount' => 'Kargo Ücreti',
+    'Choose your shipping method' => 'Kargo yöntemini seçin',
+    'Flat Rate' => 'Sabit Ücret',
+    'Total Shipping costs: %s' => 'Toplam kargo ücreti: %s',
+    'Books' => 'Kitaplar',
+    'Weight' => 'Ağırlık',
+    'in Kilograms' => 'kilogram cinsinden',
 ];

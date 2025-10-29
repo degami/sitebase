@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Áp dụng giảm giá thất bại: %s',
     'Discount ID is required to remove a discount.' => 'Cần ID giảm giá để xóa giảm giá.',
     'Discount does not belong to this cart.' => 'Giảm giá không thuộc giỏ hàng này.',
+    'Shipping Amount' => 'Phí vận chuyển',
+    'Choose your shipping method' => 'Chọn phương thức vận chuyển của bạn',
+    'Flat Rate' => 'Giá cố định',
+    'Total Shipping costs: %s' => 'Tổng chi phí vận chuyển: %s',
+    'Books' => 'Sách',
+    'Weight' => 'Trọng lượng',
+    'in Kilograms' => 'tính bằng kilôgam',
 ];

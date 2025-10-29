@@ -166,9 +166,9 @@ class Cart extends FormPageWithLang
 
         foreach ($this->getCart()?->getItems() ?? [] as $item) {
 
-            $itemTitle = $item->getProduct()->getTitle();
+            $itemTitle = $item->getProduct()->getName();
             if (is_callable([$item->getProduct(), 'getFrontendUrl']) && $item->getProduct()->getFrontendUrl()) {
-                $itemTitle = '<a href="'.$item->getProduct()->getFrontendUrl().'">' . $item->getProduct()->getTitle() . '</a>';
+                $itemTitle = '<a href="'.$item->getProduct()->getFrontendUrl().'">' . $item->getProduct()->getName() . '</a>';
             }
 
             $removeUrl = $this->getUrl('frontend.commerce.cart.remove', [

@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Échec de l’application du rabais : %s',
     'Discount ID is required to remove a discount.' => 'L’ID du rabais est requis pour supprimer un rabais.',
     'Discount does not belong to this cart.' => 'Le rabais n’appartient pas à ce panier.',
+    'Shipping Amount' => 'Montant de livraison',
+    'Choose your shipping method' => 'Choisissez votre méthode de livraison',
+    'Flat Rate' => 'Tarif fixe',
+    'Total Shipping costs: %s' => 'Coût total de livraison : %s',
+    'Books' => 'Livres',
+    'Weight' => 'Poids',
+    'in Kilograms' => 'en kilogrammes',
 ];

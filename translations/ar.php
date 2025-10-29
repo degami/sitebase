@@ -366,4 +366,11 @@ return [
     'Failed to apply discount: %s' => 'فشل تطبيق الخصم: %s',
     'Discount ID is required to remove a discount.' => 'مطلوب معرف الخصم لإزالة الخصم.',
     'Discount does not belong to this cart.' => 'الخصم لا ينتمي إلى هذه السلة.',
+    'Shipping Amount' => 'مبلغ الشحن',
+    'Choose your shipping method' => 'اختر طريقة الشحن الخاصة بك',
+    'Flat Rate' => 'سعر ثابت',
+    'Total Shipping costs: %s' => 'إجمالي تكاليف الشحن: %s',
+    'Books' => 'الكتب',
+    'Weight' => 'الوزن',
+    'in Kilograms' => 'بالكيلوغرامات',
 ];

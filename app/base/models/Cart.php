@@ -30,6 +30,7 @@ use DateTime;
  * @method float getSubTotal()
  * @method float getDiscountAmount()
  * @method float getTaxAmount()
+ * @method string getShippingMethod()
  * @method float getShippingAmount()
  * @method float getTotalInclTax()
  * @method string getCurrencyCode()
@@ -50,6 +51,7 @@ use DateTime;
  * @method self setSubTotal(float $sub_total)
  * @method self setDiscountAmount(float $discount_amount)
  * @method self setTaxAmount(float $tax_amount)
+ * @method self setShippingMethod(string $shipping_method)
  * @method self setShippingAmount(float $shipping_amount)
  * @method self setTotalInclTax(float $total_incl_tax)
  * @method self setCurrencyCode(string $currency_code)
@@ -502,6 +504,7 @@ class Cart extends BaseModel
     public function calculateShipping(): float
     {
         if (!$this->requireShipping()) {
+            $this->setShippingMethod(null);
             $this->setShippingAmount(0.0);
             $this->setAdminShippingAmount(0.0);
             return 0.0;
@@ -509,12 +512,13 @@ class Cart extends BaseModel
 
         if (!$this->getShippingAddress()) {
             // If no shipping address is set, we cannot calculate shipping
+            $this->setShippingMethod(null);
             $this->setShippingAmount(0.0);
             $this->setAdminShippingAmount(0.0);
             return 0.0;
         }
 
-        $shipping_amount = 0.0;
+        $shipping_amount = $this->getShippingAmount() ?? 0.0;
 
         $this->setShippingAmount($shipping_amount);
         $this->setAdminShippingAmount(App::getInstance()->getUtils()->convertFromCurrencyToCurrency($shipping_amount, $this->getCurrencyCode(), $this->getAdminCurrencyCode()));

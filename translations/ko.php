@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => '할인 적용 실패: %s',
     'Discount ID is required to remove a discount.' => '할인을 제거하려면 할인 ID가 필요합니다.',
     'Discount does not belong to this cart.' => '할인은 이 장바구니에 속하지 않습니다.',
+    'Shipping Amount' => '배송비',
+    'Choose your shipping method' => '배송 방법을 선택하세요',
+    'Flat Rate' => '고정 요금',
+    'Total Shipping costs: %s' => '총 배송비: %s',
+    'Books' => '책',
+    'Weight' => '무게',
+    'in Kilograms' => '킬로그램 단위로',
 ];

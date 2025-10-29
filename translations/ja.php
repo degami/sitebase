@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => '割引の適用に失敗しました：%s',
     'Discount ID is required to remove a discount.' => '割引を削除するには割引IDが必要です。',
     'Discount does not belong to this cart.' => '割引はこのカートに属していません。',
+    'Shipping Amount' => '配送料金',
+    'Choose your shipping method' => '配送方法を選択してください',
+    'Flat Rate' => '定額料金',
+    'Total Shipping costs: %s' => '合計配送料: %s',
+    'Books' => '本',
+    'Weight' => '重さ',
+    'in Kilograms' => 'キログラムで',
 ];

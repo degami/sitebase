@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Αποτυχία εφαρμογής της έκπτωσης: %s',
     'Discount ID is required to remove a discount.' => 'Απαιτείται ID έκπτωσης για να αφαιρεθεί η έκπτωση.',
     'Discount does not belong to this cart.' => 'Η έκπτωση δεν ανήκει σε αυτό το καλάθι.',
+    'Shipping Amount' => 'Ποσό αποστολής',
+    'Choose your shipping method' => 'Επιλέξτε τη μέθοδο αποστολής σας',
+    'Flat Rate' => 'Σταθερή χρέωση',
+    'Total Shipping costs: %s' => 'Συνολικά έξοδα αποστολής: %s',
+    'Books' => 'Βιβλία',
+    'Weight' => 'Βάρος',
+    'in Kilograms' => 'σε κιλά',
 ];

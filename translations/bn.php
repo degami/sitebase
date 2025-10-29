@@ -393,4 +393,11 @@ return [
     'Failed to apply discount: %s' => 'ডিসকাউন্ট প্রয়োগে ব্যর্থ: %s',
     'Discount ID is required to remove a discount.' => 'ডিসকাউন্ট সরাতে ডিসকাউন্ট ID প্রয়োজন।',
     'Discount does not belong to this cart.' => 'ডিসকাউন্ট এই কার্টের সাথে সম্পর্কিত নয়।',
+    'Shipping Amount' => 'শিপিং খরচ',
+    'Choose your shipping method' => 'আপনার শিপিং পদ্ধতি নির্বাচন করুন',
+    'Flat Rate' => 'নির্দিষ্ট হার',
+    'Total Shipping costs: %s' => 'মোট শিপিং খরচ: %s',
+    'Books' => 'বই',
+    'Weight' => 'ওজন',
+    'in Kilograms' => 'কিলোগ্রামে',
 ];

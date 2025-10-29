@@ -385,4 +385,11 @@ return [
     'Failed to apply discount: %s' => 'No se pudo aplicar el descuento: %s',
     'Discount ID is required to remove a discount.' => 'Se requiere el ID del descuento para eliminar un descuento.',
     'Discount does not belong to this cart.' => 'El descuento no pertenece a este carrito.',
+    'Shipping Amount' => 'Importe de envío',
+    'Choose your shipping method' => 'Elige tu método de envío',
+    'Flat Rate' => 'Tarifa fija',
+    'Total Shipping costs: %s' => 'Coste total de envío: %s',
+    'Books' => 'Libros',
+    'Weight' => 'Peso',
+    'in Kilograms' => 'en kilogramos',
 ];

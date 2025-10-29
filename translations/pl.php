@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Nie udało się zastosować rabatu: %s',
     'Discount ID is required to remove a discount.' => 'ID rabatu jest wymagane do usunięcia rabatu.',
     'Discount does not belong to this cart.' => 'Rabat nie należy do tego koszyka.',
+    'Shipping Amount' => 'Koszt wysyłki',
+    'Choose your shipping method' => 'Wybierz metodę wysyłki',
+    'Flat Rate' => 'Stawka ryczałtowa',
+    'Total Shipping costs: %s' => 'Całkowity koszt wysyłki: %s',
+    'Books' => 'Książki',
+    'Weight' => 'Waga',
+    'in Kilograms' => 'w kilogramach',
 ];

@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'A kedvezmény alkalmazása sikertelen: %s',
     'Discount ID is required to remove a discount.' => 'A kedvezmény eltávolításához kedvezményazonosító szükséges.',
     'Discount does not belong to this cart.' => 'A kedvezmény nem tartozik ehhez a kosárhoz.',
+    'Shipping Amount' => 'Szállítási díj',
+    'Choose your shipping method' => 'Válassza ki a szállítási módot',
+    'Flat Rate' => 'Fix díj',
+    'Total Shipping costs: %s' => 'Teljes szállítási költség: %s',
+    'Books' => 'Könyvek',
+    'Weight' => 'Súly',
+    'in Kilograms' => 'kilogrammban',
 ];

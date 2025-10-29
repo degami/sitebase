@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Gagal menerapkan diskon: %s',
     'Discount ID is required to remove a discount.' => 'ID diskon diperlukan untuk menghapus diskon.',
     'Discount does not belong to this cart.' => 'Diskon tidak termasuk dalam keranjang ini.',
+    'Shipping Amount' => 'Biaya Pengiriman',
+    'Choose your shipping method' => 'Pilih metode pengiriman Anda',
+    'Flat Rate' => 'Tarif tetap',
+    'Total Shipping costs: %s' => 'Total biaya pengiriman: %s',
+    'Books' => 'Buku',
+    'Weight' => 'Berat',
+    'in Kilograms' => 'dalam kilogram',
 ];

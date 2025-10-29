@@ -391,4 +391,11 @@ return [
     'Failed to apply discount: %s' => 'Kortingscode toepassen mislukt: %s',
     'Discount ID is required to remove a discount.' => 'Kortings-ID is vereist om een korting te verwijderen.',
     'Discount does not belong to this cart.' => 'Korting behoort niet tot deze winkelwagen.',
+    'Shipping Amount' => 'Verzendkosten',
+    'Choose your shipping method' => 'Kies je verzendmethode',
+    'Flat Rate' => 'Vast tarief',
+    'Total Shipping costs: %s' => 'Totale verzendkosten: %s',
+    'Books' => 'Boeken',
+    'Weight' => 'Gewicht',
+    'in Kilograms' => 'in kilogrammen',
 ];

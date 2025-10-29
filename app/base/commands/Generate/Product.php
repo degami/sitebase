@@ -437,6 +437,7 @@ class " . $className . " extends DBMigration
             ->addForeignKey('fk_".$migration_table."_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_".$migration_table."_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_".$migration_table."_language_locale', ['locale'], 'language', ['locale'])
+            ->addForeignKey('fk_".$migration_table."_tax_class_id', ['tax_class_id'], 'tax_class', ['id'])
             ->setAutoIncrementColumn('id');
 
         return \$table;

@@ -38,6 +38,7 @@ class CreateBookTableMigration extends DBMigration
             ->addForeignKey('fk_book_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_book_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_book_language_locale', ['locale'], 'language', ['locale'])
+            ->addForeignKey('fk_book_tax_class_id', ['tax_class_id'], 'tax_class', ['id'])
             ->setAutoIncrementColumn('id');
 
         return $table;

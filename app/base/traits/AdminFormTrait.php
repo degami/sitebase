@@ -15,6 +15,7 @@ namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
+use App\Base\Interfaces\Model\PhysicalProductInterface;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
@@ -280,6 +281,76 @@ trait AdminFormTrait
                         }
                 })");
         }
+
+        return $form;
+    }
+
+    /**
+     * adds Physical Product elements to form
+     *
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @return FAPI\Form
+     * @throws FAPI\Exceptions\FormException
+     */
+    protected function addPhysicalProductFormElements(FAPI\Form $form, &$form_state): FAPI\Form
+    {
+        $object = $this->getObject();
+
+        $product_weight = $product_length = $product_width = $product_height = 0.0;
+        if ($object instanceof PhysicalProductInterface  && $object instanceof FrontendModel && $object->isLoaded()) {
+            $product_weight = $object->weight;
+            $product_length = $object->length;
+            $product_width = $object->width;
+            $product_height = $object->height;
+        }
+
+        /** @var Fieldset $fieldset */
+        $fieldset = $form->addField('physical', [
+            'type' => 'fieldset',
+            'title' => 'Physical Informations',
+            'collapsible' => true,
+            'collapsed' => false,
+        ]);
+
+        $fieldset
+            ->addField('weight', [
+                'type' => 'number',
+                'title' => 'Weight',
+                'default_value' => $product_weight,
+                'min' => '0.00',
+                'max' => '1000000.00',
+                'step' => '0.01',
+                'description' => 'in Kilograms',
+                'validate' => ['required'],
+            ])->addField('length', [
+                'type' => 'number',
+                'title' => 'Box Length',
+                'default_value' => $product_length,
+                'min' => '0.00',
+                'max' => '1000000.00',
+                'step' => '0.01',
+                'description' => 'in cm',
+                'validate' => ['required'],
+            ])->addField('width', [
+                'type' => 'number',
+                'title' => 'Box Width',
+                'default_value' => $product_width,
+                'min' => '0.00',
+                'max' => '1000000.00',
+                'step' => '0.01',
+                'description' => 'in cm',
+                'validate' => ['required'],
+            ])->addField('height', [
+                'type' => 'number',
+                'title' => 'Box Height',
+                'default_value' => $product_height,
+                'min' => '0.00',
+                'max' => '1000000.00',
+                'step' => '0.01',
+                'description' => 'in cm',
+                'validate' => ['required'],
+            ]);
 
         return $form;
     }

@@ -118,42 +118,6 @@ class Books extends AdminManageProductsPage
                     'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
                     'default_value' => $product_content,
                     'rows' => 20,
-                ])->addField('weight', [
-                    'type' => 'number',
-                    'title' => 'Weight',
-                    'default_value' => $product_weight,
-                    'min' => '0.00',
-                    'max' => '1000000.00',
-                    'step' => '0.01',
-                    'description' => 'in Kilograms',
-                    'validate' => ['required'],
-                ])->addField('length', [
-                    'type' => 'number',
-                    'title' => 'Box Length',
-                    'default_value' => $product_length,
-                    'min' => '0.00',
-                    'max' => '1000000.00',
-                    'step' => '0.01',
-                    'description' => 'in cm',
-                    'validate' => ['required'],
-                ])->addField('width', [
-                    'type' => 'number',
-                    'title' => 'Box Width',
-                    'default_value' => $product_width,
-                    'min' => '0.00',
-                    'max' => '1000000.00',
-                    'step' => '0.01',
-                    'description' => 'in cm',
-                    'validate' => ['required'],
-                ])->addField('height', [
-                    'type' => 'number',
-                    'title' => 'Box Height',
-                    'default_value' => $product_height,
-                    'min' => '0.00',
-                    'max' => '1000000.00',
-                    'step' => '0.01',
-                    'description' => 'in cm',
-                    'validate' => ['required'],
                 ])->addField('price', [
                     'type' => 'number',
                     'title' => 'Price',
@@ -170,6 +134,7 @@ class Books extends AdminManageProductsPage
                     'validate' => ['required'],
                 ]);
 
+                $this->addPhysicalProductFormElements($form, $form_state);
                 $this->addFrontendFormElements($form, $form_state);
                 $this->addSeoFormElements($form, $form_state);
 
@@ -230,10 +195,10 @@ class Books extends AdminManageProductsPage
                 $product->setLocale($values['frontend']['locale']);
                 $product->setContent($values['content']);
                 $product->setWebsiteId($values['frontend']['website_id']);
-                $product->setWeight((float)$values['weight']);
-                $product->setHeight((float)$values['height']);
-                $product->setLength((float)$values['length']);
-                $product->setWidth((float)$values['width']);
+                $product->setWeight((float)$values['physical']['weight']);
+                $product->setHeight((float)$values['physical']['height']);
+                $product->setLength((float)$values['physical']['length']);
+                $product->setWidth((float)$values['physical']['width']);
                 $product->setPrice((float)$values['price']);
                 $product->setTaxClassId($values['tax_class_id']);
 

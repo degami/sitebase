@@ -31,6 +31,8 @@ class Product extends CodeGeneratorCommand
 {
     public const BASE_MODEL_NAMESPACE = "App\\Site\\Models\\";
     public const BASE_MIGRATION_NAMESPACE = "App\\Site\\Migrations\\";
+    public const BASE_PRODUCT_INTERFACE = 'App\Base\Interfaces\Model\ProductInterface';
+    public const PHYSICAL_PRODUCT_INTERFACE =  'App\Base\Interfaces\Model\PhysicalProductInterface';
 
     /**
      * @var array columns
@@ -185,7 +187,7 @@ class Product extends CodeGeneratorCommand
         ],
     ];
 
-    protected $interface = 'App\Base\Interfaces\Model\ProductInterface';
+    protected $interface = self::BASE_PRODUCT_INTERFACE;
     protected $traits = ['App\Base\Traits\ProductTrait'];
 
     /**
@@ -394,6 +396,16 @@ use App\Base\GraphQl\GraphQLExport;
 class " . $className . " extends FrontendModel implements ".$this->getUtils()->getClassBasename($this->interface)."
 {
     use ".implode(";\n    use ", array_map(fn($t) => $this->getUtils()->getClassBasename($t), $this->traits)).";
+
+    /**
+     * {@inheritdoc}
+     *
+     * @return bool
+     */
+    public function isPhysical(): bool
+    {
+        return " . ($this->interface == self::PHYSICAL_PRODUCT_INTERFACE ? 'true' : 'false') . ";
+    }
 
     /**
      * {@inheritdoc}

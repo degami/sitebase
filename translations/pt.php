@@ -398,4 +398,13 @@ return [
     'Books' => 'Livros',
     'Weight' => 'Peso',
     'in Kilograms' => 'em quilogramas',
+    'Add to Cart' => 'Adicionar ao carrinho',
+    'Refresh Methods' => 'Atualizar métodos',
+    'Matrix Rate' => 'Taxa matricial',
+    'Shipping costs: %s' => 'Custos de envio: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Padrão de código postal (ex: 00*,10*,*)',
+    'Weight from (kg)' => 'Peso de (kg)',
+    'Weight to (kg)' => 'Peso até (kg)',
+    'Cost' => 'Custo',
+    'Add Rule' => 'Adicionar regra',
 ];

@@ -398,4 +398,13 @@ return [
     'Books' => 'Sách',
     'Weight' => 'Trọng lượng',
     'in Kilograms' => 'tính bằng kilôgam',
+    'Add to Cart' => 'Thêm vào giỏ hàng',
+    'Refresh Methods' => 'Làm mới phương thức',
+    'Matrix Rate' => 'Tỷ lệ ma trận',
+    'Shipping costs: %s' => 'Chi phí vận chuyển: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Mẫu mã ZIP (ví dụ: 00*,10*,*)',
+    'Weight from (kg)' => 'Trọng lượng từ (kg)',
+    'Weight to (kg)' => 'Trọng lượng đến (kg)',
+    'Cost' => 'Chi phí',
+    'Add Rule' => 'Thêm quy tắc',
 ];

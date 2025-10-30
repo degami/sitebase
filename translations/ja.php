@@ -398,4 +398,13 @@ return [
     'Books' => '本',
     'Weight' => '重さ',
     'in Kilograms' => 'キログラムで',
+    'Add to Cart' => 'カートに追加',
+    'Refresh Methods' => '方法を更新',
+    'Matrix Rate' => 'マトリックス料金',
+    'Shipping costs: %s' => '配送料: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => '郵便番号パターン（例: 00*,10*,*）',
+    'Weight from (kg)' => '重量（kg）から',
+    'Weight to (kg)' => '重量（kg）まで',
+    'Cost' => 'コスト',
+    'Add Rule' => 'ルールを追加',
 ];

@@ -398,4 +398,13 @@ return [
     'Books' => 'Books',
     'Weight' => 'Weight',
     'in Kilograms' => 'in Kilograms',
+    'Add to Cart' => 'Add to Cart',
+    'Refresh Methods' => 'Refresh Methods',
+    'Matrix Rate' => 'Matrix Rate',
+    'Shipping costs: %s' => 'Shipping costs: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'ZIP code pattern (eg: 00*,10*,*)',
+    'Weight from (kg)' => 'Weight from (kg)',
+    'Weight to (kg)' => 'Weight to (kg)',
+    'Cost' => 'Cost',
+    'Add Rule' => 'Add Rule',
 ];

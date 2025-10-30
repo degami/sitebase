@@ -123,7 +123,7 @@ class MatrixRate extends BaseShippingMethod
                 ])
                 ->addField("cost_$i", [
                     'type' => 'number',
-                    'title' => 'Cost (€)',
+                    'title' => 'Cost',
                     'container_class' => 'col-sm-12 pb-2',
                     'step' => 0.01,
                     'min' => 0,

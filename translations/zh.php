@@ -398,4 +398,13 @@ return [
     'Books' => '书籍',
     'Weight' => '重量',
     'in Kilograms' => '以千克为单位',
+    'Add to Cart' => '加入购物车',
+    'Refresh Methods' => '刷新方法',
+    'Matrix Rate' => '矩阵费率',
+    'Shipping costs: %s' => '运费：%s',
+    'ZIP code pattern (eg: 00*,10*,*)' => '邮政编码模式（例如：00*,10*,*）',
+    'Weight from (kg)' => '重量从（kg）',
+    'Weight to (kg)' => '重量至（kg）',
+    'Cost' => '费用',
+    'Add Rule' => '添加规则',
 ];

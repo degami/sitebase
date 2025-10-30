@@ -398,4 +398,13 @@ return [
     'Books' => 'Cărți',
     'Weight' => 'Greutate',
     'in Kilograms' => 'în kilograme',
+    'Add to Cart' => 'Adaugă în coș',
+    'Refresh Methods' => 'Reîmprospătează metodele',
+    'Matrix Rate' => 'Tarif matrice',
+    'Shipping costs: %s' => 'Costuri de transport: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Model cod poștal (ex: 00*,10*,*)',
+    'Weight from (kg)' => 'Greutate de la (kg)',
+    'Weight to (kg)' => 'Greutate până la (kg)',
+    'Cost' => 'Cost',
+    'Add Rule' => 'Adaugă regulă',
 ];

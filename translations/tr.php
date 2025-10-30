@@ -398,4 +398,13 @@ return [
     'Books' => 'Kitaplar',
     'Weight' => 'Ağırlık',
     'in Kilograms' => 'kilogram cinsinden',
+    'Add to Cart' => 'Sepete ekle',
+    'Refresh Methods' => 'Yöntemleri yenile',
+    'Matrix Rate' => 'Matris oranı',
+    'Shipping costs: %s' => 'Kargo maliyeti: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Posta kodu deseni (örn: 00*,10*,*)',
+    'Weight from (kg)' => 'Ağırlık başlangıcı (kg)',
+    'Weight to (kg)' => 'Ağırlık sonu (kg)',
+    'Cost' => 'Maliyet',
+    'Add Rule' => 'Kural ekle',
 ];

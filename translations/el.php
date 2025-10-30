@@ -398,4 +398,13 @@ return [
     'Books' => 'Βιβλία',
     'Weight' => 'Βάρος',
     'in Kilograms' => 'σε κιλά',
+    'Add to Cart' => 'Προσθήκη στο καλάθι',
+    'Refresh Methods' => 'Ανανέωση μεθόδων',
+    'Matrix Rate' => 'Πίνακας τιμών',
+    'Shipping costs: %s' => 'Κόστος αποστολής: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Μοτίβο ταχυδρομικού κώδικα (π.χ. 00*,10*,*)',
+    'Weight from (kg)' => 'Βάρος από (kg)',
+    'Weight to (kg)' => 'Βάρος έως (kg)',
+    'Cost' => 'Κόστος',
+    'Add Rule' => 'Προσθήκη κανόνα',
 ];

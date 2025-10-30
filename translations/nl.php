@@ -398,4 +398,13 @@ return [
     'Books' => 'Boeken',
     'Weight' => 'Gewicht',
     'in Kilograms' => 'in kilogrammen',
+    'Add to Cart' => 'Toevoegen aan winkelwagen',
+    'Refresh Methods' => 'Methoden vernieuwen',
+    'Matrix Rate' => 'Matrix-tarief',
+    'Shipping costs: %s' => 'Verzendkosten: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Postcodepatroon (bijv: 00*,10*,*)',
+    'Weight from (kg)' => 'Gewicht van (kg)',
+    'Weight to (kg)' => 'Gewicht tot (kg)',
+    'Cost' => 'Kosten',
+    'Add Rule' => 'Regel toevoegen',
 ];

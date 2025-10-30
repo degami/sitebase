@@ -398,4 +398,13 @@ return [
     'Books' => '책',
     'Weight' => '무게',
     'in Kilograms' => '킬로그램 단위로',
+    'Add to Cart' => '장바구니에 추가',
+    'Refresh Methods' => '방법 새로고침',
+    'Matrix Rate' => '매트릭스 요율',
+    'Shipping costs: %s' => '배송비: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => '우편번호 패턴 (예: 00*,10*,*)',
+    'Weight from (kg)' => '무게 시작 (kg)',
+    'Weight to (kg)' => '무게 종료 (kg)',
+    'Cost' => '비용',
+    'Add Rule' => '규칙 추가',
 ];

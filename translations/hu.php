@@ -398,4 +398,13 @@ return [
     'Books' => 'Könyvek',
     'Weight' => 'Súly',
     'in Kilograms' => 'kilogrammban',
+    'Add to Cart' => 'Kosárba tesz',
+    'Refresh Methods' => 'Módszerek frissítése',
+    'Matrix Rate' => 'Mátrix díj',
+    'Shipping costs: %s' => 'Szállítási költség: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Irányítószám minta (pl.: 00*,10*,*)',
+    'Weight from (kg)' => 'Súly ettől (kg)',
+    'Weight to (kg)' => 'Súly eddig (kg)',
+    'Cost' => 'Költség',
+    'Add Rule' => 'Szabály hozzáadása',
 ];

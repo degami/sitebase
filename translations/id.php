@@ -398,4 +398,13 @@ return [
     'Books' => 'Buku',
     'Weight' => 'Berat',
     'in Kilograms' => 'dalam kilogram',
+    'Add to Cart' => 'Tambahkan ke keranjang',
+    'Refresh Methods' => 'Segarkan metode',
+    'Matrix Rate' => 'Tarif matriks',
+    'Shipping costs: %s' => 'Biaya pengiriman: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'Pola kode pos (mis: 00*,10*,*)',
+    'Weight from (kg)' => 'Berat dari (kg)',
+    'Weight to (kg)' => 'Berat hingga (kg)',
+    'Cost' => 'Biaya',
+    'Add Rule' => 'Tambahkan aturan',
 ];

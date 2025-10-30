@@ -400,4 +400,13 @@ return [
     'Books' => 'বই',
     'Weight' => 'ওজন',
     'in Kilograms' => 'কিলোগ্রামে',
+    'Add to Cart' => 'কার্টে যোগ করুন',
+    'Refresh Methods' => 'পদ্ধতি রিফ্রেশ করুন',
+    'Matrix Rate' => 'ম্যাট্রিক্স রেট',
+    'Shipping costs: %s' => 'শিপিং খরচ: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'জিপ কোড প্যাটার্ন (যেমন: 00*,10*,*)',
+    'Weight from (kg)' => 'ওজন থেকে (কেজি)',
+    'Weight to (kg)' => 'ওজন পর্যন্ত (কেজি)',
+    'Cost' => 'খরচ',
+    'Add Rule' => 'নিয়ম যোগ করুন',
 ];

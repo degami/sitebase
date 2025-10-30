@@ -373,4 +373,13 @@ return [
     'Books' => 'الكتب',
     'Weight' => 'الوزن',
     'in Kilograms' => 'بالكيلوغرامات',
+    'Add to Cart' => 'أضف إلى السلة',
+    'Refresh Methods' => 'تحديث الطرق',
+    'Matrix Rate' => 'معدل المصفوفة',
+    'Shipping costs: %s' => 'تكاليف الشحن: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'نمط الرمز البريدي (مثلاً: 00*,10*,*)',
+    'Weight from (kg)' => 'الوزن من (كجم)',
+    'Weight to (kg)' => 'الوزن إلى (كجم)',
+    'Cost' => 'التكلفة',
+    'Add Rule' => 'إضافة قاعدة',
 ];

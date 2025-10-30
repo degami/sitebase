@@ -398,4 +398,13 @@ return [
     'Books' => 'पुस्तकें',
     'Weight' => 'वज़न',
     'in Kilograms' => 'किलोग्राम में',
+    'Add to Cart' => 'कार्ट में जोड़ें',
+    'Refresh Methods' => 'विधियाँ रीफ़्रेश करें',
+    'Matrix Rate' => 'मैट्रिक्स दर',
+    'Shipping costs: %s' => 'शिपिंग लागत: %s',
+    'ZIP code pattern (eg: 00*,10*,*)' => 'पिन कोड पैटर्न (उदा: 00*,10*,*)',
+    'Weight from (kg)' => 'वजन से (किग्रा)',
+    'Weight to (kg)' => 'वजन तक (किग्रा)',
+    'Cost' => 'लागत',
+    'Add Rule' => 'नियम जोड़ें',
 ];

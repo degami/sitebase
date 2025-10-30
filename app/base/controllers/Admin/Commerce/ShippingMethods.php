@@ -307,13 +307,21 @@ class ShippingMethods extends AdminFormPage
     public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
         $code = $this->getRequest()->query->get('code');
-        $values = $form->values()->toArray();
 
-        unset($values['action']);
-        unset($values['button']);
+        /** @var ShippingMethodInterface $shippingMethod */
+        $shippingMethod = $this->getShippingMethods()[$code];
 
-        foreach ($values as $key => $value) {
-            $this->getSiteData()->setConfigValue('shipping/'.$code.'/'.$key, $value);
+        if (method_exists($shippingMethod, 'formSubmitted')) {
+            call_user_func_array([$shippingMethod, 'formSubmitted'], [$form, $form_state]);
+        } else {
+            $values = $form->values()->toArray();
+
+            unset($values['action']);
+            unset($values['button']);
+
+            foreach ($values as $key => $value) {
+                $this->getSiteData()->setConfigValue('shipping/'.$code.'/'.$key, $value);
+            }
         }
 
         return $this->refreshPage();

@@ -98,7 +98,7 @@ class Shipping extends FormPageWithLang
             'type' => 'select',
             'title' => '',
             'options' => ['' => '-- Select --'] + $addresses,
-            'default_value' => $this->getCart()->getBillingAddressId(),
+            'default_value' => $this->getCart()->getShippingAddressId(),
         ]);
 
         $form->addMarkup('<div class="row mt-3">'.$this->getUtils()->translate('or create a new one').'</div>');
@@ -233,48 +233,103 @@ class Shipping extends FormPageWithLang
         $accordion = $form->addField('shipping_methods', [
             'type' => 'accordion',
             'container_class' => 'mt-2',
+            'container_attributes' => ['id' => 'shipping_methods-container'],
         ]);
 
-        $methodsWithCost = array_map(function(ShippingMethodInterface $shippingMethod) {
-            return [
-                'cost' => $shippingMethod->evaluateShippingCosts($this->getCart()->getShippingAddress(), $this->getCart()),
-                'method' => $shippingMethod,
-            ];
-        }, $shippingMethods);
 
-        $minShippingCost = min(array_column($methodsWithCost, 'cost'));
 
-        $shippingMethods = array_values(array_map(fn($item) => $item['method'], array_filter($methodsWithCost, function ($item) use ($minShippingCost) {
-            if ($item['cost'] > $minShippingCost && !$item['method']->showEvenIfNotCheapest()) {
-                return false;
-            }
 
-            return $item;
-        })));
+        $checkAddress = null;
 
-        foreach ($shippingMethods as $key => $shippingMethod) {
-            $accordion
-                ->addAccordion($shippingMethod->getName())
-                ->addField('shipping_'.$key.'_code', [
-                    'type' => 'hidden',
-                    'default_value' => $this->getShippingMethodCode($shippingMethod),
-                ])
-                ->addField($this->getShippingMethodCode($shippingMethod), $shippingMethod->getShippingFormFieldset($this->getCart(), $form, $form_state));
+        if (!empty($form_state['input_values']['copy_address'])) {
+            $checkAddress = Address::load($form_state['input_values']['copy_address']);
+        } else if (!empty($form_state['input_values']['country_code']) && !empty($form_state['input_values']['postcode'])) {
+            $checkAddress = new Address();
+            $checkAddress
+                ->setFirstName($form_state['input_values']['first_name'])
+                ->setLastName($form_state['input_values']['last_name'])
+                ->setCompany($form_state['input_values']['company'])
+                ->setAddress1($form_state['input_values']['address1'])
+                ->setAddress2($form_state['input_values']['address2'])
+                ->setCity($form_state['input_values']['city'])
+                ->setState($form_state['input_values']['state'])
+                ->setPostcode($form_state['input_values']['postcode'])
+                ->setCountryCode($form_state['input_values']['country_code'])
+                ->setPhone($form_state['input_values']['phone'])
+                ->setEmail($form_state['input_values']['email']);
         }
 
-        $accordion->addJs('
-            $("#shipping_methods").on("accordionactivate", function(event, ui) {
-                var activeIndex = $(this).accordion("option", "active");
-                $("#selected_shipping_method").val($("#shipping_"+activeIndex+"_code").val());
-            });
-        ');
+        if (is_null($checkAddress)) {
+            $checkAddress = $this->getCart()->getShippingAddress();
+        }
 
-        $form->addField('selected_shipping_method', [
-            'type' => 'hidden',
-            'default_value' => $this->getShippingMethods() ? $this->getShippingMethodCode($shippingMethods[$accordion->getActive()]) : '',
+        if ($checkAddress) {
+
+            if (!$this->getCart()->getShippingAddress()) {
+                // set cart shipping address with "temporary" data in order to get methods informations
+                $this->getCart()->setShippingAddress($checkAddress);
+            }
+
+            $methodsWithCost = array_map(function(ShippingMethodInterface $shippingMethod) {
+                return [
+                    'cost' => $shippingMethod->evaluateShippingCosts($this->getCart()->getShippingAddress() ?? App::getInstance()->containerMake(Address::class), $this->getCart()),
+                    'method' => $shippingMethod,
+                ];
+            }, $shippingMethods);
+
+            $minShippingCost = min(array_column($methodsWithCost, 'cost'));
+
+            $shippingMethods = array_values(array_map(fn($item) => $item['method'], array_filter($methodsWithCost, function ($item) use ($minShippingCost) {
+                if ($item['cost'] > $minShippingCost && !$item['method']->showEvenIfNotCheapest()) {
+                    return false;
+                }
+
+                return $item;
+            })));
+
+            foreach ($shippingMethods as $key => $shippingMethod) {
+                $accordion
+                    ->addAccordion($shippingMethod->getName())
+                    ->addField('shipping_'.$key.'_code', [
+                        'type' => 'hidden',
+                        'default_value' => $this->getShippingMethodCode($shippingMethod),
+                    ])
+                    ->addField($this->getShippingMethodCode($shippingMethod), $shippingMethod->getShippingFormFieldset($this->getCart(), $form, $form_state));
+            }
+
+            $accordion->addJs('
+                $("#shipping_methods").on("accordionactivate", function(event, ui) {
+                    var activeIndex = $(this).accordion("option", "active");
+                    $("#selected_shipping_method").val($("#shipping_"+activeIndex+"_code").val());
+                });
+            ');
+
+            $form->addField('selected_shipping_method', [
+                'type' => 'hidden',
+                'default_value' => $this->getShippingMethods() ? $this->getShippingMethodCode($shippingMethods[$accordion->getActive()]) : '',
+            ]);
+
+        }
+
+        $form->addField('refresh_methods', [
+            'type' => 'submit',
+            'value' => 'Refresh Methods',
+            'ajax_url' => App::getInstance()->getWebRouter()->getUrl('crud.app.base.controllers.frontend.json.shippingcallback'),
+            'event' => [[
+                'event' => 'click',
+                'callback' => [static::class, 'methodsFormCallback'],
+                'target' => 'shipping_methods-container',
+                'effect' => 'fade',
+                'method' => 'replace',
+            ]],
         ]);
 
         return $form;
+    }
+
+    public static function methodsFormCallback(FAPI\Form $form)
+    {
+        return $form->getField('shipping_methods');
     }
 
     /**

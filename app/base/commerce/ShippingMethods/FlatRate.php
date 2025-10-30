@@ -77,7 +77,7 @@ class FlatRate extends BaseShippingMethod
             'type' => 'seamless_container',
         ]);
 
-        $totalCosts = $this->calculateShipping(null, $cart)['shipping_cost'];
+        $totalCosts = $this->evaluateShippingCosts($cart->getShippingAddress() ?? App::getInstance()->containerMake(Address::class), $cart);
         $totalCostsFormatted = App::getInstance()->getUtils()->formatPrice($totalCosts, $cart->getCurrencyCode());
 
         $out->addField('shipping_costs', [

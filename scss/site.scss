@@ -243,3 +243,18 @@ ul.breadcrumbs {
   max-width: 100%;
   overflow: scroll;
 }
+
+.frontend-page {
+    #shipping_methods,
+    #payment_methods {
+        .ui-accordion-header {
+            &.ui-state-active {
+                &::before {
+                    display: inline-block;
+                    content: " ✓ ";
+                    font-size: 1.2rem;
+                }
+            }
+        }
+    }
+}

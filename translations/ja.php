@@ -412,4 +412,5 @@ return [
     'Your Order Number is %s' => 'ご注文番号は %s です',
     'Order not confirmed' => '注文が確認されませんでした',
     'There was an issue with your order. Please try again later or contact support.' => 'ご注文に問題が発生しました。後でもう一度お試しいただくか、サポートにお問い合わせください。',
+    'Your cart is empty.' => 'カートは空です。',
 ];

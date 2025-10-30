@@ -412,4 +412,5 @@ return [
     'Your Order Number is %s' => 'Số đơn hàng của bạn là %s',
     'Order not confirmed' => 'Đơn hàng chưa được xác nhận',
     'There was an issue with your order. Please try again later or contact support.' => 'Có sự cố xảy ra với đơn hàng của bạn. Vui lòng thử lại sau hoặc liên hệ bộ phận hỗ trợ.',
+    'Your cart is empty.' => 'Giỏ hàng của bạn trống.',
 ];

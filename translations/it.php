@@ -412,4 +412,5 @@ return [
     'Your Order Number is %s' => 'Il numero del tuo ordine è %s',
     'Order not confirmed' => 'Ordine non confermato',
     'There was an issue with your order. Please try again later or contact support.' => 'Si è verificato un problema con il tuo ordine. Riprova più tardi o contatta l’assistenza.',
+    'Your cart is empty.' => 'Il tuo carrello è vuoto.',
 ];

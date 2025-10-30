@@ -412,4 +412,5 @@ return [
     'Your Order Number is %s' => 'Sipariş numaranız %s',
     'Order not confirmed' => 'Sipariş onaylanmadı',
     'There was an issue with your order. Please try again later or contact support.' => 'Siparişinizle ilgili bir sorun oluştu. Lütfen daha sonra tekrar deneyin veya destekle iletişime geçin.',
+    'Your cart is empty.' => 'Sepetiniz boş.',
 ];

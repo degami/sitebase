@@ -387,4 +387,5 @@ return [
     'Your Order Number is %s' => 'رقم الطلب الخاص بك هو %s',
     'Order not confirmed' => 'لم يتم تأكيد الطلب',
     'There was an issue with your order. Please try again later or contact support.' => 'حدثت مشكلة في طلبك. يرجى المحاولة مرة أخرى لاحقًا أو الاتصال بالدعم.',
+    'Your cart is empty.' => 'سلة التسوق فارغة.',
 ];

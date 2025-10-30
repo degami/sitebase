@@ -128,7 +128,7 @@ class Shipping extends FormPageWithLang
         );
 
         $form
-            ->addMarkup('<div class="row mt-3">')
+            ->addMarkup('<div id="add-address-container" class="row mt-3">')
             ->addField('first_name', [
                 'type' => 'textfield',
                 'title' => 'First Name',
@@ -205,6 +205,31 @@ class Shipping extends FormPageWithLang
             ])
             ->addMarkup('</div>');
 
+        $form->addJs("
+            \$('input,textarea,select', '#add-address-container').on('change', function(evt) {
+                if (\$('#refresh_methods-event-loading').length > 0) {
+                    return;
+                }
+                if (['first_name','last_name','company','phone','email'].includes(\$(evt.target).attr('id'))) {
+                    return;
+                }
+
+                if (\$('#postcode', '#add-address-container').val() == '' || \$('#country_code', '#add-address-container').val() == '') {
+                    return;
+                }
+
+                \$('#copy_address').val('');
+
+                \$('#refresh_methods').trigger('click');
+            });
+
+            \$('#copy_address').on('change', function(evt) {
+                \$('input,textarea,select', '#add-address-container').val('');
+                \$('#refresh_methods').trigger('click');                
+            });
+        ");
+
+
         return $form;
     }
 
@@ -261,8 +286,9 @@ class Shipping extends FormPageWithLang
         }
 
         // set cart shipping address with "temporary" data in order to get methods informations
-        $this->getCart()->setShippingAddress($checkAddress);
-
+        if (!is_null($checkAddress)) {
+            $this->getCart()->setShippingAddress($checkAddress);
+        }
 
         if ($checkAddress) {
             $methodsWithCost = array_map(function(ShippingMethodInterface $shippingMethod) {
@@ -303,7 +329,6 @@ class Shipping extends FormPageWithLang
                 'type' => 'hidden',
                 'default_value' => $this->getShippingMethods() ? $this->getShippingMethodCode($shippingMethods[$accordion->getActive()]) : '',
             ]);
-
         }
 
         $form->addField('refresh_methods', [

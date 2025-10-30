@@ -260,13 +260,11 @@ class Shipping extends FormPageWithLang
             $checkAddress = $this->getCart()->getShippingAddress();
         }
 
+        // set cart shipping address with "temporary" data in order to get methods informations
+        $this->getCart()->setShippingAddress($checkAddress);
+
+
         if ($checkAddress) {
-
-            if (!$this->getCart()->getShippingAddress()) {
-                // set cart shipping address with "temporary" data in order to get methods informations
-                $this->getCart()->setShippingAddress($checkAddress);
-            }
-
             $methodsWithCost = array_map(function(ShippingMethodInterface $shippingMethod) {
                 return [
                     'cost' => $shippingMethod->evaluateShippingCosts($this->getCart()->getShippingAddress() ?? App::getInstance()->containerMake(Address::class), $this->getCart()),

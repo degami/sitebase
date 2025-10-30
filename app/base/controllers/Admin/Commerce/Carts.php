@@ -190,9 +190,9 @@ class Carts extends AdminManageFrontendModelsPage
                 ]);
 
                 foreach ($cart->getItems() ?? [] as $item) {
-                    $itemTitle = $item->getProduct()->getTitle();
+                    $itemTitle = $item->getProduct()->getName();
                     if (is_callable([$item->getProduct(), 'getFrontendUrl']) && $item->getProduct()->getFrontendUrl()) {
-                        $itemTitle = '<a href="'.$item->getProduct()->getFrontendUrl().'" target="_blank">' . $item->getProduct()->getTitle() . '</a>';
+                        $itemTitle = '<a href="'.$item->getProduct()->getFrontendUrl().'" target="_blank">' . $item->getProduct()->getName() . '</a>';
                     }
 
                     $table->addRow()

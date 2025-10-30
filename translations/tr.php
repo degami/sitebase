@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => 'Ağırlık sonu (kg)',
     'Cost' => 'Maliyet',
     'Add Rule' => 'Kural ekle',
+    'Shipping Methods' => 'Kargo yöntemleri',
 ];

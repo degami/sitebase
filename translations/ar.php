@@ -382,4 +382,5 @@ return [
     'Weight to (kg)' => 'الوزن إلى (كجم)',
     'Cost' => 'التكلفة',
     'Add Rule' => 'إضافة قاعدة',
+    'Shipping Methods' => 'طرق الشحن',
 ];

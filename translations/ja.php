@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => '重量（kg）まで',
     'Cost' => 'コスト',
     'Add Rule' => 'ルールを追加',
+    'Shipping Methods' => '配送方法',
 ];

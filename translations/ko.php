@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => '무게 종료 (kg)',
     'Cost' => '비용',
     'Add Rule' => '규칙 추가',
+    'Shipping Methods' => '배송 방법',
 ];

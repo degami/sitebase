@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => 'Βάρος έως (kg)',
     'Cost' => 'Κόστος',
     'Add Rule' => 'Προσθήκη κανόνα',
+    'Shipping Methods' => 'Μέθοδοι αποστολής',
 ];

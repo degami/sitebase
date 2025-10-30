@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => 'वजन तक (किग्रा)',
     'Cost' => 'लागत',
     'Add Rule' => 'नियम जोड़ें',
+    'Shipping Methods' => 'शिपिंग के तरीके',
 ];

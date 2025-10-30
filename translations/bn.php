@@ -409,4 +409,5 @@ return [
     'Weight to (kg)' => 'ওজন পর্যন্ত (কেজি)',
     'Cost' => 'খরচ',
     'Add Rule' => 'নিয়ম যোগ করুন',
+    'Shipping Methods' => 'শিপিং পদ্ধতি',
 ];

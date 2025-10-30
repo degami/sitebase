@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => 'Greutate până la (kg)',
     'Cost' => 'Cost',
     'Add Rule' => 'Adaugă regulă',
+    'Shipping Methods' => 'Metode de livrare',
 ];

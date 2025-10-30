@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => 'Súly eddig (kg)',
     'Cost' => 'Költség',
     'Add Rule' => 'Szabály hozzáadása',
+    'Shipping Methods' => 'Szállítási módok',
 ];

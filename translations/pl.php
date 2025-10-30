@@ -407,4 +407,5 @@ return [
     'Weight to (kg)' => 'Waga do (kg)',
     'Cost' => 'Koszt',
     'Add Rule' => 'Dodaj regułę',
+    'Shipping Methods' => 'Metody wysyłki',
 ];

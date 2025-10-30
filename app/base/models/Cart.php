@@ -504,6 +504,7 @@ class Cart extends BaseModel
     public function calculateShipping(): float
     {
         if (!$this->requireShipping()) {
+            $this->setShippingAddressId(null);
             $this->setShippingMethod(null);
             $this->setShippingAmount(0.0);
             $this->setAdminShippingAmount(0.0);

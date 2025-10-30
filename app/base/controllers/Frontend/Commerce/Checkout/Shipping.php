@@ -236,9 +236,6 @@ class Shipping extends FormPageWithLang
             'container_attributes' => ['id' => 'shipping_methods-container'],
         ]);
 
-
-
-
         $checkAddress = null;
 
         if (!empty($form_state['input_values']['copy_address'])) {

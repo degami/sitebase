@@ -408,4 +408,8 @@ return [
     'Cost' => 'लागत',
     'Add Rule' => 'नियम जोड़ें',
     'Shipping Methods' => 'शिपिंग के तरीके',
+    'Order Confirmed' => 'ऑर्डर की पुष्टि हो गई',
+    'Your Order Number is %s' => 'आपका ऑर्डर नंबर %s है',
+    'Order not confirmed' => 'ऑर्डर की पुष्टि नहीं हुई',
+    'There was an issue with your order. Please try again later or contact support.' => 'आपके ऑर्डर में कोई समस्या हुई है। कृपया बाद में पुनः प्रयास करें या सहायता से संपर्क करें।',
 ];

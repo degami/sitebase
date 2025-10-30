@@ -408,4 +408,8 @@ return [
     'Cost' => 'Kosten',
     'Add Rule' => 'Regel toevoegen',
     'Shipping Methods' => 'Verzendmethoden',
+    'Order Confirmed' => 'Bestelling bevestigd',
+    'Your Order Number is %s' => 'Uw bestelnummer is %s',
+    'Order not confirmed' => 'Bestelling niet bevestigd',
+    'There was an issue with your order. Please try again later or contact support.' => 'Er is een probleem opgetreden met uw bestelling. Probeer het later opnieuw of neem contact op met de ondersteuning.',
 ];

@@ -408,4 +408,8 @@ return [
     'Cost' => '비용',
     'Add Rule' => '규칙 추가',
     'Shipping Methods' => '배송 방법',
+    'Order Confirmed' => '주문이 확인되었습니다',
+    'Your Order Number is %s' => '주문 번호는 %s입니다',
+    'Order not confirmed' => '주문이 확인되지 않았습니다',
+    'There was an issue with your order. Please try again later or contact support.' => '주문에 문제가 발생했습니다. 나중에 다시 시도하거나 고객 지원에 문의하세요.',
 ];

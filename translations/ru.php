@@ -408,4 +408,8 @@ return [
     'Cost' => 'Стоимость',
     'Add Rule' => 'Добавить правило',
     'Shipping Methods' => 'Методы доставки',
+    'Order Confirmed' => 'Заказ подтверждён',
+    'Your Order Number is %s' => 'Номер вашего заказа: %s',
+    'Order not confirmed' => 'Заказ не подтверждён',
+    'There was an issue with your order. Please try again later or contact support.' => 'Возникла проблема с вашим заказом. Пожалуйста, попробуйте позже или свяжитесь со службой поддержки.',
 ];

@@ -408,4 +408,8 @@ return [
     'Cost' => '费用',
     'Add Rule' => '添加规则',
     'Shipping Methods' => '运输方式',
+    'Order Confirmed' => '订单已确认',
+    'Your Order Number is %s' => '您的订单号是 %s',
+    'Order not confirmed' => '订单未确认',
+    'There was an issue with your order. Please try again later or contact support.' => '您的订单出现问题。请稍后再试或联系客户支持。',
 ];

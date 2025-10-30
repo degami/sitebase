@@ -408,4 +408,8 @@ return [
     'Cost' => 'Cost',
     'Add Rule' => 'Adaugă regulă',
     'Shipping Methods' => 'Metode de livrare',
+    'Order Confirmed' => 'Comandă confirmată',
+    'Your Order Number is %s' => 'Numărul comenzii dvs. este %s',
+    'Order not confirmed' => 'Comanda nu a fost confirmată',
+    'There was an issue with your order. Please try again later or contact support.' => 'A apărut o problemă cu comanda dvs. Vă rugăm să încercați din nou mai târziu sau să contactați asistența.',
 ];

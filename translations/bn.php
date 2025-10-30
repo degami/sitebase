@@ -410,4 +410,8 @@ return [
     'Cost' => 'খরচ',
     'Add Rule' => 'নিয়ম যোগ করুন',
     'Shipping Methods' => 'শিপিং পদ্ধতি',
+    'Order Confirmed' => 'অর্ডার নিশ্চিত হয়েছে',
+    'Your Order Number is %s' => 'আপনার অর্ডার নম্বর %s',
+    'Order not confirmed' => 'অর্ডার নিশ্চিত হয়নি',
+    'There was an issue with your order. Please try again later or contact support.' => 'আপনার অর্ডারে একটি সমস্যা হয়েছে। অনুগ্রহ করে পরে আবার চেষ্টা করুন বা সহায়তার সাথে যোগাযোগ করুন।',
 ];

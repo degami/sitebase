@@ -167,7 +167,7 @@ class BookDetail extends FrontendPageWithObject
             'container_class' => 'd-inline-block',
         ]);
 
-        $this->addSubmitButton($form, true, true, 'Add to Cart');
+        $this->addSubmitButton($form, true, true, $this->getUtils()->translate('Add to Cart', locale: $this->getCurrentLocale()));
 
         return $form;
     }

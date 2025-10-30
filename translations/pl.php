@@ -408,4 +408,8 @@ return [
     'Cost' => 'Koszt',
     'Add Rule' => 'Dodaj regułę',
     'Shipping Methods' => 'Metody wysyłki',
+    'Order Confirmed' => 'Zamówienie potwierdzone',
+    'Your Order Number is %s' => 'Numer Twojego zamówienia to %s',
+    'Order not confirmed' => 'Zamówienie niepotwierdzone',
+    'There was an issue with your order. Please try again later or contact support.' => 'Wystąpił problem z Twoim zamówieniem. Spróbuj ponownie później lub skontaktuj się z pomocą techniczną.',
 ];

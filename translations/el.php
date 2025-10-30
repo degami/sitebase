@@ -408,4 +408,8 @@ return [
     'Cost' => 'Κόστος',
     'Add Rule' => 'Προσθήκη κανόνα',
     'Shipping Methods' => 'Μέθοδοι αποστολής',
+    'Order Confirmed' => 'Η παραγγελία επιβεβαιώθηκε',
+    'Your Order Number is %s' => 'Ο αριθμός της παραγγελίας σας είναι %s',
+    'Order not confirmed' => 'Η παραγγελία δεν επιβεβαιώθηκε',
+    'There was an issue with your order. Please try again later or contact support.' => 'Παρουσιάστηκε πρόβλημα με την παραγγελία σας. Προσπαθήστε ξανά αργότερα ή επικοινωνήστε με την υποστήριξη.',
 ];

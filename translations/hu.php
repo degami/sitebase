@@ -408,4 +408,8 @@ return [
     'Cost' => 'Költség',
     'Add Rule' => 'Szabály hozzáadása',
     'Shipping Methods' => 'Szállítási módok',
+    'Order Confirmed' => 'Rendelés megerősítve',
+    'Your Order Number is %s' => 'A rendelési számod: %s',
+    'Order not confirmed' => 'A rendelés nincs megerősítve',
+    'There was an issue with your order. Please try again later or contact support.' => 'Probléma merült fel a rendelésével. Kérjük, próbálja meg később újra, vagy lépjen kapcsolatba az ügyfélszolgálattal.',
 ];

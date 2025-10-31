@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Zamówienie niepotwierdzone',
     'There was an issue with your order. Please try again later or contact support.' => 'Wystąpił problem z Twoim zamówieniem. Spróbuj ponownie później lub skontaktuj się z pomocą techniczną.',
     'Your cart is empty.' => 'Twój koszyk jest pusty.',
+    'Free Shipping' => 'Darmowa wysyłka',
+    'Your cart is eligible to Free Shipping' => 'Twój koszyk kwalifikuje się do darmowej wysyłki',
 ];

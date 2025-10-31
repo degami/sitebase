@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'A rendelés nincs megerősítve',
     'There was an issue with your order. Please try again later or contact support.' => 'Probléma merült fel a rendelésével. Kérjük, próbálja meg később újra, vagy lépjen kapcsolatba az ügyfélszolgálattal.',
     'Your cart is empty.' => 'A kosarad üres.',
+    'Free Shipping' => 'Ingyenes szállítás',
+    'Your cart is eligible to Free Shipping' => 'A kosarad jogosult az ingyenes szállításra',
 ];

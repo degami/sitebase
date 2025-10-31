@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Pesanan belum dikonfirmasi',
     'There was an issue with your order. Please try again later or contact support.' => 'Terjadi masalah dengan pesanan Anda. Silakan coba lagi nanti atau hubungi dukungan.',
     'Your cart is empty.' => 'Keranjang Anda kosong.',
+    'Free Shipping' => 'Gratis ongkir',
+    'Your cart is eligible to Free Shipping' => 'Keranjang Anda memenuhi syarat untuk gratis ongkir',
 ];

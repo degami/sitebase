@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Ordine non confermato',
     'There was an issue with your order. Please try again later or contact support.' => 'Si è verificato un problema con il tuo ordine. Riprova più tardi o contatta l’assistenza.',
     'Your cart is empty.' => 'Il tuo carrello è vuoto.',
+    'Free Shipping' => 'Spedizione gratuita',
+    'Your cart is eligible to Free Shipping' => 'Il tuo carrello ha diritto alla spedizione gratuita',
 ];

@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Η παραγγελία δεν επιβεβαιώθηκε',
     'There was an issue with your order. Please try again later or contact support.' => 'Παρουσιάστηκε πρόβλημα με την παραγγελία σας. Προσπαθήστε ξανά αργότερα ή επικοινωνήστε με την υποστήριξη.',
     'Your cart is empty.' => 'Το καλάθι σας είναι άδειο.',
+    'Free Shipping' => 'Δωρεάν αποστολή',
+    'Your cart is eligible to Free Shipping' => 'Το καλάθι σας πληροί τις προϋποθέσεις για δωρεάν αποστολή',
 ];

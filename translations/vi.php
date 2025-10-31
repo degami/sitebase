@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Đơn hàng chưa được xác nhận',
     'There was an issue with your order. Please try again later or contact support.' => 'Có sự cố xảy ra với đơn hàng của bạn. Vui lòng thử lại sau hoặc liên hệ bộ phận hỗ trợ.',
     'Your cart is empty.' => 'Giỏ hàng của bạn trống.',
+    'Free Shipping' => 'Miễn phí vận chuyển',
+    'Your cart is eligible to Free Shipping' => 'Giỏ hàng của bạn đủ điều kiện để được miễn phí vận chuyển',
 ];

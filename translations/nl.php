@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Bestelling niet bevestigd',
     'There was an issue with your order. Please try again later or contact support.' => 'Er is een probleem opgetreden met uw bestelling. Probeer het later opnieuw of neem contact op met de ondersteuning.',
     'Your cart is empty.' => 'Je winkelwagen is leeg.',
+    'Free Shipping' => 'Gratis verzending',
+    'Your cart is eligible to Free Shipping' => 'Je winkelwagen komt in aanmerking voor gratis verzending',
 ];

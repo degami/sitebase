@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Order not confirmed',
     'There was an issue with your order. Please try again later or contact support.' => 'There was an issue with your order. Please try again later or contact support.',
     'Your cart is empty.' => 'Your cart is empty.',
+    'Free Shipping' => 'Free Shipping',
+    'Your cart is eligible to Free Shipping' => 'Your cart is eligible to Free Shipping',
 ];

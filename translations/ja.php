@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => '注文が確認されませんでした',
     'There was an issue with your order. Please try again later or contact support.' => 'ご注文に問題が発生しました。後でもう一度お試しいただくか、サポートにお問い合わせください。',
     'Your cart is empty.' => 'カートは空です。',
+    'Free Shipping' => '送料無料',
+    'Your cart is eligible to Free Shipping' => 'カートは送料無料の対象です',
 ];

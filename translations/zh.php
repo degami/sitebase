@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => '订单未确认',
     'There was an issue with your order. Please try again later or contact support.' => '您的订单出现问题。请稍后再试或联系客户支持。',
     'Your cart is empty.' => '您的购物车是空的。',
+    'Free Shipping' => '免运费',
+    'Your cart is eligible to Free Shipping' => '您的购物车符合免运费条件',
 ];

@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'Заказ не подтверждён',
     'There was an issue with your order. Please try again later or contact support.' => 'Возникла проблема с вашим заказом. Пожалуйста, попробуйте позже или свяжитесь со службой поддержки.',
     'Your cart is empty.' => 'Ваша корзина пуста.',
+    'Free Shipping' => 'Бесплатная доставка',
+    'Your cart is eligible to Free Shipping' => 'Ваша корзина имеет право на бесплатную доставку',
 ];

@@ -413,4 +413,6 @@ return [
     'Order not confirmed' => 'ऑर्डर की पुष्टि नहीं हुई',
     'There was an issue with your order. Please try again later or contact support.' => 'आपके ऑर्डर में कोई समस्या हुई है। कृपया बाद में पुनः प्रयास करें या सहायता से संपर्क करें।',
     'Your cart is empty.' => 'आपकी टोकरी खाली है।',
+    'Free Shipping' => 'मुफ़्त शिपिंग',
+    'Your cart is eligible to Free Shipping' => 'आपकी टोकरी मुफ़्त शिपिंग के लिए योग्य है',
 ];

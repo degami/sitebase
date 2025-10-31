@@ -407,4 +407,6 @@ return [
     'Order not confirmed' => 'Pedido no confirmado',
     'There was an issue with your order. Please try again later or contact support.' => 'Hubo un problema con tu pedido. Intenta nuevamente más tarde o contacta con el soporte.',
     'Your cart is empty.' => 'Tu carrito está vacío.',
+    'Free Shipping' => 'Envío gratis',
+    'Your cart is eligible to Free Shipping' => 'Tu carrito es elegible para el envío gratis',
 ];

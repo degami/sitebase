@@ -37,6 +37,7 @@ use App\Base\Controllers\Admin\Login;
 use App\Base\Models\Block;
 use App\Base\Models\OrderShipment;
 use App\Base\Models\ProgressManagerProcess;
+use App\Base\Models\Website;
 use App\Base\Tools\DataCollector\BlocksDataCollector;
 use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
@@ -285,7 +286,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return (string)$menu;
     }
 
-    public function renderSiteLogo() : TagElement
+    public function renderSiteLogo(?Website $website = null) : TagElement
     {
         // add logo
         $logo = $this->containerMake(
@@ -295,7 +296,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 'attributes' => [
                     'class' => '',
                     'title' => $this->getEnvironment()->getVariable('APPNAME'),
-                    'src' => $this->getAssets()->assetUrl('/sitebase_logo.png'),
+                    'src' => $this->getAssets()->assetUrl('/sitebase_logo.png', $website?->getId()),
                 ],
             ]]
         );

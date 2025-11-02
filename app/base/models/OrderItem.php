@@ -160,4 +160,36 @@ class OrderItem extends BaseModel
 
         return $this;
     }
+
+    /**
+     * Check if this order item requires shipping
+     *
+     * @return bool
+     */
+    public function requireShipping(): bool
+    {
+        if (!$this->getProduct()) {
+            return false;
+        }
+
+        if (!$this->getProduct()->isPhysical()) {
+            return false;
+        }
+
+        if (is_null($this->getId())) {
+            return true;
+        }
+
+        $stmt = App::getInstance()->getPdo()->prepare("
+            SELECT SUM(quantity)
+            FROM order_shipment_item
+            WHERE order_item_id = :orderItemId
+        ");
+
+        $stmt->execute(['orderItemId' => $this->getId()]);
+
+        $sumShipmentsQty = $stmt->fetchColumn();
+
+        return $sumShipmentsQty < $this->getQuantity();
+    }
 }

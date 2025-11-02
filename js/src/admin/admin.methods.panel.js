@@ -78,6 +78,11 @@
                         processData: false,
                         contentType: false,
                         success: function(data) {
+                            if( $.trim(data.js) != '' ){
+                                eval(data.js);
+                                return;
+                            };
+
                             $(that).appAdmin('reloadPanelContent');
                         },
                         error: function() {

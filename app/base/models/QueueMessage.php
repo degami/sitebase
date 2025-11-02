@@ -70,7 +70,11 @@ class QueueMessage extends BaseModel implements QueueMessageInterface
      */
     public function getWorkerClass(): string
     {
-        return "App\\Site\\Queues\\" . $this->snakeCaseToPascalCase($this->getQueueName()) . "\\Worker";
+        if (class_exists("App\\Site\\Queues\\" . $this->snakeCaseToPascalCase($this->getQueueName()) . "\\Worker")) {
+            return "App\\Site\\Queues\\" . $this->snakeCaseToPascalCase($this->getQueueName()) . "\\Worker";
+        }
+
+        return "App\\Base\\Queues\\" . $this->snakeCaseToPascalCase($this->getQueueName()) . "\\Worker";
     }
 
     /**

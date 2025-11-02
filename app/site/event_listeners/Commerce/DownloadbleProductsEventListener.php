@@ -34,7 +34,7 @@ class DownloadbleProductsEventListener implements EventListenerInterface
     public function addUserDownloads(Event $e) 
     {
         /** @var Order */
-        $order = $e->getData('order');
+        $order = $e->getData('object');
 
         foreach ($order->getItems() as $orderItem) {
             /** @var OrderItem $orderItem */

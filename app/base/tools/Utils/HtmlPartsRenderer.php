@@ -35,6 +35,7 @@ use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Controllers\Admin\Login;
 use App\Base\Models\Block;
+use App\Base\Models\OrderShipment;
 use App\Base\Models\ProgressManagerProcess;
 use App\Base\Tools\DataCollector\BlocksDataCollector;
 use Degami\Basics\Html\TagElement;
@@ -1712,6 +1713,85 @@ class HtmlPartsRenderer extends ContainerAwareObject
             ]]
         );
 
-        return $qrCode;
+        return (string)$qrCode;
+    }
+
+    public function renderOrderShipment(OrderShipment $shipment) : string
+    {
+        /** @var TagElement $table */
+        $table = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'table',
+                'width' => '100%',
+                'cellspacing' => '0',
+                'cellpadding' => '0',
+                'border' => '0',
+                'attributes' => ['class' => "table table-striped"],
+            ]]
+        );
+
+        $thead = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'thead',
+            ]]
+        );
+
+        $tbody = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tbody',
+            ]]
+        );
+
+        $table->addChild($thead);
+        $table->addChild($tbody);
+
+        $thead->addChild($this->containerMake(
+            TagElement::class,
+            ['options' =>[
+                'tag' => 'tr',
+                'attributes' => ['class' => 'thead-dark'],
+                'children' => [
+                    $this->containerMake(TagElement::class, ['options' => [
+                        'tag' => 'th',
+                        'text' => $shipment->getShippingMethod() . ($shipment->getStatus() ? " (".$shipment->getStatus().")":""),
+                    ]]),
+                    $this->containerMake(TagElement::class, ['options' => [
+                        'tag' => 'th',
+                        'text' => $shipment->getShipmentCode(),
+                        'attributes' => ['class' => 'text-right'],
+                    ]]),
+                ]
+            ]]
+        ));
+
+        $rownum = 0;
+        foreach ($shipment->getItems() as $shipmentItem) {
+
+            /** @var OrderItem $oderItem */
+            $orderItem = $shipmentItem->getOrderItem();
+
+            /** @var ProductInterface $product */
+            $product = $orderItem->getProduct();
+
+            $tbody->addChild($this->containerMake(
+                TagElement::class,
+                ['options' =>[
+                    'tag' => 'tr',
+                    'attributes' => ['class' => $rownum++ % 2 == 0 ? 'odd' : 'even'],
+                    'children' => [
+                        $this->containerMake(TagElement::class, ['options' => [
+                            'tag' => 'td',
+                            'text' => '<strong>'.$shipmentItem->getQuantity() .'x</strong> ' .$product->getName() . ' ('. $product->getSku() . ')',
+                            'attributes' => ['colspan' => 2, 'class' => 'text-right'],
+                        ]]),
+                    ]
+                ]]
+            )); 
+        }
+
+        return (string)$table;
     }
 }

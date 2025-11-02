@@ -21,6 +21,7 @@ use App\Base\Models\OrderStatus;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Models\UserSession;
 use Degami\PHPFormsApi as FAPI;
+use Exception;
 use HaydenPierce\ClassFinder\ClassFinder;
 
 class Payment extends FormPageWithLang

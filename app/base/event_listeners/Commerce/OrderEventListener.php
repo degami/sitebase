@@ -16,8 +16,11 @@ namespace App\Base\EventListeners\Commerce;
 use App\App;
 use App\Base\Interfaces\EventListenerInterface;
 use App\Base\Models\Order;
+use App\Base\Models\OrderPayment;
+use App\Base\Models\OrderShipment;
 use App\Base\Models\OrderStatus;
 use App\Base\Models\OrderStatusChange;
+use App\Base\Models\Website;
 use Gplanchat\EventManager\Event;
 use Exception;
 
@@ -27,7 +30,9 @@ class OrderEventListener implements EventListenerInterface
 	{
 		// Return an array of event handlers as required by the interface
 		return [
-            'order_post_persist' => [$this, 'saveStatusChange']
+            'order_post_persist' => [$this, 'saveStatusChange'],
+            'order_paid' => [$this, 'sendPaidNotification'],
+            'order_shipment' => [$this, 'sendShipmentNotification']
         ];
 	}
 
@@ -52,6 +57,70 @@ class OrderEventListener implements EventListenerInterface
             } catch (Exception $e) { $statusTo = null; }
 
             $orderStatusChange->setOrder($order)->setStatusFrom($statusFrom)->setStatusTo($statusTo)->persist();
+        }
+   }
+
+    public function sendPaidNotification(Event $e) 
+    {
+        /** @var Order */
+        $order = $e->getData('object');
+
+        /** @var OrderPayment */
+        $payment = $e->getData('payment');
+
+        try {
+            App::getInstance()->getUtils()->queueTemplateMail(
+                App::getInstance()->getSiteData()->getSiteEmail(),
+                App::getInstance()->getSiteData()->getConfigValue('commerce/emails/customer_care') ?? App::getInstance()->getSiteData()->getSiteEmail(), 
+                App::getInstance()->getUtils()->translate('Your order %s has been received', [$order->getOrderNumber()], locale: $order->getOwner()->getLocale()),
+                [
+                    'order' => [[Order::class, 'load'], ['id' => $order->getId()]], 
+                    'payment' => [[OrderPayment::class, 'load'], ['id' => $payment->getId()]],
+                    'website' => [[Website::class, 'load'], ['id' => $order->getWebsiteId()]]
+                ],
+                'commerce/new_order_customer'
+            );
+        } catch (\Exception $e) {
+            App::getInstance()->getApplicationLogger()->exception($e);
+        }
+
+        try {
+            App::getInstance()->getUtils()->queueInternalMail(
+                App::getInstance()->getSiteData()->getSiteEmail(),
+                App::getInstance()->getSiteData()->getConfigValue('commerce/emails/customer_care') ?? App::getInstance()->getSiteData()->getSiteEmail(),
+                App::getInstance()->getUtils()->translate('New order incoming', locale: App::getInstance()->getSiteData()->getCurrentWebsite()?->getDefaultLocale()),
+                App::getInstance()->getUtils()->translate('New order created: %s on website %s', [$order->getOrderNumber(), App::getInstance()->getSiteData()->getCurrentWebsite()?->getSiteName()], locale: App::getInstance()->getSiteData()->getCurrentWebsite()?->getDefaultLocale())
+            );
+        } catch (\Exception $e) {
+            App::getInstance()->getApplicationLogger()->exception($e);
+        }
+   }
+
+    public function sendShipmentNotification(Event $e) 
+    {
+        /** @var Order */
+        $order = $e->getData('object');
+
+        /** @var OrderShipment */
+        $shipment = $e->getData('shipment');
+
+        /** @var array */
+        $items = $e->getData('items');
+
+        try {
+            App::getInstance()->getUtils()->queueTemplateMail(
+                App::getInstance()->getSiteData()->getSiteEmail(),
+                App::getInstance()->getSiteData()->getConfigValue('commerce/emails/customer_care') ?? App::getInstance()->getSiteData()->getSiteEmail(), 
+                App::getInstance()->getUtils()->translate('New shipment for your order %s', [$order->getOrderNumber()], locale: $order->getOwner()->getLocale()),
+                [
+                    'order' => [[Order::class, 'load'], ['id' => $order->getId()]], 
+                    'shipment' => [[OrderShipment::class, 'load'], ['id' => $shipment->getId()]],
+                    'website' => [[Website::class, 'load'], ['id' => $order->getWebsiteId()]]
+                ],
+                'commerce/new_shipment_customer'
+            );
+        } catch (\Exception $e) {
+            App::getInstance()->getApplicationLogger()->exception($e);
         }
    }
 }

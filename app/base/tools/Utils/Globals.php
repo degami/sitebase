@@ -43,6 +43,7 @@ use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Models\User;
 use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
+use Degami\Basics\Html\TagElement;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Exchanger\ExchangeRateQueryBuilder;
@@ -597,6 +598,45 @@ class Globals extends ContainerAwareObject
     }
 
     /**
+     * @param string $subject
+     * @param array $variables
+     * @param string $template_name
+     * @return string
+     * @throws BasicException
+     * @throws Throwable
+     */
+    public function getTemplateMailBody(string $subject, array $variables = [], string $template_name = 'generic'): string
+    {
+        $old_directory = $this->getTemplates()->getDirectory();
+
+        $siteLogo = '';
+        try {
+            $logoFile = file_get_contents(App::getDir(App::WEBROOT) . DS . 'sitebase_logo.png'); 
+            $siteLogo = '<div>' . $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'img',
+                    'attributes' => [
+                        'class' => '',
+                        'title' => $this->getEnvironment()->getVariable('APPNAME'),
+                        'src' => "data:image/png;base64,".base64_encode($logoFile),
+                    ],
+                ]]
+            ) . '</div>';
+        } catch (Throwable $e) {}
+
+        $template = $this->getTemplates()->make('mails::' . $template_name);
+        $template->data([
+            'subject' => $subject,
+            'site_logo' => $siteLogo,
+        ] + $variables);
+        $out = $template->render();
+        $this->getTemplates()->setDirectory($old_directory);
+
+        return $out;
+    }
+
+    /**
      * @param string $from
      * @param string $to
      * @param string $subject
@@ -616,6 +656,29 @@ class Globals extends ContainerAwareObject
             'to' => $to,
             'subject' => $subject,
             'body' => $this->getWrappedMailBody($subject, $body, $template_name),
+        ]);
+    }
+
+    /**
+     * @param string $from
+     * @param string $to
+     * @param string $subject
+     * @param array $template_vars
+     * @param string $template_name
+     * @return QueueMessage
+     * @throws BasicException
+     * @throws DependencyException
+     * @throws NotFoundException
+     * @throws Throwable
+     */
+    public function queueTemplateMail(string $from, string $to, string $subject, array $template_vars, string $template_name): QueueMessage
+    {
+        return $this->addQueueMessage('template_mail', [
+            'from' => $from,
+            'to' => $to,
+            'subject' => $subject,
+            'template_name' => $template_name,
+            'template_vars' => $template_vars,
         ]);
     }
 

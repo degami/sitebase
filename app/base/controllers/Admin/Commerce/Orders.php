@@ -21,12 +21,15 @@ use Exception;
 use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Order as OrderModel;
+use App\Base\Models\OrderItem;
 use App\Base\Models\OrderPayment;
 use App\Base\Models\OrderStatus;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\OrderComment;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Models\OrderShipment;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 /**
  * "Orders" Admin Page
@@ -117,6 +120,16 @@ class Orders extends AdminManageFrontendModelsPage
 
         switch ($type) {
             case 'edit':
+                if ($order->requiresShipping() || $order->getShipments()) {
+                    $this->addActionLink(
+                        'ship-btn',
+                        'ship-btn',
+                        $this->getHtmlRenderer()->getIcon('truck') .' ' . $this->getUtils()->translate('Shipments', locale: $this->getCurrentLocale()),
+                        $this->getUrl('crud.app.base.controllers.admin.json.ordershipment', ['id' => $this->getRequest()->query->get('order_id')]) . '?order_id=' . $this->getRequest()->query->get('order_id') . '&action=ship',
+                        'btn btn-sm btn-light inToolSidePanel'
+                    );
+                }
+
                 // intenitional fallthrough
 
             case 'view':
@@ -256,9 +269,56 @@ class Orders extends AdminManageFrontendModelsPage
                         'rows' => 5,
                     ]);
 
+                    $form->addField('notify_email', [
+                        'type' => 'switchbox',
+                        'title' => 'Notify by Email',
+                        'default_value' => false,
+                    ]);
+    
                     $this->addSubmitButton($form);
                 }
 
+                break;
+
+            case 'ship':
+                $form->addMarkup('<h4>'.$this->getUtils()->translate('Create new Shipment', locale: $this->getCurrentLocale()).'</h4>');
+
+                $form->addField('shipping_method', [
+                    'type' => 'textfield',
+                    'title' => 'Shipping Method',
+                    'default_value' => '',
+                ])->addField('shipment_code', [
+                    'type' => 'textfield',
+                    'title' => 'Shipment Code',
+                    'default_value' => '',
+                ]);
+
+                foreach ($order->getItems() as $orderItem) {
+                    /** @var OrderItem $orderItem */
+                    if ($orderItem->requireShipping()) {
+                        $form->addField('row_'.$orderItem->getId(), [
+                            'type' => 'fieldset',
+                            'title' => $orderItem->getProduct()->getName() . ' ('.$orderItem->getProduct()->getSku().')',
+                            'inner_attributes' => [
+                                'class' => 'row',
+                            ]
+                        ])->addField('ship_'.$orderItem->getId(), [
+                            'type' => 'checkbox',
+                            'title' => 'Ship',
+                            'default_value' => true,
+                            'label_class' => 'mr-2',
+                            'container_class' => 'col-1',
+                        ])->addField('ship_'.$orderItem->getId().'_qty', [
+                            'type' => 'number',
+                            'title' => 'Quantity',
+                            'default_value' => $orderItem->getQuantity(),
+                            'label_class' => 'mr-2',
+                            'container_class' => 'col-11 d-flex',
+                        ]);
+                    }
+                }
+
+                $this->addSubmitButton($form);
                 break;
 
             case 'cancel':
@@ -332,10 +392,41 @@ class Orders extends AdminManageFrontendModelsPage
                         ->setUserId($this->getCurrentUser()->getId())
                         ->setComment($values->comment)
                         ->persist();
+
+                    if ($values->notify_email) {
+                        $this->getUtils()->queueTemplateMail(
+                            App::getInstance()->getSiteData()->getConfigValue('commerce/emails/customer_care') ?? App::getInstance()->getSiteData()->getSiteEmail(),
+                            $order->getBillingAddress()->getEmail(),
+                            $this->getUtils()->translate("New comment on your order %s", [$order->getOrderNumber()], locale: $order->getOwner()->getLocale()),
+                            ['orderNumber' => $order->getOrderNumber(), 'comment' => $values->comment],
+                            'commerce/order_comment'
+                        );
+                    }
                 }
 
-
                 $this->addInfoFlashMessage($this->getUtils()->translate("Order updated."));
+
+                break;
+            case 'ship':
+
+                $shipmentItems = [];
+                foreach ($order->getItems() as $orderItem) {
+                    /** @var OrderItem $orderItem */
+                    if ($orderItem->requireShipping()) {
+                        if ($values['row_'.$orderItem->getId()]['ship_'.$orderItem->getId()]) {
+                            $shipmentItems[] = [
+                                'order_item' => $orderItem,
+                                'quantity' => $values['row_'.$orderItem->getId()]['ship_'.$orderItem->getId().'_qty'],
+                            ];
+                        }
+                    }
+                }
+
+                $order->ship($values['shipping_method'], $values['shipment_code'], $shipmentItems);
+
+//                $this->addInfoFlashMessage($this->getUtils()->translate("Shipment created."));
+
+                return new JsonResponse(['success' => true, 'js' => '$(\'#admin\').appAdmin(\'closeSidePanel\')']);
 
                 break;
             case 'cancel':

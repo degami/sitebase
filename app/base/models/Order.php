@@ -339,7 +339,7 @@ class Order extends BaseModel
 
         $this->setOrderPayment($payment);
 
-        App::getInstance()->event('order_paid', ['order' => $this]);
+        App::getInstance()->event('order_paid', ['object' => $this, 'payment' => $payment]);
 
         return $this;
     }
@@ -387,5 +387,64 @@ class Order extends BaseModel
         }
 
         return OrderComment::getCollection()->where(['order_id' => $this->getId()])->addOrder(['created_at' => 'DESC']);
+    }
+
+    /**
+     * Check if order requires shipping
+     *
+     * @return bool
+     */
+    public function requiresShipping() : bool
+    {
+        foreach ($this->getItems() as $item) {
+            /** @var OrderItem $item */
+            if ($item->requireShipping()) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
+     * Ship an amount of order items using a shipment method
+     *
+     * @param string $shipping_method_name
+     * @param string $shipment_code
+     * @param array $items
+     * @param mixed $additional_data
+     * @return self
+     */
+    public function ship(string $shipping_method_name, string $shipment_code, ?array $items = null, $additional_data = null) : ?OrderShipment
+    {
+        if (!$this->requireShipping()) {
+            return null;
+        }
+
+        // if no items are specified, all items are shipped
+        if (is_null($items)) {
+            $items = $this->getItems();
+        }
+
+        $shipment = OrderShipment::createForOrder($this, $shipping_method_name, $shipment_code, $items, $additional_data);
+        $shipment->persist();
+
+        App::getInstance()->event('order_shipment', ['object' => $this, 'items' => $items, 'shipment' => $shipment]);
+
+        return $shipment;
+    }
+
+    /**
+     * Get the shipments associated with this order
+     *
+     * @return BaseCollection|null
+     */
+    public function getShipments() : ?BaseCollection
+    {
+        if (!$this->getId()) {
+            return null;
+        }
+
+        return OrderShipment::getCollection()->where(['order_id' => $this->getId()])->addOrder(['created_at' => 'DESC']);
     }
 }

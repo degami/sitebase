@@ -149,6 +149,7 @@ class OrderShipments extends AdminManageFrontendModelsPage
         switch ($type) {
             case 'view' :
 
+                $form->addMarkup($this->renderShipmentInfo($orderShipment));
 
                 break;
             case 'edit':
@@ -251,7 +252,29 @@ class OrderShipments extends AdminManageFrontendModelsPage
             // no break
             case 'edit':
 
-                
+                $orderShipment->setShippingMethod($values['shipping_method']);
+                $orderShipment->setShipmentCode($values['shipment_code']);
+                $orderShipment->setStatus($values['status']);
+                $orderShipment->setWebsiteId($values['website_id']);
+
+                $changedData = $orderShipment->getChangedData();
+
+                if (is_numeric($values['location']['latitude']) && is_numeric($values['location']['longitude'])) {
+                    $changedData += [
+                        'latitude' => $values['location']['latitude'],
+                        'longitude' => $values['location']['longitude'],
+                    ];
+
+                    // update position, saving history if needed (this also persists the object)
+                    $orderShipment->updatePosition($values['location']['latitude'], $values['location']['longitude']);
+                }
+
+                $this->setAdminActionLogData($changedData);
+
+                $orderShipment->persist();
+
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Order Shipment Saved."));
+
                 break;
             case 'delete':
                 $orderShipment->delete();
@@ -276,8 +299,9 @@ class OrderShipments extends AdminManageFrontendModelsPage
             'ID' => 'id',
             'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
             'Order' => ['order' => 'order_id', 'foreign' => 'order_id', 'table' => $this->getModelTableName(), 'view' => 'order_number'],
-            'Shipping Method' => ['order' => 'shipping_method'],
-            'Shipment Code' => ['order' => 'shipment_code'],
+            'Shipping Method' => ['order' => 'shipping_method', 'search' => 'shipping_method'],
+            'Shipment Code' => ['order' => 'shipment_code', 'search' => 'shipment_code'],
+            'Status' => ['order' => 'status'],
             'actions' => null,
         ];
     }
@@ -301,6 +325,7 @@ class OrderShipments extends AdminManageFrontendModelsPage
                     'Order' => $orderShipment->getOrder()->getOrderNumber(),
                     'Shipping Method' => $orderShipment->getShippingMethod(),
                     'Shipment Code' => $orderShipment->getShipmentCode(),
+                    'Status' => $orderShipment->getStatus(),
                     'actions' => [
                         static::VIEW_BTN => $this->getViewButton($orderShipment->id),                            
                         static::EDIT_BTN => $this->getEditButton($orderShipment->id),
@@ -336,5 +361,91 @@ class OrderShipments extends AdminManageFrontendModelsPage
     public static function exposeDataToDashboard() : mixed
     {
         return null;
+    }
+
+    protected function renderShipmentInfo(OrderShipmentModel $orderShipment) : string
+    {
+        $locationScript = '';
+        $latitude = $orderShipment->getLatitude();
+        $longitude = $orderShipment->getLongitude();
+        if ($this->getEnvironment()->getVariable('GOOGLE_API_KEY')) {
+            $locationScript = "<script type=\"text/javascript\">
+                var latlng = {
+                    lat: ".$latitude.",
+                    lng: ".$longitude."
+                };
+                var map = new google.maps.Map(document.getElementById('shipment-history-map'), {
+                    zoom: 4,
+                    center: latlng
+                });
+
+                var marker = new google.maps.Marker({
+                    position: latlng,
+                    map: map,
+                    draggable: false
+                });
+</script>";
+        } else if ($this->getEnvironment()->getVariable('MAPBOX_API_KEY')) {
+            $locationScript = "<script type=\"text/javascript\">
+                var latlng = {
+                    lat: ".$latitude.",
+                    lng: ".$longitude."
+                };
+                var map = L.map('shipment-history-map').setView([latlng.lat,latlng.lng],4);
+                L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token={accessToken}', {
+                    attribution:
+                        'Map data &copy; <a href=\"https://www.openstreetmap.org/\">OpenStreetMap</a> contributors,'+
+                        '<a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA</a>,'+
+                        ' Imagery © <a href=\"https://www.mapbox.com/\">Mapbox</a>',
+                    maxZoom: 18,
+                    id: 'mapbox/streets-v12',
+                    accessToken: '{$this->getEnvironment()->getVariable('MAPBOX_API_KEY')}'
+                }).addTo(map);
+
+                var marker = L.marker([latlng.lat, latlng.lng],{
+                    draggable: false
+                }).addTo(map);
+</script>";
+        }
+
+        return 
+            '<h2>'.$this->getUtils()->translate('Shipment %s for order %s', [$orderShipment->getShipmentCode(),$orderShipment->getOrder()?->getOrderNumber()]).'</h2><hr/>'.
+            '<div id="shipment-history-map" style="height:400px;margin-bottom:20px;"></div>'.
+            $locationScript .
+            ($orderShipment->getLatitude() && $orderShipment->getLongitude() ? 
+                '<script type="text/javascript">
+                    document.addEventListener("DOMContentLoaded", function() {
+                        var mapOptions = {
+                            center: { lat: '.$orderShipment->getLatitude().', lng: '.$orderShipment->getLongitude().' },
+                            zoom: 12
+                        };
+                        var map = new google.maps.Map(document.querySelector(".shipment-history-map"), mapOptions);
+                        var marker = new google.maps.Marker({
+                            position: { lat: '.$orderShipment->getLatitude().', lng: '.$orderShipment->getLongitude().' },
+                            map: map,
+                            title: "Current Location"
+                        });
+                    });
+                </script>'
+                : '<p>'.$this->getUtils()->translate('No current location available').'</p>'
+            ).
+
+            ($orderShipment->getPositionHistory() === [] ? 
+                '<p>'.$this->getUtils()->translate('No position history available').'</p>'
+                :
+                '<h3>'.$this->getUtils()->translate('Position History').'</h3>'.
+                '<ul class="list-group"><li class="list-group-item">'.implode('</li><li class="list-group-item">', array_map(
+                    function ($historyItem) {
+                        $data = [
+                            'latitude' => $historyItem->getLatitude(),
+                            'longitude' => $historyItem->getLongitude(),
+                            'when' => $historyItem->getCreatedAt()
+                        ];
+
+                        return $this->getHtmlRenderer()->renderArrayOnTable($data);
+                    },
+                    $orderShipment->getPositionHistory()
+                ))."</li></ul>"
+            );
     }
 }

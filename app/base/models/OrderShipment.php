@@ -14,6 +14,7 @@
 namespace App\Base\Models;
 
 use App\App;
+use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Traits\WithOwnerTrait;
@@ -216,5 +217,41 @@ class OrderShipment extends BaseModel
         }
 
         return parent::postPersist($persistOptions);
+    }
+
+    public function updatePosition(float $latitude, float $longitude): self
+    {
+        if ($this->getLatitude() === $latitude && $this->getLongitude() === $longitude) {
+            return $this;
+        }
+
+        if (!is_null($this->getLatitude()) || !is_null($this->getLongitude())) {
+            // log previous location
+            /** @var OrderShipmentHistory $history */
+            $history = App::getInstance()->containerMake(OrderShipmentHistory::class);
+            $history
+                ->setShipmentId($this->getId())
+                ->setLatitude($this->getLatitude())
+                ->setLongitude($this->getLongitude())
+                ->persist();
+        }
+
+        $this
+            ->setLatitude($latitude)
+            ->setLongitude($longitude)
+            ->persist();
+
+        return $this;
+    }
+
+    public function getPositionHistory(): array
+    {
+        /** @var OrderShipmentHistory[] $history */
+        $history = OrderShipmentHistory::getCollection()
+            ->where(['shipment_id' => $this->getId()])
+            ->addOrder(['created_at' => 'DESC'])
+            ->getItems();
+
+        return $history;
     }
 }

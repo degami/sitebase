@@ -180,6 +180,23 @@ class OrderItem extends BaseModel
             return true;
         }
 
+        return $this->remainingShippableQuantity() > 0;
+    }
+
+    public function remainingShippableQuantity(): int
+    {
+        if (!$this->getProduct()) {
+            return 0;
+        }
+
+        if (!$this->getProduct()->isPhysical()) {
+            return 0;
+        }
+
+        if (is_null($this->getId())) {
+            return $this->getQuantity();
+        }
+
         $stmt = App::getInstance()->getPdo()->prepare("
             SELECT SUM(quantity)
             FROM order_shipment_item
@@ -190,6 +207,6 @@ class OrderItem extends BaseModel
 
         $sumShipmentsQty = $stmt->fetchColumn();
 
-        return $sumShipmentsQty < $this->getQuantity();
+        return max(0, $this->getQuantity() - (int)$sumShipmentsQty);
     }
 }

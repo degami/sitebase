@@ -78,6 +78,16 @@
                 onConfirm: callback
             });
         },
+        info: function(text, callback) {
+            let that = this;
+            
+            $(that).appAdmin('showAlertDialog', {
+                type: 'info',
+                title: __('Info'),
+                message: text,
+                onConfirm: callback
+            });
+        },
         warning: function(text, callback) {
             let that = this;
 

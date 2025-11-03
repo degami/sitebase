@@ -77,7 +77,19 @@
                         data: formData,
                         processData: false,
                         contentType: false,
-                        success: function(data) {
+                        success: function(data, textStatus, jqXHR) {
+                            // if response is html and a tag with class 'alert' is found, show alert dialog
+                            if (jqXHR.getResponseHeader("Content-Type").search("text/html") !== -1) {
+                                let tempDiv = $('<div>').html(data);
+                                let alertDiv = tempDiv.find('.alert');
+                                if (alertDiv.length > 0) {
+                                    // based on alert (alert-danger, alert-info) class, determine type and call alertType method
+                                    let alertType = alertDiv.hasClass('alert-danger') ? 'error' : 'info';
+                                    $(that).appAdmin(alertType, alertDiv.text());
+                                    return;
+                                }
+                            }
+
                             if( $.trim(data.js) != '' ){
                                 eval(data.js);
                                 return;

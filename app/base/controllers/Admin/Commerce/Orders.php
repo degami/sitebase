@@ -134,10 +134,17 @@ class Orders extends AdminManageFrontendModelsPage
 
             case 'view':
 
-                if (in_array($order->getOrderStatus()?->getStatus(), [OrderStatus::PAID, OrderStatus::WAITING_FOR_PAYMENT])) {
+                if (!is_null($order->getOrderPayment())) {
                     $orderPayment = OrderPayment::getCollection()->where(['order_id' => $order->getId()])->addOrder(['created_at' => 'DESC'])->getFirst();
                     if ($orderPayment) {
-                        $this->addActionLink('payment-btn', 'payment-btn', $this->getHtmlRenderer()->getIcon('dollar-sign') . ' ' . $this->getUtils()->translate('Payment', locale: $this->getCurrentLocale()), $this->getUrl('admin.commerce.orderpayments') . '?' . http_build_query(['action' => 'view', 'payment_id' => $orderPayment->getId()]) );
+                        $this->addActionLink(
+                            'payment-btn', 
+                            'payment-btn', 
+                            $this->getHtmlRenderer()->getIcon('dollar-sign') . ' ' . $this->getUtils()->translate('Payment', locale: $this->getCurrentLocale()), 
+                            //$this->getUrl('admin.commerce.orderpayments') . '?' . http_build_query(['action' => 'view', 'payment_id' => $orderPayment->getId()]) ,
+                            $this->getUrl('crud.app.base.controllers.admin.json.orderpayment', ['id' => $this->getRequest()->query->get('order_id')]) . '?order_id=' . $this->getRequest()->query->get('order_id') . '&action=payment',
+                            'btn btn-sm btn-light inToolSidePanel'
+                        );
                     }
                 }
 
@@ -311,7 +318,7 @@ class Orders extends AdminManageFrontendModelsPage
                         ])->addField('ship_'.$orderItem->getId().'_qty', [
                             'type' => 'number',
                             'title' => 'Quantity',
-                            'default_value' => $orderItem->getQuantity(),
+                            'default_value' => $orderItem->remainingShippableQuantity(),
                             'label_class' => 'mr-2',
                             'container_class' => 'col-11 d-flex',
                         ]);
@@ -350,8 +357,30 @@ class Orders extends AdminManageFrontendModelsPage
      */
     public function formValidate(FAPI\Form $form, &$form_state): bool|string
     {
-        //$values = $form->values();
-        // @todo : check if page language is in page website languages?
+        /**
+         * @var OrderModel $order
+         */
+        $order = $this->getObject();
+
+        $values = $form->values();
+
+        switch ($values['action']) {
+            case 'ship':
+                $hasAtLeastOne = false;
+                foreach ($order->getItems() as $orderItem) {
+                    /** @var OrderItem $orderItem */
+                    if ($orderItem->requireShipping()) {
+                        if ($values['row_'.$orderItem->getId()]['ship_'.$orderItem->getId()]) {
+                            $hasAtLeastOne = true;
+                        }
+                    }
+                }
+                if (!$hasAtLeastOne) {
+                    return $this->getUtils()->translate('You must select at least one item to ship.', locale: $this->getCurrentLocale());
+                }
+                break;
+        }
+
         return true;
     }
 
@@ -423,6 +452,16 @@ class Orders extends AdminManageFrontendModelsPage
                 }
 
                 $order->ship($values['shipping_method'], $values['shipment_code'], $shipmentItems);
+
+                if (!$order->requiresShipping()) {
+                    $order->setOrderStatus(OrderStatus::getCollection()->where(['status' => OrderStatus::SHIPPED])->getFirst())->persist();
+
+                    $this->setAdminActionLogData('Order ' . $order->getId() . ' marked as shipped.');
+
+                    $this->addInfoFlashMessage($this->getUtils()->translate("Order marked as shipped."));
+
+                    return new JsonResponse(['success' => true, 'js' => '$(\'#admin\').appAdmin(\'closeSidePanel\'); document.location.reload()']);
+                }
 
 //                $this->addInfoFlashMessage($this->getUtils()->translate("Shipment created."));
 

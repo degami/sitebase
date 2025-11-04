@@ -93,6 +93,11 @@
             .feather {
                 vertical-align: middle !important;
             }
+
+            svg {
+                height: auto !important;
+                min-width: 20px;
+            }
         }
     }
 

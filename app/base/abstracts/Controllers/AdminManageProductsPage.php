@@ -112,4 +112,29 @@ abstract class AdminManageProductsPage extends AdminManageFrontendModelsPage
         $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), fn($modelClass) => is_subclass_of($modelClass, ProductInterface::class));
         return array_combine($classes, array_map(fn($class) => strtolower(basename($class)), $classes));
     }
+
+    protected function collectActionButtons() : self
+    {
+        parent::collectActionButtons();
+
+
+        if (($this->template_data['action'] ?? 'list') == 'edit') {
+            $product = $this->getObject();
+            if (false && $product instanceof ProductInterface) {
+                // Add Manage Stock button for physical products
+                if ($product->isPhysical()) {
+                    $this->addActionLink(
+                        'stock-btn',
+                        'stock-btn',
+                        $this->getUtils()->translate('Manage Stock', locale: $this->getCurrentLocale()),
+                        '#',
+                        'btn btn-sm btn-light inToolSidePanel', 
+                        ['data-panelWidth' => '80%']
+                    );
+                }
+            }
+        }
+
+        return $this;
+    }
 }

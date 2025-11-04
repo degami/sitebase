@@ -278,7 +278,14 @@ abstract class AdminPage extends BaseHtmlPage
             }
         }
 
-        $this->addActionLink(static::BACK_BTN, static::BACK_BTN, $this->getHtmlRenderer()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', locale: $this->getCurrentLocale()), $this->getControllerUrl() . $query_params, 'btn btn-sm btn-outline-dark');
+        $this->addActionLink(
+            static::BACK_BTN, 
+            static::BACK_BTN, 
+            $this->getHtmlRenderer()->getIcon('rewind') . ' ' . $this->getUtils()->translate('Back', locale: $this->getCurrentLocale()), 
+            $this->getControllerUrl() . $query_params, 
+            'btn btn-sm btn-outline-dark',
+            order: PHP_INT_MAX
+        );
     }
 
     /**

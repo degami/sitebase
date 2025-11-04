@@ -122,7 +122,13 @@ trait AdminTrait
         );
 
 
-        foreach ($this->action_buttons as $key => $button_html) {
+        @uasort($this->action_buttons, function ($a, $b) {
+            return $a['order'] <=> $b['order'];
+        });
+
+        $action_buttons = array_column($this->action_buttons, 'tag');
+
+        foreach ($action_buttons as $key => $button_html) {
             $ul->addChild(
                 $this->containerMake(
                     TagElement::class,
@@ -178,8 +184,11 @@ trait AdminTrait
      * @param string $button_class
      * @return self
      */
-    public function addActionButton(string $key, string $button_id, string $button_text, $button_class = 'btn btn-sm btn-light') : static
+    public function addActionButton(string $key, string $button_id, string $button_text, string $button_class = 'btn btn-sm btn-light', array $attributes = [], ?int $order = null) : static
     {
+        if (!is_array($attributes)) {
+            $attributes = [];
+        }
         $button = $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'button',
             'id' => $button_id,
@@ -189,7 +198,7 @@ trait AdminTrait
             ],
             'text' => $button_text,
         ]]);
-        $this->action_buttons[$key] = $button;
+        $this->action_buttons[$key] = ['tag' => $button, 'order' => $order ?? PHP_INT_MAX / 2];
 
         return $this;
     }
@@ -205,7 +214,7 @@ trait AdminTrait
      * @param array $attributes
      * @return self
      */
-    public function addActionLink($key, $link_id, $link_text, $link_href = '#', $link_class = 'btn btn-sm btn-light', $attributes = []) : static
+    public function addActionLink($key, $link_id, $link_text, $link_href = '#', string $link_class = 'btn btn-sm btn-light', array $attributes = [], ?int $order = null) : static
     {
         if (!is_array($attributes)) {
             $attributes = [];
@@ -221,7 +230,7 @@ trait AdminTrait
             'text' => $link_text,
         ]]);
 
-        $this->action_buttons[$key] = $button;
+        $this->action_buttons[$key] = ['tag' => $button, 'order' => $order ?? PHP_INT_MAX / 2];
         return $this;
     }
 

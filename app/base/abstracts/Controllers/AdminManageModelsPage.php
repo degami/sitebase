@@ -95,32 +95,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
             }
     
             $this->addPaginationSizeSelector();
-            $this->addNewButton();
 
             $adminTableId = 'listing-'.$layout.'-' . strtolower($this->getUtils()->getClassBasename($this->getObjectClass()));
 
-            $controllerClassName = str_replace("\\","\\\\", static::class);
-            $modelClassName = str_replace("\\","\\\\", $this->getObjectClass());
-
             $itemsPerPage = $this->getItemsPerPage();
             $data = $this->getTableItems($itemsPerPage);
-
-            if (static::hasMassActions() && !empty($data['items'])) {
-                $this->addBatchDeleteButton($modelClassName, $adminTableId);
-
-                // need to check if there is at least one edit button in the table
-                $hasEditButton = false;
-                foreach ($this->getTableElements($data['items']) as $tableElement) {
-                    if (isset($tableElement['actions'][static::EDIT_BTN])) {
-                        $hasEditButton = true;
-                        break;
-                    }
-                }
-
-                if ($hasEditButton) {
-                    $this->addBatchEditButton($controllerClassName, $modelClassName, $adminTableId);
-                }
-            }
 
             $tableElements = $this->getTableElements($data['items'], ['layout' => $layout]);
 
@@ -145,12 +124,43 @@ abstract class AdminManageModelsPage extends AdminFormPage
             }
 
             $this->template_data += [
+                'adminTableId' => $adminTableId,
+                'data' => $data,
                 'before_listing' => $this->getBeforeListing(),
                 'listing' => $tableContents,
                 'total' => $data['total'],
                 'current_page' => $data['page'],
                 'paginator' => $this->getHtmlRenderer()->renderPaginator($data['page'], $data['total'], $this, $itemsPerPage, 5),
             ];
+        }
+
+        $this->collectActionButtons();
+    }
+
+    protected function collectActionButtons() : self
+    {
+        if (($this->template_data['action'] ?? 'list') == 'list') {
+            $this->addNewButton();
+
+            $controllerClassName = str_replace("\\","\\\\", static::class);
+            $modelClassName = str_replace("\\","\\\\", $this->getObjectClass());
+
+            if (static::hasMassActions() && !empty($this->template_data['data']['items'] ?? null)) {
+                $this->addBatchDeleteButton($modelClassName, $this->template_data['adminTableId']);
+
+                // need to check if there is at least one edit button in the table
+                $hasEditButton = false;
+                foreach ($this->getTableElements($this->template_data['data']['items']) as $tableElement) {
+                    if (isset($tableElement['actions'][static::EDIT_BTN])) {
+                        $hasEditButton = true;
+                        break;
+                    }
+                }
+
+                if ($hasEditButton) {
+                    $this->addBatchEditButton($controllerClassName, $modelClassName, $this->template_data['adminTableId']);
+                }
+            }
         }
 
         if (($this->template_data['action'] ?? 'list') == 'edit') {
@@ -165,6 +175,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
         if (($this->template_data['action'] ?? 'list') != 'list') {
             $this->addBackButton();
         }
+
+        return $this;
     }
 
     /**

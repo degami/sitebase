@@ -83,7 +83,7 @@ trait FormPageTrait
             'value' => $text,
             'attributes' => ['class' => 'btn btn-primary btn-sm'],
             'weight' => 100,
-            'label' => $this->getHtmlRenderer()->getIcon($icon, ['style' => 'zoom: 1.5']) . '&nbsp;' . __($text),
+            'label' => $this->getHtmlRenderer()->getIcon($icon, ['style' => 'zoom: 1.5; margin-right: 5px;']) . '&nbsp;' . __($text),
         ];
 
         $form->addField($name, array_merge($defaults, $options));
@@ -104,17 +104,24 @@ trait FormPageTrait
         FAPI\Form $form,
         bool $inline_button = false,
         bool $isConfirmation = false,
-        ?string $buttonText = null
+        ?string $buttonText = null,
+        ?string $icon = null,
+        bool $disabled = false
     ): FAPI\Form {
         $options = $inline_button
             ? ['attributes' => ['class' => 'btn btn-primary btn-sm'], 'weight' => 100]
             : ['attributes' => ['class' => 'btn btn-primary btn-lg btn-block'], 'container_class' => 'form-item mt-3', 'weight' => 110];
 
+        if ($disabled) {
+            $options['attributes']['disabled'] = 'disabled';
+            $options['attributes']['class'] .= ' btn-disabled';
+        }
+
         $this->addButton(
             $form,
             'button',
             $buttonText ?? ($isConfirmation ? 'Ok' : 'Save') ,
-            $isConfirmation ? 'check' : 'save',
+            $icon ?? ($isConfirmation ? 'check' : 'save'),
             $options
         );
 

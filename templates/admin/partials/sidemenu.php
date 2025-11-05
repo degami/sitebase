@@ -28,7 +28,7 @@
         </div>
 
         <div id="collapse<?= $sectionKey; ?>" class="<?= $collapsed; ?>" aria-labelledby="heading<?= $sectionKey; ?>" data-parent="#accordion">
-            <div class="card-body">
+            <div class="card-body" style="min-height: <?= count($sectionLinks) * 40;?>px">
                 <?php foreach ($sectionLinks as $key => $link) :?>
                     <div class="nav-item">
                         <a class="nav-link<?= ($controller->getRouteName() == $link['route_name']) ? ' active' : '';?> <?= $link['route_name'];?>" href="<?= $this->sitebase()->getUrl($link['route_name']);?>" title="<?= $this->sitebase()->translate($link['text']);?>">

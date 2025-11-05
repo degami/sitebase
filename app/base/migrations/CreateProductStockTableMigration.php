@@ -34,7 +34,7 @@ class CreateProductStockTableMigration extends DBMigration
             ->addColumn('website_id', 'INT', null, ['UNSIGNED'], false)
             ->addColumn('product_class', 'VARCHAR', [255])
             ->addColumn('product_id', 'INT', null, ['UNSIGNED'])
-            ->addColumn('quantity', 'INT', null, ['UNSIGNED'])
+            ->addColumn('quantity', 'INT', null, [])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)

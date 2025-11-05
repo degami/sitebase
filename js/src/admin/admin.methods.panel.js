@@ -71,6 +71,13 @@
                 $('.sidepanel form', that).submit(function(evt){
                     evt.preventDefault();
                     let formData = new FormData(this);
+
+                    let formParent = $(this).parent();
+                    formParent.css('position', 'relative');
+                    $('<div id="sidebarFormLoading" class="overlay-spinner position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="position: absolute; top: 0; left: 0;background: rgba(255, 255, 255, 0.7); z-index: 10;">'+
+                        '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'+
+                    '</div>').appendTo(formParent);
+
                     $.ajax({
                         type: "POST",
                         url: $(this).attr("action"),
@@ -78,6 +85,7 @@
                         processData: false,
                         contentType: false,
                         success: function(data, textStatus, jqXHR) {
+                            $('#sidebarFormLoading').remove();
                             // if response is html and a tag with class 'alert' is found, show alert dialog
                             if (jqXHR.getResponseHeader("Content-Type").search("text/html") !== -1) {
                                 let tempDiv = $('<div>').html(data);
@@ -98,6 +106,7 @@
                             $(that).appAdmin('reloadPanelContent');
                         },
                         error: function() {
+                            $('#sidebarFormLoading').remove();
                             $(that).appAdmin('showAlertDialog', {
                                 title: 'Error',
                                 message: 'Generic Error',

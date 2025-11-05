@@ -17,6 +17,8 @@ use App\App;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Controllers\FrontendPageWithLang;
+use App\Base\Models\ProductStock;
+use App\Base\Models\StockMovement;
 use Symfony\Component\HttpFoundation\Response;
 
 class Add extends FrontendPageWithLang
@@ -100,13 +102,17 @@ class Add extends FrontendPageWithLang
 
             $quantity = (int) $productDetails['quantity'] ?? 1;
 
-            $this->getCart()->fullLoad()->addProduct(
+            $cartItem = $this->getCart()->fullLoad()->addProduct(
                 $product,
                 $quantity
             );
 
             $this->getCart()->calculate()->persist();
 
+            if ($product instanceof \App\Base\Interfaces\Model\PhysicalProductInterface) {
+                // add a stock movement reservation
+                StockMovement::createForCartItem($cartItem)->persist();
+            }
 
             $this->addSuccessFlashMessage(
                 $this->getUtils()->translate('Product added to cart successfully.', locale: $this->getCurrentLocale())

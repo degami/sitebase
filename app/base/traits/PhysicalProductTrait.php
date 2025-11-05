@@ -16,6 +16,7 @@ namespace App\Base\Traits;
 use App\Base\Interfaces\Model\PhysicalProductInterface;
 use RuntimeException;
 use App\Base\GraphQl\GraphQLExport;
+use App\Base\Models\ProductStock;
 
 trait PhysicalProductTrait
 {
@@ -69,5 +70,17 @@ trait PhysicalProductTrait
         }
 
         return $this->getData('height');
+    }
+
+    public function getProductStock(): ?ProductStock
+    {
+        if (!($this instanceof PhysicalProductInterface)) {
+            throw new RuntimeException("Current object is not an instance of PhysicalProductInterface");
+        }
+
+        return ProductStock::getCollection()->where([
+            'product_class' => get_class($this),
+            'product_id' => $this->getId(),
+            ])->getFirst();
     }
 }

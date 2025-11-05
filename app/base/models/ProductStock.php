@@ -105,18 +105,33 @@ class ProductStock extends BaseModel
             ->where(['stock_id' => $this->getId()]);
     }
 
+    public function getCurrentQuantity(): int
+    {
+        return max(0, $this->getQuantity() + array_sum(
+            $this->getMovements()
+            ->where([
+                'movement_type' => StockMovement::MOVEMENT_TYPE_DECREASE,
+                'updated_at > ?' => date('Y-m-d H:i:s', time() - StockMovement::MAX_CART_THRESHOLD * 60),
+                'order_item_id' => null,
+            ])
+            ->map(function (StockMovement $movement) {
+                return match($movement->getMovementType()) {
+                    StockMovement::MOVEMENT_TYPE_INCREASE => 1 * abs($movement->getQuantity()),
+                    StockMovement::MOVEMENT_TYPE_DECREASE => -1 * abs($movement->getQuantity()),
+                    default => 0,
+                };
+            })
+        ));
+    }
+
     public function consolidateStock(): self
     {
-        // @todo - check resulting query
-        $collection = $this->getMovements()->orWhere([
-            ['movement_type' => StockMovement::MOVEMENT_TYPE_INCREASE],
-            ['movement_type' => StockMovement::MOVEMENT_TYPE_DECREASE, 'order_item_id:not' => null]
-        ]);
+        $collection = $this->getMovements()->where("(movement_type = '" . StockMovement::MOVEMENT_TYPE_INCREASE . "' OR (movement_type = '" . StockMovement::MOVEMENT_TYPE_DECREASE . "' AND order_item_id IS NOT NULL))");
 
         $this->setQuantity($this->getQuantity() + array_sum($collection->map(function (StockMovement $movement) {
             return match($movement->getMovementType()) {
-                StockMovement::MOVEMENT_TYPE_INCREASE => 1 * $movement->getQuantity(),
-                StockMovement::MOVEMENT_TYPE_DECREASE => -1 * $movement->getQuantity(),
+                StockMovement::MOVEMENT_TYPE_INCREASE => 1 * abs($movement->getQuantity()),
+                StockMovement::MOVEMENT_TYPE_DECREASE => -1 * abs($movement->getQuantity()),
                 default => 0,
             };
         })));

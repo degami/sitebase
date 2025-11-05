@@ -92,7 +92,7 @@ class DownloadableProducts extends AdminManageProductsPage
                 $this->addActionLink(
                     'media-btn',
                     'media-btn',
-                    '&#9776; ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
+                    $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
                     $this->getUrl('crud.app.site.controllers.admin.json.downloadablemedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );

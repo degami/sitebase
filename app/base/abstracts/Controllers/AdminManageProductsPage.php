@@ -120,14 +120,14 @@ abstract class AdminManageProductsPage extends AdminManageFrontendModelsPage
 
         if (($this->template_data['action'] ?? 'list') == 'edit') {
             $product = $this->getObject();
-            if (false && $product instanceof ProductInterface) {
+            if ($product instanceof ProductInterface) {
                 // Add Manage Stock button for physical products
                 if ($product->isPhysical()) {
                     $this->addActionLink(
                         'stock-btn',
                         'stock-btn',
-                        $this->getUtils()->translate('Manage Stock', locale: $this->getCurrentLocale()),
-                        '#',
+                        $this->getHtmlRenderer()->getIcon('layers') . ' ' .$this->getUtils()->translate('Manage Stock', locale: $this->getCurrentLocale()),
+                        $this->getUrl('crud.app.base.controllers.admin.json.productstocks', ['product_details' => base64_encode(json_encode(['product_class' => $this->getObjectClass(),'product_id' => $product->getId()]))]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&action=',
                         'btn btn-sm btn-light inToolSidePanel', 
                         ['data-panelWidth' => '80%']
                     );

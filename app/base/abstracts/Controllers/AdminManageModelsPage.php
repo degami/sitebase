@@ -503,7 +503,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
 
         $this->addActionLink(
             static::VERSIONS_BTN, 
-            static::VERSIONS_BTN, '&#9776; ' . $this->getUtils()->translate('Versions', locale: $this->getCurrentLocale()), 
+            static::VERSIONS_BTN, 
+            $this->getHtmlRenderer()->getIcon('git-branch') . ' ' . $this->getUtils()->translate('Versions', locale: $this->getCurrentLocale()), 
             $this->getUrl('crud.app.base.controllers.admin.json.versions', ['class' => base64_encode(get_class($object)), 'key' => base64_encode($primaryKey) ]), 
             'btn btn-sm btn-light inToolSidePanel', 
             ['data-panelWidth' => '80%']

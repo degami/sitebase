@@ -167,7 +167,18 @@ class BookDetail extends FrontendPageWithObject
             'container_class' => 'd-inline-block',
         ]);
 
-        $this->addSubmitButton($form, true, true, $this->getUtils()->translate('Add to Cart', locale: $this->getCurrentLocale()));
+        $stockQty = $this->getObject()->getProductStock()?->getCurrentQuantity() ?? 0;
+
+        $this->addSubmitButton(
+            $form, 
+            true, 
+            true, 
+            $this->getUtils()->translate('Add to Cart', locale: $this->getCurrentLocale()),
+            'shopping-cart',
+            $stockQty < 1
+        );
+
+        $form->setSuffix($this->getUtils()->translate(' items in stock: %d', [$stockQty], locale: $this->getCurrentLocale()));
 
         return $form;
     }

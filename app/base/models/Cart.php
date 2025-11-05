@@ -368,6 +368,17 @@ class Cart extends BaseModel
         }
 
         if ($cartItem instanceof CartItem && $cartItem->getId()) {
+            /** @var ProductInterface|null $product */
+            $product = $cartItem->getProduct();
+            if ($product instanceof \App\Base\Interfaces\Model\PhysicalProductInterface) {
+                // remove stock movement - we can do it here as this method saves the cart afterwards
+                StockMovement::createForCartItem($cartItem)->persist();
+                $stockMovements = StockMovement::getCollection()
+                    ->where(['cart_item_id' => $cartItem->getId()]);
+                
+                $stockMovements->delete();
+            }
+
             $cartItem->delete();
         }
 

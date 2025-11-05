@@ -16,6 +16,7 @@ namespace App\Base\Controllers\Frontend\Commerce;
 use App\App;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Abstracts\Controllers\FormPageWithLang;
+use App\Base\Models\StockMovement;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Request;
@@ -283,6 +284,17 @@ class Cart extends FormPageWithLang
                 $quantity = (int) $value;
                 if ($quantity > 0) {
                     $this->getCart()->getCartItem($item_id)?->setQuantity($quantity);
+
+                    if ($this->getCart()->getCartItem($item_id)?->getProduct() instanceof \App\Base\Interfaces\Model\PhysicalProductInterface) {
+                        // remove stock movement - we can do it here as this method saves the cart afterwards
+                        $stockMovement = StockMovement::getCollection()
+                            ->where(['cart_item_id' => $this->getCart()->getCartItem($item_id)->getId()])->getFirst();
+                        if ($stockMovement) {
+                            $stockMovement->setQuantity($quantity)->persist();
+                        }
+
+                    }
+
                 } else {
                     $this->getCart()->removeItem($item_id);
                 }

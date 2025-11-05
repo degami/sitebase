@@ -167,7 +167,13 @@ class DownloadbleDetail extends FrontendPageWithObject
             'container_class' => 'd-inline-block',
         ]);
 
-        $this->addSubmitButton($form, true, true, $this->getUtils()->translate('Add to Cart', locale: $this->getCurrentLocale()));
+        $this->addSubmitButton(
+            $form, 
+            true, 
+            true, 
+            $this->getUtils()->translate('Add to Cart', locale: $this->getCurrentLocale()),
+            'shopping-cart'
+        );
 
         return $form;
     }

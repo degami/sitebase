@@ -15,6 +15,7 @@ namespace App\Base\Models;
 
 use App\App;
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Interfaces\Model\PhysicalProductInterface;
 use App\Base\Traits\WithOwnerTrait;
 use App\Base\Traits\WithWebsiteTrait;
 use App\Base\Interfaces\Model\ProductInterface;
@@ -208,5 +209,20 @@ class OrderItem extends BaseModel
         $sumShipmentsQty = $stmt->fetchColumn();
 
         return max(0, $this->getQuantity() - (int)$sumShipmentsQty);
+    }
+
+    public function postPersist(array $persistOptions = []): BaseModel
+    {
+        if ($this->getProduct() instanceof PhysicalProductInterface) {
+            try {
+                $stockMovement = StockMovement::loadBy('cart_item_id', $this->getCartItemId());
+                $stockMovement->setOrderItem($this)->persist();
+            } catch (\Exception $e) {
+                // no stock movement found for this cart item. create a new one
+                StockMovement::createForOrderItem($this)->persist();
+            }
+        }
+
+        return parent::postPersist($persistOptions);
     }
 }

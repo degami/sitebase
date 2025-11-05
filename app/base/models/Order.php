@@ -339,6 +339,8 @@ class Order extends BaseModel
 
         $this->setOrderPayment($payment);
 
+        App::getInstance()->getUtils()->addQueueMessage('consolidate_stock', ['order_id' => $this->getId()]);
+
         App::getInstance()->event('order_paid', ['object' => $this, 'payment' => $payment]);
 
         return $this;

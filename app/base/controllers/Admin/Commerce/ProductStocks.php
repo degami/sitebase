@@ -296,9 +296,4 @@ class ProductStocks extends AdminManageFrontendModelsPage
         }
         return parent::beforeRender();
     }
-
-    public static function exposeDataToDashboard() : mixed
-    {
-        return null;
-    }
 }

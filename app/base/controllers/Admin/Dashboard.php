@@ -131,6 +131,7 @@ class Dashboard extends AdminPage
                         'route_name' => $pageLink['route_name'],
                         'section' => $pageLink['section'],
                         'data' => $dashboardData,
+                        'order' => $pageLink['order'] ?? 0,
                     ];
                 }
             }

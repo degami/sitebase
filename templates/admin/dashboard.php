@@ -49,6 +49,15 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
         }
         $bySectionLinks[$section][] = $link;
     }
+
+    foreach ($bySectionLinks as $sectionName => $chunk) {
+        usort($bySectionLinks[$sectionName], function($a, $b) {
+            $orderA = $a['order'] ?? 0;
+            $orderB = $b['order'] ?? 0;
+            return $orderA <=> $orderB;
+        });
+    }
+
     ksort($bySectionLinks);
 ?>
             <?php foreach ($bySectionLinks as $sectionName => $chunk) : ?>

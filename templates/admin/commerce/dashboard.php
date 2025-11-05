@@ -44,12 +44,14 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                 role="tabpanel" 
                 aria-labelledby="<?= $tab_id ?>-tab"
             >
-                <!-- Summary cards -->
+                <!-- Row 1: Main metrics -->
                 <div class="row mt-3">
                     <div class="col-md-3">
                         <div class="card text-center">
-                            <div class="card-header"><h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Orders') ?></h6></div>
-                            <div class="card-body">                                
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Orders') ?></h6>
+                            </div>
+                            <div class="card-body">
                                 <p class="h3 mb-0"><?= (int)$data['total_sales'] ?></p>
                             </div>
                         </div>
@@ -57,7 +59,9 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
 
                     <div class="col-md-3">
                         <div class="card text-center">
-                            <div class="card-header"><h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Revenue') ?></h6></div>
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Revenue (Gross)') ?></h6>
+                            </div>
                             <div class="card-body">
                                 <p class="h3 mb-0"><?= htmlspecialchars($data['total_income']) ?></p>
                             </div>
@@ -66,28 +70,82 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
 
                     <div class="col-md-3">
                         <div class="card text-center">
-                            <div class="card-header"><h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Average order value') ?></h6></div>
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Net Income') ?></h6>
+                            </div>
                             <div class="card-body">
-                                <p class="h3 mb-0"><?= htmlspecialchars($data['average_order']) ?></p>
+                                <p class="h3 mb-0"><?= htmlspecialchars($data['net_income']) ?></p>
                             </div>
                         </div>
                     </div>
 
                     <div class="col-md-3">
                         <div class="card text-center">
-                            <div class="card-header"><h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Products sold') ?></h6></div>
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Average Order Value') ?></h6>
+                            </div>
                             <div class="card-body">
-                                <p class="h3 mb-0"><?= (int)$data['total_products'] ?></p>
+                                <p class="h3 mb-0"><?= htmlspecialchars($data['average_order']) ?></p>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- More stats -->
+                <!-- Row 2: Secondary metrics -->
+                <div class="row mt-3">
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Products Sold') ?></h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="h3 mb-0"><?= (int)$data['total_products'] ?></p>
+                                <small class="text-muted"><?= $this->sitebase()->translate('Avg per order: %s', [$data['avg_products']]) ?></small>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Unique Customers') ?></h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="h3 mb-0"><?= (int)$data['unique_customers'] ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Orders per day') ?></h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="h3 mb-0"><?= $data['orders_per_day'] ?></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-3">
+                        <div class="card text-center">
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Shipping total') ?></h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="h3 mb-0"><?= htmlspecialchars($data['total_shipping']) ?></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Row 3: Tax, discount, payment -->
                 <div class="row mt-3">
                     <div class="col-md-4">
                         <div class="card text-center">
-                            <div class="card-header"><h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Tax collected') ?></h6></div>
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Tax collected') ?></h6>
+                            </div>
                             <div class="card-body">
                                 <p class="h4 mb-0"><?= htmlspecialchars($data['total_tax']) ?></p>
                             </div>
@@ -96,8 +154,10 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
 
                     <div class="col-md-4">
                         <div class="card text-center">
-                        <div class="card-header"><h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Discounts given') ?></h6></div>
-                        <div class="card-body">
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Discounts given') ?></h6>
+                            </div>
+                            <div class="card-body">
                                 <p class="h4 mb-0"><?= htmlspecialchars($data['total_discount']) ?></p>
                             </div>
                         </div>
@@ -105,7 +165,9 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
 
                     <div class="col-md-4">
                         <div class="card text-center">
-                            <div class="card-header"><h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Most used payment method') ?></h6></div>
+                            <div class="card-header">
+                                <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Most used payment method') ?></h6>
+                            </div>
                             <div class="card-body">
                                 <p class="h4 mb-0"><?= htmlspecialchars($data['top_payment']) ?></p>
                             </div>
@@ -114,7 +176,10 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                 </div>
 
                 <!-- Top sellers -->
-                <h4 class="mt-4 mb-3"><?= $this->sitebase()->translate('Top %d best sellers', [count($data['most_sold'])]); ?></h4>
+                <h4 class="mt-4 mb-3">
+                    <?= $this->sitebase()->translate('Top %d best sellers', [count($data['most_sold'])]); ?>
+                </h4>
+
                 <div class="table-responsive">
                     <table class="table table-striped table-bordered table-sm">
                         <thead class="thead-dark">
@@ -129,14 +194,14 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                                 <tr>
                                     <td><?= htmlspecialchars($item['product']) ?></td>
                                     <td class="text-right"><?= (int)$item['total_qty'] ?></td>
-                                    <td class="text-right"><?= $item['stock'] ?></td>
+                                    <td class="text-right"><?= htmlspecialchars($item['stock']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
                 </div>
-
             </div>
         <?php $first = false; endforeach; ?>
     </div>
+
 </div>

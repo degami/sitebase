@@ -94,13 +94,18 @@ class Dashboard extends AdminPage
             $args['to'] = $to->format('Y-m-d 23:59:59');
         }
 
-        // === 1️⃣ Statistiche generali (solo tabella `order`) ===
+        // === 1️⃣ Statistiche generali ===
         $qOrders = "
             SELECT
                 COUNT(o.id) AS total_sales,
+                COUNT(DISTINCT o.user_id) AS unique_customers,
+                SUM(o.admin_sub_total) AS net_income,
                 SUM(o.admin_total_incl_tax) AS total_income,
-                SUM(o.discount_amount) AS total_discounts,
-                SUM(o.tax_amount) AS total_tax,
+                SUM(o.admin_shipping_amount) AS total_shipping,
+                SUM(o.admin_discount_amount) AS total_discounts,
+                SUM(o.admin_tax_amount) AS total_tax,
+                AVG(o.admin_discount_amount) AS avg_discount,
+                AVG(o.admin_tax_amount) AS avg_tax,
                 MAX(o.admin_currency_code) AS admin_currency_code
             FROM `order` o
             $where
@@ -122,7 +127,7 @@ class Dashboard extends AdminPage
         $stmt2->execute($args);
         $items = $stmt2->fetch(\PDO::FETCH_ASSOC) ?: [];
 
-        // === 3️⃣ Prodotti più venduti (TOP 10) ===
+        // === 3️⃣ Prodotti più venduti (TOP 5) ===
         $qTop = "
             SELECT 
                 CONCAT(oi.product_class, ':', oi.product_id) AS product_key,
@@ -146,9 +151,9 @@ class Dashboard extends AdminPage
                 $label = method_exists($product, 'getSku')
                     ? ($product->getSku() ?: $product->getName())
                     : $product->getName();
-                $stock = ($product instanceof PhysicalProductInterface) ? 
-                    $product->getProductStock()->getCurrentQuantity() : 
-                    $this->getUtils()->translate('unlimited', locale: $this->getCurrentLocale());
+                $stock = ($product instanceof PhysicalProductInterface)
+                    ? $product->getProductStock()->getCurrentQuantity()
+                    : $this->getUtils()->translate('unlimited', locale: $this->getCurrentLocale());
             } catch (\Exception $e) {
                 $label = 'n/a';
                 $stock = 'n/a';
@@ -181,22 +186,33 @@ class Dashboard extends AdminPage
         $currency = $orders['admin_currency_code'] ?? 'EUR';
 
         $total_sales = (int) ($orders['total_sales'] ?? 0);
+        $total_products = (int) ($items['total_products'] ?? 0);
+        $unique_customers = (int) ($orders['unique_customers'] ?? 0);
         $total_income = (float) ($orders['total_income'] ?? 0);
+        $net_income = (float) ($orders['net_income'] ?? 0);
         $total_tax = (float) ($orders['total_tax'] ?? 0);
         $total_discount = (float) ($orders['total_discounts'] ?? 0);
-        $total_products = (int) ($items['total_products'] ?? 0);
+        $total_shipping = (float) ($orders['total_shipping'] ?? 0);
 
         $aov = $total_sales > 0 ? $total_income / $total_sales : 0;
+        $avg_products = $total_sales > 0 ? $total_products / $total_sales : 0;
+        $days = $from ? max(1, $to->diff($from)->days) : 1;
+        $orders_per_day = $days > 0 ? $total_sales / $days : 0;
 
         return [
-            'total_sales'     => $total_sales,
-            'total_income'    => $utils->formatPrice($total_income, $currency),
-            'total_tax'       => $utils->formatPrice($total_tax, $currency),
-            'total_discount'  => $utils->formatPrice($total_discount, $currency),
-            'total_products'  => $total_products,
-            'average_order'   => $utils->formatPrice($aov, $currency),
-            'most_sold'       => $most_sold,
-            'top_payment'     => $payment['payment_method'] ?? 'n/a',
+            'total_sales'        => $total_sales,
+            'unique_customers'   => $unique_customers,
+            'total_income'       => $utils->formatPrice($total_income, $currency),
+            'net_income'         => $utils->formatPrice($net_income, $currency),
+            'total_tax'          => $utils->formatPrice($total_tax, $currency),
+            'total_discount'     => $utils->formatPrice($total_discount, $currency),
+            'total_shipping'     => $utils->formatPrice($total_shipping, $currency),
+            'total_products'     => $total_products,
+            'average_order'      => $utils->formatPrice($aov, $currency),
+            'avg_products'       => round($avg_products, 2),
+            'orders_per_day'     => round($orders_per_day, 2),
+            'most_sold'          => $most_sold,
+            'top_payment'        => $payment['payment_method'] ?? 'n/a',
         ];
     }
 }

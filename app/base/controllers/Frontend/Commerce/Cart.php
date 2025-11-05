@@ -291,8 +291,12 @@ class Cart extends FormPageWithLang
                             ->where(['cart_item_id' => $this->getCart()->getCartItem($item_id)->getId()])->getFirst();
                         if ($stockMovement) {
                             $stockMovement->setQuantity($quantity)->persist();
+                        } else {
+                            $stockMovement = StockMovement::createForCartItem(
+                                $this->getCart()->getCartItem($item_id)
+                            );
+                            $stockMovement->persist();
                         }
-
                     }
 
                 } else {

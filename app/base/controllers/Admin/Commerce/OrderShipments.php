@@ -358,11 +358,6 @@ class OrderShipments extends AdminManageFrontendModelsPage
         return parent::beforeRender();
     }
 
-    public static function exposeDataToDashboard() : mixed
-    {
-        return null;
-    }
-
     protected function renderShipmentInfo(OrderShipmentModel $orderShipment) : string
     {
         $locationScript = '';

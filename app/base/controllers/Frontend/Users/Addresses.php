@@ -22,6 +22,11 @@ use Degami\PHPFormsApi as FAPI;
 class Addresses extends LoggedUserFormPage
 {
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'My Addresses';
+
+    /**
      * @inheritDoc
      */
     public static function isEnabled(): bool
@@ -234,19 +239,6 @@ class Addresses extends LoggedUserFormPage
         }
 
         return $this->doRedirect($this->getUrl('frontend.users.addresses'));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Addresses', locale: $this->getCurrentLocale());
     }
 
     protected function getAddress() : Address

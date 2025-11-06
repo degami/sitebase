@@ -8,7 +8,7 @@
     <?php if ($this->sitebase()->isCommerceAvailable()) : ?>
     <li class="nav-item">
         <a class="nav-link" href="<?= $this->sitebase()->getUrl('frontend.users.addresses');?>">
-            <?php $this->sitebase()->drawIcon('book'); ?> <span class="text"><?= $this->sitebase()->translate('Addresses');?></span>
+            <?php $this->sitebase()->drawIcon('book'); ?> <span class="text"><?= $this->sitebase()->translate('My Addresses');?></span>
         </a>
     </li>
 
@@ -21,6 +21,12 @@
     <li class="nav-item">
         <a class="nav-link" href="<?= $this->sitebase()->getUrl('frontend.users.downloads');?>">
             <?php $this->sitebase()->drawIcon('download'); ?> <span class="text"><?= $this->sitebase()->translate('My Downloads');?></span>
+        </a>
+    </li>
+
+    <li class="nav-item">
+        <a class="nav-link" href="<?= $this->sitebase()->getUrl('frontend.users.giftcards');?>">
+            <?php $this->sitebase()->drawIcon('gift'); ?> <span class="text"><?= $this->sitebase()->translate('My Giftcards');?></span>
         </a>
     </li>
     <?php endif;?>

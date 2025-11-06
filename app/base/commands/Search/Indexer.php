@@ -69,7 +69,12 @@ class Indexer extends BaseCommand
             return Command::FAILURE;
         }
 
-        $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), function($className) {
+        $classes = array_merge(
+            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), 
+            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
+        );
+
+        $classes = array_filter($classes, function($className) {
             return is_subclass_of($className, FrontendModel::class) && $this->containerCall([$className, 'isIndexable']);
         });
 

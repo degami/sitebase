@@ -70,8 +70,8 @@ class OrderEventListener implements EventListenerInterface
 
         try {
             App::getInstance()->getUtils()->queueTemplateMail(
-                App::getInstance()->getSiteData()->getSiteEmail(),
-                App::getInstance()->getSiteData()->getConfigValue('commerce/emails/customer_care') ?? App::getInstance()->getSiteData()->getSiteEmail(), 
+                App::getInstance()->getSiteData()->getConfigValue('commerce/emails/customer_care') ?? App::getInstance()->getSiteData()->getSiteEmail(),
+                $order->getBillingAddress()->getEmail(), 
                 App::getInstance()->getUtils()->translate('Your order %s has been received', [$order->getOrderNumber()], locale: $order->getOwner()->getLocale()),
                 [
                     'order' => [[Order::class, 'load'], ['id' => $order->getId()]], 

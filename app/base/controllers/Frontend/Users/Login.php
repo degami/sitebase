@@ -34,6 +34,11 @@ class Login extends FormPage
     use FrontendPageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Login';
+
+    /**
      * {@inheritdoc}
      *
      * @return bool
@@ -258,18 +263,5 @@ class Login extends FormPage
         $logged_user->getUserSession()->addSessionData('last_login', new \DateTime())->persist();
 
         return "" . $logged_user->getJWT();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Login', locale: $this->getCurrentLocale());
     }
 }

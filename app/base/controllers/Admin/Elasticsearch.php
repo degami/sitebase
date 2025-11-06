@@ -126,7 +126,12 @@ class Elasticsearch extends AdminPage
 
         $tableContents = [];
 
-        $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class));
+        $classes = array_merge(
+            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), 
+            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
+        );
+        
+        $classes = array_filter($classes, fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class));
         foreach ($classes as $className) {
             if (!$this->containerCall([$className, 'isIndexable'])) {
                 continue;

@@ -40,11 +40,6 @@ abstract class AdminPage extends BaseHtmlPage
     const BACK_BTN = 'back-btn';
 
     /**
-     * @var string page title
-     */
-    protected ?string $page_title = null;
-
-    /**
      * {@inheritdoc}
      *
      * @param ContainerInterface $container

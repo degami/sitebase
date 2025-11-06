@@ -27,6 +27,12 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 class Downloads extends LoggedUserPage
 {
     const ITEMS_PER_PAGE = 20;
+
+    /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'My Downloads';
+
     /**
      * @inheritDoc
      */
@@ -106,19 +112,6 @@ class Downloads extends LoggedUserPage
 //        return DownloadableProduct::getCollection()->where(['id' => array_unique($productIds)]);
 
         return UserDownload::getCollection()->where(['user_id' => $this->getCurrentUser()->getId()]);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('My Downloads', locale: $this->getCurrentLocale());
     }
 
     /**

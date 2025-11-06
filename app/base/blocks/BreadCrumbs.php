@@ -181,7 +181,7 @@ class BreadCrumbs extends BaseCodeBlock
                          * @var FrontendPage $currentPage 
                          */
                         $currentPage = static::getControllerByRewrite($rewrite, App::getInstance());
-                        $title = $currentPage->getRouteName();
+                        $title = $currentPage->getPageTitle() ?? $currentPage->getRouteName();
                     }
 
                     if ($rewrite->getRoute() == '/page/' . $homepageid) {
@@ -270,9 +270,9 @@ class BreadCrumbs extends BaseCodeBlock
                         'attributes' => [
                             'class' => 'breadcrumb-link',
                             'href' => $current_page->getRewrite()->getUrl(),
-                            'title' => $current_page->getRouteName(),
+                            'title' => $current_page->getPageTitle() ?? $current_page->getRouteName(),
                         ],
-                        'text' => $current_page->getRouteName(),
+                        'text' => $current_page->getPageTitle() ?? $current_page->getRouteName(),
                     ]]
                 );
             } else {
@@ -283,9 +283,9 @@ class BreadCrumbs extends BaseCodeBlock
                         'attributes' => [
                             'class' => 'breadcrumb-link',
                             'href' => $current_page->getControllerUrl(),
-                            'title' => $current_page->getRouteName(),
+                            'title' => $current_page->getPageTitle() ?? $current_page->getRouteName(),
                         ],
-                        'text' => $current_page->getRouteName(),
+                        'text' => $current_page->getPageTitle() ?? $current_page->getRouteName(),
                     ]]
                 );
             }

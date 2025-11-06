@@ -23,6 +23,11 @@ use App\Base\Models\OrderComment;
 
 class Orders extends LoggedUserFormPage
 {
+    /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'My Orders';
+
     const ITEMS_PER_PAGE = 20;
     /**
      * @inheritDoc
@@ -280,19 +285,6 @@ class Orders extends LoggedUserFormPage
         }
 
         return $this->doRedirect($this->getUrl('frontend.users.orders'));
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('My Orders', locale: $this->getCurrentLocale());
     }
 
     protected function getOrder() : ?Order

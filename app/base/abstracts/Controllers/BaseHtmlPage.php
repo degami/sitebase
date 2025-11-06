@@ -48,6 +48,11 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     use PageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = null;
+
+    /**
      * @var Template|null template object
      */
     protected ?Template $template = null;
@@ -459,5 +464,10 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     protected function refreshPage(array $urlParams = []) : RedirectResponse 
     {
         return $this->doRedirect($this->getControllerUrl() . (!empty($urlParams) ? '?' . http_build_query($urlParams) : ''));
+    }
+
+    public function getPageTitle(): ?string
+    {
+        return $this->page_title;
     }
 }

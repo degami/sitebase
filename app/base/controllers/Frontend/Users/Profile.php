@@ -28,6 +28,10 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
  */
 class Profile extends LoggedUserFormPage
 {
+    /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'User Profile';
 
     /**
      * {@inheritdoc}
@@ -211,18 +215,5 @@ class Profile extends LoggedUserFormPage
         }
 
         return $this->refreshPage();
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('User profile', locale: $this->getCurrentLocale());
     }
 }

@@ -387,7 +387,7 @@ class Product extends CodeGeneratorCommand
 namespace App\\Site\\Models;
 
 use App\\Base\\Abstracts\\Models\\FrontendModel;
-use ".str_replace('\\','\\\\', $this->interface).";
+use ".$this->interface.";
 use ".implode(";\nuse ", $this->traits).";
 use App\Base\GraphQl\GraphQLExport;
 

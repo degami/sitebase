@@ -35,6 +35,11 @@ class PasswordForgot extends FormPage
     use FrontendPageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Forgot Password?';
+
+    /**
      * {@inheritdoc}
      *
      * @return bool
@@ -270,18 +275,5 @@ class PasswordForgot extends FormPage
         }
 
         return $user_model;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Forgot Password?', locale: $this->getCurrentLocale());
     }
 }

@@ -18,6 +18,7 @@ use App\Base\Models\Address;
 use App\Base\Models\Role;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
+use App\Base\Models\StoreCredit;
 use App\Base\Models\User;
 use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
@@ -126,7 +127,16 @@ class Users extends AdminManageModelsPage
                         $this->getUrl('crud.app.base.controllers.admin.json.useraddresses', ['id' => $this->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getRequest()->query->get('user_id') . '&action=newaddress',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
- 
+
+                    $this->addActionLink(
+                        'storecredit-btn',
+                        'storecredit-btn',
+                        '<i class="fas fa-coins"></i> ' . $this->getUtils()->translate('Store Credit', locale: $this->getCurrentLocale()),
+                        $this->getUrl('crud.app.base.controllers.admin.json.userstorecredit', ['id' => $this->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getRequest()->query->get('user_id') . '&action=newstorecredittransaction',
+                        'btn btn-sm btn-light inToolSidePanel'
+                    );
+
+
                     if ($user->locked) {
                         $this->addActionLink(
                             'lock-btn',
@@ -332,6 +342,31 @@ class Users extends AdminManageModelsPage
                 ]);
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
                 break;
+            case 'newstorecredittransaction':
+
+                $websites = $this->getUtils()->getWebsitesSelectOptions();
+
+                $form
+                    ->addField('website_id', [
+                        'type' => 'select',
+                        'title' => 'Website',
+                        'default_value' => $this->getSiteData()->getCurrentWebsiteId(),
+                        'options' => $websites,
+                        'validate' => ['required'],
+                    ])
+                    ->addField('amount', [
+                        'type' => 'number',
+                        'title' => 'Amount',
+                        'step' => '0.01',
+                        'min' => 0,
+                        'max' => 10000,
+                        'validate' => ['required'],
+                        'default_value' => '',
+                    ]);
+
+                $this->addSubmitButton($form);
+
+                break;
         }
 
         return $form;
@@ -439,6 +474,37 @@ class Users extends AdminManageModelsPage
 
                 $this->setAdminActionLogData('Deleted user ' . $user->getId());
                 $address->delete();
+
+                break;
+            case 'newstorecredittransaction':
+
+                $storeCredit = StoreCredit::getCollection()
+                    ->where([
+                        'user_id' => $user->getId(),
+                        'website_id' => $values['website_id'] ?? $this->getSiteData()->getCurrentWebsiteId(),
+                    ])
+                    ->getFirst();
+
+                if (!$storeCredit) {
+                    $storeCredit = new StoreCredit();
+                    $storeCredit->setUserId($user->getId())
+                        ->setWebsiteId($values['website_id'] ?? $this->getSiteData()->getCurrentWebsiteId())
+                        ->setCredit(0)
+                        ->persist();
+                }
+
+                $storeCredit->makeTransaction(
+                    $values['amount'],
+                    $user,
+                    $this->containerCall(
+                        [\App\Base\Models\Website::class, 'load'],
+                        ['id' => $values['website_id'] ?? $this->getSiteData()->getCurrentWebsiteId()]
+                    )
+                );
+
+                $this->setAdminActionLogData('Added store credit transaction for user ' . $user->getId());
+
+                $this->addSuccessFlashMessage($this->getUtils()->translate('Store credit transaction added successfully.', locale: $this->getCurrentLocale()));
 
                 break;
         }

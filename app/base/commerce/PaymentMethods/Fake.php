@@ -13,6 +13,7 @@
 
 namespace App\Base\Commerce\PaymentMethods;
 
+use App\App;
 use Degami\PHPFormsApi as FAPI;
 use Degami\PHPFormsApi\Containers\SeamlessContainer;
 use App\Base\Models\Cart;
@@ -30,6 +31,14 @@ class Fake extends BasePaymentMethod
     public function getName(): string
     {
         return 'Fake (Test) Payment';
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isActive(Cart $cart): bool
+    {
+        return App::getInstance()->getEnvironment()->canDebug() && parent::isActive($cart);
     }
 
     public function getConfigurationForm(FAPI\Form $form, array &$form_state) : FAPI\Form

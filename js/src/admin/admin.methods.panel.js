@@ -94,7 +94,10 @@
                                     // based on alert (alert-danger, alert-info) class, determine type and call alertType method
                                     let alertType = alertDiv.hasClass('alert-danger') ? 'error' : 'info';
                                     $(that).appAdmin(alertType, alertDiv.text());
-                                    return;
+
+                                    if (alertType == 'error') {
+                                        return;
+                                    }
                                 }
                             }
 

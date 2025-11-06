@@ -194,7 +194,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                                 <tr>
                                     <td><?= htmlspecialchars($item['product']) ?></td>
                                     <td class="text-right"><?= (int)$item['total_qty'] ?></td>
-                                    <td class="text-right"><?= htmlspecialchars($item['stock']) ?></td>
+                                    <td class="text-right"><?= htmlspecialchars((string)$item['stock']) ?></td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>

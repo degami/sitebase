@@ -14,7 +14,7 @@ class CreateOrderShipmentHistoryTableMigration extends DBMigration
 
     public function getName(): string
     {
-        return '9.3_'.parent::getName();
+        return '09.3_'.parent::getName();
     }
 
     public function addDBTableDefinition(Table $table): Table

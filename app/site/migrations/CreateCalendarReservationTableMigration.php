@@ -13,7 +13,7 @@ class CreateCalendarReservationTableMigration extends DBMigration
 
     public function getName(): string
     {
-        return '184_'.parent::getName();
+        return '10_'.parent::getName();
     }
 
     public function addDBTableDefinition(Table $table): Table

@@ -12,8 +12,10 @@ $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_def
 <div class="row">
     <div class="col-md-10">
 
-        <h1 class="giftcard-title"><?php echo $object->getTitle();?></h1>
-        <div class="giftcard-content"><?php echo $object->getContent();?></div>
+        <h1 class="book-title"><?php echo $object->getTitle();?></h1>
+        <div class="sku">SKU: <?= $object->getSku(); ?></div>
+        <h3 class="price mt-2 mb-3"><?= $this->sitebase()->formatPrice($object->getPrice()); ?></h3>
+        <div class="book-content"><?php echo $object->getContent();?></div>
 
         <?php if (($gallery = $object->getGallery()) && count($gallery)) : ?>
         <div class="page-gallery">

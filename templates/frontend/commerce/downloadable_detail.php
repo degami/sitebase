@@ -13,6 +13,9 @@ $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_def
     <div class="col-md-10">
 
         <h1 class="downloadable-title"><?php echo $object->getTitle();?></h1>
+        <div class="sku">SKU: <?= $object->getSku(); ?></div>
+        <h3 class="price mt-2 mb-3"><?= $this->sitebase()->formatPrice($object->getPrice()); ?></h3>
+
         <div class="downloadable-content"><?php echo $object->getContent();?></div>
 
         <?php if (($gallery = $object->getGallery()) && count($gallery)) : ?>

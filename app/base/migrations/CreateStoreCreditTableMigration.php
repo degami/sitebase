@@ -13,7 +13,7 @@ class CreateStoreCreditTableMigration extends DBMigration
 
     public function getName(): string
     {
-        return '8.4_'.parent::getName();
+        return '08.4_'.parent::getName();
     }
 
     public function addDBTableDefinition(Table $table): Table

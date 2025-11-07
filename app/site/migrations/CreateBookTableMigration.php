@@ -12,7 +12,7 @@ class CreateBookTableMigration extends DBMigration
 
     public function getName(): string
     {
-        return '178_'.parent::getName();
+        return '10_'.parent::getName();
     }
 
     public function addDBTableDefinition(Table $table): Table

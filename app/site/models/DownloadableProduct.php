@@ -107,7 +107,7 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
     }
 
     /**
-     * adds media to page
+     * adds media to downloadable_product gallery
      *
      * @param MediaElement $media_element
      * @return self
@@ -126,7 +126,7 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
     }
 
     /**
-     * removes media from page
+     * removes media from downloadable_product gallery
      *
      * @param MediaElement $media_element
      * @return self
@@ -144,7 +144,7 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
     }
 
     /**
-     * getsmedia element
+     * gets media element
      *
      * @param bool $reset
      * @return MediaElement|null

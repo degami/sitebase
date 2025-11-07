@@ -2,6 +2,7 @@
 
 namespace App\Site\Models;
 
+use App\App;
 use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Interfaces\Model\PhysicalProductInterface;
 use App\Base\Traits\PhysicalProductTrait;
@@ -52,9 +53,78 @@ class Book extends FrontendModel implements PhysicalProductInterface
     use ProductTrait;
     use PhysicalProductTrait;
 
+    /**
+     * @var array page gallery
+     */
+    protected array $gallery = [];
+
     public function isPhysical(): bool
     {
         return true;
+    }
+
+
+    /**
+     * gets book gallery
+     *
+     * @param bool $reset
+     * @return \App\Site\Models\MediaElement[]
+     * @throws Exception
+     */
+    #[GraphQLExport]
+    public function getGallery(bool $reset = false): array
+    {
+        $this->checkLoaded();
+
+        if (!(is_array($this->gallery) && !empty($this->gallery)) || $reset == true) {
+            $this->gallery = array_filter(array_map(
+                function ($el) {
+                    /** @var MediaElement $mediaElement */
+                    $mediaElement = App::getInstance()->containerMake(MediaElement::class, ['db_row' => $el]);
+
+                    return $mediaElement->isImage() ? $mediaElement : null;
+                },
+                $this->book_media_elementList()->media_element()->fetchAll()
+            ));
+        }
+        return $this->gallery;
+    }
+
+    /**
+     * adds media to book gallery
+     *
+     * @param MediaElement $media_element
+     * @return self
+     * @throws BasicException
+     */
+    public function addMedia(MediaElement $media_element): static
+    {
+        $new_page_media_row = App::getInstance()->getDb()->table('book_media_element')->createRow();
+        $new_page_media_row->update(
+            [
+                'book_id' => $this->id,
+                'media_element_id' => $media_element->id,
+            ]
+        );
+        return $this;
+    }
+
+    /**
+     * removes media from book gallery
+     *
+     * @param MediaElement $media_element
+     * @return self
+     * @throws BasicException
+     */
+    public function removeMedia(MediaElement $media_element): static
+    {
+        App::getInstance()->getDb()->table('book_media_element')->where(
+            [
+                'book_id' => $this->id,
+                'media_element_id' => $media_element->id,
+            ]
+        )->delete();
+        return $this;
     }
 
     /**

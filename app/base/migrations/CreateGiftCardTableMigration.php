@@ -13,7 +13,7 @@ class CreateGiftCardTableMigration extends DBMigration
 
     public function getName(): string
     {
-        return '8.5_'.parent::getName();
+        return '08.5_'.parent::getName();
     }
 
     public function addDBTableDefinition(Table $table): Table

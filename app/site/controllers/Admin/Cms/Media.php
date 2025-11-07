@@ -29,6 +29,7 @@ use App\Site\Models\Page;
 use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Abstracts\Models\BaseCollection;
+use App\Site\Models\Book;
 use Degami\Basics\Html\TagElement;
 use App\Site\Models\DownloadableProduct;
 use Exception;
@@ -335,12 +336,29 @@ class Media extends AdminManageModelsPage
                     ]);
                 }
 
-                if ($this->getRequest()->query->get('product_id')) {
+                if ($this->getRequest()->query->get('product_type') == 'downloadable' && $this->getRequest()->query->get('product_id')) {
                     /** @var DownloadableProduct $product */
                     $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
                     $form->addField('product_id', [
                         'type' => 'hidden',
                         'default_value' => $product->getId(),
+                    ]);
+                    $form->addField('product_type', [
+                        'type' => 'hidden',
+                        'default_value' => 'downloadable',
+                    ]);
+                }
+
+                if ($this->getRequest()->query->get('product_type') == 'downloadable' && $this->getRequest()->query->get('product_id')) {
+                    /** @var Book $product */
+                    $product = $this->containerCall([Book::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
+                    $form->addField('product_id', [
+                        'type' => 'hidden',
+                        'default_value' => $product->getId(),
+                    ]);
+                    $form->addField('product_type', [
+                        'type' => 'hidden',
+                        'default_value' => 'book',
                     ]);
                 }
 
@@ -472,6 +490,58 @@ class Media extends AdminManageModelsPage
 
                 $this->addSubmitButton($form, true);
                 break;
+            case 'book_assoc':
+                $not_in = array_map(
+                    function ($el) {
+                        return $el->page_id;
+                    },
+                    $this->getDb()->book_media_elementList()->where('media_element_id', $media->getId())->fetchAll()
+                );
+
+                $products = array_filter(
+                    array_map(
+                        function ($product) use ($not_in) {
+                            /** @var Book $product */
+                            if (in_array($product->getId(), $not_in)) {
+                                return null;
+                            }
+
+                            return ['title' => $product->getTitle() . ' - ' . $product->getRewrite()->getUrl(), 'id' => $product->getId()];
+                        },
+                        Book::getCollection()->getItems()
+                    )
+                );
+
+                $products = array_combine(array_column($products, 'id'), array_column($products, 'title'));
+
+                $form->addField('product_id', [
+                    'type' => 'select',
+                    'options' => ['' => ''] + $products,
+                    'default_value' => '',
+                ])->addField('media_id', [
+                    'type' => 'hidden',
+                    'default_value' => $media->getId(),
+                ]);
+
+                $this->addSubmitButton($form, true);
+                break;
+            case 'book_deassoc':
+                /** @var Book $product */
+                $product = $this->containerCall([Book::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
+                $form->addField('product_id', [
+                    'type' => 'hidden',
+                    'default_value' => $product->getId(),
+                ])->addField('media_id', [
+                    'type' => 'hidden',
+                    'default_value' => $media->getId(),
+                ])->addField('confirm', [
+                    'type' => 'markup',
+                    'value' => 'Do you confirm the disassociation of the selected element from the "' . $product->getTitle() . '" product (ID: ' . $product->getId() . ') ?',
+                    'suffix' => '<br /><br />',
+                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.bookmedia', ['id' => $product->getId()]) . '?page_id=' . $product->getId() . '&action=new">Cancel</a>');
+
+                $this->addSubmitButton($form, true);
+                break;
             case 'delete':
                 $confirmMessage = 'Do you confirm the deletion of the selected element?';
                 if ($media->isDirectory()) {
@@ -578,8 +648,10 @@ class Media extends AdminManageModelsPage
 
                 if ($values['page_id'] != null) {
                     $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']])->addMedia($media);
-                } else if ($values['product_id'] != null) {
+                } else if ($values['product_type'] == 'downloadable' && $values['product_id'] != null) {
                     $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $values['product_id']])->addMedia($media);
+                } else if ($values['product_type'] == 'book' && $values['product_id'] != null) {
+                    $this->containerCall([Book::class, 'load'], ['id' => $values['product_id']])->addMedia($media);
                 } else {
                     $this->addSuccessFlashMessage($this->getUtils()->translate("Media Saved."));
                 }

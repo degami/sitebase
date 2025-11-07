@@ -274,7 +274,7 @@ class Media extends AdminManageModelsPage
                 $this->addActionLink(
                     'pages-btn',
                     'pages-btn',
-                    '&#9776; ' . $this->getUtils()->translate('Pages', locale: $this->getCurrentLocale()),
+                    $this->getHtmlRenderer()->getIcon('book-open') . ' ' . $this->getUtils()->translate('Pages', locale: $this->getCurrentLocale()),
                     $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $this->getRequest()->query->get('media_id')]) . '?media_id=' . $this->getRequest()->query->get('media_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );

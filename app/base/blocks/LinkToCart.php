@@ -89,7 +89,9 @@ class LinkToCart extends BaseCodeBlock
 
         $numItems = count($this->getCart($current_page)?->getItems() ?? []);
 
-        $targetHref = $this->getWebRouter()->getUrl("frontend.commerce.cart");
+        $targetHref = $this->getWebRouter()->getUrl("frontend.commerce.cart.withlang", [
+            'lang' => $current_page?->getCurrentLocale(),
+        ]);
         $countbadge = '<span class="badge badge-secondary position-absolute" style="bottom: -5px; left: -5px;">'.$numItems.'</span>';
 
 

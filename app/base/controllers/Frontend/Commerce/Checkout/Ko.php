@@ -24,6 +24,11 @@ class Ko extends FrontendPageWithLang
     use CommercePageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'There was a little problem processing your order';
+
+    /**
      * @inheritDoc
      */
     public static function isEnabled(): bool
@@ -39,19 +44,6 @@ class Ko extends FrontendPageWithLang
     public function canBeFPC(): bool
     {
         return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('There was a little problem processing your Order', locale: $this->getCurrentLocale());
     }
 
     /**

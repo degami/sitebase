@@ -89,14 +89,6 @@ class GiftCards extends AdminManageProductsPage
 
         switch ($type) {
             case 'edit':
-                $this->addActionLink(
-                    'media-btn',
-                    'media-btn',
-                    $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.downloadablemedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&action=new',
-                    'btn btn-sm btn-light inToolSidePanel'
-                );
-
             case 'new':
 
                 $product_title = $product_content = $product_media = '';
@@ -165,24 +157,6 @@ class GiftCards extends AdminManageProductsPage
             case 'delete':
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
                 break;
-
-            case 'media_deassoc':
-                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
-                $form->addField('product_id', [
-                    'type' => 'hidden',
-                    'default_value' => $product->id,
-                ])->addField('media_id', [
-                    'type' => 'hidden',
-                    'default_value' => $media->id,
-                ])->addField('confirm', [
-                    'type' => 'markup',
-                    'value' => 'Do you confirm the disassociation of the "' . $product->title . '" product from the media ID: ' . $media->id . '?',
-                    'suffix' => '<br /><br />',
-                ])->addMarkup('<a class="btn btn-danger btn-sm" href="' . $this->getUrl('crud.app.site.controllers.admin.json.mediadownloadableproducts', ['id' => $media->id]) . '?media_id=' . $media->id . '&action=downloadable_product_deassoc">Cancel</a>');
-
-                $this->addSubmitButton($form, true);
-                break;
-
         }
 
         return $form;
@@ -235,27 +209,22 @@ class GiftCards extends AdminManageProductsPage
                 $product->setWebsiteId($values['frontend']['website_id']);
                 $product->setMediaId($values['media_id']);
                 $product->setPrice((float)$values['price']);
+                $product->setCredit((float)$values['price']);
                 $product->setTaxClassId($values['tax_class_id']);
 
                 $this->setAdminActionLogData($product->getChangedData());
 
                 $product->persist();
 
-                $this->addSuccessFlashMessage($this->getUtils()->translate("Product Saved."));
+                $this->addSuccessFlashMessage($this->getUtils()->translate("Giftcard Saved."));
                 break;
             case 'delete':
                 $product->delete();
 
-                $this->setAdminActionLogData('Deleted product ' . $product->getId());
+                $this->setAdminActionLogData('Deleted giftcard ' . $product->getId());
 
-                $this->addInfoFlashMessage($this->getUtils()->translate("Product Deleted."));
+                $this->addInfoFlashMessage($this->getUtils()->translate("Giftcard Deleted."));
 
-                break;
-            case 'media_deassoc':
-                if ($values['media_id']) {
-                    $media = $this->containerCall([Media::class, 'load'], ['id' => $values['media_id']]);
-                    $product->removeMedia($media);
-                }
                 break;
         }
 

@@ -24,6 +24,11 @@ class Billing extends FormPageWithLang
     use CommercePageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Billing Address';
+
+    /**
      * @inheritDoc
      */
     public static function isEnabled(): bool
@@ -47,19 +52,6 @@ class Billing extends FormPageWithLang
     public function getTemplateName(): string
     {
         return 'commerce/billing';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Billing Address', locale: $this->getCurrentLocale());
     }
 
     /**

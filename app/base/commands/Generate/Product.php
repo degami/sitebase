@@ -370,12 +370,14 @@ class Product extends CodeGeneratorCommand
     protected function getModelFileContents($className): string
     {
         $comment = '';
+        $comment .= " * @method int getId()\n";
         foreach ($this->columns as $name => $column_info) {
             $comment .= " * @method " . $column_info['php_type'] . " get" . $this->getUtils()->snakeCaseToPascalCase($name) . "()\n";
         }
         $comment .= " * @method \\DateTime getCreatedAt()\n";
         $comment .= " * @method \\DateTime getUpdatedAt()\n";
 
+        $comment .= " * @method self setId(int \$id)\n";
         foreach ($this->columns as $name => $column_info) {
             $comment .= " * @method self set" . $this->getUtils()->snakeCaseToPascalCase($name) . "(" . $column_info['php_type'] . " \${$name})\n";
         }

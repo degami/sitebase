@@ -34,6 +34,11 @@ class DownloadablesList extends FrontendPageWithLang
     protected ?RouteInfo $route_info = null;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Downloadables';
+
+    /**
      * gets route group
      *
      * @return string
@@ -117,18 +122,5 @@ class DownloadablesList extends FrontendPageWithLang
         }
         $this->getApp()->setCurrentLocale($this->locale);
         return $this->locale;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Downloadables', locale: $this->getCurrentLocale());
     }
 }

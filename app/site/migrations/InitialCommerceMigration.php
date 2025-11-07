@@ -72,6 +72,12 @@ class InitialCommerceMigration extends BaseMigration
             $taxClass->setWebsiteId($website->getId());
             $taxClass->setClassName('Products');
             $taxClass->persist();
+
+            /** @var TaxClass $taxClass */
+            $taxClass = App::getInstance()->containerMake(TaxClass::class);
+            $taxClass->setWebsiteId($website->getId());
+            $taxClass->setClassName('No Tax');
+            $taxClass->persist();
         }
     }
 

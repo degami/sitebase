@@ -25,6 +25,11 @@ class Typ extends FrontendPageWithLang
     use CommercePageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Thank you for your Order';
+
+    /**
      * @inheritDoc
      */
     public static function isEnabled(): bool
@@ -40,19 +45,6 @@ class Typ extends FrontendPageWithLang
     public function canBeFPC(): bool
     {
         return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Thank you for your Order', locale: $this->getCurrentLocale());
     }
 
     /**

@@ -152,7 +152,7 @@ class Dashboard extends AdminPage
                     ? ($product->getSku() ?: $product->getName())
                     : $product->getName();
                 $stock = ($product instanceof PhysicalProductInterface)
-                    ? $product->getProductStock()?->getCurrentQuantity()
+                    ? ($product->getProductStock()?->getCurrentQuantity() ?? 0)
                     : $this->getUtils()->translate('unlimited', locale: $this->getCurrentLocale());
             } catch (\Exception $e) {
                 $label = 'n/a';

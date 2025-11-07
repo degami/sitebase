@@ -28,6 +28,11 @@ use App\Base\Tools\Search\Manager as SearchManager;
 class Search extends FrontendPageWithLang
 {
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Search';
+
+    /**
      * {@inheritdoc}
      *
      * @return bool
@@ -128,19 +133,6 @@ class Search extends FrontendPageWithLang
             ->addSort('created_at', 'desc')
             ->addSort('id', 'asc')
             ->searchData($page);
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Search', locale: $this->getCurrentLocale());
     }
 
     /**

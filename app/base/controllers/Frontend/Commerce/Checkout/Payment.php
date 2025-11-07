@@ -29,6 +29,11 @@ class Payment extends FormPageWithLang
     use CommercePageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Payment';
+
+    /**
      * @inheritDoc
      */
     public static function isEnabled(): bool
@@ -52,19 +57,6 @@ class Payment extends FormPageWithLang
     public function getTemplateName(): string
     {
         return 'commerce/payment';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Payment', locale: $this->getCurrentLocale());
     }
 
     /**

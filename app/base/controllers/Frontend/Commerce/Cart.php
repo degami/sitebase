@@ -26,7 +26,12 @@ use Degami\PHPFormsApi\Containers\TableContainer;
 class Cart extends FormPageWithLang
 {
     use CommercePageTrait;
-    
+
+    /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Cart';
+
     public function __construct(
         protected ContainerInterface $container, 
         ?Request $request = null,
@@ -69,19 +74,6 @@ class Cart extends FormPageWithLang
     public static function getRouteVerbs(): array
     {
         return ['GET', 'POST'];
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Cart', locale: $this->getCurrentLocale());
     }
 
     /**

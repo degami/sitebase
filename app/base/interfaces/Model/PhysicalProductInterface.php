@@ -13,6 +13,8 @@
 
 namespace App\Base\Interfaces\Model;
 
+use App\Base\Models\ProductStock;
+
 interface PhysicalProductInterface extends ProductInterface
 {
     public function getWeight(): float; 
@@ -21,4 +23,5 @@ interface PhysicalProductInterface extends ProductInterface
     public function getHeight(): ?float;
 
     public function getVolumetricWeight(float $divisor = 5000): float;
+    public function getProductStock(): ?ProductStock;
 }

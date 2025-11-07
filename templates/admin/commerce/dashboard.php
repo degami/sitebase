@@ -47,7 +47,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                 <!-- Row 1: Main metrics -->
                 <div class="row mt-3">
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Orders') ?></h6>
                             </div>
@@ -58,7 +58,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Revenue (Gross)') ?></h6>
                             </div>
@@ -69,7 +69,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Net Income') ?></h6>
                             </div>
@@ -80,7 +80,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Average Order Value') ?></h6>
                             </div>
@@ -94,7 +94,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                 <!-- Row 2: Secondary metrics -->
                 <div class="row mt-3">
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Products Sold') ?></h6>
                             </div>
@@ -106,7 +106,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Unique Customers') ?></h6>
                             </div>
@@ -117,7 +117,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Orders per day') ?></h6>
                             </div>
@@ -128,7 +128,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-3">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Shipping total') ?></h6>
                             </div>
@@ -142,7 +142,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                 <!-- Row 3: Tax, discount, payment -->
                 <div class="row mt-3">
                     <div class="col-md-4">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Tax collected') ?></h6>
                             </div>
@@ -153,7 +153,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-4">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Discounts given') ?></h6>
                             </div>
@@ -164,7 +164,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
                     </div>
 
                     <div class="col-md-4">
-                        <div class="card text-center">
+                        <div class="card text-center h-100">
                             <div class="card-header">
                                 <h6 class="text-muted mb-2"><?= $this->sitebase()->translate('Most used payment method') ?></h6>
                             </div>

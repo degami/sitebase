@@ -27,6 +27,11 @@ class Shipping extends FormPageWithLang
     use CommercePageTrait;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Shipping Address';
+
+    /**
      * @inheritDoc
      */
     public static function isEnabled(): bool
@@ -50,19 +55,6 @@ class Shipping extends FormPageWithLang
     public function getTemplateName(): string
     {
         return 'commerce/shipping';
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Shipping Address', locale: $this->getCurrentLocale());
     }
 
     /**

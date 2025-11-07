@@ -35,6 +35,11 @@ class GiftCardsList extends FrontendPageWithLang
     protected ?RouteInfo $route_info = null;
 
     /**
+     * @var string page title
+     */
+    protected ?string $page_title = 'Gift Cards';
+
+    /**
      * gets route group
      *
      * @return string
@@ -118,18 +123,5 @@ class GiftCardsList extends FrontendPageWithLang
         }
         $this->getApp()->setCurrentLocale($this->locale);
         return $this->locale;
-    }
-
-    /**
-     * {@inheritdoc}
-     *
-     * @return string
-     * @throws BasicException
-     * @throws DependencyException
-     * @throws NotFoundException
-     */
-    public function getRouteName(): string
-    {
-        return $this->getUtils()->translate('Gift Cards', locale: $this->getCurrentLocale());
     }
 }

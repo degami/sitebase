@@ -1795,4 +1795,266 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         return (string)$table;
     }
+
+    public function renderCalendar(\DateTime $date, string $view = 'month'): string
+    {
+        switch ($view) {
+            case 'day':
+                return $this->renderDayView($date);
+            case 'week':
+                return $this->renderWeekView($date);
+            case 'month':
+            default:
+                return $this->renderMonthView($date);
+        }
+    }
+
+    protected function renderMonthView(\DateTime $date): string
+    {
+        $start = (clone $date)->modify('first day of this month');
+        $end   = (clone $date)->modify('last day of this month');
+
+        $startWeekDay = (int)$start->format('N'); // 1 = lun, 7 = dom
+        $daysInMonth  = (int)$date->format('t');
+
+        $table = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'table',
+                'attributes' => ['class' => "table table-bordered text-center calendar-month"],
+            ]]
+        );
+
+        $thead = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'thead',
+            ]]
+        );
+        $tbody = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tbody',
+            ]]
+        );
+
+        $table->addChild($thead);
+        $table->addChild($tbody);
+
+        $row = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tr',
+            ]]
+        );
+        foreach (['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] as $d) {
+            $row->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'th',
+                        'text' => $this->getUtils()->translate($d),
+                    ]]
+                )
+            );
+        }
+        $thead->addChild($row);
+
+        $currentDay = 1;
+        $currentRow = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tr',
+            ]]
+        );
+        $tbody->addChild($currentRow);
+
+        // empty cells before start
+        for ($i=1; $i<$startWeekDay; $i++) {
+            $currentRow->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'td',
+                        'attributes' => ['class' => 'bg-light'],
+                    ]]
+                )
+            );
+        }
+
+        while ($currentDay <= $daysInMonth) {
+            $current = (clone $start)->setDate($start->format('Y'), $start->format('m'), $currentDay);
+            $isToday = $current->format('Y-m-d') === date('Y-m-d');
+
+            $class = $isToday ? 'table-primary fw-bold' : '';
+
+            $currentRow->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'td',
+                        'text' => (string)$currentDay,
+                        'attributes' => ['class' => $class],
+                    ]]
+                )
+            );
+
+            if ($current->format('N') == 7) {
+                $tbody->addChild($currentRow);
+                $currentRow = $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'tr',
+                    ]]
+                );
+                $tbody->addChild($currentRow);
+            }
+
+            $currentDay++;
+        }
+
+        return (string)$table;
+    }
+
+    protected function renderWeekView(\DateTime $date, string $formatDate = 'D d/m'): string
+    {
+        $startOfWeek = (clone $date)->modify('monday this week');
+
+        $table = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'table',
+                'attributes' => ['class' => "table table-bordered text-center calendar-week"],
+            ]]
+        );
+
+        $thead = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'thead',
+            ]]
+        );
+        $tbody = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tbody',
+            ]]
+        );
+        $table->addChild($thead);
+        $table->addChild($tbody);
+
+        $row = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tr',
+            ]]
+        );
+        for ($i=0; $i<7; $i++) {
+            $d = (clone $startOfWeek)->modify("+$i day");
+            $row->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'th',
+                        'text' => $d->format($formatDate),
+                    ]]
+                )
+            );
+        }
+        $thead->addChild($row);
+
+        $row = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tr',
+            ]]
+        );
+        for ($i=0; $i<7; $i++) {
+            $d = (clone $startOfWeek)->modify("+$i day");
+            $isToday = $d->format('Y-m-d') === date('Y-m-d');
+            $class = $isToday ? 'table-primary fw-bold' : '';
+            $row->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'td',
+                        'text' => '',
+                        'attributes' => ['class' => $class, 'style' => 'height:100px'],
+                    ]]
+                )
+            );
+        }
+        $tbody->addChild($row);
+        return (string)$table;
+    }
+
+    protected function renderDayView(\DateTime $date, string $formatDate = 'l d F Y'): string
+    {
+        $table = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'table',
+                'attributes' => ['class' => "table table-bordered text-center calendar-day"],
+            ]]
+        );
+
+        $thead = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'thead',
+            ]]
+        );
+
+        $tbody = $this->containerMake(
+            TagElement::class,
+            ['options' => [
+                'tag' => 'tbody',
+            ]]
+        );
+
+        $table->addChild($thead);
+        $table->addChild($tbody);
+
+        $thead->addChild(
+            $this->containerMake(
+                TagElement::class,
+                ['options' => [
+                    'tag' => 'tr',
+                    'children' => [
+                        $this->containerMake(TagElement::class, ['options' => [
+                            'tag' => 'th',
+                            'text' => $date->format($formatDate),
+                            'attributes' => ['colspan' => 2],
+                        ]]),
+                    ]
+                ]]
+            )
+        );
+
+        // fasce orarie
+        for ($h = 0; $h < 24; $h++) {
+            $tbody->addChild(
+                $this->containerMake(
+                    TagElement::class,
+                    ['options' => [
+                        'tag' => 'tr',
+                        'children' => [
+                            $this->containerMake(TagElement::class, ['options' => [
+                                'tag' => 'td',
+                                'text' => sprintf('%02d:00', $h),
+                                'attributes' => ['style' => 'width:100px;', 'class' => 'fw-bold'],
+                            ]]),
+                            $this->containerMake(TagElement::class, ['options' => [
+                                'tag' => 'td',
+                                'text' => '',
+                                'attributes' => ['style' => 'height:40px;'],
+                            ]]),
+                        ]
+                    ]]
+                )
+            );
+        }
+
+        return (string)$table;
+    }
 }

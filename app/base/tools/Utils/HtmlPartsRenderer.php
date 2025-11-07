@@ -1796,25 +1796,25 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return (string)$table;
     }
 
-    public function renderCalendar(\DateTime $date, string $view = 'month'): string
+    public function renderCalendar(\DateTime $date, string $view = 'month', array $cellsContent = []): string
     {
         switch ($view) {
             case 'day':
-                return $this->renderDayView($date);
+                return $this->renderDayView($date, cellsContent: $cellsContent);
             case 'week':
-                return $this->renderWeekView($date);
+                return $this->renderWeekView($date, cellsContent: $cellsContent);
             case 'month':
             default:
-                return $this->renderMonthView($date);
+                return $this->renderMonthView($date, cellsContent: $cellsContent);
         }
     }
 
-    protected function renderMonthView(\DateTime $date): string
+    protected function renderMonthView(\DateTime $date, array $cellsContent = []): string
     {
         $start = (clone $date)->modify('first day of this month');
         $end   = (clone $date)->modify('last day of this month');
 
-        $startWeekDay = (int)$start->format('N'); // 1 = lun, 7 = dom
+        $startWeekDay = (int)$start->format('N'); // 1 = mon, 7 = sun
         $daysInMonth  = (int)$date->format('t');
 
         $table = $this->containerMake(
@@ -1845,15 +1845,16 @@ class HtmlPartsRenderer extends ContainerAwareObject
             TagElement::class,
             ['options' => [
                 'tag' => 'tr',
+                'attributes' => ['class' => 'thead-dark'],
             ]]
         );
-        foreach (['Mon','Tue','Wed','Thu','Fri','Sat','Sun'] as $d) {
+        foreach (['Monday','Tuesday','Wednesday','Thursday','Friday','Saturday','Sunday'] as $d) {
             $row->addChild(
                 $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'th',
-                        'text' => $this->getUtils()->translate($d),
+                        'text' => substr($this->getUtils()->translate($d), 0, 3),
                     ]]
                 )
             );
@@ -1884,23 +1885,21 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
         while ($currentDay <= $daysInMonth) {
             $current = (clone $start)->setDate($start->format('Y'), $start->format('m'), $currentDay);
-            $isToday = $current->format('Y-m-d') === date('Y-m-d');
 
-            $class = $isToday ? 'table-primary fw-bold' : '';
+            $class = $this->getCalendarDayClasses($current);
 
             $currentRow->addChild(
                 $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'td',
-                        'text' => (string)$currentDay,
+                        'text' => '<div>' . (string)$currentDay . '</div><div>' . ((string)($cellsContent[$current->format('Y-m-d')] ?? '')) . '</div>',
                         'attributes' => ['class' => $class],
                     ]]
                 )
             );
 
             if ($current->format('N') == 7) {
-                $tbody->addChild($currentRow);
                 $currentRow = $this->containerMake(
                     TagElement::class,
                     ['options' => [
@@ -1916,7 +1915,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return (string)$table;
     }
 
-    protected function renderWeekView(\DateTime $date, string $formatDate = 'D d/m'): string
+    protected function renderWeekView(\DateTime $date, string $formatDate = 'D d/m', array $cellsContent = []): string
     {
         $startOfWeek = (clone $date)->modify('monday this week');
 
@@ -1932,6 +1931,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             TagElement::class,
             ['options' => [
                 'tag' => 'thead',
+                'attributes' => ['class' => 'thead-dark'],
             ]]
         );
         $tbody = $this->containerMake(
@@ -1971,14 +1971,13 @@ class HtmlPartsRenderer extends ContainerAwareObject
         );
         for ($i=0; $i<7; $i++) {
             $d = (clone $startOfWeek)->modify("+$i day");
-            $isToday = $d->format('Y-m-d') === date('Y-m-d');
-            $class = $isToday ? 'table-primary fw-bold' : '';
+            $class = $this->getCalendarDayClasses($d);
             $row->addChild(
                 $this->containerMake(
                     TagElement::class,
                     ['options' => [
                         'tag' => 'td',
-                        'text' => '',
+                        'text' => (string)($cellsContent[$d->format('Y-m-d')] ?? ''),
                         'attributes' => ['class' => $class, 'style' => 'height:100px'],
                     ]]
                 )
@@ -1988,7 +1987,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         return (string)$table;
     }
 
-    protected function renderDayView(\DateTime $date, string $formatDate = 'l d F Y'): string
+    protected function renderDayView(\DateTime $date, string $formatDate = 'l d F Y', array $cellsContent = []): string
     {
         $table = $this->containerMake(
             TagElement::class,
@@ -2020,6 +2019,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 TagElement::class,
                 ['options' => [
                     'tag' => 'tr',
+                    'attributes' => ['class' => 'thead-dark'],
                     'children' => [
                         $this->containerMake(TagElement::class, ['options' => [
                             'tag' => 'th',
@@ -2046,7 +2046,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                             ]]),
                             $this->containerMake(TagElement::class, ['options' => [
                                 'tag' => 'td',
-                                'text' => '',
+                                'text' => (string)($cellsContent[$h] ?? ''),
                                 'attributes' => ['style' => 'height:40px;'],
                             ]]),
                         ]
@@ -2056,5 +2056,14 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         return (string)$table;
+    }
+
+    private function getCalendarDayClasses($current) : string
+    {
+        $classes = [$current->format('Y-m-d')];
+        if ($current->format('Y-m-d') === date('Y-m-d')) {
+            $classes[] = 'table-primary fw-bold';
+        }
+        return implode(' ', $classes);
     }
 }

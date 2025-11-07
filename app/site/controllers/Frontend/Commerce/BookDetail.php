@@ -60,7 +60,7 @@ class BookDetail extends FrontendPageWithObject
      */
     public function getTemplateName(): string
     {
-        return 'commerce/downloadable_detail';
+        return 'commerce/book_detail';
     }
 
     /**

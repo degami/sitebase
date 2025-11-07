@@ -1,7 +1,7 @@
 <?php
 /**
  * @var $paginator array
- * @var $news array
+ * @var $products array
  * @var $page_title string
  */
 $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Downloadables')] + get_defined_vars()) ?>

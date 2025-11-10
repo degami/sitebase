@@ -177,7 +177,7 @@ class GiftCards extends LoggedUserFormPage
             $storeCredit = new StoreCredit();
             $storeCredit->setUserId($this->getCurrentUser()->getId());
             $storeCredit->setWebsiteId($this->getCurrentWebsiteId());
-            $storeCredit->setAmount(0);
+            $storeCredit->setCredit(0);
             $storeCredit->persist();
         }
 

@@ -334,9 +334,7 @@ class Rewrites extends AdminManageModelsPage
                     'Locale' => $rewrite->getLocale(),
                     'actions' => [
                         static::TRANSLATIONS_BTN => $this->getActionButton('translations', $rewrite->id, 'success', 'tag', 'Translations'),
-                        static::EDIT_BTN => $this->getEditButton($rewrite->id),
-                        static::DELETE_BTN => $this->getDeleteButton($rewrite->id),
-                    ],
+                    ] + $this->getModelRowButtons($rewrite),
                 ];
             },
             $data

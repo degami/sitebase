@@ -33,6 +33,7 @@ use ReflectionClass;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Site\Models\MediaElement;
 use Symfony\Component\HttpFoundation\Response;
+use Degami\PHPFormsApi as FAPI;
 
 /**
  * Base for admin page that manages a Model
@@ -172,8 +173,11 @@ abstract class AdminManageModelsPage extends AdminFormPage
             }
         }
 
-        if (($this->template_data['action'] ?? 'list') != 'list') {
+        if (!in_array(($this->template_data['action'] ?? 'list'), ['list', 'duplicate', 'delete',])) {
             $this->addBackButton();
+            if (($this->template_data['action'] ?? 'list') != 'new') { // no need to remove something that is not there
+                $this->addRemoveButton();
+            }
         }
 
         return $this;
@@ -739,6 +743,26 @@ abstract class AdminManageModelsPage extends AdminFormPage
     protected function beforeRender(): BasePage|Response
     {
         if ($this->getRequest()->query->get('action') == 'duplicate') {
+
+            $form = FAPI\FormBuilder::getForm([$this, 'getDuplicateFormDefinition'], $this->getFormId())
+                ->setValidate([[$this, 'duplicateFormValidate']])
+                ->setSubmit([[$this, 'duplicateFormSubmitted']]);
+
+            $this->template_data = [
+                'action' => $this->getRequest()->query->get('action') ?? 'list',
+                'form' => $form,
+            ];
+
+            $this->getApp()->event('before_form_process', ['form' => $form]);
+            $form->process();
+
+            if ($form && $form->isSubmitted()) {
+                $this->getApp()->event('form_submitted', ['form' => $form]);
+                return $form->getSubmitResults(get_class($this) . '::duplicateFormSubmitted');
+            }
+
+            /*
+            // if we wish to use "javascript confirmation"
             $object = $this->getObject();
             $copy = $object?->duplicate()->persist();
             if ($copy) {
@@ -747,10 +771,44 @@ abstract class AdminManageModelsPage extends AdminFormPage
             } else {
                 $this->addErrorFlashMessage($this->getUtils()->translate('Error duplicating object', locale: $this->getCurrentLocale()));
                 return $this->doRedirect($this->getControllerUrl() . '?action=list');
-            }
+            }*/
         }
 
         return parent::beforeRender();
+    }
+
+    public function getDuplicateFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
+    {
+        $object = $this->getObject();
+        $this->fillConfirmationForm('Do you confirm the duplication of the selected element?', $form, $this->getControllerUrl() . '?action=edit&' . $this->getObjectIdQueryParam() . '=' . $object->getId());
+        return $form;
+    }
+
+    public function duplicateFormValidate(FAPI\Form $form, &$form_state): bool|string
+    {
+        return true;
+    }
+
+    public function duplicateFormSubmitted(FAPI\Form $form, &$form_state): mixed
+    {
+
+        $object = $this->getObject();
+        $copy = $object?->duplicate()->persist();
+        if ($copy) {
+            $this->addSuccessFlashMessage($this->getUtils()->translate('Object duplicated successfully', locale: $this->getCurrentLocale()));
+            return $this->doRedirect($this->getControllerUrl() . '?action=edit&' . $this->getObjectIdQueryParam() . '=' . $copy->getId());
+        } else {
+            $this->addErrorFlashMessage($this->getUtils()->translate('Error duplicating object', locale: $this->getCurrentLocale()));
+            return $this->doRedirect($this->getControllerUrl() . '?action=list');
+        }
+    }
+
+    protected function getModelRowButtons(BaseModel $object) : array
+    {
+        return [
+            static::EDIT_BTN => $this->getEditButton($object->getId()),
+            static::DELETE_BTN => $this->getDeleteButton($object->getId()),
+        ];
     }
 
     public static function exposeDataToDashboard() : mixed

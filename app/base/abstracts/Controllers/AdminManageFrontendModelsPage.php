@@ -18,6 +18,7 @@ use App\Base\Traits\AdminFormTrait;
 use Degami\Basics\Html\TagElement;
 use DI\DependencyException;
 use DI\NotFoundException;
+use App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Base for admin page that manages a Frontend Model
@@ -55,5 +56,13 @@ abstract class AdminManageFrontendModelsPage extends AdminManageModelsPage
         }
 
         return '';
+    }
+
+    protected function getModelRowButtons(BaseModel $object) : array
+    {
+        return [
+            static::FRONTEND_BTN => $this->getFrontendModelButton($object),
+            static::TRANSLATIONS_BTN => $this->getTranslationsButton($object),
+        ] + parent::getModelRowButtons($object);
     }
 }

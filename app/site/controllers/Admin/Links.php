@@ -19,6 +19,7 @@ use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\LinkExchange;
 use App\Site\Models\Taxonomy;
@@ -314,10 +315,7 @@ class Links extends AdminManageFrontendModelsPage
                     'Locale' => $link->locale,
                     'Title' => $link->title,
                     'Active' => $this->getUtils()->translate(boolval($link->active) ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($link->id),
-                        static::DELETE_BTN => $this->getDeleteButton($link->id),
-                    ],
+                    'actions' => AdminManageModelsPage::getModelRowButtons($link),
                 ];
             },
             $data

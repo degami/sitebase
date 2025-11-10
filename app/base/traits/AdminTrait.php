@@ -117,7 +117,7 @@ trait AdminTrait
             TagElement::class,
             ['options' => [
                 'tag' => 'ul',
-                'attributes' => ['class' => 'navbar-nav mr-auto d-none d-md-block d-lg-block'],
+                'attributes' => ['class' => 'navbar-nav mr-auto d-none d-md-flex d-lg-flex'],
             ]]
         );
 
@@ -134,7 +134,7 @@ trait AdminTrait
                     TagElement::class,
                     ['options' => [
                         'tag' => 'li',
-                        'attributes' => ['class' => 'nav-item ml-2 mb-1 text-nowrap d-inline-flex align-items-center'],
+                        'attributes' => ['class' => 'nav-item ml-2 mb-1 text-nowrap d-inline-flex align-items-center h-100'],
                         'text' => $button_html
                     ]]
                 )
@@ -195,7 +195,7 @@ trait AdminTrait
             'attributes' => [
                 'class' => $button_class . ' w-100',
                 'title' => strip_tags($button_text),
-            ],
+            ] + $attributes,
             'text' => $button_text,
         ]]);
         $this->action_buttons[$key] = ['tag' => $button, 'order' => $order ?? PHP_INT_MAX / 2];

@@ -373,12 +373,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'Locale' => $term->locale,
                     'Title' => $term->title,
                     'Content' => $term->content,
-                    'actions' => [
-                        static::FRONTEND_BTN => $this->getFrontendModelButton($term),
-                        static::TRANSLATIONS_BTN => $this->getTranslationsButton($term),
-                        static::EDIT_BTN => $this->getEditButton($term->id),
-                        static::DELETE_BTN => $this->getDeleteButton($term->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($term),
                 ];
             },
             $data

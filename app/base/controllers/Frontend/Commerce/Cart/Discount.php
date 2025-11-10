@@ -84,7 +84,7 @@ class Discount extends FrontendPageWithLang
         );
 
         try {
-            if (!isJson($actionDetails)) { 
+            if (!isJson($actionDetails)) {
                 throw new RuntimeException($this->getUtils()->translate('No action details provided.', locale: $this->getCurrentLocale()));
             }
 
@@ -115,6 +115,29 @@ class Discount extends FrontendPageWithLang
                 
                 if (in_array($discount->getId(), array_map(fn($d) => $d->getInitialDiscountId(), $this->getCart()->getDiscounts() ?? []))) {
                     throw new RuntimeException($this->getUtils()->translate('Discount code already applied.', locale: $this->getCurrentLocale()));
+                }
+
+                if (($discount->getMaxUsages() ?? -1) >= 0) {
+                    $totalUsages = CartDiscount::getCollection()
+                        ->where(['initial_discount_id' => $discount->getId()])
+                        ->count();
+
+                    if ($totalUsages >= $discount->getMaxUsages()) {
+                        throw new RuntimeException($this->getUtils()->translate('Discount code usage limit reached.', locale: $this->getCurrentLocale()));
+                    }
+                }
+
+                if (($discount->getMaxUsagesPerUser() ?? -1) >= 0) {
+                    $userUsages = CartDiscount::getCollection()
+                        ->where([
+                            'initial_discount_id' => $discount->getId(),
+                            'user_id' => $this->getCurrentUser()->getId(),
+                        ])
+                        ->count();
+
+                    if ($userUsages >= $discount->getMaxUsagesPerUser()) {
+                        throw new RuntimeException($this->getUtils()->translate('You have reached the usage limit for this discount code.', locale: $this->getCurrentLocale()));
+                    }
                 }
 
                 try {

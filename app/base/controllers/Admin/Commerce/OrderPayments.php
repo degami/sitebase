@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\OrderPayment as OrderPaymentModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -28,7 +28,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 /**
  * "Order Payments" Admin Page
  */
-class OrderPayments extends AdminManageFrontendModelsPage
+class OrderPayments extends AdminManageModelsPage
 {
     /**
      * @var string page title
@@ -248,10 +248,8 @@ class OrderPayments extends AdminManageFrontendModelsPage
                     'Transaction Id' => $orderPayment->getTransactionId(),
                     'Transaction Amount' => $this->getUtils()->formatPrice($orderPayment->getTransactionAmount(), $orderPayment->getCurrencyCode()),
                     'actions' => [
-                        static::VIEW_BTN => $this->getViewButton($orderPayment->id),                            
-                        static::EDIT_BTN => $this->getEditButton($orderPayment->id),
-                        static::DELETE_BTN => $this->getDeleteButton($orderPayment->id),
-                    ],
+                        static::VIEW_BTN => $this->getViewButton($orderPayment->id),
+                    ] + $this->getModelRowButtons($orderPayment),
                 ];
             },
             $data

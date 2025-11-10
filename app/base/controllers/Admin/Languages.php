@@ -262,10 +262,7 @@ class Languages extends AdminManageModelsPage
                     'Name' => $language->name,
                     'Native' => $language->native,
                     'Family' => $language->family,
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($language->id),
-                        static::DELETE_BTN => $this->getDeleteButton($language->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($language),
                 ];
             },
             $data

@@ -248,12 +248,7 @@ class News extends AdminManageFrontendModelsPage
                     'Locale' => $news->locale,
                     'Title' => $news->title,
                     'Date' => $news->date,
-                    'actions' => [
-                        static::FRONTEND_BTN => $this->getFrontendModelButton($news),
-                        static::TRANSLATIONS_BTN => $this->getTranslationsButton($news),
-                        static::EDIT_BTN => $this->getEditButton($news->id),
-                        static::DELETE_BTN => $this->getDeleteButton($news->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($news),
                 ];
             },
             $data

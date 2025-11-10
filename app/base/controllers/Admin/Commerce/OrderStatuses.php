@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\OrderStatus as OrderStatusModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -28,7 +28,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 /**
  * "Order Statuses" Admin Page
  */
-class OrderStatuses extends AdminManageFrontendModelsPage
+class OrderStatuses extends AdminManageModelsPage
 {
     /**
      * @var string page title
@@ -243,10 +243,7 @@ class OrderStatuses extends AdminManageFrontendModelsPage
                     'ID' => $orderStatus->id,
                     'Website' => $orderStatus->getWebsiteId() == null ? 'All websites' : $orderStatus->getWebsite()->domain,
                     'Status' => $orderStatus->getStatus(),
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($orderStatus->id),
-                        static::DELETE_BTN => $this->getDeleteButton($orderStatus->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($orderStatus),
                 ];
             },
             $data

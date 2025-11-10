@@ -442,9 +442,7 @@ class Sitemaps extends AdminManageModelsPage
                     'actions' => [
                         static::FRONTEND_BTN => ($sitemap->getPublishedOn() != null && $sitemap->getContent() != null ? $this->getFrontendModelButton($sitemap) : ''),
                         'generate-btn' => $this->getActionButton('generate', $sitemap->getId(), 'btn btn-warning generate', 'rss', 'Generate'),
-                        static::EDIT_BTN => $this->getEditButton($sitemap->id),
-                        static::DELETE_BTN => $this->getDeleteButton($sitemap->id),
-                    ],
+                    ] + $this->getModelRowButtons($sitemap),
                 ];
             },
             $data

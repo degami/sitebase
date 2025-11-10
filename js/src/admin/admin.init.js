@@ -215,6 +215,7 @@
                     }
                 });
 
+                /*
                 $('#duplicate-btn', $elem).on('click', function(evt) {
                     evt.preventDefault();
 
@@ -225,6 +226,33 @@
                         cancelText: __('No, Cancel'),
                         onConfirm: function() {
                             document.location.href = $(evt.target).attr('href');
+                        }
+                    });
+                });
+                */
+
+                $('*[data-goto-url]', $elem).on('click', function(evt) {
+                    evt.preventDefault();
+                    const gotoUrl = $(this).data('gotoUrl') || $(this).data('goto-url');
+                    if (gotoUrl) {
+                        document.location.href = gotoUrl;
+                    }
+                });
+
+                $('.with-enable-switch').each(function() {
+                    const $element = $(this);
+                    $switchHtml = '<label class="switch mr-1"><input type="checkbox" data-target-selector="#' + $element.attr('id') + '" id="' + $element.attr('id') + '-enabler" value="" class="paginator-items-choice" style="width: 50px"><span class="slider"></span></label>';
+                    $element.before($switchHtml);
+
+                    const $switchElement = $('#' + $element.attr('id') + '-enabler');
+                    $switchElement.on('change', function() {
+                        const targetSelector = $switchElement.data('targetSelector');
+                        const $targetElem = $(targetSelector);
+
+                        if ($switchElement.is(':checked')) {
+                            $targetElem.removeAttr('disabled').removeProp('disabled');
+                        } else {
+                            $targetElem.attr('disabled', 'disabled').prop('disabled', true);
                         }
                     });
                 });

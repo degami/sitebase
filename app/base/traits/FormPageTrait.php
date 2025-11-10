@@ -160,6 +160,12 @@ trait FormPageTrait
      */
     protected function fillConfirmationForm(string $confirm_message, FAPI\Form $form, ?string $cancel_url = null): FAPI\Form
     {
+        $cancel_url = $cancel_url ?: $this->getEnvironment()->getRequest()->headers->get('referer');
+        if (!$cancel_url) {
+            $cancel_url = $this->getControllerUrl();
+        }
+
+
         $form->addField(
             'confirm',
             [
@@ -169,7 +175,7 @@ trait FormPageTrait
                 'weight' => -100,
             ]
         )
-            ->addMarkup('<a class="btn btn-danger btn-sm cancel-btn" href="' . ($cancel_url ?: $this->getControllerUrl()) . '">' . $this->getHtmlRenderer()->getIcon('x', ['style' => 'zoom: 1.5']) . '&nbsp' . $this->getUtils()->translate('Cancel', locale: $this->getCurrentLocale()) . '</a>');
+            ->addMarkup('<a class="btn btn-danger btn-sm cancel-btn" href="' . $cancel_url . '">' . $this->getHtmlRenderer()->getIcon('x', ['style' => 'zoom: 1.5']) . '&nbsp' . $this->getUtils()->translate('Cancel', locale: $this->getCurrentLocale()) . '</a>');
         $this->addSubmitButton($form, true, true);
         return $form;
     }

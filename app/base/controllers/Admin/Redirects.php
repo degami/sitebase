@@ -251,10 +251,7 @@ class Redirects extends AdminManageModelsPage
                     'URL From' => $redirect->url_from,
                     'URL To' => $redirect->url_to,
                     'Redirect code' => $redirect->redirect_code,
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($redirect->id),
-                        static::DELETE_BTN => $this->getDeleteButton($redirect->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($redirect),
                 ];
             },
             $data

@@ -97,10 +97,7 @@ abstract class AdminManageProductsPage extends AdminManageFrontendModelsPage
                     'Tax Class' => $product->getTaxClassId() ? TaxClass::load($product->getTaxClassId())?->getClassName() : 'N/A',
                     'Price' => $product->getPrice(),
                     'Is Physical' => $product->isPhysical() ? 'Yes' : 'No',
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($product->id),
-                        static::DELETE_BTN => $this->getDeleteButton($product->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($product),
                 ];
             },
             $data

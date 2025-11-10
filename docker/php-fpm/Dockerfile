@@ -13,6 +13,7 @@ RUN addgroup --gid "$GID" "$GROUPNAME" \
 RUN apk add --no-cache \
     bash \
     git \
+    ca-certificates \
     zlib zlib-dev \
     libpng libpng-dev \
     libjpeg-turbo-dev \
@@ -21,6 +22,9 @@ RUN apk add --no-cache \
     libxml2 libxml2-dev \
     libsodium libsodium-dev \
     libzip libzip-dev \
+    bzip2 bzip2-dev \
+    curl curl-dev \
+    oniguruma-dev \
     imagemagick-dev \
     build-base \
     autoconf \
@@ -36,7 +40,7 @@ RUN apk add --no-cache \
 RUN docker-php-ext-configure gd \
         --with-jpeg=/usr/include/ \
         --with-freetype=/usr/include/ \
-    && docker-php-ext-install -j$(nproc) gd pdo_mysql pdo fileinfo simplexml sodium zip
+    && docker-php-ext-install -j$(nproc) gd pdo_mysql pdo fileinfo simplexml sodium zip bz2 xml curl mbstring
 
 # PECL extensions
 RUN apk add --no-cache $PHPIZE_DEPS \

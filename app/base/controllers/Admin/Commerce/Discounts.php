@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Discount as DiscountModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -28,7 +28,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 /**
  * "Discounts" Admin Page
  */
-class Discounts extends AdminManageFrontendModelsPage
+class Discounts extends AdminManageModelsPage
 {
     /**
      * @var string page title
@@ -143,7 +143,8 @@ class Discounts extends AdminManageFrontendModelsPage
                     'type' => 'switchbox',
                     'title' => 'Active',
                     'default_value' => $discount->getActive(),
-                ])->addField('discount_amount', [
+                ])
+                ->addField('discount_amount', [
                     'type' => 'textfield',
                     'title' => 'Discount Amount',
                     'validate' => ['required', 'numeric'],                    
@@ -157,7 +158,25 @@ class Discounts extends AdminManageFrontendModelsPage
                         'percentage' => '% of Total',
                     ],
                     'default_value' => $discount->getDiscountType(),
-                ]);
+                ])
+                ->addMarkup('<div class="row">')
+                ->addField('max_usages', [
+                    'type' => 'textfield',
+                    'title' => 'Maximum Usages',
+                    'validate' => ['numeric'],
+                    'default_value' => $discount->getMaxUsages() ?? -1,
+                    'container_class' => 'col-md-6',
+                    'description' => 'Set how many times this discount can be used in total. Set -1 for unlimited.',    
+                ])
+                ->addField('max_usages_per_user', [
+                    'type' => 'textfield',
+                    'title' => 'Maximum Usages Per User',
+                    'validate' => ['numeric'],
+                    'default_value' => $discount->getMaxUsagesPerUser() ?? -1,         
+                    'container_class' => 'col-md-6',
+                    'description' => 'Set how many times this discount can be used by a single user. Set -1 for unlimited.',
+                ])
+                ->addMarkup('</div>');
 
                 $this->addSubmitButton($form);
 
@@ -275,12 +294,9 @@ class Discounts extends AdminManageFrontendModelsPage
                     'Title' => $discount->getTitle(),
                     'Code' => $discount->getCode(),
                     'Active' => $discount->getActive() ? 'Yes' : 'No',
-                    'Discount Amount' => $discount->getDiscountAmount(),
+                    'Discount Amount' => number_format($discount->getDiscountAmount(), 2),
                     'Discount Type' => $discount->getDiscountType(),
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($discount->id),
-                        static::DELETE_BTN => $this->getDeleteButton($discount->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($discount),
                 ];
             },
             $data

@@ -30,6 +30,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Models\Rewrite;
 use App\Base\Routing\RouteInfo;
 use App\App;
+use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Models\BaseCollection;

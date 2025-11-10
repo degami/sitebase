@@ -387,9 +387,7 @@ class Cron extends AdminManageModelsPage
                     'Callable' => $task->cron_task_callable,
                     'Schedule' => '<a href="' . $task->getInfoUrl() . '" target="_blank">' . $task->schedule . '</a>',
                     'Active' => $this->getUtils()->translate($task->active ? 'Yes' : 'No', locale: $this->getCurrentLocale()),
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($task->id),
-                        static::DELETE_BTN => $this->getDeleteButton($task->id),
+                    'actions' => $this->getModelRowButtons($task) + [
                         'run-btn' => $this->getRunButton($task->id),
                     ],
                 ];

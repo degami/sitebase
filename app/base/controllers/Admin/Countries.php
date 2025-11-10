@@ -314,10 +314,7 @@ class Countries extends AdminManageModelsPage
                     'Capital' => $country->capital,
                     'Latitude' => $country->latitude,
                     'Longitude' => $country->longitude,
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($country->id),
-                        static::DELETE_BTN => $this->getDeleteButton($country->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($country),
                 ];
             },
             $data

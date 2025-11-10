@@ -579,12 +579,8 @@ class ContactForms extends AdminManageFrontendModelsPage
                     'URL' => $contact->url,
                     '# Submissions' => count($contact->getContactSubmissions()),
                     'actions' => [
-                        static::FRONTEND_BTN => $this->getFrontendModelButton($contact),
-                        static::TRANSLATIONS_BTN => $this->getTranslationsButton($contact),
                         'submissions-btn' => $this->getActionButton('submissions', $contact->id, 'warning', 'list', 'Submissions'),
-                        static::EDIT_BTN => $this->getEditButton($contact->id),
-                        static::DELETE_BTN => $this->getDeleteButton($contact->id),
-                    ],
+                    ] + $this->getModelRowButtons($contact),
                 ];
             },
             $data

@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Models\Address;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Cart as CartModel;
@@ -34,7 +34,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 /**
  * "Carts" Admin Page
  */
-class Carts extends AdminManageFrontendModelsPage
+class Carts extends AdminManageModelsPage
 {
     /**
      * {@inheritdoc}
@@ -497,10 +497,7 @@ class Carts extends AdminManageFrontendModelsPage
                     'Total' => $this->getUtils()->formatPrice($cart->getTotalInclTax(), $cart->getCurrencyCode()),
                     'Created At' => $cart->getCreatedAt(),
                     'Updated At' => $cart->getUpdatedAt(),
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($cart->id),
-                        static::DELETE_BTN => $this->getDeleteButton($cart->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($cart),
                 ];
             },
             $data

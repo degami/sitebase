@@ -283,6 +283,18 @@ abstract class AdminPage extends BaseHtmlPage
         );
     }
 
+    public function addRemoveButton() : void
+    {
+        $this->addActionButton(
+            'remove-btn', 
+            'remove-btn', 
+            $this->getHtmlRenderer()->getIcon('trash') . ' ' . $this->getUtils()->translate('Remove', locale: $this->getCurrentLocale()), 
+            'btn btn-sm btn-outline-danger with-enable-switch', 
+            ['disabled' => 'disabled', 'data-goto-url' => $this->getControllerUrl() . '?action=delete&' . $this->getObjectIdQueryParam() . '=' . $this->getObject()->getId(), ],
+            order: PHP_INT_MAX - 1
+        );
+    }
+
     /**
      * get sidebar size
      * 

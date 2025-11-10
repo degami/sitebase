@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\ProductStock;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -29,7 +29,7 @@ use HaydenPierce\ClassFinder\ClassFinder;
 /**
  * "Product Stocks" Admin Page
  */
-class ProductStocks extends AdminManageFrontendModelsPage
+class ProductStocks extends AdminManageModelsPage
 {
     /**
      * @var string page title
@@ -279,10 +279,7 @@ class ProductStocks extends AdminManageFrontendModelsPage
                     'Product Class' => $productStock->getProductClass(),
                     'Product Id' => $productStock->getProductId(),
                     'Quantity' => $productStock->getQuantity(),
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($productStock->id),
-                        static::DELETE_BTN => $this->getDeleteButton($productStock->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($productStock),
                 ];
             },
             $data

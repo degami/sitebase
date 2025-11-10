@@ -15,28 +15,28 @@ namespace App\Base\Tools\Utils;
 
 use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
-use ZipArchive;
+use RarArchive;
 
 /**
- * Zip utils functions Helper Class
+ * RAR utils functions Helper Class
  */
-class Zip extends ContainerAwareObject
+class Rar extends ContainerAwareObject
 {
     /**
-     * extract zip file to directory
+     * extract rar file to directory
      * 
-     * @param string $zipPath
+     * @param string $rarPath
      * @param string $targetDirectory
      * @return void
      */
-    public function extract(string $zipPath, string $targetDirectory) : void
+    public function extract(string $rarPath, string $targetDirectory) : void
     {
-        if (!class_exists(ZipArchive::class)) {
-            throw new Exception("ZipArchive class not found. Please enable zip extension.");
+        if (!class_exists(RarArchive::class)) {
+            throw new Exception("RarArchive class not found. Please enable rar extension.");
         }
 
-        if (!file_exists($zipPath)) {
-            throw new Exception("Missing ZIP file: $zipPath");
+        if (!file_exists($rarPath)) {
+            throw new Exception("Missing RAR file: $rarPath");
         }
 
         if (!is_dir($targetDirectory)) {
@@ -45,17 +45,17 @@ class Zip extends ContainerAwareObject
             }
         }
 
-        $zip = new ZipArchive();
+        $rar = new RarArchive();
 
-        if ($zip->open($zipPath) === true) {
-            if ($zip->extractTo($targetDirectory)) {
-                $zip->close();
+        if ($rar->open($rarPath) === true) {
+            if ($rar->extractTo($targetDirectory)) {
+                $rar->close();
             } else {
-                $zip->close();
-                throw new Exception("Errors extracting zip file.");
+                $rar->close();
+                throw new Exception("Errors extracting rar file.");
             }
         } else {
-            throw new Exception("Unable to open ZIP file: $zipPath");
+            throw new Exception("Unable to open RAR file: $rarPath");
         }
     }
 
@@ -63,23 +63,23 @@ class Zip extends ContainerAwareObject
      * compress a list of files
      * 
      * @param array $paths
-     * @return ZipArchive
+     * @return RarArchive
      */
-    public function compress(array $paths) : ZipArchive
+    public function compress(array $paths) : RarArchive
     {
         if (empty($paths)) {
             throw new Exception("Missing files list.");
         }
 
-        $zip = new ZipArchive();
+        $rar = new RarArchive();
 
         foreach ($paths as $path) {
             if (!file_exists($path)) {
                 continue;
             }
-            $zip->addFile($path);
+            $rar->addFile($path);
         }
 
-        return $zip;
+        return $rar;
     }
 }

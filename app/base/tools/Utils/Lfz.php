@@ -17,23 +17,23 @@ use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 
 /**
- * GZip utils functions Helper Class
+ * Lzf utils functions Helper Class
  */
-class GZip extends ContainerAwareObject
+class Lzf extends ContainerAwareObject
 {
     /**
-     * Compress a single file into gzip format
+     * Compress a single file into lzf format
      * 
      * @param string $sourceFile      Path to the file to compress
-     * @param string|null $targetFile Optional target .gz file path (default: sourceFile.gz)
+     * @param string|null $targetFile Optional target .lzf file path (default: sourceFile.lzf)
      * @param int $level Compression level 0-9 (default 9 = max)
      * 
-     * @return string Path to the created gzip file
+     * @return string Path to the created lzf file
      */
     public function compress(string $sourceFile, ?string $targetFile = null, int $level = 9): string
     {
-        if (!function_exists('gzopen')) {
-            throw new Exception("GZip functions not found. Please enable zlib extension.");
+        if (!function_exists('lfz_compress')) {
+            throw new Exception("LZF functions not found. Please enable lzf extension.");
         }
 
         if (!file_exists($sourceFile)) {
@@ -41,7 +41,7 @@ class GZip extends ContainerAwareObject
         }
 
         if ($targetFile === null) {
-            $targetFile = $sourceFile . '.gz';
+            $targetFile = $sourceFile . '.lzf';
         }
 
         $in = fopen($sourceFile, 'rb');
@@ -49,24 +49,24 @@ class GZip extends ContainerAwareObject
             throw new Exception("Unable to open source file: $sourceFile");
         }
 
-        $out = gzopen($targetFile, 'wb' . $level);
+        $out = fopen($targetFile, 'wb');
         if ($out === false) {
             fclose($in);
-            throw new Exception("Unable to open target gzip file: $targetFile");
+            throw new Exception("Unable to open target lzf file: $targetFile");
         }
 
         while (!feof($in)) {
             $data = fread($in, 1024 * 512);
             if ($data === false) {
                 fclose($in);
-                gzclose($out);
+                fclose($out);
                 throw new Exception("Error reading source file during compression.");
             }
-            gzwrite($out, $data);
+            fwrite($out, \lzf_compress($data));
         }
 
         fclose($in);
-        gzclose($out);
+        fclose($out);
 
         @unlink($sourceFile);
 
@@ -74,52 +74,52 @@ class GZip extends ContainerAwareObject
     }
 
     /**
-     * Extract a gzip file to a target file
+     * Extract a lzf file to a target file
      * 
-     * @param string $gzipFile Path to the .gz file
-     * @param string|null $targetFile Optional target file path (default: gzipFile without .gz)
+     * @param string $lzfFile Path to the .lzf file
+     * @param string|null $targetFile Optional target file path (default: lzfFile without .lzf)
      * 
      * @return string Path to the extracted file
      */
-    public function extract(string $gzipFile, ?string $targetFile = null): string
+    public function extract(string $lzfFile, ?string $targetFile = null): string
     {
-        if (!function_exists('gzopen')) {
-            throw new Exception("GZip functions not found. Please enable zlib extension.");
+        if (!function_exists('lzf_decompress')) {
+            throw new Exception("LZF functions not found. Please enable lzf extension.");
         }
 
-        if (!file_exists($gzipFile)) {
-            throw new Exception("GZip file not found: $gzipFile");
+        if (!file_exists($lzfFile)) {
+            throw new Exception("LZF file not found: $lzfFile");
         }
 
         if ($targetFile === null) {
-            $targetFile = preg_replace('/\.gz$/', '', $gzipFile);
+            $targetFile = preg_replace('/\.lzf$/', '', $lzfFile);
         }
 
-        $in = gzopen($gzipFile, 'rb');
+        $in = fopen($lzfFile, 'rb');
         if ($in === false) {
-            throw new Exception("Unable to open gzip file: $gzipFile");
+            throw new Exception("Unable to open lzf file: $lzfFile");
         }
 
         $out = fopen($targetFile, 'wb');
         if ($out === false) {
-            gzclose($in);
+            fclose($in);
             throw new Exception("Unable to open target file: $targetFile");
         }
 
-        while (!gzeof($in)) {
-            $data = gzread($in, 1024 * 512);
+        while (!feof($in)) {
+            $data = fread($in, 1024 * 512);
             if ($data === false) {
-                gzclose($in);
+                fclose($in);
                 fclose($out);
-                throw new Exception("Error reading gzip file during extraction.");
+                throw new Exception("Error reading lzf file during extraction.");
             }
-            fwrite($out, $data);
+            fwrite($out, \lzf_decompress($data));
         }
 
-        gzclose($in);
+        fclose($in);
         fclose($out);
 
-        @unlink($gzipFile);
+        @unlink($lzfFile);
 
         return $targetFile;
     }

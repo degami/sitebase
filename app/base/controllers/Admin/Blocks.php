@@ -443,10 +443,7 @@ class Blocks extends AdminManageModelsPage
                         )
                     ),
                     'Order' => $block->order,
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($block->id),
-                        static::DELETE_BTN => $this->getDeleteButton($block->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($block),
                 ];
             },
             $data

@@ -30,6 +30,8 @@ use DateTime;
  * @method bool getActive()
  * @method float getDiscountAmount()
  * @method string getDiscountType()
+ * @method int getMaxUsages()
+ * @method int getMaxUsagesPerUser()
  * @method DateTime getCreatedAt()
  * @method DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -40,6 +42,8 @@ use DateTime;
  * @method self setActive(bool $active)
  * @method self setDiscountAmount(float $discount_amount)
  * @method self setDiscountType(string $discount_type)
+ * @method self setMaxUsages(int $max_usages)
+ * @method self setMaxUsagesPerUser(int $max_usages_per_user)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
  */

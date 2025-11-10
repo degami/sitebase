@@ -17,23 +17,23 @@ use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 
 /**
- * GZip utils functions Helper Class
+ * Bzip2 utils functions Helper Class
  */
-class GZip extends ContainerAwareObject
+class Bzip2 extends ContainerAwareObject
 {
     /**
-     * Compress a single file into gzip format
+     * Compress a single file into bzip2 format
      * 
      * @param string $sourceFile      Path to the file to compress
-     * @param string|null $targetFile Optional target .gz file path (default: sourceFile.gz)
+     * @param string|null $targetFile Optional target .bz2 file path (default: sourceFile.bz2)
      * @param int $level Compression level 0-9 (default 9 = max)
      * 
-     * @return string Path to the created gzip file
+     * @return string Path to the created bzip2 file
      */
     public function compress(string $sourceFile, ?string $targetFile = null, int $level = 9): string
     {
-        if (!function_exists('gzopen')) {
-            throw new Exception("GZip functions not found. Please enable zlib extension.");
+        if (!function_exists('bzopen')) {
+            throw new Exception("Bzip2 functions not found. Please enable bzip2 extension.");
         }
 
         if (!file_exists($sourceFile)) {
@@ -41,7 +41,7 @@ class GZip extends ContainerAwareObject
         }
 
         if ($targetFile === null) {
-            $targetFile = $sourceFile . '.gz';
+            $targetFile = $sourceFile . '.bz2';
         }
 
         $in = fopen($sourceFile, 'rb');
@@ -49,24 +49,24 @@ class GZip extends ContainerAwareObject
             throw new Exception("Unable to open source file: $sourceFile");
         }
 
-        $out = gzopen($targetFile, 'wb' . $level);
+        $out = bzopen($targetFile, 'wb'.$level);
         if ($out === false) {
             fclose($in);
-            throw new Exception("Unable to open target gzip file: $targetFile");
+            throw new Exception("Unable to open target bzip2 file: $targetFile");
         }
 
         while (!feof($in)) {
             $data = fread($in, 1024 * 512);
             if ($data === false) {
                 fclose($in);
-                gzclose($out);
+                bzclose($out);
                 throw new Exception("Error reading source file during compression.");
             }
-            gzwrite($out, $data);
+            bzwrite($out, $data);
         }
 
         fclose($in);
-        gzclose($out);
+        bzclose($out);
 
         @unlink($sourceFile);
 
@@ -74,52 +74,52 @@ class GZip extends ContainerAwareObject
     }
 
     /**
-     * Extract a gzip file to a target file
+     * Extract a bzip2 file to a target file
      * 
-     * @param string $gzipFile Path to the .gz file
-     * @param string|null $targetFile Optional target file path (default: gzipFile without .gz)
+     * @param string $bzip2File Path to the .bz2 file
+     * @param string|null $targetFile Optional target file path (default: bzip2File without .bz2)
      * 
      * @return string Path to the extracted file
      */
-    public function extract(string $gzipFile, ?string $targetFile = null): string
+    public function extract(string $bzip2File, ?string $targetFile = null): string
     {
-        if (!function_exists('gzopen')) {
-            throw new Exception("GZip functions not found. Please enable zlib extension.");
+        if (!function_exists('bzopen')) {
+            throw new Exception("Bzip2 functions not found. Please enable bzip2 extension.");
         }
 
-        if (!file_exists($gzipFile)) {
-            throw new Exception("GZip file not found: $gzipFile");
+        if (!file_exists($bzip2File)) {
+            throw new Exception("Bzip2 file not found: $bzip2File");
         }
 
         if ($targetFile === null) {
-            $targetFile = preg_replace('/\.gz$/', '', $gzipFile);
+            $targetFile = preg_replace('/\.bz2$/', '', $bzip2File);
         }
 
-        $in = gzopen($gzipFile, 'rb');
+        $in = bzopen($bzip2File, 'rb');
         if ($in === false) {
-            throw new Exception("Unable to open gzip file: $gzipFile");
+            throw new Exception("Unable to open bzip2 file: $bzip2File");
         }
 
         $out = fopen($targetFile, 'wb');
         if ($out === false) {
-            gzclose($in);
+            bzclose($in);
             throw new Exception("Unable to open target file: $targetFile");
         }
 
-        while (!gzeof($in)) {
-            $data = gzread($in, 1024 * 512);
+        while (!feof($in)) {
+            $data = fread($in, 1024 * 512);
             if ($data === false) {
-                gzclose($in);
+                bzclose($in);
                 fclose($out);
-                throw new Exception("Error reading gzip file during extraction.");
+                throw new Exception("Error reading bzip2 file during extraction.");
             }
             fwrite($out, $data);
         }
 
-        gzclose($in);
+        bzclose($in);
         fclose($out);
 
-        @unlink($gzipFile);
+        @unlink($bzip2File);
 
         return $targetFile;
     }

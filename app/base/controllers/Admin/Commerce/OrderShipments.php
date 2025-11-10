@@ -21,7 +21,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\OrderShipment as OrderShipmentModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -32,7 +32,7 @@ use App\Base\Models\Order;
 /**
  * "Order Shipments" Admin Page
  */
-class OrderShipments extends AdminManageFrontendModelsPage
+class OrderShipments extends AdminManageModelsPage
 {
     public function __construct(
         protected ContainerInterface $container, 
@@ -328,9 +328,7 @@ class OrderShipments extends AdminManageFrontendModelsPage
                     'Status' => $orderShipment->getStatus(),
                     'actions' => [
                         static::VIEW_BTN => $this->getViewButton($orderShipment->id),                            
-                        static::EDIT_BTN => $this->getEditButton($orderShipment->id),
-                        static::DELETE_BTN => $this->getDeleteButton($orderShipment->id),
-                    ],
+                    ] + $this->getModelRowButtons($orderShipment),
                 ];
             },
             $data

@@ -23,6 +23,7 @@ use App\Base\Models\Calendar;
  * @method string getMetaDescription()
  * @method string getHtmlTitle()
  * @method int getCalendarId()
+ * @method int getDuration()
  * @method \DateTime getCreatedAt()
  * @method \DateTime getUpdatedAt()
  * @method self setId(int $id)
@@ -39,6 +40,7 @@ use App\Base\Models\Calendar;
  * @method self setMetaDescription(string $meta_description)
  * @method self setHtmlTitle(string $html_title)
  * @method self setCalendarId(int $calendar_id)
+ * @method self setDuration(int $duration)
  * @method self setCreatedAt(\DateTime $created_at)
  * @method self setUpdatedAt(\DateTime $updated_at)
  */

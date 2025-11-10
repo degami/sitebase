@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Order as OrderModel;
 use App\Base\Models\OrderItem;
@@ -34,7 +34,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 /**
  * "Orders" Admin Page
  */
-class Orders extends AdminManageFrontendModelsPage
+class Orders extends AdminManageModelsPage
 {
     /**
      * {@inheritdoc}

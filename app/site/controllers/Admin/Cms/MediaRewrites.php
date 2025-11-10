@@ -250,10 +250,7 @@ class MediaRewrites extends AdminManageModelsPage
                     'Rewrite - Url' => $elem->getRewrite()?->getUrl() ?? 'Everywhere',
                     'Locale' => $elem->getRewrite()?->getLocale() ?? 'Any',
                     'Owner' => $elem->getOwner()->username,
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($elem->id),
-                        static::DELETE_BTN => $this->getDeleteButton($elem->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($elem),
                 ];
             },
             $data

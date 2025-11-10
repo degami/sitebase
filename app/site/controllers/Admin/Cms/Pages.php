@@ -338,12 +338,7 @@ class Pages extends AdminManageFrontendModelsPage
                     'URL' => $page->url,
                     'Locale' => $page->locale,
                     'Title' => $page->title,
-                    'actions' => [
-                        static::FRONTEND_BTN => $this->getFrontendModelButton($page),
-                        static::TRANSLATIONS_BTN => $this->getTranslationsButton($page),
-                        static::EDIT_BTN => $this->getEditButton($page->id),
-                        static::DELETE_BTN => $this->getDeleteButton($page->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($page),
                 ];
             },
             $data

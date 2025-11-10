@@ -18,7 +18,7 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
+use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\TaxClass as TaxClassModel;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -28,7 +28,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 /**
  * "Tax Classes" Admin Page
  */
-class TaxClasses extends AdminManageFrontendModelsPage
+class TaxClasses extends AdminManageModelsPage
 {
     /**
      * @var string page title
@@ -242,10 +242,7 @@ class TaxClasses extends AdminManageFrontendModelsPage
                     'ID' => $taxClass->id,
                     'Website' => $taxClass->getWebsiteId() == null ? 'All websites' : $taxClass->getWebsite()->domain,
                     'Class Name' => $taxClass->getClassName(),
-                    'actions' => [
-                        static::EDIT_BTN => $this->getEditButton($taxClass->id),
-                        static::DELETE_BTN => $this->getDeleteButton($taxClass->id),
-                    ],
+                    'actions' => $this->getModelRowButtons($taxClass),
                 ];
             },
             $data

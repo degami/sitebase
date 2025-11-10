@@ -32,6 +32,7 @@ class CreateCalendarReservationTableMigration extends DBMigration
             ->addColumn('meta_description', 'VARCHAR', [1024], [], true, null)
             ->addColumn('html_title', 'VARCHAR', [1024], [], true, null)
             ->addColumn('calendar_id', 'INT', null, ['UNSIGNED'], true, null)
+            ->addColumn('duration', 'INT', null, ['UNSIGNED'], true, null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)

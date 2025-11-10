@@ -37,6 +37,8 @@ class CreateDiscountTableMigration extends DBMigration
             ->addColumn('code', 'VARCHAR', [64])
             ->addColumn('discount_amount', 'DECIMAL', ['12, 4'])
             ->addColumn('discount_type', 'VARCHAR', [10])
+            ->addColumn('max_usages', 'INT', null, [], true, null)
+            ->addColumn('max_usages_per_user', 'INT', null, [], true, null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)

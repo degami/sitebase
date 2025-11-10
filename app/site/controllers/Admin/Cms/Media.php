@@ -805,9 +805,7 @@ class Media extends AdminManageModelsPage
                     default => [
                         'usage-btn' => $this->getActionButton('usage', $elem->id, 'success', 'zoom-in', 'Usage'),
                         'rename-btn' => $this->getActionButton('rename', $elem->id, 'warning','pen-tool', 'Rename'),
-                        static::EDIT_BTN => $this->getEditButton($elem->id),
-                        static::DELETE_BTN => $this->getDeleteButton($elem->id),
-                    ]
+                    ] + $this->getModelRowButtons($elem),
                 };
                 return [
                     'ID' => $elem->getId(),

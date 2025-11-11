@@ -112,20 +112,24 @@ class Pages extends AdminManageFrontendModelsPage
 
         switch ($type) {
             case 'edit':
-                $this->addActionLink(
-                    'media-btn',
-                    'media-btn',
-                    $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
-                    'btn btn-sm btn-light inToolSidePanel'
-                );
-                $this->addActionLink(
-                    'taxonomy-btn',
-                    'taxonomy-btn',
-                    $this->getHtmlRenderer()->getIcon('list') . ' ' . $this->getUtils()->translate('Terms', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
-                    'btn btn-sm btn-light inToolSidePanel'
-                );
+                if (Media::getCollection()->count() > 0) {
+                    $this->addActionLink(
+                        'media-btn',
+                        'media-btn',
+                        $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
+                        $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
+                        'btn btn-sm btn-light inToolSidePanel'
+                    );
+                }
+                if (Taxonomy::getCollection()->count() > 0) {
+                    $this->addActionLink(
+                        'taxonomy-btn',
+                        'taxonomy-btn',
+                        $this->getHtmlRenderer()->getIcon('list') . ' ' . $this->getUtils()->translate('Terms', locale: $this->getCurrentLocale()),
+                        $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
+                        'btn btn-sm btn-light inToolSidePanel'
+                    );
+                }
             // intentional fall-trough
             // no break
             case 'new':

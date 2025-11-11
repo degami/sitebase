@@ -307,6 +307,15 @@ class Media extends AdminManageModelsPage
                     ]);  
                 }
 
+                if ($this->getRequest()->query->get('page_id') || $this->getRequest()->query->get('product_id') || ($form_state['input_values']['gallery'] ?? false)) {
+                    $galleryField = $this->containerMake(\App\Site\Tools\FAPI\Fields\Gallery::class, [ 'options' => [
+                        'title' => 'Select an existing media',
+    //                    'multiple' => true,
+                    ]]);
+
+                    $form->addField('gallery', $galleryField);
+                }
+
                 $form
                 ->addField('upload_file', [
                     'type' => 'file',
@@ -617,41 +626,46 @@ class Media extends AdminManageModelsPage
             // intentional fall trough
             // no break
             case 'edit':
-                if ($form->getField('upload_file')->isUploaded()) {
-                    if ($values->upload_file->filepath) {
-                        $media->setPath($values->upload_file->filepath);
+
+                if (is_numeric($values->gallery)) {
+                    $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $values->gallery]);
+                } else {
+                    if ($form->getField('upload_file')->isUploaded()) {
+                        if ($values->upload_file->filepath) {
+                            $media->setPath($values->upload_file->filepath);
+                        }
+                        if ($values->upload_file->filename) {
+                            $media->setFilename($values->upload_file->filename);
+                        }
+                        if ($values->upload_file->mimetype) {
+                            $media->setMimetype($values->upload_file->mimetype);
+                        }
+                        if ($values->upload_file->filesize) {
+                            $media->setFilesize($values->upload_file->filesize);
+                        }
+                        if ($values->upload_file->renamed) {
+                            $this->addInfoFlashMessage(
+                                $this->getUtils()->translate(
+                                    "File was renamed to %s",
+                                    [$values->upload_file->filename]
+                                )
+                            );
+                        }
                     }
-                    if ($values->upload_file->filename) {
-                        $media->setFilename($values->upload_file->filename);
-                    }
-                    if ($values->upload_file->mimetype) {
-                        $media->setMimetype($values->upload_file->mimetype);
-                    }
-                    if ($values->upload_file->filesize) {
-                        $media->setFilesize($values->upload_file->filesize);
-                    }
-                    if ($values->upload_file->renamed) {
-                        $this->addInfoFlashMessage(
-                            $this->getUtils()->translate(
-                                "File was renamed to %s",
-                                [$values->upload_file->filename]
-                            )
-                        );
-                    }
+
+                    $media->setLazyload($values->lazyload);
+
+                    $this->setAdminActionLogData($media->getChangedData());
+
+                    $media->persist();
                 }
 
-                $media->setLazyload($values->lazyload);
-
-                $this->setAdminActionLogData($media->getChangedData());
-
-                $media->persist();
-
-                if ($values['page_id'] != null) {
-                    $this->containerCall([Page::class, 'load'], ['id' => $values['page_id']])->addMedia($media);
-                } else if ($values['product_type'] == 'downloadable' && $values['product_id'] != null) {
-                    $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $values['product_id']])->addMedia($media);
-                } else if ($values['product_type'] == 'book' && $values['product_id'] != null) {
-                    $this->containerCall([Book::class, 'load'], ['id' => $values['product_id']])->addMedia($media);
+                if ($form_state['input_values']['page_id'] != null) {
+                    $this->containerCall([Page::class, 'load'], ['id' => $form_state['input_values']['page_id']])->addMedia($media);
+                } else if ($form_state['input_values']['product_type'] == 'downloadable' && $form_state['input_values']['product_id'] != null) {
+                    $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $form_state['input_values']['product_id']])->addMedia($media);
+                } else if ($form_state['input_values']['product_type'] == 'book' && $form_state['input_values']['product_id'] != null) {
+                    $this->containerCall([Book::class, 'load'], ['id' => $form_state['input_values']['product_id']])->addMedia($media);
                 } else {
                     $this->addSuccessFlashMessage($this->getUtils()->translate("Media Saved."));
                 }

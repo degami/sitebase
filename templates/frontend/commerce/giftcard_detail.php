@@ -11,9 +11,13 @@ $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_def
 
 <div class="row">
     <div class="col-md-10">
-
         <h1 class="giftcard-title"><?php echo $object->getTitle();?></h1>
-        <div class="giftcard-content"><?php echo $object->getContent();?></div>
+        <div class="row">
+            <?php if ($object->getMediaId()) : ?>
+            <div class="giftcard-image col-2"><?= $object->getMedia()?->getThumb("400x300", class: 'img-fluid'); ?></div>
+            <?php endif; ?>
+            <div class="giftcard-content col"><?php echo $object->getContent();?></div>
+        </div>
 
         <?php if (($gallery = $object->getGallery()) && count($gallery)) : ?>
         <div class="page-gallery">

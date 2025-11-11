@@ -6,6 +6,7 @@ use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Interfaces\Model\ProductInterface;
 use App\Base\Traits\ProductTrait;
 use App\Base\GraphQl\GraphQLExport;
+use App\Site\Models\MediaElement;
 
 /**
  * @method string getSku()
@@ -46,6 +47,8 @@ class GiftCard extends FrontendModel implements ProductInterface
 {
     use ProductTrait;
 
+    protected ?MediaElement $media = null;
+
     /**
      * {@inheritdoc}
      *
@@ -54,6 +57,26 @@ class GiftCard extends FrontendModel implements ProductInterface
     public function isPhysical(): bool
     {
         return false;
+    }
+
+    #[GraphQLExport]
+    public function getMedia(): ?MediaElement
+    {
+        if (!is_null($this->media)) {
+            return $this->media;
+        }
+
+        if (is_null($this->getMediaId())) {
+            return null;
+        }
+
+        return $this->setMedia(MediaElement::load($this->getMediaId()))->media;
+    }
+
+    public function setMedia(?MediaElement $media): self
+    {
+        $this->media = $media;
+        return $this;
     }
 
     /**

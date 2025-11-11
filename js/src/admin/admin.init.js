@@ -87,7 +87,7 @@
                     );
                 });
 
-                $('a.inToolSidePanel[href]', $elem).click(function(evt){
+                $(document).on('click', 'a.inToolSidePanel[href]', function(evt){
                     const $btnElement = $(this);
 
                     if ($btnElement.attr('href') != '#') {

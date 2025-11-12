@@ -19,7 +19,6 @@ use Degami\PHPFormsApi\Form;
 use App\Site\Models\MediaElement;
 use App\Base\Abstracts\Models\BaseCollection;
 use Degami\Basics\Html\TagElement;
-use Exception;
 
 class Gallery extends Field
 {
@@ -114,7 +113,7 @@ class Gallery extends Field
         return $field;
     }
 
-/**
+    /**
      * {@inheritdoc}
      *
      * @param Form $form form object
@@ -126,9 +125,6 @@ class Gallery extends Field
         }
         $id = $this->getHtmlId();
 
-        $this->addJs("
-            console.log('#{$id}','#{$form->getId()}')
-        ");
         if ($this->multiple) {
             $this->addJs("
                 $('#{$id}','#{$form->getId()}').on('change', '.media-selector', function(){

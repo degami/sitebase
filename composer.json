@@ -111,7 +111,8 @@
       "App\\Site\\GraphQL\\Resolvers\\": "app/site/graphql/Resolvers",
       "App\\Site\\Webdav\\": "app/site/webdav",
       "App\\Site\\Commerce\\": "app/site/commerce",
-      "App\\Site\\EventListeners\\": "app/site/event_listeners"
+      "App\\Site\\EventListeners\\": "app/site/event_listeners",
+      "App\\Site\\Tools\\": "app/site/tools"
     }
   },
     "require-dev": {

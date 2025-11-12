@@ -358,7 +358,7 @@ class Media extends AdminManageModelsPage
                     ]);
                 }
 
-                if ($this->getRequest()->query->get('product_type') == 'downloadable' && $this->getRequest()->query->get('product_id')) {
+                if ($this->getRequest()->query->get('product_type') == 'book' && $this->getRequest()->query->get('product_id')) {
                     /** @var Book $product */
                     $product = $this->containerCall([Book::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
                     $form->addField('product_id', [
@@ -484,7 +484,8 @@ class Media extends AdminManageModelsPage
                 break;
             case 'downloadable_product_deassoc':
                 /** @var DownloadableProduct $product */
-                $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
+                $product_id = $this->getRequest()->query->get('product_id') ?? $form_state['input_values']['product_id'];
+                $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $product_id]);
                 $form->addField('product_id', [
                     'type' => 'hidden',
                     'default_value' => $product->getId(),
@@ -536,7 +537,8 @@ class Media extends AdminManageModelsPage
                 break;
             case 'book_deassoc':
                 /** @var Book $product */
-                $product = $this->containerCall([Book::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
+                $product_id = $this->getRequest()->query->get('product_id') ?? $form_state['input_values']['product_id'];
+                $product = $this->containerCall([Book::class, 'load'], ['id' => $product_id]);
                 $form->addField('product_id', [
                     'type' => 'hidden',
                     'default_value' => $product->getId(),
@@ -690,7 +692,7 @@ class Media extends AdminManageModelsPage
                 break;
             case 'downloadable_product_deassoc':
                 if ($values['product_id']) {
-                    /** @var DownloadableProduct $page */
+                    /** @var DownloadableProduct $product */
                     $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $values['product_id']]);
                     $product->removeMedia($media);
                 }
@@ -699,6 +701,20 @@ class Media extends AdminManageModelsPage
                 if ($values['product_id']) {
                     /** @var DownloadableProduct $product */
                     $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $values['product_id']]);
+                    $product->addMedia($media);
+                }
+                break;
+            case 'book_deassoc':
+                if ($values['product_id']) {
+                    /** @var Book $product */
+                    $product = $this->containerCall([Book::class, 'load'], ['id' => $values['product_id']]);
+                    $product->removeMedia($media);
+                }
+                break;
+            case 'book_assoc':
+                if ($values['product_id']) {
+                    /** @var Book $product */
+                    $product = $this->containerCall([Book::class, 'load'], ['id' => $values['product_id']]);
                     $product->addMedia($media);
                 }
                 break;

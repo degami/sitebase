@@ -60,10 +60,14 @@ class PageMedia extends AdminJsonPage
 
         $gallery = array_map(
             function ($el) use ($page) {
-                return '<div class="gallery-elem">' .
+                return '<div class="gallery-elem card h-100 mr-2">' .
+                    '<div class="card-header text-right p-2">' .
+                        ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $page->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=page_deassoc">&times;</a>' .
+                    '</div>' .
+                    '<div class="card-body text-center d-flex align-items-center justify-content-center">' .
                     $el->getThumb("150x100", null, 'img-fluid img-thumbnail') .
-                    ' <a class="deassoc_lnk" data-page_id="' . $page->id . '" data-media_id="' . $el->id . '" href="' . $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $page->id]) . '?page_id=' . $page->id . '&media_id=' . $el->id . '&action=page_deassoc">&times;</a>' .
-                    '</div>';
+                    '</div>' .
+                '</div>';
             },
             $page->getGallery()
         );
@@ -91,7 +95,7 @@ class PageMedia extends AdminJsonPage
             'success' => true,
             'params' => $this->getRequest()->query->all(),
             'gallery' => $galleryData,
-            'html' => ($this->getRequest()->query->get('action') == 'new' ? "<div class=\"page-gallery\">" . implode("", $gallery) . "</div><hr />" : '') . $form->render(),
+            'html' => ($this->getRequest()->query->get('action') == 'new' ? "<div class=\"d-flex justify-content-start page-gallery\">" . implode("", $gallery) . "</div><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

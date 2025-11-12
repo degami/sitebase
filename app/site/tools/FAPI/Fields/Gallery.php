@@ -61,7 +61,7 @@ class Gallery extends Field
             'tag' => 'div',
             'id' => $id,
             'attributes' => [
-                'class' => 'row row-cols-4',
+                'class' => 'row row-cols-6 p-4',
             ],
         ]]);
         
@@ -83,7 +83,7 @@ class Gallery extends Field
             $field->addChild(
                 App::getInstance()->containerMake(TagElement::class, ['options' => [
                     'tag' => 'div',
-                    'attributes' => ['class' => 'col text-center'],
+                    'attributes' => ['class' => 'col text-center h-100 align-bottom d-flex flex-column justify-content-center', 'style' => 'min-height: 100px;'],
                     'text' => $this->renderMediaElement(
                         $grandparent, App::getInstance()->getHtmlRenderer()->getIcon('corner-left-up') . ' ' . __('Up')
                     ),
@@ -96,7 +96,7 @@ class Gallery extends Field
             $field->addChild(
                 App::getInstance()->containerMake(TagElement::class, ['options' => [
                     'tag' => 'div',
-                    'attributes' => ['class' => 'col text-center'],
+                    'attributes' => ['class' => 'col text-center h-100 align-bottom d-flex flex-column justify-content-center', 'style' => 'min-height: 100px;'],
                     'text' => $this->renderMediaElement($media),
                 ]])
             );
@@ -155,6 +155,17 @@ class Gallery extends Field
     {
         $text = ($labelText ?? '<abbr title="' . $media?->getFilename() . '">' . substr("" . $media?->getFilename(), 0, $maxLength) . (strlen("".$media?->getFilename()) > $maxLength ? '...' : '') . '</abbr>');
         $label = '<label class="text-nowrap" for="media-selector-'.$media?->getId().'"><input type="checkbox" class="media-selector" id="media-selector-'.$media?->getId().'" value="' . $media?->getId() . '" />' . $text . '</label>';
+
+        $label = '<div class="pretty p-icon p-smooth p-primary p-curve">
+            <input class="media-selector" type="checkbox" id="media-selector-'.$media?->getId().'" value="' . $media?->getId() . '"  />
+            <div class="state">
+                <i class="icon fa fa-check"></i>
+                <label for="media-selector-'.$media?->getId().'">' . $text . '</label>
+            </div>
+        </div>';
+
+
+
         if (is_null($media) || $media->isDirectory()) {
             $uri = App::getInstance()->getEnvironment()->getRequest()->getUri();
             $parsed = parse_url($uri);
@@ -164,7 +175,7 @@ class Gallery extends Field
 
             $label = '<label class="text-nowrap"><a class="inToolSidePanel" href="'.$uri.'&parent_id='.$media?->getId().'">' . $text . '</a></label>';
         }
-        
+
         return match (true) {
             is_null($media), $media?->isDirectory() => '<div class="media-element media-directory"><h2 style="height: 50px; margin: 0;">'.App::getInstance()->getHtmlRenderer()->getFAIcon('folder', 'regular').'</h2></div>',
             $media?->isImage() => '<div class="media-element media-image">' . $media->getThumb('50x50') . '</div>',

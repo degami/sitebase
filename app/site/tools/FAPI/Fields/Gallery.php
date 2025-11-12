@@ -154,8 +154,7 @@ class Gallery extends Field
     protected function renderMediaElement(?MediaElement $media, ?string $labelText = null, int $maxLength = 12): string
     {
         $text = ($labelText ?? '<abbr title="' . $media?->getFilename() . '">' . substr("" . $media?->getFilename(), 0, $maxLength) . (strlen("".$media?->getFilename()) > $maxLength ? '...' : '') . '</abbr>');
-        $label = '<label class="text-nowrap" for="media-selector-'.$media?->getId().'"><input type="checkbox" class="media-selector" id="media-selector-'.$media?->getId().'" value="' . $media?->getId() . '" />' . $text . '</label>';
-
+        
         $label = '<div class="pretty p-icon p-smooth p-primary p-curve">
             <input class="media-selector" type="checkbox" id="media-selector-'.$media?->getId().'" value="' . $media?->getId() . '"  />
             <div class="state">
@@ -163,8 +162,6 @@ class Gallery extends Field
                 <label for="media-selector-'.$media?->getId().'">' . $text . '</label>
             </div>
         </div>';
-
-
 
         if (is_null($media) || $media->isDirectory()) {
             $uri = App::getInstance()->getEnvironment()->getRequest()->getUri();
@@ -177,7 +174,7 @@ class Gallery extends Field
         }
 
         return match (true) {
-            is_null($media), $media?->isDirectory() => '<div class="media-element media-directory"><h2 style="height: 50px; margin: 0;">'.App::getInstance()->getHtmlRenderer()->getFAIcon('folder', 'regular').'</h2></div>',
+            is_null($media), $media?->isDirectory() => '<div class="media-element media-directory"><h2 style="height: 40px; margin: 0; zoom:1.5;">'.App::getInstance()->getHtmlRenderer()->getFAIcon('folder', 'solid').'</h2></div>',
             $media?->isImage() => '<div class="media-element media-image">' . $media->getThumb('50x50') . '</div>',
             default => '<div class="media-element media-file">' . $media->getMimeIcon() . '</div>',
         } . '<div>'.$label.'</div>';

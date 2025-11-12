@@ -13,6 +13,7 @@
 
 namespace App\Base\Traits;
 
+use App\App;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Interfaces\Model\PhysicalProductInterface;
@@ -353,5 +354,26 @@ trait AdminFormTrait
             ]);
 
         return $form;
+    }
+
+    protected function getUserTinymceOptions(): array
+    {
+        $user = App::getInstance()->getAuth()->getCurrentUser();
+        $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
+
+        $isDarkMode = $uiSettings['darkMode'] ?? $this->getEnvironment()->getVariable('ADMIN_DARK_MODE', false);
+
+        $default_options = FORMS_DEFAULT_TINYMCE_OPTIONS;
+
+        if ($isDarkMode) {
+            $default_options['skin'] = 'oxide-dark';
+            $default_options['content_css'] = 'dark';
+        }
+
+        if (isset($user_settings['tinymce_options']) && is_array($user_settings['tinymce_options'])) {
+            return array_merge($default_options, $user_settings['tinymce_options']);
+        }
+
+        return $default_options;
     }
 }

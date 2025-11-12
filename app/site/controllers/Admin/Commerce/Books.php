@@ -128,7 +128,7 @@ class Books extends AdminManageProductsPage
                 ])->addField('content', [
                     'type' => 'tinymce',
                     'title' => 'Content',
-                    'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
+                    'tinymce_options' => $this->getUserTinymceOptions(),
                     'default_value' => $product_content,
                     'rows' => 20,
                 ])->addField('price', [

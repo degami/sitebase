@@ -17,7 +17,7 @@ define(
     '<div class="alert alert-info"><ul>%s</ul></div>'
 );
 define(
-    'DEFAULT_TINYMCE_OPTIONS',
+    'FORMS_DEFAULT_TINYMCE_OPTIONS',
     [
     'menubar' => false,
     'plugins' => "code,link,lists,advlist,preview,searchreplace,media,table,block_plugin,ai_translate_plugin",

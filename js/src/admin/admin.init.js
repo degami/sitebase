@@ -69,11 +69,36 @@
                 });
 
                 $('#darkmode-selector').on('change', function () {
+                    const isDarkMode = $(this).is(':checked');
+
                     $elem.appAdmin('updateUserUiSettings', 
-                        {'darkMode': $(this).is(':checked')},
+                        {'darkMode': isDarkMode},
                         function (data) {
                             //document.location.reload();
                             $('body').toggleClass('dark-mode');
+
+                            if (typeof tinymce === 'undefined' || !tinymce.activeEditor) {
+                                return;
+                            }
+
+                            const activeEditor = tinymce.activeEditor;
+                            const textareaId = activeEditor.id; // ID del textarea originale
+                            const content = activeEditor.getContent();
+                            const defaultOptions = $elem.appAdmin('getSettings').defaultTinymceOptions || {};
+
+                            activeEditor.remove();
+
+                            setTimeout(() => {
+                                tinymce.init({
+                                    ...defaultOptions,
+                                    selector: `#${textareaId}`,
+                                    skin: isDarkMode ? 'oxide-dark' : 'oxide',
+                                    content_css: isDarkMode ? 'dark' : 'default',
+                                    setup: (ed) => {
+                                        ed.on('init', () => ed.setContent(content));
+                                    },
+                                });
+                            }, 100);
                         }
                     );
                 });

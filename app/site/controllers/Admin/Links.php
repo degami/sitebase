@@ -157,7 +157,7 @@ class Links extends AdminManageFrontendModelsPage
                 ->addField('description', [
                     'type' => 'tinymce',
                     'title' => 'Description',
-                    'tinymce_options' => DEFAULT_TINYMCE_OPTIONS,
+                    'tinymce_options' => $this->getUserTinymceOptions(),
                     'default_value' => $link_description,
                     'rows' => 20,
                 ])->addField('active', [

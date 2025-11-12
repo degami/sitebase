@@ -176,6 +176,7 @@ abstract class AdminPage extends BaseHtmlPage
                     'massEditUrl' => $this->getUrl('crud.app.base.controllers.admin.json.massedit'),
                     'mediaPasteUrl' => $this->getUrl('crud.app.site.controllers.admin.json.mediapaste'),
                     'currentLocale' => $this->getCurrentLocale(),
+                    'defaultTinymceOptions' => FORMS_DEFAULT_TINYMCE_OPTIONS,
                 ]
             ) . ");"
         );

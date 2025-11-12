@@ -21,6 +21,7 @@ use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\Book;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\TaxClass;
+use App\Site\Models\MediaElement as Media;
 
 /**
  * "Books" Admin Page
@@ -87,13 +88,15 @@ class Books extends AdminManageProductsPage
 
         switch ($type) {
             case 'edit':
-                $this->addActionLink(
-                    'media-btn',
-                    'media-btn',
-                    $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.bookmedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&product_type=book&action=new',
-                    'btn btn-sm btn-light inToolSidePanel'
-                );
+                if (Media::getCollection()->count() > 0) {
+                    $this->addActionLink(
+                        'media-btn',
+                        'media-btn',
+                        $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
+                        $this->getUrl('crud.app.site.controllers.admin.json.bookmedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&product_type=book&action=new',
+                        'btn btn-sm btn-light inToolSidePanel'
+                    );
+                }
 
                 // intentional fall trough
                 // no break

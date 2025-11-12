@@ -89,13 +89,15 @@ class DownloadableProducts extends AdminManageProductsPage
 
         switch ($type) {
             case 'edit':
-                $this->addActionLink(
-                    'media-btn',
-                    'media-btn',
-                    $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.downloadablemedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&product_type=downloadable&action=new',
-                    'btn btn-sm btn-light inToolSidePanel'
-                );
+                if (Media::getCollection()->count() > 0) {
+                    $this->addActionLink(
+                        'media-btn',
+                        'media-btn',
+                        $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
+                        $this->getUrl('crud.app.site.controllers.admin.json.downloadablemedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&product_type=downloadable&action=new',
+                        'btn btn-sm btn-light inToolSidePanel'
+                    );
+                }
 
                 // intentional fall trough
                 // no break

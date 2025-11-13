@@ -72,6 +72,35 @@ function  dockerbuild {
   $docker_compose_bin build $args
 }
 
+function share {
+    if [[ $(dockerps web) != 1 ]]; then
+        echo "Il container web non è attivo. Avviare prima con bin/docker start"
+        exit 1
+    fi
+
+    if [[ -f "$root_dir/docker/.env" ]]; then
+        export $(grep -v '^#' "$root_dir/docker/.env" | xargs)
+    fi
+
+    if [[ -z "$NGROK_AUTHTOKEN" ]]; then
+        echo "NGROK_AUTHTOKEN is missing. Update .env file with your ngrok authtoken."
+        exit 1
+    fi
+
+    echo "Starting ngrok container..."
+    $docker_compose_bin --profile share up -d ngrok
+
+    sleep 2
+    NGROK_URL=$(dockerexec ngrok curl --silent http://localhost:4040/api/tunnels | jq -r '.tunnels[0].public_url')
+    echo "ngrok public URL: $NGROK_URL"
+    echo "Monitor ngrok on http://localhost:4040"
+}
+
+function unshare {
+    echo "Stopping ngrok..."
+    dockerstop ngrok
+}
+
 if ! [ -e $docker_bin ]; then
     echo "This script should be run from the root dir"
     exit
@@ -184,6 +213,12 @@ case "$1" in
         echo "container php-fpm is down"
       fi
     ;;
+  share)
+      share
+      ;;
+  unshare)
+      unshare
+      ;;
   launch|l)
       if [[ $(dockerps php-fpm) = 1 ]]; then
         shift

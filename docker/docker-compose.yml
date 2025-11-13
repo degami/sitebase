@@ -92,6 +92,20 @@ services:
     restart: unless-stopped
     ports:
       - 9001:9001 # supervisor
+  ngrok:
+    build:
+      context: ./ngrok
+    profiles: ["share"]
+    depends_on:
+      - web
+    env_file:
+      - ./.env
+    networks:
+      sitebasenet:
+        ipv4_address: ${IPV4_CLASS}.0.9
+    stdin_open: true
+    tty: true
+#    restart: unless-stopped
   mailhog:
     image: mailhog/mailhog
     logging:

@@ -1,0 +1,6 @@
+# docker/ngrok/ngrok.yml
+authtoken: ${NGROK_AUTHTOKEN}
+tunnels:
+  web:
+    proto: http
+    addr: web:80

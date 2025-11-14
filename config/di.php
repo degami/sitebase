@@ -242,4 +242,7 @@ return [
 
     \App\Base\Environment\Manager::class => DI\autowire(\App\Base\Environment\Manager::class),
     'environment' => DI\get(\App\Base\Environment\Manager::class),
+
+    \App\Base\Tools\Utils\Geocoder::class => DI\autowire(\App\Base\Tools\Utils\Geocoder::class),
+    'geocoder' => DI\get(\App\Base\Tools\Utils\Geocoder::class),
 ];

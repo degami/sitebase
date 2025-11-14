@@ -29,6 +29,7 @@ use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
 use App\Base\Tools\Utils\Zip;
 use App\Base\Tools\Utils\GZip;
+use App\Base\Tools\Utils\Geocoder;
 use App\Base\Models\Website;
 use App\Base\Routers\Admin;
 use App\Base\Routing\RouteInfo;
@@ -530,5 +531,16 @@ trait ContainerAwareTrait
     public function getEnvironment(): EnvironmentManager
     {
         return $this->getService('environment');
+    }
+
+    /**
+     * gets geocoder
+     *
+     * @return Geocoder
+     * @throws BasicException 
+     */
+    public function getGeocoder(): Geocoder
+    {
+        return $this->getService('geocoder');
     }
 }

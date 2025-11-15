@@ -14,6 +14,7 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseCollection;
+use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\ModelWithLocationCollection;
 use App\Base\GraphQl\GraphQLExport;
 
@@ -42,6 +43,10 @@ trait WithLatLngTrait
     #[GraphQLExport]
     public function getLatitude(): float
     {
+        if ($this instanceof BaseModel && !$this->latitude) {
+            $this->latitude = floatval($this->getData('latitude') ?? 0.0);
+        }
+
         return $this->latitude;
     }
 
@@ -53,6 +58,10 @@ trait WithLatLngTrait
     #[GraphQLExport]
     public function getLongitude(): float
     {
+        if ($this instanceof BaseModel && !$this->longitude) {
+            $this->longitude = floatval($this->getData('longitude') ?? 0.0);
+        }
+
         return $this->longitude;
     }
 
@@ -87,5 +96,37 @@ trait WithLatLngTrait
         }
 
         return $collection;
+    }
+
+    /**
+     * sets latitude
+     *
+     * @param float $latitude
+     * @return self
+     */
+    public function setLatitude(float $latitude): self
+    {
+        $this->latitude = $latitude;
+        if ($this instanceof BaseModel) {
+            $this->setData(['latitude' => $latitude]);
+        }
+
+        return $this;
+    }
+
+    /**
+     * sets longitude
+     *
+     * @param float $longitude
+     * @return self
+     */
+    public function setLongitude(float $longitude): self
+    {
+        $this->longitude = $longitude;
+        if ($this instanceof BaseModel) {
+            $this->setData(['longitude' => $longitude]);
+        }
+
+        return $this;
     }
 }

@@ -17,6 +17,7 @@ use App\Base\Interfaces\Commerce\ShipmentTrackerInterface;
 use App\Base\Models\OrderShipment;
 use App\Base\Abstracts\ContainerAwareObject;
 use Degami\Basics\Exceptions\BasicException;
+use Psr\Container\ContainerInterface;
 
 class GLSTracker extends ContainerAwareObject implements ShipmentTrackerInterface
 {
@@ -28,7 +29,7 @@ class GLSTracker extends ContainerAwareObject implements ShipmentTrackerInterfac
 
 
     public function __construct(
-        protected $container,
+        protected ContainerInterface $container,
     ) {
         parent::__construct($container);
 

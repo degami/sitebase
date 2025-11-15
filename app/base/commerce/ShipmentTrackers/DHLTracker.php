@@ -25,8 +25,9 @@ class DHLTracker extends AbstractOAuth2ApiClient implements ShipmentTrackerInter
 {
     private const CARRIER_CODE = 'dhl';
 
-    public function __construct(ContainerInterface $container)
-    {
+    public function __construct(
+        protected ContainerInterface $container
+    ) {
         parent::__construct(
             $container,
             App::getInstance()->getSiteData()->getConfigValue('commerce/shipment_trackers/dhl/client_id'),

@@ -105,7 +105,9 @@ class OrderAddress extends BaseModel
             ->setPostcode($address->getPostcode())
             ->setCountryCode($address->getCountryCode())
             ->setPhone($address->getPhone())
-            ->setEmail($address->getEmail());
+            ->setEmail($address->getEmail())
+            ->setLatitude($address->getLatitude())
+            ->setLongitude($address->getLongitude());
     }
 
     /**

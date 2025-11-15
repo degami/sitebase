@@ -200,6 +200,15 @@ class Order extends BaseModel
     {
         if (!$address instanceof OrderAddress) {
             $address = OrderAddress::createFromAddress($address);
+            if (!$address->getLongitude() && !$address->getLatitude()) {
+                try {
+                    $geocoder = App::getInstance()->getGeocoder();
+                    $coords = $geocoder->geocode($address->getFullAddress());
+                    if ($coords) {
+                        $address->setLatitude($coords['lat'])->setLongitude($coords['lon']);
+                    }
+                } catch (\Exception $e) {}
+            }
         }
 
         $this->billingAddress = $address->setType('billing')->setOrder($this);
@@ -216,6 +225,15 @@ class Order extends BaseModel
     {
         if (!$address instanceof OrderAddress) {
             $address = OrderAddress::createFromAddress($address);
+            if (!$address->getLongitude() && !$address->getLatitude()) {
+                try {
+                    $geocoder = App::getInstance()->getGeocoder();
+                    $coords = $geocoder->geocode($address->getFullAddress());
+                    if ($coords) {
+                        $address->setLatitude($coords['lat'])->setLongitude($coords['lon']);
+                    }
+                } catch (\Exception $e) {}
+            }
         }
 
         $this->shippingAddress = $address->setType('shipping')->setOrder($this);

@@ -226,8 +226,19 @@ class Addresses extends LoggedUserFormPage
                     ->setPostcode($values['postcode'])
                     ->setCountryCode($values['country_code'])
                     ->setPhone($values['phone'])
-                    ->setEmail($values['email'])
-                    ->persist();
+                    ->setEmail($values['email']);
+
+                if (!$address->getLongitude() && !$address->getLatitude()) {
+                    try {
+                        $geocoder = App::getInstance()->getGeocoder();
+                        $coords = $geocoder->geocode($address->getFullAddress());
+                        if ($coords) {
+                            $address->setLatitude($coords['lat'])->setLongitude($coords['lon']);
+                        }
+                    } catch (\Exception $e) {}
+                }
+
+                $address->persist();
 
                 $this->addInfoFlashMessage($this->getUtils()->translate("Address saved"));
                 break;

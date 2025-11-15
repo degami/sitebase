@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Site\Models;
 
 use App\Base\Abstracts\Models\FrontendModel;
@@ -9,6 +20,8 @@ use App\Base\GraphQl\GraphQLExport;
 use App\Base\Models\Calendar;
 
 /**
+ * Calendar Reservation Model
+ * 
  * @method int getId()
  * @method string getSku()
  * @method string getTitle()

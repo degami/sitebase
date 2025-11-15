@@ -17,6 +17,9 @@ use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "address" table migration
+ */
 class CreateAddressTableMigration extends DBMigration
 {
     protected string $tableName = 'address';

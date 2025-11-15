@@ -19,7 +19,7 @@ use Degami\SqlSchema\Index;
 use Degami\SqlSchema\Table;
 
 /**
- * "create users_2fa table migration
+ *  "users_2fa" table migration
  */
 class CreateUsers2FaTableMigration extends DBMigration
 {

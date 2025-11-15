@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Base\Models;
 
 use App\Base\Abstracts\Models\FrontendModel;
@@ -9,6 +20,8 @@ use App\Base\GraphQl\GraphQLExport;
 use App\Site\Models\MediaElement;
 
 /**
+ * Gift Card Model
+ * 
  * @method string getSku()
  * @method string getTitle()
  * @method string getContent()

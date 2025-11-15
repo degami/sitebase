@@ -17,6 +17,9 @@ use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "cart_item" table migration
+ */
 class CreateCartItemTableMigration extends DBMigration
 {
     protected string $tableName = 'cart_item';

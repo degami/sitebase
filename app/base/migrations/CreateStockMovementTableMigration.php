@@ -17,6 +17,9 @@ use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "stock_movement" table migration
+ */
 class CreateStockMovementTableMigration extends DBMigration
 {
     protected string $tableName = 'stock_movement';

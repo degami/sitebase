@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Site\Models;
 
 use App\App;
@@ -10,6 +21,8 @@ use App\Base\Traits\ProductTrait;
 use App\Base\GraphQl\GraphQLExport;
 
 /**
+ * Book Model
+ * 
  * @method string getSku()
  * @method string getTitle()
  * @method string getContent()

@@ -17,6 +17,9 @@ use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "country" table migration
+ */
 class CreateCountryTableMigration extends DBMigration
 {
     protected string $tableName = 'country';

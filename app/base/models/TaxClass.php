@@ -18,7 +18,7 @@ use App\Base\Traits\WithWebsiteTrait;
 use DateTime;
 
 /**
- * Address Model
+ * Tax Class Model
  *
  * @method int getId()
  * @method int getWebsiteId()

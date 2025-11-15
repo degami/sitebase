@@ -17,6 +17,9 @@ use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "tax_rate" table migration
+ */
 class CreateTaxRateTableMigration extends DBMigration
 {
     protected string $tableName = 'tax_rate';

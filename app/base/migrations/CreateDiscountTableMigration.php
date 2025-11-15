@@ -17,6 +17,9 @@ use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "discount" table migration
+ */
 class CreateDiscountTableMigration extends DBMigration
 {
     protected string $tableName = 'discount';

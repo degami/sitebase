@@ -18,6 +18,9 @@ use Degami\SqlSchema\ForeignKey;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "order_status_change" table migration
+ */
 class CreateOrderStatusChangeTableMigration extends DBMigration
 {
     protected string $tableName = 'order_status_change';

@@ -17,6 +17,9 @@ use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "order_shipment" table migration
+ */
 class CreateOrderShipmentTableMigration extends DBMigration
 {
     protected string $tableName = 'order_shipment';

@@ -20,7 +20,7 @@ use Degami\SqlSchema\Index;
 use Degami\SqlSchema\Table;
 
 /**
- * "user" table migration
+ * "user_session" table migration
  */
 class CreateUserSessionsTableMigration extends DBMigration
 {

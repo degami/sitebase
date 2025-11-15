@@ -18,6 +18,9 @@ use Degami\SqlSchema\ForeignKey;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\Index;
 
+/**
+ * "cart_discount" table migration
+ */
 class CreateCartDiscountTableMigration extends DBMigration
 {
     protected string $tableName = 'cart_discount';

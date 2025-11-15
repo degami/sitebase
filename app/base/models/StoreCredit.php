@@ -10,6 +10,8 @@ use App\Base\Traits\WithOwnerTrait;
 use App\Base\Traits\WithWebsiteTrait;
 
 /**
+ * Store Credit Model
+ * 
  * @method int getId()
  * @method int getUserId()
  * @method int getWebsiteId()

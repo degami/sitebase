@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Base\Abstracts\OAuth2;
 
 use Psr\Container\ContainerInterface;
@@ -7,6 +18,9 @@ use App\Base\Models\OAuth2AccessToken;
 use Degami\Basics\Exceptions\BasicException;
 use GuzzleHttp\Exception\GuzzleException;
 
+/**
+ * Authorization Code OAuth2 Client
+ */
 abstract class AuthorizationCodeOAuth2Client extends AbstractOAuth2ApiClient
 {
     public function __construct(

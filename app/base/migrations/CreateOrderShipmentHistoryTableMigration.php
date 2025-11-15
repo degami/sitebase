@@ -1,5 +1,16 @@
 <?php
 
+/**
+ * SiteBase
+ * PHP Version 8.3
+ *
+ * @category CMS / Framework
+ * @package  Degami\Sitebase
+ * @author   Mirko De Grandis <degami@github.com>
+ * @license  MIT https://opensource.org/licenses/mit-license.php
+ * @link     https://github.com/degami/sitebase
+ */
+
 namespace App\Base\Migrations;
 
 use App\Base\Abstracts\Migrations\DBMigration;
@@ -8,6 +19,9 @@ use Degami\SqlSchema\Index;
 use Degami\SqlSchema\Table;
 use Degami\SqlSchema\ForeignKey;
 
+/**
+ * "order_shipment_history" table migration
+ */
 class CreateOrderShipmentHistoryTableMigration extends DBMigration
 {
     protected string $tableName = 'order_shipment_history';

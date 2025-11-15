@@ -126,10 +126,42 @@ class GLSTracker extends ContainerAwareObject implements ShipmentTrackerInterfac
         */
         $data = $this->fetchTrackingData($shipment);
         $status = $data['parcels'][0]['status'] ?? null;
+
+        // GLS API does not provide latitude and longitude in this response
         $latitude = null;
         $longitude = null;
-        // GLS API does not provide latitude and longitude in this response
+
+        // use geocoder class to get lat/lon from location if needed
+        $geocoder = $this->getGeocoder();
+
+        try {
+            // get latest event location
+            $events = $data['parcels'][0]['events'] ?? [];
+            usort($events, function ($a, $b) {
+                return strtotime($b['timestamp']) <=> strtotime($a['timestamp']);
+            });
+            $latestEvent = $events[0] ?? null;
+
+
+            $position = $geocoder->geocode(
+                trim(
+                    ($latestEvent['location'] ?? '') . ' ' .
+                    ' ' // no postal code available
+                    ($latestEvent['country'] ?? '')
+                )
+            );
+
+            $latitude = $position['lat'] ?? null;
+            $longitude = $position['lon'] ?? null;
+        } catch (BasicException $e) {
+            // log error
+        }
+
 
         $shipment->setStatus($status)->persist();
+
+        if ($latitude !== null && $longitude !== null) {
+            $shipment->updatePosition($latitude, $longitude);
+        }
     }
 }

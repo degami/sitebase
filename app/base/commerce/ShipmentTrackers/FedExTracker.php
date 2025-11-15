@@ -465,11 +465,33 @@ class FedExTracker extends AbstractOAuth2ApiClient implements ShipmentTrackerInt
         $data = $this->fetchTrackingData($shipment);
 
         $status = $data['output']['completeTrackResults'][0]['trackResults'][0]['latestStatusDetail']['description'] ?? null;
+
+        // FedEx API does not provide latitude and longitude in this response
         $latitude = null;
         $longitude = null;
-        // FedEx API does not provide latitude and longitude in this response
 
+        // use geocoder class to get lat/lon from location if needed
+        $geocoder = $this->getGeocoder();
+
+        try {
+            $position = $geocoder->geocode(
+                trim(
+                    ($data['output']['completeTrackResults'][0]['trackResults'][0]['destinationLocation']['locationContactAndAddress']['address']['city'] ?? '') . ' ' .
+                    ($data['output']['completeTrackResults'][0]['trackResults'][0]['destinationLocation']['locationContactAndAddress']['address']['postalCode'] ?? '') . ' ' .
+                    ($data['output']['completeTrackResults'][0]['trackResults'][0]['destinationLocation']['locationContactAndAddress']['address']['countryCode'] ?? '')
+                )
+            );
+
+            $latitude = $position['lat'] ?? null;
+            $longitude = $position['lon'] ?? null;
+        } catch (BasicException $e) {
+            // log error
+        }
 
         $shipment->setStatus($status)->persist();
+
+        if ($latitude !== null && $longitude !== null) {
+            $shipment->updatePosition($latitude, $longitude);
+        }
     }
 }

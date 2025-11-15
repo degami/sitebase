@@ -225,10 +225,34 @@ class DHLTracker extends AbstractOAuth2ApiClient implements ShipmentTrackerInter
 
         $status = $data['shipments'][0]['status']['status'] ?? null;
         $location = $data['shipments'][0]['status']['location']['address'] ?? null;
+
+        // DHL API does not provide latitude and longitude in this response
         $latitude = null;
         $longitude = null;
-        // DHL API does not provide latitude and longitude in this response
+
+        // use geocoder class to get lat/lon from location if needed
+        $geocoder = $this->getGeocoder();
+
+        try {
+            $position = $geocoder->geocode(
+                trim(
+                    ($location['addressLocality'] ?? '') . ' ' .
+                    ($location['postalCode'] ?? '') . ' ' .
+                    ($location['countryCode'] ?? '')
+                )
+            );
+
+            $latitude = $position['lat'] ?? null;
+            $longitude = $position['lon'] ?? null;
+        } catch (BasicException $e) {
+            // log error
+        }
+
 
         $shipment->setStatus($status)->persist();
+
+        if ($latitude !== null && $longitude !== null) {
+            $shipment->updatePosition($latitude, $longitude);
+        }
     }
 }

@@ -442,4 +442,11 @@ return [
     "Product Class" => "Κατηγορία προϊόντος",
     "Product Id" => "Κωδικός προϊόντος",
     "Gift Cards" => "Κάρτες δώρων",
+    'Shipment %s for order %s' => 'Αποστολή %s για την παραγγελία %s',
+    'Position History' => 'Ιστορικό θέσης',
+    'Field Name' => 'Όνομα πεδίου',
+    'Field Value' => 'Τιμή πεδίου',
+    'latitude' => 'γεωγραφικό πλάτος',
+    'longitude' => 'γεωγραφικό μήκος',
+    'when' => 'πότε',
 ];

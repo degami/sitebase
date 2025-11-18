@@ -442,4 +442,11 @@ return [
     "Product Class" => "Ürün sınıfı",
     "Product Id" => "Ürün ID",
     "Gift Cards" => "Hediye Kartları",
+    'Shipment %s for order %s' => 'Sipariş %s için gönderi %s',
+    'Position History' => 'Konum Geçmişi',
+    'Field Name' => 'Alan Adı',
+    'Field Value' => 'Alan Değeri',
+    'latitude' => 'enlem',
+    'longitude' => 'boylam',
+    'when' => 'ne zaman',
 ];

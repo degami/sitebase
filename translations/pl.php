@@ -442,4 +442,11 @@ return [
     "Product Class" => "Klasa produktu",
     "Product Id" => "ID produktu",
     "Gift Cards" => "Karty podarunkowe",
+    'Shipment %s for order %s' => 'Przesyłka %s dla zamówienia %s',
+    'Position History' => 'Historia pozycji',
+    'Field Name' => 'Nazwa pola',
+    'Field Value' => 'Wartość pola',
+    'latitude' => 'szerokość geograficzna',
+    'longitude' => 'długość geograficzna',
+    'when' => 'kiedy',
 ];

@@ -442,4 +442,11 @@ return [
     "Product Class" => "Produktklasse",
     "Product Id" => "Produkt-ID",
     "Gift Cards" => "Geschenkkarten",
+    'Shipment %s for order %s' => 'Sendung %s für Bestellung %s',
+    'Position History' => 'Positionsverlauf',
+    'Field Name' => 'Feldname',
+    'Field Value' => 'Feldwert',
+    'latitude' => 'Breitengrad',
+    'longitude' => 'Längengrad',
+    'when' => 'wann',
 ];

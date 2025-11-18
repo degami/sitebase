@@ -442,4 +442,11 @@ return [
     "Product Class" => "Phân loại sản phẩm",
     "Product Id" => "ID sản phẩm",
     "Gift Cards" => "Thẻ quà tặng",
+    'Shipment %s for order %s' => 'Lô hàng %s cho đơn hàng %s',
+    'Position History' => 'Lịch sử vị trí',
+    'Field Name' => 'Tên trường',
+    'Field Value' => 'Giá trị trường',
+    'latitude' => 'vĩ độ',
+    'longitude' => 'kinh độ',
+    'when' => 'khi nào',
 ];

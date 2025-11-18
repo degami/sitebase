@@ -1442,7 +1442,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     TagElement::class,
                     ['options' => [
                         'tag' => 'th',
-                        'text' => $th,
+                        'text' => App::getInstance()->getUtils()->translate($th),
                         'scope' => 'col',
                         'attributes' => ($nowrap == true) ? ['class' => 'nowrap'] : [],
                     ]]

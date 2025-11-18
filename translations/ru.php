@@ -442,4 +442,11 @@ return [
     "Product Class" => "Класс товара",
     "Product Id" => "ID товара",
     "Gift Cards" => "Подарочные карты",
+    'Shipment %s for order %s' => 'Отправление %s для заказа %s',
+    'Position History' => 'История позиции',
+    'Field Name' => 'Название поля',
+    'Field Value' => 'Значение поля',
+    'latitude' => 'широта',
+    'longitude' => 'долгота',
+    'when' => 'когда',
 ];

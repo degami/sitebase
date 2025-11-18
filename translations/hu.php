@@ -442,4 +442,11 @@ return [
     "Product Class" => "Termék osztály",
     "Product Id" => "Termék ID",
     "Gift Cards" => "Ajándékkártyák",
+    'Shipment %s for order %s' => 'Szállítás %s a(z) %s rendeléshez',
+    'Position History' => 'Pozíció előzmények',
+    'Field Name' => 'Mező neve',
+    'Field Value' => 'Mező értéke',
+    'latitude' => 'szélesség',
+    'longitude' => 'hosszúság',
+    'when' => 'mikor',
 ];

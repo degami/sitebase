@@ -430,9 +430,9 @@ class OrderShipments extends AdminManageModelsPage
                 '<ul class="list-group"><li class="list-group-item">'.implode('</li><li class="list-group-item">', array_map(
                     function ($historyItem) {
                         $data = [
-                            'latitude' => $historyItem->getLatitude(),
-                            'longitude' => $historyItem->getLongitude(),
-                            'when' => $historyItem->getCreatedAt()
+                            $this->getUtils()->translate('latitude') => $historyItem->getLatitude(),
+                            $this->getUtils()->translate('longitude') => $historyItem->getLongitude(),
+                            $this->getUtils()->translate('when') => $historyItem->getCreatedAt()
                         ];
 
                         return $this->getHtmlRenderer()->renderArrayOnTable($data);

@@ -442,4 +442,11 @@ return [
     "Product Class" => "商品クラス",
     "Product Id" => "商品ID",
     "Gift Cards" => "ギフトカード",
+    'Shipment %s for order %s' => '注文 %s の出荷 %s',
+    'Position History' => '位置履歴',
+    'Field Name' => 'フィールド名',
+    'Field Value' => 'フィールド値',
+    'latitude' => '緯度',
+    'longitude' => '経度',
+    'when' => 'いつ',
 ];

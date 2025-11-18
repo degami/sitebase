@@ -173,9 +173,9 @@ abstract class AdminManageModelsPage extends AdminFormPage
             }
         }
 
-        if (!in_array(($this->template_data['action'] ?? 'list'), ['list', 'duplicate', 'delete',])) {
+        if (!in_array(($this->template_data['action'] ?? 'list'), ['list', 'duplicate', 'delete'])) {
             $this->addBackButton();
-            if (($this->template_data['action'] ?? 'list') != 'new') { // no need to remove something that is not there
+            if (!in_array(($this->template_data['action'] ?? 'list'), ['new', 'view'])) { // no need to remove something that is not there
                 $this->addRemoveButton();
             }
         }

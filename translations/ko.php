@@ -442,4 +442,11 @@ return [
     "Product Class" => "제품 분류",
     "Product Id" => "제품 ID",
     "Gift Cards" => "기프트 카드",
+    'Shipment %s for order %s' => '주문 %s의 배송 %s',
+    'Position History' => '위치 기록',
+    'Field Name' => '필드 이름',
+    'Field Value' => '필드 값',
+    'latitude' => '위도',
+    'longitude' => '경도',
+    'when' => '언제',
 ];

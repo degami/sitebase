@@ -442,4 +442,11 @@ return [
     "Product Class" => "Kelas produk",
     "Product Id" => "ID produk",
     "Gift Cards" => "Kartu hadiah",
+    'Shipment %s for order %s' => 'Pengiriman %s untuk pesanan %s',
+    'Position History' => 'Riwayat posisi',
+    'Field Name' => 'Nama bidang',
+    'Field Value' => 'Nilai bidang',
+    'latitude' => 'lintang',
+    'longitude' => 'bujur',
+    'when' => 'kapan',    
 ];

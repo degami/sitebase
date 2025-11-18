@@ -417,4 +417,11 @@ return [
     "Product Class" => "فئة المنتج",
     "Product Id" => "معرف المنتج",
     "Gift Cards" => "بطاقات الهدايا",
+    'Shipment %s for order %s' => 'شحنة %s للطلب %s',
+    'Position History' => 'تاريخ الموقع',
+    'Field Name' => 'اسم الحقل',
+    'Field Value' => 'قيمة الحقل',
+    'latitude' => 'خط العرض',
+    'longitude' => 'خط الطول',
+    'when' => 'متى',
 ];

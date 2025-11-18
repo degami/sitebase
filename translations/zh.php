@@ -442,4 +442,11 @@ return [
     "Product Class" => "产品分类",
     "Product Id" => "产品ID",
     "Gift Cards" => "礼品卡",
+    'Shipment %s for order %s' => '订单 %s 的发货 %s',
+    'Position History' => '位置历史',
+    'Field Name' => '字段名称',
+    'Field Value' => '字段值',
+    'latitude' => '纬度',
+    'longitude' => '经度',
+    'when' => '时间',
 ];

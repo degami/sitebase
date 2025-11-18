@@ -444,4 +444,11 @@ return [
     "Product Class" => "পণ্যের শ্রেণি",
     "Product Id" => "পণ্য আইডি",
     "Gift Cards" => "উপহার কার্ড",
+    'Shipment %s for order %s' => 'অর্ডার %s এর জন্য চালান %s',
+    'Position History' => 'অবস্থান ইতিহাস',
+    'Field Name' => 'ক্ষেত্রের নাম',
+    'Field Value' => 'ক্ষেত্রের মান',
+    'latitude' => 'অক্ষাংশ',
+    'longitude' => 'দ্রাঘিমাংশ',
+    'when' => 'কখন',
 ];

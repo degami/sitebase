@@ -442,4 +442,11 @@ return [
     "Product Class" => "उत्पाद वर्ग",
     "Product Id" => "उत्पाद आईडी",
     "Gift Cards" => "उपहार कार्ड",
+    'Shipment %s for order %s' => 'ऑर्डर %s के लिए शिपमेंट %s',
+    'Position History' => 'स्थिति इतिहास',
+    'Field Name' => 'फ़ील्ड नाम',
+    'Field Value' => 'फ़ील्ड मान',
+    'latitude' => 'अक्षांश',
+    'longitude' => 'देशांतर',
+    'when' => 'कब',
 ];

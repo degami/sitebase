@@ -441,5 +441,12 @@ return [
     "Product Stocks" => "Stocuri produse",
     "Product Class" => "Clasă produs",
     "Product Id" => "ID produs",
-    "Gift Cards" => "Carduri cadou",    
+    "Gift Cards" => "Carduri cadou",
+    'Shipment %s for order %s' => 'Expediere %s pentru comanda %s',
+    'Position History' => 'Istoric poziție',
+    'Field Name' => 'Nume câmp',
+    'Field Value' => 'Valoare câmp',
+    'latitude' => 'latitudine',
+    'longitude' => 'longitudine',
+    'when' => 'când',
 ];

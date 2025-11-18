@@ -219,7 +219,7 @@ class OrderPayments extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
-            'Order' => ['order' => 'order_id', 'foreign' => 'order_id', 'table' => $this->getModelTableName(), 'view' => 'order_number'],
+            'Order Number' => ['order' => 'order_id', 'foreign' => 'order_id', 'table' => $this->getModelTableName(), 'view' => 'order_number'],
             'Payment Method' => ['order' => 'payment_method'],
             'Transaction Id' => ['order' => 'transaction_id'],
             'Transaction Amount' => ['order' => 'transaction_amount'],
@@ -243,7 +243,7 @@ class OrderPayments extends AdminManageModelsPage
                 return [
                     'ID' => $orderPayment->id,
                     'Website' => $orderPayment->getWebsiteId() == null ? 'All websites' : $orderPayment->getWebsite()->domain,
-                    'Order' => $orderPayment->getOrder()->getOrderNumber(),
+                    'Order Number' => $orderPayment->getOrder()->getOrderNumber(),
                     'Payment Method' => $orderPayment->getPaymentMethod(),
                     'Transaction Id' => $orderPayment->getTransactionId(),
                     'Transaction Amount' => $this->getUtils()->formatPrice($orderPayment->getTransactionAmount(), $orderPayment->getCurrencyCode()),

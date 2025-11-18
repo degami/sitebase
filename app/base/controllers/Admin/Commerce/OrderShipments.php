@@ -298,7 +298,7 @@ class OrderShipments extends AdminManageModelsPage
         return [
             'ID' => 'id',
             'Website' => ['order' => 'website_id', 'foreign' => 'website_id', 'table' => $this->getModelTableName(), 'view' => 'site_name'],
-            'Order' => ['order' => 'order_id', 'foreign' => 'order_id', 'table' => $this->getModelTableName(), 'view' => 'order_number'],
+            'Order Number' => ['order' => 'order_id', 'foreign' => 'order_id', 'table' => $this->getModelTableName(), 'view' => 'order_number'],
             'Shipping Method' => ['order' => 'shipping_method', 'search' => 'shipping_method'],
             'Shipment Code' => ['order' => 'shipment_code', 'search' => 'shipment_code'],
             'Status' => ['order' => 'status'],
@@ -322,7 +322,7 @@ class OrderShipments extends AdminManageModelsPage
                 return [
                     'ID' => $orderShipment->id,
                     'Website' => $orderShipment->getWebsiteId() == null ? 'All websites' : $orderShipment->getWebsite()->domain,
-                    'Order' => $orderShipment->getOrder()->getOrderNumber(),
+                    'Order Number' => $orderShipment->getOrder()->getOrderNumber(),
                     'Shipping Method' => $orderShipment->getShippingMethod(),
                     'Shipment Code' => $orderShipment->getShipmentCode(),
                     'Status' => $orderShipment->getStatus(),

@@ -14,14 +14,14 @@
 namespace App\Base\AI\Models;
 
 use App\App;
-use App\Base\Interfaces\AI\AIModelInterface;
-use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Models\AbstractLLMAdapter;
+use App\Base\AI\Flows\BaseFlow;
 use Exception;
 
 /**
  * Mistral AI Model
  */
-class Mistral extends ContainerAwareObject implements AIModelInterface
+class Mistral extends AbstractLLMAdapter
 {
     public const MISTRAL_MODEL = 'mistral-medium';
     public const MISTRAL_MODEL_PATH = 'app/mistral/model';
@@ -46,47 +46,129 @@ class Mistral extends ContainerAwareObject implements AIModelInterface
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH));
     }
 
-    public function ask(string $prompt, ?string $model = null, ?array $previousMessages = null) : string
+    public function getEndpoint(?string $model = null) : string
     {
-        $client = $this->getGuzzle();
+        return "https://api.mistral.ai/" . $this->getVersion() . "/chat/completions";
+    }
+
+    public function prepareRequest(array $payload) : array
+    {
         $apiKey = $this->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH);
 
         if (empty($apiKey)) {
             throw new Exception("Missing Mistral Token");
         }
 
-        $endPoint = "https://api.mistral.ai/" . $this->getVersion() . "/chat/completions";
-
-        // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH));
-        // $maxTokens = min(self::MISTRAL_MAX_TOKENS, $remainingTokens);
-
-        $maxTokens = self::MISTRAL_MAX_TOKENS;
-
-        $messages = $previousMessages ?? [];
-        $messages[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-
-        $response = $client->post($endPoint, [
+        return [
             'headers' => [
                 'Content-Type: application/json',
                 'Authorization' => 'Bearer ' . $apiKey,
             ],
-            'json' => [
-                'model' => $this->getModel($model),
-                'max_tokens' => $maxTokens,
-                "temperature" => 0.7,
-                'messages' => $messages,
+            'json' => $payload,
+        ];
+    }
+
+    public function formatUserMessage(string $prompt): array
+    {
+        return [
+            'role' => 'user',
+            'content' => $prompt,
+        ];
+    }
+
+    public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
+    {
+        $messages = $previousMessages;
+        $messages[] = $this->formatUserMessage($prompt);
+
+        $maxTokens = self::MISTRAL_MAX_TOKENS;
+
+        return [
+            'model' => $this->getModel($model),
+            'max_tokens' => $maxTokens,
+            "temperature" => 0.7,
+            'messages' => $messages,
+        ];
+    }
+
+    public function normalizeResponse(array $raw): array
+    {
+        $assistantText = null;
+        $functionCalls = [];
+
+        if (isset($raw['choices'][0]['message'])) {
+            $msg = $raw['choices'][0]['message'];
+
+            // testo normale
+            if (!empty($msg['content'])) {
+                $assistantText = $msg['content'];
+            }
+
+            // tool calls
+            if (!empty($msg['tool_calls'])) {
+                foreach ($msg['tool_calls'] as $call) {
+                    $functionCalls[] = [
+                        'name' => $call['function']['name'],
+                        'args' => json_decode($call['function']['arguments'], true),
+                        'id' => $call['id']
+                    ];
+                }
+            }
+        }
+
+        return [
+            'assistantText' => $assistantText,
+            'functionCalls' => $functionCalls,
+            'raw' => $raw
+        ];
+    }
+
+    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    {
+        $messages = [
+            [
+                'role' => 'system',
+                'parts' => [
+                    ['text' => $flow->systemPrompt()]
+                ]
             ],
+        ];
+
+        if ($flow->schema()) {
+            $messages[] = [
+                'role' => 'system',
+                'content' => "Schema GraphQL disponibile:\n" . $flow->schema()
+            ];
+        }
+
+        $messages[] = [
+            'role' => 'user',
+            'parts' => [
+                ['text' => $userPrompt]
+            ]
+        ];
+
+        $messages[] = [
+            'role' => 'model',
+            'parts' => [
+                ['text' => json_encode($flow->tools())]
+            ]
+        ];
+
+        return array_values($messages);
+    }
+
+    public function sendFunctionResponse(string $toolCallId, array $result, array &$history = []): array
+    {
+        return $this->sendRaw([
+            'messages' => [
+                [
+                    'role' => 'tool',
+                    'tool_call_id' => $toolCallId,
+                    'content' => json_encode($result)
+                ]
+            ]
         ]);
-        $data = json_decode($response->getBody(), true);
-        $generatedText = $data['choices'][0]['message']['content'] ?? null;
-
-        // update remaining tokens configuration
-        // $this->getSiteData()->setConfigValue(self::MISTRAL_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
-
-        return trim($generatedText);
     }
 
     public function getAvailableModels(bool $reset = false) : array

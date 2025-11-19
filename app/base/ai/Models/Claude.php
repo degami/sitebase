@@ -14,14 +14,14 @@
 namespace App\Base\AI\Models;
 
 use App\App;
-use App\Base\Interfaces\AI\AIModelInterface;
-use App\Base\Abstracts\ContainerAwareObject;
+use App\Base\Abstracts\Models\AbstractLLMAdapter;
+use App\Base\AI\Flows\BaseFlow;
 use Exception;
 
 /**
  * Claude AI Model
  */
-class Claude extends ContainerAwareObject implements AIModelInterface
+class Claude extends AbstractLLMAdapter
 {
     public const CLAUDE_MODEL = 'claude-3-5-sonnet-20241022';
     public const CLAUDE_MODEL_PATH = 'app/claude/model';
@@ -46,47 +46,145 @@ class Claude extends ContainerAwareObject implements AIModelInterface
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH));
     }
 
-    public function ask(string $prompt, ?string $model = null, ?array $previousMessages = null) : string
+    public function getEndpoint(?string $model = null) : string
     {
-        $client = $this->getGuzzle();
+        return "https://api.anthropic.com/" . $this->getVersion() . "/messages";
+    }
+
+    public function prepareRequest(array $payload) : array
+    {
         $apiKey = $this->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH);
 
         if (empty($apiKey)) {
             throw new Exception("Missing Claude Token");
         }
 
-        $endPoint = "https://api.anthropic.com/" . $this->getVersion() . "/messages";
+        return [
+            'headers' => [
+                'Content-Type' => 'application/json',
+                'x-api-key: ' . $apiKey,
+                'anthropic-version: 2023-06-01'
+            ],
+            'json' => $payload,
+        ];
+    }
+
+    public function formatUserMessage(string $prompt): array
+    {
+        return [
+            'role' => 'user',
+            'content' => $prompt
+        ];
+    }
+
+    public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
+    {
+        $messages = $previousMessages;
+        $messages[] = $this->formatUserMessage($prompt);
 
         // $remainingTokens = intval($this->getSiteData()->getConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH));
         // $maxTokens = min(self::CLAUDE_MAX_TOKENS, $remainingTokens);
 
         $maxTokens = self::CLAUDE_MAX_TOKENS;
 
-        $messages = $previousMessages ?? [];
-        $messages[] = [
-            'role' => 'user',
-            'content' => $prompt,
+        return [
+            'model' => $this->getModel($model),
+            'max_tokens' => $maxTokens,
+            'messages' => $messages,
+        ];
+    }
+
+    public function normalizeResponse(array $raw): array
+    {
+        $assistantText = '';
+        $functionCalls = [];
+
+        if (!empty($raw['content'])) {
+            foreach ($raw['content'] as $item) {
+
+                if ($item['type'] === 'text') {
+                    $assistantText .= $item['text'];
+                }
+
+                if ($item['type'] === 'tool_use') {
+                    $functionCalls[] = [
+                        'id' => $item['id'],
+                        'name' => $item['name'],
+                        'args' => $item['input']
+                    ];
+                }
+            }
+        }
+
+        return [
+            'assistantText' => $assistantText ?: null,
+            'functionCalls' => $functionCalls,
+            'raw' => $raw
+        ];
+    }
+
+    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    {
+        $messages = [
+            [
+                'role' => 'system',
+                'parts' => [
+                    ['text' => $flow->systemPrompt()]
+                ]
+            ],
         ];
 
-        $response = $client->post($endPoint, [
-            'headers' => [
-                'Content-Type: application/json',
-                'x-api-key: ' . $apiKey,
-                'anthropic-version: 2023-06-01'
-            ],
-            'json' => [
-                'model' => $this->getModel($model),
-                'max_tokens' => $maxTokens,
-                'messages' => $messages,
-            ],
+        if ($flow->schema()) {
+            $messages[] = [
+                'role' => 'system',
+                'content' => "Schema GraphQL disponibile:\n" . $flow->schema()
+            ];
+        }
+
+        $messages[] = [
+            'role' => 'user',
+            'parts' => [
+                ['text' => $userPrompt]
+            ]
+        ];
+
+        $messages[] = [
+            'role' => 'model',
+            'parts' => [
+                ['text' => json_encode($flow->tools())]
+            ]
+        ];
+
+        return array_values($messages);
+    }
+
+    public function sendFunctionResponse(string $toolUseId, array $result, array &$history = []): array
+    {
+        return $this->sendRaw([
+            'messages' => [
+                [
+                    'role' => 'assistant',
+                    'content' => [
+                        [
+                            'type' => 'tool_result',
+                            'tool_use_id' => $toolUseId,
+                            'content' => json_encode($result)
+                        ]
+                    ]
+                ]
+            ]
         ]);
-        $data = json_decode($response->getBody(), true);
-        $generatedText = $data['content'][0]['text'];
+    }
+
+    public function ask(string $prompt, ?string $model = null, ?array $previousMessages = null) : string
+    {
+        $generatedText = parent::ask($prompt, $model, $previousMessages);
 
         // update remaining tokens configuration
-        // $this->getSiteData()->setConfigValue(self::CLAUDE_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
+        // $maxTokens = self::CHATGPT_MAX_TOKENS;
+        // $this->getSiteData()->setConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
 
-        return trim($generatedText);
+        return $generatedText;
     }
 
     public function getAvailableModels(bool $reset = false) : array

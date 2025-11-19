@@ -15,6 +15,7 @@ namespace App\Base\EventListeners\GraphQL;
 
 use App\App;
 use App\Base\Interfaces\EventListenerInterface;
+use App\Base\Interfaces\Model\ProductInterface;
 use Gplanchat\EventManager\Event;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
@@ -26,6 +27,7 @@ use App\Base\Models\CartDiscount;
 use App\Base\Models\Website;
 use App\Base\Models\Discount as DiscountModel;
 use GraphQL\Type\Definition\ResolveInfo;
+use HaydenPierce\ClassFinder\ClassFinder;
 
 class CommerceEventListener implements EventListenerInterface
 {
@@ -313,6 +315,22 @@ class CommerceEventListener implements EventListenerInterface
 
                 $cart = $this->getCart($currentUser, $currentWesite);
                 $productClass = $args['productClass'] ?? null;
+
+                // if product class is not a full namespaced class, try to resolve it
+                if (!class_exists($productClass)) {
+                    $classes = array_filter(array_merge(
+                        ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                        ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
+                    ), fn ($class) => is_subclass_of($class, ProductInterface::class));
+                    $classes = array_combine(array_map(fn ($c) => App::getInstance()->getClassBasename($c), $classes), $classes);
+
+                    if (isset($classes[$productClass])) {
+                        $productClass = $classes[$productClass];
+                    } else {
+                        throw new RuntimeException($app->getUtils()->translate('Invalid product class.'));
+                    }
+                }
+
                 $productId = $args['productId'] ?? null;
                 $quantity = $args['quantity'] ?? 1;
 

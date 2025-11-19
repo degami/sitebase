@@ -14,14 +14,14 @@
 namespace App\Base\AI\Models;
 
 use App\App;
-use App\Base\Abstracts\ContainerAwareObject;
-use App\Base\Interfaces\AI\AIModelInterface;
+use App\Base\Abstracts\Models\AbstractLLMAdapter;
+use App\Base\AI\Flows\BaseFlow;
 use Exception;
 
 /**
  * Groq AI Model
  */
-class Groq extends ContainerAwareObject implements AIModelInterface
+class Groq extends AbstractLLMAdapter
 {
     public const GROQ_MODEL = 'llama-3.1-8b-instant';
     public const GROQ_TOKEN_PATH = 'app/groq/token';
@@ -44,46 +44,126 @@ class Groq extends ContainerAwareObject implements AIModelInterface
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::GROQ_TOKEN_PATH));
     }
 
-    /**
-     * Invia una richiesta chat compatibile OpenAI
-     */
-    public function ask(string $prompt, ?string $model = null, ?array $previousMessages = null): string
+    public function getEndpoint(?string $model = null) : string
     {
-        $client = $this->getGuzzle();
+        return "https://api.groq.com/openai/" . $this->getVersion() . "/chat/completions";
+    }
+
+    public function prepareRequest(array $payload) : array
+    {
         $apiKey = $this->getSiteData()->getConfigValue(self::GROQ_TOKEN_PATH);
 
         if (empty($apiKey)) {
             throw new Exception("Missing Groq Token");
         }
 
-        $modelName = $this->getModel($model);
-
-        // costruzione messages stile OpenAI
-        $messages = $previousMessages ?? [];
-        $messages[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-
-        $response = $client->post("https://api.groq.com/openai/" . $this->getVersion() . "/chat/completions", [
+        return [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $apiKey,
             ],
-            'json' => [
-                'model' => $modelName,
-                'messages' => $messages,
-                'temperature' => 0.7,
-            ],
-        ]);
+            'json' => $payload,
+        ];
+    }
 
-        $data = json_decode($response->getBody(), true);
+    public function formatUserMessage(string $prompt): array
+    {
+        return [
+            'role' => 'user',
+            'content' => $prompt,
+        ];
+    }
 
-        if (!isset($data['choices'][0]['message']['content'])) {
-            throw new Exception("Invalid response from Groq API: " . json_encode($data));
+    public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
+    {
+        $messages = $previousMessages;
+        $messages[] = $this->formatUserMessage($prompt);
+
+        return [
+            'model' => $this->getModel($model),
+            'messages' => $messages,
+            'temperature' => 0.7,
+        ];
+    }
+
+    public function normalizeResponse(array $raw): array
+    {
+        $assistantText = null;
+        $functionCalls = [];
+
+        if (isset($raw['choices'][0]['message'])) {
+            $msg = $raw['choices'][0]['message'];
+
+            // testo normale
+            if (!empty($msg['content'])) {
+                $assistantText = $msg['content'];
+            }
+
+            // tool calls
+            if (!empty($msg['tool_calls'])) {
+                foreach ($msg['tool_calls'] as $call) {
+                    $functionCalls[] = [
+                        'name' => $call['function']['name'],
+                        'args' => json_decode($call['function']['arguments'], true),
+                        'id' => $call['id']
+                    ];
+                }
+            }
         }
 
-        return trim($data['choices'][0]['message']['content']);
+        return [
+            'assistantText' => $assistantText,
+            'functionCalls' => $functionCalls,
+            'raw' => $raw
+        ];
+    }
+
+    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    {
+        $messages = [
+            [
+                'role' => 'system',
+                'parts' => [
+                    ['text' => $flow->systemPrompt()]
+                ]
+            ],
+        ];
+
+        if ($flow->schema()) {
+            $messages[] = [
+                'role' => 'system',
+                'content' => "Schema GraphQL disponibile:\n" . $flow->schema()
+            ];
+        }
+
+        $messages[] = [
+            'role' => 'user',
+            'parts' => [
+                ['text' => $userPrompt]
+            ]
+        ];
+
+        $messages[] = [
+            'role' => 'model',
+            'parts' => [
+                ['text' => json_encode($flow->tools())]
+            ]
+        ];
+
+        return array_values($messages);
+    }
+
+    public function sendFunctionResponse(string $toolCallId, array $result, array &$history = []): array
+    {
+        return $this->sendRaw([
+            'messages' => [
+                [
+                    'role' => 'tool',
+                    'tool_call_id' => $toolCallId,
+                    'content' => json_encode($result)
+                ]
+            ]
+        ]);
     }
 
     public function getAvailableModels(bool $reset = false): array

@@ -14,14 +14,14 @@
 namespace App\Base\AI\Models;
 
 use App\App;
-use App\Base\Abstracts\ContainerAwareObject;
-use App\Base\Interfaces\AI\AIModelInterface;
+use App\Base\Abstracts\Models\AbstractLLMAdapter;
+use App\Base\AI\Flows\BaseFlow;
 use Exception;
 
 /**
  * Perplexity AI Model
  */
-class Perplexity extends ContainerAwareObject implements AIModelInterface
+class Perplexity extends AbstractLLMAdapter
 {
     public const PERPLEXITY_MODEL = 'pplx-70b-online'; // modello di default
     public const PERPLEXITY_TOKEN_PATH = 'app/perplexity/token';
@@ -42,44 +42,103 @@ class Perplexity extends ContainerAwareObject implements AIModelInterface
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::PERPLEXITY_TOKEN_PATH));
     }
 
-    /**
-     * Invia una richiesta all'API Perplexity e ottiene una risposta
-     */
-    public function ask(string $prompt, ?string $model = null, ?array $previousMessages = null) : string
+    public function getEndpoint(?string $model = null) : string
     {
-        $client = $this->getGuzzle();
+        return "https://api.perplexity.ai/chat/completions";
+    }
+
+    public function prepareRequest(array $payload) : array
+    {
         $apiKey = $this->getSiteData()->getConfigValue(self::PERPLEXITY_TOKEN_PATH);
 
         if (empty($apiKey)) {
             throw new Exception("Missing Perplexity Token");
         }
 
-        $modelName = $this->getModel($model);
-
-        $messages = $previousMessages ?? [];
-        $messages[] = [
-            'role' => 'user',
-            'content' => $prompt,
-        ];
-
-        $response = $client->post('https://api.perplexity.ai/chat/completions', [
+        return [
             'headers' => [
                 'Content-Type' => 'application/json',
                 'Authorization' => 'Bearer ' . $apiKey,
             ],
-            'json' => [
-                'model' => $modelName,
-                'messages' => $messages,
+            'json' => $payload,
+        ];
+    }
+
+    public function formatUserMessage(string $prompt): array
+    {
+        return [
+            'role' => 'user',
+            'content' => $prompt,
+        ];
+    }
+
+    public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
+    {
+        $messages = $previousMessages;
+        $messages[] = $this->formatUserMessage($prompt);
+
+        return [
+            'model' => $this->getModel($model),
+            'messages' => $messages,
+        ];
+    }
+
+    public function normalizeResponse(array $raw): array
+    {
+        $text = $raw['choices'][0]['text'] ?? null;
+
+        return [
+            'assistantText' => $text,
+            'functionCalls' => [],
+            'raw' => $raw
+        ];
+    }
+
+    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    {
+        $messages = [
+            [
+                'role' => 'system',
+                'parts' => [
+                    ['text' => $flow->systemPrompt()]
+                ]
             ],
-        ]);
+        ];
 
-        $data = json_decode($response->getBody(), true);
-
-        if (!isset($data['choices'][0]['message']['content'])) {
-            throw new Exception("Invalid response from Perplexity API: " . json_encode($data));
+        if ($flow->schema()) {
+            $messages[] = [
+                'role' => 'system',
+                'content' => "Schema GraphQL disponibile:\n" . $flow->schema()
+            ];
         }
 
-        return trim($data['choices'][0]['message']['content']);
+        $messages[] = [
+            'role' => 'user',
+            'parts' => [
+                ['text' => $userPrompt]
+            ]
+        ];
+
+        $messages[] = [
+            'role' => 'model',
+            'parts' => [
+                ['text' => json_encode($flow->tools())]
+            ]
+        ];
+
+        return array_values($messages);
+    }
+
+    public function sendFunctionResponse(string $ignored, array $result, array &$history = []): array
+    {
+        return $this->sendRaw([
+            'messages' => [
+                [
+                    'role' => 'assistant',
+                    'content' => json_encode($result)
+                ]
+            ]
+        ]);
     }
 
     public function getAvailableModels(bool $reset = false) : array

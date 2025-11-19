@@ -36,6 +36,7 @@ use App\Base\Routing\RouteInfo;
 use App\Base\Routers\Web;
 use App\Base\Routers\Webhooks;
 use App\Base\Routers\Crud;
+use App\Base\Routers\Graphql;
 use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
@@ -245,6 +246,17 @@ trait ContainerAwareTrait
     public function getWebhooksRouter(): Webhooks
     {
         return $this->getService('webhooks_router');
+    }
+
+    /**
+     * gets graphql service
+     *
+     * @return Graphql
+     * @throws BasicException
+     */
+    public function getGraphQLRouter(): Graphql
+    {
+        return $this->getService('graphql_router');
     }
 
     /**

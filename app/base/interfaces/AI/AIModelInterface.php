@@ -12,6 +12,7 @@
  */
 
 namespace App\Base\Interfaces\AI;
+use App\Base\AI\Flows\BaseFlow;
 
 
 interface AIModelInterface 
@@ -19,7 +20,15 @@ interface AIModelInterface
     public static function getCode() : string;
     public static function getName() : string;
     public static function isEnabled() : bool;
+    public function getEndpoint(?string $model = null) : string;
+    public function prepareRequest(array $payload) : array;
+    public function formatUserMessage(string $prompt): array;
+    public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array;
+    public function sendRaw(array $payload) : array;
     public function ask(string $prompt, ?string $model = null, ?array $previousMessages = null) : string;
+    public function normalizeResponse(array $raw) : array;
+    public function sendFunctionResponse(string $functionName, array $result, array &$history = []): array;
+    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array;
     public function getAvailableModels(bool $reset = false) : array;
     public function getVersion() : string;
     public function getModel(?string $model = null) : string;

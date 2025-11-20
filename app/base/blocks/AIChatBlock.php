@@ -149,7 +149,14 @@ class AIChatBlock extends BaseCodeBlock
     text-align: center;
     font-size: 13px;
     color: #555;
-}            
+}
+    
+.ai-chat-intro {
+    background: #f9f9f9;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+    font-size: 11px;
+}
             '
         ]]);
     }
@@ -213,16 +220,20 @@ class AIChatBlock extends BaseCodeBlock
         ]]);
     }
 
-    protected function chatBotDialog(): string
+    protected function chatBotDialog(?BasePage $current_page = null): string
     {
+        $title = App::getInstance()->getUtils()->translate('Ecommerce AI Companion', locale: $current_page?->getCurrentLocale());
+        $intro = App::getInstance()->getUtils()->translate('Ask me to find products, add them to your cart, and assist you with your shopping needs!', locale: $current_page?->getCurrentLocale());
+
         return <<<HTML
 <div id="ai-chat-modal" class="ai-chat-modal" style="display:none;">
     <div class="ai-chat-backdrop"></div>
     <div class="ai-chat-window">
         <div class="ai-chat-header">
-            <span>Assistente AI</span>
+            <span>$title</span>
             <button id="ai-chat-close">×</button>
         </div>
+        <div class="ai-chat-intro">$intro</div>
         <div class="ai-chat-messages" id="ai-chat-messages"></div>
         <div class="ai-chat-loading" id="ai-chat-loading" style="display:none;">Sto pensando...</div>
         <div class="ai-chat-input">
@@ -260,7 +271,7 @@ HTML;
             return $this->chatBotCss() .
                    $this->chatBotJs() .
                    $this->chatBotLaucher() .
-                   $this->chatBotDialog();
+                   $this->chatBotDialog($current_page);
         } catch (Exception $e) {
             return "";
         }

@@ -13,14 +13,25 @@
 
 namespace App\Base\AI\Flows;
 
+use App\Base\AI\Actions\GraphQLSchemaProvider;
 
 class EcommerceFlow extends BaseFlow
 {
     protected string $schema;
 
-    public function __construct(string $schema)
+    public function __construct(GraphQLSchemaProvider $schemaProvider)
     {
-        $this->schema = $schema;
+        $this->schema = $schemaProvider->getSchemaFilteredByTypes([
+            'Cart',
+            'CartItem',
+            'CartDiscount',
+            'ProductInterface',
+            'PhysicalProductInterface',
+            'GiftCard',
+            'Book',
+            'DownloadableProduct',
+            'ProductStock',
+        ]);
     }
 
 
@@ -33,7 +44,8 @@ class EcommerceFlow extends BaseFlow
     {
         return <<<TXT
 Sei un agente che usa esclusivamente i tools per consultare un backend GraphQL.
-Se devi interrogare il backend, devi chiamare la funzione `graphqlQuery`.
+Se devi interrogare il backend, devi chiamare la funzione `graphqlQuery`. 
+Rispondi solo a domande relative a processi di ecommerce, altrimenti rispondi che non puoi aiutare, dato che sei un assistente per ecommerce.
 TXT;
     }
 

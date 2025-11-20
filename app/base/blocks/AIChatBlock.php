@@ -13,6 +13,7 @@
 
 namespace App\Base\Blocks;
 
+use App\App;
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Html\TagElement;
@@ -23,6 +24,11 @@ use Exception;
  */
 class AIChatBlock extends BaseCodeBlock
 {
+
+    public function isCachable() : bool
+    {
+        return false;
+    }
 
     protected function chatBotCss(): TagElement
     {
@@ -176,10 +182,10 @@ class AIChatBlock extends BaseCodeBlock
             contentType: "application/json",
             data: JSON.stringify({ prompt: text }),
             success: function(res) {
-                appendMessage("ai", res.assistantText || "(nessuna risposta)");
+                appendMessage("ai", res.assistantText || "('.App::getInstance()->getUtils()->translate('I got no responses to send').')");
             },
             error: function() {
-                appendMessage("ai", "Errore nel server.");
+                appendMessage("ai", "'.App::getInstance()->getUtils()->translate('Can\'t reply now. please try again later').'.");
             },
             complete: function() {
                 $(\'#ai-chat-loading\').hide();
@@ -242,6 +248,14 @@ HTML;
 
     public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
+        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) === false) {
+            return "";
+        }
+
+        if (!$current_page->hasLoggedUser()) {
+            return "";
+        }
+
         try {
             return $this->chatBotCss() .
                    $this->chatBotJs() .

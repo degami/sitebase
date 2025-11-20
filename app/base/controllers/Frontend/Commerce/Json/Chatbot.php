@@ -97,12 +97,8 @@ $.ajax({
         }
 
         $gql = new GraphQLExecutor($endpoint, 'Bearer '.$authToken);
-
-        $schemaProvider = new GraphQLSchemaProvider($gql);
         
-        $schemaText = $schemaProvider->getFullSchema();
-
-        $flow = new EcommerceFlow($schemaText);
+        $flow = new EcommerceFlow(new GraphQLSchemaProvider($gql));
 
         $orchestrator = new Orchestrator($llm);
 

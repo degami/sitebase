@@ -72,6 +72,19 @@ class Perplexity extends AbstractLLMAdapter
         ];
     }
 
+    public function formatAssistantMessage(mixed $message, ?string $messageType = null): array
+    {
+        return [
+            'role' => 'assistant',
+            $messageType ?? 'content' => $message
+        ];
+    }
+
+    public function formatAssistantFunctionCallMessage(string $functionName, array $args, ?string $id = null): ?array
+    {
+        return $this->formatAssistantMessage("Call function $functionName with argoments " . json_encode($args) . (!is_null($id) ? " (id: $id)" : ""));
+    }
+
     public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
     {
         $messages = $previousMessages;
@@ -94,14 +107,12 @@ class Perplexity extends AbstractLLMAdapter
         ];
     }
 
-    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, ?string $model = null): array
     {
         $messages = [
             [
                 'role' => 'system',
-                'parts' => [
-                    ['text' => $flow->systemPrompt()]
-                ]
+                'content' => $flow->systemPrompt()
             ],
         ];
 
@@ -113,31 +124,22 @@ class Perplexity extends AbstractLLMAdapter
         }
 
         $messages[] = [
-            'role' => 'user',
-            'parts' => [
-                ['text' => $userPrompt]
-            ]
+            'role' => 'assistant',
+            'content' => json_encode($flow->tools())
         ];
 
-        $messages[] = [
-            'role' => 'model',
-            'parts' => [
-                ['text' => json_encode($flow->tools())]
-            ]
-        ];
+        $messages[] = $this->formatUserMessage($userPrompt);
 
         return array_values($messages);
     }
 
-    public function sendFunctionResponse(string $ignored, array $result, array &$history = []): array
+    public function sendFunctionResponse(string $functionName, array $result, array &$history = [], ?string $id = null): array
     {
+        $history[] = $this->formatUserMessage("Tool response for call to function $functionName".(!is_null($id)?" (id: $id)":"").": " . json_encode($result));
+
         return $this->sendRaw([
-            'messages' => [
-                [
-                    'role' => 'assistant',
-                    'content' => json_encode($result)
-                ]
-            ]
+            'model' => $this->getDefaultModel(),
+            'messages' => $history
         ]);
     }
 

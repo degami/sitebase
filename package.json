@@ -5,6 +5,7 @@
   "main": "Gulpfile.js",
   "type": "module",
   "dependencies": {
+    "dompurify": "^3.3.0",
     "gallery": "^1.0.2",
     "gulp-header": "^2.0.9",
     "gulp-include": "^2.4.1",
@@ -15,8 +16,10 @@
     "jquery-lazy": "^1.7.10",
     "jquery.cookie": "^1.4.1",
     "jquery.cycle2": "^2.1.7",
+    "marked": "^17.0.0",
     "moment": "^2.24.0",
     "pretty-checkbox": "^3.0.3",
+    "safe-marked": "^16.0.0",
     "select2": "^4.1.0-rc.0",
     "tiny-slider": "^2.9.4"
   },

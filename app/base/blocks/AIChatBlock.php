@@ -18,6 +18,7 @@ use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Html\TagElement;
 use Exception;
+use Degami\PHPFormsApi as FAPI;
 
 /**
  * AI Chat Block
@@ -161,8 +162,10 @@ class AIChatBlock extends BaseCodeBlock
         ]]);
     }
 
-    protected function chatBotJs(): TagElement
+    protected function chatBotJs(array $config): TagElement
     {
+        $aiModel = $config['ai-model'] ?? 'googlegemini';
+
         return $this->containerMake(TagElement::class, ['options' => [
             'tag' => 'script',
             'text' => '
@@ -185,7 +188,7 @@ class AIChatBlock extends BaseCodeBlock
 
         $.ajax({
             method: "POST",
-            url: "/commerce/chatbot/chat",
+            url: "/commerce/chatbot/chat?ai='.$aiModel.'",
             contentType: "application/json",
             data: JSON.stringify({ prompt: text }),
             success: function(res) {
@@ -225,6 +228,10 @@ class AIChatBlock extends BaseCodeBlock
         $title = App::getInstance()->getUtils()->translate('Ecommerce AI Companion', locale: $current_page?->getCurrentLocale());
         $intro = App::getInstance()->getUtils()->translate('Ask me to find products, add them to your cart, and assist you with your shopping needs!', locale: $current_page?->getCurrentLocale());
 
+        $writeAMessage = App::getInstance()->getUtils()->translate('Write a message...', locale: $current_page?->getCurrentLocale());
+        $thinking = App::getInstance()->getUtils()->translate('I am thinking...', locale: $current_page?->getCurrentLocale());
+        $send = App::getInstance()->getUtils()->translate('Send', locale: $current_page?->getCurrentLocale());
+
         return <<<HTML
 <div id="ai-chat-modal" class="ai-chat-modal" style="display:none;">
     <div class="ai-chat-backdrop"></div>
@@ -235,10 +242,15 @@ class AIChatBlock extends BaseCodeBlock
         </div>
         <div class="ai-chat-intro">$intro</div>
         <div class="ai-chat-messages" id="ai-chat-messages"></div>
-        <div class="ai-chat-loading" id="ai-chat-loading" style="display:none;">Sto pensando...</div>
+        <div class="ai-chat-loading" id="ai-chat-loading" style="display:none;">
+            <div class="spinner-border spinner-border-sm" role="status">
+                <span class="sr-only">Loading...</span>
+            </div>    
+            $thinking
+        </div>
         <div class="ai-chat-input">
-            <input id="ai-chat-text" type="text" placeholder="Scrivi un messaggio..." />
-            <button id="ai-chat-send">Invia</button>
+            <input id="ai-chat-text" type="text" placeholder="$writeAMessage" />
+            <button id="ai-chat-send">$send</button>
         </div>
     </div>
 </div>
@@ -259,21 +271,56 @@ HTML;
 
     public function renderHTML(?BasePage $current_page = null, array $data = []): string
     {
-        if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) === false) {
-            return "";
-        }
-
-        if (!$current_page->hasLoggedUser()) {
-            return "";
-        }
-
         try {
+            if (App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false) === false) {
+                return "";
+            }
+
+            if (!$current_page->hasLoggedUser()) {
+                return "";
+            }
+
+            $config = array_filter(json_decode($data['config'] ?? '{}', true));
+            if (empty($config)) {
+                $config = [
+                    'ai-model' => 'googlegemini',
+                ];
+            }
+
             return $this->chatBotCss() .
-                   $this->chatBotJs() .
+                   $this->chatBotJs($config) .
                    $this->chatBotLaucher() .
                    $this->chatBotDialog($current_page);
         } catch (Exception $e) {
             return "";
         }
+    }
+
+    /**
+     * additional configuration fieldset
+     *
+     * @param FAPI\Form $form
+     * @param $form_state
+     * @param $default_values
+     * @return array
+     * @throws FAPI\Exceptions\FormException
+     */
+    public function additionalConfigFieldset(FAPI\Form $form, &$form_state, $default_values): array
+    {
+        $config_fields = [];
+
+        $aiModels = [];
+        foreach (App::getInstance()->getAI()->getEnabledAIs(true) as $aiModel) {
+            $aiModels[$aiModel['code']] = $aiModel['name'];
+        }
+
+        $config_fields[] = $form->getFieldObj('ai-model', [
+            'type' => 'select',
+            'title' => 'AI Model',
+            'options' => $aiModels,
+            'default_value' => $default_values['ai-model'] ?? '',
+        ]);
+
+        return $config_fields;
     }
 }

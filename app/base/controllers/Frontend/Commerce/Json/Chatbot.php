@@ -19,28 +19,24 @@ use App\Base\AI\Actions\GraphQLExecutor;
 use App\Base\AI\Actions\GraphQLSchemaProvider;
 use App\Base\AI\Actions\Orchestrator;
 use App\Base\AI\Flows\EcommerceFlow;
-use App\Base\AI\Models\GoogleGemini as GoogleGeminiModel;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
-use GraphQL\Utils\SchemaPrinter;
 
 /**
  * Ecommerce Chatbot
  */
 class Chatbot extends BaseJsonPage
 {
-/*
-
-$.ajax({
-'method': 'POST',
-'url': '/commerce/chatbot/chat',
-'contentType': 'application/json',
-'data': JSON.stringify({'prompt': 'Trova il prodotto meno caro e aggiungilo al carrello'})
-}) 
-
-*/
+    /*
+    $.ajax({
+    'method': 'POST',
+    'url': '/commerce/chatbot/chat',
+    'contentType': 'application/json',
+    'data': JSON.stringify({'prompt': 'Trova il prodotto meno caro e aggiungilo al carrello'})
+    }) 
+    */
 
     /**
      * determines if route is available for router
@@ -51,7 +47,6 @@ $.ajax({
     {
         return App::getInstance()->getEnvironment()->getVariable('ENABLE_COMMERCE', false); // && App::getInstance()->getAuth()->getCurrentUser();
     }
-
 
     /**
      * return route path
@@ -90,28 +85,34 @@ $.ajax({
     protected function getJsonData(): array
     {
         $endpoint = rtrim($this->getUrl('frontend.root'), '/') . '/graphql';
-        $llm = $this->containerMake(GoogleGeminiModel::class);
+        // internally we can use http to speed things up
+        $endpoint = str_replace('https://', 'http://', $endpoint);
+
+        $llm = $this->getAI()->getAIModel($this->getRequest()->query->get('ai', 'googlegemini'));
+
         $authToken = $this->getRequest()->cookies->get('Authorization', '');
         if (empty($authToken)) {
             throw new Exception("Missing auth token cookie");
         }
 
         $gql = new GraphQLExecutor($endpoint, 'Bearer '.$authToken);
-        
         $flow = new EcommerceFlow(new GraphQLSchemaProvider($gql));
 
         $orchestrator = new Orchestrator($llm);
 
-        // registra il tool
         $orchestrator->registerTool('graphqlQuery', function($args) use($gql) {
             return $gql->execute($args['query'], $args['variables'] ?? []);
         });
 
-        // avvia il flow
-        $response = $orchestrator->runFlow($flow, $this->getPrompt($this->getRequest())); // "Trova il prodotto meno caro e aggiungilo al carrello"
+        $response = $orchestrator->runFlow($flow, $this->getPrompt($this->getRequest()));
 
-        // stampa risposta finale
-        return $response;
+        if ($this->getEnvironment()->canDebug()){
+            return $response;
+        }
+
+        return [
+            'assistantText' => $response['assistantText'] ?? '',
+        ];
     }
 
     /**

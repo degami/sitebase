@@ -73,6 +73,31 @@ class GoogleGemini extends AbstractLLMAdapter
         ];
     }
 
+
+    public function formatAssistantMessage(mixed $message, ?string $messageType = null): array
+    {
+        return [
+            'role' => 'assistant',
+            $messageType ?? 'contents' => $message
+        ];
+    }
+
+    public function formatAssistantFunctionCallMessage(string $functionName, array $args, ?string $id = null): ?array
+    {
+        // this method is not used by Gemini orchestrator flows, but we need to implement it for the interface
+        return [
+            'role' => 'model',
+            'parts' => [
+                [
+                    'function_call' => [
+                        'name' => $functionName,
+                        'args' => json_encode($args)
+                    ]
+                ]
+            ]
+        ];
+    }
+
     public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
     {
         $messages = $previousMessages;
@@ -150,37 +175,37 @@ class GoogleGemini extends AbstractLLMAdapter
         ];
     }
 
-    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, ?string $model = null): array
     {
         $messages =  [
-            (object)[
-                'role' => 'user',
-                'parts' => [
-                    ['text' => $flow->systemPrompt()]
-                ]
-            ],
-            (object)[
-                'role' => 'user',
-                'parts' => [
-                    ['text' => $userPrompt]
-                ]
-            ]
+            (object) $this->formatUserMessage($flow->systemPrompt()),
+            (object) $this->formatUserMessage($userPrompt)
         ];
 
-
+        // googlegemini does not support system messages after the first one, add schema as user message
         if ($flow->schema()) {
-            $messages[] = [
-                'role' => 'user',
-                'parts' => [
-                    ['text' => "Ecco il tuo schema GraphQL:\n" . $flow->schema()]
-                ]
+            $messages[] = (object) $this->formatUserMessage("Ecco il tuo schema GraphQL:\n" . $flow->schema());
+        }
+
+        // Costruiamo le dichiarazioni dei tool
+        $functions = [];
+        foreach ($flow->tools() as $name => $schema) {
+            $functions[] = [
+                'name' => $name,
+                'description' => $schema['description'] ?? '',
+                'parameters' => $schema['parameters'] ?? ['type' => 'object']
             ];
         }
 
-        return array_values($messages);
+        return [
+            'contents' => array_values($messages),
+            'tools' => [
+                ['function_declarations' => $functions]
+            ]
+        ];
     }
 
-    public function sendFunctionResponse(string $name, array $result, array &$history = []): array
+    public function sendFunctionResponse(string $name, array $result, array &$history = [], ?string $id = null): array
     {
         $history[] = [
             'role' => 'tool',

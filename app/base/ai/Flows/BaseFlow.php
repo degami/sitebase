@@ -17,9 +17,6 @@ abstract class BaseFlow
 {
     abstract public function systemPrompt() : string;
 
-    /**
-     * Tools dichiarati dal flow (schema per il modello)
-     */
     abstract public function tools() : array;
 
     public function schema(): string

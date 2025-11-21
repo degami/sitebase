@@ -13,6 +13,7 @@
 
 namespace App\Base\AI\Actions;
 
+use App\App;
 use GraphQL\Utils\BuildClientSchema;
 use GraphQL\Utils\SchemaPrinter;
 use GraphQL\Type\Schema;
@@ -28,6 +29,9 @@ use GraphQL\Type\Definition\NamedType;
 
 class GraphQLSchemaProvider
 {
+
+  const INTROSPECTION_CACHE_KEY = 'graphql.introspection.full_schema';
+
   const INTROSPECTION_QUERY = '
 query IntrospectionQuery {
   __schema {
@@ -103,7 +107,12 @@ fragment TypeRef on __Type {
   
   public function getFullSchema(): string
   {
-    $result = $this->executor->execute(self::INTROSPECTION_QUERY);
+    if (App::getInstance()->getCache()->has(self::INTROSPECTION_CACHE_KEY)) {
+      $result = App::getInstance()->getCache()->get(self::INTROSPECTION_CACHE_KEY);
+    } else {
+      $result = $this->executor->execute(self::INTROSPECTION_QUERY);
+      App::getInstance()->getCache()->set(self::INTROSPECTION_CACHE_KEY, $result);
+    }
     
     if (!isset($result['data']['__schema'])) {
       return '';
@@ -120,7 +129,12 @@ fragment TypeRef on __Type {
   */
   public function getSchemaFilteredByTypes(array $rootTypes): string
   {
-    $result = $this->executor->execute(self::INTROSPECTION_QUERY);
+    if (App::getInstance()->getCache()->has(self::INTROSPECTION_CACHE_KEY)) {
+      $result = App::getInstance()->getCache()->get(self::INTROSPECTION_CACHE_KEY);
+    } else {
+      $result = $this->executor->execute(self::INTROSPECTION_QUERY);
+      App::getInstance()->getCache()->set(self::INTROSPECTION_CACHE_KEY, $result);
+    }
     
     if (!isset($result['data']['__schema'])) {
       return '';

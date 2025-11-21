@@ -23,7 +23,7 @@ use Exception;
  */
 class Mistral extends AbstractLLMAdapter
 {
-    public const MISTRAL_MODEL = 'mistral-medium';
+    public const MISTRAL_MODEL = 'mistral-small-latest';
     public const MISTRAL_MODEL_PATH = 'app/mistral/model';
     public const MISTRAL_VERSION = 'v1';
     public const MISTRAL_VERSION_PATH = 'app/mistral/version';
@@ -76,6 +76,19 @@ class Mistral extends AbstractLLMAdapter
         ];
     }
 
+    public function formatAssistantMessage(mixed $message, ?string $messageType = null): array
+    {
+        return [
+            'role' => 'assistant',
+            $messageType ?? 'content' => $message
+        ];
+    }
+
+    public function formatAssistantFunctionCallMessage(string $functionName, array $args, ?string $id = null): ?array
+    {
+        return $this->formatAssistantMessage("Call function $functionName with argoments " . json_encode($args) . (!is_null($id) ? " (id: $id)" : ""));
+    }
+
     public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
     {
         $messages = $previousMessages;
@@ -111,7 +124,7 @@ class Mistral extends AbstractLLMAdapter
                         'name' => $call['function']['name'],
                         'args' => json_decode($call['function']['arguments'], true),
                         'id' => $call['id']
-                    ];
+                    ];                
                 }
             }
         }
@@ -123,14 +136,12 @@ class Mistral extends AbstractLLMAdapter
         ];
     }
 
-    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, ?string $model = null): array
     {
         $messages = [
             [
                 'role' => 'system',
-                'parts' => [
-                    ['text' => $flow->systemPrompt()]
-                ]
+                'content' => $flow->systemPrompt()
             ],
         ];
 
@@ -141,33 +152,36 @@ class Mistral extends AbstractLLMAdapter
             ];
         }
 
-        $messages[] = [
-            'role' => 'user',
-            'parts' => [
-                ['text' => $userPrompt]
-            ]
-        ];
+        $messages[] = $this->formatUserMessage($userPrompt);
 
-        $messages[] = [
-            'role' => 'model',
-            'parts' => [
-                ['text' => json_encode($flow->tools())]
-            ]
-        ];
+        $tools = [];
+        if (!empty($flow->tools())) {
+            foreach ($flow->tools() as $toolName => $tool) {
+                $tools[] = [
+                    'function' => [
+                        'name' => $toolName,
+                        'description' => $tool['description'] ?? '',
+                        'parameters' => $tool['parameters'] ?? [],
+                    ],
+                ];
+            }
+        }
 
-        return array_values($messages);
+        return [
+            'model' => $this->getDefaultModel(),
+            'tools' => $tools,
+            'messages' => array_values($messages),
+        ];
     }
 
-    public function sendFunctionResponse(string $toolCallId, array $result, array &$history = []): array
+    public function sendFunctionResponse(string $functionName, array $result, array &$history = [], ?string $id = null): array
     {
+
+        $history[] = $this->formatUserMessage("Tool response for call to function $functionName".(!is_null($id)?" (id: $id)":"").": " . json_encode($result));
+
         return $this->sendRaw([
-            'messages' => [
-                [
-                    'role' => 'tool',
-                    'tool_call_id' => $toolCallId,
-                    'content' => json_encode($result)
-                ]
-            ]
+            'model' => $this->getDefaultModel(),
+            'messages' => $history
         ]);
     }
 

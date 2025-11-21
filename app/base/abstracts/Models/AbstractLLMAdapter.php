@@ -30,12 +30,20 @@ abstract class AbstractLLMAdapter extends ContainerAwareObject implements AIMode
 
         $prepared = $this->prepareRequest($payload);
 
+        if (App::getInstance()->getEnvironment()->canDebug()) {
+            $this->getApplicationLogger()->debug("Sending LLM request <pre>" . json_encode(['endpoint' => $this->getEndpoint(), 'payload' => $prepared], JSON_PRETTY_PRINT) . "</pre>");
+        }
+
         $resp = $client->post(
             $this->getEndpoint(),
             $prepared
         );
 
         $responseBody = $resp->getBody()->getContents();
+
+        if (App::getInstance()->getEnvironment()->canDebug()) {
+            $this->getApplicationLogger()->debug("Received LLM response <pre>" . json_encode(['response' => $responseBody], JSON_PRETTY_PRINT) . "</pre>");
+        }
 
         if (!isJson($responseBody)) {
             throw new Exception("Invalid response from LLM API");

@@ -14,7 +14,6 @@
 namespace App\Base\AI\Actions;
 
 use App\Base\AI\Flows\BaseFlow;
-use App\Base\AI\Models\GoogleGemini;
 use App\Base\Interfaces\AI\AIModelInterface;
 use Exception;
 
@@ -29,7 +28,7 @@ class Orchestrator
     }
 
     /**
-     * Registra un tool invocabile dal modello
+     * Register a tool handler
      */
     public function registerTool(string $name, callable $handler) : void
     {
@@ -37,62 +36,25 @@ class Orchestrator
     }
 
     /**
-     * Avvia il flow completo.
+     * Run a flow
      */
     public function runFlow(BaseFlow $flow, string $userPrompt) : array
     {
-        //
-        // 1) Costruisco i messaggi iniziali
-        //
-        $messages = $this->llm->buildFlowInitialMessages($flow, $userPrompt);
+        $payload = $this->llm->buildFlowInitialRequest($flow, $userPrompt);
 
+        // extract messages for history tracking
+        $messages = $payload['messages'] ?? $payload['contents'] ?? [];
 
-        //
-        // 2) Prima chiamata al modello
-        //
-        if ($this->llm instanceof GoogleGemini) {
+        $response = $this->llm->sendRaw($payload);
 
-            // Costruiamo le dichiarazioni dei tool
-            $functions = [];
-            foreach ($flow->tools() as $name => $schema) {
-                $functions[] = [
-                    'name' => $name,
-                    'description' => $schema['description'] ?? '',
-                    'parameters' => $schema['parameters'] ?? ['type' => 'object']
-                ];
-            }
-
-            $response = $this->llm->sendRaw([
-                'contents' => $messages,
-                'tools' => [
-                    [
-                        'function_declarations' => $functions
-                    ]
-                ]
-            ]);
-
-        } else {
-            // fallback per altri LLM (OpenAI, Anthropic, ecc.)
-            $response = $this->llm->sendRaw([
-                'messages' => $messages
-            ]);
-        }
-
-
-        //
-        // 3) Normalizziamo la risposta
-        //
         $normalized = $this->llm->normalizeResponse($response);
 
-
-        //
-        // 4) Ciclo finché il modello continua a chiamare funzioni
-        //
         while (!empty($normalized['functionCalls'])) {
 
             $call = $normalized['functionCalls'][0];
             $functionName = $call['name'] ?? null;
             $args = $call['args'] ?? [];
+            $id = $call['id'] ?? null;
 
             if (!$functionName) {
                 throw new Exception("FunctionCall senza 'name'");
@@ -102,31 +64,16 @@ class Orchestrator
                 throw new Exception("Tool non registrato: {$functionName}");
             }
 
-            //
-            // 4a) Gemini richiede che il function_call originale
-            //     sia inserito nella history ESATTAMENTE com'era.
-            //
             if (!empty($normalized['rawFunctionMessages'][0])) {
                 $messages[] = $normalized['rawFunctionMessages'][0];
             } else {
-                // fallback sicuro per altri LLM
-                $messages[] = [
-                    'role' => 'model',
-                    'parts' => [
-                        [
-                            'function_call' => [
-                                'name' => $functionName,
-                                'args' => $args
-                            ]
-                        ]
-                    ]
-                ];
+                $assistantMessage = $this->llm->formatAssistantFunctionCallMessage($functionName, $args);
+                if (!is_null($assistantMessage)) {
+                    $messages[] = $assistantMessage;
+                }
             }
 
 
-            //
-            // 4b) Eseguiamo il tool
-            //
             $handler = $this->toolsRegistry[$functionName];
 
             if (is_string($args)) {
@@ -137,32 +84,16 @@ class Orchestrator
             $toolResult = $handler($args);
 
 
-            //
-            // 4c) Rispondiamo al modello con function_response
-            //     e con TUTTA la history (compreso il function_call originale)
-            //
             $response = $this->llm->sendFunctionResponse(
                 $functionName,
                 $toolResult,
                 $messages
             );
 
-            //
-            // 4d) Normalizziamo la nuova risposta
-            //
             $normalized = $this->llm->normalizeResponse($response);
-
-            //
-            // ⚠️ IMPORTANTE:
-            // NON aggiungere assistantText alla history qui.
-            // I messaggi testuali vanno aggiunti solo quando la chain finisce.
-            //
         }
 
 
-        //
-        // 5) Fine del flow: ritorna il risultato finale
-        //
         return $normalized;
     }
 }

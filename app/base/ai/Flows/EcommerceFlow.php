@@ -13,7 +13,10 @@
 
 namespace App\Base\AI\Flows;
 
+use App\App;
 use App\Base\AI\Actions\GraphQLSchemaProvider;
+use HaydenPierce\ClassFinder\ClassFinder;
+use App\Base\Interfaces\Model\ProductInterface;
 
 class EcommerceFlow extends BaseFlow
 {
@@ -21,17 +24,29 @@ class EcommerceFlow extends BaseFlow
 
     public function __construct(GraphQLSchemaProvider $schemaProvider)
     {
-        $this->schema = $schemaProvider->getSchemaFilteredByTypes([
+        // Get all models related to ecommerce
+        // Base Types
+        $types = [
             'Cart',
             'CartItem',
             'CartDiscount',
             'ProductInterface',
             'PhysicalProductInterface',
-            'GiftCard',
-            'Book',
-            'DownloadableProduct',
             'ProductStock',
-        ]);
+        ];
+
+        // Product Types
+        $types = array_merge($types, array_map(function($el) {
+            return App::getInstance()->getClassBasename($el);
+        }, array_filter(
+            array_merge(
+                ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), 
+                ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
+            ), 
+            fn ($className) => is_subclass_of($className, ProductInterface::class)
+        )));
+
+        $this->schema = $schemaProvider->getSchemaFilteredByTypes($types);
     }
 
 

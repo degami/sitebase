@@ -75,6 +75,31 @@ class ChatGPT extends AbstractLLMAdapter
         ];
     }
 
+    public function formatAssistantMessage(mixed $message, ?string $messageType = null): array
+    {
+        return [
+            'role' => 'assistant',
+            $messageType ?? 'content' => $message
+        ];
+    }
+
+    public function formatAssistantFunctionCallMessage(string $functionName, array $args, ?string $id = null): array
+    {
+        return [
+            'role' => 'assistant',
+            'tool_calls' => [
+                [
+                    'id' => $id ?? $functionName,
+                    'type' => 'function',
+                    'function' => [
+                        'name' => $functionName,
+                        'arguments' => json_encode($args, JSON_UNESCAPED_UNICODE),
+                    ],
+                ],
+            ],
+        ];
+    }
+
     public function buildConversation(array $previousMessages, string $prompt, ?string $model = null): array
     {
         $messages = $previousMessages;
@@ -125,14 +150,12 @@ class ChatGPT extends AbstractLLMAdapter
         ];
     }
 
-    public function buildFlowInitialMessages(BaseFlow $flow, string $userPrompt): array
+    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, ?string $model = null): array
     {
         $messages = [
             [
                 'role' => 'system',
-                'parts' => [
-                    ['text' => $flow->systemPrompt()]
-                ]
+                'content' => $flow->systemPrompt()
             ],
         ];
 
@@ -143,30 +166,34 @@ class ChatGPT extends AbstractLLMAdapter
             ];
         }
 
-        $messages[] = [
-            'role' => 'user',
-            'parts' => [
-                ['text' => $userPrompt]
-            ]
-        ];
+        $messages[] = $this->formatUserMessage($userPrompt);
 
-        $messages[] = [
-            'role' => 'model',
-            'parts' => [
-                ['text' => json_encode($flow->tools())]
-            ]
-        ];
+        $tools = [];
+        if (!empty($flow->tools())) {
+            foreach ($flow->tools() as $toolName => $tool) {
+                $tools[] = [
+                    'name' => $toolName,
+                    'description' => $tool['description'] ?? '',
+                    'parameters' => $tool['parameters'] ?? [],
+                ];
+            }
+        }
 
-        return array_values($messages);
+        return [
+            'model' => $this->getDefaultModel(),
+            'tools' => $tools,
+            'messages' => array_values($messages),
+        ];
     }
 
-    public function sendFunctionResponse(string $name, array $result, array &$history = []): array
+    public function sendFunctionResponse(string $name, array $result, array &$history = [], ?string $id = null): array
     {
         return $this->sendRaw([
+            'model' => $this->getDefaultModel(),
             'messages' => [
                 [
                     'role' => 'tool',
-                    'tool_call_id' => $name,
+                    'tool_call_id' => $id ?? $name,
                     'content' => json_encode($result)
                 ]
             ]

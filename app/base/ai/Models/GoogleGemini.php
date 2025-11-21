@@ -44,7 +44,7 @@ class GoogleGemini extends AbstractLLMAdapter
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH));
     }
 
-    public function getEndpoint(?string $model = null) : string
+    public function getCompletionsEndpoint(?string $model = null) : string
     {
         $apiKey = $this->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH);
 
@@ -53,6 +53,17 @@ class GoogleGemini extends AbstractLLMAdapter
         }
 
         return "https://generativelanguage.googleapis.com/" . $this->getVersion() . "/models/" . $this->getModel($model) . ":generateContent?key={$apiKey}";
+    }
+
+    public function getEmbeddingsEndpoint(?string $model = null) : string
+    {
+        $apiKey = $this->getSiteData()->getConfigValue(self::GEMINI_TOKEN_PATH);
+
+        if (empty($apiKey)) {
+            throw new Exception("Missing Gemini Token");
+        }
+
+        return "https://generativelanguage.googleapis.com/" . $this->getVersion() . "/models/" . $this->getModel($model) . ":embedText?key={$apiKey}";
     }
 
     public function prepareRequest(array $payload) : array
@@ -222,6 +233,14 @@ class GoogleGemini extends AbstractLLMAdapter
         return $this->sendRaw([
             'contents' => $history
         ]);
+    }
+
+    public function buildEmbeddingRequest(string $input, ?string $model = null): array
+    {
+        return [
+            'model' => $this->getModel($model),
+            'text' => $input
+        ];
     }
 
     public function getAvailableModels(bool $reset = false) : array

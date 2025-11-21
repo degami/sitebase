@@ -46,9 +46,14 @@ class Mistral extends AbstractLLMAdapter
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::MISTRAL_TOKEN_PATH));
     }
 
-    public function getEndpoint(?string $model = null) : string
+    public function getCompletionsEndpoint(?string $model = null) : string
     {
         return "https://api.mistral.ai/" . $this->getVersion() . "/chat/completions";
+    }
+
+    public function getEmbeddingsEndpoint(?string $model = null) : string
+    {
+        return "https://api.mistral.ai/" . $this->getVersion() . "/embeddings";
     }
 
     public function prepareRequest(array $payload) : array
@@ -183,6 +188,14 @@ class Mistral extends AbstractLLMAdapter
             'model' => $this->getDefaultModel(),
             'messages' => $history
         ]);
+    }
+
+    public function buildEmbeddingRequest(string $input, ?string $model = null): array
+    {
+        return [
+            'model' => $this->getModel($model),
+            'input' => $input
+        ];
     }
 
     public function getAvailableModels(bool $reset = false) : array

@@ -46,9 +46,14 @@ class Claude extends AbstractLLMAdapter
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::CLAUDE_TOKEN_PATH));
     }
 
-    public function getEndpoint(?string $model = null) : string
+    public function getCompletionsEndpoint(?string $model = null) : string
     {
         return "https://api.anthropic.com/" . $this->getVersion() . "/messages";
+    }
+
+    public function getEmbeddingsEndpoint(?string $model = null) : string
+    {
+        return "https://api.anthropic.com/" . $this->getVersion() . "/embeddings";
     }
 
     public function prepareRequest(array $payload) : array
@@ -210,6 +215,14 @@ class Claude extends AbstractLLMAdapter
         // $this->getSiteData()->setConfigValue(self::CHATGPT_REMAINING_TOKENS_PATH, max($remainingTokens - $maxTokens, 0));
 
         return $generatedText;
+    }
+
+    public function buildEmbeddingRequest(string $input, ?string $model = null): array
+    {
+        return [
+            'model' => $this->getModel($model),
+            'input' => $input
+        ];
     }
 
     public function getAvailableModels(bool $reset = false) : array

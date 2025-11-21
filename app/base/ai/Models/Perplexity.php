@@ -42,9 +42,14 @@ class Perplexity extends AbstractLLMAdapter
         return !empty(App::getInstance()->getSiteData()->getConfigValue(self::PERPLEXITY_TOKEN_PATH));
     }
 
-    public function getEndpoint(?string $model = null) : string
+    public function getCompletionsEndpoint(?string $model = null) : string
     {
         return "https://api.perplexity.ai/chat/completions";
+    }
+
+    public function getEmbeddingsEndpoint(?string $model = null) : string
+    {
+        return "https://api.perplexity.ai/embeddings";
     }
 
     public function prepareRequest(array $payload) : array
@@ -141,6 +146,14 @@ class Perplexity extends AbstractLLMAdapter
             'model' => $this->getDefaultModel(),
             'messages' => $history
         ]);
+    }
+
+    public function buildEmbeddingRequest(string $input, ?string $model = null): array
+    {
+        return [
+            'model' => $this->getModel($model),
+            'input' => $input
+        ];
     }
 
     public function getAvailableModels(bool $reset = false) : array

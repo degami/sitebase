@@ -109,7 +109,7 @@ class Mistral extends AbstractLLMAdapter
         ];
     }
 
-    public function normalizeResponse(array $raw): array
+    public function normalizeCompletionsResponse(array $raw): array
     {
         $assistantText = null;
         $functionCalls = [];
@@ -117,12 +117,10 @@ class Mistral extends AbstractLLMAdapter
         if (isset($raw['choices'][0]['message'])) {
             $msg = $raw['choices'][0]['message'];
 
-            // testo normale
             if (!empty($msg['content'])) {
                 $assistantText = $msg['content'];
             }
 
-            // tool calls
             if (!empty($msg['tool_calls'])) {
                 foreach ($msg['tool_calls'] as $call) {
                     $functionCalls[] = [
@@ -195,6 +193,14 @@ class Mistral extends AbstractLLMAdapter
         return [
             'model' => $this->getModel($model),
             'input' => $input
+        ];
+    }
+
+    public function normalizeEmbeddingsResponse(array $raw) : array
+    {
+        return [
+            'embedding' => $raw['data'][0]['embedding'] ?? [],
+            'raw' => $raw
         ];
     }
 

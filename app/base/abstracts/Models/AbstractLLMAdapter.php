@@ -61,25 +61,23 @@ abstract class AbstractLLMAdapter extends ContainerAwareObject implements AIMode
     {
         $contents = $this->buildConversation(
             $previousMessages ?? [],
-            $prompt
+            $prompt,
+            $model
         );
 
         $raw = $this->sendRaw($contents, $model, self::COMPLETIONS_ENDPOINT);
-        $norm = $this->normalizeResponse($raw);
+        $norm = $this->normalizeCompletionsResponse($raw);
 
         return trim($norm['assistantText'] ?? '');
     }
 
     public function embed(string $input, ?string $model = null) : array
     {
-        $payload = $this->buildEmbeddingRequest($input);
+        $payload = $this->buildEmbeddingRequest($input, $model);
 
         $raw = $this->sendRaw($payload, $model, self::EMBEDDINGS_ENDPOINT);
+        $norm = $this->normalizeEmbeddingsResponse($raw);
 
-        if (!empty($raw['data'][0]['embedding']) && is_array($raw['data'][0]['embedding'])) {
-            return $raw['data'][0]['embedding'];
-        }
-
-        return [];
+        return $norm['embedding'] ?? [];
     }
 }

@@ -63,7 +63,7 @@ class GoogleGemini extends AbstractLLMAdapter
             throw new Exception("Missing Gemini Token");
         }
 
-        return "https://generativelanguage.googleapis.com/" . $this->getVersion() . "/models/" . $this->getModel($model) . ":embedText?key={$apiKey}";
+        return "https://generativelanguage.googleapis.com/" . $this->getVersion() . "/models/" . $this->getModel($model) . ":embedContent?key={$apiKey}";
     }
 
     public function prepareRequest(array $payload) : array
@@ -83,7 +83,6 @@ class GoogleGemini extends AbstractLLMAdapter
             'parts' => [['text' => $prompt]]
         ];
     }
-
 
     public function formatAssistantMessage(mixed $message, ?string $messageType = null): array
     {
@@ -119,33 +118,25 @@ class GoogleGemini extends AbstractLLMAdapter
         ];
     }
 
-    public function normalizeResponse(array $raw): array
+    public function normalizeCompletionsResponse(array $raw): array
     {
         $assistantText = null;
         $functionCalls = [];
         $rawFunctionMessages = [];
 
         if (!empty($raw['candidates']) && is_array($raw['candidates'])) {
-
             foreach ($raw['candidates'] as $candidate) {
-
-                // Gemini mette sempre role/parts qui
                 if (!isset($candidate['content']['parts'])) {
                     continue;
                 }
 
                 foreach ($candidate['content']['parts'] as $part) {
 
-                    //
-                    // 1) function_call (nome ufficiale) oppure functionCall (variante)
-                    //
                     $fc = $part['function_call']
                         ?? $part['functionCall']
                         ?? null;
 
                     if ($fc) {
-
-                        // normalizza args (stringa JSON → array)
                         $args = $fc['args'] ?? ($fc['arguments'] ?? []);
                         if (is_string($args)) {
                             $decoded = json_decode($args, true);
@@ -154,23 +145,17 @@ class GoogleGemini extends AbstractLLMAdapter
                             }
                         }
 
-                        // normalizzazione functionCalls per l'orchestrator
                         $functionCalls[] = [
                             'name' => $fc['name'] ?? null,
                             'args' => $args ?? []
                         ];
 
-                        // 2) SALVO IL MESSAGGIO ORIGINALE (importantissimo)
-                        // questo è ciò che Gemini vuole a history invariata
                         $rawFunctionMessages[] = [
                             'role' => 'model',
-                            'parts' => [$part] // il part contiene function_call originale
+                            'parts' => [$part]
                         ];
                     }
 
-                    //
-                    // 3) assistant text
-                    //
                     if (isset($part['text'])) {
                         $assistantText .= $part['text'];
                     }
@@ -239,7 +224,19 @@ class GoogleGemini extends AbstractLLMAdapter
     {
         return [
             'model' => $this->getModel($model),
-            'text' => $input
+            'content' => [
+                'parts' => [[
+                    'text' => $input
+                ]]
+            ]
+        ];
+    }
+
+    public function normalizeEmbeddingsResponse(array $raw) : array
+    {
+        return [
+            'embedding' => $raw['embedding']['values'] ?? [],
+            'raw' => $raw
         ];
     }
 

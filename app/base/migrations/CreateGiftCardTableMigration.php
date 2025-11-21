@@ -54,7 +54,7 @@ class CreateGiftCardTableMigration extends DBMigration
             ->addForeignKey('fk_gift_card_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_gift_card_language_locale', ['locale'], 'language', ['locale'])
             ->addForeignKey('fk_gift_card_tax_class_id', ['tax_class_id'], 'tax_class', ['id'])
-            ->addForeignKey('fk_gift_card_media_id', ['media_id'], 'media_element', ['id'])
+            //->addForeignKey('fk_gift_card_media_id', ['media_id'], 'media_element', ['id'])
             ->setAutoIncrementColumn('id');
 
         return $table;

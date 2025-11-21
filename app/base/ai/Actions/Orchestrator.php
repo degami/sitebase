@@ -47,7 +47,7 @@ class Orchestrator
 
         $response = $this->llm->sendRaw($payload);
 
-        $normalized = $this->llm->normalizeResponse($response);
+        $normalized = $this->llm->normalizeCompletionsResponse($response);
 
         while (!empty($normalized['functionCalls'])) {
 
@@ -90,7 +90,7 @@ class Orchestrator
                 $messages
             );
 
-            $normalized = $this->llm->normalizeResponse($response);
+            $normalized = $this->llm->normalizeCompletionsResponse($response);
         }
 
 

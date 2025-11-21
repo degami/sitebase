@@ -122,7 +122,7 @@ class Claude extends AbstractLLMAdapter
         ];
     }
 
-    public function normalizeResponse(array $raw): array
+    public function normalizeCompletionsResponse(array $raw): array
     {
         $assistantText = '';
         $functionCalls = [];
@@ -222,6 +222,14 @@ class Claude extends AbstractLLMAdapter
         return [
             'model' => $this->getModel($model),
             'input' => $input
+        ];
+    }
+
+    public function normalizeEmbeddingsResponse(array $raw) : array
+    {
+        return [
+            'embedding' => $raw['data'][0]['embedding'] ?? [],
+            'raw' => $raw
         ];
     }
 

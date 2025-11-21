@@ -23,6 +23,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
 use Symfony\Component\HttpFoundation\Request;
+use FastVolt\Helper\Markdown;
 
 /**
  * Ecommerce Chatbot
@@ -105,6 +106,12 @@ class Chatbot extends BaseJsonPage
         });
 
         $response = $orchestrator->runFlow($flow, $this->getPrompt($this->getRequest()));
+
+        try {
+            $markdown = new Markdown(); // or Markdown::new()
+            $markdown->setContent($response['assistantText']);
+            $response['assistantText'] = $markdown->getHtml();
+        } catch (Exception $e) {}
 
         if ($this->getEnvironment()->canDebug()){
             return $response;

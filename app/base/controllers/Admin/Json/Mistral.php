@@ -61,6 +61,9 @@ class Mistral extends AIAdminJsonPage
         }
 
         $generatedText = $this->getAI()->askAI(MistralModel::getCode(), $prompt);
+        $markdown = new \FastVolt\Helper\Markdown();
+        $markdown->setContent($generatedText);
+        $generatedText = $markdown->toHtml();
 
         return [
             'success' => true,

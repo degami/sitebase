@@ -65,7 +65,8 @@
         "paypal/paypal-checkout-sdk": "dev-develop",
         "scalapay/scalapay-php-sdk": "dev-master",
         "symfony/mime": "7.4.x-dev",
-        "nadar/php-composer-reader": "dev-master"
+        "nadar/php-composer-reader": "dev-master",
+        "fastvolt/markdown": "v0.3.0.x-dev"
     },
   "autoload": {
     "files": [

@@ -61,6 +61,9 @@ class GoogleGemini extends AIAdminJsonPage
         }
 
         $generatedText = $this->getAI()->askAI(GoogleGeminiModel::getCode(), $prompt);
+        $markdown = new \FastVolt\Helper\Markdown();
+        $markdown->setContent($generatedText);
+        $generatedText = $markdown->toHtml();
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }

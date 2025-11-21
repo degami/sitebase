@@ -61,6 +61,9 @@ class Perplexity extends AIAdminJsonPage
         }
 
         $generatedText = $this->getAI()->askAI(PerplexityModel::getCode(), $prompt);
+        $markdown = new \FastVolt\Helper\Markdown();
+        $markdown->setContent($generatedText);
+        $generatedText = $markdown->toHtml();
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }

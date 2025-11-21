@@ -61,6 +61,9 @@ class Groq extends AIAdminJsonPage
         }
 
         $generatedText = $this->getAI()->askAI(GroqModel::getCode(), $prompt);
+        $markdown = new \FastVolt\Helper\Markdown();
+        $markdown->setContent($generatedText);
+        $generatedText = $markdown->toHtml();
 
         return ['success' => true, 'prompt' => $prompt, 'text' => $generatedText, 'messageId' => $messageId];
     }

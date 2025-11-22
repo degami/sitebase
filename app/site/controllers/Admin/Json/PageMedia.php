@@ -13,7 +13,7 @@
 
 namespace App\Site\Controllers\Admin\Json;
 
-use App\Site\Controllers\Admin\Cms\Media;
+use App\Base\Controllers\Admin\Cms\Media;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use App\Site\Models\Page;

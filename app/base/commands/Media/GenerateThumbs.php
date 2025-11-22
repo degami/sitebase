@@ -15,7 +15,7 @@ namespace App\Base\Commands\Media;
 
 use App\Base\Abstracts\Commands\BaseCommand;
 use App\Base\Abstracts\Models\BaseCollection;
-use App\Site\Controllers\Admin\Cms\Media;
+use App\BAse\Controllers\Admin\Cms\Media;
 use App\Base\Models\MediaElement;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;

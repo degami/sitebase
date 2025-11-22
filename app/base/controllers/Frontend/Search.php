@@ -21,6 +21,7 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Tools\Search\Manager as SearchManager;
+use App\Base\Tools\Search\AIManager as AISearchManager;
 
 /**
  * Search page
@@ -87,7 +88,14 @@ class Search extends FrontendPageWithLang
     public function getTemplateData(): array
     {
         $page = $this->getRequest()->query->get('page') ?? 0;
-        $search_result = $this->getSearchResult($this->getSearchQuery(), $page);
+        $query = $this->getSearchQuery();
+        $useAI = $this->getRequest()->query->get('ai') ?? false;
+
+        if ($useAI) {
+            $search_result = $this->getAIsearchResult($query, 5);
+        } else {
+            $search_result = $this->getSearchResult($query, $page);
+        }
 
         return [
             'search_query' => $this->getSearchQuery(),
@@ -153,4 +161,49 @@ class Search extends FrontendPageWithLang
 
         return $this->normalizeCacheKey($prefix . '.q='. $this->getSearchQuery().'.p='.$page);
     }
+
+    protected function getAIsearchResult(?string $search_query = null, int $k = 5, ?string $locale = null, $llmCode = 'googlegemini'): array
+    {
+        if ($search_query === null) {
+            return ['total' => 0, 'docs' => []];
+        }
+
+        /** @var AISearchManager $embeddingManager */
+        $aiSearchManager = $this->containerMake(AISearchManager::class, [
+            'llm' => $this->getAI()->getAIModel($llmCode),
+            'model' => match ($llmCode) {
+                'googlegemini' => 'text-embedding-004',
+                'chatgpt' => 'text-embedding-3-small',
+                'claude' => 'claude-2.0-embedding',
+                'groq' => 'groq-vector-1',
+                'mistral' => 'mistral-embedding-001',
+                'perplexity' => 'perplexity-embedding-001',
+                default => null,
+            }
+        ]);
+        
+        if ($locale === null) {
+            $locale = $this->getCurrentLocale();
+        }
+
+        $filters = [
+            'locale' => $locale,
+            'website_id' => $this->getSiteData()->getCurrentWebsiteId()
+        ];
+
+        $searchResult = $aiSearchManager->searchNearby($search_query, $k, $filters);
+
+        // Mappiamo i dati per essere compatibili con il template
+        return [
+            'total' => $searchResult['total'] ?? count($searchResult['docs']),
+            'docs' => array_map(function($doc) {
+
+                return $this->getSearch()->getIndexDataForFrontendModel($this->containerCall(
+                    [$doc['data']['modelClass'], 'load'],
+                    ['id' => $doc['data']['id']]
+                ))['_data'];
+
+            }, $searchResult['docs'] ?? [])
+        ];
+    }    
 }

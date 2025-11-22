@@ -318,7 +318,8 @@ class Manager extends ContainerAwareObject
         foreach (array_merge(['id', 'website_id', 'locale', 'created_at', 'updated_at'], $fields_to_index) as $field_name) {
             $body[$field_name] = $object->getData($field_name);
         }
-
+        $body['modelClass'] = $modelClass;
+        
         $body_additional = [
             'type' => $type,
             'frontend_url' => $object->getFrontendUrl()

@@ -41,6 +41,15 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Sear
                     <?php $this->sitebase()->drawIcon('search');?>
                 </button>
             </div>
+            <div class="input-group pt-2">
+                <div class="pretty p-icon p-round">
+                    <input id="use-ai" class="form-check-input" type="checkbox" role="switch" name="ai" value=1 />
+                    <div class="state">
+                        <i class="icon fa fa-check"></i>
+                        <label class="form-check-label" for="use-ai"><?= $this->sitebase()->translate('Use AI Search'); ?></label>
+                    </div>
+                </div>
+            </div>
         </div>
         </div>
     </form>

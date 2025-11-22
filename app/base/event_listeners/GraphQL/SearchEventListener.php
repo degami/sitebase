@@ -20,6 +20,7 @@ use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ObjectType;
 use App\Base\Exceptions\NotFoundException;
 use GraphQL\Type\Definition\ResolveInfo;
+use App\Base\Tools\Search\AIManager as AISearchManager;
 
 class SearchEventListener implements EventListenerInterface
 {
@@ -102,6 +103,72 @@ class SearchEventListener implements EventListenerInterface
                 },
             ];
         }
+
+        if (!isset($typesByName['NearbyItem'])) {
+            $typesByName['NearbyItem'] = new ObjectType([
+                'name' => 'NearbyItem',
+                'fields' => [
+                    'id' => ['type' => Type::nonNull(Type::int())],
+                    'website_id' => ['type' => Type::nonNull(Type::int())],
+                    'locale' => ['type' => Type::string()],
+                    'modelClass' => ['type' => Type::string()],
+                    'type' => ['type' => Type::string()],
+                    'score' => ['type' => Type::float()],
+                ]
+            ]);
+        }
+
+        if (!isset($queryFields['searchNearby'])) {
+            $queryFields['searchNearby'] = [
+                'type' => Type::listOf($typesByName['NearbyItem']),
+                'args' => [
+                    'text' => ['type' => Type::nonNull(Type::string())],
+                    'k' => ['type' => Type::int()],
+                    'locale' => ['type' => Type::string()],
+                    'website_id' => ['type' => Type::int()],
+                ],
+                'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                    $text = $args['text'];
+                    $llmCode = $args['llm'] ?? 'googlegemini';
+                    $k = $args['k'] ?? 5;
+
+                    $filters = [];
+                    if (isset($args['locale'])) {
+                        $filters['locale'] = $args['locale'];
+                    }
+                    if (isset($args['website_id'])) {
+                        $filters['website_id'] = $args['website_id'];
+                    }
+
+                    /** @var AISearchManager $embeddingManager */
+                    $aiSearchManager = App::getInstance()->containerMake(AISearchManager::class, [
+                        'llm' => App::getInstance()->getAI()->getAIModel($llmCode),
+                        'model' => match ($llmCode) {
+                            'googlegemini' => 'text-embedding-004',
+                            'chatgpt' => 'text-embedding-3-small',
+                            'claude' => 'claude-2.0-embedding',
+                            'groq' => 'groq-vector-1',
+                            'mistral' => 'mistral-embedding-001',
+                            'perplexity' => 'perplexity-embedding-001',
+                            default => null,
+                        }
+                    ]);
+
+                    $searchResult = $aiSearchManager->searchNearby($text, $k, $filters);
+
+                    return array_map(function ($el) {
+                        return [
+                            'id' => $el['data']['id'],
+                            'website_id' => $el['data']['website_id'],
+                            'locale' => $el['data']['locale'],
+                            'modelClass' => $el['data']['modelClass'],
+                            'type' => $el['data']['type'],
+                            'score' => $el['score'],
+                        ];
+                    }, $searchResult['docs'] ?? []);
+                },
+            ];
+        }        
     }
 
     /**

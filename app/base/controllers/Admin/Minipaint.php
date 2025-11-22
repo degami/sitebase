@@ -11,12 +11,12 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Base\Controllers\Admin;
 
 use App\App;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Exceptions\NotFoundException;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use App\Base\Routing\RouteInfo;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -89,7 +89,7 @@ class Minipaint extends AdminPage
         if (basename($filepath) == 'index.html') {
             $media = MediaElement::load($this->getRequest()->query->get('media_id'));
             $mediaMimeType = $media->getMimetype();
-            $minipaintSaveUrl = $this->getUrl('crud.app.site.controllers.admin.minipaintsave', ['media_id' => $media->getId()]);
+            $minipaintSaveUrl = $this->getUrl('crud.app.base.controllers.admin.minipaintsave', ['media_id' => $media->getId()]);
             $backUrl = $this->getUrl('admin.cms.media'). '?' . http_build_query(['action' => 'edit', 'media_id' => $media->getId()]);
 
             $saveMessage = $this->getUtils()->translate("Save on server");

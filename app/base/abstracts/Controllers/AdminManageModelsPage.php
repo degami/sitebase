@@ -31,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Degami\Basics\Html\TagElement;
 use ReflectionClass;
 use App\Base\Abstracts\Controllers\BasePage;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use Symfony\Component\HttpFoundation\Response;
 use Degami\PHPFormsApi as FAPI;
 

@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\MediaElementRewrite as MediaElementRewriteModel;
+use App\Base\Models\MediaElementRewrite as MediaElementRewriteModel;
 
 /**
  * MediaRewrites REST endpoint

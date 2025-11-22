@@ -19,6 +19,7 @@ use App\Base\Interfaces\Model\PhysicalProductInterface;
 use App\Base\Traits\PhysicalProductTrait;
 use App\Base\Traits\ProductTrait;
 use App\Base\GraphQl\GraphQLExport;
+use App\Base\Models\MediaElement;
 
 /**
  * Book Model
@@ -81,7 +82,7 @@ class Book extends FrontendModel implements PhysicalProductInterface
      * gets book gallery
      *
      * @param bool $reset
-     * @return \App\Site\Models\MediaElement[]
+     * @return \App\Base\Models\MediaElement[]
      * @throws Exception
      */
     #[GraphQLExport]

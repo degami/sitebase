@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Models;
+namespace App\Base\Models;
 
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Traits\WithOwnerTrait;

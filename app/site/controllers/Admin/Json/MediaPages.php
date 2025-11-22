@@ -17,7 +17,7 @@ use App\Site\Controllers\Admin\Cms\Pages;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use App\Site\Models\Page;
-use App\Site\Models\MediaElement as Media;
+use App\Base\Models\MediaElement as Media;
 use DI\DependencyException;
 use DI\NotFoundException;
 

@@ -19,6 +19,7 @@ use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\GraphQl\GraphQLExport;
+use App\Base\Models\MediaElement;
 
 /**
  * Page Model
@@ -74,7 +75,7 @@ class Page extends FrontendModel
      * gets page gallery
      *
      * @param bool $reset
-     * @return \App\Site\Models\MediaElement[]
+     * @return \App\Base\Models\MediaElement[]
      * @throws Exception
      */
     #[GraphQLExport]
@@ -100,7 +101,7 @@ class Page extends FrontendModel
      * gets page gallery
      *
      * @param bool $reset
-     * @return \App\Site\Models\MediaElement[]
+     * @return \App\Base\Models\MediaElement[]
      * @throws Exception
      */
     #[GraphQLExport]

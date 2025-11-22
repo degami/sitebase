@@ -15,7 +15,7 @@ namespace App\Site\Webdav;
 
 use Sabre\DAV\Collection;
 use App\App;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 
 class MediaRootDirectory extends Collection
 {

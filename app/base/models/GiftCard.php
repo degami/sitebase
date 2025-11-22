@@ -17,7 +17,7 @@ use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Interfaces\Model\ProductInterface;
 use App\Base\Traits\ProductTrait;
 use App\Base\GraphQl\GraphQLExport;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 
 /**
  * Gift Card Model

@@ -18,7 +18,7 @@ use App\Base\Abstracts\Models\FrontendModel;
 use DateTime;
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Interfaces\Model\ProductInterface;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use Exception;
 use App\Base\GraphQl\GraphQLExport;
 use App\Base\Traits\ProductTrait;
@@ -84,7 +84,7 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
      * gets downloadable_product gallery
      *
      * @param bool $reset
-     * @return \App\Site\Models\MediaElement[]
+     * @return \App\Base\Models\MediaElement[]
      * @throws Exception
      */
     #[GraphQLExport]

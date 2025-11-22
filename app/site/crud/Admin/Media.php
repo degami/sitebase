@@ -14,7 +14,7 @@
 namespace App\Site\Crud\Admin;
 
 use App\Base\Abstracts\Controllers\AdminRestPage;
-use App\Site\Models\MediaElement as MediaElementModel;
+use App\Base\Models\MediaElement as MediaElementModel;
 
 /**
  * Media REST endpoint

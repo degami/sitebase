@@ -16,7 +16,7 @@ namespace App\Site\Tools\FAPI\Fields;
 use App\App;
 use Degami\PHPFormsApi\Abstracts\Base\Field;
 use Degami\PHPFormsApi\Form;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use App\Base\Abstracts\Models\BaseCollection;
 use Degami\Basics\Html\TagElement;
 

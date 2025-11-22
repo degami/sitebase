@@ -11,11 +11,11 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Commands\Media;
+namespace App\Base\Commands\Media;
 
 use App\App;
 use App\Base\Abstracts\Commands\BaseCommand;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;

@@ -23,7 +23,7 @@ use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\Page;
 use App\Site\Models\Taxonomy;
-use App\Site\Models\MediaElement as Media;
+use App\Base\Models\MediaElement as Media;
 use App\App;
 
 /**

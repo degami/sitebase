@@ -130,6 +130,7 @@ class Event extends ModelWithLocation
      */
     public function nearBy(float $radius) : ModelWithLocationCollection|BaseCollection
     {
+        /** @var ModelWithLocationCollection $collection */
         $collection = static::getCollection();
         if (is_callable([$collection, 'withinRange'])) {
             return $collection->withinRange($this->getLatitude(), $this->getLongitude(), $radius)

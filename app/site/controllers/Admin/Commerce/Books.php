@@ -21,7 +21,7 @@ use Degami\PHPFormsApi as FAPI;
 use App\Site\Models\Book;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\TaxClass;
-use App\Site\Models\MediaElement as Media;
+use App\Base\Models\MediaElement as Media;
 
 /**
  * "Books" Admin Page

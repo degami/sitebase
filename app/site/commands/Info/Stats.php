@@ -19,7 +19,7 @@ use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
 use App\Site\Models\LinkExchange;
 use App\Base\Models\MailLog;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use App\Base\Models\RequestLog;
 use App\Base\Models\User;
 use App\Base\Models\Website;

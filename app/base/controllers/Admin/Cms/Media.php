@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Cms;
+namespace App\Base\Controllers\Admin\Cms;
 
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Routing\RouteInfo;
@@ -24,7 +24,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Base\Abstracts\Controllers\AdminFormPage;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use App\Site\Models\Page;
 use App\App;
 use App\Base\Abstracts\Controllers\BasePage;

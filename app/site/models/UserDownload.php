@@ -18,7 +18,7 @@ use App\Base\Traits\WithOwnerTrait;
 use App\App;
 use DateTime;
 use Exception;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 
 /**
  * User Download Model

@@ -11,10 +11,10 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin;
+namespace App\Base\Controllers\Admin;
 
 use App\Base\Abstracts\Controllers\AdminJsonPage;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use Degami\Basics\Exceptions\BasicException;
 
 /**

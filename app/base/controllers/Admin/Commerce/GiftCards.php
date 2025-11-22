@@ -20,9 +20,9 @@ use App\Base\Abstracts\Controllers\AdminManageProductsPage;
 use App\Base\Models\GiftCard;
 use Degami\PHPFormsApi as FAPI;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use App\Base\Models\TaxClass;
-use App\Site\Models\MediaElement as Media;
+use App\Base\Models\MediaElement as Media;
 
 /**
  * "Gift Cards" Admin Page

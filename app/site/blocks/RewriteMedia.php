@@ -16,7 +16,7 @@ namespace App\Site\Blocks;
 use App\Base\Abstracts\Blocks\BaseCodeBlock;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
-use App\Site\Models\MediaElementRewrite;
+use App\Base\Models\MediaElementRewrite;
 use Degami\Basics\Exceptions\BasicException;
 use Degami\Basics\Html\TagElement;
 use Degami\PHPFormsApi as FAPI;

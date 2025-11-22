@@ -19,7 +19,7 @@ use App\Base\Models\Order;
 use App\Base\Models\OrderItem;
 use Gplanchat\EventManager\Event;
 use App\Site\Models\UserDownload;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 
 class DownloadbleProductsEventListener implements EventListenerInterface
 {

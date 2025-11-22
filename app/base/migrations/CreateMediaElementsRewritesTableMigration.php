@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Migrations;
+namespace App\Base\Migrations;
 
 use App\Base\Abstracts\Migrations\DBMigration;
 use Degami\SqlSchema\Exceptions\DuplicateException;
@@ -20,14 +20,14 @@ use Degami\SqlSchema\Index;
 use Degami\SqlSchema\Table;
 
 /**
- * "media_element" table migration
+ * "media_element_rewrite" table migration
  */
-class CreateMediaElementsTableMigration extends DBMigration
+class CreateMediaElementsRewritesTableMigration extends DBMigration
 {
     /**
      * @var string table name
      */
-    protected string $tableName = 'media_element';
+    protected string $tableName = 'media_element_rewrite';
 
     /**
      * {@inheritdoc}
@@ -36,7 +36,7 @@ class CreateMediaElementsTableMigration extends DBMigration
      */
     public function getName(): string
     {
-        return '04_' . parent::getName();
+        return '05_' . parent::getName();
     }
 
     /**
@@ -51,17 +51,14 @@ class CreateMediaElementsTableMigration extends DBMigration
     {
         $table
             ->addColumn('id', 'INT', null, ['UNSIGNED'], false)
-            ->addColumn('path', 'VARCHAR', [1024])
-            ->addColumn('filename', 'VARCHAR', [255])
-            ->addColumn('mimetype', 'VARCHAR', [50])
-            ->addColumn('filesize', 'INT', null, ['UNSIGNED'])
+            ->addColumn('media_element_id', 'INT', null, ['UNSIGNED'])
+            ->addColumn('rewrite_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
-            ->addColumn('lazyload', 'BOOLEAN', null, [])
-            ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
+            ->addIndex('media_element_rewrite', ['media_element_id', 'rewrite_id'], Index::TYPE_UNIQUE)
+            ->addForeignKey('fk_media_element_rewrite_media_element_id', ['media_element_id'], 'media_element', ['id'])
+            ->addForeignKey('fk_media_element_rewrite_owner_id', ['user_id'], 'user', ['id'])
+            ->addForeignKey('fk_media_element_rewrite_rewrite_id', ['rewrite_id'], 'rewrite', ['id'])
             ->addIndex(null, 'id', Index::TYPE_PRIMARY)
-            ->addIndex('path_unique', 'path', Index::TYPE_UNIQUE)
-            ->addForeignKey('fk_media_element_owner_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');
 
         return $table;

@@ -14,7 +14,7 @@
 namespace App\Site\Webdav;
 
 use Sabre\DAV\File;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 
 class MediaFile extends File
 {

@@ -11,9 +11,9 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Cms;
+namespace App\Base\Controllers\Admin\Cms;
 
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use App\Base\Models\Rewrite;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -21,7 +21,7 @@ use DI\NotFoundException;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Abstracts\Controllers\BasePage;
 use Degami\PHPFormsApi as FAPI;
-use App\Site\Models\MediaElementRewrite;
+use App\Base\Models\MediaElementRewrite;
 use Degami\Basics\Html\TagElement;
 
 /**

@@ -11,12 +11,12 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Controllers\Admin\Json;
+namespace App\Base\Controllers\Admin\Json;
 
 use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminJsonPage;
 use App\Base\Exceptions\InvalidValueException;
-use App\Site\Models\MediaElement;
+use App\Base\Models\MediaElement;
 use DI\DependencyException;
 use DI\NotFoundException;
 

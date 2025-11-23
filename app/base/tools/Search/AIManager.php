@@ -114,10 +114,6 @@ class AIManager extends Manager
  
         $type = strtolower(static::getClassBasename($modelClass));
 
-        $fields_to_index = ['title', 'content'];
-        if (method_exists($modelClass, 'exposeToIndexer')) {
-            $fields_to_index = $this->containerCall([$modelClass, 'exposeToIndexer']);
-        }
 
         $body = [];
 
@@ -127,6 +123,22 @@ class AIManager extends Manager
         $body['modelClass'] = $modelClass;
 
         $body['type'] = $type;
+
+        $embeddable = $this->getEmbeddableDataForFrontendModel($object);
+
+        $body['embedding'] = $this->llm->embed(implode(' ', array_filter($embeddable)), $this->model);
+
+        return ['_id' => $type . '_' . $object->getId(), '_data' => $body];
+    }
+
+    public function getEmbeddableDataForFrontendModel(FrontendModel $object) : array
+    {
+        $modelClass = get_class($object);
+
+        $fields_to_index = ['title', 'content'];
+        if (method_exists($modelClass, 'exposeToIndexer')) {
+            $fields_to_index = $this->containerCall([$modelClass, 'exposeToIndexer']);
+        }
 
         $embeddable = [];
         foreach ($fields_to_index as $field_name) {
@@ -143,9 +155,8 @@ class AIManager extends Manager
 
             return null;
         }, $embeddable);
-        $body['embedding'] = $this->llm->embed(implode(' ', array_filter($embeddable)), $this->model);
 
-        return ['_id' => $type . '_' . $object->getId(), '_data' => $body];
+        return $embeddable;
     }
 
     /**

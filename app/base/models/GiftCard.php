@@ -18,6 +18,7 @@ use App\Base\Interfaces\Model\ProductInterface;
 use App\Base\Traits\ProductTrait;
 use App\Base\GraphQl\GraphQLExport;
 use App\Base\Models\MediaElement;
+use Exception;
 
 /**
  * Gift Card Model
@@ -83,7 +84,11 @@ class GiftCard extends FrontendModel implements ProductInterface
             return null;
         }
 
-        return $this->setMedia(MediaElement::load($this->getMediaId()))->media;
+        try {
+            return $this->setMedia(MediaElement::load($this->getMediaId()))->media;
+        } catch (Exception $e) {}
+
+        return null;
     }
 
     public function setMedia(?MediaElement $media): self

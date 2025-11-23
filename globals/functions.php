@@ -61,3 +61,19 @@ function isJson($content)
 
     return is_array($decoded) || is_object($decoded);
 }
+
+function array_unique_by(array $items, callable $callback): array {
+    $seen = [];
+    $result = [];
+
+    foreach ($items as $item) {
+        $key = $callback($item);
+
+        if (!isset($seen[$key])) {
+            $seen[$key] = true;
+            $result[] = $item;
+        }
+    }
+
+    return $result;
+}

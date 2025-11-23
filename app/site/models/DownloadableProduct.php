@@ -159,7 +159,9 @@ class DownloadableProduct extends FrontendModel implements ProductInterface
         }
 
         if (empty($this->media) || $reset == true) {
-            $this->media = MediaElement::load($this->getMediaId()) ?: null;
+            try {
+                $this->media = MediaElement::load($this->getMediaId()) ?: null;
+            } catch (Exception $e) {}
         }
 
         return $this->media;

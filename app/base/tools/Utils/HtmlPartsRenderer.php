@@ -33,6 +33,7 @@ use App\App;
 use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Abstracts\Controllers\AdminPage;
+use App\Base\Abstracts\Controllers\BaseHtmlPage;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Controllers\Admin\Login;
 use App\Base\Models\Block;
@@ -368,8 +369,12 @@ class HtmlPartsRenderer extends ContainerAwareObject
             return $this->getCache()->get($cache_key);
         }
 
-        if ($current_rewrite == null && ($route_info instanceof RouteInfo) && is_numeric($route_info->getRewrite())) {
-            $current_rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $route_info->getRewrite()]);
+        if ($current_page instanceof BaseHtmlPage) {
+            $current_rewrite = $current_page->getRewriteObject();
+
+            if ($current_rewrite == null && ($route_info instanceof RouteInfo) && is_numeric($route_info->getRewrite())) {
+                $current_rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $route_info->getRewrite()]);
+            }
         }
 
         if (is_null($pageBlocks)) {

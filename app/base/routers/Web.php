@@ -185,7 +185,18 @@ class Web extends BaseRouter implements WebRouterInterface
             $domain = $website->getDomain();
             $website_id = $website->getId();
 
-            $rewrite = Rewrite::getCollection()->where(['url' => $uri, 'website_id' => $website_id])->getFirst();
+            if (isset($cached_routes[$domain][$uri])) {
+                // create a Rewrite with cached data
+                return $this->containerCall([Rewrite::class, 'new'], ['initial_data' => $cached_routes[$domain][$uri]]);
+            }
+
+//            $rewrite = Rewrite::getCollection()->where(['url' => $uri, 'website_id' => [$website_id, null]])->getFirst();
+            $rewrite = Rewrite::getCollection()
+                ->where(['url' => $uri, 'website_id' => [$website_id, null]])
+                ->addSelect('*')->addSelect('IF(website_id = ' . $website_id . ', 1, 0) AS is_current_website')
+                ->addOrder(['is_current_website' => 'DESC'], 'start')
+                ->getFirst();
+
             if ($rewrite instanceof Rewrite) {
                 $cached_routes[$domain][$uri] = $rewrite->getData();
                 $this->setCachedRoutes($cached_routes);

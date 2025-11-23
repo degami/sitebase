@@ -57,6 +57,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      */
     protected ?Template $template = null;
 
+    protected ?Rewrite $rewriteObject = null;
+
     /**
      * BasePage constructor.
      *
@@ -253,6 +255,10 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      */
     public function getRewriteObject() : ?Rewrite
     {
+        if ($this->rewriteObject instanceof Rewrite) {
+            return $this->rewriteObject;
+        }
+
         if ($this->getRouteInfo()->getRewrite()) {
             return $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
         }

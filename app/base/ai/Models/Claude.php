@@ -187,7 +187,7 @@ class Claude extends AbstractLLMAdapter
         ];
     }
 
-    public function sendFunctionResponse(string $functionName, array $result, array &$history = [], ?string $id = null): array
+    public function sendFunctionResponse(string $functionName, array $result, ?array $tools = null, array &$history = [], ?string $id = null): array
     {
         return $this->sendRaw([
             'model' => $this->getDefaultModel(),

@@ -33,6 +33,8 @@ class EcommerceFlow extends BaseFlow
             'ProductInterface',
             'PhysicalProductInterface',
             'ProductStock',
+//            'SearchResult',
+//            'NearbyItem',
         ];
 
         // Product Types

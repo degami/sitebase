@@ -15,6 +15,7 @@ namespace App\Base\Traits;
 
 use App\App;
 use App\Base\Abstracts\Models\BaseModel;
+use App\Base\GraphQl\GraphQLExport;
 use App\Base\Models\Rewrite;
 use Exception;
 
@@ -29,6 +30,7 @@ trait FrontendModelTrait
      * @return string
      * @throws Exception
      */
+    #[GraphQLExport]
     public function getFrontendUrl(): string
     {
         $this->checkLoaded();

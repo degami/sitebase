@@ -175,13 +175,14 @@ class GoogleGemini extends AbstractLLMAdapter
     {
         $messages =  [
             (object) $this->formatUserMessage($flow->systemPrompt()),
-            (object) $this->formatUserMessage($userPrompt)
         ];
 
         // googlegemini does not support system messages after the first one, add schema as user message
         if ($flow->schema()) {
             $messages[] = (object) $this->formatUserMessage("Ecco il tuo schema GraphQL:\n" . $flow->schema());
         }
+
+        $messages[] =  (object) $this->formatUserMessage($userPrompt);
 
         // Costruiamo le dichiarazioni dei tool
         $functions = [];
@@ -201,7 +202,7 @@ class GoogleGemini extends AbstractLLMAdapter
         ];
     }
 
-    public function sendFunctionResponse(string $name, array $result, array &$history = [], ?string $id = null): array
+    public function sendFunctionResponse(string $name, array $result, ?array $tools = null, array &$history = [], ?string $id = null): array
     {
         $history[] = [
             'role' => 'tool',
@@ -216,7 +217,8 @@ class GoogleGemini extends AbstractLLMAdapter
         ];
 
         return $this->sendRaw([
-            'contents' => $history
+            'contents' => $history,
+            'tools' => $tools ?? [],
         ]);
     }
 

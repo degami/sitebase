@@ -177,7 +177,7 @@ class Mistral extends AbstractLLMAdapter
         ];
     }
 
-    public function sendFunctionResponse(string $functionName, array $result, array &$history = [], ?string $id = null): array
+    public function sendFunctionResponse(string $functionName, array $result, ?array $tools = null, array &$history = [], ?string $id = null): array
     {
 
         $history[] = $this->formatUserMessage("Tool response for call to function $functionName".(!is_null($id)?" (id: $id)":"").": " . json_encode($result));

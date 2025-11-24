@@ -180,11 +180,11 @@ class AIManager extends Manager
             'knn' => [
                 'embedding' => [
                     'vector' => $vector,
-                    'k' => $k
+                    'k' => $k * 2
                 ]
             ]
         ];
-
+/*
         if (!empty($filters)) {
             $filterClauses = [];
             foreach ($filters as $field => $value) {
@@ -208,7 +208,18 @@ class AIManager extends Manager
                 'query' => $query
             ]
         ];
+*/
+        foreach($filters as $boolType => $conditions) {
+            foreach ((array)$conditions as $condition) {
+                $this->addGenericCondition($condition, $boolType);
+            }
+        }
 
+        $this->addGenericCondition($knnQuery, 'must');
+
+        $response = $this->searchData();    
+
+/*        
         $client = $this->getClient();
         $response = $client->search($params);
 
@@ -225,6 +236,9 @@ class AIManager extends Manager
             'total' => $response['hits']['total']['value'] ?? count($docs),
             'docs'  => $docs
         ];
+*/
+
+        return $response;
     }
 
     /**

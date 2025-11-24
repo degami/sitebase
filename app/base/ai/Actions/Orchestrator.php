@@ -87,6 +87,7 @@ class Orchestrator
             $response = $this->llm->sendFunctionResponse(
                 $functionName,
                 $toolResult,
+                $payload['tools'] ?? null,
                 $messages
             );
 

@@ -14,6 +14,8 @@
 namespace App\Base\EventListeners\GraphQL;
 
 use App\App;
+use App\Base\Abstracts\Models\BaseModel;
+use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Interfaces\EventListenerInterface;
 use App\Base\Interfaces\Model\ProductInterface;
 use Gplanchat\EventManager\Event;
@@ -28,6 +30,7 @@ use App\Base\Models\Website;
 use App\Base\Models\Discount as DiscountModel;
 use GraphQL\Type\Definition\ResolveInfo;
 use HaydenPierce\ClassFinder\ClassFinder;
+use App\Base\Tools\Search\AIManager as AISearchManager;
 
 class CommerceEventListener implements EventListenerInterface
 {
@@ -109,6 +112,12 @@ class CommerceEventListener implements EventListenerInterface
         if (!isset($queryFields['cart'])) {
             //  cart: Cart
             $queryFields['cart'] = $this->getCartQueryDefinition($typesByName, $typesByClass);
+        }
+
+        if (!isset($queryFields['narbyProducts'])) {
+            //  nearbyProducts: [ProductInterface]
+            $queryFields['nearbyProducts'] = $this->getProductsNearByQueryDefinition($typesByName, $typesByClass);
+
         }
     }
 
@@ -462,5 +471,98 @@ class CommerceEventListener implements EventListenerInterface
             ->persist();
 
         return $cart;
-    }    
+    } 
+    
+    
+    protected function getProductsNearByQueryDefinition(array &$typesByName, array &$typesByClass): array
+    {
+        $app = App::getInstance();
+        return [
+            'type' => Type::listOf($typesByName['ProductInterface']),
+            'args' => [
+                'productClass' => ['type' => Type::nonNull(Type::string())],
+                'productId' => ['type' => Type::nonNull(Type::int())],
+                'k' => ['type' => Type::int()],
+                'locale' => ['type' => Type::string()],
+                'website_id' => ['type' => Type::int()],
+            ],
+            'resolve' => function ($rootValue, $args, $context, ResolveInfo $info) use ($app) {
+                $llmCode = $args['llm'] ?? 'googlegemini';
+                $k = $args['k'] ?? 5;
+
+                $productClass = $args['productClass'] ?? null;
+
+                // if product class is not a full namespaced class, try to resolve it
+                if (!class_exists($productClass)) {
+                    $classes = array_filter(array_merge(
+                        ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
+                        ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
+                    ), fn ($class) => is_subclass_of($class, ProductInterface::class));
+                    $classes = array_combine(array_map(fn ($c) => App::getInstance()->getClassBasename($c), $classes), $classes);
+
+                    if (isset($classes[$productClass])) {
+                        $productClass = $classes[$productClass];
+                    } else {
+                        throw new RuntimeException($app->getUtils()->translate('Invalid product class.'));
+                    }
+                }
+
+                $productId = $args['productId'] ?? null;
+
+                $filters = [];
+
+                /** @var AISearchManager $aiSearchManager */
+                $aiSearchManager = App::getInstance()->containerMake(AISearchManager::class, [
+                    'llm' => App::getInstance()->getAI()->getAIModel($llmCode),
+                    'model' => match ($llmCode) {
+                        'googlegemini' => 'text-embedding-004',
+                        'chatgpt' => 'text-embedding-3-small',
+                        'claude' => 'claude-2.0-embedding',
+                        'groq' => 'groq-vector-1',
+                        'mistral' => 'mistral-embedding-001',
+                        'perplexity' => 'perplexity-embedding-001',
+                        default => null,
+                    }
+                ]);
+
+                if (isset($args['locale'])) {
+                    $aiSearchManager->addAndCondition('locale', $args['locale']);
+                }
+                if (isset($args['website_id'])) {
+                    $aiSearchManager->addAndCondition('website_id', $args['website_id']);
+                }
+
+                $aiSearchManager->addNotGroup([
+                    ['field' => 'modelClass', 'value' => strtolower(App::getClassBasename($productClass))],
+                    ['field' => 'id', 'value' => $productId],
+                ]);
+
+                /** @var FrontendModel $product */
+                $product = $app->containerCall([$productClass, 'load'], ['id' => $productId]);
+                if (!($product instanceof ProductInterface)) {
+                    throw new RuntimeException($app->getUtils()->translate('Product not found.'));
+                }
+
+                $embeddable = $aiSearchManager->getEmbeddableDataForFrontendModel($product);
+
+                $searchResult = $aiSearchManager->searchNearby(implode(' ', array_filter($embeddable)), $k, $filters);
+
+                return array_filter(array_map(function ($el) use ($app) {
+                    $modelClass = $el['modelClass'] ?? null;
+                    $modelId = $el['id'] ?? null;
+
+                    if (class_exists($modelClass)) {
+                        $model = $app->containerCall([$modelClass, 'load'], ['id' => $modelId]);
+                        if ($model instanceof ProductInterface) {
+                            /** @var BaseModel $model */
+                            return $model;
+                        }
+                    }
+
+                    return null;
+
+                }, $searchResult['docs'] ?? []));
+            },
+        ];
+    }
 }

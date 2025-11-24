@@ -823,6 +823,11 @@ class Manager extends ContainerAwareObject
         return $this->addCondition($field, $value, 'filter');
     }
     
+    public function addAndGroup(array $conditions): static
+    {
+        return $this->addGenericCondition($this->buildAndGroup($conditions), 'filter');
+    }
+
     /**
      * Adds a condition for the "must_not" clause of the Elasticsearch query.
      *
@@ -837,6 +842,11 @@ class Manager extends ContainerAwareObject
             return $this->addGenericCondition($this->parseCondition($field), 'must_not');
         }
         return $this->addCondition($field, $value, 'must_not');
+    }
+
+    public function addNotGroup(array $conditions): static
+    {
+        return $this->addGenericCondition($this->buildAndGroup($conditions), 'must_not');
     }
 
     /**
@@ -859,6 +869,17 @@ class Manager extends ContainerAwareObject
             return $this->addGenericCondition($this->parseCondition($field), 'should');
         }
         return $this->addCondition($field, $value, 'should');
+    }
+
+    public function addOrGroup(array $conditions): static
+    {
+        if (!is_array($this->query)) {
+            $this->query = ['bool' => []];
+        }
+
+        $this->query['bool']['minimum_should_match'] = 1;
+
+        return $this->addGenericCondition($this->buildAndGroup($conditions), 'should');
     }
 
     /**

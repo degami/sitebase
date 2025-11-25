@@ -15,6 +15,7 @@ namespace App\Base\AI\Flows;
 
 use App\App;
 use App\Base\AI\Actions\GraphQLSchemaProvider;
+use App\Base\AI\Actions\GraphQLExecutor;
 use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Interfaces\Model\ProductInterface;
 
@@ -22,7 +23,7 @@ class EcommerceFlow extends BaseFlow
 {
     protected string $schema;
 
-    public function __construct(GraphQLSchemaProvider $schemaProvider)
+    public function __construct(protected GraphQLSchemaProvider $schemaProvider, protected GraphQLExecutor $executor)
     {
         // Get all models related to ecommerce
         // Base Types
@@ -80,6 +81,15 @@ TXT;
                     'required' => ['query']
                 ]
             ]
+        ];
+    }
+
+    public function toolHandlers() : array
+    {
+        return [
+            'graphqlQuery' => function($args) {
+                return $this->executor->execute($args['query'], $args['variables'] ?? []);
+            }
         ];
     }
 }

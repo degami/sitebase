@@ -26,7 +26,7 @@ class GraphQLExecutor
     {
         $this->endpoint = $endpoint;
         $this->authHeader = $authHeader;
-        $this->http = new Client(['timeout' => 30, 'verify' => false]);
+        $this->http = new Client(['timeout' => 60, 'verify' => false]);
     }
 
     /**

@@ -19,12 +19,18 @@ use Exception;
 
 class Orchestrator
 {
-    protected AIModelInterface $llm;
     protected array $toolsRegistry = [];
 
-    public function __construct(AIModelInterface $llm)
-    {
-        $this->llm = $llm;
+    public function __construct(
+        protected AIModelInterface $llm, 
+        protected BaseFlow $flow
+    ) { 
+        // auto register tool handlers.
+        foreach ($flow->toolHandlers() as $toolName => $toolHandler) {
+            if (is_callable($toolHandler)) {
+                $this->registerTool($toolName, $toolHandler);
+            }
+        }
     }
 
     /**
@@ -38,9 +44,9 @@ class Orchestrator
     /**
      * Run a flow
      */
-    public function runFlow(BaseFlow $flow, string $userPrompt) : array
+    public function runFlow(string $userPrompt) : array
     {
-        $payload = $this->llm->buildFlowInitialRequest($flow, $userPrompt);
+        $payload = $this->llm->buildFlowInitialRequest($this->flow, $userPrompt);
 
         // extract messages for history tracking
         $messages = $payload['messages'] ?? $payload['contents'] ?? [];
@@ -50,7 +56,6 @@ class Orchestrator
         $normalized = $this->llm->normalizeCompletionsResponse($response);
 
         while (!empty($normalized['functionCalls'])) {
-
             $call = $normalized['functionCalls'][0];
             $functionName = $call['name'] ?? null;
             $args = $call['args'] ?? [];
@@ -73,7 +78,6 @@ class Orchestrator
                 }
             }
 
-
             $handler = $this->toolsRegistry[$functionName];
 
             if (is_string($args)) {
@@ -82,7 +86,6 @@ class Orchestrator
             }
 
             $toolResult = $handler($args);
-
 
             $response = $this->llm->sendFunctionResponse(
                 $functionName,
@@ -93,7 +96,6 @@ class Orchestrator
 
             $normalized = $this->llm->normalizeCompletionsResponse($response);
         }
-
 
         return $normalized;
     }

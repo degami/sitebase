@@ -90,23 +90,18 @@ class Chatbot extends BaseJsonPage
         // internally we can use http to speed things up
         $endpoint = str_replace('https://', 'http://', $endpoint);
 
-        $llm = $this->getAI()->getAIModel($this->getRequest()->query->get('ai', 'googlegemini'));
-
         $authToken = $this->getRequest()->cookies->get('Authorization', '');
         if (empty($authToken)) {
             throw new Exception("Missing auth token cookie");
         }
 
+        $llm = $this->getAI()->getAIModel($this->getRequest()->query->get('ai', 'googlegemini'));
         $gql = new GraphQLExecutor($endpoint, 'Bearer '.$authToken);
-        $flow = new EcommerceFlow(new GraphQLSchemaProvider($gql));
+        $flow = new EcommerceFlow(new GraphQLSchemaProvider($gql), $gql);
 
-        $orchestrator = new Orchestrator($llm);
+        $orchestrator = new Orchestrator($llm, $flow);
 
-        $orchestrator->registerTool('graphqlQuery', function($args) use($gql) {
-            return $gql->execute($args['query'], $args['variables'] ?? []);
-        });
-
-        $response = $orchestrator->runFlow($flow, $this->getPrompt($this->getRequest()));
+        $response = $orchestrator->runFlow($this->getPrompt($this->getRequest()));
 
         try {
             $markdown = new Markdown(); // or Markdown::new()

@@ -19,6 +19,8 @@ abstract class BaseFlow
 
     abstract public function tools() : array;
 
+    abstract public function toolHandlers() : array;
+
     public function schema(): string
     {
         return '';

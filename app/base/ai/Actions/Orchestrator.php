@@ -106,7 +106,7 @@ class Orchestrator
         $history[] = $this->llm->formatUserMessage($userPrompt);
 
         // save flow messages to history, we can skip technical messages and previous history
-        $history = array_merge($history, array_slice($this->filterTechMessages($messages), count($initialMessages)));
+        $history = array_merge($history, $this->filterTechMessages(array_slice($messages, count($initialMessages))));
 
         // add assistant final message to history
         $history[] = $this->llm->formatAssistantMessage($normalized['assistantText'] ?? '');

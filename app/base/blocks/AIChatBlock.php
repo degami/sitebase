@@ -181,6 +181,8 @@ class AIChatBlock extends BaseCodeBlock
         const text = $(\'#ai-chat-text\').val().trim();
         if (!text) return;
 
+        const first_interaction = $(\'#ai-chat-messages .ai-chat-msg\').length === 0;
+
         $(\'#ai-chat-text\').val(\'\');
         appendMessage("user", text);
 
@@ -188,7 +190,7 @@ class AIChatBlock extends BaseCodeBlock
 
         $.ajax({
             method: "POST",
-            url: "/commerce/chatbot/chat?ai='.$aiModel.'",
+            url: "/commerce/chatbot/chat?ai='.$aiModel.'" + (!first_interaction ? "" : "&reset_history=1"),
             contentType: "application/json",
             data: JSON.stringify({ prompt: text }),
             success: function(res) {

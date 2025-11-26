@@ -37,8 +37,8 @@ interface AIModelInterface
     public function normalizeCompletionsResponse(array $raw) : array;
     public function normalizeEmbeddingsResponse(array $raw) : array;
 
-    public function sendFunctionResponse(string $functionName, array $result, ?array $tools = null, array &$history = [], ?string $id = null): array;
-    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, ?string $model = null): array;
+    public function sendFunctionResponse(string $functionName, array $result, ?array $tools = null, array &$history = [], ?string $model = null, ?string $id = null): array;
+    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, array &$history = [], ?string $model = null): array;
 
     public function prepareRequest(array $payload) : array;
     public function sendRaw(array $payload, ?string $model = null, string $endpoint = self::COMPLETIONS_ENDPOINT) : array;

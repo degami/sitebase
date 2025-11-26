@@ -43,6 +43,13 @@ class Manager extends ContainerAwareObject
 
             $callerInfo = $this->getCaller($callerLevel);
 
+            // as log_data field is a "text" type, we limit the message length to 65535 bytes. If longer, we truncate it.
+            // as we do not know the encoding, we will reduce it to 2/3 of that size to be sure we do not cut a multibyte char
+
+            if (strlen($message) > 43690) {
+                $message = substr($message, 0, 43690) . "\n...[truncated]";
+            }
+
             $log->setFile($callerInfo['file'])
                 ->setLine($callerInfo['line'])
                 ->setLogData($message)

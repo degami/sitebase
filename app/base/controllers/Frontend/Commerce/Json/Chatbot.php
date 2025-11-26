@@ -86,6 +86,9 @@ class Chatbot extends BaseJsonPage
      */
     protected function getJsonData(): array
     {
+        // start session for chatbot history
+        session_start();
+
         $endpoint = rtrim($this->getUrl('frontend.root'), '/') . '/graphql';
         // internally we can use http to speed things up
         $endpoint = str_replace('https://', 'http://', $endpoint);
@@ -101,7 +104,15 @@ class Chatbot extends BaseJsonPage
 
         $orchestrator = new Orchestrator($llm, $flow);
 
-        $response = $orchestrator->runFlow($this->getPrompt($this->getRequest()));
+        if (!isset($_SESSION['ecommerce_chatbot_history'])) {
+            $_SESSION['ecommerce_chatbot_history'] = [];
+        }
+
+        if ($this->getRequest()->query->get('reset_history', false)) {
+            $_SESSION['ecommerce_chatbot_history'] = [];
+        }
+
+        $response = $orchestrator->runFlow($this->getPrompt($this->getRequest()), $_SESSION['ecommerce_chatbot_history']);
 
         try {
             $markdown = new Markdown(); // or Markdown::new()

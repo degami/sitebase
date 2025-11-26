@@ -44,12 +44,17 @@ class Orchestrator
     /**
      * Run a flow
      */
-    public function runFlow(string $userPrompt) : array
+    public function runFlow(string $userPrompt, array &$history = []) : array
     {
-        $payload = $this->llm->buildFlowInitialRequest($this->flow, $userPrompt);
+        $payload = $this->llm->buildFlowInitialRequest($this->flow, $userPrompt, $history);
 
         // extract messages for history tracking
-        $messages = $payload['messages'] ?? $payload['contents'] ?? [];
+        $initialMessages = $payload['messages'] ?? $payload['contents'] ?? [];
+
+        $messages = [];
+        foreach ($initialMessages as $msg) {
+            $messages[] = $msg;
+        }
 
         $response = $this->llm->sendRaw($payload);
 
@@ -97,6 +102,26 @@ class Orchestrator
             $normalized = $this->llm->normalizeCompletionsResponse($response);
         }
 
+        // as user prompt is already in initialMessages and is probably not reported into history, add it.
+        $history[] = $this->llm->formatUserMessage($userPrompt);
+
+        // save flow messages to history, we can skip technical messages and previous history
+        $history = array_merge($history, array_slice($this->filterTechMessages($messages), count($initialMessages)));
+
+        // add assistant final message to history
+        $history[] = $this->llm->formatAssistantMessage($normalized['assistantText'] ?? '');
+
         return $normalized;
+    }
+
+    protected function filterTechMessages(array $messages) : array
+    {
+        return array_filter($messages, function ($msg) {
+            $msg = json_decode(json_encode($msg), true); // force array
+            if ($msg['role'] == 'model' && isset($msg['parts'][0]['functionCall'])) {
+                return false;
+            }
+            return !in_array($msg['role'] ?? '', ['system', 'tool']);
+        });
     }
 }

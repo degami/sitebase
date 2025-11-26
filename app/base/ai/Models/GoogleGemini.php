@@ -87,8 +87,10 @@ class GoogleGemini extends AbstractLLMAdapter
     public function formatAssistantMessage(mixed $message, ?string $messageType = null): array
     {
         return [
-            'role' => 'assistant',
-            $messageType ?? 'contents' => $message
+            'role' => 'model',
+            'parts' => [
+                [$messageType ?? 'text' => $message]
+            ]
         ];
     }
 
@@ -171,15 +173,20 @@ class GoogleGemini extends AbstractLLMAdapter
         ];
     }
 
-    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, ?string $model = null): array
+    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, array &$history = [], ?string $model = null): array
     {
-        $messages =  [
-            (object) $this->formatUserMessage($flow->systemPrompt()),
-        ];
+        $messages = [];
+
+        $messages[] = (object) $this->formatUserMessage($flow->systemPrompt());
 
         // googlegemini does not support system messages after the first one, add schema as user message
         if ($flow->schema()) {
             $messages[] = (object) $this->formatUserMessage("Ecco il tuo schema GraphQL:\n" . $flow->schema());
+        }
+
+        // add previous history
+        foreach ($history as $msg) {
+            $messages[] = (object) $msg;
         }
 
         $messages[] =  (object) $this->formatUserMessage($userPrompt);
@@ -202,7 +209,7 @@ class GoogleGemini extends AbstractLLMAdapter
         ];
     }
 
-    public function sendFunctionResponse(string $name, array $result, ?array $tools = null, array &$history = [], ?string $id = null): array
+    public function sendFunctionResponse(string $name, array $result, ?array $tools = null, array &$history = [], ?string $model = null, ?string $id = null): array
     {
         $history[] = [
             'role' => 'tool',

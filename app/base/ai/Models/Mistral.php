@@ -139,13 +139,13 @@ class Mistral extends AbstractLLMAdapter
         ];
     }
 
-    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, ?string $model = null): array
+    public function buildFlowInitialRequest(BaseFlow $flow, string $userPrompt, array &$history = [], ?string $model = null): array
     {
-        $messages = [
-            [
-                'role' => 'system',
-                'content' => $flow->systemPrompt()
-            ],
+        $messages = [];
+
+        $messages[] = [
+            'role' => 'system',
+            'content' => $flow->systemPrompt()
         ];
 
         if ($flow->schema()) {
@@ -153,6 +153,11 @@ class Mistral extends AbstractLLMAdapter
                 'role' => 'system',
                 'content' => "Schema GraphQL disponibile:\n" . $flow->schema()
             ];
+        }
+
+        // add previous history
+        foreach ($history as $msg) {
+            $messages[] = $msg;
         }
 
         $messages[] = $this->formatUserMessage($userPrompt);
@@ -171,19 +176,19 @@ class Mistral extends AbstractLLMAdapter
         }
 
         return [
-            'model' => $this->getDefaultModel(),
+            'model' => $this->getModel($model),
             'tools' => $tools,
             'messages' => array_values($messages),
         ];
     }
 
-    public function sendFunctionResponse(string $functionName, array $result, ?array $tools = null, array &$history = [], ?string $id = null): array
+    public function sendFunctionResponse(string $functionName, array $result, ?array $tools = null, array &$history = [], ?string $model = null, ?string $id = null): array
     {
 
         $history[] = $this->formatUserMessage("Tool response for call to function $functionName".(!is_null($id)?" (id: $id)":"").": " . json_encode($result));
 
         return $this->sendRaw([
-            'model' => $this->getDefaultModel(),
+            'model' => $this->getModel($model),
             'messages' => $history
         ]);
     }

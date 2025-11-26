@@ -245,12 +245,12 @@ class ApplicationLogs extends AdminManageModelsPage
             $data
         );
     }
-
+/*
     public static function exposeDataToDashboard() : mixed
     {
         return null;
     }
-
+*/
     protected function hasLayoutSelector(): bool
     {
         return false;

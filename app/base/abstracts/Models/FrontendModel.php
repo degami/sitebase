@@ -23,6 +23,7 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Models\Block;
 use Exception;
 use Throwable;
+use App\Base\GraphQl\GraphQLExport;
 
 /**
  * A model that will be shown on frontend
@@ -114,5 +115,23 @@ abstract class FrontendModel extends BaseModel
     public Function canSaveVersions() : bool
     {
         return true;
+    }
+
+    /**
+     * gets full frontend url for object
+     *
+     * @return string
+     * @throws Exception
+     */
+    #[GraphQLExport]
+    public function getAbsoluteFrontendUrl(): string
+    {
+        $this->checkLoaded();
+
+        if (($this->getUrl() ?? $this->getUrlKey()) === null) {
+            return "";
+        }
+
+        return $this->getWebsite()->getUrl() . $this->getFrontendUrl();
     }
 }

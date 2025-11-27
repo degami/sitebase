@@ -93,7 +93,7 @@ class YouMayLikeProducts extends BaseCodeBlock
         foreach ($this->getCart($current_page)->getItems() as $item) {
             $youMayLike = array_unique_by(
                 array_merge($youMayLike, $this->getProductSuggestions($item)), 
-                fn ($el) => $el['type'] . '::' . $el['id']
+                fn ($el) => $el['modelClass'] . '::' . $el['id']
             );
         }
 
@@ -103,8 +103,9 @@ class YouMayLikeProducts extends BaseCodeBlock
 
         $suggestions = [];
         foreach ($youMayLike as $elem) {
-            if (is_subclass_of($elem['modelClass'], ProductInterface::class)) {
-                $suggestion = $this->containerCall([$elem['modelClass'], 'load'], ['id' => $elem['id']]);
+            ['modelClass' => $modelClass, 'type' => $type, 'id' => $id] = $elem;
+            if (is_subclass_of($modelClass, ProductInterface::class)) {
+                $suggestion = $this->containerCall([$modelClass, 'load'], ['id' => $id]);
 
                 if (in_array(static::getClassBasename($suggestion).'::'.$suggestion->getId(), $cartIdentifiers)) {
                     continue;
@@ -170,11 +171,11 @@ class YouMayLikeProducts extends BaseCodeBlock
         $locale     = $current_page?->getCurrentLocale() ?? App::getInstance()->getCurrentLocale();
         $website_id = App::getInstance()->getSiteData()->getCurrentWebsiteId();
 
-        $cacheKey = 'youmaylike.'.$product->getSku().'.'.$locale.'.'.$website_id;
+        $cacheKey = strtolower('youmaylike.'.static::getClassBasename($product).'.'.$product->getId().'.'.$locale.'.'.$website_id);
 
         if (App::getInstance()->getCache()->has($cacheKey)) {
             $result = (array) App::getInstance()->getCache()->get($cacheKey);
-            return array_map(fn ($el) => $el['data'], $result['docs']);
+            return array_map(fn ($el) => ['modelClass' => $el['modelClass'], 'type' => $el['type'], 'id' => $el['id']], $result['docs']);
         }
 
         /** @var FrontendModel $product */
@@ -183,7 +184,7 @@ class YouMayLikeProducts extends BaseCodeBlock
 
         App::getInstance()->getCache()->set($cacheKey, $result, 1800);
 
-        return array_map(fn ($el) => $el['data'], $result['docs']);
+        return array_map(fn ($el) => ['modelClass' => $el['modelClass'], 'type' => $el['type'], 'id' => $el['id']], $result['docs']);
     }
 
     protected function getSearchManager(string $llmCode = 'googlegemini') : AISearchManager

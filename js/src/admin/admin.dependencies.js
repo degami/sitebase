@@ -4,4 +4,5 @@
 //=include ../../../node_modules/moment/min/moment-with-locales.min.js
 //=include ./tinymce-plugin-block.js
 //=include ./tinymce-plugin-aitranslate.js
+//=include ../../../node_modules/driver.js/dist/driver.min.js
 //=include ../i18n.js

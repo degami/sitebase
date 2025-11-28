@@ -141,4 +141,26 @@ class Dashboard extends AdminPage
 
         return $this->template_data;
     }
+
+    public function getUiTourSteps(): array
+    {
+        return [
+            /*
+            [
+                'element' => '#sidebar',
+                'popover' => [
+                    'title' => __('Menu Sidebar'),
+                    'description' => __('Use the sidebar to navigate through different sections of the admin panel. Click on the icons to expand and access various features and settings.'),
+                ],
+            ],
+            [
+                'element' => 'main',
+                'popover' => [
+                    'title' => __('Quick Access Links'),
+                    'description' => __('Use these links to quickly navigate to different sections of the admin panel for managing content, users, settings, and more.'),
+                ],
+            ],
+            */
+        ];
+    }
 }

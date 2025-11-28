@@ -6,6 +6,7 @@
   "type": "module",
   "dependencies": {
     "dompurify": "^3.3.0",
+    "driver.js": "^0.9.8",
     "gallery": "^1.0.2",
     "gulp-header": "^2.0.9",
     "gulp-include": "^2.4.1",

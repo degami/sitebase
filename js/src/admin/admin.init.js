@@ -298,6 +298,42 @@
                         $elem.appAdmin('showTooltip', evt.target, __('Copied!'));
                     }
                 });
+            
+                // show driver.js tour if needed
+                if ($elem.appAdmin('getSettings').driverTourSteps.length > 0) {
+                    $elem.appAdmin('getUserUiSettings', function(data) {
+                        if (!data.tours || data.tours[$elem.appAdmin('getSettings').currentRoute] != 'shown') {
+                            const driverOptions = {
+                                showProgress: true,
+                                steps: $elem.appAdmin('getSettings').driverTourSteps,
+                                doneBtnText: __('Finish'),
+                                closeBtnText: __('Close'),
+                                nextBtnText: __('Next'),
+                                prevBtnText: __('Previous'),
+                            };
+                            console.log('Starting driver.js tour with options:', driverOptions);
+                            const driverObj = new Driver(driverOptions);
+                            driverObj.setSteps(driverOptions.steps);
+                            driverObj.start();
+
+                            /*
+                            driverObj.on('complete', function() {
+                                $elem.appAdmin('updateUserUiSettings', 
+                                    {'tour': {[ $elem.appAdmin('getSettings').currentRoute ]: 'shown'}},
+                                    function (data) { }
+                                );
+                            });
+
+                            driverObj.on('close', function() {
+                                $elem.appAdmin('updateUserUiSettings', 
+                                    {'tour': {[ $elem.appAdmin('getSettings').currentRoute ]: 'shown'}},
+                                    function (data) { }
+                                );
+                            });
+                            */
+                        }
+                    });
+                }
             });
         },
     }, allMethods); // Estende con tutti i metodi

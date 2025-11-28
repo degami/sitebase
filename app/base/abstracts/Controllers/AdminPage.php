@@ -177,7 +177,7 @@ abstract class AdminPage extends BaseHtmlPage
                     'mediaPasteUrl' => $this->getUrl('crud.app.base.controllers.admin.json.mediapaste'),
                     'currentLocale' => $this->getCurrentLocale(),
                     'defaultTinymceOptions' => FORMS_DEFAULT_TINYMCE_OPTIONS,
-                    'driverTourSteps' => $this->getUiTourSteps(),
+                    'uiTourSteps' => $this->getUiTourSteps(),
                 ]
             ) . ");"
         );

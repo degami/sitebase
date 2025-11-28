@@ -348,4 +348,15 @@ class Pages extends AdminManageFrontendModelsPage
             $data
         );
     }
+
+    public function getUiTourSteps(): array
+    {
+        if (($this->getRequest()->query->get('action') ?? 'list') == 'edit') {
+            return [
+                //@todo
+            ];
+        }
+
+        return parent::getUiTourSteps();
+    }
 }

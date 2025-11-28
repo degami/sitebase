@@ -87,7 +87,7 @@ class Deploy extends BaseExecCommand
 
         $this->exportTranslations();
 
-        $this->executeCommand("npm install && gulp 2> /dev/null");
+        $this->executeCommand("npm install && gulp build 2> /dev/null");
 
         if ($nestable_js = $this->getUtils()->httpRequest('https://raw.githubusercontent.com/degami/Nestable/master/jquery.nestable.js')) {
             @mkdir(App::getDir(App::WEBROOT) . DS . 'js' . DS . 'jquery-nestable', 0755, true);

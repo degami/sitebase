@@ -9,9 +9,7 @@
     "driver.js": "^0.9.8",
     "gallery": "^1.0.2",
     "gulp-header": "^2.0.9",
-    "gulp-include": "^2.4.1",
     "gulp-minify": "^3.1.0",
-    "gulp-uglify": "^3.0.2",
     "highlightjs": "^9.16.2",
     "is-in-viewport": "^3.0.4",
     "jquery-lazy": "^1.7.10",
@@ -22,15 +20,28 @@
     "pretty-checkbox": "^3.0.3",
     "safe-marked": "^16.0.0",
     "select2": "^4.1.0-rc.0",
+    "shepherd.js": "^14.5.1",
     "tiny-slider": "^2.9.4"
   },
   "devDependencies": {
+    "@rollup/plugin-commonjs": "^29.0.0",
+    "@rollup/plugin-node-resolve": "^16.0.3",
+    "@rollup/stream": "^3.0.1",
     "del": "^8.0.0",
-    "gulp": "^5.0.0",
+    "gulp": "^5.0.1",
+    "gulp-include": "^2.4.1",
+    "gulp-rename": "^2.1.0",
     "gulp-sass": "^5.1.0",
     "gulp-size": "^5.0.0",
+    "gulp-sourcemaps": "^3.0.0",
+    "gulp-uglify": "^3.0.2",
+    "rollup": "^4.53.3",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-node-resolve": "^5.2.0",
     "sass": "^1.80.4",
-    "terser": "^5.36.0"
+    "terser": "^5.36.0",
+    "vinyl-buffer": "^1.0.1",
+    "vinyl-source-stream": "^2.0.0"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

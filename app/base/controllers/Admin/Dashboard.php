@@ -145,22 +145,30 @@ class Dashboard extends AdminPage
     public function getUiTourSteps(): array
     {
         return [
-            /*
             [
-                'element' => '#sidebar',
-                'popover' => [
-                    'title' => __('Menu Sidebar'),
-                    'description' => __('Use the sidebar to navigate through different sections of the admin panel. Click on the icons to expand and access various features and settings.'),
+                'title' => __('Menu Sidebar'),
+                'text' => __('Use the sidebar to navigate through different sections of the admin panel. Click on the icons to expand and access various features and settings.'), // popover['description'] diventa text
+                'attachTo' => [
+                    'element' => '#sidebar',
+                    'on' => 'right',
                 ],
             ],
             [
-                'element' => 'main',
-                'popover' => [
-                    'title' => __('Quick Access Links'),
-                    'description' => __('Use these links to quickly navigate to different sections of the admin panel for managing content, users, settings, and more.'),
+                'title' => __('Logout'),
+                'text' => __('This is the logout button.'),
+                'attachTo' => [
+                    'element' => '#logout-btn',
+                    'on' => 'bottom',
                 ],
             ],
-            */
+            [
+                'title' => __('Dark theme switcher'),
+                'text' => __('This switches between dark and light theme.'),
+                'attachTo' => [
+                    'element' => '.darkmode-switch .switch',
+                    'on' => 'left',
+                ],
+            ],
         ];
     }
 }

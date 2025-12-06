@@ -39,7 +39,7 @@ $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_de
 </div>
 
 <div class="counters container-fluid">
-    <div class="row row-cols-3 justify-content-md-between">
+    <div id="links" class="row row-cols-3 justify-content-md-between">
 <?php if ($bySection): 
     $bySectionLinks = [];
     foreach ($dashboard_links as $link) {

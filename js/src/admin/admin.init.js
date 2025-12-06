@@ -305,15 +305,17 @@ $.fn.appAdmin.methods = $.extend({
                 }
             });
         
-            // show driver.js tour if needed
-            if ($elem.appAdmin('getSettings').uiTourSteps.length > 0) {
+            // show shepherd.js tour if needed
+            if ($elem.appAdmin('getSettings').uiTour.steps.length > 0) {
                 $elem.appAdmin('getUserUiSettings', function(data) {
-                    if (!data.tours || data.tours[$elem.appAdmin('getSettings').currentRoute] != 'shown') {
+                    let tourName = $elem.appAdmin('getSettings').uiTour.name || $elem.appAdmin('getSettings').currentRoute;
+                    console.log(tourName);
+                    if (!data.tours || data.tours[tourName] != 'shown') {
 
                         if (!data.tours) {
                             data.tours = {};
                         }
-                        data.tours[$elem.appAdmin('getSettings').currentRoute] = 'shown';
+                        data.tours[tourName] = 'shown';
                         const updateTourStatus = function() {
                             $elem.appAdmin('updateUserUiSettings', 
                                 {'tours': data.tours},
@@ -357,7 +359,7 @@ $.fn.appAdmin.methods = $.extend({
                         };
 
                         const tour = new Tour(tourOptions);
-                        tour.addSteps($elem.appAdmin('getSettings').uiTourSteps);
+                        tour.addSteps($elem.appAdmin('getSettings').uiTour.steps);
 
                         tour.on('complete', updateTourStatus); 
                         tour.on('cancel', updateTourStatus);

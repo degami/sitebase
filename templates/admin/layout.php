@@ -34,8 +34,10 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars());?>
         <li class="nav-item px-1">
             <div class="text-nowrap px-1 d-flex align-items-center">
                 <?= $this->sitebase()->getDarkModeSwitch($controller); ?>
-                <?= $this->sitebase()->getGravatar($current_user->email, 30, class: 'rounded-circle mr-2');?>
-                <?= $this->sitebase()->translate('Hello');?>&nbsp;<a href="<?= $this->sitebase()->getUrl('admin.users'); ?>?action=edit&user_id=<?= $current_user->id; ?>"><?= $current_user->nickname; ?></a>
+                <span id="profile">
+                    <?= $this->sitebase()->getGravatar($current_user->email, 30, class: 'rounded-circle mr-2');?>
+                    <?= $this->sitebase()->translate('Hello');?>&nbsp;<a href="<?= $this->sitebase()->getUrl('admin.users'); ?>?action=edit&user_id=<?= $current_user->id; ?>"><?= $current_user->nickname; ?></a>
+                </span>
                 <a class="btn btn-light btn-sm ml-2" id="logout-btn" href="<?= $this->sitebase()->getUrl('admin.logout');?>" title="<?= $this->sitebase()->translate('Sign out');?>">
                     <span class="d-none d-md-inline-block"><?= $this->sitebase()->translate('Sign out');?></span> <?php $this->sitebase()->drawIcon('log-out'); ?>
                 </a>

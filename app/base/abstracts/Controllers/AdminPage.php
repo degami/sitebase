@@ -177,7 +177,7 @@ abstract class AdminPage extends BaseHtmlPage
                     'mediaPasteUrl' => $this->getUrl('crud.app.base.controllers.admin.json.mediapaste'),
                     'currentLocale' => $this->getCurrentLocale(),
                     'defaultTinymceOptions' => FORMS_DEFAULT_TINYMCE_OPTIONS,
-                    'uiTourSteps' => $this->getUiTourSteps(),
+                    'uiTour' => $this->getUiTour(),
                 ]
             ) . ");"
         );
@@ -326,9 +326,41 @@ abstract class AdminPage extends BaseHtmlPage
         return $this->template_data;
     }
 
-    public function getUiTourSteps(): array
+    /**
+     * ui tour
+     * array must contain prperties
+     * - string name
+     * - array steps
+     * 
+     * @return array
+     */
+    public function getUiTour(): array
     {
-        return [];
+        return [
+            'name' => strtolower(static::getClassBasename($this)),
+            'steps' => [],
+        ];
+    }
+
+    /**
+     * defines structure for a single ui tour step
+     * 
+     * @param string $htmlSelector
+     * @param string $title
+     * @param string $text
+     * @param string $position
+     * @return array
+     */
+    protected function prepareUiStep(string $htmlSelector, string $title, string $text, string $position = 'up') : array
+    {
+        return [
+            'title' => __($title),
+            'text' => __($text),
+            'attachTo' => [
+                'element' => $htmlSelector,
+                'on' => $position,
+            ],
+        ];
     }
 
     /**

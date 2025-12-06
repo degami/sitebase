@@ -349,14 +349,40 @@ class Pages extends AdminManageFrontendModelsPage
         );
     }
 
-    public function getUiTourSteps(): array
+    protected function getActionUiTourSteps(string $action) : array
     {
-        if (($this->getRequest()->query->get('action') ?? 'list') == 'edit') {
+        if ($action == 'edit') {
             return [
-                //@todo
+                $this->prepareUiStep(
+                    '#title',
+                    'Page Title',
+                    'Page Title Here',
+                    'down'
+                ),
+                $this->prepareUiStep(
+                    '#template_name',
+                    'Page Template',
+                    'Template Selector',
+                    'down'
+                ),
+                $this->prepareUiStep(
+                    '.tinymce-container',
+                    'Page Content',
+                    'Page Content Here',
+                    'down'
+                ),
+                $this->prepareUiStep(
+                    '#nav-action-buttons',
+                    'Contextual Actions',
+                    'Contextual Actions on page',
+                    'down'
+                ),
+
+
             ];
         }
 
-        return parent::getUiTourSteps();
+        return [];
     }
+
 }

@@ -831,6 +831,78 @@ abstract class AdminManageModelsPage extends AdminFormPage
         return null;
     }
 
+    public function getUiTour(): array
+    {
+        $tourName = strtolower(static::getClassBasename($this)) . '.' . ($this->template_data['action'] ?? 'list');
+
+        $steps = [];
+        if (($this->template_data['action'] ?? 'list') == 'list') {
+            // on list action we can define uiTour steps
+
+            $baseListingSteps = [
+                $this->prepareUiStep(
+                    '#listing-table-page',
+                    'Listirng Elements',
+                    'There are your lising elements',
+                    'up'
+                ),
+                $this->prepareUiStep(
+                    '#pagination-layout-selector',
+                    'Layout Selector',
+                    'Here you can switch layour',
+                    'down'
+                ),
+                $this->prepareUiStep(
+                    '#nav-action-buttons',
+                    'Action Buttons',
+                    'Here you will find action buttons',
+                    'down'
+                ),
+                $this->prepareUiStep(
+                    'tr.selectable td:first-child',
+                    'Selector',
+                    'Here you can select elements',
+                    'right'
+                ),
+                $this->prepareUiStep(
+                    'tr.selectable td:last-child',
+                    'Element Action Buttons',
+                    'Action buttons specific to elements',
+                    'left'
+                ),
+            ];
+
+            $userTours = $this->getCurrentUser()->getUserSession()->getSessionKey('uiSettings')['tours'] ?? [];
+
+            foreach ($userTours as $tour => $status) {
+                if (str_ends_with($tour, '.list') && $status == 'shown') {
+                    // base steps can be skipped
+                    $baseListingSteps = [];
+                }
+            }
+
+            $steps = $baseListingSteps + $this->getListUiTourSteps();
+        } else {
+            // let controllers define uiTour steps on other "action" values
+            $steps = $this->getActionUiTourSteps($this->template_data['action']);
+        }
+
+        return [
+            'name' => $tourName,
+            'steps' => $steps,
+        ];
+    }
+
+    protected function getActionUiTourSteps(string $action) : array
+    {
+        return [];
+    }
+
+    protected function getListUiTourSteps() : array
+    {
+        return [];
+    }
+
     /**
      * gets object to show class name for loading
      *

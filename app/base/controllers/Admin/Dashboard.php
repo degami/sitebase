@@ -142,32 +142,41 @@ class Dashboard extends AdminPage
         return $this->template_data;
     }
 
-    public function getUiTourSteps(): array
+    public function getUiTour(): array
     {
         return [
-            [
-                'title' => __('Menu Sidebar'),
-                'text' => __('Use the sidebar to navigate through different sections of the admin panel. Click on the icons to expand and access various features and settings.'), // popover['description'] diventa text
-                'attachTo' => [
-                    'element' => '#sidebar',
-                    'on' => 'right',
-                ],
-            ],
-            [
-                'title' => __('Logout'),
-                'text' => __('This is the logout button.'),
-                'attachTo' => [
-                    'element' => '#logout-btn',
-                    'on' => 'bottom',
-                ],
-            ],
-            [
-                'title' => __('Dark theme switcher'),
-                'text' => __('This switches between dark and light theme.'),
-                'attachTo' => [
-                    'element' => '.darkmode-switch .switch',
-                    'on' => 'left',
-                ],
+            'name' => 'dashboard',
+            'steps' => [
+                $this->prepareUiStep(
+                    '#sidebar', 
+                    'Menu Sidebar', 
+                    'Use the sidebar to navigate through different sections of the admin panel. Click on the icons to expand and access various features and settings.',
+                    'right'
+                ),
+                $this->prepareUiStep(
+                    '#links', 
+                    'Section links', 
+                    'These links will guide you to the admin section. numbers of each link is the number of elements for that section.',
+                    'up'
+                ),
+                $this->prepareUiStep(
+                    '#profile', 
+                    'Profile page', 
+                    'This link heads to your profile page.',
+                    'bottom'
+                ),
+                $this->prepareUiStep(
+                    '.darkmode-switch .switch', 
+                    'Dark theme switcher', 
+                    'This switches between dark and light theme.',
+                    'left'
+                ),
+                $this->prepareUiStep(
+                    '#logout-btn', 
+                    'Logout', 
+                    'This is the logout button.',
+                    'bottom'
+                ),
             ],
         ];
     }

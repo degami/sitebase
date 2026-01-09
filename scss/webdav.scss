@@ -4,16 +4,6 @@
     width: 100%;
 }
 
-.lastModifiedColumn {
-    text-align: right;
-    max-width: 15%;
-}
-
-.sizeColumn {
-    text-align: right;
-    max-width: 10%;
-}
-
 .oi {
     font-size: 2em;
     text-shadow: 2px 2px #cecece;
@@ -26,6 +16,22 @@
         align-items: center;
     }
 }
+
+.typeColumn,
+.sizeColumn,
+.lastModifiedColumn {
+    white-space: nowrap;
+    text-align: right;;
+}
+
+.lastModifiedColumn {
+    width: 15%;
+}
+
+.sizeColumn {
+    width: 10%;
+}
+
 
 .actionsPanel {
     max-width: 90%;
@@ -52,4 +58,8 @@
             }
         }
     }
+}
+
+footer small {
+    font-size: 8px;
 }

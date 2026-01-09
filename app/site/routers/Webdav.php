@@ -26,6 +26,7 @@ use Sabre\DAV\Server;
 use Sabre\DAV\Auth\Plugin as AuthPlugin;
 use Sabre\DAV\Browser\Plugin as BrowserPlugin;
 use App\App;
+use App\Site\Webdav\Browser;
 
 /**
  * Webdav Router Class
@@ -115,7 +116,7 @@ class Webdav extends BaseRouter
         $authPlugin = new AuthPlugin($authBackend, 'Sitebase WebDAV');
         $server->addPlugin($authPlugin);
 
-        $browser = new BrowserPlugin();
+        $browser = new Browser();
         $server->addPlugin($browser);
 
         $server->setLogger($this->getLog());

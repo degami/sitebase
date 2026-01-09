@@ -1,0 +1,55 @@
+@use '../vendor/components/bootstrap/css/bootstrap.css';
+
+.nodeTable {
+    width: 100%;
+}
+
+.lastModifiedColumn {
+    text-align: right;
+    max-width: 15%;
+}
+
+.sizeColumn {
+    text-align: right;
+    max-width: 10%;
+}
+
+.oi {
+    font-size: 2em;
+    text-shadow: 2px 2px #cecece;
+    margin-right: 10px;
+}
+
+.nameColumn {
+    a {
+        display: flex;
+        align-items: center;
+    }
+}
+
+.actionsPanel {
+    max-width: 90%;
+    margin:auto;
+    margin-top: 30px;
+
+    h1 {
+        font-size: 1.5em;
+        margin-bottom: 15px;
+    }
+
+    .actions {
+        display: flex;
+        gap: 10px;
+        align-content: space-around;
+        align-items: flex-start;
+
+        form {
+            width: 50%;
+
+            h3 {
+                font-size: 1.15em;
+                margin-bottom: 10px;
+            }
+        }
+    }
+}

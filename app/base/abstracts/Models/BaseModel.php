@@ -1466,5 +1466,10 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
             'primary_key' => is_array($this->getKeyFieldValue()) ? json_encode($this->getKeyFieldValue()) : $this->getKeyFieldValue()
         ])->addOrder(['created_at' => 'DESC']);
     }
+
+    public static function isExportable() : bool
+    {
+        return false;
+    }
 }
  

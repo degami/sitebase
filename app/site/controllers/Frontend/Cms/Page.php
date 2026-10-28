@@ -148,7 +148,7 @@ class Page extends FrontendPageWithObject
             return $this->showPage($homepage_id, $route_info);
         }
 
-        if (!$browser_locale || $route_vars['lang'] == $browser_locale) {
+        if (!$browser_locale || ($route_vars['lang'] ?? null) == $browser_locale) {
             // redireting to /<browser_locale> will end into an endless loop. Throw exception
             throw new ExceptionsNotFoundException("Missing homepage for current website");
         }

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -136,7 +136,9 @@ class Config extends AdminManageModelsPage
             case 'edit':
             case 'new':
 
-                $languages = [null => $this->getUtils()->translate('All languages', locale: $this->getCurrentLocale())] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
+                $languages = [
+                    "" => $this->getUtils()->translate('All languages', locale: $this->getCurrentLocale())
+                ] + $this->getUtils()->getSiteLanguagesSelectOptions($configuration->getWebsiteId());
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
 
                 $configuration_path = $configuration_value = $configuration_website = $configuration_locale = '';

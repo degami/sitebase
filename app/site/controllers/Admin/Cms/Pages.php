@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -168,7 +168,7 @@ class Pages extends AdminManageFrontendModelsPage
                     'default_value' => $page_template_name,
                     'options' => ['' => '--'] + $templates,
                 ])->addField('content', [
-                    'type' => 'tinymce',
+                    'type' => 'hugerte',
                     'title' => 'Content',
                     'tinymce_options' => $this->getUserTinymceOptions(),
                     'default_value' => $page_content,

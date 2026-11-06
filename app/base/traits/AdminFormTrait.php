@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -245,8 +245,8 @@ trait AdminFormTrait
                             return;
                         }
                         var elementContent = $('#content').val();
-                        if (tinymce.get('content')) {
-                            elementContent = tinymce.get('content').getContent();
+                        if (hugerte.get('content')) {
+                            elementContent = hugerte.get('content').getContent();
                         }
                         var locale = $('#locale').val();
                         var promptText = '".$promptText."'.replace(':language', locale).replace(':text', elementContent);
@@ -363,7 +363,7 @@ trait AdminFormTrait
 
         $isDarkMode = $uiSettings['darkMode'] ?? $this->getEnvironment()->getVariable('ADMIN_DARK_MODE', false);
 
-        $default_options = FORMS_DEFAULT_TINYMCE_OPTIONS;
+        $default_options = FORMS_DEFAULT_WYSIWYG_OPTIONS;
 
         if ($isDarkMode) {
             $default_options['skin'] = 'oxide-dark';

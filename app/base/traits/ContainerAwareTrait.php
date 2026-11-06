@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -41,7 +41,7 @@ use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
 use Feather\Icons;
-use Gplanchat\EventManager\SharedEventEmitter;
+use Degami\EventManager\SharedEventEmitter;
 use GuzzleHttp\Client as GuzzleHttpClient;
 use Imagine\Gd\Imagine;
 use League\Plates\Engine;

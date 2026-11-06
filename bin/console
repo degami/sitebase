@@ -25,10 +25,6 @@ use \App\App;
 
 $application = new Application();
 
-// load environment variables
-//$dotenv = Dotenv\Dotenv::create(App::getDir(App::ROOT));
-//$dotenv->load();
-
 $builder = new \DI\ContainerBuilder();
 $builder->addDefinitions(App::getDir(App::CONFIG).DS.'di.php');
 

@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -17,7 +17,7 @@ use App\Base\Interfaces\EventListenerInterface;
 use App\Site\Models\DownloadableProduct;
 use App\Base\Models\Order;
 use App\Base\Models\OrderItem;
-use Gplanchat\EventManager\Event;
+use Degami\EventManager\Event;
 use App\Site\Models\UserDownload;
 use App\Base\Models\MediaElement;
 

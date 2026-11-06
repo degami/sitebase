@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -308,12 +308,23 @@ class Media extends AdminManageModelsPage
                 }
 
                 if ($this->getRequest()->query->get('page_id') || $this->getRequest()->query->get('product_id') || ($form_state['input_values']['gallery'] ?? false)) {
+/*
                     $galleryField = $this->containerMake(\App\Site\Tools\FAPI\Fields\Gallery::class, [ 'options' => [
                         'title' => 'Select an existing media',
     //                    'multiple' => true,
                     ]]);
 
                     $form->addField('gallery', $galleryField);
+*/
+                    $form->addField(
+                        'gallery',
+                        [
+                            'type' => 'gallery',
+                            'title' => 'Select an existing media',
+//                            'multiple' => true,
+                        ]
+                    );
+
                 }
 
                 $form

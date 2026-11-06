@@ -5,18 +5,30 @@ return [
     'dbname' => DI\env('DATABASE_NAME'),
     'dbuser' => DI\env('DATABASE_USER'),
     'dbpass' => DI\env('DATABASE_PASS'),
+    'smtp_host' => DI\env('SMTP_HOST'),
+    'smtp_port' => DI\env('SMTP_PORT'),
+    'smtp_enc' => DI\env('SMTP_ENC'),
+    'smtp_user' => DI\env('SMTP_USER'),
+    'smtp_pass' => DI\env('SMTP_PASS'),
+    'ses_profile' => DI\env('SES_PROFILE'),
+    'ses_region' => DI\env('SES_REGION'),
     'jwt_issuer' => 'issuer',
     'jwt_audience' => 'audience',
     'jwt_id' => 'id',
     'cache_default_driver' => 'Files',
+    'debug' => DI\env('DEBUG'),
+
+    \App\Base\Environment\Manager::class => DI\autowire(\App\Base\Environment\Manager::class),
+    'environment' => DI\get(\App\Base\Environment\Manager::class),
 
     // 'log'
-    \Monolog\Logger::class => DI\factory(function () {
+    \Monolog\Logger::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
+        $debug = boolval($c->get('environment')->getVariable('DEBUG'));
         $logpath = \App\App::getDir(\App\App::ROOT) . DS . "var" . DS . "log" . DS . "logger.log";
         $logger = new \Monolog\Logger('logger');
         $fileHandler = new \Monolog\Handler\StreamHandler(
             $logpath,
-            getenv('DEBUG') ? \Monolog\Logger::DEBUG : \Monolog\Logger::ERROR
+            $debug ? \Monolog\Logger::DEBUG : \Monolog\Logger::ERROR
         );
         $fileHandler->setFormatter(new \Monolog\Formatter\LineFormatter());
         $logger->pushHandler($fileHandler);
@@ -25,20 +37,12 @@ return [
     'log' => DI\get(\Monolog\Logger::class),
 
     // 'pdo'
-/*
-    \PDO::class => DI\autowire(\PDO::class)
-        ->constructor(
-            DI\string("mysql:dbname={dbname};host={dbhost}"),
-            DI\string('{dbuser}'),
-            DI\string('{dbpass}'),
-            []
-        ),
-*/        
-    \PDO::class => DI\Factory(function () {
-        $dbhost = getenv('DATABASE_HOST');
-        $dbname = getenv('DATABASE_NAME');
-        $dbuser = getenv('DATABASE_USER');
-        $dbpass = getenv('DATABASE_PASS');
+    \PDO::class => DI\Factory(function (\Psr\Container\ContainerInterface $c) {
+
+        $dbhost = $c->get('environment')->getVariable('DATABASE_HOST');
+        $dbname = $c->get('environment')->getVariable('DATABASE_NAME');
+        $dbuser = $c->get('environment')->getVariable('DATABASE_USER');
+        $dbpass = $c->get('environment')->getVariable('DATABASE_PASS');
 
         if (empty($dbhost) || empty($dbname) || empty($dbuser)) {
             return null;
@@ -54,10 +58,6 @@ return [
     'pdo' => DI\get(\PDO::class),
 
     // 'db'
-/*    
-    \LessQL\Database::class => DI\autowire(\LessQL\Database::class)
-        ->constructor(DI\get('pdo')),
-*/
     \LessQL\Database::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
         $pdo = $c->get('pdo');
         if ($pdo === null) {
@@ -83,7 +83,7 @@ return [
         // You may use RSA or ECDSA and all their variations (256, 384, and 512) and EdDSA over Curve25519
             new \Lcobucci\JWT\Signer\Hmac\Sha256(),
             //\Lcobucci\JWT\Signer\Ecdsa\Sha256::create(),
-            \Lcobucci\JWT\Signer\Key\LocalFileReference::file(\App\App::getDir(\App\App::ASSETS) . '/rsa_private.pem')
+            \Lcobucci\JWT\Signer\Key\InMemory::file(\App\App::getDir(\App\App::ASSETS) . '/rsa_private.pem')
         );
 
         $configuration->setValidationConstraints(
@@ -100,10 +100,6 @@ return [
     'imagine' => DI\get(\Imagine\Gd\Imagine::class),
 
     // 'schema'
-/*
-    \Degami\SqlSchema\Schema::class => DI\autowire(\Degami\SqlSchema\Schema::class)
-        ->constructor(DI\get("pdo")),
-*/
     \Degami\SqlSchema\Schema::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
         $pdo = $c->get('pdo');
         if ($pdo === null) {
@@ -128,10 +124,6 @@ return [
     'debugbar' => DI\get(\DebugBar\StandardDebugBar::class),
 
     // 'traceable_pdo'
-/*
-    \DebugBar\DataCollector\PDO\TraceablePDO::class => DI\autowire(DebugBar\DataCollector\PDO\TraceablePDO::class)
-        ->constructor(DI\get('pdo')),
-*/
     \DebugBar\DataCollector\PDO\TraceablePDO::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
         $pdo = $c->get('pdo');
         if ($pdo === null) {
@@ -154,8 +146,8 @@ return [
     'monolog_collector' => DI\get(\DebugBar\Bridge\MonologCollector::class),
 
     // 'event_manager'
-    \Gplanchat\EventManager\SharedEventEmitter::class => DI\create(\Gplanchat\EventManager\SharedEventEmitter::class),
-    'event_manager' => DI\get(\Gplanchat\EventManager\SharedEventEmitter::class),
+    \Degami\EventManager\SharedEventEmitter::class => DI\create(\Degami\EventManager\SharedEventEmitter::class),
+    'event_manager' => DI\get(\Degami\EventManager\SharedEventEmitter::class),
 
     // 'site_data'
     \App\Base\Tools\Utils\SiteData::class => DI\autowire(\App\Base\Tools\Utils\SiteData::class),
@@ -174,17 +166,23 @@ return [
     'assets' => DI\get(\App\Base\Tools\Assets\Manager::class),
 
     // 'smtp_mailer'
-    \Swift_SmtpTransport::class => DI\factory(function () {
+    \Swift_SmtpTransport::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
+        $smtp_host = $c->get('environment')->getVariable('SMTP_HOST');
+        $smtp_port = $c->get('environment')->getVariable('SMTP_PORT');
+        $smtp_enc = $c->get('environment')->getVariable('SMTP_ENC');
+        $smtp_user = $c->get('environment')->getVariable('SMTP_USER');
+        $smtp_pass = $c->get('environment')->getVariable('SMTP_PASS');
+
         $transport = new \Swift_SmtpTransport(
-            getenv("SMTP_HOST"),
-            getenv('SMTP_PORT'),
-            getenv('SMTP_ENC')
+            $smtp_host,
+            $smtp_port,
+            $smtp_enc
         );
-        if (!empty(getenv('SMTP_USER'))) {
-            $transport->setUsername(getenv('SMTP_USER'));
+        if (!empty($smtp_user)) {
+            $transport->setUsername($smtp_user);
         }
-        if (!empty(getenv('SMTP_PASS'))) {
-            $transport->setPassword(getenv('SMTP_PASS'));
+        if (!empty($smtp_pass)) {
+            $transport->setPassword($smtp_pass);
         }
 
         $mailer = new \Swift_Mailer($transport);
@@ -193,11 +191,13 @@ return [
     'smtp_mailer' => DI\get(\Swift_SmtpTransport::class),
 
     // 'ses_mailer'
-    \Aws\Ses\SesClient::class => DI\factory(function () {
+    \Aws\Ses\SesClient::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
+        $ses_profile = $c->get('environment')->getVariable('SES_PROFILE');
+        $ses_region = $c->get('environment')->getVariable('SES_REGION');
         $SesClient = new \Aws\Ses\SesClient([
-            'profile' => getenv('SES_PROFILE') ?? 'default',
+            'profile' => $ses_profile ?? 'default',
             'version' => '2010-12-01',
-            'region'  => getenv('SES_REGION')
+            'region'  => $ses_region
         ]);
 
         return $SesClient;
@@ -239,9 +239,6 @@ return [
 
     \App\Base\Tools\AI\Manager::class => DI\autowire(\App\Base\Tools\AI\Manager::class),
     'ai' => DI\get(\App\Base\Tools\AI\Manager::class),
-
-    \App\Base\Environment\Manager::class => DI\autowire(\App\Base\Environment\Manager::class),
-    'environment' => DI\get(\App\Base\Environment\Manager::class),
 
     \App\Base\Tools\Utils\Geocoder::class => DI\autowire(\App\Base\Tools\Utils\Geocoder::class),
     'geocoder' => DI\get(\App\Base\Tools\Utils\Geocoder::class),

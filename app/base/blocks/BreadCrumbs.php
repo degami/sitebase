@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -374,7 +374,8 @@ class BreadCrumbs extends BaseCodeBlock
      */
     public static function getRouteGroup(): ?string
     {
-        return (trim(getenv('ADMINPAGES_GROUP')) != null) ? '/' . getenv('ADMINPAGES_GROUP') : null;
+        $group = App::getInstance()->getEnvironment()->getVariable('ADMINPAGES_GROUP');
+        return $group ? '/' . $group : null;
     }
 
 

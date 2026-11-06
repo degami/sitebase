@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -132,7 +132,7 @@ class DownloadableProducts extends AdminManageProductsPage
                     'default_value' => $product_title,
                     'validate' => ['required'],
                 ])->addField('content', [
-                    'type' => 'tinymce',
+                    'type' => 'hugerte',
                     'title' => 'Content',
                     'tinymce_options' => $this->getUserTinymceOptions(),
                     'default_value' => $product_content,

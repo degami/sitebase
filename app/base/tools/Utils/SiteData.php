@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -566,12 +566,14 @@ class SiteData extends ContainerAwareObject
 
             $pageBlocks = [];
             foreach (Block::getCollection()->where(['locale' => [$locale, null], 'website_id' => [$website_id, null]], ['order' => 'asc']) as $block) {
+                if ($block->getRegion() != null) {
                 /** @var Block $block */
-                if (!isset($pageBlocks[$block->getRegion()])) {
-                    $pageBlocks[$block->getRegion()] = [];
+                    if (!isset($pageBlocks[$block->getRegion()])) {
+                        $pageBlocks[$block->getRegion()] = [];
+                    }
+                    $block->loadInstance();
+                    $pageBlocks[$block->getRegion()][] = $block;
                 }
-                $block->loadInstance();
-                $pageBlocks[$block->getRegion()][] = $block;
             }
         }
 

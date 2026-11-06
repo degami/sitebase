@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -21,7 +21,7 @@ use App\Base\Models\OrderShipment;
 use App\Base\Models\OrderStatus;
 use App\Base\Models\OrderStatusChange;
 use App\Base\Models\Website;
-use Gplanchat\EventManager\Event;
+use Degami\EventManager\Event;
 use Exception;
 
 class OrderEventListener implements EventListenerInterface

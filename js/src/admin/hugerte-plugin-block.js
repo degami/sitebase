@@ -1,4 +1,4 @@
-tinymce.PluginManager.add('block_plugin', function(editor, url) {
+hugerte.PluginManager.add('block_plugin', function(editor, url) {
     // Bottone per inserire un blocco
     editor.ui.registry.addButton('insert_block', {
         tooltip: 'Insert a Block',

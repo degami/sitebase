@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Tools\FAPI\Fields;
+namespace Degami\PHPFormsApi\Fields;
 
 use App\App;
 use Degami\PHPFormsApi\Abstracts\Base\Field;

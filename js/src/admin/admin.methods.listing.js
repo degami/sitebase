@@ -188,7 +188,7 @@ window.appAdminMethodsListing = {
             .off('submit')
             .on('submit', function(evt) {
                 evt.preventDefault();
-                if (window.tinymce) tinymce.triggerSave();
+                if (window.hugerte) hugerte.triggerSave();
             })
             .find('div.form-item')
             .each(function() {
@@ -219,8 +219,8 @@ window.appAdminMethodsListing = {
                         const $ta = $(this);
                         $ta.prop('disabled', !enable);
 
-                        if (window.tinymce) {
-                            const editor = tinymce.get($ta.attr('id'));
+                        if (window.hugerte) {
+                            const editor = hugerte.get($ta.attr('id'));
                             if (editor) {
                                 if (editor.mode && typeof editor.mode.set === 'function') {
                                     editor.mode.set(enable ? 'design' : 'readonly');

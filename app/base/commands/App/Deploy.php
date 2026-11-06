@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -142,7 +142,7 @@ class Deploy extends BaseExecCommand
                 App::getDir(App::ROOT) . DS . 'vendor' . DS . 'components' . DS . 'jqueryui' => App::getDir('pub') . DS . 'jqueryui',
                 App::getDir(App::ROOT) . DS . 'vendor' . DS . 'components' . DS . 'jquery' => App::getDir('pub') . DS . 'jquery',
                 App::getDir(App::ROOT) . DS . 'vendor' . DS . 'components' . DS . 'font-awesome' . DS . 'webfonts' => App::getDir('pub') . DS . 'webfonts',
-                App::getDir(App::ROOT) . DS . 'vendor' . DS . 'tinymce' . DS . 'tinymce' => App::getDir('pub') . DS . 'tinymce',
+                App::getDir(App::ROOT) . DS . 'vendor' . DS . 'hugerte' . DS . 'hugerte' => App::getDir('pub') . DS . 'hugerte',
                 App::getDir(App::ROOT) . DS . 'node_modules' . DS . 'highlightjs' . DS . 'styles' . DS . 'default.css' => App::getDir('pub') . DS . 'css' . DS . 'highlight.css',
 
                 App::getDir(App::FLAGS) => App::getDir('pub') . DS . 'flags',
@@ -160,7 +160,7 @@ class Deploy extends BaseExecCommand
                 '..' . DS . 'vendor' . DS . 'components' . DS . 'jqueryui' => App::getDir('pub') . DS . 'jqueryui',
                 '..' . DS . 'vendor' . DS . 'components' . DS . 'jquery' => App::getDir('pub') . DS . 'jquery',
                 '..' . DS . 'vendor' . DS . 'components' . DS . 'font-awesome' . DS . 'webfonts' => App::getDir('pub') . DS . 'webfonts',
-                '..' . DS . 'vendor' . DS . 'tinymce' . DS . 'tinymce' => App::getDir('pub') . DS . 'tinymce',
+                '..' . DS . 'vendor' . DS . 'hugerte' . DS . 'hugerte' => App::getDir('pub') . DS . 'hugerte',
                 '..' . DS . '..' . DS . 'node_modules' . DS . 'highlightjs' . DS . 'styles' . DS . 'default.css' => App::getDir('pub') . DS . 'css' . DS . 'highlight.css',
 
                 '..' . DS . 'assets' . DS . 'flags' => App::getDir('pub') . DS . 'flags',

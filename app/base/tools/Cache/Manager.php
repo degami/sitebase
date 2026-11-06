@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -77,7 +77,8 @@ class Manager extends ContainerAwareObject implements CacheInterface
                 $config = new \Phpfastcache\Drivers\Files\Config([
                     'path' => \App\App::getDir(\App\App::ROOT) . DS . 'var' . DS . 'cache',
                 ]);
-                $config->setSecurityKey(str_replace(" ", "_", strtolower(getenv('APPNAME'))));
+                $appname = $this->getEnvironment()->getVariable('APPNAME', 'sitebase');
+                $config->setSecurityKey(str_replace(" ", "_", strtolower($appname)));
                 $cache = \Phpfastcache\CacheManager::getInstance('Files', $config);    
             }
 

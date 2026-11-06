@@ -18,7 +18,7 @@ require('shepherd.js');
 require('./i18n.js');
 
 require('./admin/admin.dependencies.js');
-require('./admin/admin.tinymce.js');
+require('./admin/admin.hugerte.js');
 require('./admin/admin.defaults.js');
 
 require('./admin/admin.methods.base.js');

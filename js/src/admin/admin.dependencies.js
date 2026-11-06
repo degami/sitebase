@@ -1,2 +1,2 @@
-//=include ./tinymce-plugin-block.js
-//=include ./tinymce-plugin-aitranslate.js
+//=include ./hugerte-plugin-block.js
+//=include ./hugerte-plugin-aitranslate.js

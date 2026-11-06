@@ -1,7 +1,7 @@
 const $ = require('jquery');
 
-if (window.tinymce && typeof tinymce.on === 'function') {
-    tinymce.on('AddEditor', function(e) {
+if (window.hugerte && typeof hugerte.on === 'function') {
+    hugerte.on('AddEditor', function(e) {
         const ed = e && (e.editor || e);
         if (!ed || !ed.id) return;
 

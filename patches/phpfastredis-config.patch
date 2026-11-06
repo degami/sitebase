@@ -1,0 +1,11 @@
+--- a/lib/Phpfastcache/Drivers/Redis/Config.php	2026-11-05 22:03:24.722451597 +0100
++++ b/lib/Phpfastcache/Drivers/Redis/Config.php	2026-11-05 22:05:42.815537330 +0100
+@@ -98,7 +98,7 @@
+      * @return static
+      * @throws PhpfastcacheLogicException
+      */
+-    public function setDatabase(int $database = null): static
++    public function setDatabase(?int $database = null): static
+     {
+         return $this->setProperty('database', $database);
+     }

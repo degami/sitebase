@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -160,20 +160,20 @@ class Manager
 
     protected function loadDotEnv() : self
     {
-        // load environment variables
-        $dotenv = Dotenv::create(App::getDir(App::ROOT));
-        $dotenv->load();
+        if (!empty($this->envVariables)) {
+            return $this;
+        }
 
-        if ($dotenv) {
-                $this->envVariables = array_combine(
-                $dotenv->getEnvironmentVariableNames(),
-                array_map(
-                    'getenv',
-                    $dotenv->getEnvironmentVariableNames()
-                )
-            );    
+        // load environment variables
+        $dotenv = Dotenv::createImmutable(App::getDir(App::ROOT));
+        
+        $loadedVariables = $dotenv->safeLoad();
+
+        if (!empty($loadedVariables)) {
+            $this->envVariables = $loadedVariables;
         } else {
-            $this->envVariables = $_ENV;
+            // Fallback su $_ENV o $_SERVER se load() è vuoto (es. seconda esecuzione)
+            $this->envVariables = !empty($_ENV) ? $_ENV : $_SERVER;
         }
 
         return $this;

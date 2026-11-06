@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,6 +13,7 @@
 
 namespace App\Base\Controllers\Frontend\Users;
 
+use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -66,7 +67,8 @@ class PasswordForgot extends FormPage
      */
     public static function getRouteGroup(): ?string
     {
-        return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/' . getenv('LOGGEDPAGES_GROUP') : null;
+        $group = App::getInstance()->getEnvironment()->getVariable('LOGGEDPAGES_GROUP');
+        return $group ? '/' . $group : null;
     }
 
     /**

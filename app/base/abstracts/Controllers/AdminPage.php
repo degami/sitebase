@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -176,7 +176,7 @@ abstract class AdminPage extends BaseHtmlPage
                     'massEditUrl' => $this->getUrl('crud.app.base.controllers.admin.json.massedit'),
                     'mediaPasteUrl' => $this->getUrl('crud.app.base.controllers.admin.json.mediapaste'),
                     'currentLocale' => $this->getCurrentLocale(),
-                    'defaultTinymceOptions' => FORMS_DEFAULT_TINYMCE_OPTIONS,
+                    'defaultWysiwygOptions' => FORMS_DEFAULT_WYSIWYG_OPTIONS,
                     'uiTour' => $this->getUiTour(),
                 ]
             ) . ");"

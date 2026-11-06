@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -90,19 +90,13 @@ class BaseCommand extends SymfonyCommand
     {
         // load environment variables
         try {
-            $dotenv = Dotenv::create(App::getDir(App::ROOT));
-            $dotenv->load();
+            $dotenv = Dotenv::createImmutable(App::getDir(App::ROOT));
+            $loadedVariables = $dotenv->load(); 
     
             $this->getContainer()->set(
-                'env',
-                array_combine(
-                    $dotenv->getEnvironmentVariableNames(),
-                    array_map(
-                        'getenv',
-                        $dotenv->getEnvironmentVariableNames()
-                    )
-                )
-            );    
+                'env', $loadedVariables
+            );
+
         } catch (\Exception $e) {
             $this->getContainer()->set('env', $_ENV);
         }

@@ -16,7 +16,7 @@ This project is open source licenses using GPL. See LICENSE.txt for more info.
 
 ## Requirements:
 
-  * PHP 8.3+
+  * PHP 8.5+
   * composer
   * npm + gulp
   * compass
@@ -93,5 +93,3 @@ If you think that this project can be useful, contributing in any way is welcome
 - npm install
 - npm run build
 - bin/console config:edit -p app/frontend/themename --value vue_theme --no-interaction
-
-

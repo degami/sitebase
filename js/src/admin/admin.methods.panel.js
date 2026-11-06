@@ -28,8 +28,8 @@ window.appAdminMethodsPanel = {
 
         $('.sidepanel textarea').each(function() {
             const id = $(this).attr('id');
-            if (id && tinymce.get(id)) {
-                tinymce.get(id).remove();
+            if (id && hugerte.get(id)) {
+                hugerte.get(id).remove();
             }
         });
 

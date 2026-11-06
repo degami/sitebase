@@ -1,4 +1,4 @@
-tinymce.PluginManager.add('ai_translate_plugin', function(editor, url) {
+hugerte.PluginManager.add('ai_translate_plugin', function(editor, url) {
 
     function translateWithAI(preferredAI) {
         const elementContent = editor.getContent();

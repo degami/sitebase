@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -13,6 +13,7 @@
 
 namespace App\Base\Abstracts\Controllers;
 
+use App\App;
 use App\Base\Traits\FrontendPageTrait;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
@@ -87,7 +88,8 @@ abstract class LoggedUserPage extends FrontendPage
      */
     public static function getRouteGroup(): ?string
     {
-        return (trim(getenv('LOGGEDPAGES_GROUP')) != null) ? '/' . getenv('LOGGEDPAGES_GROUP') : null;
+        $group = App::getInstance()->getEnvironment()->getVariable('LOGGEDPAGES_GROUP');
+        return $group ? '/' . $group : null;
     }
 
     /**

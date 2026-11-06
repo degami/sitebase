@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -15,7 +15,7 @@ namespace App\Site\EventListeners\GraphQL;
 
 use App\App;
 use App\Base\Interfaces\EventListenerInterface;
-use Gplanchat\EventManager\Event;
+use Degami\EventManager\Event;
 use GraphQL\Type\Definition\Type;
 use GraphQL\Type\Definition\ResolveInfo;
 use App\Site\Models\Contact;

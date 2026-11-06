@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -537,7 +537,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
             $debugbar['time']->startMeasure($measure_key);
         }
 
-        $page = $request?->get('page') ?? 0;
+        $page = $request?->query?->get('page') ?? 0;
         $start = (int)$page * $page_size;
 
         $total = $this->count();

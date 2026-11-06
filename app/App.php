@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -19,7 +19,7 @@ use DI\ContainerBuilder;
 use Symfony\Component\HttpFoundation\Response;
 use FastRoute\Dispatcher;
 use Psr\Container\ContainerInterface;
-use Gplanchat\EventManager\Event;
+use Degami\EventManager\Event;
 use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
 use App\Base\Exceptions\OfflineException;
@@ -516,9 +516,23 @@ class App
      */
     public function setCurrentLocale(?string $locale = null): App
     {
-        $this->current_locale = $locale;
+        $this->current_locale = $this->validateLocale($locale);
 
         return $this;
+    }
+
+    protected function validateLocale(?string $locale = null): ?string
+    {
+        if ($locale === null) {
+            return null;
+        }
+
+        $available_locales = $this->getUtils()->getSiteLanguagesSelectOptions($this->getSiteData()->getCurrentWebsiteId());
+        if (!array_key_exists($locale, $available_locales)) {
+            return null;
+        }
+
+        return $locale;
     }
 
     /**

@@ -83,19 +83,19 @@ $.fn.appAdmin.methods = $.extend({
                         //document.location.reload();
                         $('body').toggleClass('dark-mode');
 
-                        if (typeof tinymce === 'undefined' || !tinymce.activeEditor) {
+                        if (typeof hugerte === 'undefined' || !hugerte.activeEditor) {
                             return;
                         }
 
-                        const activeEditor = tinymce.activeEditor;
+                        const activeEditor = hugerte.activeEditor;
                         const textareaId = activeEditor.id; // ID del textarea originale
                         const content = activeEditor.getContent();
-                        const defaultOptions = $elem.appAdmin('getSettings').defaultTinymceOptions || {};
+                        const defaultOptions = $elem.appAdmin('getSettings').defaultWysiwygOptions || {};
 
                         activeEditor.remove();
 
                         setTimeout(() => {
-                            tinymce.init({
+                            hugerte.init({
                                 ...defaultOptions,
                                 selector: `#${textareaId}`,
                                 skin: isDarkMode ? 'oxide-dark' : 'oxide',

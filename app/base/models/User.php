@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -215,21 +215,22 @@ class User extends AccountModel
 
         $userData += $extraData;
 
-        $builder
-        ->issuedBy(App::getInstance()->getContainer()->get('jwt_issuer'))
-        ->permittedFor(App::getInstance()->getContainer()->get('jwt_audience'))
-        ->identifiedBy($this->calcTokenId())
-        // Configures the id (jti claim), replicating as a header item
-        ->issuedAt(new \DateTimeImmutable())
-        // Configures the time that the token was issue (iat claim)
-        ->canOnlyBeUsedAfter(new \DateTimeImmutable())
-        // Configures the time that the token can be used (nbf claim)
-        ->expiresAt(new \DateTimeImmutable("now +1 hour"))
-        // Configures the expiration time of the token (exp claim)
-        ->withClaim('uid', $this->getId())
-        // Configures a new claim, called "uid"
-        ->withClaim('username', $this->getUsername())
-        ->withClaim('userdata', (object)$userData);
+        // update builder variable as methods are immutable and return a new instance
+        $builder =  $builder
+            ->issuedBy(App::getInstance()->getContainer()->get('jwt_issuer'))
+            ->permittedFor(App::getInstance()->getContainer()->get('jwt_audience'))
+            ->identifiedBy($this->calcTokenId())
+            // Configures the id (jti claim), replicating as a header item
+            ->issuedAt(new \DateTimeImmutable())
+            // Configures the time that the token was issue (iat claim)
+            ->canOnlyBeUsedAfter(new \DateTimeImmutable())
+            // Configures the time that the token can be used (nbf claim)
+            ->expiresAt(new \DateTimeImmutable("now +1 hour"))
+            // Configures the expiration time of the token (exp claim)
+            ->withClaim('uid', $this->getId())
+            // Configures a new claim, called "uid"
+            ->withClaim('username', $this->getUsername())
+            ->withClaim('userdata', (object)$userData);
 
         /** @var \Lcobucci\JWT\Configuration $configuration */
         $configuration = App::getInstance()->getContainer()->get('jwt:configuration');

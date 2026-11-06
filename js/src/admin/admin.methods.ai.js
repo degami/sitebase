@@ -166,8 +166,8 @@ window.appAdminMethodsAI = {
                                 $target.val(data.text);
                             } else if ($target.is('div,p,span,li,textarea')) {
                                 $target.html(data.text);
-                                if (tinymce.get($target.attr('id'))) {
-                                    tinymce.get($target.attr('id')).setContent(data.text);
+                                if (hugerte.get($target.attr('id'))) {
+                                    hugerte.get($target.attr('id')).setContent(data.text);
                                 }
                             }
                         }

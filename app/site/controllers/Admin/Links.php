@@ -2,7 +2,7 @@
 
 /**
  * SiteBase
- * PHP Version 8.3
+ * PHP Version 8.5
  *
  * @category CMS / Framework
  * @package  Degami\Sitebase
@@ -155,7 +155,7 @@ class Links extends AdminManageFrontendModelsPage
                     'default_value' => $link_email,
                 ])
                 ->addField('description', [
-                    'type' => 'tinymce',
+                    'type' => 'hugerte',
                     'title' => 'Description',
                     'tinymce_options' => $this->getUserTinymceOptions(),
                     'default_value' => $link_description,

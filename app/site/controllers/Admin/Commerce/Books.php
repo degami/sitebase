@@ -128,7 +128,8 @@ class Books extends AdminManageProductsPage
                 ])->addField('content', [
                     'type' => 'hugerte',
                     'title' => 'Content',
-                    'tinymce_options' => $this->getUserTinymceOptions(),
+                    'wysiwyg_options' => $this->getUserWysiwygOptions(),
+                    'wysiwyg_lib_path' => $this->getAssets()->assetUrl('/hugerte/hugerte.js'),
                     'default_value' => $product_content,
                     'rows' => 20,
                 ])->addField('price', [

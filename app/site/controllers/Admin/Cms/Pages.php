@@ -170,7 +170,8 @@ class Pages extends AdminManageFrontendModelsPage
                 ])->addField('content', [
                     'type' => 'hugerte',
                     'title' => 'Content',
-                    'tinymce_options' => $this->getUserTinymceOptions(),
+                    'wysiwyg_options' => $this->getUserWysiwygOptions(),
+                    'wysiwyg_lib_path' => $this->getAssets()->assetUrl('/hugerte/hugerte.js'),
                     'default_value' => $page_content,
                     'rows' => 20,
                 ]);
@@ -366,7 +367,7 @@ class Pages extends AdminManageFrontendModelsPage
                     'down'
                 ),
                 $this->prepareUiStep(
-                    '.tinymce-container',
+                    '.hugerte-container',
                     'Page Content',
                     'Page Content Here',
                     'down'

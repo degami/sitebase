@@ -356,7 +356,7 @@ trait AdminFormTrait
         return $form;
     }
 
-    protected function getUserTinymceOptions(): array
+    protected function getUserWysiwygOptions(): array
     {
         $user = App::getInstance()->getAuth()->getCurrentUser();
         $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
@@ -370,8 +370,8 @@ trait AdminFormTrait
             $default_options['content_css'] = 'dark';
         }
 
-        if (isset($user_settings['tinymce_options']) && is_array($user_settings['tinymce_options'])) {
-            return array_merge($default_options, $user_settings['tinymce_options']);
+        if (isset($user_settings['wysiwig_options']) && is_array($user_settings['wysiwig_options'])) {
+            return array_merge($default_options, $user_settings['wysiwig_options']);
         }
 
         return $default_options;

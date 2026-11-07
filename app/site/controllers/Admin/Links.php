@@ -157,7 +157,8 @@ class Links extends AdminManageFrontendModelsPage
                 ->addField('description', [
                     'type' => 'hugerte',
                     'title' => 'Description',
-                    'tinymce_options' => $this->getUserTinymceOptions(),
+                    'wysiwyg_options' => $this->getUserWysiwygOptions(),
+                    'wysiwyg_lib_path' => $this->getAssets()->assetUrl('/hugerte/hugerte.js'),
                     'default_value' => $link_description,
                     'rows' => 20,
                 ])->addField('active', [

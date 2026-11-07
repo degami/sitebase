@@ -153,7 +153,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 ])->addField('content', [
                     'type' => 'hugerte',
                     'title' => 'Content',
-                    'tinymce_options' => $this->getUserTinymceOptions(),
+                    'wysiwyg_options' => $this->getUserWysiwygOptions(),
+                    'wysiwyg_lib_path' => $this->getAssets()->assetUrl('/hugerte/hugerte.js'),
                     'default_value' => $term_content,
                     'rows' => 2,
                 ])->addField('parent_id', [

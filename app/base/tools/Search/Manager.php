@@ -16,10 +16,12 @@ namespace App\Base\Tools\Search;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\FrontendModel;
-use Elasticsearch\Client as ElasticSearchClient;
+use OpenSearch\Client as SearchClient;
+use OpenSearch\ClientBuilder;
 use App\Base\Tools\Plates\SiteBase;
 use InvalidArgumentException;
 use App\Base\Models\ProgressManagerProcess;
+use App\Base\Exceptions\NotFoundException;
 use App\App;
 
 
@@ -34,7 +36,7 @@ class Manager extends ContainerAwareObject
     public const MAX_ELEMENTS_PER_QUERY = 10000;
     public const DEFAULT_SCROLL_TIME = '1m';
 
-    protected ?ElasticSearchClient $client = null;
+    protected ?SearchClient $client = null;
 
     /**
      * @var string|null
@@ -72,23 +74,19 @@ class Manager extends ContainerAwareObject
     }
 
     /**
-     * Retrieves the Elasticsearch client instance.
+     * Retrieves the SearchClient client instance.
      *
-     * @return ElasticSearchClient Returns an instance of the Elasticsearch client.
+     * @return SearchClient Returns an instance of the Elasticsearch client.
      */
-    protected function getClient() : ElasticSearchClient
+    protected function getClient() : SearchClient
     {
         if (is_null($this->client)) {
             $host = $this->getEnvironment()->getVariable('ELASTICSEARCH_HOST', 'localhost');
             $port = $this->getEnvironment()->getVariable('ELASTICSEARCH_PORT', '9200');
-    
-            $hosts = [
-                $host.':'.$port,
-            ];
-    
-            $this->client = \Elasticsearch\ClientBuilder::create()
-            ->setHosts($hosts)
-            ->build();
+
+            $this->client = ClientBuilder::create()
+                ->setHosts([$host.':'.$port])
+                ->build();
         }
 
         return $this->client;
@@ -102,12 +100,10 @@ class Manager extends ContainerAwareObject
     public function checkService() : bool
     {
         try {
-            $client = $this->getClient();
-
-            return @$client->ping();
-        } catch (\Throwable $e) {}
-
-        return false;
+            return (bool) $this->getClient()->ping();
+        } catch (\Throwable $e) {
+            return false;
+        }
     }
 
     /**

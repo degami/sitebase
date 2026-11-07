@@ -51,7 +51,7 @@ class Gallery extends Field
      *
      * @return string|BaseElement the field html
      */
-    public function renderField(Form $form) // renders html
+    public function renderField(Form $form) : TagElement|string // renders html
     {
         $id = $this->getHtmlId();
 
@@ -118,7 +118,7 @@ class Gallery extends Field
      *
      * @param Form $form form object
      */
-    public function preRender(Form $form)
+    public function preRender(Form $form) : void
     {
         if ($this->pre_rendered == true) {
             return;

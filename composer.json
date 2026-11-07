@@ -52,7 +52,7 @@
         "spatie/db-dumper": "^3.7",
         "stidges/country-flags": "^2.0",
         "spatie/array-to-xml": "^3.3",
-        "elasticsearch/elasticsearch": "~7.0",
+        "opensearch-project/opensearch-php": "^2.7",
         "mathiasverraes/classfunctions": "^1.1@dev",
         "phpgangsta/googleauthenticator": "dev-master",
         "cweagans/composer-patches": "^2.0",

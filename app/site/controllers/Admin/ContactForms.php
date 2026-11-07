@@ -264,7 +264,8 @@ class ContactForms extends AdminManageFrontendModelsPage
                 ->addField('content', [
                     'type' => 'hugerte',
                     'title' => 'Content',
-                    'tinymce_options' => $this->getUserTinymceOptions(),
+                    'wysiwyg_options' => $this->getUserWysiwygOptions(),
+                    'wysiwyg_lib_path' => $this->getAssets()->assetUrl('/hugerte/hugerte.js'),
                     'default_value' => $contact_content,
                     'rows' => 20,
                 ]);

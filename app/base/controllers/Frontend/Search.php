@@ -132,19 +132,15 @@ class Search extends FrontendPageWithLang
             return ['total' => 0, 'docs' => []];
         }
 
-        try {
-            return $this->getSearch()
-                ->addAndCondition('website_id', $this->getSiteData()->getCurrentWebsiteId())
-                ->addAndCondition('locale', $this->getCurrentLocale())
-                ->addOrCondition('content', ':match|'.$search_query)
-                ->addOrCondition('title', ':match|'.$search_query)
-                //->addOrCondition('date', ':match|'.$search_query) // cannot search on date field as format must be yyyy-MM-dd HH:mm:ss
-                ->addSort('created_at', 'desc')
-                ->addSort('id', 'asc')
-                ->searchData($page);
-        } catch (BasicException | DependencyException | NotFoundException $e) { throw $e; };
-
-        return ['total' => 0, 'docs' => []];
+        return $this->getSearch()
+            ->addAndCondition('website_id', $this->getSiteData()->getCurrentWebsiteId())
+            ->addAndCondition('locale', $this->getCurrentLocale())
+            ->addOrCondition('content', ':match|'.$search_query)
+            ->addOrCondition('title', ':match|'.$search_query)
+            //->addOrCondition('date', ':match|'.$search_query) // cannot search on date field as format must be yyyy-MM-dd HH:mm:ss
+            ->addSort('created_at', 'desc')
+            ->addSort('id', 'asc')
+            ->searchData($page);
     }
 
     /**

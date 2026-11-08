@@ -13,7 +13,6 @@
 
 namespace App\Base\Controllers\Admin;
 
-use App\App;
 use App\Base\Exceptions\PermissionDeniedException;
 use App\Base\Traits\AdminFormTrait;
 use App\Base\Models\Rewrite;
@@ -26,7 +25,6 @@ use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
-use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Abstracts\Controllers\AdminFormPage;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
@@ -59,10 +57,7 @@ class Blocks extends AdminManageModelsPage
     ) {
         AdminFormPage::__construct($container, $request, $route_info);
         if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
-            $blockClasses = array_merge(
-                ClassFinder::getClassesInNamespace(App::BASE_BLOCKS_NAMESPACE), 
-                ClassFinder::getClassesInNamespace(App::BLOCKS_NAMESPACE)
-            );
+            $blockClasses = $this->getClassFinder()->findBlockClasses();
 
             foreach ($blockClasses as $blockClass) {
                 $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();

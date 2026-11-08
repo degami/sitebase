@@ -25,7 +25,6 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Degami\Basics\Html\TagElement;
 use App\Base\Interfaces\Commerce\PaymentMethodInterface;
-use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Abstracts\Controllers\AdminFormPage;
 use Degami\PHPFormsApi as FAPI;
 use Symfony\Component\HttpFoundation\Response;
@@ -226,14 +225,12 @@ class PaymentMethods extends AdminFormPage
 
     protected function getPaymentMethods() : array
     {
-        $out = array_map(function($paymentClassName) {
-            return $this->containerMake($paymentClassName);
-        }, array_filter(array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-        ), function($className) {
-            return is_subclass_of($className, PaymentMethodInterface::class);
-        }));
+        $out = array_map(
+            function($paymentClassName) {
+                return $this->containerMake($paymentClassName);
+            }, 
+            $this->getClassFinder()->findPaymentMethodClasses()
+        );
 
         return array_combine(array_map(fn ($el) => $el->getCode(), $out), $out);
     }

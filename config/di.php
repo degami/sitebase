@@ -21,6 +21,9 @@ return [
     \App\Base\Environment\Manager::class => DI\autowire(\App\Base\Environment\Manager::class),
     'environment' => DI\get(\App\Base\Environment\Manager::class),
 
+    \App\Base\Tools\Utils\ClassFinder::class => DI\autowire(\App\Base\Tools\Utils\ClassFinder::class),
+    'classfinder' => DI\get(\App\Base\Tools\Utils\ClassFinder::class),
+
     // 'log'
     \Monolog\Logger::class => DI\factory(function (\Psr\Container\ContainerInterface $c) {
         $debug = boolval($c->get('environment')->getVariable('DEBUG'));

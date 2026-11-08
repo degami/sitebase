@@ -39,7 +39,7 @@ class MigrateOptionals extends Migrate
         $name = null
     ) {
         parent::__construct($container, $name);
-        $this->directory = App::getDir(App::MIGRATIONS) . DS . 'optionals';
+        $this->directory = App::getDir(App::MIGRATIONS) . DS . 'Optionals';
     }
 
     /**

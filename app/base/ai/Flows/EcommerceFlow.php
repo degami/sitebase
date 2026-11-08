@@ -16,8 +16,6 @@ namespace App\Base\AI\Flows;
 use App\App;
 use App\Base\AI\Actions\GraphQLSchemaProvider;
 use App\Base\AI\Actions\GraphQLExecutor;
-use HaydenPierce\ClassFinder\ClassFinder;
-use App\Base\Interfaces\Model\ProductInterface;
 
 class EcommerceFlow extends BaseFlow
 {
@@ -39,15 +37,12 @@ class EcommerceFlow extends BaseFlow
         ];
 
         // Product Types
-        $types = array_merge($types, array_map(function($el) {
-            return App::getInstance()->getClassBasename($el);
-        }, array_filter(
-            array_merge(
-                ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), 
-                ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-            ), 
-            fn ($className) => is_subclass_of($className, ProductInterface::class)
-        )));
+        $types = array_merge($types, array_map(
+            function($el) {
+                return App::getInstance()->getClassBasename($el);
+            }, 
+            App::getInstance()->getClassFinder()->findProductClasses()       
+        ));
 
         $this->schema = $schemaProvider->getSchemaFilteredByTypes($types);
     }

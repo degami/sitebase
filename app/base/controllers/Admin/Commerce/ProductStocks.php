@@ -24,7 +24,6 @@ use App\Base\Models\ProductStock;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Abstracts\Controllers\BasePage;
-use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * "Product Stocks" Admin Page
@@ -120,12 +119,7 @@ class ProductStocks extends AdminManageModelsPage
 
         $websites = $this->getUtils()->getWebsitesSelectOptions();
 
-        $physicalProductClasses = array_filter(array_merge(
-            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-        ), function ($className) {
-            return is_subclass_of($className, \App\Base\Interfaces\Model\PhysicalProductInterface::class);
-        });
+        $physicalProductClasses = $this->getClassFinder()->findPhysicalProductClasses();
 
         switch ($type) {
             case 'edit':

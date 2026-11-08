@@ -22,9 +22,7 @@ use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use App\Base\Routing\RouteInfo;
 use App\Base\Abstracts\Controllers\BasePage;
-use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Html\TagElement;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Tools\Search\Manager as SearchManager;
 
@@ -126,16 +124,8 @@ class Elasticsearch extends AdminPage
 
         $tableContents = [];
 
-        $classes = array_merge(
-            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), 
-            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-        );
-        
-        $classes = array_filter($classes, fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class));
+        $classes = $this->getClassFinder()->findIndexableClasses();
         foreach ($classes as $className) {
-            if (!$this->containerCall([$className, 'isIndexable'])) {
-                continue;
-            }
             $type = strtolower(static::getClassBasename($className));
             $tableContents[] = [
                 'Type' => $type, 
@@ -185,21 +175,13 @@ class Elasticsearch extends AdminPage
         if ($this->getRequest()->query->get('action') == 'reindex') {
             $results = [];
 
-            $classes = ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
+            $classes = $this->getClassFinder()->findIndexableClasses();
             foreach ($classes as $modelClass) {
                 $type = strtolower(static::getClassBasename($modelClass));
                 if ($this->getRequest()->query->get('type') && $type != $this->getRequest()->query->get('type')) {
                     continue;
                 }
     
-                if (!is_subclass_of($modelClass, FrontendModel::class)) {
-                    continue;
-                }
-
-                if (!$this->containerCall([$modelClass, 'isIndexable'])) {
-                    continue;
-                }
-
                 $reindexed = $this->reindexModels($modelClass);
                 foreach ($reindexed as $type => $count) {
                     if (isset($results[$type])) {

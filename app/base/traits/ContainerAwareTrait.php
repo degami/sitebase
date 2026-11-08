@@ -37,6 +37,7 @@ use App\Base\Routers\Web;
 use App\Base\Routers\Webhooks;
 use App\Base\Routers\Crud;
 use App\Base\Routers\Graphql;
+use App\Base\Tools\Utils\ClassFinder;
 use Aws\Ses\SesClient;
 use DebugBar\StandardDebugBar;
 use Degami\SqlSchema\Schema;
@@ -50,7 +51,7 @@ use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 use Degami\Basics\Exceptions\BasicException;
-use HaydenPierce\ClassFinder\ClassFinder;
+use HaydenPierce\ClassFinder\ClassFinder as HaydenClassFinder;
 use PHPGangsta_GoogleAuthenticator;
 use Swift_Mailer;
 use function DI\autowire;
@@ -281,12 +282,9 @@ trait ContainerAwareTrait
                 }
             };
 
-            foreach (ClassFinder::getClassesInNamespace(App::BASE_ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
-                $registerRouter($className);
-            }
-    
-            foreach (ClassFinder::getClassesInNamespace(App::ROUTERS_NAMESPACE, ClassFinder::RECURSIVE_MODE) as $className) {
-                $registerRouter($className);
+
+            foreach ($this->getClassFinder()->findRouterClasses() as $routerClass) {
+                $registerRouter($routerClass);                
             }
 
             $this->getContainer()->set('routers', $out);
@@ -554,5 +552,16 @@ trait ContainerAwareTrait
     public function getGeocoder(): Geocoder
     {
         return $this->getService('geocoder');
+    }
+
+    /**
+     * get classfinder
+     * 
+     * @return ClassFinder
+     * @throws BasicException 
+     */
+    public function getClassFinder() : ClassFinder
+    {
+        return $this->getService('classfinder');
     }
 }

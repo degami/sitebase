@@ -11,7 +11,7 @@
  * @link     https://github.com/degami/sitebase
  */
 
-namespace App\Site\Migrations;
+namespace App\Site\Migrations\Optionals;
 
 use App\App;
 use App\Base\Abstracts\Migrations\BaseMigration;
@@ -39,7 +39,6 @@ use Exception;
 use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
-use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * fake data migration
@@ -522,10 +521,7 @@ class FakeDataMigration extends BaseMigration
 
 
         // add all blocks
-        $blockClasses = array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_BLOCKS_NAMESPACE), 
-            ClassFinder::getClassesInNamespace(App::BLOCKS_NAMESPACE)
-        );
+        $this->getClassFinder()->findBlockClasses();
 
         foreach ($blockClasses as $blockClass) {
             $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();

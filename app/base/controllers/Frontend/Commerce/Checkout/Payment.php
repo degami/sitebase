@@ -21,8 +21,6 @@ use App\Base\Models\OrderStatus;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Models\UserSession;
 use Degami\PHPFormsApi as FAPI;
-use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 
 class Payment extends FormPageWithLang
 {
@@ -227,19 +225,20 @@ class Payment extends FormPageWithLang
 
     protected function getPaymentMethods() : array
     {
-        return array_values(array_map(function($paymentClassName) {
-            return $this->containerMake($paymentClassName);
-        }, array_filter(array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-        ), function($className) {
-            if (!is_subclass_of($className, PaymentMethodInterface::class)) {
-                return false;
-            }
-
-            $method = $this->containerMake($className);
-            return App::getInstance()->getSiteData()->getConfigValue('payments/'.$method->getCode().'/active') == 1;
-        })));
+        return array_values(
+            array_map(
+                function($paymentClassName) {
+                    return $this->containerMake($paymentClassName);
+                }, 
+                array_filter(
+                    $this->getClassFinder()->findPaymentMethodClasses(), 
+                    function($className) {
+                        $method = $this->containerMake($className);
+                        return App::getInstance()->getSiteData()->getConfigValue('payments/'.$method->getCode().'/active') == 1;
+                    }   
+                )
+            )
+        );
     }
 
     protected function getPaymentMethodCode(PaymentMethodInterface $payment_method) : string

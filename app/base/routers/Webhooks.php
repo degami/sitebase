@@ -19,7 +19,6 @@ use App\Base\Abstracts\Routing\BaseRouter;
 use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Routing\RouteInfo;
 
@@ -66,7 +65,7 @@ class Webhooks extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = ClassFinder::getClassesInNamespace(App::WEBHOOKS_NAMESPACE, ClassFinder::RECURSIVE_MODE);
+                $controllerClasses = $this->getClassFinder()->findWebhookControllers();
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BaseWebhookPage::class)) {
 

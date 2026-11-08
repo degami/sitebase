@@ -39,7 +39,7 @@
         "genkgo/migrations": "^1.0",
         "fisharebest/localization": "^1.13",
         "symfony/console": "^7.1",
-        "haydenpierce/class-finder": "^0.3.1",
+        "haydenpierce/class-finder": "^0.6",
         "imagine/imagine": "^1.2",
         "components/jquery": "^3.6",
         "components/bootstrap": "^4.6",

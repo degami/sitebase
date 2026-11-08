@@ -21,7 +21,6 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Controllers\BasePage;
@@ -72,10 +71,7 @@ class Web extends BaseRouter implements WebRouterInterface
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = array_unique(array_merge(
-                    ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE.'\Frontend', ClassFinder::RECURSIVE_MODE),
-                    ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE.'\Frontend', ClassFinder::RECURSIVE_MODE),
-                ));
+                $controllerClasses = $this->getClassFinder()->findFrontendControllers();
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {
 

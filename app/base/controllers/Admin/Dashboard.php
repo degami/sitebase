@@ -13,7 +13,6 @@
 
 namespace App\Base\Controllers\Admin;
 
-use App\App;
 use App\Base\Models\Block;
 use App\Site\Models\Contact;
 use App\Site\Models\ContactSubmission;
@@ -23,14 +22,8 @@ use App\Base\Models\MediaElement;
 use App\Base\Models\RequestLog;
 use App\Base\Models\User;
 use App\Base\Models\Website;
-use App\Site\Models\Page;
-use App\Site\Models\News;
-use App\Site\Models\Taxonomy;
 use App\Base\Abstracts\Controllers\AdminPage;
-use App\Base\Abstracts\Models\FrontendModel;
 use App\Base\Tools\Utils\Globals;
-use App\Site\Models\Event;
-use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * "Dashboard" Admin Page
@@ -80,13 +73,7 @@ class Dashboard extends AdminPage
      */
     public function getTemplateData(): array
     {
-
-        $frontendClasses = array_filter(array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-        ), function ($className) {
-            return is_subclass_of($className, FrontendModel::class);
-        });
+        $frontendClasses = $this->getClassFinder()->findFrontendModelClasses();
 
         $this->template_data = [
             'websites' => Website::getCollection()->count(),
@@ -110,13 +97,7 @@ class Dashboard extends AdminPage
             $this->template_data[strtolower($key)] = $this->containerCall([$frontendClass, 'getCollection'])->count();
         }
 
-
-        $adminControllers = array_filter(array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-        ), function ($className) {
-            return is_subclass_of($className, AdminPage::class);
-        });
+        $adminControllers = $this->getClassFinder()->findAdminPages();
 
         $this->template_data['dashboard_links'] = [];
         foreach ($adminControllers as $adminController) {

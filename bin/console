@@ -67,27 +67,30 @@ try {
     }
 
     // ... register commands
-    $commandsClasses = array_unique(array_merge(
-        ClassFinder::getClassesInNamespace(App::BASE_COMMANDS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-        ClassFinder::getClassesInNamespace(App::COMMANDS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-    ));
+    $commandsClasses = App::getInstance()->getClassFinder()->findCommandClasses();
     foreach($commandsClasses as $commandClass){
-            if (is_callable([$commandClass, 'registerCommand'])) {
-                $commandEnabled = call_user_func([$commandClass, 'registerCommand']);
-                if ($commandEnabled === false) {
-                    continue;
-                }    
-            }
 
-            $array = explode("\\", $commandClass);
-            $classname = array_pop($array);
-            $commandname = str_replace(["App\\Base\\Commands\\","App\\Site\\Commands\\"], "", $commandClass);
-            $commandname = preg_replace("/".$classname."$/", "", $commandname) . $container->get('utils')->pascalCaseToSnakeCase($classname);
-            $commandname = strtolower(str_replace("\\", ":", $commandname));
-            $commandObj = $container->make($commandClass, ['name' => $commandname, 'container' => $container]);
-            if ($commandObj instanceof Command) {
-                $application->add($commandObj);
-            }
+        // if class is abstract , do not register it
+        if ((new \ReflectionClass($commandClass))->isAbstract()) {
+            continue;
+        }
+
+        if (is_callable([$commandClass, 'registerCommand'])) {
+            $commandEnabled = call_user_func([$commandClass, 'registerCommand']);
+            if ($commandEnabled === false) {
+                continue;
+            }    
+        }
+
+        $array = explode("\\", $commandClass);
+        $classname = array_pop($array);
+        $commandname = str_replace(["App\\Base\\Commands\\","App\\Site\\Commands\\"], "", $commandClass);
+        $commandname = preg_replace("/".$classname."$/", "", $commandname) . $container->get('utils')->pascalCaseToSnakeCase($classname);
+        $commandname = strtolower(str_replace("\\", ":", $commandname));
+        $commandObj = $container->make($commandClass, ['name' => $commandname, 'container' => $container]);
+        if ($commandObj instanceof Command) {
+            $application->add($commandObj);
+        }
     }
 
     $application->run();

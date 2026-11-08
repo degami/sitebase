@@ -13,13 +13,11 @@
 
 namespace App\Base\Commands\Version;
 
-use App\App;
 use App\Base\Abstracts\Commands\BaseCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\Console\Command\Command;
 use App\Base\Abstracts\Models\BaseCollection;
 
@@ -54,10 +52,7 @@ class Add extends BaseCommand
     {
         $classnames = $input->getOption('class');
         if (empty($classnames)) {
-            $classnames = array_merge(
-                ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-            );
+            $classnames = $this->getClassFinder()->findModelClasses();
         }
 
         $classnames = array_filter($classnames, function ($className) {

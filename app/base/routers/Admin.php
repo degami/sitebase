@@ -13,10 +13,8 @@
 
 namespace App\Base\Routers;
 
-use App\App;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Controllers\BasePage;
@@ -45,10 +43,7 @@ class Admin extends Web
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = array_unique(array_merge(
-                    ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE . '\Admin', ClassFinder::RECURSIVE_MODE),
-                    ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE . '\Admin', ClassFinder::RECURSIVE_MODE),
-                ));
+                $controllerClasses = $this->getClassFinder()->findAdminControllers();
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {
 

@@ -13,7 +13,6 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
@@ -27,7 +26,6 @@ use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\Website;
 
@@ -677,10 +675,7 @@ class SiteData extends ContainerAwareObject
 
         $admin_links_key = "admin.links";
         if (!$this->getCache()->has($admin_links_key) || $reset) {
-            $controllerClasses = array_unique(array_merge(
-                ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ));
+            $controllerClasses = $this->getClassFinder()->findControllers();
             foreach ($controllerClasses as $controllerClass) {
                 if (method_exists($controllerClass, 'getAdminPageLink')) {
                     $adminLink = $this->containerCall([$controllerClass, 'getAdminPageLink']) ?? null;

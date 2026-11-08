@@ -13,12 +13,9 @@
 
 namespace App\Base\Cron\Tasks;
 
-use App\App;
-use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Models\ProgressManagerProcess;
 use App\Base\Tools\Search\Manager;
@@ -45,9 +42,7 @@ class SearchManager extends ContainerAwareObject
             return null;
         }
 
-        $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), function($className) {
-            return is_subclass_of($className, FrontendModel::class) && $this->containerCall([$className, 'isIndexable']);
-        });
+        $classes = $this->getClassFinder()->findIndexableClasses();
 
         if (!count($classes)) {
             return null;

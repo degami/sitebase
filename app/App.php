@@ -32,7 +32,6 @@ use App\Base\Traits\ContainerAwareTrait;
 use App\Base\Traits\ToolsTrait;
 use App\Base\Traits\TranslatorsTrait;
 use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Throwable;
 use App\Base\Interfaces\EventListenerInterface;
 
@@ -431,10 +430,7 @@ class App
         $event_liteners_key = "site.event_listeners";
         if (!$this->getCache()->has($event_liteners_key) || $reset) {
 
-            $listeners = array_filter(array_merge(
-                ClassFinder::getClassesInNamespace(App::BASE_EVENT_LISTENERS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                ClassFinder::getClassesInNamespace(App::EVENT_LISTENERS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-            ), fn ($listenerClass) => is_subclass_of($listenerClass, EventListenerInterface::class));
+            $listeners = $this->getClassFinder()->findEventListenerClasses();
 
             $this->getCache()->set($event_liteners_key, $listeners);
         } else {

@@ -13,7 +13,6 @@
 
 namespace App\Base\Controllers\Admin;
 
-use App\App;
 use App\Base\Models\CronLog;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
@@ -21,7 +20,6 @@ use DI\NotFoundException;
 use Exception;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
-use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Models\CronTask;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\BasePage;
@@ -100,9 +98,8 @@ class Cron extends AdminManageModelsPage
     public function beforeRender() : BasePage|Response
     {
         if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
-            $baseTaskClasses = ClassFinder::getClassesInNamespace(App::BASE_CRON_TASKS_NAMESPACE);
-            $taskClasses = ClassFinder::getClassesInNamespace(App::CRON_TASKS_NAMESPACE);
-            foreach (array_merge($baseTaskClasses, $taskClasses) as $taskClass) {
+            $taskClasses = $this->getClassFinder()->findCronTaskClasses();
+            foreach ($taskClasses as $taskClass) {
                 foreach (get_class_methods($taskClass) as $key => $method_name) {
                     $cron_task_callable = json_encode([$taskClass, $method_name]);
 

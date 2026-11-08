@@ -20,7 +20,6 @@ use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Country;
 use App\Base\Models\Address;
 use App\Base\Interfaces\Commerce\ShippingMethodInterface;
-use HaydenPierce\ClassFinder\ClassFinder;
 
 class Shipping extends FormPageWithLang
 {
@@ -434,19 +433,20 @@ class Shipping extends FormPageWithLang
 
     protected function getShippingMethods() : array
     {
-        return array_values(array_map(function($shippingClassName) {
-            return $this->containerMake($shippingClassName);
-        }, array_filter(array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::COMMERCE_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-        ), function($className) {
-            if (!is_subclass_of($className, ShippingMethodInterface::class)) {
-                return false;
-            }
-
-            $method = $this->containerMake($className);
-            return App::getInstance()->getSiteData()->getConfigValue('shipping/'.$method->getCode().'/active') == 1;
-        })));
+        return array_values(
+            array_map(
+                function($shippingClassName) {
+                    return $this->containerMake($shippingClassName);
+                }, 
+                array_filter(
+                    $this->getClassFinder()->findShippingMethodClasses(), 
+                    function($className) {
+                        $method = $this->containerMake($className);
+                        return App::getInstance()->getSiteData()->getConfigValue('shipping/'.$method->getCode().'/active') == 1;
+                    }   
+                )
+            )
+        );
     }
 
     protected function getShippingMethodCode(ShippingMethodInterface $shipping_method) : string

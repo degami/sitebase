@@ -13,10 +13,8 @@
 
 namespace App\Base\Tools\AI;
 
-use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Interfaces\AI\AIModelInterface;
-use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * Ai Manager
@@ -45,14 +43,7 @@ class Manager extends ContainerAwareObject
             return array_keys($this->availableAIsCache);
         }
 
-        $classes = array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_AIMODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::AIMODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-        );
-
-        $classes = array_filter($classes, function($className) {
-            return is_subclass_of($className, AIModelInterface::class) && !(new \ReflectionClass($className))->isAbstract();
-        });
+        $classes = $this->getClassFinder()->findAIModelClasses();
 
         $AIs = [];
         foreach ($classes as $className) {

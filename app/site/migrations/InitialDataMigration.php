@@ -31,7 +31,6 @@ use App\Base\Tools\Utils\SiteData;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use HaydenPierce\ClassFinder\ClassFinder;
 
 /**
  * basic data migration
@@ -354,10 +353,7 @@ class InitialDataMigration extends BaseMigration
     public static function getAdminPermissionsArray() : array 
     {
         $permissionsArray = [];
-        $controllerClasses = array_unique(array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_CONTROLLERS_NAMESPACE.'\Admin', ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::CONTROLLERS_NAMESPACE.'\Admin', ClassFinder::RECURSIVE_MODE),
-        ));
+        $controllerClasses = App::getInstance()->getClassFinder()->findAdminControllers();
         foreach ($controllerClasses as $controllerClass) {
             if (is_callable([$controllerClass, 'getAccessPermission'])) {
                 $permissionsArray[] = App::getInstance()->containerCall([$controllerClass, 'getAccessPermission']);

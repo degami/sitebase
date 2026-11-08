@@ -29,7 +29,6 @@ use App\Base\Models\CartDiscount;
 use App\Base\Models\Website;
 use App\Base\Models\Discount as DiscountModel;
 use GraphQL\Type\Definition\ResolveInfo;
-use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Tools\Search\AIManager as AISearchManager;
 
 class CommerceEventListener implements EventListenerInterface
@@ -327,10 +326,7 @@ class CommerceEventListener implements EventListenerInterface
 
                 // if product class is not a full namespaced class, try to resolve it
                 if (!class_exists($productClass)) {
-                    $classes = array_filter(array_merge(
-                        ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                        ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-                    ), fn ($class) => is_subclass_of($class, ProductInterface::class));
+                    $classes = App::getInstance()->getClassFinder()->findProductClasses();
                     $classes = array_combine(array_map(fn ($c) => App::getInstance()->getClassBasename($c), $classes), $classes);
 
                     if (isset($classes[$productClass])) {
@@ -494,10 +490,7 @@ class CommerceEventListener implements EventListenerInterface
 
                 // if product class is not a full namespaced class, try to resolve it
                 if (!class_exists($productClass)) {
-                    $classes = array_filter(array_merge(
-                        ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                        ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-                    ), fn ($class) => is_subclass_of($class, ProductInterface::class));
+                    $classes = App::getInstance()->getClassFinder()->findProductClasses();
                     $classes = array_combine(array_map(fn ($c) => App::getInstance()->getClassBasename($c), $classes), $classes);
 
                     if (isset($classes[$productClass])) {

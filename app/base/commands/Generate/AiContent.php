@@ -15,14 +15,11 @@ namespace App\Base\Commands\Generate;
 
 use App\App;
 use App\Base\Abstracts\Commands\BaseCommand;
-use App\Base\Abstracts\Models\FrontendModel;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Degami\SqlSchema\Column;
-use Degami\SqlSchema\ForeignKey;
 
 /**
  * Generate Contents with AI Command
@@ -59,12 +56,7 @@ class AiContent extends BaseCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output) : int
     {
-        $contentTypes = array_filter(array_merge(
-            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-        ), function ($class) {
-            return is_subclass_of($class, FrontendModel::class) && !(new \ReflectionClass($class))->isAbstract();
-        });
+        $contentTypes =$this->getClassFinder()->findFrontendModelClasses();
 
         $contentTypes = array_combine(
             $contentTypes,

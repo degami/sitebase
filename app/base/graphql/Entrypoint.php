@@ -34,7 +34,6 @@ use GraphQL\Type\Definition\ObjectType;
 use GraphQL\Type\Definition\Type;
 use ReflectionNamedType;
 use Symfony\Component\HttpFoundation\Response;
-use HaydenPierce\ClassFinder\ClassFinder;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionUnionType;
@@ -578,12 +577,7 @@ class Entrypoint extends BasePage
 
     protected function buildGraphQLSchema(): Schema
     {
-        $modelClasses = array_filter(array_merge(
-            ClassFinder::getClassesInNamespace('App\\Base\\Models', ClassFinder::RECURSIVE_MODE),
-            ClassFinder::getClassesInNamespace('App\\Site\\Models', ClassFinder::RECURSIVE_MODE)
-        ), function ($class) {
-            return is_subclass_of($class, BaseModel::class) && !is_subclass_of($class, BaseCollection::class);
-        });
+        $modelClasses = $this->getClassFinder()->findModelClasses();
 
         // base types
         $this->buildBaseTypes();

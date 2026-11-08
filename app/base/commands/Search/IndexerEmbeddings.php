@@ -13,14 +13,10 @@
 
 namespace App\Base\Commands\Search;
 
-use App\App;
 use App\Base\Abstracts\Commands\BaseCommand;
-use App\Base\Abstracts\Models\FrontendModel;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
-use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Command\Command;
@@ -85,14 +81,7 @@ class IndexerEmbeddings extends BaseCommand
             return Command::FAILURE;
         }
 
-        $classes = array_merge(
-            ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), 
-            ClassFinder::getClassesInNamespace(App::BASE_MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE)
-        );
-
-        $classes = array_filter($classes, function($className) {
-            return is_subclass_of($className, FrontendModel::class) && $this->containerCall([$className, 'isIndexable']);
-        });
+        $classes = $this->getClassFinder()->findIndexableClasses();
 
         if (!count($classes)) {
             $this->getIo()->error("No frontend classes found to index");

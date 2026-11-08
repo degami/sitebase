@@ -18,7 +18,6 @@ use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use App\Base\Interfaces\Model\ProductInterface;
-use HaydenPierce\ClassFinder\ClassFinder;
 use App\Base\Models\TaxClass;
 
 /**
@@ -106,7 +105,7 @@ abstract class AdminManageProductsPage extends AdminManageFrontendModelsPage
 
     protected function getProductTypes(): array
     {
-        $classes = array_filter(ClassFinder::getClassesInNamespace(App::MODELS_NAMESPACE, ClassFinder::RECURSIVE_MODE), fn($modelClass) => is_subclass_of($modelClass, ProductInterface::class));
+        $classes =$this->getClassFinder()->findProductClasses();
         return array_combine($classes, array_map(fn($class) => strtolower(basename($class)), $classes));
     }
 

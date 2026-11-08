@@ -20,7 +20,6 @@ use App\Base\Abstracts\Routing\BaseRouter;
 use App\Base\Exceptions\InvalidValueException;
 use Degami\Basics\Exceptions\BasicException;
 use Exception;
-use HaydenPierce\ClassFinder\ClassFinder;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Routing\RouteInfo;
 
@@ -67,10 +66,7 @@ class Crud extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $controllerClasses = array_unique(array_merge(
-                    ClassFinder::getClassesInNamespace(App::BASE_CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                    ClassFinder::getClassesInNamespace(App::CRUD_NAMESPACE, ClassFinder::RECURSIVE_MODE),
-                ));
+                $controllerClasses = $this->getClassFinder()->findCrudControllers();
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BaseRestPage::class) || is_subclass_of($controllerClass, BaseJsonPage::class)) {
 

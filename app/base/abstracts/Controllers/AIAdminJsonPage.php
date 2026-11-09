@@ -39,6 +39,11 @@ abstract class AIAdminJsonPage extends AdminJsonPage
      */
     protected function getMessageId(Request $request) : ?string
     {
-        return $request->get('messageId') ?: $request->get('message_id');
+        $content = json_decode($request->getContent(), true);
+        if (is_array($content) && !empty($content['messageId'])) {
+            return (string) $content['messageId'];
+        }
+
+        return $request->request->get('messageId') ?? $request->query->get('messageId');
     }
 }

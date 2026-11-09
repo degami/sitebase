@@ -153,7 +153,7 @@ window.appAdminMethodsAI = {
             $.ajax({
                 type: "POST",
                 url: AIUrl,
-                data: JSON.stringify({'prompt': params.prompt}),
+                data: JSON.stringify({'prompt': params.prompt, 'messageId': params.messageId}),
                 processData: false,
                 contentType: 'application/json',
                 success: function(data) {

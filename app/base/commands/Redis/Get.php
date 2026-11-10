@@ -29,7 +29,7 @@ class Get extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Get Redis Entry')
         ->setDefinition(

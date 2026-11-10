@@ -31,7 +31,7 @@ class Indexer extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Index data for search');
     }

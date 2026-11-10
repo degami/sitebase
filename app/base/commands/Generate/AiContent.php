@@ -29,7 +29,7 @@ class AiContent extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate content using AI')
         ->addOption('contenttype', 't', InputOption::VALUE_OPTIONAL, 'Content Type')

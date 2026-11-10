@@ -30,7 +30,7 @@ class Restore extends BaseExecCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this
             ->setDescription('Restore Dump')

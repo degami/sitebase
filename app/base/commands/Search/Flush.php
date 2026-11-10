@@ -30,7 +30,7 @@ class Flush extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Flush data from elasticsearch index');
         $this->addOption('drop', 'd', InputOption::VALUE_NONE);

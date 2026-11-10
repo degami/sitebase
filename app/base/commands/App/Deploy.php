@@ -33,7 +33,7 @@ class Deploy extends BaseExecCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this
             ->setDescription('Run Deploy Tasks')

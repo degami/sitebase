@@ -29,7 +29,7 @@ class Disable extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Disable Debug');
     }

@@ -30,7 +30,7 @@ class Add extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Add a new config')
             ->setDefinition(

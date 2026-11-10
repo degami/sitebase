@@ -31,7 +31,7 @@ class Enable extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Enable 2 Factory Authentication')
         ->setDefinition(

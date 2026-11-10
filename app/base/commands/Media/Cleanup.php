@@ -33,7 +33,7 @@ class Cleanup extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Cleanup all media element without file or files without media element');
     }

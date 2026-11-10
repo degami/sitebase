@@ -89,7 +89,7 @@ try {
         $commandname = strtolower(str_replace("\\", ":", $commandname));
         $commandObj = $container->make($commandClass, ['name' => $commandname, 'container' => $container]);
         if ($commandObj instanceof Command) {
-            $application->add($commandObj);
+            $application->addCommand($commandObj);
         }
     }
 

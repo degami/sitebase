@@ -31,7 +31,7 @@ class IndexerEmbeddings extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Index embedding data for search')
         ->addArgument('llm', InputArgument::OPTIONAL, 'LLM to user', 'googlegemini');

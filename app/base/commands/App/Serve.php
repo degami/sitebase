@@ -30,7 +30,7 @@ class Serve extends BaseExecCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Run PHP Http Server')
             ->setDefinition(

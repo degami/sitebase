@@ -45,7 +45,7 @@ class MigrateOptionals extends Migrate
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         parent::configure();
         $this->setDescription('Migrate Optionals Migrations (eg Fake data)');

@@ -24,7 +24,7 @@ use App\Base\Models\ModelVersion;
  */
 class Detail extends BaseCommand
 {
-    protected function configure(): void
+    protected function configure() : void
     {
         $this
             ->setDescription('Show details of a specific model version')

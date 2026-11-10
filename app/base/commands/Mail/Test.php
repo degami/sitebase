@@ -32,7 +32,7 @@ class Test extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Test Email')
             ->setDefinition(

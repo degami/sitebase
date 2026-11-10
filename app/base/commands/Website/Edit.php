@@ -30,7 +30,7 @@ class Edit extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Edit a website')
             ->setDefinition(

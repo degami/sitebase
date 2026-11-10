@@ -29,7 +29,7 @@ class Delete extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Delete user')
             ->setDefinition(

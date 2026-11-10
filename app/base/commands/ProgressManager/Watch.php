@@ -32,7 +32,7 @@ class Watch extends BaseCommand
     /** @var int[] */
     private $listedProcesses = [];
 
-    protected function configure(): void
+    protected function configure() : void
     {
         $this->setDescription('Monitor active ProgressManagerProcess elements');
     }

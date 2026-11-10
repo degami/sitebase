@@ -24,7 +24,7 @@ use App\Base\Models\ModelVersion;
  */
 class Compare extends BaseCommand
 {
-    protected function configure(): void
+    protected function configure() : void
     {
         $this
             ->setDescription('Compare two model versions')

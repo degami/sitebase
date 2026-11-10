@@ -27,7 +27,7 @@ class GetSql extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Get Create Tables SQL');
     }

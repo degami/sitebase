@@ -193,7 +193,7 @@ class Product extends CodeGeneratorCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate a new Ecommerce Product class')
             ->setDefinition(

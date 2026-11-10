@@ -30,7 +30,7 @@ class Block extends CodeGeneratorCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate a new Block class')
             ->setDefinition(

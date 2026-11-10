@@ -86,7 +86,7 @@ class Migrate extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Migrate')
             ->setDefinition(

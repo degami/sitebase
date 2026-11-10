@@ -26,7 +26,7 @@ use Symfony\Component\Console\Input\InputArgument;
  */
 class Abort extends BaseCommand
 {
-    protected function configure(): void
+    protected function configure() : void
     {
         $this
             ->setDescription('Abort an active ProgressManagerProcess element')

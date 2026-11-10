@@ -30,7 +30,7 @@ use Symfony\Component\Console\Input\InputArgument;
 
 class FetchFromUrl extends BaseCommand
 {
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Fetch Media Element from url')
             ->addArgument('url', InputArgument::REQUIRED, 'Url to fetch')

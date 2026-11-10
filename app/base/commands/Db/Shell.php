@@ -29,7 +29,7 @@ class Shell extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('DB Interactive Shell');
     }

@@ -31,7 +31,7 @@ class Dump extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Database Dump');
     }

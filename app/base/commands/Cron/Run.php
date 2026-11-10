@@ -34,7 +34,7 @@ class Run extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Run Cron');
     }

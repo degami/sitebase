@@ -36,7 +36,7 @@ class Hello extends Command
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Say Hello');
         $this->addArgument('username', InputArgument::OPTIONAL, 'The name of the user to say hello.', null);

@@ -40,7 +40,7 @@ class Model extends CodeGeneratorCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate a new Model class')
             ->setDefinition(

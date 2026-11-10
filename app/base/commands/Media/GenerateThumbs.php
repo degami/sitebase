@@ -34,7 +34,7 @@ class GenerateThumbs extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate missing Media Thumbnails')
         ->addOption(

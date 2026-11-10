@@ -32,7 +32,7 @@ class ClearThumbs extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Clear All Media Thumbnails');
     }

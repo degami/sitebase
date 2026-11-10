@@ -27,7 +27,7 @@ class Offline extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Set site in Maintenance mode');
     }

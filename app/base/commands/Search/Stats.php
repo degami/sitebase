@@ -29,7 +29,7 @@ class Stats extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Search Statistics')
             ->addArgument('type', InputArgument::OPTIONAL, 'Type')

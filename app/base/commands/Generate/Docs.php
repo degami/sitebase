@@ -31,7 +31,7 @@ class Docs extends BaseExecCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate documentation with phpdoc');
     }

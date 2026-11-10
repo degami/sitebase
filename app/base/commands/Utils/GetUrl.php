@@ -28,7 +28,7 @@ class GetUrl extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Get route url')
             ->addArgument('route_name', InputArgument::OPTIONAL, 'Route name', 'frontend.root')

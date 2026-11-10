@@ -29,7 +29,7 @@ class EnableFpc extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Enable Full Page Cache');
     }

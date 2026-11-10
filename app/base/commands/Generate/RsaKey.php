@@ -28,7 +28,7 @@ class RsaKey extends BaseExecCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate RSA key');
     }

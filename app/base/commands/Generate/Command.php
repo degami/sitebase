@@ -30,7 +30,7 @@ class Command extends CodeGeneratorCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Generate a new Command class')
             ->setDefinition(
@@ -93,7 +93,7 @@ class " . $className . " extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         \$this->setDescription('" . $className . "');
     }

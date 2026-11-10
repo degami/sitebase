@@ -30,7 +30,7 @@ class ModEnv extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Edit .env file')
             ->setDefinition(

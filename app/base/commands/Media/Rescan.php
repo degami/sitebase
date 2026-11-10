@@ -28,7 +28,7 @@ use SplFileInfo;
 
 class Rescan extends BaseCommand
 {
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Rescan filesystem for missing media elements');
     }

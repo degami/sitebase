@@ -30,7 +30,7 @@ class Lock extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Lock user')
             ->setDefinition(

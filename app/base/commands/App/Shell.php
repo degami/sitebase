@@ -30,7 +30,7 @@ class Shell extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Interactive Shell');
     }

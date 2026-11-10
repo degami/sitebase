@@ -31,7 +31,7 @@ class Disable extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Disable 2 Factory Authentication')
         ->setDefinition(

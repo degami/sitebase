@@ -30,7 +30,7 @@ class Restore extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Restore version')
             ->setDefinition(

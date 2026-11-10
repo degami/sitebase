@@ -28,7 +28,7 @@ class UpdateSalt extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setDescription('Change SALT value into .env file');
     }

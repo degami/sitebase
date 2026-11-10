@@ -31,7 +31,7 @@ class Clear2Fa extends BaseCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure()
+    protected function configure() : void
     {
         $this->setName('users:clear_2fa');
         $this->setDescription('Clear user 2fa secret')

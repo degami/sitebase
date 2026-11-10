@@ -17,6 +17,7 @@ use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Website;
+use App\Base\Tools\Utils\SiteData;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
@@ -142,6 +143,13 @@ class Websites extends AdminManageModelsPage
                     'default_value' => $website_default_locale,
                     'options' => $languages,
                     'validate' => ['required'],
+                ])->addField('languages', [
+                    'type' => 'select',
+                    'multiple' => true,
+                    'title' => 'Enabled Languages',
+                    'default_value' => array_keys($languages),
+                    'options' => $languages,
+                    'validate' => ['required'],
                 ]);
 
                 $this->addSubmitButton($form);
@@ -199,6 +207,15 @@ class Websites extends AdminManageModelsPage
                 $this->setAdminActionLogData($website->getChangedData());
 
                 $website->persist();
+
+                // save configuration when website has an id for sure
+
+                $languages = $values['languages']->toArray();
+                if (!empty($website->getDefaultLocale()) && !in_array($website->getDefaultLocale(), $languages)) {
+                    $languages[] = $website->getDefaultLocale();
+                }
+
+                $this->getSiteData()->setConfigValue(SiteData::LOCALES_PATH, implode(',', $languages), $website->getId());
 
                 $this->addSuccessFlashMessage($this->getUtils()->translate("Website Saved."));
                 break;

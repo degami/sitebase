@@ -54,6 +54,12 @@ class ChangeLanguage extends BaseCodeBlock
                         ],
                     ]]);
 
+
+                    $siteLanguages = $this->getUtils()->getSiteLanguagesSelectOptions($this->getSiteData()->getCurrentWebsiteId());
+
+                    // filter not enabled languages
+                    $translations = array_intersect_key($translations, $siteLanguages);
+
                     $atags = array_map(
                         function ($el, $key) use ($config) {
                             $text = '';

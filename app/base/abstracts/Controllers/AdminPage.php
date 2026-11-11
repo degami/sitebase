@@ -178,6 +178,7 @@ abstract class AdminPage extends BaseHtmlPage
                     'currentLocale' => $this->getCurrentLocale(),
                     'defaultWysiwygOptions' => FORMS_DEFAULT_WYSIWYG_OPTIONS,
                     'uiTour' => $this->getUiTour(),
+                    'aiSettingsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.aisettings'),
                 ]
             ) . ");"
         );

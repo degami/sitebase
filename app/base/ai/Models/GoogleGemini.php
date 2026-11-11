@@ -17,6 +17,7 @@ use App\App;
 use App\Base\Abstracts\Models\AbstractLLMAdapter;
 use App\Base\AI\Flows\BaseFlow;
 use Exception;
+use Override;
 
 /**
  * GoogleGemini AI Model
@@ -25,6 +26,8 @@ class GoogleGemini extends AbstractLLMAdapter
 {
     public const GEMINI_MODEL = 'gemini-flash-latest';
     public const GEMINI_MODEL_PATH = 'app/gemini/model';
+    public const GEMINI_EMBEDDING_MODEL = 'gemini-embedding-001';
+    public const GEMINI_EMBEDDING_MODEL_PATH = 'app/gemini/embedding_model';
     public const GEMINI_VERSION = 'v1beta';
     public const GEMINI_VERSION_PATH = 'app/gemini/version';
     public const GEMINI_TOKEN_PATH = 'app/gemini/token';
@@ -63,7 +66,7 @@ class GoogleGemini extends AbstractLLMAdapter
             throw new Exception("Missing Gemini Token");
         }
 
-        return "https://generativelanguage.googleapis.com/" . $this->getVersion() . "/models/" . $this->getModel($model) . ":embedContent?key={$apiKey}";
+        return "https://generativelanguage.googleapis.com/" . $this->getVersion() . "/models/" . $this->getEmbeddingModel($model) . ":embedContent?key={$apiKey}";
     }
 
     public function prepareRequest(array $payload) : array
@@ -232,7 +235,7 @@ class GoogleGemini extends AbstractLLMAdapter
     public function buildEmbeddingRequest(string $input, ?string $model = null): array
     {
         return [
-            'model' => $this->getModel($model),
+            'model' => $this->getEmbeddingModel($model),
             'content' => [
                 'parts' => [[
                     'text' => $input
@@ -297,5 +300,32 @@ class GoogleGemini extends AbstractLLMAdapter
         }
 
         return $this->getSiteData()->getConfigValue(self::GEMINI_MODEL_PATH) ?? $this->getDefaultModel();
+    }
+
+    public function setModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::GEMINI_MODEL_PATH, $model);
+    }
+
+    public function getEmbeddingModel(?string $model = null) : string
+    {
+        if (!is_null($model) && in_array($model, $this->getAvailableModels())) {
+            return $model;
+        }
+
+        return $this->getSiteData()->getConfigValue(self::GEMINI_EMBEDDING_MODEL_PATH) ?? self::GEMINI_EMBEDDING_MODEL;
+    }
+
+    public function setEmbeddingModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::GEMINI_EMBEDDING_MODEL_PATH, $model);
     }
 }

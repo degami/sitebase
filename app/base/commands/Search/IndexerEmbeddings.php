@@ -57,7 +57,7 @@ class IndexerEmbeddings extends BaseCommand
 
         /** @var AISearchManager $embeddingManager */
         $embeddingManager = $this->containerMake(AISearchManager::class, [
-            'llm' => $this->getAI()->getAIModel($input->getArgument('llm')),
+            'llm' => $this->getAI()->getLLMAdapter($input->getArgument('llm')),
             'model' => match ($input->getArgument('llm')) {
                 'googlegemini' => 'text-embedding-004',
                 'chatgpt' => 'text-embedding-3-small',

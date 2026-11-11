@@ -76,6 +76,11 @@ window.appAdminMethodsAI = {
                 );
             });
 
+            $('#ai-settings', $(chatPanel)).off('click').on('click', function(e) {
+                e.preventDefault();
+                $(that).appAdmin('openAISettingsPanel', chatPanel);
+            });
+
             $(that).appAdmin('getUserUiSettings', function(data) {
                 if (undefined != data.preferredAI) {
                     $('#chatAISelector', $(chatPanel)).val(data.preferredAI);
@@ -181,4 +186,80 @@ window.appAdminMethodsAI = {
             });
         }
     },
+    openAISettingsPanel: function (chatPanel) {
+        let that = this;
+
+        $('#ai-settings-panel', chatPanel).remove();
+        $('<div id="ai-settings-panel" />').insertBefore('#chatMessages', chatPanel);
+
+
+        let url = $(that).appAdmin('getSettings').aiSettingsUrl;
+
+        $.getJSON(url, function (response){
+            $('#ai-settings-panel', chatPanel).html(response.html);
+
+            // add behaviours
+            $('.chat-messages select:not(".select-processed")', that).select2({
+                dropdownCssClass: "in_sidepanel",
+                'width':'100%'
+            }).addClass('select-processed');
+            $('#ai-settings-panel form', that).submit(function(evt){
+                evt.preventDefault();
+                let formData = new FormData(this);
+
+                let formParent = $(this).parent();
+                formParent.css('position', 'relative');
+                $('<div id="sidebarFormLoading" class="overlay-spinner position-absolute top-0 start-0 w-100 h-100 d-flex justify-content-center align-items-center" style="position: absolute; top: 0; left: 0;background: rgba(255, 255, 255, 0.7); z-index: 10;">'+
+                    '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>'+
+                '</div>').appendTo(formParent);
+
+                $.ajax({
+                    type: "POST",
+                    url: $(this).attr("action"),
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function(data, textStatus, jqXHR) {
+                        $('#sidebarFormLoading').remove();
+                        // if response is html and a tag with class 'alert' is found, show alert dialog
+                        if (jqXHR.getResponseHeader("Content-Type").search("text/html") !== -1) {
+                            let tempDiv = $('<div>').html(data);
+                            let alertDiv = tempDiv.find('.alert');
+                            if (alertDiv.length > 0) {
+                                // based on alert (alert-danger, alert-info) class, determine type and call alertType method
+                                let alertType = alertDiv.hasClass('alert-danger') ? 'error' : 'info';
+                                $(that).appAdmin(alertType, alertDiv.text());
+
+                                if (alertType == 'error') {
+                                    return;
+                                }
+                            }
+                        }
+
+                        if( $.trim(data.js) != '' ){
+                            eval(data.js);
+                            return;
+                        };
+
+                        $('#ai-settings-panel').slideUp(function() {
+                            $(this).remove();
+                        });
+                    },
+                    error: function() {
+                        $('#sidebarFormLoading').remove();
+                        $(that).appAdmin('showAlertDialog', {
+                            title: 'Error',
+                            message: 'Generic Error',
+                            type: 'error',
+                        });
+                    }
+                });
+                return false;
+            });
+
+            if( $.trim(response.js) != '' ){
+                eval(response.js);
+            };
+        });
+    }
 };

@@ -92,17 +92,17 @@ class Manager extends ContainerAwareObject
             }
 
             foreach($ai as $aiElem) {
-                if (!$this->getAIModel($aiElem)->isEnabled()) {
+                if (!$this->getLLMAdapter($aiElem)->isEnabled()) {
                     $out &= false;
                 }
             }
             return $out;
         } elseif (is_string($ai)) {
-            return $this->getAIModel($ai)?->isEnabled() ?? false;
+            return $this->getLLMAdapter($ai)?->isEnabled() ?? false;
         }
 
         foreach($this->getAvailableAIs() as $aiElem) {
-            if ($this->getAIModel($aiElem)?->isEnabled()) {
+            if ($this->getLLMAdapter($aiElem)?->isEnabled()) {
                 return true;
             }
         }
@@ -115,7 +115,7 @@ class Manager extends ContainerAwareObject
         // get previous interactions for the selected aiType
         $previousInteractions = $this->getInteractions($aiType);
  
-        $generatedText = $this->getAIModel($aiType)->ask($prompt, $model, $previousInteractions);
+        $generatedText = $this->getLLMAdapter($aiType)->ask($prompt, $model, $previousInteractions);
  
         // add prompth and response to interactions to maintain history
         $this->saveInteraction($prompt, $generatedText, $aiType);
@@ -252,7 +252,7 @@ class Manager extends ContainerAwareObject
 
     /** --- Helper --- */
 
-    public function getAIModel(string $aiType) : ?AIModelInterface
+    public function getLLMAdapter(string $aiType) : ?AIModelInterface
     {
         $availableAIs = $this->getAvailableAIs(true);
         if (array_key_exists($aiType, $availableAIs)) {

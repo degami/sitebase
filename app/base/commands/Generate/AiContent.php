@@ -154,7 +154,7 @@ class AiContent extends BaseCommand
         $selectModel = $this->keepAsking('Do you want to select a specific model? (y/n) ', ['y', 'n']) == 'y';
         $model = null;
         if ($selectModel) {
-            $models = $this->getAi()->getAIModel($aiType)?->getAvailableModels(true) ?? [];
+            $models = $this->getAi()->getLLMAdapter($aiType)?->getAvailableModels(true) ?? [];
             if (count($models) > 0) {
                 $model = $this->selectElementFromList($models, 'Choose model');
             }

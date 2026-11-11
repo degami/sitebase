@@ -29,9 +29,12 @@ class AIManager extends Manager
         protected AIModelInterface $llm,
         protected ?string $model = null
     ) {
-        return parent::__construct($container);
+        parent::__construct($container);
+/*
         $this->model = $llm->getModel($this->model);
+        $llmName = static::getClassBaseName($this->llm::class);
         $this->setIndexName(strtolower('llm_embeddings_' .  $llmName . '_' . $this->model));
+*/
     }
 
     /**

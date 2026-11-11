@@ -142,7 +142,7 @@ class SearchEventListener implements EventListenerInterface
 
                     /** @var AISearchManager $embeddingManager */
                     $aiSearchManager = App::getInstance()->containerMake(AISearchManager::class, [
-                        'llm' => App::getInstance()->getAI()->getAIModel($llmCode),
+                        'llm' => App::getInstance()->getAI()->getLLMAdapter($llmCode),
                         'model' => match ($llmCode) {
                             'googlegemini' => 'text-embedding-004',
                             'chatgpt' => 'text-embedding-3-small',

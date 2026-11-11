@@ -100,11 +100,14 @@ $this->layout('base::layout', ['title' => $title] + get_defined_vars());?>
 
                 <div class="p-1 border-bottom d-flex justify-content-between align-items-center">
                     <strong class="ml-3">Chat AI</strong>
-                    <select id="chatAISelector" class="select-processed" style="width: 150px;">
-                        <?php foreach ($this->sitebase()->getEnabledAIs(true) as $ai => $AIinfo) : ?>
-                            <option value="<?= $ai; ?>"><?= ucfirst($AIinfo['name']); ?></option>
-                        <?php endforeach; ?>
-                    </select>
+                    <div>
+                        <select id="chatAISelector" class="select-processed" style="width: 150px;">
+                            <?php foreach ($this->sitebase()->getEnabledAIs(true) as $ai => $AIinfo) : ?>
+                                <option value="<?= $ai; ?>"><?= ucfirst($AIinfo['name']); ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <button id="ai-settings" class="btn"><?php echo $this->sitebase()->drawIcon('settings') ?></button>
+                    </div>
                     <a href="#" class="closebtn mr-2">&times;</a>
                 </div>
                 <div id="chatMessages" class="chat-messages px-3 py-2 overflow-auto" style="height: calc(100vh - <?php if ($this->sitebase()->getEnvironment()->canDebug()): ?>155px<?php else: ?>120px<?php endif;?>);">

@@ -195,7 +195,7 @@ class YouMayLikeProducts extends BaseCodeBlock
 
         /** @var AISearchManager $embeddingManager */
         return $this->aiSearchManager = $this->containerMake(AISearchManager::class, [
-            'llm' => $this->getAI()->getAIModel($llmCode),
+            'llm' => $this->getAI()->getLLMAdapter($llmCode),
             'model' => match ($llmCode) {
                 'googlegemini' => 'text-embedding-004',
                 'chatgpt' => 'text-embedding-3-small',

@@ -48,6 +48,12 @@ interface AIModelInterface
 
     public function getAvailableModels(bool $reset = false) : array;
     public function getVersion() : string;
+
     public function getModel(?string $model = null) : string;
+    public function setModel(string $model) : bool;
+
+    public function getEmbeddingModel() : string;
+    public function setEmbeddingModel(string $model) : bool;
+
     public function getDefaultModel() : string;
 }

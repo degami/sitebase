@@ -26,6 +26,8 @@ class Groq extends AbstractLLMAdapter
     public const GROQ_MODEL = 'llama-3.1-8b-instant';
     public const GROQ_TOKEN_PATH = 'app/groq/token';
     public const GROQ_MODEL_PATH = 'app/groq/model';
+    public const GROQ_EMBEDDING_MODEL = 'llama-3.1-8b-instant';
+    public const GROQ_EMBEDDING_MODEL_PATH = 'app/groq/embedding_model';
     public const GROQ_VERSION = 'v1';
     public const GROQ_VERSION_PATH = 'app/groq/version';
 
@@ -178,7 +180,7 @@ class Groq extends AbstractLLMAdapter
     public function buildEmbeddingRequest(string $input, ?string $model = null): array
     {
         return [
-            'model' => $this->getModel($model),
+            'model' => $this->getEmbeddingModel($model),
             'input' => $input
         ];
     }
@@ -244,5 +246,32 @@ class Groq extends AbstractLLMAdapter
     public function getVersion() : string
     {
         return $this->getSiteData()->getConfigValue(self::GROQ_VERSION_PATH) ?? self::GROQ_VERSION;
+    }
+
+    public function setModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::GROQ_MODEL_PATH, $model);
+    }
+
+    public function getEmbeddingModel(?string $model = null) : string
+    {
+        if (!is_null($model) && in_array($model, $this->getAvailableModels())) {
+            return $model;
+        }
+
+        return $this->getSiteData()->getConfigValue(self::GROQ_EMBEDDING_MODEL_PATH) ?? self::GROQ_EMBEDDING_MODEL;
+    }
+
+    public function setEmbeddingModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::GROQ_EMBEDDING_MODEL_PATH, $model);
     }
 }

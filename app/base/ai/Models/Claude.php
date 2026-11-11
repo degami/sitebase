@@ -25,6 +25,8 @@ class Claude extends AbstractLLMAdapter
 {
     public const CLAUDE_MODEL = 'claude-3-5-sonnet-20241022';
     public const CLAUDE_MODEL_PATH = 'app/claude/model';
+    public const CLAUDE_EMBEDDING_MODEL = 'claude-3-5-sonnet-20241022';
+    public const CLAUDE_EMBEDDING_MODEL_PATH = 'app/claude/embedding_model';
     public const CLAUDE_VERSION = 'v1';
     public const CLAUDE_VERSION_PATH = 'app/claude/version';
     public const CLAUDE_TOKEN_PATH = 'app/claude/token';
@@ -225,7 +227,7 @@ class Claude extends AbstractLLMAdapter
     public function buildEmbeddingRequest(string $input, ?string $model = null): array
     {
         return [
-            'model' => $this->getModel($model),
+            'model' => $this->getEmbeddingModel($model),
             'input' => $input
         ];
     }
@@ -288,5 +290,32 @@ class Claude extends AbstractLLMAdapter
         }
 
         return $this->getSiteData()->getConfigValue(self::CLAUDE_MODEL_PATH) ?? $this->getDefaultModel();
+    }
+
+    public function setModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::CLAUDE_MODEL_PATH, $model);
+    }
+
+    public function getEmbeddingModel(?string $model = null) : string
+    {
+        if (!is_null($model) && in_array($model, $this->getAvailableModels())) {
+            return $model;
+        }
+
+        return $this->getSiteData()->getConfigValue(self::CLAUDE_EMBEDDING_MODEL_PATH) ?? self::CLAUDE_EMBEDDING_MODEL;
+    }
+
+    public function setEmbeddingModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::CLAUDE_EMBEDDING_MODEL_PATH, $model);
     }
 }

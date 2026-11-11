@@ -26,6 +26,8 @@ class Perplexity extends AbstractLLMAdapter
     public const PERPLEXITY_MODEL = 'pplx-70b-online'; // modello di default
     public const PERPLEXITY_TOKEN_PATH = 'app/perplexity/token';
     public const PERPLEXITY_MODEL_PATH = 'app/perplexity/model';
+    public const PERPLEXITY_EMBEDDING_MODEL = 'pplx-70b-online'; // modello di default
+    public const PERPLEXITY_EMBEDDING_MODEL_PATH = 'app/perplexity/embedding_model';
 
     public static function getCode() : string
     {
@@ -204,5 +206,32 @@ class Perplexity extends AbstractLLMAdapter
     public function getVersion() : string
     {
         return 'none';
+    }
+
+    public function setModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::PERPLEXITY_MODEL_PATH, $model);
+    }
+
+    public function getEmbeddingModel(?string $model = null) : string
+    {
+        if (!is_null($model) && in_array($model, $this->getAvailableModels())) {
+            return $model;
+        }
+
+        return $this->getSiteData()->getConfigValue(self::PERPLEXITY_EMBEDDING_MODEL_PATH) ?? self::PERPLEXITY_EMBEDDING_MODEL;
+    }
+
+    public function setEmbeddingModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::PERPLEXITY_EMBEDDING_MODEL_PATH, $model);
     }
 }

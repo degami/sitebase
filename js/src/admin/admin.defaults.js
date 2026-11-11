@@ -13,4 +13,5 @@ window.appAdminDefaults = {
     'massDeleteUrl': null,
     'massEditUrl': null,
     'mediaPasteUrl': null,
+    'aiSettingsUrl': null,
 };

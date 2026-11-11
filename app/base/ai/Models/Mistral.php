@@ -25,6 +25,8 @@ class Mistral extends AbstractLLMAdapter
 {
     public const MISTRAL_MODEL = 'mistral-small-latest';
     public const MISTRAL_MODEL_PATH = 'app/mistral/model';
+    public const MISTRAL_EMBEDDING_MODEL = 'mistral-small-latest';
+    public const MISTRAL_EMBEDDING_MODEL_PATH = 'app/mistral/embedding_model';
     public const MISTRAL_VERSION = 'v1';
     public const MISTRAL_VERSION_PATH = 'app/mistral/version';
     public const MISTRAL_TOKEN_PATH = 'app/mistral/token';
@@ -196,7 +198,7 @@ class Mistral extends AbstractLLMAdapter
     public function buildEmbeddingRequest(string $input, ?string $model = null): array
     {
         return [
-            'model' => $this->getModel($model),
+            'model' => $this->getEmbeddingModel($model),
             'input' => $input
         ];
     }
@@ -258,5 +260,32 @@ class Mistral extends AbstractLLMAdapter
         }
 
         return $this->getSiteData()->getConfigValue(self::MISTRAL_MODEL_PATH) ?? $this->getDefaultModel();
+    }
+
+    public function setModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::MISTRAL_MODEL_PATH, $model);
+    }
+
+    public function getEmbeddingModel(?string $model = null) : string
+    {
+        if (!is_null($model) && in_array($model, $this->getAvailableModels())) {
+            return $model;
+        }
+
+        return $this->getSiteData()->getConfigValue(self::MISTRAL_EMBEDDING_MODEL_PATH) ?? self::MISTRAL_EMBEDDING_MODEL;
+    }
+
+    public function setEmbeddingModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::MISTRAL_EMBEDDING_MODEL_PATH, $model);
     }
 }

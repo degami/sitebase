@@ -98,7 +98,7 @@ class Chatbot extends BaseJsonPage
             throw new Exception("Missing auth token cookie");
         }
 
-        $llm = $this->getAI()->getAIModel($this->getRequest()->query->get('ai', 'googlegemini'));
+        $llm = $this->getAI()->getLLMAdapter($this->getRequest()->query->get('ai', 'googlegemini'));
         $gql = new GraphQLExecutor($endpoint, 'Bearer '.$authToken);
         $flow = new EcommerceFlow(new GraphQLSchemaProvider($gql), $gql);
 

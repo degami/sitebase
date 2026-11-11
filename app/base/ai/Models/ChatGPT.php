@@ -25,6 +25,8 @@ class ChatGPT extends AbstractLLMAdapter
 {
     public const CHATGPT_MODEL = 'gpt-3.5-turbo';
     public const CHATGPT_MODEL_PATH = 'app/chatgpt/model';
+    public const CHATGPT_EMBEDDING_MODEL = 'gpt-3.5-turbo';
+    public const CHATGPT_EMBEDDING_MODEL_PATH = 'app/chatgpt/embedding_model';
     public const CHATGPT_VERSION = 'v1';
     public const CHATGPT_VERSION_PATH = 'app/chatgpt/version';
     public const CHATGPT_TOKEN_PATH = 'app/chatgpt/token';
@@ -222,7 +224,7 @@ class ChatGPT extends AbstractLLMAdapter
     public function buildEmbeddingRequest(string $input, ?string $model = null): array
     {
         return [
-            'model' => $this->getModel($model),
+            'model' => $this->getEmbeddingModel($model),
             'input' => $input
         ];
     }
@@ -283,5 +285,32 @@ class ChatGPT extends AbstractLLMAdapter
         }
 
         return $this->getSiteData()->getConfigValue(self::CHATGPT_MODEL_PATH) ?? $this->getDefaultModel();
+    }
+
+    public function setModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::CHATGPT_MODEL_PATH, $model);
+    }
+
+    public function getEmbeddingModel(?string $model = null) : string
+    {
+        if (!is_null($model) && in_array($model, $this->getAvailableModels())) {
+            return $model;
+        }
+
+        return $this->getSiteData()->getConfigValue(self::CHATGPT_EMBEDDING_MODEL_PATH) ?? self::CHATGPT_EMBEDDING_MODEL;
+    }
+
+    public function setEmbeddingModel(string $model): bool
+    {
+        if (!in_array($model, $this->getAvailableModels())) {
+            return false;
+        }
+        
+        return $this->getSiteData()->setConfigValue(self::CHATGPT_EMBEDDING_MODEL_PATH, $model);
     }
 }

@@ -31,7 +31,7 @@ class Docs extends BaseExecCommand
     /**
      * {@inheritdoc}
      */
-    protected function configure() : void
+    protected function configure(): void
     {
         $this->setDescription('Generate documentation with phpdoc');
     }
@@ -41,10 +41,10 @@ class Docs extends BaseExecCommand
      *
      * @param InputInterface $input
      * @param OutputInterface $output
-     * @return void
+     * @return int
      * @throws NotFoundException
      */
-    protected function execute(InputInterface $input, OutputInterface $output) : int
+    protected function execute(InputInterface $input, OutputInterface $output): int
     {
         $output->writeln("<info>Generating Documentation</info>");
 
@@ -52,21 +52,100 @@ class Docs extends BaseExecCommand
             throw new NotFoundException('phpdoc command is missing!');
         }
 
-        $commandline = "phpdoc -t " . App::getDir(App::ROOT) . DS . "docs -d " . App::getDir(App::APP) . " --sourcecode --ignore=vendor/* --template=default --setting=\"graphs.enabled=true\" --setting=\"graphs.enabled=false\" --force >/dev/null 2>&1";
+        $docsDir = App::getDir(App::ROOT) . DS . "docs";
+        $webDocsLink = App::getDir(App::WEBROOT) . DS . "docs";
+
+        $commandline = "phpdoc -t " . $docsDir . " -d " . App::getDir(App::APP) . " --sourcecode --ignore=vendor/* --template=default --setting=\"graphs.enabled=false\" --force >/dev/null 2>&1";
         $this->executeCommand($commandline);
 
-        if (!file_exists(App::getDir(App::WEBROOT) . DS . "docs")) {
+        if (!file_exists($webDocsLink) && !is_link($webDocsLink)) {
             $question = new ConfirmationQuestion('Do you want to publish docs also on website? ', false);
             if (!$this->getQuestionHelper()->ask($input, $output, $question)) {
                 $output->writeln('<info>Not Publishing</info>');
                 return Command::SUCCESS;
             }
 
-            symlink(App::getDir(App::ROOT) . DS . "docs", App::getDir(App::WEBROOT) . DS . "docs");
+            symlink($docsDir, $webDocsLink);
         }
+
+        $website = $this->getSiteData()->getCurrentWebsite();
+        $host = $website->getDomain();
+        $this->rewriteLinksToAbsolute($docsDir, $host, "/docs");
 
         $this->getIo()->success('Task completed');
 
         return Command::SUCCESS;
+    }
+
+    private function rewriteLinksToAbsolute(string $docsDir, string $host, string $basePath = '/'): void
+    {
+        $normalizedHost = rtrim(trim($host), '/');
+        if (!preg_match('#^(?:https?:)?//#i', $normalizedHost)) {
+            $normalizedHost = '//' . $normalizedHost;
+        }
+
+        $normalizedBase = trim(str_replace('\\', '/', $basePath), '/');
+        $basePrefix = $normalizedBase !== '' ? '/' . $normalizedBase : '';
+
+        $realDocsDir = realpath($docsDir);
+        if ($realDocsDir === false) {
+            return;
+        }
+
+        $iterator = new \RecursiveIteratorIterator(
+            new \RecursiveDirectoryIterator($realDocsDir, \FilesystemIterator::SKIP_DOTS)
+        );
+
+        foreach ($iterator as $file) {
+            /** @var \SplFileInfo $file */
+            if (!$file->isFile() || strtolower($file->getExtension()) !== 'html') {
+                continue;
+            }
+
+            $content = file_get_contents($file->getPathname());
+            if ($content === false) {
+                continue;
+            }
+
+            $updated = preg_replace_callback(
+                '/\b(href|src)=([\'"])(?!https?:\/\/|\/\/|#|mailto:|data:)([^\'"#?]+)([#?][^\'"]*)?\2/i',
+                function (array $m) use ($normalizedHost, $basePrefix): string {
+                    $attr = $m[1];
+                    $quote = $m[2];
+                    $target = $m[3];
+                    $suffix = $m[4] ?? '';
+
+                    if (str_starts_with($target, '/')) {
+                        $resolvedPath = $this->resolveRelativePath($target);
+                    } else {
+                        $resolvedPath = $this->resolveRelativePath($basePrefix . '/' . $target);
+                    }
+
+                    return $attr . '=' . $quote . $normalizedHost . $resolvedPath . $suffix . $quote;
+                },
+                $content
+            );
+
+            if ($updated !== null && $updated !== $content) {
+                file_put_contents($file->getPathname(), $updated);
+            }
+        }
+    }
+
+    private function resolveRelativePath(string $path): string
+    {
+        $segments = [];
+        foreach (explode('/', str_replace('\\', '/', $path)) as $segment) {
+            if ($segment === '' || $segment === '.') {
+                continue;
+            }
+            if ($segment === '..') {
+                array_pop($segments);
+                continue;
+            }
+            $segments[] = $segment;
+        }
+
+        return '/' . implode('/', $segments);
     }
 }

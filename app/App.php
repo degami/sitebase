@@ -34,9 +34,18 @@ use App\Base\Traits\TranslatorsTrait;
 use Exception;
 use Throwable;
 use App\Base\Interfaces\EventListenerInterface;
+use App\Base\Environment\Manager as EnvironmentManager;
+use League\Plates\Engine;
+use DI\Container;
+use DebugBar\StandardDebugBar;
 
 /**
  * App class
+ * @method string getDir(string $type)
+ * @method EnvironmentManager getEnvironment()
+ * @method Engine getTemplates()
+ * @method ContainerInterface|Container getContainer()
+ * @method StandardDebugBar getDebugbar()
  */
 class App
 {
@@ -443,7 +452,7 @@ class App
 
         foreach ($listeners as $listenerClass) {
             if (is_subclass_of($listenerClass, EventListenerInterface::class)) {
-                $lister = $this->containerMake($listenerClass);
+                $lister = $this->containerMake((string) $listenerClass);
 
                 foreach ($lister->getEventHandlers() as $eventName => $eventHandler) {
                     if (is_callable($eventHandler)) {

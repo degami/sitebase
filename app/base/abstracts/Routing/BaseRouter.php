@@ -366,12 +366,12 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
     /**
      * gets array from cache
      *
-     * @param $array_name
+     * @param string $array_name
      * @return array
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function getArrayFromCache($array_name): array
+    protected function getArrayFromCache(string $array_name): array
     {
         $out = [];
         $cache_key = $this->getCacheKey($array_name);
@@ -385,13 +385,13 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
     /**
      * sets array in cache
      *
-     * @param $array_name
-     * @param $array
+     * @param string $array_name
+     * @param array $array
      * @return self
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    protected function setArrayInCache($array_name, $array): self
+    protected function setArrayInCache(string $array_name, array $array): self
     {
         $cache_key = $this->getCacheKey($array_name);
         $this->getCache()->set($cache_key, $array);
@@ -403,7 +403,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
      * sets cached routes
      *
      * @param array $routes
-     * @return $this
+     * @return BaseRouter
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
@@ -489,7 +489,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
         if ($dispatcher_info[0] == Dispatcher::NOT_FOUND) {
             $cached_rewrites = $this->getCachedRewrites();
 
-            /** @var Rewrite $rewrite */
+            /** @var Rewrite|null $rewrite */
             $rewrite = null;
             if (isset($cached_rewrites[$domain][$uri])) {
                 $rewrite = $this->containerCall([Rewrite::class, 'new'], ['initial_data' => $cached_rewrites[$domain][$uri]]);
@@ -547,7 +547,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
     /**
      * gets Class applicable route http verbs
      *
-     * @param $controller_class
+     * @param string|object $controller_class
      * @return array
      * @throws InvalidValueException
      */

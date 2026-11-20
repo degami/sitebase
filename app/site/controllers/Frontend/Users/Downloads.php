@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Base\Exceptions\PermissionDeniedException;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+use Degami\Basics\Exceptions\BasicException;
 
 class Downloads extends LoggedUserPage
 {
@@ -117,7 +118,7 @@ class Downloads extends LoggedUserPage
     /**
      * before render hook
      *
-     * @return Response|self
+     * @return Response|BasePage
      * @throws PermissionDeniedException
      * @throws BasicException
      */

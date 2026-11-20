@@ -280,7 +280,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
      *
      * @param array|string $condition
      * @param array $order
-     * @param int!null $page_size
+     * @param int|null $page_size
      * @param int $start
      * @return static
      * @throws DependencyException
@@ -303,7 +303,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
      *
      * @param array|string $condition
      * @param array $order
-     * @param int!null $page_size
+     * @param int|null $page_size
      * @param int $start
      * @return static
      * @throws DependencyException

@@ -51,7 +51,6 @@ use Monolog\Logger;
 use PDO;
 use Psr\Container\ContainerInterface;
 use Degami\Basics\Exceptions\BasicException;
-use HaydenPierce\ClassFinder\ClassFinder as HaydenClassFinder;
 use PHPGangsta_GoogleAuthenticator;
 use Swift_Mailer;
 use function DI\autowire;
@@ -59,6 +58,7 @@ use DI\Container;
 
 /**
  * Container Aware Object Trait
+ * @method string getClassBasename(string $className)
  */
 trait ContainerAwareTrait
 {

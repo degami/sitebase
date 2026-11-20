@@ -13,25 +13,28 @@
 
 namespace App\Base\Traits;
 
-use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\FrontendPage;
 use App\Site\Controllers\Frontend\Cms\Page;
 use App\Site\Models\Page as PageModel;
 use App\Base\Abstracts\Models\AccountModel;
-use App\Base\Models\GuestUser;
-use App\Base\Models\User;
 use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
-use Lcobucci\JWT\Token;
-use Lcobucci\JWT\Validator;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
+use App\Base\Auth\Manager as AuthManager;
+use App\Base\Tools\Utils\SiteData;
+use App\Base\Tools\Utils\Globals;
 
 /**
  * Pages Trait
+ * @method AuthManager getAuth()
+ * @method SiteData getSiteData()
+ * @method mixed containerCall(callable|array $callable, array $arguments = [])
+ * @method Globals getUtils()
+ * @property RouteInfo $route_info
  */
 trait PageTrait
 {
@@ -48,7 +51,7 @@ trait PageTrait
     /**
      * @var RouteInfo|null route info object
      */
-    protected ?RouteInfo $route_info;
+    //protected ?RouteInfo $route_info;
 
     /**
      * @var Website|null current website model

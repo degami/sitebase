@@ -221,7 +221,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         }
     }
 
-    protected function normalizeCacheKey($key) : string
+    protected function normalizeCacheKey(string $key) : string
     {
         return strtolower(preg_replace("/\.+/", '.', str_replace([':','/'], '.', preg_replace("/\s+/i", "+", $key))));
     }

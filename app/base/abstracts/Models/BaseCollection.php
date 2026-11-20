@@ -14,7 +14,6 @@
 namespace App\Base\Abstracts\Models;
 
 use App\App;
-use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Exceptions\InvalidValueException;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Tools\DataCollector\CollectionDataCollector;
@@ -25,7 +24,6 @@ use DI\NotFoundException;
 use IteratorAggregate;
 use LessQL\Result;
 use LessQL\Row;
-use Psr\Container\ContainerInterface;
 use Symfony\Component\HttpFoundation\Request;
 
 /**
@@ -33,7 +31,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class BaseCollection implements ArrayAccess, IteratorAggregate
 {
-    public const ITEMS_PER_PAGE = 5;
+    public const ITEMS_PER_PAGE = 50;
 
     /**
      * @var array collection loaded items

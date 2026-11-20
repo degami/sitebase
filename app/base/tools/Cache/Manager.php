@@ -33,6 +33,7 @@ use Psr\SimpleCache\CacheInterface;
 use ReflectionException;
 use Traversable;
 
+use function is_array;
 use function is_int;
 use function iterator_to_array;
 
@@ -79,11 +80,39 @@ class Manager extends ContainerAwareObject implements CacheInterface
                 ]);
                 $appname = $this->getEnvironment()->getVariable('APPNAME', 'sitebase');
                 $config->setSecurityKey(str_replace(" ", "_", strtolower($appname)));
-                $cache = \Phpfastcache\CacheManager::getInstance('Files', $config);    
+                $cache = \Phpfastcache\CacheManager::getInstance('Files', $config);
             }
 
             self::$internalCacheInstance = $cache;
         }
+    }
+
+    /**
+     * Sanitizes a cache key so it is safe for phpfastcache drivers and avoids collisions.
+     *
+     * @param mixed $key
+     * @return string
+     */
+    protected function sanitizeKey(mixed $key): string
+    {
+        $rawKey = (string) $key;
+
+        // Se la chiave contiene già solo caratteri sicuri ed è entro il limite, la manteniamo intatta
+        if (preg_match('/^[A-Za-z0-9_.-]{1,120}$/', $rawKey) === 1) {
+            return $rawKey;
+        }
+
+        // Altrimenti ripuliamo i caratteri non consentiti e aggiungiamo un suffisso hash per evitare collisioni
+        $clean = preg_replace('/[^A-Za-z0-9_.-]+/', '_', $rawKey) ?? 'key';
+        $clean = trim($clean, '._-');
+        if ($clean === '') {
+            $clean = 'key';
+        }
+
+        $hash = substr(hash('sha256', $rawKey), 0, 12);
+        $prefix = substr($clean, 0, 100);
+
+        return $prefix . '_' . $hash;
     }
 
     /**
@@ -95,14 +124,14 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * @throws BasicException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function get($key, $default = null) : mixed
+    public function get($key, $default = null): mixed
     {
         if ($this->getEnvironment()->getVariable('DISABLE_CACHE')) {
             return $default;
         }
 
         try {
-            $cacheItem = $this->getInternalCacheInstance()->getItem($key);
+            $cacheItem = $this->getInternalCacheInstance()->getItem($this->sanitizeKey($key));
             if (!$cacheItem->isExpired() && $cacheItem->get() !== null) {
                 return $cacheItem->get();
             }
@@ -117,7 +146,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * gets cache lifetime
      *
      * @param int|DateInterval|null $ttl
-     * @return int|Dateinterval
+     * @return int|DateInterval
      * @throws BasicException
      */
     public function getCacheLifetime(int|DateInterval|null $ttl = null): DateInterval|int
@@ -145,7 +174,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
 
         try {
             $cacheItem = $this->getInternalCacheInstance()
-                ->getItem($key)
+                ->getItem($this->sanitizeKey($key))
                 ->set($value)
                 ->addTag(self::CACHE_TAG);
             if (is_int($ttl) && $ttl <= 0) {
@@ -170,7 +199,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     public function delete($key): bool
     {
         try {
-            return $this->getInternalCacheInstance()->deleteItem($key);
+            return $this->getInternalCacheInstance()->deleteItem($this->sanitizeKey($key));
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
@@ -201,16 +230,23 @@ class Manager extends ContainerAwareObject implements CacheInterface
      */
     public function getMultiple($keys, $default = null): iterable
     {
-        if ($keys instanceof Traversable) {
-            $keys = iterator_to_array($keys);
-        }
         try {
-            return array_map(
-                function (ExtendedCacheItemInterface $item) {
-                    return $item->get();
-                },
-                $this->getInternalCacheInstance()->getItems($keys)
-            );
+            if ($keys instanceof Traversable) {
+                $keys = iterator_to_array($keys);
+            }
+
+            if (is_array($keys)) {
+                $keys = array_map([$this, 'sanitizeKey'], $keys);
+
+                return array_map(
+                    function (ExtendedCacheItemInterface $item) {
+                        return $item->get();
+                    },
+                    $this->getInternalCacheInstance()->getItems($keys)
+                );
+            } else {
+                throw new PhpfastcacheInvalidArgumentException('$keys must be an array/Traversable instance.');
+            }
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
         }
@@ -227,11 +263,15 @@ class Manager extends ContainerAwareObject implements CacheInterface
      */
     public function setMultiple($values, $ttl = null): bool
     {
+        if ($this->getEnvironment()->getVariable('DISABLE_CACHE')) {
+            return false;
+        }
+
         $ttl = $this->getCacheLifetime($ttl);
 
         try {
             foreach ($values as $key => $value) {
-                $cacheItem = $this->getInternalCacheInstance()->getItem($key)->set($value);
+                $cacheItem = $this->getInternalCacheInstance()->getItem($this->sanitizeKey($key))->set($value);
 
                 if (is_int($ttl) && $ttl <= 0) {
                     $cacheItem->expiresAt((new DateTime('@0')));
@@ -259,11 +299,15 @@ class Manager extends ContainerAwareObject implements CacheInterface
     {
         try {
             if ($keys instanceof Traversable) {
-                return $this->getInternalCacheInstance()->deleteItems(iterator_to_array($keys));
-            } elseif (is_array($keys)) {
+                $keys = iterator_to_array($keys);
+            }
+
+            if (is_array($keys)) {
+                $keys = array_map([$this, 'sanitizeKey'], $keys);
+
                 return $this->getInternalCacheInstance()->deleteItems($keys);
             } else {
-                throw new phpFastCacheInvalidArgumentException('$keys must be an array/Traversable instance.');
+                throw new PhpfastcacheInvalidArgumentException('$keys must be an array/Traversable instance.');
             }
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
@@ -285,7 +329,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
         }
 
         try {
-            $cacheItem = $this->getInternalCacheInstance()->getItem($key);
+            $cacheItem = $this->getInternalCacheInstance()->getItem($this->sanitizeKey($key));
             return $cacheItem->isHit() && !$cacheItem->isExpired();
         } catch (PhpfastcacheInvalidArgumentException $e) {
             throw new PhpfastcacheSimpleCacheException($e->getMessage(), 0, $e);
@@ -333,7 +377,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
      * get items by tag
      *
      * @param string $tagName
-     * @return     array
+     * @return array
      */
     public function getAllItemsByTag(string $tagName): array
     {
@@ -343,7 +387,7 @@ class Manager extends ContainerAwareObject implements CacheInterface
     /**
      * returns cache keys array
      */
-    public function keys() : array
+    public function keys(): array
     {
         return array_keys($this->getAllItemsByTag(self::CACHE_TAG) ?? []);
     }

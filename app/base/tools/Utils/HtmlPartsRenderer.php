@@ -51,6 +51,9 @@ use Exception;
  */
 class HtmlPartsRenderer extends ContainerAwareObject
 {
+
+    protected $uncommittedCachableBlocks = [];
+
     /**
      * returns flash message html
      *
@@ -284,7 +287,8 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $menu->addChild($menu_content);
 
         // store into cache
-        $this->getCache()->set($cache_key, (string)$menu);
+//        $this->getCache()->set($cache_key, (string)$menu);
+        $this->setUncommittedCachableBlocks($cache_key, (string)$menu);
         return (string)$menu;
     }
 
@@ -415,9 +419,28 @@ class HtmlPartsRenderer extends ContainerAwareObject
             }
         }
         if (!empty($cache_key)) {
-            $this->getCache()->set($cache_key, $out);
+//            $this->getCache()->set($cache_key, $out);
+            $this->setUncommittedCachableBlocks($cache_key, $out);
         }
         return $out;
+    }
+
+    public function resetUncommittedCachableBlocks() : self
+    {
+        $this->uncommittedCachableBlocks = [];
+        return $this;
+    }
+
+    public function setUncommittedCachableBlocks(string $cache_key, string $blockHtml) : self 
+    {
+        $this->uncommittedCachableBlocks[$cache_key] = $blockHtml;
+
+        return $this;
+    }
+
+    public function getUncommittedCachableBlocks() : array
+    {
+        return $this->uncommittedCachableBlocks;
     }
 
     public function renderUncachableBlockTag(Block $block, ?BasePage $current_page, ?string $locale = null) : string

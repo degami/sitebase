@@ -382,6 +382,10 @@ class App
 
         if ($response instanceof Response) {
             $response->prepare($this->getEnvironment()->getRequest())->send();
+
+            if ($response->getStatusCode() == 200) {
+                $this->event('commit_html_blocks', []);
+            }
         } else {
             // fallback to 404
             $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);

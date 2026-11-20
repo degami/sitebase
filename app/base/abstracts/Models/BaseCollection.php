@@ -33,7 +33,7 @@ use Symfony\Component\HttpFoundation\Request;
  */
 class BaseCollection implements ArrayAccess, IteratorAggregate
 {
-    public const ITEMS_PER_PAGE = 50;
+    public const ITEMS_PER_PAGE = 5;
 
     /**
      * @var array collection loaded items

@@ -14,7 +14,7 @@
 namespace App\Site\Controllers\Frontend\Cms;
 
 use Degami\Basics\Exceptions\BasicException;
-use App\Base\Abstracts\Controllers\FrontendPageWithLang;
+use App\Base\Abstracts\Controllers\FrontendPaginatedPageWithLang;
 use App\Site\Models\Event;
 use App\Base\Routing\RouteInfo;
 use App\Base\Tools\Utils\SiteData;
@@ -24,7 +24,7 @@ use DI\NotFoundException;
 /**
  * Events List Page
  */
-class EventList extends FrontendPageWithLang
+class EventList extends FrontendPaginatedPageWithLang
 {
     /**
      * @var RouteInfo|null route info object

@@ -15,8 +15,7 @@ namespace App\Base\Controllers\Frontend\Commerce;
 
 use App\App;
 use Degami\Basics\Exceptions\BasicException;
-use App\Base\Abstracts\Controllers\FrontendPage;
-use App\Base\Abstracts\Controllers\FrontendPageWithLang;
+use App\Base\Abstracts\Controllers\FrontendPaginatedPageWithLang;
 use App\Base\Models\GiftCard;
 use App\Base\Routing\RouteInfo;
 use App\Base\Tools\Utils\SiteData;
@@ -27,7 +26,7 @@ use Mpdf\Gif\Gif;
 /**
  * Gift Cards List Page
  */
-class GiftCardsList extends FrontendPageWithLang
+class GiftCardsList extends FrontendPaginatedPageWithLang
 {
     /**
      * @var RouteInfo|null route info object

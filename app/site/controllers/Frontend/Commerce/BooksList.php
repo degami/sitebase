@@ -15,19 +15,17 @@ namespace App\Site\Controllers\Frontend\Commerce;
 
 use App\App;
 use Degami\Basics\Exceptions\BasicException;
-use App\Base\Abstracts\Controllers\FrontendPage;
-use App\Base\Abstracts\Controllers\FrontendPageWithLang;
+use App\Base\Abstracts\Controllers\FrontendPaginatedPageWithLang;
 use App\Base\Routing\RouteInfo;
 use App\Base\Tools\Utils\SiteData;
 use App\Site\Models\Book;
-use App\Site\Models\DownloadableProduct;
 use DI\DependencyException;
 use DI\NotFoundException;
 
 /**
  * Books List Page
  */
-class BooksList extends FrontendPageWithLang
+class BooksList extends FrontendPaginatedPageWithLang
 {
     /**
      * @var RouteInfo|null route info object

@@ -34,13 +34,13 @@ function getCookie(name) {
             }
         });
 
-        if (undefined != cookieStore) {
+        if (typeof window.cookieStore === 'undefined') {
+            const val = getCookie('darkmode');
+            $('#darkmode-selector').prop('checked', val === 'true' || val === '1');
+        } else {
             cookieStore.get('darkmode').then(function(data){
                 $('#darkmode-selector').prop('checked', data?.value);
             });
-        } else {
-            const val = getCookie('darkmode');
-            $('#darkmode-selector').prop('checked', val === 'true' || val === '1');
         }
 
         $('#darkmode-selector').change(function(evt) {

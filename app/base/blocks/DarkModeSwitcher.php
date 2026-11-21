@@ -72,9 +72,20 @@ class DarkModeSwitcher extends BaseCodeBlock
                 ],
                 'text' => "
                     (function(\$){
-                        cookieStore.get('darkmode').then(function(data){
-                            \$('#darkmode-selector').prop('checked', data?.value);
-                        });
+
+                        if (typeof window.cookieStore === 'undefined') { 
+                            const val = getCookie('darkmode');
+                            if (val == '1') {
+                                \$('#darkmode-selector').prop('checked', true);
+                            } else {
+                                \$('#darkmode-selector').prop('checked', false);
+                            }
+                        } else {
+                            cookieStore.get('darkmode').then(function(data){
+                                \$('#darkmode-selector').prop('checked', data?.value);
+                            });
+                        }
+                    
                         \$('#darkmode-selector').change(function(evt) {
                             if (\$(this).prop('checked')) {
                                 \$.cookie('darkmode', \$(this).prop('checked') ? true : null, { expires: 365, path: '/' });

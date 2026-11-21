@@ -89,13 +89,22 @@ abstract class FrontendPage extends BaseHtmlPage
 
         if (!str_starts_with($this->getRouteName(), 'admin.')) {
             $this->getAssets()->addJs("
-                cookieStore.get('darkmode').then(function(data){
-                    if (data?.value) {
+                if (typeof window.cookieStore === 'undefined') { 
+                    const val = getCookie('darkmode');
+                    if (val == '1') {
                         \$('body').addClass('dark-mode');
                     } else {
                         \$('body').removeClass('dark-mode');
                     }
-                });
+                } else {
+                    cookieStore.get('darkmode').then(function(data){
+                        if (data?.value) {
+                            \$('body').addClass('dark-mode');
+                        } else {
+                            \$('body').removeClass('dark-mode');
+                        }
+                    });
+                }
             ");
         }
 

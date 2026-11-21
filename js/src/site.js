@@ -7,6 +7,14 @@
 //=include ../../node_modules/gallery/lib/gallery.js
 //=include ../i18n.js
 
+function getCookie(name) {
+    const prefix = encodeURIComponent(name) + '=';
+    const item = document.cookie
+        .split('; ')
+        .find((row) => row.startsWith(prefix));
+    return item ? decodeURIComponent(item.slice(prefix.length)) : undefined;
+}
+
 (function($){
     $(document).ready(function(){
         $('img[data-src]').Lazy();
@@ -26,9 +34,15 @@
             }
         });
 
-        cookieStore.get('darkmode').then(function(data){
-            $('#darkmode-selector').prop('checked', data?.value);
-        });
+        if (undefined != cookieStore) {
+            cookieStore.get('darkmode').then(function(data){
+                $('#darkmode-selector').prop('checked', data?.value);
+            });
+        } else {
+            const val = getCookie('darkmode');
+            $('#darkmode-selector').prop('checked', val === 'true' || val === '1');
+        }
+
         $('#darkmode-selector').change(function(evt) {
             if ($(this).prop('checked')) {
                 $.cookie('darkmode', $(this).prop('checked') ? true : null, { expires: 365, path: '/' });

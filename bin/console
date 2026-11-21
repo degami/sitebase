@@ -40,6 +40,7 @@ try {
 
     global $app;
     $app = new \App\App();
+    $app->init();
     $container->set(\App\App::class, $app);
     $container->set('app', $container->get(App::class));
     $website = null;
@@ -80,7 +81,7 @@ try {
             $commandEnabled = call_user_func([$commandClass, 'registerCommand']);
             if ($commandEnabled === false) {
                 continue;
-            }    
+            }
         }
 
         $array = explode("\\", $commandClass);

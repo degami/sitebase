@@ -97,15 +97,23 @@ class App
         // do we need php sessions ?
         // session_start();
 
+        $builder = new ContainerBuilder();
+        $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
+
+        /**
+         * @var ContainerInterface $this->container
+         */
+        $this->container = $builder->build();
+    }
+
+    /**
+     * application initialization
+     *
+     * @return App
+     */
+    public function init() : App
+    {
         try { 
-            $builder = new ContainerBuilder();
-            $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
-
-            /**
-             * @var ContainerInterface $this->container
-             */
-            $this->container = $builder->build();
-
             if (is_file(static::getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
                 $this->blocked_ips = include(static::getDir(self::CONFIG) . DS . 'blocked_ips.php');
                 if (!is_array($this->blocked_ips)) {
@@ -180,6 +188,8 @@ class App
             $response->prepare($this->getEnvironment()->getRequest())->send();
             die();
         }
+
+        return $this;
     }
 
     /**
@@ -620,5 +630,14 @@ class App
 </body>
 </html>
 HTML;
+    }
+
+    /**
+     * Helper method used into pub/index.php
+     */
+    public static function serve()
+    {
+        $app = new App();
+        $app->init()->bootstrap();
     }
 }

@@ -20,5 +20,4 @@ if (!App::installDone() && !str_starts_with($_SERVER['REQUEST_URI'], '/setup/'))
     exit();
 }
 
-$app = new App();
-$app->bootstrap();
+App::serve();

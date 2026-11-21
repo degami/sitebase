@@ -15,6 +15,8 @@ namespace App\Base\Interfaces\Controller;
 
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Routing\RouteInfo;
+use App\Base\Abstracts\Controllers\BasePage;
+use App\Base\Exceptions\PermissionDeniedException;
 
 interface PageInterface
 {
@@ -26,4 +28,14 @@ interface PageInterface
      * @return Response
      */
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response;
+
+    /**
+     * controller entrypoint
+     *
+     * @param RouteInfo|null $route_info
+     * @param array $route_data
+     * @return Response|self
+     * @throws PermissionDeniedException
+     */
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response;
 }

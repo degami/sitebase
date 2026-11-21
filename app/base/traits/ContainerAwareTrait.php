@@ -516,7 +516,12 @@ trait ContainerAwareTrait
     public function getAppRouteInfo(): ?RouteInfo
     {
         try {
-            return $this->getAppRequestInfo()?->getRouteInfo();
+            $requestInfo = $this->getAppRequestInfo();
+
+            if ($requestInfo instanceof RequestInfo) {
+                return $requestInfo->getRouteInfo();
+            }
+
         } catch (\Exception $e) {
         }
 

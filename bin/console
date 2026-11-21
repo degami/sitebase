@@ -19,7 +19,6 @@ use Psr\Container\ContainerInterface;
 use DI\Container;
 use \Symfony\Component\Console\Application;
 use Symfony\Component\Console\Input\InputOption;
-use \HaydenPierce\ClassFinder\ClassFinder;
 use \Symfony\Component\Console\Command\Command;
 use \App\App;
 
@@ -28,8 +27,10 @@ $application = new Application();
 $builder = new \DI\ContainerBuilder();
 $builder->addDefinitions(App::getDir(App::CONFIG).DS.'di.php');
 
+/** @var Container|null $container */
+$container = null;
+
 try {
-    /** @var Container $container */
     $container = $builder->build();
 
     $applicationDefinition = $application->getDefinition();

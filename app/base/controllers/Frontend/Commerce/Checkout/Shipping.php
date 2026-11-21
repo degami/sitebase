@@ -20,6 +20,7 @@ use Degami\PHPFormsApi as FAPI;
 use App\Base\Models\Country;
 use App\Base\Models\Address;
 use App\Base\Interfaces\Commerce\ShippingMethodInterface;
+use App\Base\Tools\Utils\ClassFinder;
 
 class Shipping extends FormPageWithLang
 {
@@ -451,6 +452,6 @@ class Shipping extends FormPageWithLang
 
     protected function getShippingMethodCode(ShippingMethodInterface $shipping_method) : string
     {
-        return $shipping_method->getCode() ?: strtolower(str_replace("\\",'_', trim(str_replace([App::BASE_COMMERCE_NAMESPACE, App::COMMERCE_NAMESPACE], '', get_class($shipping_method)), "\\")));
+        return $shipping_method->getCode() ?: strtolower(str_replace("\\",'_', trim(str_replace([ClassFinder::BASE_COMMERCE_NAMESPACE, ClassFinder::COMMERCE_NAMESPACE], '', get_class($shipping_method)), "\\")));
     }
 }

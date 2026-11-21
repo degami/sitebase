@@ -34,75 +34,114 @@ use Psr\Container\ContainerInterface;
 class ClassFinder extends ContainerAwareObject
 {
 
+    public const BASE_COMMANDS_NAMESPACE = 'App\Base\Commands';
+    public const COMMANDS_NAMESPACE = 'App\Site\Commands';
+
+    public const BASE_CONTROLLERS_NAMESPACE = 'App\Base\Controllers';
+    public const CONTROLLERS_NAMESPACE = 'App\Site\Controllers';
+
+    public const BASE_CRON_TASKS_NAMESPACE = 'App\Base\Cron\Tasks';
+    public const CRON_TASKS_NAMESPACE = 'App\Site\Cron\Tasks';
+
+    public const BASE_ROUTERS_NAMESPACE = 'App\Base\Routers';
+    public const ROUTERS_NAMESPACE = 'App\Site\Routers';
+
+    public const BASE_BLOCKS_NAMESPACE = 'App\Base\Blocks';
+    public const BLOCKS_NAMESPACE = 'App\Site\Blocks';
+
+    public const BASE_MODELS_NAMESPACE = 'App\Base\Models';
+    public const MODELS_NAMESPACE = 'App\Site\Models';
+
+    public const BASE_CRUD_NAMESPACE = 'App\Base\Crud';
+    public const CRUD_NAMESPACE = 'App\Site\Crud';
+
+    public const BASE_COMMERCE_NAMESPACE = 'App\Base\Commerce';
+    public const COMMERCE_NAMESPACE = 'App\Site\Commerce';
+
+    public const BASE_MIGRATIONS_NAMESPACE = 'App\Base\Migrations';
+    public const MIGRATIONS_NAMESPACE = 'App\Site\Migrations';
+
+    public const BASE_EVENT_LISTENERS_NAMESPACE = 'App\Base\EventListeners';
+    public const EVENT_LISTENERS_NAMESPACE = 'App\Site\EventListeners';
+
+    public const WEBHOOKS_NAMESPACE = 'App\Site\Webhooks';
+    public const QUEUES_NAMESPACE = 'App\Site\Queues';
+
+    public const GRAPHQL_RESOLVERS_NAMESPACE = 'App\Site\GraphQL\Resolvers';
+
+    public const BASE_AIMODELS_NAMESPACE = 'App\Base\AI\Models';
+    public const AIMODELS_NAMESPACE = 'App\Site\AI\Models';
+
     protected array $classesInNamespaces = [];
-    protected array $classesNamespaces = [
-        'commands' => [
-            App::BASE_COMMANDS_NAMESPACE,
-            App::COMMANDS_NAMESPACE,
-        ],
-        'controllers' => [
-            App::BASE_CONTROLLERS_NAMESPACE,
-            App::CONTROLLERS_NAMESPACE,
-        ],
-        'admincontrollers' => [
-            App::BASE_CONTROLLERS_NAMESPACE . '\Admin',
-            App::CONTROLLERS_NAMESPACE . '\Admin',
-        ],
-        'frontendcontrollers' => [
-            App::BASE_CONTROLLERS_NAMESPACE . '\Frontend',
-            App::CONTROLLERS_NAMESPACE . '\Frontend',
-        ],
-        'cron_tasks' => [
-            App::BASE_CRON_TASKS_NAMESPACE,
-            App::CRON_TASKS_NAMESPACE,
-        ],
-        'routers' => [
-            App::BASE_ROUTERS_NAMESPACE,
-            App::ROUTERS_NAMESPACE,
-        ],
-        'blocks' => [
-            App::BASE_BLOCKS_NAMESPACE,
-            App::BLOCKS_NAMESPACE,
-        ],
-        'models' => [
-            App::BASE_MODELS_NAMESPACE,
-            App::MODELS_NAMESPACE,
-        ],
-        'crud' => [
-            App::BASE_CRUD_NAMESPACE,
-            App::CRUD_NAMESPACE,
-        ],
-        'commerce' => [
-            App::BASE_COMMERCE_NAMESPACE,
-            App::COMMERCE_NAMESPACE,
-        ],
-        'migrations' => [
-            App::BASE_MIGRATIONS_NAMESPACE,
-            App::MIGRATIONS_NAMESPACE,
-        ],
-        'event_listeners' => [
-            App::BASE_EVENT_LISTENERS_NAMESPACE,
-            App::EVENT_LISTENERS_NAMESPACE,
-        ],
-        'webhooks' => [
-            App::WEBHOOKS_NAMESPACE,
-        ],
-        'queues' => [
-            App::QUEUES_NAMESPACE,
-        ],
-        'graphql' => [
-            App::GRAPHQL_RESOLVERS_NAMESPACE,
-        ],
-        'ai_models' => [
-            App::BASE_AIMODELS_NAMESPACE,
-            App::AIMODELS_NAMESPACE,
-        ],
-    ];
+    protected array $classesNamespaces = [];
 
 
     public function __construct(ContainerInterface $container)
     {
         parent::__construct($container);
+        $this->classesNamespaces = [
+            'commands' => [
+                static::BASE_COMMANDS_NAMESPACE,
+                static::COMMANDS_NAMESPACE,
+            ],
+            'controllers' => [
+                static::BASE_CONTROLLERS_NAMESPACE,
+                static::CONTROLLERS_NAMESPACE,
+            ],
+            'admincontrollers' => [
+                static::BASE_CONTROLLERS_NAMESPACE . '\Admin',
+                static::CONTROLLERS_NAMESPACE . '\Admin',
+            ],
+            'frontendcontrollers' => [
+                static::BASE_CONTROLLERS_NAMESPACE . '\Frontend',
+                static::CONTROLLERS_NAMESPACE . '\Frontend',
+            ],
+            'cron_tasks' => [
+                static::BASE_CRON_TASKS_NAMESPACE,
+                static::CRON_TASKS_NAMESPACE,
+            ],
+            'routers' => [
+                static::BASE_ROUTERS_NAMESPACE,
+                static::ROUTERS_NAMESPACE,
+            ],
+            'blocks' => [
+                static::BASE_BLOCKS_NAMESPACE,
+                static::BLOCKS_NAMESPACE,
+            ],
+            'models' => [
+                static::BASE_MODELS_NAMESPACE,
+                static::MODELS_NAMESPACE,
+            ],
+            'crud' => [
+                static::BASE_CRUD_NAMESPACE,
+                static::CRUD_NAMESPACE,
+            ],
+            'commerce' => [
+                static::BASE_COMMERCE_NAMESPACE,
+                static::COMMERCE_NAMESPACE,
+            ],
+            'migrations' => [
+                static::BASE_MIGRATIONS_NAMESPACE,
+                static::MIGRATIONS_NAMESPACE,
+            ],
+            'event_listeners' => [
+                static::BASE_EVENT_LISTENERS_NAMESPACE,
+                static::EVENT_LISTENERS_NAMESPACE,
+            ],
+            'webhooks' => [
+                static::WEBHOOKS_NAMESPACE,
+            ],
+            'queues' => [
+                static::QUEUES_NAMESPACE,
+            ],
+            'graphql' => [
+                static::GRAPHQL_RESOLVERS_NAMESPACE,
+            ],
+            'ai_models' => [
+                static::BASE_AIMODELS_NAMESPACE,
+                static::AIMODELS_NAMESPACE,
+            ],
+        ];
         $this->initClassesCache();
     }
 

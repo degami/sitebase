@@ -37,6 +37,7 @@ use Symfony\Component\HttpFoundation\Response;
 use ReflectionClass;
 use ReflectionMethod;
 use ReflectionUnionType;
+use App\Base\Tools\Utils\ClassFinder;
 
 class Entrypoint extends BasePage
 {
@@ -276,7 +277,7 @@ class Entrypoint extends BasePage
         return null;
     }
 
-    private function classHasMethodReturningType($class, $returnType) : string|bool
+    private function classHasMethodReturningType(object|string $class, string $returnType) : string|bool
     {
         if (class_exists("App\\Site\\Models\\".$returnType) || class_exists("App\\Base\\Models\\".$returnType)) {
             $returnType = class_exists("App\\Base\\Models\\".$returnType) ? "App\\Base\\Models\\".$returnType : "App\\Site\\Models\\".$returnType;
@@ -297,7 +298,7 @@ class Entrypoint extends BasePage
         return false;
     }
 
-    private function classHasPropertyNameMethod($class, $propertyName) : string|bool
+    private function classHasPropertyNameMethod(object|string $class, string $propertyName) : string|bool
     {
         try {
             $reflection = new \ReflectionClass($class);
@@ -386,8 +387,8 @@ class Entrypoint extends BasePage
 
             // only base types or models types should be added
             if (!in_array($phpType, ['int', 'string', 'bool', 'float', 'double', 'array']) && 
-                !str_starts_with($phpType, App::MODELS_NAMESPACE) &&
-                !str_starts_with($phpType, App::BASE_MODELS_NAMESPACE)
+                !str_starts_with($phpType, ClassFinder::MODELS_NAMESPACE) &&
+                !str_starts_with($phpType, ClassFinder::BASE_MODELS_NAMESPACE)
             ) {
                 // continue;
             }

@@ -13,6 +13,7 @@
 
 namespace App\Base\Routing;
 
+use App\App;
 use FastRoute\Dispatcher;
 use App\Base\Abstracts\Controllers\BasePage;
 
@@ -92,8 +93,15 @@ class RouteInfo
      * @param int|null $rewrite
      * @param string|null $type
      */
-    public function __construct(array $dispatcher_info, string $http_method, string $uri, string $route, ?string $route_name = null, ?int $rewrite = null, ?string $type = null)
-    {
+    public function __construct(
+        array $dispatcher_info, 
+        string $http_method, 
+        string $uri, 
+        string $route, 
+        ?string $route_name = null, 
+        ?int $rewrite = null, 
+        ?string $type = null
+    ) {
         $this->dispatcher_info = $dispatcher_info;
         $this->http_method = $http_method;
         $this->uri = $uri;
@@ -118,6 +126,11 @@ class RouteInfo
                 $this->handler = $dispatcher_info[1];
                 $this->vars = $dispatcher_info[2];
                 $this->allowed_methods = null;
+
+                if (is_array($this->handler) && is_callable([$this->handler[0], 'getRouteVerbs'])) {
+                    $this->allowed_methods = App::getInstance()->containerCall([$this->handler[0], 'getRouteVerbs']);
+                }
+                
                 break;
         }
     }
@@ -158,7 +171,7 @@ class RouteInfo
     /**
      * sets handler to call
      *
-     * @param callback $handler
+     * @param callable $handler
      * @return self
      */
     public function setHandler(callable $handler): RouteInfo

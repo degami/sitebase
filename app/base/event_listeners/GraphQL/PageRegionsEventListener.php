@@ -93,7 +93,7 @@ class PageRegionsEventListener implements EventListenerInterface
                             $currentPage = static::getControllerByRewrite($rewrite, $app);
                         } else {
                             $webRouter = $app->getWebRouter();
-                            $routeInfo = $webRouter->getRequestInfo('GET', $args['route_path']);
+                            $routeInfo = $webRouter->getRouteInfo('GET', $args['route_path']);
                             if ($routeInfo) {
                                 $currentPage = static::getControllerByRouteInfo($routeInfo, $app);
                             }

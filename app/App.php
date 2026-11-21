@@ -22,6 +22,7 @@ use Psr\Container\ContainerInterface;
 use Degami\EventManager\Event;
 use App\Base\Models\Website;
 use App\Base\Routing\RouteInfo;
+use App\Base\Routing\RequestInfo;
 use App\Base\Exceptions\OfflineException;
 use App\Base\Exceptions\BlockedIpException;
 use App\Base\Exceptions\NotFoundException;
@@ -73,44 +74,6 @@ class App
     public const TEMPLATES = 'templates';
     public const TRANSLATIONS = 'translations';
     public const GRAPHQL = 'graphql';
-
-    public const BASE_COMMANDS_NAMESPACE = 'App\Base\Commands';
-    public const COMMANDS_NAMESPACE = 'App\Site\Commands';
-
-    public const BASE_CONTROLLERS_NAMESPACE = 'App\Base\Controllers';
-    public const CONTROLLERS_NAMESPACE = 'App\Site\Controllers';
-
-    public const BASE_CRON_TASKS_NAMESPACE = 'App\Base\Cron\Tasks';
-    public const CRON_TASKS_NAMESPACE = 'App\Site\Cron\Tasks';
-
-    public const BASE_ROUTERS_NAMESPACE = 'App\Base\Routers';
-    public const ROUTERS_NAMESPACE = 'App\Site\Routers';
-
-    public const BASE_BLOCKS_NAMESPACE = 'App\Base\Blocks';
-    public const BLOCKS_NAMESPACE = 'App\Site\Blocks';
-
-    public const BASE_MODELS_NAMESPACE = 'App\Base\Models';
-    public const MODELS_NAMESPACE = 'App\Site\Models';
-
-    public const BASE_CRUD_NAMESPACE = 'App\Base\Crud';
-    public const CRUD_NAMESPACE = 'App\Site\Crud';
-
-    public const BASE_COMMERCE_NAMESPACE = 'App\Base\Commerce';
-    public const COMMERCE_NAMESPACE = 'App\Site\Commerce';
-
-    public const BASE_MIGRATIONS_NAMESPACE = 'App\Base\Migrations';
-    public const MIGRATIONS_NAMESPACE = 'App\Site\Migrations';
-
-    public const BASE_EVENT_LISTENERS_NAMESPACE = 'App\Base\EventListeners';
-    public const EVENT_LISTENERS_NAMESPACE = 'App\Site\EventListeners';
-
-    public const WEBHOOKS_NAMESPACE = 'App\Site\Webhooks';
-    public const QUEUES_NAMESPACE = 'App\Site\Queues';
-
-    public const GRAPHQL_RESOLVERS_NAMESPACE = 'App\Site\GraphQL\Resolvers';
-
-    public const BASE_AIMODELS_NAMESPACE = 'App\Base\AI\Models';
-    public const AIMODELS_NAMESPACE = 'App\Site\AI\Models';
 
     /**
      * @var string|null current locale
@@ -239,13 +202,7 @@ class App
         $this->registerEventListeners();
 
         $response = null;
-        $routeInfo = null;
         try {
-            $website = null;
-            if ($this->getEnvironment()->isCliServer()) {
-                $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
-            }
-
             if ($this->isBlocked($this->getEnvironment()->getRequest()?->getClientIp())) {
                 // if blocked stop immediately
                 throw new BlockedIpException();
@@ -282,29 +239,13 @@ class App
                     Rewrite::getCollection()->getItems();
                 }
 
-                foreach ($this->getRouters() as $router) {
-                    if (!$this->containerCall([$this->getService($router), 'isEnabled'])) {
-                        continue;
-                    }
+                /** @var RequestInfo $request_info */
+                $request_info = RequestInfo::createFromRequest($this->getEnvironment()->getRequest());
 
-                    $routeInfo = $this->containerCall(
-                        [$this->getService($router), 'getRequestInfo'],
-                        [
-                            'http_method' => $_SERVER['REQUEST_METHOD'],
-                            'request_uri' => $_SERVER['REQUEST_URI'],
-                            'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $this->getSiteData()->currentServerName()
-                        ]
-                    );
+                // register request info into container
+                $this->getContainer()->set(RequestInfo::class, $request_info);
 
-                    if ($routeInfo->getStatus() != Dispatcher::NOT_FOUND) {
-                        break;
-                    }
-                }
-
-                // register routeinfo into container
-                $this->getContainer()->set(RouteInfo::class, $routeInfo);
-
-                switch ($routeInfo->getStatus()) {
+                switch ($this->getAppRouteInfo()->getStatus()) {
                     case Dispatcher::NOT_FOUND:
                         // ... 404 Not Found
                         throw new NotFoundException();
@@ -327,7 +268,7 @@ class App
                             }
                         }
 
-                        if ($this->isSiteOffline() && !$routeInfo->worksOffline()) {
+                        if ($this->isSiteOffline() && !$this->getAppRouteInfo()->worksOffline()) {
                             throw new OfflineException();
                         }
 

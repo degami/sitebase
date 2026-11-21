@@ -23,6 +23,7 @@ use Symfony\Component\HttpFoundation\Response;
 use App\Base\Exceptions\NotFoundException;
 use App\Base\Abstracts\Controllers\BasePage;
 use Throwable;
+use App\Base\Exceptions\PermissionDeniedException;
 
 /**
  * Event Detail Page
@@ -40,16 +41,6 @@ class EventDetail extends FrontendPageWithObject
     }
 
     /**
-     * returns valid route HTTP verbs
-     *
-     * @return array
-     */
-    public static function getRouteVerbs(): array
-    {
-        return ['GET'];
-    }
-
-    /**
      * {@inheritdoc}
      *
      * @return string
@@ -62,7 +53,7 @@ class EventDetail extends FrontendPageWithObject
     /**
      * {@inheritdoc}
      *
-     * @return Response|self
+     * @return Response|BasePage
      * @throws PermissionDeniedException
      * @throws BasicException
      */

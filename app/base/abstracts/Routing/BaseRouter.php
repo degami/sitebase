@@ -265,7 +265,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
     public function checkRoute(string $route): bool
     {
         try {
-            return !in_array($this->getRequestInfo('GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
+            return !in_array($this->getRouteInfo('GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
         } catch (DependencyException | NotFoundException $e) {
         }
 
@@ -461,7 +461,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getRequestInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
+    public function getRouteInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
     {
         if (empty($http_method)) {
             $http_method = $_SERVER['REQUEST_METHOD'];

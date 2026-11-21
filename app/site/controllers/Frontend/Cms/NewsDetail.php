@@ -13,7 +13,6 @@
 
 namespace App\Site\Controllers\Frontend\Cms;
 
-use Degami\Basics\Exceptions\BasicException;
 use Exception;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Site\Models\News;
@@ -35,16 +34,6 @@ class NewsDetail extends FrontendPageWithObject
     public static function getRoutePath(): string
     {
         return 'news/{id:\d+}';
-    }
-
-    /**
-     * returns valid route HTTP verbs
-     *
-     * @return array
-     */
-    public static function getRouteVerbs(): array
-    {
-        return ['GET'];
     }
 
     /**

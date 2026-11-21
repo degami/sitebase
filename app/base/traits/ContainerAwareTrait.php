@@ -23,6 +23,7 @@ use App\Base\Tools\Search\Manager as SearchManager;
 use App\Base\Tools\ApplicationLogger\Manager as ApplicationLoggerManager;
 use App\Base\Auth\Manager as AuthManager;
 use App\Base\Environment\Manager as EnvironmentManager;
+use App\Base\Interfaces\Router\RouterInterface;
 use App\Base\Tools\Utils\Globals;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
@@ -33,6 +34,7 @@ use App\Base\Tools\Utils\Geocoder;
 use App\Base\Models\Website;
 use App\Base\Routers\Admin;
 use App\Base\Routing\RouteInfo;
+use App\Base\Routing\RequestInfo;
 use App\Base\Routers\Web;
 use App\Base\Routers\Webhooks;
 use App\Base\Routers\Crud;
@@ -294,6 +296,17 @@ trait ContainerAwareTrait
     }
 
     /**
+     * gets router by name
+     * 
+     * @return RouterInterface
+     * @throws BasicException
+     */
+    public function getRouter(string $router) : RouterInterface
+    {
+        return $this->getService($router);
+    }
+
+    /**
      * gets global utils service
      *
      * @return Globals
@@ -485,10 +498,25 @@ trait ContainerAwareTrait
      *
      * @return RouteInfo|null
      */
+    public function getAppRequestInfo(): ?RequestInfo
+    {
+        try {
+            return $this->getContainer()->get(RequestInfo::class);
+        } catch (\Exception $e) {
+        }
+
+        return null;
+    }
+
+    /**
+     * gets route info
+     *
+     * @return RouteInfo|null
+     */
     public function getAppRouteInfo(): ?RouteInfo
     {
         try {
-            return $this->getContainer()->get(RouteInfo::class);
+            return $this->getAppRequestInfo()?->getRouteInfo();
         } catch (\Exception $e) {
         }
 

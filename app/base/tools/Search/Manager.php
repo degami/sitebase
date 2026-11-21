@@ -17,12 +17,11 @@ use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Models\BaseCollection;
 use App\Base\Abstracts\Models\FrontendModel;
 use OpenSearch\Client as SearchClient;
-use OpenSearch\ClientBuilder;
 use App\Base\Tools\Plates\SiteBase;
 use InvalidArgumentException;
 use App\Base\Models\ProgressManagerProcess;
-use App\Base\Exceptions\NotFoundException;
 use App\App;
+use OpenSearch\GuzzleClientFactory;
 
 
 /**
@@ -81,12 +80,24 @@ class Manager extends ContainerAwareObject
     protected function getClient() : SearchClient
     {
         if (is_null($this->client)) {
-            $host = $this->getEnvironment()->getVariable('ELASTICSEARCH_HOST', 'localhost');
-            $port = $this->getEnvironment()->getVariable('ELASTICSEARCH_PORT', '9200');
+            $env    = $this->getEnvironment();
+            $scheme = $env->getVariable('ELASTICSEARCH_SCHEME', 'http');
+            $host   = $env->getVariable('ELASTICSEARCH_HOST', 'localhost');
+            $port   = $env->getVariable('ELASTICSEARCH_PORT', '9200');
+            $user   = $env->getVariable('ELASTICSEARCH_USER', null);
+            $pass   = $env->getVariable('ELASTICSEARCH_PASSWORD', null);
+            $verify = (bool) $env->getVariable('ELASTICSEARCH_SSL_VERIFY', 1);
 
-            $this->client = ClientBuilder::create()
-                ->setHosts([$host.':'.$port])
-                ->build();
+            $options = [
+                'base_uri' => sprintf('%s://%s:%s', $scheme, $host, $port),
+                'verify'   => $verify,
+            ];
+            if (!empty($user)) {
+                $options['auth'] = [$user, $pass ?? ''];
+            }
+
+            // 1. client HTTP PSR-18 (GuzzleHttp\Client)
+            $this->client = (new GuzzleClientFactory())->create($options);
         }
 
         return $this->client;
@@ -570,6 +581,7 @@ class Manager extends ContainerAwareObject
             $withScroll = self::DEFAULT_SCROLL_TIME;
         }
 
+        $search_result = null;
         if ($withScroll) {
             try {
                 $search_result = $this->openScroll($withScroll, $pageSize, $onlyAggregations);
@@ -580,7 +592,9 @@ class Manager extends ContainerAwareObject
                 }
             } finally {
                 // close scroll
-                $this->closeScroll($search_result['scroll_id']);
+                if (($search_result['scroll_id'] ?? false) !== false) {
+                    $this->closeScroll($search_result['scroll_id']);
+                } 
             }
         } else {
             // normal method

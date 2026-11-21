@@ -21,6 +21,7 @@ use App\Base\Models\OrderStatus;
 use App\Base\Traits\CommercePageTrait;
 use App\Base\Models\UserSession;
 use Degami\PHPFormsApi as FAPI;
+use App\Base\Tools\Utils\ClassFinder;
 
 class Payment extends FormPageWithLang
 {
@@ -243,6 +244,6 @@ class Payment extends FormPageWithLang
 
     protected function getPaymentMethodCode(PaymentMethodInterface $payment_method) : string
     {
-        return $payment_method->getCode() ?: strtolower(str_replace("\\",'_', trim(str_replace([App::BASE_COMMERCE_NAMESPACE, App::COMMERCE_NAMESPACE], '', get_class($payment_method)), "\\")));
+        return $payment_method->getCode() ?: strtolower(str_replace("\\",'_', trim(str_replace([ClassFinder::BASE_COMMERCE_NAMESPACE, ClassFinder::COMMERCE_NAMESPACE], '', get_class($payment_method)), "\\")));
     }
 }

@@ -84,7 +84,9 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response
     {
-        $this->route_info = $route_info;
+        if (!is_null($route_info)) {
+            $this->route_info = $route_info;
+        }
 
         $before_result = $this->beforeRender();
         if ($before_result instanceof Response) {
@@ -288,8 +290,12 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     public function returnAfterLogin(?string $custom_message = null) : RedirectResponse
     {
+        if (is_null($custom_message)) {
+            $custom_message = 'You need to be logged in to access this page. Please log in or register.';
+        }
+
         $this->addWarningFlashMessage(
-            $this->getUtils()->translate( $custom_message ?? 'You need to be logged in to access this page. Please log in or register.')
+            $this->getUtils()->translate( $custom_message)
         );
         
         return $this->doRedirect( 

@@ -13,11 +13,8 @@
 
 namespace App\Site\Controllers\Frontend\Cms;
 
-use Degami\Basics\Exceptions\BasicException;
 use App\Base\Abstracts\Controllers\FrontendPageWithObject;
 use App\Site\Models\Taxonomy as TaxonomyModel;
-use DI\DependencyException;
-use DI\NotFoundException;
 
 /**
  * Taxonomy Term Detail Page

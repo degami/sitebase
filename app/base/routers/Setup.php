@@ -94,10 +94,10 @@ class Setup extends BaseRouter
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getRequestInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
+    public function getRouteInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
     {
         // set request info type as webdav
-        return parent::getRequestInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);
+        return parent::getRouteInfo($http_method, $request_uri, $domain)->setType(self::ROUTER_TYPE);
     }
 
     public function __invoke()

@@ -16,7 +16,6 @@ namespace App\Base\Tools\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;
-use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * Blocks data collector for debugging

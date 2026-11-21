@@ -109,6 +109,6 @@ class Rewrite extends BaseModel
      */
     public function getRouteInfo(): RouteInfo
     {
-        return App::getInstance()->getWebRouter()->getRequestInfo('GET', $this->getRoute());
+        return App::getInstance()->getWebRouter()->getRouteInfo('GET', $this->getRoute());
     }
 }

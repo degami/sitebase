@@ -16,7 +16,6 @@ namespace App\Base\Tools\DataCollector;
 use DebugBar\DataCollector\DataCollector;
 use DebugBar\DataCollector\Renderable;
 use DebugBar\DataCollector\AssetProvider;
-use App\Base\Abstracts\Controllers\BasePage;
 
 /**
  * Page data collector for debugging
@@ -110,7 +109,7 @@ class CollectionDataCollector extends DataCollector implements Renderable, Asset
         if ($size <= 0) {
             return '0';
         }
-        return @round($size/pow(1024,($i=floor(log($size,1024)))),2).' '.$unit[$i];
+        return @round($size/pow(1024,($i = (int) floor(log($size,1024)))),2).' '.$unit[$i];
     }
 
     public static function getClassBasename(string|object $object_or_namespace) : string

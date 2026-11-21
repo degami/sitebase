@@ -398,6 +398,16 @@ abstract class FrontendPage extends BaseHtmlPage
 
 
     /**
+     * returns valid route HTTP verbs
+     *
+     * @return array
+     */
+    public static function getRouteVerbs(): array
+    {
+        return ['GET'];
+    }
+
+    /**
      * show menu flag.
      * utility function, subclasses can override this method to disable menu load
      *

@@ -89,17 +89,17 @@ class UncachableBlock extends BaseRestPage
         $uri = $this->buildRequestUriFromParsedUrl(parse_url($data['url']));
 
         $website = null;
-        if (php_sapi_name() == 'cli-server') {
+        if ($this->getEnvironment()->isCliServer()) {
             $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
         }
 
         /** @var RouteInfo $routeInfo */
         $routeInfo = $this->containerCall(
-            [$webRouter, 'getRequestInfo'],
+            [$webRouter, 'getRouteInfo'],
             [
                 'http_method' => 'GET',
                 'request_uri' => $uri,
-                'domain' => (php_sapi_name() == 'cli-server') ? $website->domain : $this->getSiteData()->currentServerName()
+                'domain' => ($this->getEnvironment()->isCliServer()) ? $website->domain : $this->getSiteData()->currentServerName()
             ]
         );
 

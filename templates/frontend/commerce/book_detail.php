@@ -1,6 +1,7 @@
 <?php
 /**
- * @var $object \App\Base\Abstracts\Models\FrontendModel
+ * @var \App\Base\Abstracts\Models\FrontendModel $object
+ * @var \Degami\PHPFormsApi\Form $form
  */
 $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_defined_vars()) ?>
 

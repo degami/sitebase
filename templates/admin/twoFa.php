@@ -1,4 +1,9 @@
 <?php
+/**
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var string $pageIntro
+ * @var \Degami\PHPFormsApi\Form $form
+ */
 $this->layout('frontend::layout', ['title' => $this->sitebase()->env('APPNAME')] + get_defined_vars()) ?>
 <?php $this->start('menu') ?><?php $this->stop() ?>
 

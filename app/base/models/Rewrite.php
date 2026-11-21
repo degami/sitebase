@@ -27,6 +27,8 @@ use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\GraphQl\GraphQLExport;
+use LessQL\Row;
+use LessQL\Result;
 
 /**
  * Rewrite Model
@@ -49,6 +51,7 @@ use App\Base\GraphQl\GraphQLExport;
  * @method self setParentId(int $parent_id)
  * @method self setCreatedAt(DateTime $created_at)
  * @method self setUpdatedAt(DateTime $updated_at)
+ * @method Result menuList()
  */
 #[GraphQLExport]
 class Rewrite extends BaseModel

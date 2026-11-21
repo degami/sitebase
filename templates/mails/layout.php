@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $subject string
- * @var $site_logo string
+ * @var string $subject
+ * @var string $site_logo
  */
 
 $this->layout('base::mail', get_defined_vars()) ?>

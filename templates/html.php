@@ -1,8 +1,8 @@
 <?php
 /**
- * @var $title string
- * @var $lang string
- * @var $body_class string
+ * @var string $title
+ * @var string $lang
+ * @var string $body_class
  */
 
 ?><!doctype html>

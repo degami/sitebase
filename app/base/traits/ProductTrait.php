@@ -54,4 +54,10 @@ trait ProductTrait
     {
         return $this->getData('title');
     }
+
+    #[GraphQLExport]
+    public function getDescription() : ?string
+    {
+        return $this->getData('content');
+    }
 }

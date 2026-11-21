@@ -1,11 +1,12 @@
 <?php
 /**
- * @var $user \App\Base\Abstracts\Models\AccountModel
- * @var $cart \App\Base\Models\Cart
- * @var $checkoutURL string
- * @var $applyDiscountUrl string
- * @var $discounts array
- * @var $controller \App\Base\Controllers\Frontend\Commerce\Cart
+ * @var \App\Base\Abstracts\Models\AccountModel $user
+ * @var \App\Base\Models\Cart $cart
+ * @var string $checkoutURL
+ * @var string $applyDiscountUrl
+ * @var array $discounts
+ * @var \App\Base\Controllers\Frontend\Commerce\Cart $controller
+ * @var \Degami\PHPFormsApi\Form $form
  */
 
 $this->layout('frontend::layout', ['title' => 'Cart'] + get_defined_vars()) ?>

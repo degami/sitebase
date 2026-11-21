@@ -1,10 +1,10 @@
 <?php
 /**
- * @var $user \App\Base\Abstracts\Models\AccountModel
- * @var $cart \App\Base\Models\Cart
- * @var $controller \App\Base\Controllers\Frontend\Commerce\Payment
+ * @var \App\Base\Abstracts\Models\AccountModel $user
+ * @var \App\Base\Models\Cart $cart
+ * @var \App\Base\Controllers\Frontend\Commerce\Checkout\Payment $controller
+ * @var \Degami\PHPFormsApi\Form $form
  */
-
 $this->layout('frontend::layout', ['title' => 'Payment'] + get_defined_vars()) ?>
     <h2><?= $this->sitebase()->translate('Order Review & Payment') ?></h2>
     <div class="row">

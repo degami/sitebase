@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $subject string
+ * @var string $subject
  */
 
 $lang = $lang ?? $this->sitebase()->getCurrentLocale();

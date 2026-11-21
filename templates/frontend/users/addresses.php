@@ -1,9 +1,9 @@
 <?php
 /**
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
- * @var $addresses \App\Base\Models\Address[]
- * @var $form \Degami\PHPFormsApi\Form
- * @var $controller \App\Base\Controllers\Frontend\Users\Addresses
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
+ * @var \App\Base\Models\Address[] $addresses
+ * @var \Degami\PHPFormsApi\Form $form
+ * @var \App\Base\Controllers\Frontend\Users\Addresses $controller
  */
 $this->layout('frontend::layout', ['title' => 'Addresses'] + get_defined_vars()) ?>
 
@@ -18,7 +18,7 @@ $this->layout('frontend::layout', ['title' => 'Addresses'] + get_defined_vars())
         </nav>
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="row">
-            <?php if ($controller->getRequest()->get('action') == 'edit' || $controller->getRequest()->get('action') == 'add' || $controller->getRequest()->get('action') == 'delete') :?>
+            <?php if ($controller->getRequest()->query->get('action') == 'edit' || $controller->getRequest()->query->get('action') == 'add' || $controller->getRequest()->query->get('action') == 'delete') :?>
                     <?= $form;?>
             <?php else: ?>
                 <?php if (empty($addresses)) :?>

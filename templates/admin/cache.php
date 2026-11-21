@@ -1,7 +1,10 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
+ * @var array $table_contents
+ * @var array $table_header
+ * @var string $info
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 

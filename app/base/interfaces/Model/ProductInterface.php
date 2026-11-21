@@ -21,6 +21,8 @@ interface ProductInterface
 
     public function getName() : ?string;
 
+    public function getDescription() : ?string;
+
     public function getPrice() : float;
 
     public function getTaxClassId() : ?int;

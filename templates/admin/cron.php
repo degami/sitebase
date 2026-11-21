@@ -1,12 +1,12 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $action string
- * @var $last_beat string
- * @var $listing string
- * @var $before_listing string
- * @var $paginator string
- * @var $form \Degami\PHPFormsApi\Form
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var string $action
+ * @var string $last_beat
+ * @var string $listing
+ * @var string $before_listing
+ * @var string $paginator
+ * @var \Degami\PHPFormsApi\Form $form
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 

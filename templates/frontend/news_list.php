@@ -1,8 +1,9 @@
 <?php
 /**
- * @var $paginator array
- * @var $news array
- * @var $page_title string
+ * @var array $paginator
+ * @var array $news
+ * @var string $page_title
+ * @var string $paginator
  */
 $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('News')] + get_defined_vars()) ?>
 

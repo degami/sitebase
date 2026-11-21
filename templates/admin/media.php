@@ -1,15 +1,16 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $action string
- * @var $before_listing string
- * @var $listing string
- * @var $paginator string
- * @var $media_elem \App\Site\Models\MediaElement
- * @var $elem_data array
- * @var $pages array
- * @var $form \Degami\PHPFormsApi\Form
- * @var $submission \App\Site\Models\ContactSubmission
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var string $action
+ * @var string $before_listing
+ * @var string $listing
+ * @var string $paginator
+ * @var \App\Site\Models\MediaElement $media_elem
+ * @var array $elem_data
+ * @var array $pages
+ * @var \Degami\PHPFormsApi\Form $form
+ * @var \App\Site\Models\ContactSubmission $submission
+ * @var string $info_table
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 

@@ -1,9 +1,10 @@
 <?php
 /**
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
- * @var $addresses \App\Base\Models\Address[]
- * @var $form \Degami\PHPFormsApi\Form
- * @var $controller \App\Base\Controllers\Frontend\Users\Addresses
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
+ * @var \App\Base\Models\Address[] $addresses
+ * @var \Degami\PHPFormsApi\Form $form
+ * @var \App\Base\Controllers\Frontend\Users\Addresses $controller
+ * @var string $credit_summary
  */
 $this->layout('frontend::layout', ['title' => 'My Giftcards'] + get_defined_vars()) ?>
 

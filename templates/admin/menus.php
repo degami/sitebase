@@ -1,9 +1,9 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $action string
- * @var $menus array
- * @var $form \Degami\PHPFormsApi\Form
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var string $action
+ * @var array $menus
+ * @var \Degami\PHPFormsApi\Form $form
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 

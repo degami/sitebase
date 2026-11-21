@@ -1,8 +1,8 @@
 <?php
 /**
- * @var $paginator array
- * @var $products array
- * @var $page_title string
+ * @var string $paginator
+ * @var \App\Base\Interfaces\Model\ProductInterface[] $products
+ * @var string $page_title
  */
 $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Gift Cards')] + get_defined_vars()) ?>
 
@@ -14,10 +14,10 @@ $this->layout('frontend::layout', ['title' => $this->sitebase()->translate('Gift
                 <li>
                     <div>
                         <a href="<?= $product->getFrontendUrl(); ?>" class="giftcard-detail">
-                            <span class="giftcard-title"><?= $product->getTitle(); ?></span>
+                            <span class="giftcard-title"><?= $product->getName(); ?></span>
                         </a>
                     </div>
-                    <div class="giftcard-description"><?= $this->sitebase()->summarize($product->getContent(), 20); ?></div>
+                    <div class="giftcard-description"><?= $this->sitebase()->summarize($product->getDescription(), 20); ?></div>
                 </li>
             <?php endforeach;?>
         </ul>

@@ -1,8 +1,9 @@
 <?php
 /**
- * @var $title string
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var string $title
+ * @var string $icon
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
  */
 
 $this->layout('base::layout', ['title' => $title] + get_defined_vars());?>

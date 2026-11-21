@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $form Degami\PHPFormsApi\Form
+ * @var Degami\PHPFormsApi\Form $form
  */
 $this->layout('html', ['title' => 'Form']) ?>
 

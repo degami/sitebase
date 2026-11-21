@@ -1,9 +1,9 @@
 <?php
 /**
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
- * @var $orders \App\Base\Models\Order[]
- * @var $form \Degami\PHPFormsApi\Form
- * @var $controller \App\Base\Controllers\Frontend\Users\Addresses
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
+ * @var \App\Base\Models\Order[] $orders
+ * @var \Degami\PHPFormsApi\Form $form
+ * @var \App\Base\Controllers\Frontend\Users\Addresses $controller
  */
 $this->layout('frontend::layout', ['title' => 'Orders'] + get_defined_vars()) ?>
 
@@ -18,7 +18,7 @@ $this->layout('frontend::layout', ['title' => 'Orders'] + get_defined_vars()) ?>
         </nav>
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="row">
-            <?php if ($controller->getRequest()->get('action') == 'cancel' || $controller->getRequest()->get('action') == 'view') :?>
+            <?php if ($controller->getRequest()->query->get('action') == 'cancel' || $controller->getRequest()->query->get('action') == 'view') :?>
                     <?= $form;?>
             <?php else: ?>
                 <?php if (empty($orders)) :?>

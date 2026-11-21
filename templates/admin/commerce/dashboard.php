@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $controller \App\Base\Controllers\Admin\Commerce\Dashboard
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
+ * @var \App\Base\Controllers\Admin\Commerce\Dashboard $controller
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
  */
 
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>

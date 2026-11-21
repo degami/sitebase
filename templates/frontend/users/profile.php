@@ -1,8 +1,8 @@
 <?php
 /**
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
- * @var $form \Degami\PHPFormsApi\Form
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
+ * @var \Degami\PHPFormsApi\Form $form
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
  */
 $this->layout('frontend::layout', ['title' => 'Profile'] + get_defined_vars()) ?>
 
@@ -16,7 +16,7 @@ $this->layout('frontend::layout', ['title' => 'Profile'] + get_defined_vars()) ?
             </div>
         </nav>
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
-            <?php if ($controller->getRequest()->get('action') == 'edit' || $controller->getRequest()->get('action') == 'change_pass') :?>
+            <?php if ($controller->getRequest()->query->get('action') == 'edit' || $controller->getRequest()->query->get('action') == 'change_pass') :?>
                 <?= $form;?>
             <?php else :?>
                 <div class="card" style="width: 400px;max-width: 100%;">

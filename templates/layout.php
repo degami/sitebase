@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $title string
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var string $title
  */
 /** @var \DebugBar\StandardDebugBar $debugbar */
 $debugbar = $this->sitebase()->getDebugbar();

@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $form \Degami\PHPFormsApi\Form
+ * @var \Degami\PHPFormsApi\Form $form
  */
 $this->layout('frontend::layout', ['title' => 'Login'] + get_defined_vars()) ?>
 

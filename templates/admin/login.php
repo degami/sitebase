@@ -1,6 +1,8 @@
 <?php
 /**
- * @var $form \Degami\PHPFormsApi\Form
+ * @var \Degami\PHPFormsApi\Form $form
+ * @var string $bgAuthor
+ * @var string $bgUrl
  */
 $this->layout('frontend::layout', ['title' => 'Login'] + get_defined_vars()) ?>
 <?php $this->start('menu') ?><?php $this->stop() ?>

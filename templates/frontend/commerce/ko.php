@@ -1,8 +1,8 @@
 <?php
 /**
- * @var $user \App\Base\Abstracts\Models\AccountModel
- * @var $order \App\Base\Models\Order
- * @var $controller \App\Base\Controllers\Frontend\Commerce\Ko
+ * @var \App\Base\Abstracts\Models\AccountModel $user
+ * @var \App\Base\Models\Order $order
+ * @var \App\Base\Controllers\Frontend\Commerce\Checkout\Ko $controller
  */
 
 $this->layout('frontend::layout', ['title' => 'Order not confirmed'] + get_defined_vars()) ?>

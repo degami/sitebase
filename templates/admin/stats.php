@@ -1,10 +1,10 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $top_visitors array
- * @var $most_viewed array
- * @var $top_errors array
- * @var $top_scanners array
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var array $top_visitors
+ * @var array $most_viewed
+ * @var array $top_errors
+ * @var array $top_scanners
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 

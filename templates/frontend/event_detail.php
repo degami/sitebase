@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $object \App\Base\Abstracts\Models\FrontendModel
+ * @var \App\Base\Abstracts\Models\FrontendModel $object
  */
 define('KILOMETER', 1000);
 $this->layout('frontend::layout', ['title' => $object->getPageTitle()] + get_defined_vars()) ?>

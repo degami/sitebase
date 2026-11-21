@@ -1,7 +1,7 @@
 <?php
 /**
- * @var $title string
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
+ * @var string $title
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
  */
 $this->layout('base::layout', ['title' => $title] + get_defined_vars()) ?>
 

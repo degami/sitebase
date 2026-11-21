@@ -1,11 +1,11 @@
 <?php
 /**
- * @var $user \App\Base\Abstracts\Models\AccountModel
- * @var $order \App\Base\Models\Order
- * @var $stripe_public_key string
- * @var $ok_url string
- * @var $ko_url string
- * @var $controller \App\Base\Controllers\Frontend\Commerce\Checkout\StripeReturnCallback
+ * @var \App\Base\Abstracts\Models\AccountModel $user
+ * @var \App\Base\Models\Order $order
+ * @var string $stripe_public_key
+ * @var string $ok_url
+ * @var string $ko_url
+ * @var \App\Base\Controllers\Frontend\Commerce\Checkout\Stripe\StripeReturnCallback $controller
  */
 
 $this->layout('frontend::layout', ['title' => 'Stripe Return'] + get_defined_vars()) ?>

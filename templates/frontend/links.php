@@ -1,10 +1,10 @@
 <?php
 /**
- * @var $page_title string
- * @var $links array
- * @var $paginator string
- * @var $locale string
- * @var $form \Degami\PHPFormsApi\Form
+ * @var string $page_title
+ * @var array $links
+ * @var string $paginator
+ * @var string $locale
+ * @var \Degami\PHPFormsApi\Form $form
  */
 $this->layout('frontend::layout', ['title' => 'Links'] + get_defined_vars()) ?>
 

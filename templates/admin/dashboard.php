@@ -1,19 +1,20 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $current_user \App\Base\Abstracts\Models\AccountModel
- * @var $websites integer
- * @var $users integer
- * @var $pages integer
- * @var $contact_forms integer
- * @var $contact_submissions integer
- * @var $taxonomy_terms integer
- * @var $news integer
- * @var $links integer
- * @var $blocks integer
- * @var $media integer
- * @var $page_views integer
- * @var $mails_sent integer
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var \App\Base\Abstracts\Models\AccountModel $current_user
+ * @var integer $websites
+ * @var integer $users
+ * @var integer $pages
+ * @var integer $contact_forms
+ * @var integer $contact_submissions
+ * @var integer $taxonomy_terms
+ * @var integer $news
+ * @var integer $links
+ * @var integer $blocks
+ * @var integer $media
+ * @var integer $page_views
+ * @var integer $mails_sent
+ * @var array $dashboard_links
  */
 
 $bySection = ($this->sitebase()->getUseruISetting($controller, 'dashboardLayout') ?? 'list') == 'by_section';

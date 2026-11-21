@@ -1,12 +1,12 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $action string
- * @var $request \Symfony\Component\HttpFoundation\Request
- * @var $logHtml string
- * @var $listing string
- * @var $before_listing string
- * @var $paginator string
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var string $action
+ * @var \Symfony\Component\HttpFoundation\Request $request
+ * @var string $logHtml
+ * @var string $listing
+ * @var string $before_listing
+ * @var string $paginator
  */
 $icon_style = 'vertical-align: text-top; width: 24px; height: 24px;';
 

@@ -1,11 +1,8 @@
 <?php
 /**
- * @var $controller \App\Base\Abstracts\Controllers\BaseHtmlPage
- * @var $action string
- * @var $last_beat string
- * @var $table string
- * @var $paginator string
- * @var $form \Degami\PHPFormsApi\Form
+ * @var \App\Base\Abstracts\Controllers\BaseHtmlPage $controller
+ * @var string $style
+ * @var string $php_info
  */
 $this->layout('admin::layout', ['title' => $controller->getPageTitle()] + get_defined_vars()) ?>
 

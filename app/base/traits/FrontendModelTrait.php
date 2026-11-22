@@ -21,6 +21,20 @@ use Exception;
 
 /**
  * Trait for frontend models
+ * 
+ * @method ?int getId()
+ * @method ?string getUrl()
+ * @method ?string getUrlKey()
+ * @method ?string getLocale()
+ * @method ?int getWebsiteId()
+ * @method ?int getAppWebsite()
+ * @method ?int getUserId()
+ * @method string defaultTableName()
+ * @method self setWebsiteId(int $websiteId)
+ * @method self setUserId(int $userId)
+ * @method self setLocale(string $locale)
+ * @method self setUrl(string $url)
+ * @method self setUrlKey(string $urlKey)
  */
 trait FrontendModelTrait
 {

@@ -20,6 +20,8 @@ use App\Base\GraphQl\GraphQLExport;
 
 /**
  * Trait for elements with latitude and longitude
+ * 
+ * @method ModelWithLocationCollection|BaseCollection getCollection()
  */
 trait WithLatLngTrait
 {

@@ -14,6 +14,10 @@
 namespace App\Base\Traits;
 
 use App\Base\Abstracts\Models\BaseModel;
+use Degami\Basics\Exceptions\BasicException;
+use DI\DependencyException;
+use App\Base\Exceptions\NotFoundException;
+use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 
 trait FrontendPageWithObjectTrait
 {
@@ -23,7 +27,7 @@ trait FrontendPageWithObjectTrait
      * sets object to show
      *
      * @param BaseModel $object
-     * @return self
+     * @return static
      */
     protected function setObject(BaseModel $object) : static
     {

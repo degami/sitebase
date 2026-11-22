@@ -13,6 +13,7 @@
 
 namespace App\Base\Traits;
 
+use App\App;
 use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Exceptions\PermissionDeniedException;
 use Degami\Basics\Exceptions\BasicException;
@@ -20,9 +21,19 @@ use Degami\PHPFormsApi as FAPI;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
+use App\Base\Tools\Utils\HtmlPartsRenderer;
+use App\Base\Tools\Utils\Globals;
+use App\Base\Environment\Manager as EnvironmentManager;
 
 /**
  * Form Trait
+ * 
+ * @method HtmlPartsRenderer getHtmlRenderer()
+ * @method Globals getUtils()
+ * @method string getControllerUrl()
+ * @method EnvironmentManager getEnvironment()
+ * @method ?string getCurrentLocale()
+ * @method App getApp()
  */
 trait FormTrait
 {

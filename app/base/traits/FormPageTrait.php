@@ -13,13 +13,7 @@
 
 namespace App\Base\Traits;
 
-use App\Base\Abstracts\Controllers\BasePage;
-use App\Base\Exceptions\PermissionDeniedException;
-use Degami\Basics\Exceptions\BasicException;
 use Degami\PHPFormsApi as FAPI;
-use DI\DependencyException;
-use DI\NotFoundException;
-use Symfony\Component\HttpFoundation\Response;
 
 /**
  * Form Page Trait

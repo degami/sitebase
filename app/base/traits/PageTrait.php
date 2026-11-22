@@ -27,11 +27,13 @@ use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Auth\Manager as AuthManager;
 use App\Base\Tools\Utils\SiteData;
 use App\Base\Tools\Utils\Globals;
+use App\Base\Environment\Manager as EnvironmentManager;
 
 /**
  * Pages Trait
  * @method AuthManager getAuth()
  * @method SiteData getSiteData()
+ * @method EnvironmentManager getEnvironment()
  * @method mixed containerCall(callable|array $callable, array $arguments = [])
  * @method Globals getUtils()
  * @property RouteInfo $route_info

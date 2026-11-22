@@ -241,7 +241,7 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if (!$this->getEnvironment()->getRequestInfo()->getRouteInfo()->isAdminRoute() && !$this->checkPermission('view_site')) {
+        if (!$this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->isAdminRoute() && !$this->checkPermission('view_site')) {
             throw new PermissionDeniedException();
         }
 

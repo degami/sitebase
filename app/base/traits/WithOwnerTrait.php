@@ -19,9 +19,12 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use App\Base\GraphQl\GraphQLExport;
 use App\Base\Versions\VersionExclude;
+use LessQL\Result;
 
 /**
  * Trait for elements with getOwner
+ * 
+ * @method Result user()
  */
 trait WithOwnerTrait
 {

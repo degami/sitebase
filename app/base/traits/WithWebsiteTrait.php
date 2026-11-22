@@ -18,9 +18,12 @@ use App\Base\Models\Website;
 use DI\DependencyException;
 use DI\NotFoundException;
 use App\Base\GraphQl\GraphQLExport;
+use LessQL\Result;
 
 /**
  * Trait for elements with Website
+ * 
+ * @method Result website()
  */
 trait WithWebsiteTrait
 {

@@ -15,19 +15,21 @@ namespace App\Base\Traits;
 
 
 use App\App;
-use App\Base\Environment\Manager;
 use App\Base\Routers\Web;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
 use Exception;
+use App\Base\Environment\Manager as EnvironmentManager;
+use App\Base\Abstracts\Models\BaseModel;
 
 /**
  * Frontend pages Trait
  * 
- * @method getApp() : App
- * @method getEnvironment() : Manager
- * @method getWebRouter() : Web
+ * @method App getApp()
+ * @method EnvironmentManager getEnvironment()
+ * @method Web getWebRouter()
+ * @method ?BaseModel getObject()
  */
 trait FrontendPageTrait
 {

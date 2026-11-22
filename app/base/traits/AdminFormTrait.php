@@ -26,6 +26,7 @@ Use Degami\PHPFormsApi\Containers\Fieldset;
 
 /**
  * Administration Forms Trait
+ * @method string getObjectClass()
  */
 trait AdminFormTrait
 {

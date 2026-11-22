@@ -18,10 +18,12 @@ use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\ModelWithChildren;
 use Exception;
 use Throwable;
-use App\Base\GraphQL\GraphQLExport;
 
 /**
  * Trait for elements with children
+ * 
+ * @property ?int $id
+ * @property ?int $parent_id
  */
 trait WithChildrenTrait
 {

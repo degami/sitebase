@@ -50,11 +50,9 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws NotFoundException
      */
     public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ContainerInterface $container
     ) {
-        parent::__construct($container, $request, $route_info);
+        parent::__construct($container);
 
         // this call is here to force current locale set
         $this->getCurrentLocale();

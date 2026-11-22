@@ -70,11 +70,9 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      * @throws NotFoundException
      */
     public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ContainerInterface $container
     ) {
-        parent::__construct($container, $request, $route_info);
+        parent::__construct($container);
 
         if ($this->getEnvironment()->canDebug()) {
             /** @var DebugBar $debugbar */
@@ -172,8 +170,6 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      */
     public function renderPage(?RouteInfo $route_info = null, array $route_data = []): Response
     {
-        $this->route_info = $route_info;
-
         $before_result = $this->beforeRender();
         if ($before_result instanceof Response) {
             return $before_result;

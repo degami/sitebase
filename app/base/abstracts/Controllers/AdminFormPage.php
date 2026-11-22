@@ -46,11 +46,9 @@ abstract class AdminFormPage extends AdminPage
      * @throws PermissionDeniedException
      */
     public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ContainerInterface $container
     ) {
-        parent::__construct($container, $request, $route_info);
+        parent::__construct($container);
         $this->template_data = [
             'action' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list',
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())

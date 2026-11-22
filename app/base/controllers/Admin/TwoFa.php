@@ -45,12 +45,10 @@ class TwoFa extends AdminFormPage
      * @throws PhpfastcacheSimpleCacheException
      */
     public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ContainerInterface $container
     ) {
         session_start(); // session is needed
-        parent::__construct($container, $request, $route_info);
+        parent::__construct($container);
         if (!$this->getTemplates()->getFolders()->exists('frontend')) {
             $this->getTemplates()->addFolder('frontend', App::getDir(App::TEMPLATES) . DS . 'frontend');
         }

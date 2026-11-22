@@ -34,6 +34,7 @@ use Exception;
 use Throwable;
 use App\Base\Interfaces\EventListenerInterface;
 use App\Base\Environment\Manager as EnvironmentManager;
+use App\Base\Models\Website;
 use League\Plates\Engine;
 use DI\Container;
 use DebugBar\StandardDebugBar;
@@ -130,6 +131,13 @@ class App
                         unset($this->blocked_ips[array_search($unblock, $this->blocked_ips)]);
                     }
                 }
+            }
+
+
+            if ($this->getEnvironment()->isCli()) {
+                // get first website and set as current website
+                $website = Website::getCollection()->getFirst();
+                putenv("website_id=".$website->id);
             }
 
             // preload requestInfo

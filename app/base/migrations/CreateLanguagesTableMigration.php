@@ -59,8 +59,8 @@ class CreateLanguagesTableMigration extends DBMigration
             ->addColumn('family', 'VARCHAR', [255])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
-            ->addIndex('locale_unique', 'locale', Index::TYPE_UNIQUE)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)            
+            ->addIndex('locale_unique', ['locale'], Index::TYPE_UNIQUE)
             ->setAutoIncrementColumn('id');
 
         return $table;

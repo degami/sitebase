@@ -59,7 +59,7 @@ class CreateUserDownloadsTableMigration extends DBMigration
             ->addColumn('download_available_count', 'INT', null, [])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_user_download_owner_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');
 

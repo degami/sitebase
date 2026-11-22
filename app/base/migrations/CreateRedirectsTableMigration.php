@@ -57,7 +57,7 @@ class CreateRedirectsTableMigration extends DBMigration
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_redirect_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_redirect_owner_id', ['user_id'], 'user', ['id'])
             ->addIndex('url_from_unique', ['website_id', 'url_from'], Index::TYPE_UNIQUE)

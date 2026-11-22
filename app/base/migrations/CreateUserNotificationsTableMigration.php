@@ -56,7 +56,7 @@ class CreateUserNotificationsTableMigration extends DBMigration
             ->addColumn('read', 'BOOLEAN', null, [], false, '0')
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_usernotification_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_usernotification_user_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

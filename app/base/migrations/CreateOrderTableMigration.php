@@ -54,7 +54,7 @@ class CreateOrderTableMigration extends DBMigration
             ->addColumn('additional_data', 'TEXT', null)
             ->addColumn('created_at', 'DATETIME', null, [], false)
             ->addColumn('updated_at', 'DATETIME', null, [], false)
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_order_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_order_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_order_status_id', ['order_status_id'], 'order_status', ['id'])

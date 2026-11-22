@@ -60,7 +60,7 @@ class CreateUsersTableMigration extends DBMigration
             ->addColumn('additional_data', 'TEXT', null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addIndex('username_unique', ['username'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_role_id', ['role_id'], 'role', ['id'])
             ->addForeignKey('fk_user_language_locale', ['locale'], 'language', ['locale'])

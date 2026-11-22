@@ -59,7 +59,7 @@ class CreatePositionTableMigration extends DBMigration
             ->addColumn('active', 'BOOLEAN', null, [])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_position_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_position_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_position_language_locale', ['locale'], 'language', ['locale'])

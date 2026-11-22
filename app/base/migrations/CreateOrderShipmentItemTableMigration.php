@@ -40,7 +40,7 @@ class CreateOrderShipmentItemTableMigration extends DBMigration
             ->addColumn('quantity', 'INT', null, [], false)
             ->addColumn('created_at', 'DATETIME', null, [], false)
             ->addColumn('updated_at', 'DATETIME', null, [], false)
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_shipmentitem_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_shipmentitem_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_shipmentitem_shipment_id', ['shipment_id'], 'order_shipment', ['id'], ForeignKey::ACTION_CASCADE, ForeignKey::ACTION_CASCADE)

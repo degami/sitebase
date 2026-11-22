@@ -106,12 +106,12 @@ class DownloadablesList extends FrontendPaginatedPageWithLang
     /**
      * {@inheritdoc}
      *
-     * @return string
+     * @return string|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentLocale(): string
+    public function getCurrentLocale(): ?string
     {
         if (!$this->locale) {
             $this->locale = parent::getCurrentLocale();

@@ -56,7 +56,7 @@ class CreatePagesMediaElementsTableMigration extends DBMigration
             ->addIndex('page_media_element', ['page_id', 'media_element_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_page_media_element_page_id', ['page_id'], 'page', ['id'])
             ->addForeignKey('fk_page_media_element_media_element_id', ['media_element_id'], 'media_element', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

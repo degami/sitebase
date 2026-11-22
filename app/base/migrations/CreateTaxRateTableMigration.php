@@ -39,7 +39,7 @@ class CreateTaxRateTableMigration extends DBMigration
             ->addColumn('rate', 'FLOAT', null, [], true, null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_tax_rate_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_tax_rate_tax_class_id', ['tax_class_id'], 'tax_class', ['id'])
             ->setAutoIncrementColumn('id');

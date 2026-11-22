@@ -56,7 +56,7 @@ class CreateLinkExchangeTaxonomyTableMigration extends DBMigration
             ->addIndex('link_exchange_taxonomy', ['link_exchange_id', 'taxonomy_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_link_exchange_taxonomy_page_id', ['link_exchange_id'], 'link_exchange', ['id'])
             ->addForeignKey('fk_link_exchange_taxonomy_taxonomy_id', ['taxonomy_id'], 'taxonomy', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

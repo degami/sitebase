@@ -58,7 +58,7 @@ class CreateContactDefinitionTableMigration extends DBMigration
             ->addColumn('field_data', 'VARCHAR', [1024])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_contact_definition_contact_id', ['contact_id'], 'contact', ['id'])
             ->setAutoIncrementColumn('id');
 

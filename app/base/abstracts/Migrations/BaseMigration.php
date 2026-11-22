@@ -14,13 +14,12 @@
 namespace App\Base\Abstracts\Migrations;
 
 use Genkgo\Migrations\MigrationInterface;
-use App\Base\Abstracts\ContainerAwareObject;
 use function Verraes\ClassFunctions\short;
 
 /**
  * Base for migration objects
  */
-abstract class BaseMigration extends ContainerAwareObject implements MigrationInterface
+abstract class BaseMigration implements MigrationInterface
 {
     /**
      * do the migration

@@ -54,7 +54,7 @@ class CreateOrderItemTableMigration extends DBMigration
             ->addColumn('admin_currency_code', 'VARCHAR', [255])
             ->addColumn('created_at', 'DATETIME', null, [], false)
             ->addColumn('updated_at', 'DATETIME', null, [], false)
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_orderitem_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_orderitem_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_orderitem_order_id', ['order_id'], 'order', ['id'], ForeignKey::ACTION_CASCADE, ForeignKey::ACTION_CASCADE)

@@ -56,7 +56,7 @@ class CreateDownloadableProductsMediaElementsTableMigration extends DBMigration
             ->addIndex('downloadable_product_media_element', ['downloadable_product_id', 'media_element_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_downloadable_product_media_element_page_id', ['downloadable_product_id'], 'downloadable_product', ['id'])
             ->addForeignKey('fk_downloadable_product_media_element_media_element_id', ['media_element_id'], 'media_element', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

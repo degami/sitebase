@@ -55,7 +55,7 @@ class CreateBlocksRewritesTableMigration extends DBMigration
             ->addIndex('block_rewrite', ['block_id', 'rewrite_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_block_rewrite_block_id', ['block_id'], 'block', ['id'])
             ->addForeignKey('fk_block_rewrite_rewrite_id', ['rewrite_id'], 'rewrite', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

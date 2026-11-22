@@ -49,7 +49,7 @@ class CreateGiftCardTableMigration extends DBMigration
              ->addColumn('media_id', 'INT', null, ['UNSIGNED'], true, null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_gift_card_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_gift_card_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_gift_card_language_locale', ['locale'], 'language', ['locale'])

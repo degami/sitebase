@@ -40,7 +40,7 @@ class CreateProductStockTableMigration extends DBMigration
             ->addColumn('quantity', 'INT', null, [])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_stock_website_id', ['website_id'], 'website', ['id'])
 //            ->addForeignKey('fk_stock_owner_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

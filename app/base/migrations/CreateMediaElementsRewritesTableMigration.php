@@ -58,7 +58,7 @@ class CreateMediaElementsRewritesTableMigration extends DBMigration
             ->addForeignKey('fk_media_element_rewrite_media_element_id', ['media_element_id'], 'media_element', ['id'])
             ->addForeignKey('fk_media_element_rewrite_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_media_element_rewrite_rewrite_id', ['rewrite_id'], 'rewrite', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

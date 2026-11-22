@@ -60,7 +60,7 @@ class CreateAdminActionLogTableMigration extends DBMigration
             ->addColumn('log_data', 'TEXT')
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_adminactionlog_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_adminactionlog_user_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

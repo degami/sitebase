@@ -56,6 +56,16 @@ class Migrate extends BaseCommand
     protected $directory;
 
     /**
+     * @var string baseNameSpace
+     */
+    protected $baseNameSpace;
+
+    /**
+     * @var string nameSpace
+     */
+    protected $nameSpace;
+
+    /**
      * {@inheritdoc}
      *
      * @param string|null $name
@@ -80,7 +90,10 @@ class Migrate extends BaseCommand
             ]
         );
         $this->baseDirectory = App::getDir(App::BASE_MIGRATIONS);
+        $this->baseNameSpace = 'App\\Base\\Migrations\\';
+
         $this->directory = App::getDir(App::MIGRATIONS);
+        $this->nameSpace = 'App\\Site\\Migrations\\';
     }
 
     /**
@@ -124,10 +137,10 @@ class Migrate extends BaseCommand
             $direction = MigrationInterface::DIRECTION_UP;
         }
 
-        $list = $this->factory->newListFromDirectory($this->baseDirectory, 'App\\Base\\Migrations\\');
+        $list = $this->factory->newListFromDirectory($this->baseDirectory, $this->baseNameSpace);
         $baseResult = $list->migrate($direction);
 
-        $list = $this->factory->newListFromDirectory($this->directory, 'App\\Site\\Migrations\\');
+        $list = $this->factory->newListFromDirectory($this->directory, $this->nameSpace);
         $result = $list->migrate($direction);
 
         $migrations = [];

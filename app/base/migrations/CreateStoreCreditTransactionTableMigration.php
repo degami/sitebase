@@ -41,7 +41,7 @@ class CreateStoreCreditTransactionTableMigration extends DBMigration
             ->addColumn('transaction_id', 'VARCHAR', [100])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_storecredittransaction_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_storecredittransaction_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_storecredittransaction_storecredit_id', ['store_credit_id'], 'store_credit', ['id'])

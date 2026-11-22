@@ -39,6 +39,7 @@ use Exception;
 use Imagine\Image\Box;
 use Imagine\Image\Palette\RGB;
 use Imagine\Image\Point;
+use App\Site\Migrations\InitialDataMigration;
 
 /**
  * fake data migration
@@ -92,7 +93,7 @@ class FakeDataMigration extends BaseMigration
      */
     public function up() : void
     {
-        $adminUser = $this->containerCall([User::class, 'load'], ['id' => 1]);
+        $adminUser = App::getInstance()->containerCall([User::class, 'load'], ['id' => 1]);
 
         $terms = [];
         $pages = [];
@@ -108,10 +109,10 @@ class FakeDataMigration extends BaseMigration
 
 
         /** @var Website $website */
-        $website = $this->containerCall([Website::class, 'load'], ['id' => $this->website_id]);
+        $website = App::getInstance()->containerCall([Website::class, 'load'], ['id' => $this->website_id]);
 
         /** @var Page $home_page */
-        $home_page = $this->containerCall([Page::class, 'load'], ['id' => 1]);
+        $home_page = App::getInstance()->containerCall([Page::class, 'load'], ['id' => 1]);
         $homePages[$home_page->getLocale()] = $home_page;
         foreach ($this->locales as $locale) {
             if ($locale == $website->getDefaultLocale()) {
@@ -128,7 +129,7 @@ class FakeDataMigration extends BaseMigration
         for ($i = 1; $i <= 3; $i++) {
             foreach ($this->locales as $locale) {
                 $terms[$locale][] = $this->addTerm(
-                    $this->getUtils()->translate("Term", locale: $locale). ' ' . $i,
+                    App::getInstance()->getUtils()->translate("Term", locale: $locale). ' ' . $i,
                     strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(1, 3)),
                     $locale,
                     $adminUser
@@ -143,7 +144,7 @@ class FakeDataMigration extends BaseMigration
         for ($i = 1; $i <= 5; $i++) {
             foreach ($this->locales as $locale) {
                 $pages[$locale][] = $this->addPage(
-                    $this->getUtils()->translate('Page', locale: $locale) . ' ' . $i,
+                    App::getInstance()->getUtils()->translate('Page', locale: $locale) . ' ' . $i,
                     strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $locale,
                     array_intersect_key($terms[$locale], array_flip(array_rand($terms[$locale], rand(2, count($terms[$locale]) - 1)))),
@@ -187,7 +188,7 @@ class FakeDataMigration extends BaseMigration
         ];
         
         foreach ($this->locales as $locale) {
-            $rewrite_model = $this->containerMake(Rewrite::class);
+            $rewrite_model = App::getInstance()->containerMake(Rewrite::class);
             $rewrite_model->url = '/' . $locale . '/links.html';
             $rewrite_model->route = '/links';
             $rewrite_model->locale = $locale;
@@ -198,7 +199,7 @@ class FakeDataMigration extends BaseMigration
         }
 
         foreach ($this->locales as $locale) {
-            $rewrite_model = $this->containerMake(Rewrite::class);
+            $rewrite_model = App::getInstance()->containerMake(Rewrite::class);
             $rewrite_model->url = '/' . $locale . '/news.html';
             $rewrite_model->route = '/news';
             $rewrite_model->locale = $locale;
@@ -209,7 +210,7 @@ class FakeDataMigration extends BaseMigration
         }
 
         foreach ($this->locales as $locale) {
-            $rewrite_model = $this->containerMake(Rewrite::class);
+            $rewrite_model = App::getInstance()->containerMake(Rewrite::class);
             $rewrite_model->url = '/' . $locale . '/events.html';
             $rewrite_model->route = '/events';
             $rewrite_model->locale = $locale;
@@ -235,7 +236,7 @@ class FakeDataMigration extends BaseMigration
             $date = $now->add(new DateInterval($interval_spec));
             foreach ($this->locales as $locale) {
                 $news[$locale][] = $this->addNews(
-                    $this->getUtils()->translate('News', locale: $locale) . ' ' . $i,
+                    App::getInstance()->getUtils()->translate('News', locale: $locale) . ' ' . $i,
                     strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $date,
                     $locale,
@@ -248,7 +249,7 @@ class FakeDataMigration extends BaseMigration
             $date = $now->add(new DateInterval($interval_spec));
             foreach ($this->locales as $locale) {
                 $events[$locale][] = $this->addEvent(
-                    $this->getUtils()->translate('Event', locale: $locale) . ' ' . $i,
+                    App::getInstance()->getUtils()->translate('Event', locale: $locale) . ' ' . $i,
                     strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                     $date,
                     $location['latitude'],
@@ -275,7 +276,7 @@ class FakeDataMigration extends BaseMigration
 
         foreach ($this->locales as $locale) {
             $contacts[$locale][] = $this->addContactForm(
-                $this->getUtils()->translate('Contact Us', locale: $locale),
+                App::getInstance()->getUtils()->translate('Contact Us', locale: $locale),
                 strtoupper($locale) . ' - ' . str_repeat($this->lorem_ipsum_p, rand(2, 6)),
                 $locale,
                 [
@@ -313,7 +314,7 @@ class FakeDataMigration extends BaseMigration
                 foreach (['homePages'] as $array_name) {
                     $element_from = ${$array_name}[$locale];
                     $element_to = ${$array_name}[$other_locale];
-                    $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
+                    $rewrite_translation_row = App::getInstance()->getDb()->table('rewrite_translation')->createRow();
                     $rewrite_translation_row->update(
                         [
                             'source' => $element_from->getId(),
@@ -333,13 +334,13 @@ class FakeDataMigration extends BaseMigration
                         $element_to = ${$array_name}[$other_locale][$index];
 
                         if ($element_from->getRewrite() == null) {
-                            $element_from = $this->containerCall([get_class($element_from), 'load'], ['id' => $element_from->getId()]);
+                            $element_from = App::getInstance()->containerCall([get_class($element_from), 'load'], ['id' => $element_from->getId()]);
                         }
                         if ($element_to->getRewrite() == null) {
-                            $element_to = $this->containerCall([get_class($element_to), 'load'], ['id' => $element_to->getId()]);
+                            $element_to = App::getInstance()->containerCall([get_class($element_to), 'load'], ['id' => $element_to->getId()]);
                         }
 
-                        $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
+                        $rewrite_translation_row = App::getInstance()->getDb()->table('rewrite_translation')->createRow();
                         $rewrite_translation_row->update(
                             [
                                 'source' => $element_from->getRewrite()->getId(),
@@ -357,7 +358,7 @@ class FakeDataMigration extends BaseMigration
                 foreach (['links_exchange_rewrites', 'news_list_rewrites', 'events_list_rewrites'] as $array_name) {
                     $element_from = ${$array_name}[$locale];
                     $element_to = ${$array_name}[$other_locale];
-                    $rewrite_translation_row = $this->getDb()->table('rewrite_translation')->createRow();
+                    $rewrite_translation_row = App::getInstance()->getDb()->table('rewrite_translation')->createRow();
                     $rewrite_translation_row->update(
                         [
                             'source' => $element_from->getId(),
@@ -384,19 +385,19 @@ class FakeDataMigration extends BaseMigration
                 }
             }
             $this->addMenuItem(
-                $this->getUtils()->translate('News', locale: $locale),
+                App::getInstance()->getUtils()->translate('News', locale: $locale),
                 $this->menu_names[$locale],
                 $news_list_rewrites[$locale],
                 $locale
             );
             $this->addMenuItem(
-                $this->getUtils()->translate('Events', locale: $locale),
+                App::getInstance()->getUtils()->translate('Events', locale: $locale),
                 $this->menu_names[$locale],
                 $events_list_rewrites[$locale],
                 $locale
             );
             $this->addMenuItem(
-                $this->getUtils()->translate('Links Exchange', locale: $locale),
+                App::getInstance()->getUtils()->translate('Links Exchange', locale: $locale),
                 $this->menu_names[$locale],
                 $links_exchange_rewrites[$locale],
                 $locale
@@ -418,7 +419,7 @@ class FakeDataMigration extends BaseMigration
                         throw new ExceptionsNotFoundException();
                     }
                 } catch (Exception $e) {
-                    $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
+                    $config = App::getInstance()->containerCall([Configuration::class, 'new'], ['initial_data' => [
                         'website_id' => $this->website_id,
                         'locale' => $locale,
                         'path' => $path,
@@ -439,7 +440,7 @@ class FakeDataMigration extends BaseMigration
                         throw new ExceptionsNotFoundException();
                     }
                 } catch (Exception $e) {
-                    $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
+                    $config = App::getInstance()->containerCall([Configuration::class, 'new'], ['initial_data' => [
                         'website_id' => $this->website_id,
                         'locale' => $locale,
                         'path' => $path,
@@ -466,7 +467,7 @@ class FakeDataMigration extends BaseMigration
                     throw new ExceptionsNotFoundException();
                 }
             } catch (Exception $e) {
-                $config = $this->containerCall([Configuration::class, 'new'], ['initial_data' => [
+                $config = App::getInstance()->containerCall([Configuration::class, 'new'], ['initial_data' => [
                     'website_id' => $this->website_id,
                     'path' => $path,
                 ]]);
@@ -510,7 +511,7 @@ class FakeDataMigration extends BaseMigration
                 $media = $backgrounds[$i];
 
                 if ($media && $rewrite && $media->id && $rewrite->id) {
-                    $media_rewrite = $this->containerMake(MediaElementRewrite::class);
+                    $media_rewrite = App::getInstance()->containerMake(MediaElementRewrite::class);
                     $media_rewrite->media_element_id = $media->id;
                     $media_rewrite->rewrite_id = $rewrite->id;
 
@@ -521,7 +522,7 @@ class FakeDataMigration extends BaseMigration
 
 
         // add all blocks
-        $this->getClassFinder()->findBlockClasses();
+        $blockClasses = App::getInstance()->getClassFinder()->findBlockClasses();
 
         foreach ($blockClasses as $blockClass) {
             $existing_blocks = Block::getCollection()->where(['instance_class' => $blockClass])->getItems();
@@ -530,7 +531,7 @@ class FakeDataMigration extends BaseMigration
             }
 
             /** @var Block $new_block */
-            $new_block = $this->containerMake(Block::class);
+            $new_block = App::getInstance()->containerMake(Block::class);
             $new_block->setRegion(null);
             $new_block->setTitle(str_replace("App\\Site\\Blocks\\", "", $blockClass));
             $new_block->setLocale(null);
@@ -541,15 +542,15 @@ class FakeDataMigration extends BaseMigration
         }
 
         // update blocks positions
-        $this->getDb()->query('UPDATE `block` SET `region` = \'pre_content\', `config` = \'{"add-current":"0"}\', `order` = 1 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\BreadCrumbs\' LIMIT 1;');
-        $this->getDb()->query('UPDATE `block` SET `region` = \'pre_footer\', `config` = \'{"show-language":"none","show-flags":"1"}\', `order` = 1  WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\ChangeLanguage\' LIMIT 1;');
-        $this->getDb()->query('UPDATE `block` SET `region` = \'before_body_close\', `config` = \'{"rewrite_en":"1","rewrite_fr":"1","rewrite_it":"1","rewrite_ro":"1","background-color":"#CECECE","color":"#000000","sticky":"bottom"}\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\CookieNotice\' LIMIT 1;');
-        $this->getDb()->query('UPDATE `block` SET `region` = \'pre_content\', `config` = \'{"fx":"","speed":"","timeout":""}\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\RewriteMedia\' LIMIT 1;');
-        $this->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\Search\' LIMIT 1;'); 
-        $this->getDb()->query('UPDATE `block` SET `region` = \'post_footer\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\YearCopy\' LIMIT 1;'); 
-        $this->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 1 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\LinkToUserArea\' LIMIT 1;'); 
-        $this->getDb()->query('UPDATE `block` SET `region` = \'post_content\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\AuthorInfo\' LIMIT 1;'); 
-        $this->getDb()->query('UPDATE `block` SET `region` = \'post_header\', `config` = \'{"add-current":"1"}\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\BreadCrumbs\' LIMIT 1;'); 
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'pre_content\', `config` = \'{"add-current":"0"}\', `order` = 1 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\BreadCrumbs\' LIMIT 1;');
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'pre_footer\', `config` = \'{"show-language":"none","show-flags":"1"}\', `order` = 1  WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\ChangeLanguage\' LIMIT 1;');
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'before_body_close\', `config` = \'{"rewrite_en":"1","rewrite_fr":"1","rewrite_it":"1","rewrite_ro":"1","background-color":"#CECECE","color":"#000000","sticky":"bottom"}\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\CookieNotice\' LIMIT 1;');
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'pre_content\', `config` = \'{"fx":"","speed":"","timeout":""}\', `order` = 0 WHERE instance_class = \'App\\\\Site\\\\Blocks\\\\RewriteMedia\' LIMIT 1;');
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\Search\' LIMIT 1;'); 
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'post_footer\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\YearCopy\' LIMIT 1;'); 
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'post_menu\', `order` = 1 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\LinkToUserArea\' LIMIT 1;'); 
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'post_content\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\AuthorInfo\' LIMIT 1;'); 
+        App::getInstance()->getDb()->query('UPDATE `block` SET `region` = \'post_header\', `config` = \'{"add-current":"1"}\', `order` = 0 WHERE instance_class = \'App\\\\Base\\\\Blocks\\\\BreadCrumbs\' LIMIT 1;'); 
     }
 
     /**
@@ -566,9 +567,9 @@ class FakeDataMigration extends BaseMigration
     private function addNews(string $title, string $content, DateTime $date, string $locale = 'en', ?User $owner_model = null, ?Rewrite $parentRewrite = null): NewsModel
     {
         /** @var NewsModel $news_model */
-        $news_model = $this->containerCall([NewsModel::class, 'new'], ['initial_data' => [
+        $news_model = App::getInstance()->containerCall([NewsModel::class, 'new'], ['initial_data' => [
             'website_id' => $this->website_id,
-            'url' => $this->getUtils()->slugify($title, false),
+            'url' => App::getInstance()->getUtils()->slugify($title, false),
             'title' => $title,
             'locale' => $locale,
             'content' => $content,
@@ -601,9 +602,9 @@ class FakeDataMigration extends BaseMigration
     private function addEvent(string $title, string $content, DateTime $date, float $latitude, float $longitude, string $locale = 'en', ?User $owner_model = null, ?Rewrite $parentRewrite = null): EventModel
     {
         /** @var EventModel $event_model */
-        $event_model = $this->containerCall([EventModel::class, 'new'], ['initial_data' => [
+        $event_model = App::getInstance()->containerCall([EventModel::class, 'new'], ['initial_data' => [
             'website_id' => $this->website_id,
-            'url' => $this->getUtils()->slugify($title, false),
+            'url' => App::getInstance()->getUtils()->slugify($title, false),
             'title' => $title,
             'locale' => $locale,
             'content' => $content,
@@ -636,9 +637,9 @@ class FakeDataMigration extends BaseMigration
     private function addPage(string $title, string $content, $locale = 'en', array $terms = [], ?User $owner_model = null, array $images = []): Page
     {
         /** @var Page $page_model */
-        $page_model = $this->containerCall([Page::class, 'new'], ['initial_data' => [
+        $page_model = App::getInstance()->containerCall([Page::class, 'new'], ['initial_data' => [
             'website_id' => $this->website_id,
-            'url' => $this->getUtils()->slugify($title, false),
+            'url' => App::getInstance()->getUtils()->slugify($title, false),
             'title' => $title,
             'locale' => $locale,
             'content' => $content,
@@ -670,9 +671,9 @@ class FakeDataMigration extends BaseMigration
     private function addTerm(string $title, string $content, string $locale = 'en', ?User $owner_model = null): Taxonomy
     {
         /** @var Taxonomy $term_model */
-        $term_model = $this->containerCall([Taxonomy::class, 'new'], ['initial_data' => [
+        $term_model = App::getInstance()->containerCall([Taxonomy::class, 'new'], ['initial_data' => [
             'website_id' => $this->website_id,
-            'url' => $this->getUtils()->slugify($title, false),
+            'url' => App::getInstance()->getUtils()->slugify($title, false),
             'title' => $title,
             'locale' => $locale,
             'content' => $content,
@@ -698,7 +699,7 @@ class FakeDataMigration extends BaseMigration
     private function addLinkExchange(string $url, string $email, $locale = 'en', array $terms = [], ?User $owner_model = null): LinkExchange
     {
         /** @var LinkExchange $link_exchange_model */
-        $link_exchange_model = $this->containerCall([LinkExchange::class, 'new'], ['initial_data' => [
+        $link_exchange_model = App::getInstance()->containerCall([LinkExchange::class, 'new'], ['initial_data' => [
             'website_id' => $this->website_id,
             'url' => $url,
             'title' => $url,
@@ -731,9 +732,9 @@ class FakeDataMigration extends BaseMigration
     private function addContactForm(string $title, string $content, $locale = 'en', array $fields = [], ?User $owner_model = null): Contact
     {
         /** @var Contact $contact_model */
-        $contact_model = $this->containerCall([Contact::class, 'new'], ['initial_data' => [
+        $contact_model = App::getInstance()->containerCall([Contact::class, 'new'], ['initial_data' => [
             'website_id' => $this->website_id,
-            'url' => $this->getUtils()->slugify($title, false),
+            'url' => App::getInstance()->getUtils()->slugify($title, false),
             'title' => $title,
             'locale' => $locale,
             'content' => $content,
@@ -743,7 +744,7 @@ class FakeDataMigration extends BaseMigration
         $contact_model->persist();
 
         foreach ($fields as $key => $field) {
-            $this->getDb()->createRow('contact_definition')->update(
+            App::getInstance()->getDb()->createRow('contact_definition')->update(
                 [
                     'contact_id' => $contact_model->getId(),
                     'field_label' => $field['label'],
@@ -771,7 +772,7 @@ class FakeDataMigration extends BaseMigration
     private function addMenuItem(string $title, string $menu_name, Rewrite $rewrite, string $locale = 'en', ?Menu $parent = null): Menu
     {
         /** @var Menu $menu_item_model */
-        $menu_item_model = $this->containerCall([Menu::class, 'new'], ['initial_data' => [
+        $menu_item_model = App::getInstance()->containerCall([Menu::class, 'new'], ['initial_data' => [
             'menu_name' => $menu_name,
             'website_id' => $this->website_id,
             'title' => $title,
@@ -803,7 +804,7 @@ class FakeDataMigration extends BaseMigration
     private function addBlock(string $title, string $content, string $region, string $locale = 'en', array $rewrites = []): Block
     {
         /** @var Block $block_model */
-        $block_model = $this->containerCall([Block::class, 'new'], ['initial_data' => [
+        $block_model = App::getInstance()->containerCall([Block::class, 'new'], ['initial_data' => [
             'website_id' => $this->website_id,
             'title' => $title,
             'locale' => $locale,
@@ -815,7 +816,7 @@ class FakeDataMigration extends BaseMigration
 
         if (!empty($rewrites)) {
             foreach ($rewrites as $rewrite) {
-                $this->getDb()->createRow(
+                App::getInstance()->getDb()->createRow(
                     'block_rewrite',
                     [
                         'block_id' => $block_model->getId(),
@@ -851,7 +852,7 @@ class FakeDataMigration extends BaseMigration
         $color3 = $palette->color([rand(0, 255), rand(0, 255), rand(0, 255)], 100);
         $color4 = $palette->color([rand(0, 255), rand(0, 255), rand(0, 255)], 100);
 
-        $image = $this->getImagine()->create($size, null);
+        $image = App::getInstance()->getImagine()->create($size, null);
         $image
             ->draw()
             ->rectangle(new Point(1, 1), new Point(($w / 2) - 1, ($h / 2) - 1), $color1, true)
@@ -864,13 +865,13 @@ class FakeDataMigration extends BaseMigration
         $filename = App::getDir(App::MEDIA) . DS . 'image-' . rand() . '-' . date("YmdHis") . '.png';
         $image->save($filename);
 
-        $media = $this->containerMake(MediaElement::class);
+        $media = App::getInstance()->containerMake(MediaElement::class);
         $media->path = $filename;
         $media->filename = basename($filename);
 
         $file_info = finfo_open(FILEINFO_MIME_TYPE); // return mime type ala mimetype extension
         $media->mimetype = finfo_file($file_info, $filename);
-        finfo_close($file_info);
+        @finfo_close($file_info);
 
         $media->filesize = filesize($filename);
 

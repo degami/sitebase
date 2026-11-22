@@ -56,9 +56,9 @@ class CreateWebsiteTableMigration extends DBMigration
             ->addColumn('default_locale', 'VARCHAR', [10])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addForeignKey('fk_website_language_locale', ['default_locale'], 'language', ['locale'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
-            ->setAutoIncrementColumn('id');
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
+            ->setAutoIncrementColumn('id')
+            ->addForeignKey('fk_website_language_locale', ['default_locale'], 'language', ['locale']);
 
         return $table;
     }

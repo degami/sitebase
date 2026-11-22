@@ -56,7 +56,7 @@ class CreatePagesTaxonomyTableMigration extends DBMigration
             ->addIndex('page_taxonomy', ['page_id', 'taxonomy_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_page_taxonomy_page_id', ['page_id'], 'page', ['id'])
             ->addForeignKey('fk_page_taxonomy_taxonomy_id', ['taxonomy_id'], 'taxonomy', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

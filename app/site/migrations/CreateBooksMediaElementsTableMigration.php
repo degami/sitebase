@@ -56,7 +56,7 @@ class CreateBooksMediaElementsTableMigration extends DBMigration
             ->addIndex('book_media_element', ['book_id', 'media_element_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_book_media_element_book_id', ['book_id'], 'book', ['id'])
             ->addForeignKey('fk_book_media_element_media_element_id', ['media_element_id'], 'media_element', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

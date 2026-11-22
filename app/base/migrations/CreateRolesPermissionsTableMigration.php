@@ -56,7 +56,7 @@ class CreateRolesPermissionsTableMigration extends DBMigration
             ->addIndex('role_permission', ['role_id', 'permission_id'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_role_permission_role_id', ['role_id'], 'role', ['id'])
             ->addForeignKey('fk_role_permission_permission_id', ['permission_id'], 'permission', ['id'])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->setAutoIncrementColumn('id');
 
         return $table;

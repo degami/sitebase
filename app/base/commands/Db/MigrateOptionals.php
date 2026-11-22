@@ -18,7 +18,6 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Psr\Container\ContainerInterface;
 use App\App;
-use Symfony\Component\Console\Command\Command;
 
 /**
  * Migrate Database Optionals Command
@@ -40,6 +39,7 @@ class MigrateOptionals extends Migrate
     ) {
         parent::__construct($container, $name);
         $this->directory = App::getDir(App::MIGRATIONS) . DS . 'Optionals';
+        $this->nameSpace = 'App\\Site\\Migrations\\Optionals\\';
     }
 
     /**

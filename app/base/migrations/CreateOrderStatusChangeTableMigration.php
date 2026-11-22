@@ -40,7 +40,7 @@ class CreateOrderStatusChangeTableMigration extends DBMigration
             ->addColumn('status_to', 'VARCHAR', [255])
             ->addColumn('created_at', 'DATETIME', null, [], false)
             ->addColumn('updated_at', 'DATETIME', null, [], false)
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_orderstatuschange_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_orderstatuschange_order_id', ['order_id'], 'order', ['id'], ForeignKey::ACTION_CASCADE, ForeignKey::ACTION_CASCADE)
             ->setAutoIncrementColumn('id');

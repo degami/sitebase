@@ -54,7 +54,7 @@ class CreateRewriteTranslationsTableMigration extends DBMigration
             ->addColumn('source_locale', 'VARCHAR', [10])
             ->addColumn('destination', 'INT', null, ['UNSIGNED'])
             ->addColumn('destination_locale', 'VARCHAR', [10])
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_rewrite_translation_source_language_locale', ['source_locale'], 'language', ['locale'])
             ->addForeignKey('fk_rewrite_translation_destination_language_locale', ['destination_locale'], 'language', ['locale'])
             ->addForeignKey('fk_rewrite_source_id', ['source'], 'rewrite', ['id'])

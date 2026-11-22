@@ -55,7 +55,7 @@ class CreateUserSessionsTableMigration extends DBMigration
             ->addColumn('session_data', 'TEXT', null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_usersession_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_usersession_user_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

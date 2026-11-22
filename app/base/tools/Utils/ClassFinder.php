@@ -203,7 +203,7 @@ class ClassFinder
     }
 
     public function findBlockClasses() {
-        return $this->getGroupClasses('block');
+        return $this->getGroupClasses('blocks');
     }
 
     public function findProductClasses() {

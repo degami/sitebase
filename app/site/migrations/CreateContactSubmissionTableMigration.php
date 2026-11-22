@@ -55,7 +55,7 @@ class CreateContactSubmissionTableMigration extends DBMigration
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_contact_submission_contact_id', ['contact_id'], 'contact', ['id'])
             ->addForeignKey('fk_contact_submission_user_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

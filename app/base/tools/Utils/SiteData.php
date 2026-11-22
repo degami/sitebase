@@ -13,6 +13,7 @@
 
 namespace App\Base\Tools\Utils;
 
+use App\App;
 use App\Base\Abstracts\ContainerAwareObject;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Exceptions\NotFoundException as ExceptionsNotFoundException;
@@ -81,12 +82,13 @@ class SiteData extends ContainerAwareObject
         }
 
         $website = null;
-        if ($this->getEnvironment()->isCliServer() || $this->getEnvironment()->isCli()) {
-            $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
-        } else {
-            $website = Website::getCollection()->where('domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)')->getFirst();
+        if (!App::installDone()) {
+            if ($this->getEnvironment()->isCliServer() || $this->getEnvironment()->isCli()) {
+                $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
+            } else {
+                $website = Website::getCollection()->where('domain = ' . $this->getDb()->quote($this->currentServerName()) . ' OR (FIND_IN_SET(' . $this->getDb()->quote($this->currentServerName()) . ', aliases) > 0)')->getFirst();
+            }
         }
-
         if ($this->getEnvironment()->canDebug()) {
             $debugbar['time']->stopMeasure($measure_key);
         }
@@ -266,11 +268,13 @@ class SiteData extends ContainerAwareObject
         }
 
         $cached_configuration = $this->getCachedConfig();
-        if (isset($cached_configuration[$website_id][$config_path][$locale])) {
-            return $cached_configuration[$website_id][$config_path][$locale];
-        }
-        if (isset($cached_configuration[$website_id][$config_path]['default'])) {
-            return $cached_configuration[$website_id][$config_path]['default'];
+        if ($website_id) {
+            if (isset($cached_configuration[$website_id][$config_path][$locale])) {
+                return $cached_configuration[$website_id][$config_path][$locale];
+            }
+            if (isset($cached_configuration[$website_id][$config_path]['default'])) {
+                return $cached_configuration[$website_id][$config_path]['default'];
+            }
         }
 
         try {

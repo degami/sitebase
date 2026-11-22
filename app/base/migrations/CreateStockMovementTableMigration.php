@@ -42,7 +42,7 @@ class CreateStockMovementTableMigration extends DBMigration
             ->addColumn('order_item_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_stockmovement_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_stockmovement_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_stockmovement_stock_id', ['stock_id'], 'product_stock', ['id'])

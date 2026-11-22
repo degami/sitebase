@@ -48,12 +48,12 @@ trait FrontendPageWithObjectTrait
         /**
      * {@inheritdoc}
      *
-     * @return string
+     * @return string|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentLocale(): string
+    public function getCurrentLocale(): ?string
     {
         if (isset($this->template_data['object']) && ($this->template_data['object'] instanceof BaseModel) && $this->template_data['object']->isLoaded()) {
             if ($this->template_data['object']->getLocale()) {

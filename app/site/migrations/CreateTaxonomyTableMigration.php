@@ -64,7 +64,7 @@ class CreateTaxonomyTableMigration extends DBMigration
             ->addColumn('user_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_taxonomy_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_taxonomy_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_taxonomy_language_locale', ['locale'], 'language', ['locale'])

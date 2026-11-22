@@ -358,12 +358,12 @@ class Login extends FormPage
     /**
      * {@inheritdoc}
      *
-     * @return string
+     * @return string|null
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
-    public function getCurrentLocale(): string
+    public function getCurrentLocale(): ?string
     {
         return $this->getSiteData()->getDefaultLocale();
     }

@@ -53,7 +53,7 @@ class CreateCartItemTableMigration extends DBMigration
             ->addColumn('admin_currency_code', 'VARCHAR', [10])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_cartitem_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_cartitem_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_cartitem_cart_id', ['cart_id'], 'cart', ['id'])

@@ -92,11 +92,14 @@ class Website extends BaseModel
     #[GraphQLExport()]
     public function getUrl() : string
     {
+        $server_port = $_SERVER['SERVER_PORT'] ?? 80;
+        $protocol = (($_SERVER['HTTPS'] ?? 'off') != 'off' || $server_port == 443) ? 'https' : 'http';
+
         $parsed = parse_url(
             sprintf(
                 "%s://%s%s%s",
-                (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') ? 'https' : 'http',
-                (is_numeric($_SERVER['SERVER_PORT']) && $_SERVER['SERVER_PORT'] != 80 && $_SERVER['SERVER_PORT'] != 443) ? ':' . $_SERVER['SERVER_PORT'] : '',
+                $protocol,
+                (is_numeric($server_port) && $server_port != 80 && $server_port != 443) ? ':' . $server_port : '',
                 $this->getDomain(),
                 '/'
             )

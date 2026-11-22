@@ -53,7 +53,7 @@ class CreateCartTableMigration extends DBMigration
             ->addColumn('billing_address_id', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_cart_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_cart_owner_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

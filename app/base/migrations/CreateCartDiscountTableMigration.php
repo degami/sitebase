@@ -45,7 +45,7 @@ class CreateCartDiscountTableMigration extends DBMigration
             ->addColumn('admin_currency_code', 'VARCHAR', [10])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_cartdiscount_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_cartdiscount_owner_id', ['user_id'], 'user', ['id'])
             ->addForeignKey('fk_cartdiscount_cart_id', ['cart_id'], 'cart', ['id'], ForeignKey::ACTION_CASCADE, ForeignKey::ACTION_CASCADE)

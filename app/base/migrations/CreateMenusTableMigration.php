@@ -63,7 +63,7 @@ class CreateMenusTableMigration extends DBMigration
             ->addColumn('breadcrumb', 'VARCHAR', [1024])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addIndex('menu_name', 'menu_name', Index::TYPE_INDEX)
             ->addForeignKey('fk_menu_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_menu_rewrite_id', ['rewrite_id'], 'rewrite', ['id'])

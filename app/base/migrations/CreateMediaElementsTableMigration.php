@@ -59,7 +59,7 @@ class CreateMediaElementsTableMigration extends DBMigration
             ->addColumn('lazyload', 'BOOLEAN', null, [])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addIndex('path_unique', 'path', Index::TYPE_UNIQUE)
             ->addForeignKey('fk_media_element_owner_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

@@ -58,7 +58,7 @@ class CreateConfigurationTableMigration extends DBMigration
             ->addColumn('is_system', 'BOOLEAN', null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addIndex('path_unique', ['website_id', 'locale', 'path'], Index::TYPE_UNIQUE)
             ->addForeignKey('fk_configuration_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_configuration_locale', ['locale'], 'language', ['locale'])

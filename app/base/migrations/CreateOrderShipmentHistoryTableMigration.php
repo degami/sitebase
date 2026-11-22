@@ -39,7 +39,7 @@ class CreateOrderShipmentHistoryTableMigration extends DBMigration
             ->addColumn('longitude', 'FLOAT', null, [], true, null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_shipmenthistory_shipment_id', ['shipment_id'], 'order_shipment', ['id'], ForeignKey::ACTION_CASCADE, ForeignKey::ACTION_CASCADE)
             ->setAutoIncrementColumn('id');
 

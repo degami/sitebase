@@ -17,6 +17,7 @@ use Degami\Basics\Exceptions\BasicException;
 use Degami\SqlSchema\Schema;
 use Degami\SqlSchema\Table;
 use Exception;
+use App\App;
 
 /**
  * Base for database migrations
@@ -36,7 +37,7 @@ abstract class DBMigration extends BaseMigration
     {
         $table = $sql = null;
         try {
-            $schema = $this->containerMake(Schema::class, ['pdo' => $this->getPdo(), 'preload' => true]);
+            $schema = App::getInstance()->containerMake(Schema::class, ['pdo' => App::getInstance()->getPdo(), 'preload' => true]);
 
             try {
                 $table = $schema->getTable($this->tableName);
@@ -51,8 +52,8 @@ abstract class DBMigration extends BaseMigration
             $table = $this->addDBTableDefinition($table);
 
             $sql = $table->migrate();
-            if ($this->getPdo()->exec($sql) === false) {
-                throw new Exception("SQL Error: " . $this->getPdo()->errorInfo()[2], 1);
+            if (App::getInstance()->getPdo()->exec($sql) === false) {
+                throw new Exception("SQL Error: " . App::getInstance()->getPdo()->errorInfo()[2], 1);
             }
         } catch (Exception $e) {
             if (isset($sql) && ($table instanceof Table)) {
@@ -68,7 +69,7 @@ abstract class DBMigration extends BaseMigration
      */
     public function down() : void
     {
-        $this->getPdo()->exec("DROP TABLE {$this->tableName}");
+        App::getInstance()->getPdo()->exec("DROP TABLE {$this->tableName}");
     }
 
     /**

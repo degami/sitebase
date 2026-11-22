@@ -57,7 +57,7 @@ class CreateQueueMessageTableMigration extends DBMigration
             ->addColumn('result', 'INT', null, ['UNSIGNED'])
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_queue_message_website_id', ['website_id'], 'website', ['id'])
             ->setAutoIncrementColumn('id');
 

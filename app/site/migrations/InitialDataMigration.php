@@ -228,7 +228,7 @@ class InitialDataMigration extends BaseMigration
     {
         $fd = fopen("app/base/tools/iso_639-1.csv", "r");
         $header = null;
-        while ($row = fgetcsv($fd)) {
+        while ($row = fgetcsv($fd, null, ',', '"', '\\')) {
             if ($header == null) {
                 $header = $row;
             } else {
@@ -257,7 +257,7 @@ class InitialDataMigration extends BaseMigration
     {
         $fd = fopen("app/base/tools/all_countries_with_capitals.csv", "r");
         $header = null;
-        while ($row = fgetcsv($fd)) {
+        while ($row = fgetcsv($fd, null, ',', '"', '\\')) {
             if ($header == null) {
                 $header = $row;
             } else {

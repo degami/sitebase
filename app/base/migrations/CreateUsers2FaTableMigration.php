@@ -53,7 +53,7 @@ class CreateUsers2FaTableMigration extends DBMigration
             ->addColumn('secret', 'TEXT', null)
             ->addColumn('created_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
             ->addColumn('updated_at', 'TIMESTAMP', null, [], false, 'CURRENT_TIMESTAMP()')
-            ->addIndex(null, 'id', Index::TYPE_PRIMARY)
+            ->addIndex('PK', ['id'], Index::TYPE_PRIMARY)
             ->addForeignKey('fk_user2fa_website_id', ['website_id'], 'website', ['id'])
             ->addForeignKey('fk_user2fa_user_id', ['user_id'], 'user', ['id'])
             ->setAutoIncrementColumn('id');

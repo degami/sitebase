@@ -41,15 +41,12 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      * BasePage constructor.
      *
      * @param ContainerInterface $container
-     * @param Request $request
-     * @param RouteInfo $route_info
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
      */
     public function __construct(
-        protected ContainerInterface $container, 
-        protected ?Request $request = null
+        protected ContainerInterface $container
     ) {
         parent::__construct($container);
 

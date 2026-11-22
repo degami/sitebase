@@ -22,14 +22,14 @@ use DI\DependencyException;
 use DI\NotFoundException;
 use Symfony\Component\HttpFoundation\Response;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
-use App\Base\Tools\Utils\Globals;
+use App\Base\Tools\Utils\Utils;
 use App\Base\Environment\Manager as EnvironmentManager;
 
 /**
  * Form Trait
  * 
  * @method HtmlPartsRenderer getHtmlRenderer()
- * @method Globals getUtils()
+ * @method Utils getUtils()
  * @method string getControllerUrl()
  * @method EnvironmentManager getEnvironment()
  * @method ?string getCurrentLocale()

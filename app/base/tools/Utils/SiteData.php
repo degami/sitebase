@@ -469,7 +469,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getDateFormat(?int $website_id = null, ?string $locale = null): string
     {
-        $date_format = $this->getSiteData()->getConfigValue(self::DATE_FORMAT_PATH, $website_id, $locale);
+        $date_format = $this->getConfigValue(self::DATE_FORMAT_PATH, $website_id, $locale);
         return $date_format ?: 'Y-m-d';
     }
 
@@ -486,7 +486,7 @@ class SiteData extends ContainerAwareObject
      */
     public function getDateTimeFormat(?int $website_id = null, ?string $locale = null): string
     {
-        $date_format = $this->getSiteData()->getConfigValue(self::DATE_TIME_FORMAT_PATH, $website_id, $locale);
+        $date_format = $this->getConfigValue(self::DATE_TIME_FORMAT_PATH, $website_id, $locale);
         return $date_format ?: 'Y-m-d H:i';
     }
 
@@ -565,7 +565,7 @@ class SiteData extends ContainerAwareObject
         static $pageBlocks = null;
 
         if (is_null($pageBlocks)) {
-            $website_id = $this->getSiteData()->getCurrentWebsiteId();
+            $website_id = $this->getCurrentWebsiteId();
 
             $pageBlocks = [];
             foreach (Block::getCollection()->where(['locale' => [$locale, null], 'website_id' => [$website_id, null]], ['order' => 'asc']) as $block) {

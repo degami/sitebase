@@ -24,7 +24,7 @@ use App\Base\Tools\ApplicationLogger\Manager as ApplicationLoggerManager;
 use App\Base\Auth\Manager as AuthManager;
 use App\Base\Environment\Manager as EnvironmentManager;
 use App\Base\Interfaces\Router\RouterInterface;
-use App\Base\Tools\Utils\Globals;
+use App\Base\Tools\Utils\Utils;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\Mailer;
 use App\Base\Tools\Utils\SiteData;
@@ -309,10 +309,10 @@ trait ContainerAwareTrait
     /**
      * gets global utils service
      *
-     * @return Globals
+     * @return Utils
      * @throws BasicException
      */
-    public function getUtils(): Globals
+    public function getUtils(): Utils
     {
         return $this->getService('utils');
     }

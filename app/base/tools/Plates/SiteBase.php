@@ -17,7 +17,7 @@ use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Auth\Manager as AuthManager;
 use App\Base\Tools\AI\Manager as AIManager;
 use App\Base\Environment\Manager as EnvironmentManager;
-use App\Base\Tools\Utils\Globals;
+use App\Base\Tools\Utils\Utils;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
 use App\Base\Tools\Utils\SiteData;
 use App\Base\Models\Website;
@@ -233,9 +233,9 @@ class SiteBase implements ExtensionInterface
     /**
      * gets utils
      *
-     * @return Globals
+     * @return Utils
      */
-    protected function getUtils(): Globals
+    protected function getUtils(): Utils
     {
         return $this->container->get('utils');
     }

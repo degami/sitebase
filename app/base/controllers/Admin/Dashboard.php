@@ -23,7 +23,7 @@ use App\Base\Models\RequestLog;
 use App\Base\Models\User;
 use App\Base\Models\Website;
 use App\Base\Abstracts\Controllers\AdminPage;
-use App\Base\Tools\Utils\Globals;
+use App\Base\Tools\Utils\Utils;
 
 /**
  * "Dashboard" Admin Page
@@ -93,7 +93,7 @@ class Dashboard extends AdminPage
 
 
         foreach ($frontendClasses as $frontendClass) {
-            $key = $this->getUtils()->pluralize(Globals::getClassBasename($frontendClass));
+            $key = $this->getUtils()->pluralize(Utils::getClassBasename($frontendClass));
             $this->template_data[strtolower($key)] = $this->containerCall([$frontendClass, 'getCollection'])->count();
         }
 

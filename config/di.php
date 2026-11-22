@@ -161,8 +161,8 @@ return [
     'html_renderer' => DI\get(\App\Base\Tools\Utils\HtmlPartsRenderer::class),
 
     // 'utils'
-    \App\Base\Tools\Utils\Globals::class => DI\autowire(\App\Base\Tools\Utils\Globals::class),
-    'utils' => DI\get(\App\Base\Tools\Utils\Globals::class),
+    \App\Base\Tools\Utils\Utils::class => DI\autowire(\App\Base\Tools\Utils\Utils::class),
+    'utils' => DI\get(\App\Base\Tools\Utils\Utils::class),
 
     // 'assets'
     \App\Base\Tools\Assets\Manager::class => DI\autowire(\App\Base\Tools\Assets\Manager::class),

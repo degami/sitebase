@@ -26,7 +26,7 @@ use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Auth\Manager as AuthManager;
 use App\Base\Tools\Utils\SiteData;
-use App\Base\Tools\Utils\Globals;
+use App\Base\Tools\Utils\Utils;
 use App\Base\Environment\Manager as EnvironmentManager;
 
 /**
@@ -35,7 +35,7 @@ use App\Base\Environment\Manager as EnvironmentManager;
  * @method SiteData getSiteData()
  * @method EnvironmentManager getEnvironment()
  * @method mixed containerCall(callable|array $callable, array $arguments = [])
- * @method Globals getUtils()
+ * @method Utils getUtils()
  * @property RouteInfo $route_info
  */
 trait PageTrait

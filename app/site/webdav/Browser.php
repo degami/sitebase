@@ -16,7 +16,7 @@ namespace App\Site\Webdav;
 use App\App;
 use App\Base\Tools\Assets\Manager as AssetsManager;
 use App\Base\Tools\Utils\HtmlPartsRenderer;
-use App\Base\Tools\Utils\Globals;
+use App\Base\Tools\Utils\Utils;
 use Sabre\DAV\Browser\Plugin as BrowserPlugin;
 use Sabre\DAV;
 use Sabre\HTTP;;
@@ -33,7 +33,7 @@ class Browser extends BrowserPlugin
 
         $node = $this->server->tree->getNodeForPath($path);
 
-        /** @var Globals $utils */
+        /** @var Utils $utils */
         $utils = App::getInstance()->getUtils();
 
         if ($node instanceof DAV\ICollection) {

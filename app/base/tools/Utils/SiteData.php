@@ -82,7 +82,7 @@ class SiteData extends ContainerAwareObject
         }
 
         $website = null;
-        if (!App::installDone()) {
+        if (App::installDone()) {
             if ($this->getEnvironment()->isCliServer() || $this->getEnvironment()->isCli()) {
                 $website = $this->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
             } else {

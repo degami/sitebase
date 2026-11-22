@@ -14,6 +14,9 @@
 namespace App\Base\Traits;
 
 
+use App\App;
+use App\Base\Environment\Manager;
+use App\Base\Routers\Web;
 use Degami\Basics\Exceptions\BasicException;
 use DI\DependencyException;
 use DI\NotFoundException;
@@ -21,6 +24,10 @@ use Exception;
 
 /**
  * Frontend pages Trait
+ * 
+ * @method getApp() : App
+ * @method getEnvironment() : Manager
+ * @method getWebRouter() : Web
  */
 trait FrontendPageTrait
 {
@@ -102,7 +109,7 @@ trait FrontendPageTrait
      */
     protected function check2FA(): bool
     {
-        if ($this->getEnvironment()->getVariable('USE2FA_USERS') && !in_array($this->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && $this->getAuth()->currentUserHasPassed2FA() != true) {
+        if ($this->getEnvironment()->getVariable('USE2FA_USERS') && !in_array($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login']) && $this->getAuth()->currentUserHasPassed2FA() != true) {
             return false;
         }
 

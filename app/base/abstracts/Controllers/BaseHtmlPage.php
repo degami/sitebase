@@ -170,6 +170,10 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      */
     public function renderPage(?RouteInfo $route_info = null, array $route_data = []): Response
     {
+        if ($route_info != null) {
+            $this->getEnvironment()->getRequestInfo()->setRouteInfo($route_info);
+        }
+
         $before_result = $this->beforeRender();
         if ($before_result instanceof Response) {
             return $before_result;

@@ -199,7 +199,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function renderSiteMenu(string $locale): ?string
+    public function renderSiteMenu(?string $locale): ?string
     {
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
 

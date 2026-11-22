@@ -56,7 +56,7 @@ abstract class FrontendPageWithObject extends FrontendPage
             /** @var PageDataCollector $collector */
             $collector = $debugbar->getCollector(PageDataCollector::NAME);
             $collector->addAdditionalInfo('object_class', static::getObjectClass());
-            $collector->addAdditionalInfo('object_id', $this->getObject()->getId());
+            $collector->addAdditionalInfo('object_id', $this->getObject()?->getId());
         }
 
         return parent::beforeRender();

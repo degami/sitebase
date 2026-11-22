@@ -151,7 +151,7 @@ class PageRegionsEventListener implements EventListenerInterface
         $vars['route_data'] = $routeInfo->getVars();
         $vars['route_data']['_noLog'] = true;
 
-        $currentPage->setRouteInfo($routeInfo);
+//        $currentPage->setRouteInfo($routeInfo);
 
         if ($currentPage instanceof FrontendPageWithObject) {
             $app->containerCall([$currentPage, $handlerMethod], $vars);

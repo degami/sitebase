@@ -37,6 +37,18 @@ class RequestInfo
         return $this->request;
     }
 
+    public function setRouteInfo(RouteInfo $route_info) : static
+    {
+        $this->route_info = $route_info;
+        return $this;
+    }
+
+    public function setRequest(Request $request) : static
+    {
+        $this->request = $request;
+        return $this;
+    }
+
     public static function createFromRequest(Request $request) : RequestInfo
     {
         /** @var App $app */

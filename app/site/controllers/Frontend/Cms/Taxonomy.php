@@ -58,7 +58,7 @@ class Taxonomy extends FrontendPageWithObject
      */
     protected function getHtmlBodyClasses() : string
     {
-        return parent::getHtmlBodyClasses() . ' taxonomy-' . $this->getObject()->id;
+        return parent::getHtmlBodyClasses() . ' taxonomy-' . $this->getObject()?->id;
     }
 
     /**

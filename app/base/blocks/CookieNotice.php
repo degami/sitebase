@@ -90,6 +90,9 @@ class CookieNotice extends BaseCodeBlock
             $config += ['sticky' => 'bottom'];
 
             $locale = $current_page?->getCurrentLocale();
+            if (empty($locale)) {
+                return  "";
+            }
             /** @var Rewrite $rewrite */
             $rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $config['rewrite_' . $locale]]);
 

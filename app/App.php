@@ -20,8 +20,6 @@ use Symfony\Component\HttpFoundation\Response;
 use FastRoute\Dispatcher;
 use Psr\Container\ContainerInterface;
 use Degami\EventManager\Event;
-use App\Base\Models\Website;
-use App\Base\Routing\RouteInfo;
 use App\Base\Routing\RequestInfo;
 use App\Base\Exceptions\OfflineException;
 use App\Base\Exceptions\BlockedIpException;
@@ -185,7 +183,7 @@ class App
                 $this->genericErrorPage('Critical Error', $e->getMessage()),
                 500
             );
-            $response->prepare($this->getEnvironment()->getRequest())->send();
+            $response->prepare($this->getEnvironment()->getRequestInfo()->getRequest())->send();
             die();
         }
 
@@ -213,7 +211,7 @@ class App
 
         $response = null;
         try {
-            if ($this->isBlocked($this->getEnvironment()->getRequest()?->getClientIp())) {
+            if ($this->isBlocked($this->getEnvironment()->getRequestInfo()->getRequest()?->getClientIp())) {
                 // if blocked stop immediately
                 throw new BlockedIpException();
             }
@@ -249,13 +247,7 @@ class App
                     Rewrite::getCollection()->getItems();
                 }
 
-                /** @var RequestInfo $request_info */
-                $request_info = RequestInfo::createFromRequest($this->getEnvironment()->getRequest());
-
-                // register request info into container
-                $this->getContainer()->set(RequestInfo::class, $request_info);
-
-                switch ($this->getAppRouteInfo()->getStatus()) {
+                switch ($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getStatus()) {
                     case Dispatcher::NOT_FOUND:
                         // ... 404 Not Found
                         throw new NotFoundException();
@@ -263,14 +255,14 @@ class App
                         // ... 405 Method Not Allowed
                         throw new NotAllowedException();
                     case Dispatcher::FOUND:
-                        $handler = $this->getAppRouteInfo()->getHandler();
-                        $vars = $this->getAppRouteInfo()->getVars();
+                        $handler = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getHandler();
+                        $vars = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars();
 
                         // inject routeInfo
-                        $vars['route_info'] = $this->getAppRouteInfo();
+                        $vars['route_info'] = $this->getEnvironment()->getRequestInfo()->getRouteInfo();
 
                         // add route collected data
-                        $vars['route_data'] = $this->getAppRouteInfo()->getVars();
+                        $vars['route_data'] = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars();
                         if (isset($vars['lang'])) {
                             $this->setCurrentLocale($vars['lang']);
                             if (!isset($vars['locale'])) {
@@ -278,7 +270,7 @@ class App
                             }
                         }
 
-                        if ($this->isSiteOffline() && !$this->getAppRouteInfo()->worksOffline()) {
+                        if ($this->isSiteOffline() && !$this->getEnvironment()->getRequestInfo()->getRouteInfo()->worksOffline()) {
                             throw new OfflineException();
                         }
 
@@ -310,15 +302,15 @@ class App
         } catch (BlockedIpException $e) {
             $response = $this->containerCall([$this->getUtils(), 'blockedIpPage']);
         } catch (NotFoundException $e) {
-            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()]);
         } catch (PermissionDeniedException $e) {
-            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $this->getAppRouteInfo()]);
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 403, 'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()]);
         } catch (NotAllowedException $e) {
-            $allowedMethods = $this->getAppRouteInfo()->getAllowedMethods();
-            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getAppRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
+            $allowedMethods = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getAllowedMethods();
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 405, 'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo(), 'template_data' => ['allowedMethods' => $allowedMethods]]);
         } catch (BasicException | Exception | Throwable $e) {
             if (App::installDone()) {
-                $response = $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
+                $response = $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()]);
             } else {
                 $response = new Response(
                     $this->genericErrorPage('Critical Error', $e->getMessage()),
@@ -341,15 +333,15 @@ class App
         }
 
         if ($response instanceof Response) {
-            $response->prepare($this->getEnvironment()->getRequest())->send();
+            $response->prepare($this->getEnvironment()->getRequestInfo()->getRequest())->send();
 
             if ($response->getStatusCode() == 200) {
                 $this->event('commit_html_blocks', []);
             }
         } else {
             // fallback to 404
-            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
-            $response->prepare($this->getEnvironment()->getRequest())->send();
+            $response = $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()]);
+            $response->prepare($this->getEnvironment()->getRequestInfo()->getRequest())->send();
         }
     }
 

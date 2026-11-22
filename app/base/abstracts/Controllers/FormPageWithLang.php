@@ -49,6 +49,6 @@ abstract class FormPageWithLang extends FormPage
 
     protected function hasLang() : bool
     {
-        return !empty($this->getRouteInfo()->getVar('lang'));
+        return !empty($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('lang'));
     }
 }

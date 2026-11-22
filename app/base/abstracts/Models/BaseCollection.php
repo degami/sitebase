@@ -524,7 +524,7 @@ class BaseCollection implements ArrayAccess, IteratorAggregate
     public function paginate(int $page_size = self::ITEMS_PER_PAGE): array
     {
         /** @var Request $request */
-        $request = App::getInstance()->getEnvironment()->getRequest();
+        $request = App::getInstance()->getEnvironment()->getRequestInfo()->getRequest();
 
         /** @var DebugBar $debugbar */
         $debugbar = App::getInstance()->getDebugbar();

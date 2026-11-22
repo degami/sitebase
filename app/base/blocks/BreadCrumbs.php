@@ -56,7 +56,7 @@ class BreadCrumbs extends BaseCodeBlock
 
         $locale = $current_page?->getCurrentLocale();
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
-        $route_info = $current_page?->getRouteInfo();
+        $route_info = $current_page?->getEnvironment()?->getRequestInfo()?->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
         if ($current_page?->getRouteGroup() == AdminPage::getRouteGroup() || $route_info?->isAdminRoute()) {
@@ -71,7 +71,7 @@ class BreadCrumbs extends BaseCodeBlock
         }
 
         $menu_item = Menu::getCollection()->where(['rewrite_id' => $route_info?->getRewrite()])->getFirst();
-        if ($this->getAppRouteInfo()->getVar('lang') || preg_match('/\.withlang$/', $this->getAppRouteInfo()->getRouteName()) || preg_match('/^\/[a-zA-Z]{2}\//', $this->getAppRouteInfo()->getUri())) {
+        if ($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('lang') || preg_match('/\.withlang$/', $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName()) || preg_match('/^\/[a-zA-Z]{2}\//', $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getUri())) {
             $home_url = $this->getWebRouter()->getUrl('frontend.root.withlang', ['lang' => $locale]);
         } else {
             $home_url = $this->getWebRouter()->getUrl('frontend.root');

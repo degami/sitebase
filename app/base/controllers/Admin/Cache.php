@@ -90,7 +90,7 @@ class Cache extends AdminPage
 
     ) {
         parent::__construct($container, $request, $route_info);
-        if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
+        if (($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list') == 'list') {
             $this->addActionLink('clear-btn', 'clear-btn', $this->getHtmlRenderer()->getIcon('refresh-cw') . ' ' . $this->getUtils()->translate('Clear', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=clear', 'btn btn-sm btn-warning');
         }    
     }
@@ -136,7 +136,7 @@ class Cache extends AdminPage
     {
         $out = parent::beforeRender();
 
-        if ($this->getRequest()->query->get('action') == 'clear') {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'clear') {
 
 
             $this->getCache()->clear();

@@ -49,6 +49,7 @@ use Symfony\Component\HttpFoundation\RedirectResponse;
 use Exchanger\ExchangeRateQueryBuilder;
 use Exchanger\Service\ExchangerateHost;
 use Exchanger\Exchanger;
+use DebugBar\DebugBar;
 
 /**
  * Global utils functions Helper Class
@@ -134,13 +135,13 @@ class Globals extends ContainerAwareObject
      */
     protected function logRequestIfNeeded(int $status_code) : void
     {
-        $request = $this->getEnvironment()->getRequest();
+        $request = $this->getEnvironment()->getRequestInfo()->getRequest();
         if (!$request) {
             return;
         }
 
         if (!$this->getApp()->isBlocked($request->getClientIp()) && $this->getSiteData()->getConfigValue('app/frontend/log_requests') == true) {
-            $route_info = $this->getAppRouteInfo();
+            $route_info = $this->getEnvironment()->getRequestInfo()->getRouteInfo();
             try {
                 $controller = null;
                 if ($route_info instanceof RouteInfo) {
@@ -177,7 +178,7 @@ class Globals extends ContainerAwareObject
             $this->logRequestIfNeeded($error_code);
         }
 
-        $request = $this->getEnvironment()->getRequest();
+        $request = $this->getEnvironment()->getRequestInfo()->getRequest();
 
         if ($route_info == null) {
             $route_info = $this->getEmptyRouteInfo();
@@ -266,7 +267,7 @@ class Globals extends ContainerAwareObject
     public function exceptionPage(Throwable $exception, ?RouteInfo $route_info = null): Response
     {
         if (App::installDone()) {
-            $this->logException($exception, null, $this->getEnvironment()->getRequest());
+            $this->logException($exception, null, $this->getEnvironment()->getRequestInfo()->getRequest());
         }
 
         if ($route_info == null) {
@@ -301,7 +302,7 @@ class Globals extends ContainerAwareObject
      */
     public function blockedIpPage(?RouteInfo $route_info = null): Response
     {
-        $request = $this->getEnvironment()->getRequest();
+        $request = $this->getEnvironment()->getRequestInfo()->getRequest();
         $template_data = [
             'ip_addr' => $request?->getClientIp(),
         ];
@@ -739,8 +740,8 @@ class Globals extends ContainerAwareObject
      */
     public function getAuthorizationHeader(): ?string
     {
-        $token = $this->getEnvironment()->getRequest()?->headers->get('Authorization');
-        return (string) ($token ?: $this->getEnvironment()->getRequest()?->cookies->get('Authorization'));
+        $token = $this->getEnvironment()?->getRequestInfo()?->getRequest()?->headers->get('Authorization');
+        return (string) ($token ?: $this->getEnvironment()?->getRequestInfo()?->getRequest()?->cookies->get('Authorization'));
     }
 
     /**

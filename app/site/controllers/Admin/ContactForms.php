@@ -85,9 +85,9 @@ class ContactForms extends AdminManageFrontendModelsPage
             }
             /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
             $collection = $this->containerCall([static::getObjectClass(), 'getCollection']);
-            $collection->addOrder($this->getRequest()->query->all('order'));
+            $collection->addOrder($this->getEnvironment()->getRequestInfo()->getRequest()->query->all('order'));
             if ($this->template_data['action'] == 'submissions') {
-                $collection->addCondition(['contact_id' => $this->getRequest()->query->get('contact_id')]);
+                $collection->addCondition(['contact_id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('contact_id')]);
             }
 
             $data = $this->containerCall([$collection, 'paginate']);
@@ -129,7 +129,7 @@ class ContactForms extends AdminManageFrontendModelsPage
             ]);
 
             $this->template_data += [
-                'submission_data' => $contact->getContactSubmission($this->getRequest()->query->get('submission_id'))
+                'submission_data' => $contact->getContactSubmission($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('submission_id'))
             ];
         }
 
@@ -173,7 +173,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      */
     public static function getObjectClass(): string
     {
-        if ((App::getInstance()->getEnvironment()->getRequest()->query->get('action') ?? 'list') == 'submissions') {
+        if ((App::getInstance()->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list') == 'submissions') {
             return ContactSubmission::class;
         }
         return Contact::class;
@@ -186,7 +186,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      */
     protected function getObjectIdQueryParam(): string
     {
-        if (($this->getRequest()->query->get('action') ?? 'list') == 'submissions') {
+        if (($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list') == 'submissions') {
             return 'submission_id';
         }
         return 'contact_id';
@@ -221,7 +221,7 @@ class ContactForms extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         /** @var Contact $contact */
         $contact = $this->getObject();
 
@@ -326,7 +326,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                     $form->addField('addmore', [
                         'type' => 'submit',
                         'value' => 'Add more',
-                        'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.contactcallback') . '?action=' . $this->getRequest()->query->get('action') . '&contact_id=' . $this->getRequest()->query->get('contact_id'),
+                        'ajax_url' => $this->getUrl('crud.app.site.controllers.admin.json.contactcallback') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') . '&contact_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('contact_id'),
                         'event' => [
                             [
                                 'event' => 'click',
@@ -563,7 +563,7 @@ class ContactForms extends AdminManageFrontendModelsPage
                         'ID' => $submission->id,
                         'User' => $submission->getUserId() > 0 ? $submission->getOwner()->email : 'guest',
                         'Created At' => $submission->created_at,
-                        'actions' => ['<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&contact_id='.$this->getRequest()->query->get('contact_id').'&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>']
+                        'actions' => ['<a class="btn btn-primary btn-sm" href="' . $this->getControllerUrl() . '?action=view_submission&contact_id='.$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('contact_id').'&submission_id=' . $submission->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in') . '</a>']
                     ];
                 },
                 $data

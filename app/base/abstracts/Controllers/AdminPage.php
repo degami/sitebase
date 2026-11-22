@@ -111,7 +111,7 @@ abstract class AdminPage extends BaseHtmlPage
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return BasePage|Response
+     * @return Response
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
@@ -120,7 +120,7 @@ abstract class AdminPage extends BaseHtmlPage
      * @throws Throwable
      * @throws \DebugBar\DebugBarException
      */
-    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         $return = parent::renderPage($route_info, $route_data);
 
@@ -129,10 +129,10 @@ abstract class AdminPage extends BaseHtmlPage
                 try {
                     /** @var RequestLog $log */
                     $log = $this->containerMake(AdminActionLog::class);
-                    $log->fillWithRequest($this->getRequest(), $this);
+                    $log->fillWithRequest($this->getEnvironment()->getRequestInfo()->getRequest(), $this);
                     $log->persist();
                 } catch (Exception $e) {
-                    $this->getUtils()->logException($e, "Can't write AdminActionLog", $this->getRequest());
+                    $this->getUtils()->logException($e, "Can't write AdminActionLog", $this->getEnvironment()->getRequestInfo()->getRequest());
                     if ($this->getEnvironment()->canDebug()) {
                         return $this->getUtils()->exceptionPage($e);
                     }
@@ -164,7 +164,7 @@ abstract class AdminPage extends BaseHtmlPage
             "\$('#admin').appAdmin(" . json_encode(
                 [
                     'rootUrl' => $this->getUrl('admin.index'),
-                    'currentRoute' => $this->getRouteInfo()->getRouteName(),
+                    'currentRoute' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName(),
                     'checkLoggedUrl' => $this->getUrl('crud.app.base.controllers.admin.json.checksession'),
                     'logoutUrl' => $this->getUrl('admin.logout'),
                     'uIsettingsUrl' => $this->getUrl('crud.app.base.controllers.admin.json.uisettings'),

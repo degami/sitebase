@@ -75,7 +75,7 @@ class DownloadableProducts extends AdminManageProductsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
 
             /**
          * @var DownloadableProduct $product
@@ -94,7 +94,7 @@ class DownloadableProducts extends AdminManageProductsPage
                         'media-btn',
                         'media-btn',
                         $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.site.controllers.admin.json.downloadablemedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&product_type=downloadable&action=new',
+                        $this->getUrl('crud.app.site.controllers.admin.json.downloadablemedia', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id') . '&product_type=downloadable&action=new',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
                 }
@@ -172,7 +172,7 @@ class DownloadableProducts extends AdminManageProductsPage
                 break;
 
             case 'media_deassoc':
-                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
+                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id')]);
                 $form->addField('product_id', [
                     'type' => 'hidden',
                     'default_value' => $product->id,

@@ -135,7 +135,7 @@ class MatrixRate extends BaseShippingMethod
         $form->addField('add_rule', [
             'type' => 'submit',
             'value' => 'Add Rule',
-            'ajax_url' => App::getInstance()->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.shippingmethodscallback') . '?action=' . App::getInstance()->getEnvironment()->getRequest()->query->get('action') . '&code=' . App::getInstance()->getEnvironment()->getRequest()->query->get('code'),
+            'ajax_url' => App::getInstance()->getAdminRouter()->getUrl('crud.app.base.controllers.admin.json.shippingmethodscallback') . '?action=' . App::getInstance()->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') . '&code=' . App::getInstance()->getEnvironment()->getRequestInfo()->getRequest()->query->get('code'),
             'event' => [[
                 'event' => 'click',
                 'callback' => [static::class, 'matrixrateFormCallback'],

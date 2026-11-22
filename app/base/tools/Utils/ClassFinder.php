@@ -13,8 +13,7 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\App;
-use App\Base\Abstracts\ContainerAwareObject;
+
 use HaydenPierce\ClassFinder\ClassFinder as HaydenClassFinder;
 use App\Base\Abstracts\Models\BaseModel;
 use App\Base\Abstracts\Models\BaseCollection;
@@ -26,12 +25,11 @@ use App\Base\Interfaces\Model\PhysicalProductInterface;
 use App\Base\Interfaces\Commerce\ShippingMethodInterface;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Interfaces\AI\AIModelInterface;
-use Psr\Container\ContainerInterface;
 
 /**
  * ClassFinder utils functions Helper Class
  */
-class ClassFinder extends ContainerAwareObject
+class ClassFinder
 {
 
     public const BASE_COMMANDS_NAMESPACE = 'App\Base\Commands';
@@ -76,9 +74,8 @@ class ClassFinder extends ContainerAwareObject
     protected array $classesNamespaces = [];
 
 
-    public function __construct(ContainerInterface $container)
+    public function __construct()
     {
-        parent::__construct($container);
         $this->classesNamespaces = [
             'commands' => [
                 static::BASE_COMMANDS_NAMESPACE,
@@ -190,11 +187,11 @@ class ClassFinder extends ContainerAwareObject
     }
 
     public function findModelClasses() {
-        return $this->getClassFinder()->findAndFilterGroupClasses('models', fn($modelClass) => is_subclass_of($modelClass, BaseModel::class) && !is_subclass_of($modelClass, BaseCollection::class));
+        return $this->findAndFilterGroupClasses('models', fn($modelClass) => is_subclass_of($modelClass, BaseModel::class) && !is_subclass_of($modelClass, BaseCollection::class));
     }
 
     public function findIndexableClasses() {
-        return $this->findAndFilterGroupClasses('models', fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class) && $this->containerCall([$modelClass, 'isIndexable']));
+        return $this->findAndFilterGroupClasses('models', fn($modelClass) => is_subclass_of($modelClass, FrontendModel::class) && is_callable([$modelClass, 'isIndexable']) &&  call_user_func([$modelClass, 'isIndexable']));
     }
 
     public function findEventListenerClasses() {
@@ -226,7 +223,7 @@ class ClassFinder extends ContainerAwareObject
     }
 
     public function findExportableClasses() {
-        return $this->findAndFilterGroupClasses('models', fn($modelClass) => is_callable([$modelClass, 'isExportable']) && $this->containerCall([$modelClass, 'isExportable']) == true);
+        return $this->findAndFilterGroupClasses('models', fn($modelClass) => is_callable([$modelClass, 'isExportable']) && call_user_func([$modelClass, 'isExportable']) == true);
     }
 
     public function findPaymentMethodClasses() {

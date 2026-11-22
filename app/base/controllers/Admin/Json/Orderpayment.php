@@ -57,7 +57,7 @@ class Orderpayment extends AdminJsonPage
     {
         $route_data = $this->getRouteData();
 
-        $order = Order::load($this->getRequest()->query->get('order_id'));
+        $order = Order::load($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id'));
 
         $orderPayment = $order->getOrderPayment();
 
@@ -67,7 +67,7 @@ class Orderpayment extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'html' => $html,
             'js' => "",
         ];

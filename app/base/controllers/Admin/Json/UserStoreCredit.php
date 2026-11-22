@@ -88,7 +88,7 @@ class UserStoreCredit extends AdminJsonPage
         $userController = $this->containerMake(Users::class);
         $form = $userController->getForm();
 
-        $form->setAction($this->getUrl('admin.users') . '?user_id=' . $user->getId() . '&action=' . $this->getRequest()->query->get('action'));
+        $form->setAction($this->getUrl('admin.users') . '?user_id=' . $user->getId() . '&action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action'));
         $form->addField(
             'user_id',
             [
@@ -103,9 +103,9 @@ class UserStoreCredit extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'addresses' => $transactionsData,
-            'html' => ($this->getRequest()->query->get('action') == 'newstorecredittransaction' ? $creditSummary."<hr /><div class=\"user-transactions\">" . implode("", $transactions) . "</div><hr /><h4>" . $this->getUtils()->translate("Add a new one") . "</h4>" : '') . $form->render(),
+            'html' => ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'newstorecredittransaction' ? $creditSummary."<hr /><div class=\"user-transactions\">" . implode("", $transactions) . "</div><hr /><h4>" . $this->getUtils()->translate("Add a new one") . "</h4>" : '') . $form->render(),
             'js' => "",
         ];
     }

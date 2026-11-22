@@ -49,19 +49,17 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     public function __construct(
         protected ContainerInterface $container, 
-        protected ?Request $request = null, 
-        protected ?RouteInfo $route_info = null
+        protected ?Request $request = null
     ) {
         parent::__construct($container);
-        $this->request = $request ?: $this->getEnvironment()->getRequest();
-        $this->route_info = $route_info ?: $this->getAppRouteInfo();
 
-        // dispatch "request_created" event
-        $this->getApp()->event('request_created', ['request' => $this->request]);
         $this->response = $this->containerMake(Response::class);
 
+        // dispatch "response_created" event
+        $this->getApp()->event('response_created', ['response' => $this->response]);
+
         // let App know this is the controller object
-        $this->getAppRouteInfo()?->setControllerObject($this);
+        $this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->setControllerObject($this);
     }
 
     /**
@@ -79,15 +77,11 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return Response|self
+     * @return Response
      * @throws PermissionDeniedException
      */
-    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): Response
     {
-        if (!is_null($route_info)) {
-            $this->route_info = $route_info;
-        }
-
         $before_result = $this->beforeRender();
         if ($before_result instanceof Response) {
             return $before_result;
@@ -105,15 +99,11 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     protected function getRouteData(mixed $var_name = null): mixed
     {
-        if (is_null($this->route_info)) {
-            return null;
-        }
-
         if ($var_name == null) {
-            return $this->getRouteInfo()->getVars();
+            return $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars();
         }
 
-        $vars = $this->getRouteInfo()->getVars();
+        $vars = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars();
         return is_array($vars) && isset($vars[$var_name]) ? $vars[$var_name] : null;
     }
 
@@ -139,16 +129,6 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
     }
 
     /**
-     * get request object
-     *
-     * @return Request
-     */
-    public function getRequest(): Request
-    {
-        return $this->request;
-    }
-
-    /**
      * get response object
      *
      * @return Response
@@ -156,28 +136,6 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
     public function getResponse(): Response
     {
         return $this->response;
-    }
-
-    /**
-     * get route_info
-     *
-     * @return RouteInfo|null
-     */
-    public function getRouteInfo(): ?RouteInfo
-    {
-        return $this->route_info;
-    }
-
-    /**
-     * set route info
-     * 
-     * @param RouteInfo $routeInfo
-     * @return BasePage
-     */
-    public function setRouteInfo(RouteInfo $routeInfo) : BasePage
-    {
-        $this->route_info = $routeInfo;
-        return $this;
     }
 
     /**
@@ -232,8 +190,8 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
      */
     public function getControllerUrl(): string
     {
-        if ($this->getRouteInfo() instanceof RouteInfo) {
-            return $this->getUrl($this->getRouteInfo()->getRouteName(), $this->getRouteInfo()->getVars());
+        if ($this->getEnvironment()->getRequestInfo()->getRouteInfo() instanceof RouteInfo) {
+            return $this->getUrl($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName(), $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars());
         }
 
         $path = str_replace("app/site/controllers/", "", str_replace("\\", "/", 
@@ -251,8 +209,8 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
             }
 
             $route_vars = [];
-            if ($this->getRouteInfo() instanceof RouteInfo) {
-                $route_vars = $this->getRouteInfo()->getVars();
+            if ($this->getEnvironment()->getRequestInfo()->getRouteInfo() instanceof RouteInfo) {
+                $route_vars = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars();
             }
 
             foreach ($route_vars as $var_name => $value) {

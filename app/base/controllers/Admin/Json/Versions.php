@@ -75,10 +75,10 @@ class Versions extends AdminJsonPage
         }
 
         $diffTable = null;
-        if ($this->getRequest()->query->get('version_a') && $this->getRequest()->query->get('version_b')) {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('version_a') && $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('version_b')) {
             $compare = $object->getVersions()->where(['id' => [
-                $this->getRequest()->query->get('version_a'),
-                $this->getRequest()->query->get('version_b'),
+                $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('version_a'),
+                $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('version_b'),
             ]])->getItems();
             /** @var ModelVersion $second */
             $second = reset($compare);
@@ -88,12 +88,12 @@ class Versions extends AdminJsonPage
             $diff = $first->compareWith($second);
 
             $diffTable = '<table class="table compare_versions" border="0" cellpadding="6" cellspacing="0">';
-            $diffTable .= '<thead class="thead-dark"><tr><th>Field</th><th>'.$first->getCreatedAt().'</th><th>'.$second->getCreatedAt().'</th></tr></thead><tbody>';
+            $diffTable .= '<thead class="thead-dark"><tr><th>Field</th><th>'.(string)$first->getCreatedAt().'</th><th>'.(string)$second->getCreatedAt().'</th></tr></thead><tbody>';
             $diffTable .= $this->renderDiffTable($diff);
             $diffTable .= '</tbody></table>';
-        } else if ($this->getRequest()->query->get('details')) {
+        } else if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('details')) {
             /** @var ModelVersion $version */
-            $version = $object->getVersions()->where(['id' => $this->getRequest()->query->get('details')])->getFirst();
+            $version = $object->getVersions()->where(['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('details')])->getFirst();
             $diffTable = $this->renderVersionTable($version);
         }
 
@@ -115,9 +115,9 @@ class Versions extends AdminJsonPage
 \$rows.each(function() {
     const \$row = $(this);
     const id = \$row.find('td:first').text().trim();
-    if (id === '{$this->getRequest()->query->get('version_a')}'
-        || id === '{$this->getRequest()->query->get('version_b')}'
-        || id === '{$this->getRequest()->query->get('details')}'
+    if (id === '{$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('version_a')}'
+        || id === '{$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('version_b')}'
+        || id === '{$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('details')}'
     ) {
         \$row.addClass('selected');
     }
@@ -135,7 +135,7 @@ JS;
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'html' => $html,
             'js' => <<<JS
 $(function() {

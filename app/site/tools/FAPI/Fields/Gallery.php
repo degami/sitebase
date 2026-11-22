@@ -64,7 +64,7 @@ class Gallery extends Field
             ],
         ]]);
         
-        $parent_id = App::getInstance()->getEnvironment()->getRequest()->query->get('parent_id');
+        $parent_id = App::getInstance()->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id');
         if (empty($parent_id) || !is_numeric($parent_id)) {
             $parent_id = null;
         }
@@ -160,7 +160,7 @@ class Gallery extends Field
         </div>';
 
         if (is_null($media) || $media->isDirectory()) {
-            $uri = App::getInstance()->getEnvironment()->getRequest()->getUri();
+            $uri = App::getInstance()->getEnvironment()->getRequestInfo()->getRequest()->getUri();
             $parsed = parse_url($uri);
             parse_str($parsed['query'] ?? '', $queryParams);
             unset($queryParams['parent_id']);

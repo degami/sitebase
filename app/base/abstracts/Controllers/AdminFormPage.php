@@ -52,7 +52,7 @@ abstract class AdminFormPage extends AdminPage
     ) {
         parent::__construct($container, $request, $route_info);
         $this->template_data = [
-            'action' => $this->getRequest()->query->get('action') ?? 'list',
+            'action' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list',
             'form' => FAPI\FormBuilder::getForm([$this, 'getFormDefinition'], $this->getFormId())
                 ->setValidate([[$this, 'formValidate']])
                 ->setSubmit([[$this, 'formSubmitted']]),
@@ -87,7 +87,7 @@ abstract class AdminFormPage extends AdminPage
      */
     protected function beforeRender(): BasePage|Response
     {
-        if ($this->getForm() && $this->getRequest()->query->get('asJson') == 1) {
+        if ($this->getForm() && $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('asJson') == 1) {
             if ($this->getForm()->isSubmitted()) {
                 $this->getApp()->event('form_submitted', ['form' => $this->getForm()]);
                 $formResults = $this->getForm()->getSubmitResults(get_class($this) . '::formSubmitted');
@@ -108,7 +108,7 @@ abstract class AdminFormPage extends AdminPage
             }
 
             if ($this->getForm()->getAction() == null) {
-                $queryParams = $this->getRequest()->query->all();
+                $queryParams = $this->getEnvironment()->getRequestInfo()->getRequest()->query->all();
                 $this->getForm()->setAction($this->getControllerUrl() . ($queryParams ? '?' . http_build_query($queryParams) : ''));
             }
 

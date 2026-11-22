@@ -76,13 +76,13 @@ abstract class BaseWebhookPage extends BasePage
                 try {
                     /** @var RequestLog $log */
                     $log = $this->containerMake(RequestLog::class);
-                    $log->fillWithRequest($this->getRequest(), $this);
+                    $log->fillWithRequest($this->getEnvironment()->getRequestInfo()->getRequest(), $this);
                     $log->setResponseCode(200);
                     $log->persist();
                 } catch (Exception $e) {
-                    $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
+                    $this->getUtils()->logException($e, "Can't write RequestLog", $this->getEnvironment()->getRequestInfo()->getRequest());
                     if ($this->getEnvironment()->canDebug()) {
-                        return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
+                        return $this->getUtils()->exceptionPage($e, $this->getEnvironment()->getRequestInfo()->getRouteInfo());
                     }
                 }    
             }
@@ -112,7 +112,7 @@ abstract class BaseWebhookPage extends BasePage
      */
     protected function getWebhookData() : Webhook
     {
-        return new Webhook(json_decode($this->getRequest()->getContent(), true));
+        return new Webhook(json_decode($this->getEnvironment()->getRequestInfo()->getRequest()->getContent(), true));
     }
 
     /**

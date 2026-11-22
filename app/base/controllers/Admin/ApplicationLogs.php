@@ -116,8 +116,8 @@ class ApplicationLogs extends AdminManageModelsPage
     {
         $out = parent::getTemplateData();
 
-        if ($this->getRequest()->query->get('action') == 'details' && $this->getRequest()->query->get('log_id')) {
-            $log = $this->containerCall([ApplicationLog::class, 'load'], ['id' => $this->getRequest()->query->get('log_id')]);
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'details' && $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('log_id')) {
+            $log = $this->containerCall([ApplicationLog::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('log_id')]);
             $out += [
                 'log' => $log,
                 'logHtml' => $this->getHtmlRenderer()->renderApplicationLog($log),
@@ -139,7 +139,7 @@ class ApplicationLogs extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
 
         $form->addField('action', [
             'type' => 'value',

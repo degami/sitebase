@@ -53,7 +53,7 @@ class AuthorInfo extends BaseCodeBlock
             ];
         }
 
-        $route_info = $current_page?->getRouteInfo();
+        $route_info = $current_page?->getEnvironment()?->getRequestInfo()?->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
         if ($current_page?->getRouteGroup() == AdminPage::getRouteGroup() || $route_info?->isAdminRoute()) {
@@ -79,7 +79,7 @@ class AuthorInfo extends BaseCodeBlock
                                             locale: $current_page?->getCurrentLocale(), 
                                             params: [
                                                 $author?->getDisplayName(), 
-                                                date_format(new \DateTime($current_page?->getObject()?->getCreatedAt()), $config['date-format'])
+                                                date_format(new \DateTime((string) $current_page?->getObject()?->getCreatedAt()), $config['date-format'])
                                             ]
                                         ),
         ];

@@ -80,7 +80,7 @@ class LinkToCart extends BaseCodeBlock
             ];
         }
 
-        $route_info = $current_page?->getRouteInfo();
+        $route_info = $current_page?->getEnvironment()?->getRequestInfo()?->getRouteInfo();
 
         // $current_page_handler = $route_info->getHandler();
         if ($current_page?->getRouteGroup() == AdminPage::getRouteGroup() || $route_info?->isAdminRoute() || !$current_page?->getCurrentUser()) {

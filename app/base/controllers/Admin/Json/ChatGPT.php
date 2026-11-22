@@ -53,9 +53,9 @@ class ChatGPT extends AIAdminJsonPage
      */
     protected function getJsonData(): array
     {
-        $messageId = $this->getMessageId($this->getRequest());
+        $messageId = $this->getMessageId($this->getEnvironment()->getRequestInfo()->getRequest());
 
-        $prompt = $this->getPrompt($this->getRequest());
+        $prompt = $this->getPrompt($this->getEnvironment()->getRequestInfo()->getRequest());
         if (empty($prompt)) {
             throw new Exception("Missing ChatGPT prompt text");
         }

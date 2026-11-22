@@ -82,7 +82,7 @@ class PageMedia extends AdminJsonPage
         $mediaController = $this->containerMake(Media::class);
         $form = $mediaController->getForm();
 
-        $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getRequest()->query->get('action') . ($this->getRequest()->query->get('media_id') ? '&media_id=' . $this->getRequest()->query->get('media_id') : ''));
+        $form->setAction($this->getUrl('admin.cms.media') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') . ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id') ? '&media_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id') : ''));
         $form->addField(
             'page_id',
             [
@@ -93,9 +93,9 @@ class PageMedia extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'gallery' => $galleryData,
-            'html' => ($this->getRequest()->query->get('action') == 'new' ? "<div class=\"d-flex justify-content-start page-gallery\">" . implode("", $gallery) . "</div><hr />" : '') . $form->render(),
+            'html' => ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'new' ? "<div class=\"d-flex justify-content-start page-gallery\">" . implode("", $gallery) . "</div><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

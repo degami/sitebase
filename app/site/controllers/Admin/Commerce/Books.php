@@ -74,7 +74,7 @@ class Books extends AdminManageProductsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
 
         /**
          * @var Book $product
@@ -93,7 +93,7 @@ class Books extends AdminManageProductsPage
                         'media-btn',
                         'media-btn',
                         $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.site.controllers.admin.json.bookmedia', ['id' => $this->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&product_type=book&action=new',
+                        $this->getUrl('crud.app.site.controllers.admin.json.bookmedia', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id')]) . '?product_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id') . '&product_type=book&action=new',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
                 }

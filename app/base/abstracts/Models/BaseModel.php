@@ -1256,7 +1256,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
                             $related = $class::load($v['__data'][$pkField]);
                         }
                         if (empty($related) && !empty($v['__data'])) {
-                            $related = App::getInstance()->containerMake($class);
+                            $related = App::getInstance()->containerMake((string) $class);
                             $related->setData($v['__data'])->persist();
                         }
                         if ($related) {
@@ -1286,7 +1286,7 @@ abstract class BaseModel implements ArrayAccess, IteratorAggregate
                                     $related = $class::load($item['__data'][$pkField]);
                                 }
                                 if (empty($related) && !empty($item['__data'])) {
-                                    $related = App::getInstance()->containerMake($class);
+                                    $related = App::getInstance()->containerMake((string) $class);
                                     $related->setData($item['__data'])->persist();
                                 }
                                 if ($related) {

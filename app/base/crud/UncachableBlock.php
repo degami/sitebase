@@ -57,7 +57,7 @@ class UncachableBlock extends BaseRestPage
      */
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
-        if (empty($data = json_decode($this->getRequest()->getContent(), true))) {
+        if (empty($data = json_decode($this->getEnvironment()->getRequestInfo()->getRequest()->getContent(), true))) {
             throw new \Exception('Missing Data');
         }
 
@@ -65,13 +65,13 @@ class UncachableBlock extends BaseRestPage
             try {
                 /** @var RequestLog $log */
                 $log = $this->containerMake(RequestLog::class);
-                $log->fillWithRequest($this->getRequest(), $this);
+                $log->fillWithRequest($this->getEnvironment()->getRequestInfo()->getRequest(), $this);
                 $log->setResponseCode(200);
                 $log->persist();
             } catch (Exception $e) {
-                $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
+                $this->getUtils()->logException($e, "Can't write RequestLog", $this->getEnvironment()->getRequestInfo()->getRequest());
                 if ($this->getEnvironment()->canDebug()) {
-                    return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
+                    return $this->getUtils()->exceptionPage($e, $this->getEnvironment()->getRequestInfo()->getRouteInfo());
                 }
             }    
         }
@@ -110,7 +110,7 @@ class UncachableBlock extends BaseRestPage
         //$vars['container'] = $this->getContainer();
 
         // inject request object into vars
-        //$vars['request'] = $this->getRequest();
+        //$vars['request'] = $this->getEnvironment()->getRequestInfo()->getRequest();
 
         // inject routeInfo
         $vars['route_info'] = $routeInfo;

@@ -33,6 +33,7 @@ use App\Base\Abstracts\Controllers\AdminPage;
 use Degami\Basics\Html\TagElement;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use Psr\Container\ContainerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  * Plates template helper
@@ -470,9 +471,14 @@ class SiteBase implements ExtensionInterface
         return $this->getAI()->isAiAvailable($ai);
     }
 
+    public function getRequest() : ?Request
+    {
+        return $this->getEnvironment()->getRequestInfo()->getRequest();
+    }
+
     public function getCurrentUrl() : string
     {
-        return $this->getSiteData()->getRequest()->getUri();
+        return $this->getRequest()->getUri();
     }
 
     public function isCommerceAvailable() : bool

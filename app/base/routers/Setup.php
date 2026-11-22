@@ -73,7 +73,7 @@ class Setup extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $this->addRoute("/setup", "setup.entrypoint", "/", self::class, self::CLASS_METHOD, $this->getHttpVerbs());
+                $this->addRoute(group: "/setup", name: "setup.entrypoint", path: "/", class: self::class, method: $this->getClassMethod(), verbs: $this->getHttpVerbs());
 
                 // cache controllers for faster access
                 $this->setCachedControllers($this->routes);

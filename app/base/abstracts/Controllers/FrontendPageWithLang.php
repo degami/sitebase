@@ -60,6 +60,6 @@ abstract class FrontendPageWithLang extends FrontendPage
 
     protected function hasLang() : bool
     {
-        return !empty($this->getRouteInfo()->getVar('lang'));
+        return !empty($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('lang'));
     }
 }

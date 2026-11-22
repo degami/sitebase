@@ -13,14 +13,13 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 use RarArchive;
 
 /**
  * RAR utils functions Helper Class
  */
-class Rar extends ContainerAwareObject
+class Rar
 {
     /**
      * extract rar file to directory

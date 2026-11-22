@@ -65,12 +65,12 @@ class Media extends AdminManageModelsPage
                 'make_folder', 
                 'make_folder', 
                 $this->getHtmlRenderer()->getIcon('folder-plus') . ' ' .$this->getUtils()->translate('Create Folder'),
-                $this->getControllerUrl().'?action=addfolder&parent_id='.$this->getRequest()->query->get('parent_id'),
+                $this->getControllerUrl().'?action=addfolder&parent_id='.$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id'),
                 'btn btn-sm btn-outline-warning',
             );
 
-            if ($this->getRequest()->query->get('parent_id')) {
-                $parent_id = $this->getRequest()->query->get('parent_id');
+            if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id')) {
+                $parent_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id');
                 if (is_numeric($parent_id)) {
                     $parentObj = MediaElement::load($parent_id);
 
@@ -95,7 +95,7 @@ class Media extends AdminManageModelsPage
                         $page = $this->containerMake(Page::class, ['db_row' => $el]);
                         return ['url' => $page->getRewrite()->getUrl(), 'title' => $page->getTitle() . ' - ' . $page->getRewrite()->getUrl(), 'id' => $page->getId()];
                     },
-                    $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getRequest()->query->get('media_id'))->page()->fetchAll()
+                    $this->getDb()->page()->page_media_elementList()->where('media_element_id', $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id'))->page()->fetchAll()
                 ),
             ];
         }
@@ -113,13 +113,13 @@ class Media extends AdminManageModelsPage
         if (($this->template_data['action'] ?? 'list') != 'list') {
 
             $queryParams = null;
-            if ($this->getRequest()->query->get('parent_id')) {
-                $queryParams = ['parent_id' => $this->getRequest()->query->get('parent_id')];
+            if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id')) {
+                $queryParams = ['parent_id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id')];
             }
 
-            if ($this->getRequest()->query->get('media_id')) {
+            if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id')) {
                 try {
-                    $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
+                    $media = $this->containerCall([MediaElement::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id')]);
                     if ($media->getParentId()) {
                         $queryParams = ['parent_id' => $media->getParentId()];
                     }
@@ -194,8 +194,8 @@ class Media extends AdminManageModelsPage
     {
         $collection = parent::getCollection();
 
-        if ($this->getRequest()->query->get('parent_id')) {
-            $parent_id = $this->getRequest()->query->get('parent_id');
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id')) {
+            $parent_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id');
             if (is_numeric($parent_id)) {
                 $collection->addCondition(['parent_id' => $parent_id]);
             }
@@ -222,7 +222,7 @@ class Media extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         /** @var MediaElement $media */
         $media = $this->getObject();
 
@@ -235,7 +235,7 @@ class Media extends AdminManageModelsPage
             case 'addfolder':
 
                 $parentName = 'Root Folder';
-                $parent_id = $this->getRequest()->query->get('parent_id');
+                $parent_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id');
                 if (is_numeric($parent_id)) {
                     $parentObj = MediaElement::load($parent_id);
 
@@ -275,7 +275,7 @@ class Media extends AdminManageModelsPage
                     'pages-btn',
                     'pages-btn',
                     $this->getHtmlRenderer()->getIcon('book-open') . ' ' . $this->getUtils()->translate('Pages', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $this->getRequest()->query->get('media_id')]) . '?media_id=' . $this->getRequest()->query->get('media_id') . '&action=page_assoc',
+                    $this->getUrl('crud.app.site.controllers.admin.json.mediapages', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id')]) . '?media_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
 
@@ -290,8 +290,8 @@ class Media extends AdminManageModelsPage
 
                 $destinationDir = App::getDir(App::MEDIA);
                 $parent_id = null;
-                if ($this->getRequest()->query->get('parent_id')) {
-                    $parent_id = $this->getRequest()->query->get('parent_id');
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id')) {
+                    $parent_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id');
                 }
                 if ($media->getParentId()) {
                     $parent_id = $media->getParentId();
@@ -307,7 +307,7 @@ class Media extends AdminManageModelsPage
                     ]);  
                 }
 
-                if ($this->getRequest()->query->get('page_id') || $this->getRequest()->query->get('product_id') || ($form_state['input_values']['gallery'] ?? false)) {
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id') || $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id') || ($form_state['input_values']['gallery'] ?? false)) {
 /*
                     $galleryField = $this->containerMake(\App\Site\Tools\FAPI\Fields\Gallery::class, [ 'options' => [
                         'title' => 'Select an existing media',
@@ -347,18 +347,18 @@ class Media extends AdminManageModelsPage
 
                 $this->addSubmitButton($form);
 
-                if ($this->getRequest()->query->get('page_id')) {
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')) {
                     /** @var Page $page */
-                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')]);
                     $form->addField('page_id', [
                         'type' => 'hidden',
                         'default_value' => $page->getId(),
                     ]);
                 }
 
-                if ($this->getRequest()->query->get('product_type') == 'downloadable' && $this->getRequest()->query->get('product_id')) {
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_type') == 'downloadable' && $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id')) {
                     /** @var DownloadableProduct $product */
-                    $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
+                    $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id')]);
                     $form->addField('product_id', [
                         'type' => 'hidden',
                         'default_value' => $product->getId(),
@@ -369,9 +369,9 @@ class Media extends AdminManageModelsPage
                     ]);
                 }
 
-                if ($this->getRequest()->query->get('product_type') == 'book' && $this->getRequest()->query->get('product_id')) {
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_type') == 'book' && $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id')) {
                     /** @var Book $product */
-                    $product = $this->containerCall([Book::class, 'load'], ['id' => $this->getRequest()->query->get('product_id')]);
+                    $product = $this->containerCall([Book::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id')]);
                     $form->addField('product_id', [
                         'type' => 'hidden',
                         'default_value' => $product->getId(),
@@ -443,7 +443,7 @@ class Media extends AdminManageModelsPage
                 break;
             case 'page_deassoc':
                 /** @var Page $page */
-                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
+                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->getId(),
@@ -495,7 +495,7 @@ class Media extends AdminManageModelsPage
                 break;
             case 'downloadable_product_deassoc':
                 /** @var DownloadableProduct $product */
-                $product_id = $this->getRequest()->query->get('product_id') ?? $form_state['input_values']['product_id'];
+                $product_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id') ?? $form_state['input_values']['product_id'];
                 $product = $this->containerCall([DownloadableProduct::class, 'load'], ['id' => $product_id]);
                 $form->addField('product_id', [
                     'type' => 'hidden',
@@ -548,7 +548,7 @@ class Media extends AdminManageModelsPage
                 break;
             case 'book_deassoc':
                 /** @var Book $product */
-                $product_id = $this->getRequest()->query->get('product_id') ?? $form_state['input_values']['product_id'];
+                $product_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id') ?? $form_state['input_values']['product_id'];
                 $product = $this->containerCall([Book::class, 'load'], ['id' => $product_id]);
                 $form->addField('product_id', [
                     'type' => 'hidden',
@@ -747,10 +747,10 @@ class Media extends AdminManageModelsPage
 
                 break;
         }
-        if ($this->getRequest()->request->get('page_id') != null) {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('page_id') != null) {
             return new JsonResponse(['success' => true]);
         }
-        $parent_id = $this->getRequest()->query->get('parent_id') ?? $media->parent_id;
+        $parent_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id') ?? $media->parent_id;
         if ($parent_id) {
             return $this->refreshPage(['parent_id' => $parent_id]);
         }
@@ -875,8 +875,8 @@ class Media extends AdminManageModelsPage
     public function addNewButton(array $urlParams = [])
     {
         $queryParams = ['action' => 'new'];
-        if ($this->getRequest()->query->get('parent_id')) {
-            $queryParams['parent_id'] = $this->getRequest()->query->get('parent_id');
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id')) {
+            $queryParams['parent_id'] = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id');
         }
 
         $this->addActionLink(
@@ -1134,7 +1134,7 @@ class Media extends AdminManageModelsPage
 
     protected function getBeforeListing() : ?TagElement
     {
-        if ($this->getRequest()->query->get('parent_id')) {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id')) {
 
             $breadbcrumb = $this->containerMake(
                 TagElement::class,
@@ -1146,7 +1146,7 @@ class Media extends AdminManageModelsPage
 
             $paths = [];
 
-            $parent_id = $this->getRequest()->query->get('parent_id');
+            $parent_id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('parent_id');
             do {
                 $folder = MediaElement::load($parent_id);
                 $paths[] = [

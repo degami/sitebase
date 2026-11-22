@@ -95,7 +95,7 @@ abstract class FrontendModel extends BaseModel
     {
         $content = $this->getData('content');
 
-        if (preg_match("/\[(Block: (\d+))\]/", $content) && ($currentPage = App::getInstance()?->getAppRouteInfo()?->getControllerObject()) instanceof BasePage) {
+        if (preg_match("/\[(Block: (\d+))\]/", $content) && ($currentPage = App::getInstance()?->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->getControllerObject()) instanceof BasePage) {
             //$currentPage = $this->getControllerUsingRewrite(App::getInstance());
 
             $content = preg_replace_callback("/\[(Block: (\d+))\]/", function($matches) use ($currentPage) {

@@ -111,7 +111,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     public function executePayment(?FormValues $values, Cart $cart): array
     {
-        $hasLang = !empty(App::getInstance()->getAppRouteInfo()?->getVar('lang'));
+        $hasLang = !empty(App::getInstance()?->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->getVar('lang'));
 
         $returnUrl =  App::getInstance()->getWebRouter()->getUrl('frontend.commerce.checkout.stripe.stripereturncallback');
         if ($hasLang) {

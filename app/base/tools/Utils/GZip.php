@@ -13,13 +13,12 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 
 /**
  * GZip utils functions Helper Class
  */
-class GZip extends ContainerAwareObject
+class GZip
 {
     /**
      * Compress a single file into gzip format

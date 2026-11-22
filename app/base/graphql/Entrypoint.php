@@ -55,8 +55,8 @@ class Entrypoint extends BasePage
      */
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
-        if ($this->getRouteInfo()->getVar('lang') != null) {
-            $this->getApp()->setCurrentLocale($this->getRouteInfo()->getVar('lang'));
+        if ($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('lang') != null) {
+            $this->getApp()->setCurrentLocale($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('lang'));
         }
 
         $contents = '';
@@ -131,14 +131,14 @@ class Entrypoint extends BasePage
                 try {
                     /** @var RequestLog $log */
                     $log = $this->containerMake(RequestLog::class);
-                    $log->fillWithRequest($this->getRequest(), $this);
+                    $log->fillWithRequest($this->getEnvironment()->getRequestInfo()->getRequest(), $this);
                     $log->setUrl(substr($log->getUrl() . ' ' . $rawInput, 0, 1024));
                     $log->setResponseCode(200);
                     $log->persist();
                 } catch (Exception $e) {
-                    $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
+                    $this->getUtils()->logException($e, "Can't write RequestLog", $this->getEnvironment()->getRequestInfo()->getRequest());
                     if ($this->getEnvironment()->canDebug()) {
-                        return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
+                        return $this->getUtils()->exceptionPage($e, $this->getEnvironment()->getRequestInfo()->getRouteInfo());
                     }
                 }
             }

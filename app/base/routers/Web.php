@@ -89,7 +89,7 @@ class Web extends BaseRouter implements WebRouterInterface
                             $route_name = $this->containerCall([$controllerClass, 'getPageRouteName']);
                         }
 
-                        $classMethod = self::CLASS_METHOD;
+                        $classMethod = $this->getClassMethod();
                         $verbs = $this->getClassHttpVerbs($controllerClass);
 
                         if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
@@ -128,12 +128,12 @@ class Web extends BaseRouter implements WebRouterInterface
                                 throw new InvalidValueException("'{$path_value}': Invalid route string", 1);
                             }
 
-                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                            $this->addRoute(group: $group, name: strtolower($key), path: "/" . ltrim($path_value, "/ "), class: $controllerClass, method: $classMethod, verbs: $verbs);
                         });
                     }
                 }
-                $this->addRoute('', 'frontend.root.withlang', "/{lang:[a-z]{2}}[/]", Page::class, 'showFrontPage');
-                $this->addRoute('', 'frontend.root', "/", Page::class, 'showFrontPage');
+                $this->addRoute(group: '', name: 'frontend.root.withlang', path: "/{lang:[a-z]{2}}[/]", class: Page::class, method: 'showFrontPage');
+                $this->addRoute(group: '', name: 'frontend.root', path: "/", class: Page::class, method: 'showFrontPage');
 
                 // cache controllers for faster access
                 $this->setCachedControllers($this->routes);

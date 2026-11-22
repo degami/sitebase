@@ -57,7 +57,7 @@ class Ordershipment extends AdminJsonPage
     {
         $route_data = $this->getRouteData();
 
-        $order = Order::load($this->getRequest()->query->get('order_id'));
+        $order = Order::load($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id'));
 
         $orderShipments = '';
         foreach ($order->getShipments() ?? [] as $orderShipment) {
@@ -67,7 +67,7 @@ class Ordershipment extends AdminJsonPage
         if (!$order->requiresShipping()) {
             return [
                 'success' => true,
-                'params' => $this->getRequest()->query->all(),
+                'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
                 'html' => $orderShipments,
                 'js' => "",
             ];
@@ -76,7 +76,7 @@ class Ordershipment extends AdminJsonPage
         $ordersController = $this->containerMake(Orders::class);
         $form = $ordersController->getForm();
 
-        $form->setAction($this->getUrl('admin.commerce.orders') . '?action=' . $this->getRequest()->query->get('action') . ($this->getRequest()->query->get('order_id') ? '&order_id=' . $this->getRequest()->query->get('order_id') : ''));
+        $form->setAction($this->getUrl('admin.commerce.orders') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') . ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id') ? '&order_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id') : ''));
         $form->addField(
             'order_id',
             [
@@ -87,7 +87,7 @@ class Ordershipment extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'html' => $orderShipments.$form->render(),
             'js' => "",
         ];

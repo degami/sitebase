@@ -30,7 +30,6 @@ use App\Base\Abstracts\Controllers\BasePage;
 use App\Base\Models\Rewrite;
 use App\Base\Routing\RouteInfo;
 use App\App;
-use App\Base\Abstracts\Controllers\AdminManageFrontendModelsPage;
 use App\Base\Abstracts\Controllers\AdminManageModelsPage;
 use App\Base\Abstracts\Controllers\AdminPage;
 use App\Base\Abstracts\Controllers\BaseHtmlPage;
@@ -45,6 +44,7 @@ use Degami\Basics\Html\TagElement;
 use Degami\Basics\Html\TagList;
 use chillerlan\QRCode\QRCode;
 use Exception;
+use DebugBar\DebugBar;
 
 /**
  * Html Parts Renderer Helper Class
@@ -352,7 +352,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 return '';
             }
 
-            $route_info = $current_page->getRouteInfo();
+            $route_info = $current_page->getEnvironment()->getRequestInfo()->getRouteInfo();
             if ($route_info instanceof RouteInfo) {
                 //$cache_key = strtolower('site.' . $website_id . '.' . trim(str_replace("/", ".", $route_info->getRoute()), '.') . '.blocks.' . $region . '.html.' . $locale);
                 $cache_key = $current_page->getCacheKey() . '.blocks.' . $region;
@@ -455,9 +455,9 @@ class HtmlPartsRenderer extends ContainerAwareObject
                 'data-uncachable' => json_encode([
                     'block_id' => $block->getId(),
                     'url' => $current_page->getControllerUrl(), 
-                    'route' => $current_page->getRouteInfo()->getRouteName(),
-                    'rewrite' => $current_page->getRouteInfo()->getRewrite(),
-                    'route_vars' => $current_page->getRouteInfo()->getVars(),
+                    'route' => $current_page->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName(),
+                    'rewrite' => $current_page->getEnvironment()->getRequestInfo()->getRouteInfo()->getRewrite(),
+                    'route_vars' => $current_page->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars(),
                     'locale' => $locale ?? $this->getApp()->getCurrentLocale(),
                 ]),
             ],
@@ -526,7 +526,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         $current_base = $controller->getControllerUrl();
-        $query_params = $controller->getRequest()->query->all();
+        $query_params = $controller->getEnvironment()->getRequestInfo()->getRequest()->query->all();
         unset($query_params['page']);
 
         $out = $this->containerMake(
@@ -783,7 +783,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             foreach ($header as $k => $v) {
                 $className = strtolower($k);
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
-                    $searchqueryparam = (is_array($current_page->getRequest()->query->all('search')) && isset($current_page->getRequest()->query->all('search')[$v['search']])) ? $current_page->getRequest()->query->all('search')[$v['search']] : '';
+                    $searchqueryparam = (is_array($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('search')) && isset($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('search')[$v['search']])) ? $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('search')[$v['search']] : '';
 
                     // locale is a well known special case - but can be overridden
                     if ($v['search'] == 'locale' && ($v['input_type'] ?? 'select') == 'select') {
@@ -814,7 +814,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     }
                     $add_searchrow = true;
                 } else if (is_array($v) && isset($v['foreign']) && boolval($v['foreign']) == true) {
-                    $foreignqueryparam = (is_array($current_page->getRequest()->query->all('foreign')) && isset($current_page->getRequest()->query->all('foreign')[$v['foreign']])) ? $current_page->getRequest()->query->all('foreign')[$v['foreign']] : '';
+                    $foreignqueryparam = (is_array($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign')) && isset($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign')[$v['foreign']])) ? $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign')[$v['foreign']] : '';
 
                     $dbtable = $this->getSchema()->getTable($v['table']);
                     $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'];
@@ -1004,7 +1004,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
             $className = strtolower($th);
             $th = $this->getUtils()->translate($th, locale: $current_page?->getCurrentLocale());
             if ($current_page instanceof BasePage) {
-                $request_params = $current_page->getRequest()->query->all();
+                $request_params = $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all();
 
                 if (!empty($column)) {
                     $orderby = null;
@@ -1044,7 +1044,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         $thead->addChild($row);
 
         if (($current_page instanceof BasePage)) {
-            $request_params = $current_page->getRequest()->query->all();
+            $request_params = $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all();
             if (isset($request_params['order']) || isset($request_params['search'])) {
                 $request_params_nosearch = $request_params;
                 unset($request_params_nosearch['search']);
@@ -1228,7 +1228,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
                 $th = $this->getUtils()->translate($th, locale: $current_page?->getCurrentLocale());
 
-                $request_params = $current_page->getRequest()->query->all();
+                $request_params = $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all();
 
                 if (!empty($column)) {
                     $orderby = null;
@@ -1256,7 +1256,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
 
                 $div = null;
                 if (is_array($v) && isset($v['search']) && boolval($v['search']) == true) {
-                    $searchqueryparam = (is_array($current_page->getRequest()->query->all('search')) && isset($current_page->getRequest()->query->all('search')[$v['search']])) ? $current_page->getRequest()->query->all('search')[$v['search']] : '';
+                    $searchqueryparam = (is_array($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('search')) && isset($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('search')[$v['search']])) ? $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('search')[$v['search']] : '';
 
                     // locale is a well known special case - but can be overridden
                     if ($v['search'] == 'locale' && ($v['input_type'] ?? 'select') == 'select') {
@@ -1286,7 +1286,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
                     }
                     $add_searchrow = true;
                 } else if (is_array($v) && isset($v['foreign']) && boolval($v['foreign']) == true) {
-                    $foreignqueryparam = (is_array($current_page->getRequest()->query->all('foreign')) && isset($current_page->getRequest()->query->all('foreign')[$v['foreign']])) ? $current_page->getRequest()->query->all('foreign')[$v['foreign']] : '';
+                    $foreignqueryparam = (is_array($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign')) && isset($current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign')[$v['foreign']])) ? $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign')[$v['foreign']] : '';
 
                     $dbtable = $this->getSchema()->getTable($v['table']);
                     $select_options = ['' => '-- '.$this->getUtils()->translate('All', locale: $current_page->getCurrentLocale()).' --'];
@@ -1339,7 +1339,7 @@ class HtmlPartsRenderer extends ContainerAwareObject
         }
 
         if (($current_page instanceof BasePage)) {
-            $request_params = $current_page->getRequest()->query->all();
+            $request_params = $current_page->getEnvironment()->getRequestInfo()->getRequest()->query->all();
             if (isset($request_params['order']) || isset($request_params['search'])) {
                 $request_params_nosearch = $request_params;
                 unset($request_params_nosearch['search']);

@@ -494,41 +494,6 @@ trait ContainerAwareTrait
     }
 
     /**
-     * gets route info
-     *
-     * @return RouteInfo|null
-     */
-    public function getAppRequestInfo(): ?RequestInfo
-    {
-        try {
-            return $this->getContainer()->get(RequestInfo::class);
-        } catch (\Exception $e) {
-        }
-
-        return null;
-    }
-
-    /**
-     * gets route info
-     *
-     * @return RouteInfo|null
-     */
-    public function getAppRouteInfo(): ?RouteInfo
-    {
-        try {
-            $requestInfo = $this->getAppRequestInfo();
-
-            if ($requestInfo instanceof RequestInfo) {
-                return $requestInfo->getRouteInfo();
-            }
-
-        } catch (\Exception $e) {
-        }
-
-        return null;
-    }
-
-    /**
      * gets current website
      *
      * @return Website|null

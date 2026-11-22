@@ -89,7 +89,7 @@ class Elasticsearch extends AdminPage
 
     ) {
         parent::__construct($container, $request, $route_info);
-        if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
+        if (($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list') == 'list') {
             $this->addActionLink('reindex-btn', 'reindex-btn', $this->getHtmlRenderer()->getIcon('refresh-cw') . ' ' . $this->getUtils()->translate('Reindex', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=reindex', 'btn btn-sm btn-warning');
         }    
     }
@@ -172,13 +172,13 @@ class Elasticsearch extends AdminPage
     {
         $out = parent::beforeRender();
 
-        if ($this->getRequest()->query->get('action') == 'reindex') {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'reindex') {
             $results = [];
 
             $classes = $this->getClassFinder()->findIndexableClasses();
             foreach ($classes as $modelClass) {
                 $type = strtolower(static::getClassBasename($modelClass));
-                if ($this->getRequest()->query->get('type') && $type != $this->getRequest()->query->get('type')) {
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('type') && $type != $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('type')) {
                     continue;
                 }
     

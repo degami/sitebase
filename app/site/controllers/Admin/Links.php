@@ -98,7 +98,7 @@ class Links extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $link = $this->getObject();
 
         $form->addField('action', [
@@ -112,7 +112,7 @@ class Links extends AdminManageFrontendModelsPage
                     'taxonomy-btn',
                     'taxonomy-btn',
                     '&#9776; ' . $this->getUtils()->translate('Terms', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.linkterms', ['id' => $this->getRequest()->query->get('link_id')]) . '?link_id=' . $this->getRequest()->query->get('link_id') . '&action=new',
+                    $this->getUrl('crud.app.site.controllers.admin.json.linkterms', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('link_id')]) . '?link_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('link_id') . '&action=new',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall-trough
@@ -182,7 +182,7 @@ class Links extends AdminManageFrontendModelsPage
                 break;
 
             case 'term_deassoc':
-                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->query->get('term_id')]);
+                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('term_id')]);
                 $form->addField('link_id', [
                     'type' => 'hidden',
                     'default_value' => $link->id,
@@ -271,7 +271,7 @@ class Links extends AdminManageFrontendModelsPage
                 }
                 break;
         }
-        if ($this->getRequest()->request->get('term_id') != null) {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('term_id') != null) {
             return new JsonResponse(['success' => true]);
         }
         return $this->refreshPage();

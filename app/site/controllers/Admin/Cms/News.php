@@ -97,7 +97,7 @@ class News extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $news = $this->getObject();
 
         $form->addField('action', [

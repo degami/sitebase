@@ -102,7 +102,7 @@ class Pages extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $page = $this->getObject();
 
         $form->addField('action', [
@@ -117,7 +117,7 @@ class Pages extends AdminManageFrontendModelsPage
                         'media-btn',
                         'media-btn',
                         $this->getHtmlRenderer()->getIcon('image') . ' ' . $this->getUtils()->translate('Media', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
+                        $this->getUrl('crud.app.site.controllers.admin.json.pagemedia', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id') . '&action=new',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
                 }
@@ -126,7 +126,7 @@ class Pages extends AdminManageFrontendModelsPage
                         'taxonomy-btn',
                         'taxonomy-btn',
                         $this->getHtmlRenderer()->getIcon('list') . ' ' . $this->getUtils()->translate('Terms', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getRequest()->query->get('page_id') . '&action=new',
+                        $this->getUrl('crud.app.site.controllers.admin.json.pageterms', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')]) . '?page_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id') . '&action=new',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
                 }
@@ -187,7 +187,7 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
 
             case 'media_deassoc':
-                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getRequest()->query->get('media_id')]);
+                $media = $this->containerCall([Media::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('media_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
@@ -204,7 +204,7 @@ class Pages extends AdminManageFrontendModelsPage
                 break;
 
             case 'term_deassoc':
-                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getRequest()->query->get('term_id')]);
+                $term = $this->containerCall([Taxonomy::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('term_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
@@ -301,7 +301,7 @@ class Pages extends AdminManageFrontendModelsPage
                 }
                 break;
         }
-        if ($this->getRequest()->request->get('media_id') != null || $this->getRequest()->request->get('term_id') != null) {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('media_id') != null || $this->getEnvironment()->getRequestInfo()->getRequest()->request->get('term_id') != null) {
             return new JsonResponse(['success' => true]);
         }
         return $this->refreshPage();

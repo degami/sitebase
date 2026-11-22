@@ -40,17 +40,17 @@ class LinkToUserArea extends BaseCodeBlock
                 return "";
             }
 
-            if (in_array($current_page->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login'])) {
+            if (in_array($current_page->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName(), ['frontend.users.twofa', 'frontend.users.login'])) {
                 return "";
             }
 
-            if (strpos($current_page->getRouteInfo()->getRouteName(), 'frontend.users') === 0) {
+            if (strpos($current_page->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName(), 'frontend.users') === 0) {
                 return '';
             }
 
             $class = 'block user';
 
-            $locale = $current_page->getRouteInfo()->getVar('locale');
+            $locale = $current_page->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('locale');
 
             $targetHref = $this->getWebRouter()->getUrl("frontend.users.login");
             $linkText = $this->getUtils()->translate('Profile', locale: $locale);

@@ -105,7 +105,7 @@ class OrderStatuses extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
 
         /**
          * @var OrderStatusModel $orderStatus

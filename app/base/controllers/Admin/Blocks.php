@@ -56,7 +56,7 @@ class Blocks extends AdminManageModelsPage
         protected ?RouteInfo $route_info = null
     ) {
         AdminFormPage::__construct($container, $request, $route_info);
-        if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
+        if (($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list') == 'list') {
             $blockClasses = $this->getClassFinder()->findBlockClasses();
 
             foreach ($blockClasses as $blockClass) {
@@ -150,7 +150,7 @@ class Blocks extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $block = $this->getObject();
 
         $form->addField(

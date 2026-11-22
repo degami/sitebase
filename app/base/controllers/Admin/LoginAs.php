@@ -94,7 +94,7 @@ class LoginAs extends BaseHtmlPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        $token = $this->getRouteInfo()->getVar('token');
+        $token = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('token');
         if (empty($token)) {
             throw new PermissionDeniedException('Token missing');
         }

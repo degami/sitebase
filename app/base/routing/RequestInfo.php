@@ -37,7 +37,7 @@ class RequestInfo
         return $this->request;
     }
 
-    public static function createFromRequest(?Request $request) : RequestInfo
+    public static function createFromRequest(Request $request) : RequestInfo
     {
         /** @var App $app */
         $app = App::getInstance();

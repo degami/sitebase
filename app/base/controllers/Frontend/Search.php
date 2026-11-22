@@ -68,13 +68,13 @@ class Search extends FrontendPageWithLang
      */
     protected function beforeRender() : BasePage|Response
     {
-        if ($this->getRouteInfo()->getVar('lang') != null) {
-            $this->locale = $this->getRouteInfo()->getVar('lang');
+        if ($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('lang') != null) {
+            $this->locale = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVar('lang');
         }
         try {
             return parent::beforeRender();
         } catch (PermissionDeniedException | BasicException $e) {
-            return $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getAppRouteInfo()]);
+            return $this->containerCall([$this->getUtils(), 'exceptionPage'], ['exception' => $e, 'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()]);
         }
     }
 
@@ -87,9 +87,9 @@ class Search extends FrontendPageWithLang
      */
     public function getTemplateData(): array
     {
-        $page = $this->getRequest()->query->get('page') ?? 0;
+        $page = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page') ?? 0;
         $query = $this->getSearchQuery();
-        $useAI = $this->getRequest()->query->get('ai') ?? false;
+        $useAI = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('ai') ?? false;
 
         if ($useAI) {
             $search_result = $this->getAIsearchResult($query, 5);
@@ -113,7 +113,7 @@ class Search extends FrontendPageWithLang
      */
     protected function getSearchQuery(): mixed
     {
-        return $this->getRequest()->query->get('q');
+        return $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('q');
     }
 
     /**
@@ -151,12 +151,12 @@ class Search extends FrontendPageWithLang
 
         $website_id = $this->getSiteData()->getCurrentWebsiteId();
         $locale = $this->getRewrite()?->getLocale() ?? $this->getSiteData()->getDefaultLocale();
-        $page = $this->getRequest()->query->get('page') ?? 0;
+        $page = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page') ?? 0;
 
         $prefix = 'site.'.$website_id.'.'.$locale.'.';
 
 
-        $prefix .= trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
+        $prefix .= trim(str_replace("/", ".", $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName()));
 
 
         return $this->normalizeCacheKey($prefix . '.q='. $this->getSearchQuery().'.p='.$page);

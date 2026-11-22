@@ -100,7 +100,7 @@ class Users extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         /** @var User $user */
         $user = $this->getObject();
         /** @var Role $role */
@@ -124,7 +124,7 @@ class Users extends AdminManageModelsPage
                         'addresses-btn',
                         'addresses-btn',
                         '<i class="fas fa-address-book"></i> ' . $this->getUtils()->translate('Addresses', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.base.controllers.admin.json.useraddresses', ['id' => $this->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getRequest()->query->get('user_id') . '&action=newaddress',
+                        $this->getUrl('crud.app.base.controllers.admin.json.useraddresses', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('user_id') . '&action=newaddress',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
 
@@ -132,7 +132,7 @@ class Users extends AdminManageModelsPage
                         'storecredit-btn',
                         'storecredit-btn',
                         '<i class="fas fa-coins"></i> ' . $this->getUtils()->translate('Store Credit', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.base.controllers.admin.json.userstorecredit', ['id' => $this->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getRequest()->query->get('user_id') . '&action=newstorecredittransaction',
+                        $this->getUrl('crud.app.base.controllers.admin.json.userstorecredit', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('user_id')]) . '?user_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('user_id') . '&action=newstorecredittransaction',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
 
@@ -240,8 +240,8 @@ class Users extends AdminManageModelsPage
                 $countries = $this->getUtils()->getCountriesSelectOptions();
 
                 $address = $this->containerMake(Address::class);
-                if ($this->getRequest()->query->get('address_id')) {
-                    $address = Address::load($this->getRequest()->query->get('address_id'));
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('address_id')) {
+                    $address = Address::load($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('address_id'));
                 }
 
                 $websites = $this->getUtils()->getWebsitesSelectOptions();
@@ -338,7 +338,7 @@ class Users extends AdminManageModelsPage
             case 'deleteaddress':
                 $form->addField('address_id', [
                     'type' => 'hidden',
-                    'default_value' => $this->getRequest()->query->get('address_id'),
+                    'default_value' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('address_id'),
                 ]);
                 $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form);
                 break;
@@ -445,8 +445,8 @@ class Users extends AdminManageModelsPage
             case 'editaddress':
 
                 $address = $this->containerMake(Address::class);
-                if ($this->getRequest()->query->get('address_id')) {
-                    $address = Address::load($this->getRequest()->query->get('address_id'));
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('address_id')) {
+                    $address = Address::load($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('address_id'));
                 }
 
                 $address->setUserId($user->getId());
@@ -470,7 +470,7 @@ class Users extends AdminManageModelsPage
                 break;
             case 'deleteaddress':
 
-                $address = Address::load($this->getRequest()->query->get('address_id'));
+                $address = Address::load($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('address_id'));
 
                 $this->setAdminActionLogData('Deleted user ' . $user->getId());
                 $address->delete();

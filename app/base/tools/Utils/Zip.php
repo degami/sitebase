@@ -13,14 +13,13 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 use ZipArchive;
 
 /**
  * Zip utils functions Helper Class
  */
-class Zip extends ContainerAwareObject
+class Zip
 {
     /**
      * extract zip file to directory

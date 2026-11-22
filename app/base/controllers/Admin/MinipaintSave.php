@@ -40,7 +40,7 @@ class MinipaintSave extends AdminJsonPage
     public function getJsonData(): array
     {
         $route_data = $this->getRouteData();
-        $body = json_decode($this->getRequest()->getContent(), true);
+        $body = json_decode($this->getEnvironment()->getRequestInfo()->getRequest()->getContent(), true);
 
         $image = $body['image']; 
         $data = $body['image'];

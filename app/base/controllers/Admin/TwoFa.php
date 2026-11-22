@@ -289,8 +289,8 @@ class TwoFa extends AdminFormPage
     {
         $goto_url = $this->getUrl("admin.dashboard");
 
-        if ($this->getRequest()->query->get('dest')) {
-            $tmp = explode(':', base64_decode($this->getRequest()->query->get('dest')));
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('dest')) {
+            $tmp = explode(':', base64_decode($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('dest')));
 
             if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnvironment()->getVariable('SALT'))) {
                 $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));

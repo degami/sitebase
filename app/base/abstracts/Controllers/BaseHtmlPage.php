@@ -83,7 +83,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
                 $debugbar->addCollector(new ContainerDataCollector($this->getContainer()));
             }
             if (!$debugbar->hasCollector(RouteInfoDataCollector::NAME)) {
-                $debugbar->addCollector(new RouteInfoDataCollector($this->getRouteInfo()));
+                $debugbar->addCollector(new RouteInfoDataCollector($this->getEnvironment()?->getRequestInfo()?->getRouteInfo()));
             }
             if (!$debugbar->hasCollector(PageDataCollector::NAME)) {
                 $debugbar->addCollector(new PageDataCollector($this));
@@ -162,7 +162,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return BasePage|BaseHtmlPage|Response
+     * @return Response
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
@@ -170,7 +170,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
      * @throws Throwable
      * @throws DebugBarException
      */
-    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         $this->route_info = $route_info;
 
@@ -198,9 +198,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     {
         try {
             $template_html = '';
-            //$page_cache_key = 'site.fpc.' . trim(str_replace("/", ".", $this->getRouteInfo()->getRoute()), '.');
             $page_cache_key = $this->getFpcCacheKey();
-            if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->isDebugActive() && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
+            if ($this->getEnvironment()->getRequestInfo()->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->isDebugActive() && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
                 if ($this->canBeFPC() && $this->getCache()->has($page_cache_key)) {
                     $template_html = $this->getCache()->get($page_cache_key);
                 }
@@ -208,7 +207,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
 
             if (empty($template_html)) {
                 $template_html = $this->template->render();
-                if ($this->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->isDebugActive() && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->getMethod() == 'GET' && !$this->getEnvironment()->isDebugActive() && $this->getEnvironment()->getVariable('ENABLE_FPC')) {
                     if ($this->canBeFPC()) {
                         $this->getCache()->set($page_cache_key, $template_html);
                     }
@@ -232,13 +231,13 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     public function getCacheKey() : string
     {
         if ($this->getRewriteObject() == null) {
-            return $this->normalizeCacheKey('site.' . $this->getSiteData()->getCurrentWebsiteId() . '.' . trim($this->getRouteInfo()->getRoute(), '.'));            
+            return $this->normalizeCacheKey('site.' . $this->getSiteData()->getCurrentWebsiteId() . '.' . trim($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRoute(), '.'));            
         }
 
         return $this->normalizeCacheKey(
             'site.'.$this->getRewriteObject()?->getWebsiteId().
             '.' . $this->getRewriteObject()?->getLocale() . 
-            '.' . trim($this->getRouteInfo()->getRouteName() ?? "", '.')
+            '.' . trim($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName() ?? "", '.')
         );
     }
 
@@ -259,8 +258,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             return $this->rewriteObject;
         }
 
-        if ($this->getRouteInfo()->getRewrite()) {
-            return $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
+        if ($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRewrite()) {
+            return $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRewrite()]);
         }
 
         return null;
@@ -285,8 +284,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
     {
         return [
             'controller' => $this,
-            'route_info' => $this->getRouteInfo(),
-            'request' => $this->getRequest(),
+            'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo(),
+            'request' => $this->getEnvironment()->getRequestInfo()->getRequest(),
         ];
     }
 
@@ -315,8 +314,8 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
         }
 
         $out = [
-            'route_info' => ($this->getRouteInfo() instanceof RouteInfo) ?
-                $this->getRouteInfo()->toString() : $this->getRouteInfo(),
+            'route_info' => ($this->getEnvironment()->getRequestInfo()->getRouteInfo() instanceof RouteInfo) ?
+                $this->getEnvironment()->getRequestInfo()->getRouteInfo()->toString() : $this->getEnvironment()->getRequestInfo()->getRouteInfo(),
             'locale' => is_callable([$this, 'getCurrentLocale']) ?
                 $this->getCurrentLocale() :
                 ($template_data['locale'] ?? null),
@@ -445,7 +444,7 @@ abstract class BaseHtmlPage extends BasePage implements HtmlPageInterface
             return json_decode((string) ($_SESSION['flash_messages'] ?? null), true);
         }
 
-        return json_decode((string) $this->getRequest()->cookies->get('flash_messages'), true);
+        return json_decode((string) $this->getEnvironment()->getRequestInfo()->getRequest()->cookies->get('flash_messages'), true);
     }
 
     /**

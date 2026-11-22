@@ -31,4 +31,11 @@ interface RouterInterface
      * @return array
      */
     public function getRoutes(): array;
+
+    /**
+     * gets classMethod
+     * 
+     * @return string
+     */
+    public function getClassMethod() : string;
 }

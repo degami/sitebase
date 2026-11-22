@@ -101,7 +101,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $term = $this->getObject();
 
         $form->addField('action', [
@@ -115,7 +115,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                     'pages-btn',
                     'pages-btn',
                     '&#9776; ' . $this->getUtils()->translate('Pages', locale: $this->getCurrentLocale()),
-                    $this->getUrl('crud.app.site.controllers.admin.json.termpages', ['id' => $this->getRequest()->query->get('term_id')]) . '?term_id=' . $this->getRequest()->query->get('term_id') . '&action=page_assoc',
+                    $this->getUrl('crud.app.site.controllers.admin.json.termpages', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('term_id')]) . '?term_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('term_id') . '&action=page_assoc',
                     'btn btn-sm btn-light inToolSidePanel'
                 );
             // intentional fall trough
@@ -174,8 +174,8 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 $this->addSubmitButton($form);
 
 
-                if ($this->getRequest()->query->get('page_id')) {
-                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')) {
+                    $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')]);
                     $form->addField('page_id', [
                         'type' => 'hidden',
                         'default_value' => $page->id,
@@ -183,7 +183,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
                 }
                 break;
             case 'deassoc':
-                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getRequest()->query->get('page_id')]);
+                $page = $this->containerCall([Page::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page_id')]);
                 $form->addField('page_id', [
                     'type' => 'hidden',
                     'default_value' => $page->id,
@@ -332,7 +332,7 @@ class Taxonomy extends AdminManageFrontendModelsPage
 
                 break;
         }
-        if ($this->getRequest()->request->get('page_id') != null) {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('page_id') != null) {
             return new JsonResponse(['success' => true]);
         }
         return $this->refreshPage();

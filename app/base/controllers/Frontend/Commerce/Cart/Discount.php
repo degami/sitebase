@@ -90,7 +90,7 @@ class Discount extends FrontendPageWithLang
 
             $actionDetails = json_decode($actionDetails, true);
             if (isset($actionDetails['from-request']) && $actionDetails['from-request'] === true) {
-                $actionDetails = $this->getRequest()->query->all();
+                $actionDetails = $this->getEnvironment()->getRequestInfo()->getRequest()->query->all();
             }
 
             if (isset($actionDetails['action']) && $actionDetails['action'] === 'apply_discount') {

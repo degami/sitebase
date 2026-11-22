@@ -77,11 +77,11 @@ class TermPages extends AdminJsonPage
         );
 
 
-        if ($this->getRequest()->query->get('action') == 'term_deassoc') {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'term_deassoc') {
             $pagesController = $this->containerMake(Pages::class);
             $form = $pagesController->getForm();
 
-            $form->setAction($this->getUrl('admin.cms.pages') . '?action=' . $this->getRequest()->query->get('action'));
+            $form->setAction($this->getUrl('admin.cms.pages') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action'));
             $form->addField(
                 'term_id',
                 [
@@ -93,7 +93,7 @@ class TermPages extends AdminJsonPage
             $taxonomyController = $this->containerMake(\App\Site\Controllers\Admin\Cms\Taxonomy::class);
             $form = $taxonomyController->getForm();
 
-            $form->setAction($this->getUrl('admin.cms.taxonomy') . '?action=' . $this->getRequest()->query->get('action'));
+            $form->setAction($this->getUrl('admin.cms.taxonomy') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action'));
             $form->addField(
                 'term_id',
                 [
@@ -105,9 +105,9 @@ class TermPages extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'pages' => $pagesData,
-            'html' => ($this->getRequest()->query->get('action') == 'page_assoc' ? "<ul class=\"elements_list\"><li>" . implode("</li><li>", $pages) . "</li></ul><hr />" : '') . $form->render(),
+            'html' => ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'page_assoc' ? "<ul class=\"elements_list\"><li>" . implode("</li><li>", $pages) . "</li></ul><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

@@ -90,7 +90,7 @@ class PageTerms extends AdminJsonPage
             }
         }
 
-        if ($this->getRequest()->query->get('action') == 'new') {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'new') {
             foreach (['content', 'template_name'] as $fieldname) {
                 $newField = $form->getFieldObj(
                     $fieldname,
@@ -112,7 +112,7 @@ class PageTerms extends AdminJsonPage
             $form->setField('locale', $newLocaleField);
         }
 
-        $form->setAction($this->getUrl('admin.cms.taxonomy') . '?action=' . $this->getRequest()->query->get('action'));
+        $form->setAction($this->getUrl('admin.cms.taxonomy') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action'));
         $form->addField(
             'page_id',
             [
@@ -123,9 +123,9 @@ class PageTerms extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'gallery' => $termsData,
-            'html' => ($this->getRequest()->query->get('action') == 'new' ? "<ul class=\"elements_list list-group\"><li class=\"list-group-item d-flex flex-row align-items-center\">" . implode("</li><li class=\"list-group-item d-flex flex-row align-items-center\">", $terms) . "</li></ul><hr />" : '') . $form->render(),
+            'html' => ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'new' ? "<ul class=\"elements_list list-group\"><li class=\"list-group-item d-flex flex-row align-items-center\">" . implode("</li><li class=\"list-group-item d-flex flex-row align-items-center\">", $terms) . "</li></ul><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

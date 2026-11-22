@@ -86,9 +86,9 @@ class ProductStocks extends AdminJsonPage
         $stockItem = call_user_func([$product, 'getProductStock']);
 
         $action = $stockItem?->getId() ? 'edit' : 'new';
-        $this->getEnvironment()->getRequest()->query->set('action', $action);
+        $this->getEnvironment()->getRequestInfo()->getRequest()->query->set('action', $action);
         if ($action == 'edit') {
-            $this->getEnvironment()->getRequest()->query->set('stock_id', $stockItem->getId());
+            $this->getEnvironment()->getRequestInfo()->getRequest()->query->set('stock_id', $stockItem->getId());
         }
         $stocksController = $this->containerMake(ProductStocksController::class);
 
@@ -101,7 +101,7 @@ class ProductStocks extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'html' => $form->render(),
             'js' => "",
         ];

@@ -10,7 +10,7 @@ $this->layout('frontend::layout', ['title' => 'Addresses'] + get_defined_vars())
 
 <div class="container-fluid">
     <div class="row">
-        <nav id="sidebar" class="col-md-2 bg-light sidebar<?= ($controller->getRequest()->cookies->get('sidebar_size') == 'minimized') ? ' collapsed' : ''; ?>">
+        <nav id="sidebar" class="col-md-2 bg-light sidebar<?= ($this->sitebase()->getRequest()->cookies->get('sidebar_size') == 'minimized') ? ' collapsed' : ''; ?>">
             <div class="sidebar-sticky">
                 <a href="#" class="closebtn d-sm-block d-md-none">&times;</a>
                 <?php $this->insert('frontend::users/partials/sidemenu', ['controller' => $controller]); ?>
@@ -18,7 +18,7 @@ $this->layout('frontend::layout', ['title' => 'Addresses'] + get_defined_vars())
         </nav>
         <main role="main" class="col-md-10 ml-sm-auto col-lg-10 pt-3 px-4">
             <div class="row">
-            <?php if ($controller->getRequest()->query->get('action') == 'edit' || $controller->getRequest()->query->get('action') == 'add' || $controller->getRequest()->query->get('action') == 'delete') :?>
+            <?php if ($this->sitebase()->getRequest()->query->get('action') == 'edit' || $this->sitebase()->getRequest()->query->get('action') == 'add' || $this->sitebase()->getRequest()->query->get('action') == 'delete') :?>
                     <?= $form;?>
             <?php else: ?>
                 <?php if (empty($addresses)) :?>

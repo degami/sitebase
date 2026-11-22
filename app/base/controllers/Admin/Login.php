@@ -227,14 +227,14 @@ class Login extends FormPage
             if ($this->getEnvironment()->getVariable('USE2FA_ADMIN') && $this->getAuth()->currentUserHasPassed2FA(true) != true) {
                 $goto_url = $this->getAdminRouter()->getUrl('admin.twofa');
 
-                if ($this->getRequest()->query->get('dest')) {
-                    $goto_url .= '?dest'.$this->getRequest()->query->get('dest');
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('dest')) {
+                    $goto_url .= '?dest'.$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('dest');
                 }
             } else {
                 $goto_url = $this->getAdminRouter()->getUrl("admin.dashboard");
 
-                if ($this->getRequest()->query->get('dest')) {
-                    $tmp = explode(':', base64_decode($this->getRequest()->query->get('dest')));
+                if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('dest')) {
+                    $tmp = explode(':', base64_decode($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('dest')));
     
                     if (count($tmp) >= 2 && end($tmp) == sha1($this->getEnvironment()->getVariable('SALT'))) {
                         $goto_url = implode(':', array_slice($tmp, 0, count($tmp) - 1));

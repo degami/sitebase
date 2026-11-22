@@ -126,10 +126,10 @@ class Profile extends LoggedUserFormPage
 
         $form->addField('action', [
             'type' => 'value',
-            'value' => $this->getRequest()->query->get('action'),
+            'value' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action'),
         ]);
 
-        switch ($this->getRequest()->query->get('action')) {
+        switch ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action')) {
             case 'edit':
                 $form->addField('email', [
                     'type' => 'email',

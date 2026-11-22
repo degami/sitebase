@@ -46,7 +46,7 @@ class Token extends BaseJsonPage
 
     protected function getJsonData(): mixed
     {
-        return ['token' => $this->getToken($this->getRequest())];
+        return ['token' => $this->getToken($this->getEnvironment()->getRequestInfo()->getRequest())];
     }
 
     protected function getToken(Request $request) : ?string

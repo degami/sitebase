@@ -123,7 +123,7 @@ abstract class AdminManageProductsPage extends AdminManageFrontendModelsPage
                         'stock-btn',
                         'stock-btn',
                         $this->getHtmlRenderer()->getIcon('layers') . ' ' .$this->getUtils()->translate('Manage Stock', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.base.controllers.admin.json.productstocks', ['product_details' => base64_encode(json_encode(['product_class' => $this->getObjectClass(),'product_id' => $product->getId()]))]) . '?product_id=' . $this->getRequest()->query->get('product_id') . '&action=',
+                        $this->getUrl('crud.app.base.controllers.admin.json.productstocks', ['product_details' => base64_encode(json_encode(['product_class' => $this->getObjectClass(),'product_id' => $product->getId()]))]) . '?product_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('product_id') . '&action=',
                         'btn btn-sm btn-light inToolSidePanel', 
                         ['data-panelWidth' => '80%']
                     );

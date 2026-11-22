@@ -161,7 +161,7 @@ class Menus extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $menu = $this->getObject();
 
         $form->addField('action', [
@@ -171,10 +171,10 @@ class Menus extends AdminManageModelsPage
 
         switch ($type) {
             case 'view-menu-name':
-                $this->addLevel($form, $this->getRequest()->query->get('menu_name'), null);
+                $this->addLevel($form, $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('menu_name'), null);
 
                 $this->addSubmitButton($form);
-                $this->addNewButton(['menu_name' => $this->getRequest()->query->get('menu_name')]);
+                $this->addNewButton(['menu_name' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('menu_name')]);
 
                 break;
             case 'edit':
@@ -200,8 +200,8 @@ class Menus extends AdminManageModelsPage
                     $menu_position = $menu->position;
                     $menu_breadcrumb = $menu->breadcrumb;
                     $menu_website = $menu->website_id;
-                } elseif ($this->getRequest()->query->get('menu_name')) {
-                    $menu_menuname = $this->getRequest()->query->get('menu_name');
+                } elseif ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('menu_name')) {
+                    $menu_menuname = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('menu_name');
                 }
 
                 $form->addField('title', [

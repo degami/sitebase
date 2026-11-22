@@ -74,7 +74,7 @@ abstract class BaseRestPage extends BasePage
             return $return;
         }
 
-        if ($this->getRequest()->headers->get('Content-Type') != 'application/json' && $this->getRequest()->getContentTypeFormat() != 'json') {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->headers->get('Content-Type') != 'application/json' && $this->getEnvironment()->getRequestInfo()->getRequest()->getContentTypeFormat() != 'json') {
             throw new PermissionDeniedException();
         }
 
@@ -88,7 +88,7 @@ abstract class BaseRestPage extends BasePage
      */
     protected function getVerb(): string
     {
-        return $this->getRequest()->getMethod();
+        return $this->getEnvironment()->getRequestInfo()->getRequest()->getMethod();
     }
 
     /**
@@ -117,7 +117,7 @@ abstract class BaseRestPage extends BasePage
      */
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
-        if (!empty($data = json_decode($this->getRequest()->getContent(), true))) {
+        if (!empty($data = json_decode($this->getEnvironment()->getRequestInfo()->getRequest()->getContent(), true))) {
             if (isset($data['id'])) {
                 unset($data['id']);
             }
@@ -127,13 +127,13 @@ abstract class BaseRestPage extends BasePage
             try {
                 /** @var RequestLog $log */
                 $log = $this->containerMake(RequestLog::class);
-                $log->fillWithRequest($this->getRequest(), $this);
+                $log->fillWithRequest($this->getEnvironment()->getRequestInfo()->getRequest(), $this);
                 $log->setResponseCode(200);
                 $log->persist();
             } catch (Exception $e) {
-                $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
+                $this->getUtils()->logException($e, "Can't write RequestLog", $this->getEnvironment()->getRequestInfo()->getRequest());
                 if ($this->getEnvironment()->canDebug()) {
-                    return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
+                    return $this->getUtils()->exceptionPage($e, $this->getEnvironment()->getRequestInfo()->getRouteInfo());
                 }
             }
         }

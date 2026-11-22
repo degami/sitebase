@@ -147,7 +147,7 @@ trait FormTrait
      */
     protected function fillConfirmationForm(string $confirm_message, FAPI\Form $form, ?string $cancel_url = null): FAPI\Form
     {
-        $cancel_url = $cancel_url ?: $this->getEnvironment()->getRequest()->headers->get('referer');
+        $cancel_url = $cancel_url ?: $this->getEnvironment()->getRequestInfo()->getRequest()->headers->get('referer');
         if (!$cancel_url) {
             $cancel_url = $this->getControllerUrl();
         }

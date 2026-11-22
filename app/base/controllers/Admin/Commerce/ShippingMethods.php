@@ -248,12 +248,12 @@ class ShippingMethods extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
 
         if ($type == 'config') {
             $this->addBackButton();
 
-            $code = $this->getRequest()->query->get('code');
+            $code = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('code');
 
             $form->addField('action', [
                 'type' => 'value',
@@ -303,7 +303,7 @@ class ShippingMethods extends AdminFormPage
      */
     public function formSubmitted(FAPI\Form $form, &$form_state): mixed
     {
-        $code = $this->getRequest()->query->get('code');
+        $code = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('code');
 
         /** @var ShippingMethodInterface $shippingMethod */
         $shippingMethod = $this->getShippingMethods()[$code];

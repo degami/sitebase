@@ -13,13 +13,12 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 
 /**
  * Lzf utils functions Helper Class
  */
-class Lzf extends ContainerAwareObject
+class Lzf
 {
     /**
      * Compress a single file into lzf format

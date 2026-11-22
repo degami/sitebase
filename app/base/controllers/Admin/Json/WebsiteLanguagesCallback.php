@@ -44,7 +44,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      */
     public function getObjectClass(): mixed
     {
-        return $this->getRequest()->query->get('object_class');
+        return $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('object_class');
     }
 
     /**
@@ -56,7 +56,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
      */
     public function getObject() : mixed
     {
-        return $this->containerMake($this->getRequest()->query->get('object_class'));
+        return $this->containerMake($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('object_class'));
     }
 
     /**
@@ -102,7 +102,7 @@ class WebsiteLanguagesCallback extends AdminJsonPage
     public function process(?RouteInfo $route_info = null, array $route_data = []): Response
     {
         try {
-            $this->form = FAPI\FormBuilder::getForm([$this, 'emptyForm'], 'emptyForm', json_decode($this->getRequest()->request->get('jsondata'), true));
+            $this->form = FAPI\FormBuilder::getForm([$this, 'emptyForm'], 'emptyForm', json_decode($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('jsondata'), true));
 
             $out = json_decode($this->form->render());
 

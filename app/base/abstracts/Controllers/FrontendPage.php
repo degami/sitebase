@@ -241,7 +241,7 @@ abstract class FrontendPage extends BaseHtmlPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        if (!$this->getRouteInfo()->isAdminRoute() && !$this->checkPermission('view_site')) {
+        if (!$this->getEnvironment()->getRequestInfo()->getRouteInfo()->isAdminRoute() && !$this->checkPermission('view_site')) {
             throw new PermissionDeniedException();
         }
 
@@ -253,7 +253,7 @@ abstract class FrontendPage extends BaseHtmlPage
      *
      * @param RouteInfo|null $route_info
      * @param array $route_data
-     * @return BasePage|Response
+     * @return Response
      * @throws BasicException
      * @throws DependencyException
      * @throws NotFoundException
@@ -262,7 +262,7 @@ abstract class FrontendPage extends BaseHtmlPage
      * @throws Throwable
      * @throws DebugBarException
      */
-    public function renderPage(?RouteInfo $route_info = null, array $route_data = []) : BasePage|Response
+    public function renderPage(?RouteInfo $route_info = null, array $route_data = []) : Response
     {
         $return = parent::renderPage($route_info, $route_data);
 
@@ -271,13 +271,13 @@ abstract class FrontendPage extends BaseHtmlPage
                 try {
                     /** @var RequestLog $log */
                     $log = $this->containerMake(RequestLog::class);
-                    $log->fillWithRequest($this->getRequest(), $this);
+                    $log->fillWithRequest($this->getEnvironment()->getRequestInfo()->getRequest(), $this);
                     $log->setResponseCode($return instanceof Response ? $return->getStatusCode() : 200);
                     $log->persist();
                 } catch (Exception $e) {
-                    $this->getUtils()->logException($e, "Can't write RequestLog", $this->getRequest());
+                    $this->getUtils()->logException($e, "Can't write RequestLog", $this->getEnvironment()->getRequestInfo()->getRequest());
                     if ($this->getEnvironment()->canDebug()) {
-                        return $this->getUtils()->exceptionPage($e, $this->getRouteInfo());
+                        return $this->getUtils()->exceptionPage($e, $this->getEnvironment()->getRequestInfo()->getRouteInfo());
                     }
                 }
             }
@@ -298,14 +298,14 @@ abstract class FrontendPage extends BaseHtmlPage
             return $this->rewrite;
         }
 
-        if ($this->getRouteInfo()) {
+        if ($this->getEnvironment()->getRequestInfo()->getRouteInfo()) {
             try {
-                if ($this->getRouteInfo()->getRewrite()) {
+                if ($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRewrite()) {
                     // we have rewrite id into RouteInfo
-                    $this->rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getRouteInfo()->getRewrite()]);
+                    $this->rewrite = $this->containerCall([Rewrite::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRewrite()]);
                 } else {
                     // no data into RouteInfo, try by route
-                    $this->rewrite = Rewrite::getCollection()->where(['route' => $this->getRouteInfo()->getRoute()])->getFirst();
+                    $this->rewrite = Rewrite::getCollection()->where(['route' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRoute()])->getFirst();
                 }
             } catch (Exception $e) { }
         }
@@ -397,7 +397,7 @@ abstract class FrontendPage extends BaseHtmlPage
         if (empty($out) && $this instanceof FrontendPageWithLang || $this instanceof FormPageWithLang) {
             foreach ($this->getSiteData()->getSiteLocales() as $locale) {
                 if ($locale != $this->getCurrentLocale()) {
-                    $out[$locale] = $this->getUrl(str_replace('.withlang', '', $this->getRouteInfo()->getRouteName()).'.withlang', ['lang' => $locale] + $this->getRouteInfo()->getVars());
+                    $out[$locale] = $this->getUrl(str_replace('.withlang', '', $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName()).'.withlang', ['lang' => $locale] + $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars());
                 }
             }
         }

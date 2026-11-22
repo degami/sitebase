@@ -38,7 +38,7 @@ class ReadDocs extends AdminJsonPage
      */
     protected function getJsonData(): array
     {
-        $page = $this->getRequest()->query->get('docpage');
+        $page = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('docpage');
 
         $parsed = parse_url($page);
         $localPage = App::getDir(App::WEBROOT).str_replace("/", DS, $parsed['path']);

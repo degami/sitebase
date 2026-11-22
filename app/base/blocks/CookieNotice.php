@@ -78,8 +78,7 @@ class CookieNotice extends BaseCodeBlock
     {
         if (
             $current_page instanceof BasePage &&
-            $current_page->getRouteInfo() &&
-            $current_page->getRouteInfo()->isAdminRoute()
+            $current_page->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->isAdminRoute()
         ) {
             return '';
         }

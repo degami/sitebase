@@ -228,7 +228,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
     protected function getCollection() : BaseCollection
     {
         $paginate_params = [
-            'order' => $this->getRequest()->query->all('order') ?: $this->defaultOrder(),
+            'order' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all('order') ?: $this->defaultOrder(),
             'condition' => $this->getSearchParameters(),
         ];
 
@@ -272,7 +272,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
         $user = $this->getCurrentUser();
 
         $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
-        $currentRoute = $this->getRouteInfo()->getRouteName();
+        $currentRoute = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName();
 
         if (is_array($uiSettings) && isset($uiSettings[$currentRoute])) {
             if (isset($uiSettings[$currentRoute]['itemsPerPage'])) {
@@ -292,7 +292,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
         $user = $this->getCurrentUser();
 
         $uiSettings = $user->getUserSession()->getSessionKey('uiSettings');
-        $currentRoute = $this->getRouteInfo()->getRouteName();
+        $currentRoute = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName();
 
         if (is_array($uiSettings) && isset($uiSettings[$currentRoute])) {
             if (isset($uiSettings[$currentRoute]['layout'])) {
@@ -311,8 +311,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
     protected function getSearchParameters(): ?array
     {
         $out = array_filter([
-            'like' => $this->getRequest()->query->all('search'),
-            'eq' => $this->getRequest()->query->all('foreign'),
+            'like' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all('search'),
+            'eq' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign'),
         ]);
         return !empty($out) ? $out : null;
     }
@@ -330,8 +330,8 @@ abstract class AdminManageModelsPage extends AdminFormPage
             return $this->objectInstance;
         }
 
-        if ($this->getRequest()->query->has($this->getObjectIdQueryParam())) {
-            $this->objectInstance = $this->loadObject($this->getRequest()->query->get($this->getObjectIdQueryParam()));
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->has($this->getObjectIdQueryParam())) {
+            $this->objectInstance = $this->loadObject($this->getEnvironment()->getRequestInfo()->getRequest()->query->get($this->getObjectIdQueryParam()));
         } else {
             $this->objectInstance = $this->newEmptyObject();
         }
@@ -438,7 +438,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
             static::DUPLICATE_BTN, 
             static::DUPLICATE_BTN, 
             $this->getHtmlRenderer()->getIcon('copy') . ' ' . $this->getUtils()->translate('Duplicate', locale: $this->getCurrentLocale()), 
-            $this->getControllerUrl() . '?'. http_build_query(['action' => 'duplicate', $this->getObjectIdQueryParam() => $this->getRequest()->query->get($this->getObjectIdQueryParam())] + $urlParams), 
+            $this->getControllerUrl() . '?'. http_build_query(['action' => 'duplicate', $this->getObjectIdQueryParam() => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get($this->getObjectIdQueryParam())] + $urlParams), 
             'btn btn-sm btn-light')
         ;
     }
@@ -497,7 +497,7 @@ abstract class AdminManageModelsPage extends AdminFormPage
         if ($object) {
             $primaryKey = $object->getKeyFieldValue();
         } else {
-            $primaryKey = $this->getRequest()->query->get($this->getObjectIdQueryParam());
+            $primaryKey = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get($this->getObjectIdQueryParam());
             $object = $this->getObject();
         }
 
@@ -742,14 +742,14 @@ abstract class AdminManageModelsPage extends AdminFormPage
      */
     protected function beforeRender(): BasePage|Response
     {
-        if ($this->getRequest()->query->get('action') == 'duplicate') {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'duplicate') {
 
             $form = FAPI\FormBuilder::getForm([$this, 'getDuplicateFormDefinition'], $this->getFormId())
                 ->setValidate([[$this, 'duplicateFormValidate']])
                 ->setSubmit([[$this, 'duplicateFormSubmitted']]);
 
             $this->template_data = [
-                'action' => $this->getRequest()->query->get('action') ?? 'list',
+                'action' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list',
                 'form' => $form,
             ];
 

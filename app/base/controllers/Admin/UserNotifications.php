@@ -105,7 +105,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
     protected function beforeRender(): BasePage|Response
     {
         if ($this->getCollection()->count() > 0) {
-            if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
+            if (($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list') == 'list') {
                 $this->addActionLink('readall-btn', 'readall-btn', $this->getHtmlRenderer()->getIcon('user-check') . $this->getUtils()->translate('Mark all as read', locale: $this->getCurrentLocale()), $this->getControllerUrl().'?action=markallasread', 'btn btn-sm btn-outline-warning');
             }    
         }
@@ -134,7 +134,7 @@ class UserNotifications extends AdminManageFrontendModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $notification = $this->getObject();
 
         $form->addField('action', [

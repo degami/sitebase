@@ -81,7 +81,7 @@ class Webhooks extends BaseRouter
                             $route_name = $this->containerCall([$controllerClass, 'getPageRouteName']);
                         }
 
-                        $classMethod = self::CLASS_METHOD;
+                        $classMethod = $this->getClassMethod();
                         $verbs = $this->getClassHttpVerbs($controllerClass);
 
                         if (method_exists($controllerClass, 'getRoutePath')) {
@@ -106,7 +106,7 @@ class Webhooks extends BaseRouter
                                 throw new InvalidValueException("'{$path_value}': Invalid route string", 1);
                             }
 
-                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_prefix, '/') . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                            $this->addRoute(group: $group, name: strtolower($key), path: "/" . ltrim($path_prefix, '/') . ltrim($path_value, "/ "), class: $controllerClass, method: $classMethod, verbs: $verbs);
                         });
                     }
                 }

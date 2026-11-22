@@ -14,7 +14,7 @@
 namespace App\Base\Environment;
 
 use App\App;
-use Symfony\Component\HttpFoundation\Request;
+use App\Base\Routing\RequestInfo;
 use Dotenv\Dotenv;
 
 /**
@@ -22,14 +22,14 @@ use Dotenv\Dotenv;
  */
 class Manager
 {
-    protected ?Request $request = null;
+    protected ?RequestInfo $request_info = null;
 
     protected array $envVariables = [];
 
     public function __construct()
     {
         // preload data
-        $this->loadDotEnv()->getRequest();
+        $this->loadDotEnv();
     }
 
     /**
@@ -83,21 +83,21 @@ class Manager
     }
 
     /**
-     * Get the current request
+     * Get the current request info
      * 
-     * @return Request|null
+     * @return RequestInfo|null
      */
-    public function getRequest() : ?Request
+    public function getRequestInfo() : ?RequestInfo
     {
         if ($this->isCli()) {
             return null;
         }
 
-        if ($this->request !== null) {
-            return $this->request;
+        if ($this->request_info !== null) {
+            return $this->request_info;
         }
 
-        return $this->request = \Symfony\Component\HttpFoundation\Request::createFromGlobals();
+        return $this->request_info = RequestInfo::createFromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals());        
     }
 
     /**
@@ -155,7 +155,7 @@ class Manager
      */
     public function canDebug() : bool
     {
-        return $this->isDebugActive() && ($this->isDocker() || in_array($this->getRequest()?->getClientIp(), ['127.0.0.1', '::1', 'localhost']));
+        return $this->isDebugActive() && ($this->isDocker() || in_array($this->getRequestInfo()->getRequest()?->getClientIp(), ['127.0.0.1', '::1', 'localhost']));
     }
 
     protected function loadDotEnv() : self

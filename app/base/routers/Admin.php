@@ -43,6 +43,7 @@ class Admin extends Web
             if (empty($this->routes)) {
                 // collect routes
 
+                $classMethod = $this->getClassMethod();
                 $controllerClasses = $this->getClassFinder()->findAdminControllers();
                 foreach ($controllerClasses as $controllerClass) {
                     if (is_subclass_of($controllerClass, BasePage::class)) {
@@ -61,7 +62,6 @@ class Admin extends Web
                             $route_name = $this->containerCall([$controllerClass, 'getPageRouteName']);
                         }
 
-                        $classMethod = self::CLASS_METHOD;
                         $verbs = $this->getClassHttpVerbs($controllerClass);
 
                         if (($tmp = explode("/", $path, 2)) && count($tmp) > 1) {
@@ -100,11 +100,11 @@ class Admin extends Web
                                 throw new InvalidValueException("'{$path_value}': Invalid route string", 1);
                             }
 
-                            $this->addRoute($group, strtolower($key), "/" . ltrim($path_value, "/ "), $controllerClass, $classMethod, $verbs);
+                            $this->addRoute(group: $group, name: strtolower($key), path: "/" . ltrim($path_value, "/ "), class: $controllerClass, method: $classMethod, verbs: $verbs);
                         });
                     }
                 }
-                $this->addRoute($this->containerCall([AdminIndexPage::class, 'getRouteGroup']), 'admin.root', "/", AdminIndexPage::class, self::CLASS_METHOD);
+                $this->addRoute(group: $this->containerCall([AdminIndexPage::class, 'getRouteGroup']), name: 'admin.root', path: "/", class: AdminIndexPage::class, method: $classMethod);
 
                 // cache controllers for faster access
                 $this->setCachedControllers($this->routes);

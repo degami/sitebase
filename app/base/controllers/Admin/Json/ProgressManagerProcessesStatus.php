@@ -70,8 +70,8 @@ class ProgressManagerProcessesStatus extends AdminJsonPage
 
     protected function getAdditionalIds() : array
     {
-        if (isJson($this->getRequest()->getContent())) {
-            $data = json_decode($this->getRequest()->getContent(), true);
+        if (isJson($this->getEnvironment()->getRequestInfo()->getRequest()->getContent())) {
+            $data = json_decode($this->getEnvironment()->getRequestInfo()->getRequest()->getContent(), true);
             return $data['ids'] ?? [];
         }
 

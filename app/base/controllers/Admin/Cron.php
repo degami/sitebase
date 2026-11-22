@@ -97,7 +97,7 @@ class Cron extends AdminManageModelsPage
 
     public function beforeRender() : BasePage|Response
     {
-        if (($this->getRequest()->query->get('action') ?? 'list') == 'list') {
+        if (($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list') == 'list') {
             $taskClasses = $this->getClassFinder()->findCronTaskClasses();
             foreach ($taskClasses as $taskClass) {
                 foreach (get_class_methods($taskClass) as $key => $method_name) {
@@ -176,7 +176,7 @@ class Cron extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
         $task = $this->getObject();
 
         $form->addField('action', [

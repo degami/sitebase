@@ -13,14 +13,13 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 use PharData;
 
 /**
  * Tar utils functions Helper Class
  */
-class Tar extends ContainerAwareObject
+class Tar
 {
     /**
      * extract tar file to directory

@@ -57,11 +57,11 @@ class Massedit extends AdminJsonPage
     protected function getJsonData(): array
     {
         $route_data = $this->getRouteData();
-        $modelClassName = $this->getRequest()->query->get('model_class_name');
-        $controllerClassName = $this->getRequest()->query->get('controller_class_name');
+        $modelClassName = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('model_class_name');
+        $controllerClassName = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('controller_class_name');
 
-        if (strtoupper($this->getRequest()->getMethod()) == 'POST') {
-            $data = $this->getRequest()->request->all()['data'];
+        if (strtoupper($this->getEnvironment()->getRequestInfo()->getRequest()->getMethod()) == 'POST') {
+            $data = $this->getEnvironment()->getRequestInfo()->getRequest()->request->all()['data'];
 
             // rename well-known variables
             foreach ($data as $k => $v) {
@@ -72,7 +72,7 @@ class Massedit extends AdminJsonPage
             }
 
             $updated = 0;
-            foreach ($this->getRequest()->request->all()['items'] as $item) {
+            foreach ($this->getEnvironment()->getRequestInfo()->getRequest()->request->all()['items'] as $item) {
                 $id = json_decode(urldecode($item), true);
                 if (!$id) {
                     continue;
@@ -97,7 +97,7 @@ class Massedit extends AdminJsonPage
             if ($formHtml !== null) {
                 return [
                     'success' => true,
-                    'params' => $this->getRequest()->query->all(),
+                    'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
                     'html' => $formHtml,
                     'js' => "",
                 ];
@@ -105,7 +105,7 @@ class Massedit extends AdminJsonPage
         }
 
         // set action to new to get empty values form
-        $this->getRequest()->query->set('action', 'new');
+        $this->getEnvironment()->getRequestInfo()->getRequest()->query->set('action', 'new');
 
         $controller = $this->containerMake($controllerClassName);
         /** @var FAPI\Form $form */
@@ -119,7 +119,7 @@ class Massedit extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'html' => $formHtml,
             'js' => "",
         ];

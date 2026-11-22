@@ -80,7 +80,7 @@ class CartDiscounts extends AdminJsonPage
         $cartsController = $this->containerMake(Carts::class);
         $form = $cartsController->getForm();
 
-        $form->setAction($this->getUrl('admin.commerce.carts') . '?action=' . $this->getRequest()->query->get('action').'&cart_id='.$this->getRequest()->query->get('cart_id'));
+        $form->setAction($this->getUrl('admin.commerce.carts') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action').'&cart_id='.$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('cart_id'));
         $form->addField(
             'cart_id',
             [
@@ -91,9 +91,9 @@ class CartDiscounts extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'discounts' => $discountsArr,
-            'html' => ($this->getRequest()->query->get('action') == 'new_discount' ? "<div class=\"items-list\">" . implode("", $discounts) . "</div><hr />" : '') . $form->render(),
+            'html' => ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'new_discount' ? "<div class=\"items-list\">" . implode("", $discounts) . "</div><hr />" : '') . $form->render(),
             'js' => "",
         ];
     }

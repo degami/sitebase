@@ -64,8 +64,8 @@ class Graphql extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $this->addRoute("/graphql", "grapql.entrypoint", "[/]", \App\Base\GraphQl\Entrypoint::class, self::CLASS_METHOD, $this->getHttpVerbs());
-                $this->addRoute("/graphql", "grapql.entrypoint.locale", "/{lang:[a-z]{2}}[/]", \App\Base\GraphQl\Entrypoint::class, self::CLASS_METHOD, $this->getHttpVerbs());
+                $this->addRoute(group: "/graphql", name: "grapql.entrypoint", path: "[/]", class: \App\Base\GraphQl\Entrypoint::class, method: $this->getClassMethod(), verbs: $this->getHttpVerbs());
+                $this->addRoute(group: "/graphql", name: "grapql.entrypoint.locale", path: "/{lang:[a-z]{2}}[/]", class: \App\Base\GraphQl\Entrypoint::class, method: $this->getClassMethod(), verbs: $this->getHttpVerbs());
 
                 // cache controllers for faster access
                 $this->setCachedControllers($this->routes);

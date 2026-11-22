@@ -77,7 +77,7 @@ class Webdav extends BaseRouter
             if (empty($this->routes)) {
                 // collect routes
 
-                $this->addRoute("/webdav", "webdav.entrypoint", "[/{path:.*}]", self::class, self::CLASS_METHOD, $this->getHttpVerbs());
+                $this->addRoute(group: "/webdav", name: "webdav.entrypoint", path: "[/{path:.*}]", class: self::class, method: $this->getClassMethod(), verbs: $this->getHttpVerbs());
 
                 // cache controllers for faster access
                 $this->setCachedControllers($this->routes);

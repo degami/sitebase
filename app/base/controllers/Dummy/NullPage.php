@@ -44,7 +44,7 @@ class NullPage extends BaseHtmlPage
      */
     protected function beforeRender() : BasePage|Response
     {
-        return $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getAppRouteInfo()]);
+        return $this->containerCall([$this->getUtils(), 'errorPage'], ['error_code' => 404, 'route_info' => $this->getEnvironment()->getRequestInfo()->getRouteInfo()]);
     }
 
     public function getCurrentLocale() : ?string

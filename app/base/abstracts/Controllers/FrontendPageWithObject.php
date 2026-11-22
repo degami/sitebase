@@ -114,7 +114,7 @@ abstract class FrontendPageWithObject extends FrontendPage
             '.';
         }
 
-        $prefix .= trim(str_replace("/", ".", $this->getRouteInfo()->getRouteName()));
+        $prefix .= trim(str_replace("/", ".", $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName()));
 
         if ($this->getObject() instanceof FrontendModel) {
             return $this->normalizeCacheKey($prefix . '.' . $this->getUtils()->slugify($this->getObject()->getUrl(), false));

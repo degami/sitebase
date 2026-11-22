@@ -92,7 +92,7 @@ class Addresses extends LoggedUserFormPage
 
         $countries = $this->getUtils()->getCountriesSelectOptions();
 
-        $action = $this->getRequest()->query->get('action');
+        $action = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action');
         switch ($action) {
             case 'add':
             case 'edit':
@@ -208,7 +208,7 @@ class Addresses extends LoggedUserFormPage
         $address = $this->getAddress();
         $values = $form->values();
 
-        $action = $this->getRequest()->query->get('action');
+        $action = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action');
 
         switch ($action) {
             case 'add':
@@ -254,11 +254,11 @@ class Addresses extends LoggedUserFormPage
 
     protected function getAddress() : Address
     {
-        $action = $this->getRequest()->query->get('action');
+        $action = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action');
 
         /** @var Address $address */
         if ($action == 'edit') {
-            $id = $this->getRequest()->query->get('id');
+            $id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id');
             $address = Address::load($id);
 
             if ($address->getUserId() != $this->getCurrentUser()->getId()) {

@@ -56,7 +56,7 @@ class Manager extends ContainerAwareObject
                 ->setLevel($level);
 
             if ($this->getEnvironment()->isWeb()) {
-                $log->setIpAddress($this->getEnvironment()->getRequest()?->getClientIp());
+                $log->setIpAddress($this->getEnvironment()->getRequestInfo()->getRequest()?->getClientIp());
             }
 
             if ($this->getAuth()->getCurrentUser()) {

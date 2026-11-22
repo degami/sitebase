@@ -78,22 +78,22 @@ class Logs extends AdminPage
     public function getTemplateData(): array
     {
         $this->template_data = [
-            'logtype' => $this->getRequest()->query->get('logtype') ?? null,
-            'action' => $this->getRequest()->query->get('logtype') ? 'logs' : 'buttons',
+            'logtype' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('logtype') ?? null,
+            'action' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('logtype') ? 'logs' : 'buttons',
         ];
 
         $header = $data = [];
         $log = null;
 
-        if ($this->getRequest()->query->get('logtype')) {
-            if ($this->getRequest()->query->get('id')) {
-                $this->addBackButton(['logtype' => $this->getRequest()->query->get('logtype')]);
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('logtype')) {
+            if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id')) {
+                $this->addBackButton(['logtype' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('logtype')]);
             } else {
                 $this->addBackButton();
             }
 
             $paginate_params = [
-                'order' => $this->getRequest()->query->all('order') ?? ['created_at' => 'DESC'],
+                'order' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all('order') ?? ['created_at' => 'DESC'],
                 'condition' => $this->getSearchParameters(),
             ];
 
@@ -119,12 +119,12 @@ class Logs extends AdminPage
                 $paginate_params['condition'] = array_filter($conditions);
             }
 
-            switch ($this->getRequest()->query->get('logtype')) {
+            switch ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('logtype')) {
                 case 'request':
                     $this->page_title = 'Requests Logs';
 
-                    if (is_numeric($this->getRequest()->query->get('id'))) {
-                        $log = $this->containerCall([RequestLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    if (is_numeric($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id'))) {
+                        $log = $this->containerCall([RequestLog::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id')]);
                     } else {
                         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
                         $collection = $this->containerCall([RequestLog::class, 'getCollection']);
@@ -137,8 +137,8 @@ class Logs extends AdminPage
                 case 'mail':
                     $this->page_title = 'Mail Logs';
 
-                    if (is_numeric($this->getRequest()->query->get('id'))) {
-                        $log = $this->containerCall([MailLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    if (is_numeric($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id'))) {
+                        $log = $this->containerCall([MailLog::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id')]);
                     } else {
                         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
                         $collection = $this->containerCall([MailLog::class, 'getCollection']);
@@ -151,8 +151,8 @@ class Logs extends AdminPage
                 case 'cron':
                     $this->page_title = 'Cron Logs';
 
-                    if (is_numeric($this->getRequest()->query->get('id'))) {
-                        $log = $this->containerCall([CronLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    if (is_numeric($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id'))) {
+                        $log = $this->containerCall([CronLog::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id')]);
                     } else {
                         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
                         $collection = $this->containerCall([CronLog::class, 'getCollection']);
@@ -165,8 +165,8 @@ class Logs extends AdminPage
                 case 'adminactions':
                     $this->page_title = 'Admin Actions Logs';
 
-                    if (is_numeric($this->getRequest()->query->get('id'))) {
-                        $log = $this->containerCall([AdminActionLog::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    if (is_numeric($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id'))) {
+                        $log = $this->containerCall([AdminActionLog::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id')]);
                     } else {
                         /** @var \App\Base\Abstracts\Models\BaseCollection $collection */
                         $collection = $this->containerCall([AdminActionLog::class, 'getCollection']);
@@ -179,8 +179,8 @@ class Logs extends AdminPage
                 case 'progress_manager':
                     $this->page_title = 'Progress Manager Processes';
 
-                    if (is_numeric($this->getRequest()->query->get('id'))) {
-                        $log = $this->containerCall([ProgressManagerProcess::class, 'load'], ['id' => $this->getRequest()->query->get('id')]);
+                    if (is_numeric($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id'))) {
+                        $log = $this->containerCall([ProgressManagerProcess::class, 'load'], ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id')]);
                         $log['exit_status'] = match ($log['exit_status']) {
                             ProgressManagerProcess::SUCCESS => 'Success',
                             ProgressManagerProcess::FAILURE => 'Failure',
@@ -209,7 +209,7 @@ class Logs extends AdminPage
 
             }
 
-            if (is_numeric($this->getRequest()->query->get('id'))) {
+            if (is_numeric($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id'))) {
                 $this->template_data += [
                     'log' => $log,
                     'logHtml' => $this->getHtmlRenderer()->renderLog($log, false),
@@ -237,8 +237,8 @@ class Logs extends AdminPage
     protected function getSearchParameters(): ?array
     {
         $out = array_filter([
-            'like' => $this->getRequest()->query->all('search'),
-            'eq' => $this->getRequest()->query->all('foreign'),
+            'like' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all('search'),
+            'eq' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all('foreign'),
         ]);
         return !empty($out) ? $out : null;
     }
@@ -264,7 +264,7 @@ class Logs extends AdminPage
                 }
                 $out[$element] = $data[$element] ?? null;
             }
-            $out['actions'] = '<a href="' . $this->getControllerUrl() . '?logtype=' . $this->getRequest()->query->get('logtype') . '&id=' . $log->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in', ['style' => 'vertical-align: middle']) . ' ' . $this->getUtils()->translate('View', locale: $this->getCurrentLocale()) . '</a>';
+            $out['actions'] = '<a href="' . $this->getControllerUrl() . '?logtype=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('logtype') . '&id=' . $log->id . '">' . $this->getHtmlRenderer()->getIcon('zoom-in', ['style' => 'vertical-align: middle']) . ' ' . $this->getUtils()->translate('View', locale: $this->getCurrentLocale()) . '</a>';
             return $out;
         }, $data);
     }

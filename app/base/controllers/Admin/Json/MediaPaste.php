@@ -57,7 +57,7 @@ class MediaPaste extends AdminJsonPage
     {
         $route_data = $this->getRouteData();
 
-        $data = $this->getRequest()->request->all();
+        $data = $this->getEnvironment()->getRequestInfo()->getRequest()->request->all();
 
         $action = $data['action'];
         $ids = $data['ids'];

@@ -106,6 +106,16 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
     }
 
     /**
+     * gets classMethod
+     * 
+     * @return string
+     */
+    public function getClassMethod() : string
+    {
+        return self::CLASS_METHOD;
+    }
+
+    /**
      * gets Router name
      *
      * @return string

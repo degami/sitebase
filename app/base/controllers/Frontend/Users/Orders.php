@@ -70,7 +70,7 @@ class Orders extends LoggedUserFormPage
      */
     public function getTemplateData(): array
     {
-        $page = $this->getRequest()->query->get('page') ?? 0;
+        $page = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('page') ?? 0;
         $total = $this->getOrders()->count();
 
         $orders = $this->getOrders()->limit(self::ITEMS_PER_PAGE, $page * self::ITEMS_PER_PAGE)->getItems();
@@ -99,7 +99,7 @@ class Orders extends LoggedUserFormPage
     {
         $order = $this->getOrder();
 
-        $action = $this->getRequest()->query->get('action');
+        $action = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action');
         switch ($action) {
             case 'view':
                 $form->addCss('.form-container, form#orders {width: 100%;}');
@@ -257,7 +257,7 @@ class Orders extends LoggedUserFormPage
         $order = $this->getOrder();
         $values = $form->values();
 
-        $action = $this->getRequest()->query->get('action');
+        $action = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action');
 
         switch ($action) {
             case 'view':
@@ -290,7 +290,7 @@ class Orders extends LoggedUserFormPage
     protected function getOrder() : ?Order
     {
         /** @var Order $order */
-        $id = $this->getRequest()->query->get('id');
+        $id = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('id');
         if (!is_numeric($id)) {
             return null;
         }

@@ -13,13 +13,12 @@
 
 namespace App\Base\Tools\Utils;
 
-use App\Base\Abstracts\ContainerAwareObject;
 use Exception;
 
 /**
  * Bzip2 utils functions Helper Class
  */
-class Bzip2 extends ContainerAwareObject
+class Bzip2
 {
     /**
      * Compress a single file into bzip2 format

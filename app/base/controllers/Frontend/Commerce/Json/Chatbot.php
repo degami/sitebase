@@ -93,12 +93,12 @@ class Chatbot extends BaseJsonPage
         // internally we can use http to speed things up
         $endpoint = str_replace('https://', 'http://', $endpoint);
 
-        $authToken = $this->getRequest()->cookies->get('Authorization', '');
+        $authToken = $this->getEnvironment()->getRequestInfo()->getRequest()->cookies->get('Authorization', '');
         if (empty($authToken)) {
             throw new Exception("Missing auth token cookie");
         }
 
-        $llm = $this->getAI()->getLLMAdapter($this->getRequest()->query->get('ai', 'googlegemini'));
+        $llm = $this->getAI()->getLLMAdapter($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('ai', 'googlegemini'));
         $gql = new GraphQLExecutor($endpoint, 'Bearer '.$authToken);
         $flow = new EcommerceFlow(new GraphQLSchemaProvider($gql), $gql);
 
@@ -108,11 +108,11 @@ class Chatbot extends BaseJsonPage
             $_SESSION['ecommerce_chatbot_history'] = [];
         }
 
-        if ($this->getRequest()->query->get('reset_history', false)) {
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('reset_history', false)) {
             $_SESSION['ecommerce_chatbot_history'] = [];
         }
 
-        $response = $orchestrator->runFlow($this->getPrompt($this->getRequest()), $_SESSION['ecommerce_chatbot_history']);
+        $response = $orchestrator->runFlow($this->getPrompt($this->getEnvironment()->getRequestInfo()->getRequest()), $_SESSION['ecommerce_chatbot_history']);
 
         try {
             $markdown = new Markdown(); // or Markdown::new()

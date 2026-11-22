@@ -47,8 +47,9 @@ class UISettings extends AdminJsonPage
         /** @var User $user */
         $user = $this->getCurrentUser();
 
-        if ($this->getRequest()->getMethod() == 'POST') {
-            $settings = $this->getSettingsData($this->getRequest());
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->getMethod() == 'POST') {
+            /** @var array */
+            $settings = $this->getSettingsData($this->getEnvironment()->getRequestInfo()->getRequest()) ?? [];
             if (empty($settings)) {
                 throw new Exception("Missing settings content");
             }

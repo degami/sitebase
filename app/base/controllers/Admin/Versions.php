@@ -33,17 +33,17 @@ class Versions extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        if ($this->getRequest()->query->get('action') == 'delete') {
-            $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form, $this->getUrl($this->getRequest()->request->get('return_route')));
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'delete') {
+            $this->fillConfirmationForm('Do you confirm the deletion of the selected element?', $form, $this->getUrl($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('return_route')));
         }
 
-        if ($this->getRequest()->query->get('action') == 'restore') {
-            $this->fillConfirmationForm('Do you confirm the restore of the selected element?', $form, $this->getUrl($this->getRequest()->request->get('return_route')));
+        if ($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') == 'restore') {
+            $this->fillConfirmationForm('Do you confirm the restore of the selected element?', $form, $this->getUrl($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('return_route')));
         }
 
         $form->addField('return_route', [
             'type' => 'hidden',
-            'value' => $this->getRequest()->request->get('return_route'),
+            'value' => $this->getEnvironment()->getRequestInfo()->getRequest()->request->get('return_route'),
         ]);
 
         return $form;
@@ -70,8 +70,8 @@ class Versions extends AdminFormPage
      */
     public function formSubmitted(FAPI\Form $form, array &$form_state): mixed
     {
-        $version = ModelVersion::load($this->getRequest()->query->get('version_id'));
-        $action = $this->getRequest()->query->get('action');
+        $version = ModelVersion::load($this->getEnvironment()->getRequestInfo()->getRequest()->query->get('version_id'));
+        $action = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action');
 
         if ($action == 'delete') {
             $message = 'The version has been deleted';

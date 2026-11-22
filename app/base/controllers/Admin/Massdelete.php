@@ -32,19 +32,19 @@ class Massdelete extends AdminFormPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $this->fillConfirmationForm('Do you confirm the deletion of the selected elements?', $form, $this->getUrl($this->getRequest()->request->get('return_route')));
+        $this->fillConfirmationForm('Do you confirm the deletion of the selected elements?', $form, $this->getUrl($this->getEnvironment()->getRequestInfo()->getRequest()->request->get('return_route')));
 
         $form->addField('class_name', [
             'type' => 'hidden',
-            'value' => $this->getRequest()->request->get('class_name'),
+            'value' => $this->getEnvironment()->getRequestInfo()->getRequest()->request->get('class_name'),
         ]);
         
         $form->addField('return_route', [
             'type' => 'hidden',
-            'value' => $this->getRequest()->request->get('return_route'),
+            'value' => $this->getEnvironment()->getRequestInfo()->getRequest()->request->get('return_route'),
         ]);
 
-        $items = $this->getRequest()->request->all('items');
+        $items = $this->getEnvironment()->getRequestInfo()->getRequest()->request->all('items');
 
         $formItems = $form->addField('items', [
             'type' => 'seamless_container',

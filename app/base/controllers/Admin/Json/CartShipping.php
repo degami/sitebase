@@ -62,7 +62,7 @@ class CartShipping extends AdminJsonPage
         $cartsController = $this->containerMake(Carts::class);
         $form = $cartsController->getForm();
 
-        $form->setAction($this->getUrl('admin.commerce.carts') . '?action=' . $this->getRequest()->query->get('action').'&cart_id='.$this->getRequest()->query->get('cart_id'));
+        $form->setAction($this->getUrl('admin.commerce.carts') . '?action=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action').'&cart_id='.$this->getEnvironment()->getRequestInfo()->getRequest()->query->get('cart_id'));
         $form->addField(
             'cart_id',
             [
@@ -73,7 +73,7 @@ class CartShipping extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'html' => $form->render(),
             'js' => "",
         ];

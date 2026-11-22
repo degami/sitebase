@@ -62,7 +62,7 @@ class NewsDetail extends FrontendPageWithObject
             throw new NotFoundException();
         }
 
-        return parent::process($route_info);
+        return parent::process($route_info, $route_data);
     }
 
     /**

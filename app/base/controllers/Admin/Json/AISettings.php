@@ -77,7 +77,7 @@ class AISettings extends AdminJsonPage
 
         return [
             'success' => true,
-            'params' => $this->getRequest()->query->all(),
+            'params' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->all(),
             'html' => $this->form->render(),
             'js' => "",
         ];

@@ -29,14 +29,14 @@ abstract class FrontendPaginatedPageWithLang extends FrontendPageWithLang
     {
 
         /** @var Request $request */
-        $request = App::getInstance()->getEnvironment()->getRequest();
+        $request = App::getInstance()->getEnvironment()->getRequestInfo()->getRequest();
 
         $page = $request?->query?->get('page') ?? 0;
 
         if ($this->getRewriteObject() == null) {
             return $this->normalizeCacheKey(
                 'site.' . $this->getSiteData()->getCurrentWebsiteId() . 
-                '.' . trim($this->getRouteInfo()->getRoute(), '.') . 
+                '.' . trim($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRoute(), '.') . 
                 '.p'.$page
             );            
         }
@@ -44,7 +44,7 @@ abstract class FrontendPaginatedPageWithLang extends FrontendPageWithLang
         return $this->normalizeCacheKey(
             'site.'.$this->getRewriteObject()?->getWebsiteId().
             '.' . $this->getRewriteObject()?->getLocale() . 
-            '.' . trim($this->getRouteInfo()->getRouteName() ?? "", '.') . 
+            '.' . trim($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getRouteName() ?? "", '.') . 
             '.p'.$page
         );
     }

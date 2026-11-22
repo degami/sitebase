@@ -106,7 +106,7 @@ class Orders extends AdminManageModelsPage
      */
     public function getFormDefinition(FAPI\Form $form, array &$form_state): FAPI\Form
     {
-        $type = $this->getRequest()->query->get('action') ?? 'list';
+        $type = $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('action') ?? 'list';
 
         /**
          * @var OrderModel $order
@@ -125,7 +125,7 @@ class Orders extends AdminManageModelsPage
                         'ship-btn',
                         'ship-btn',
                         $this->getHtmlRenderer()->getIcon('truck') .' ' . $this->getUtils()->translate('Shipments', locale: $this->getCurrentLocale()),
-                        $this->getUrl('crud.app.base.controllers.admin.json.ordershipment', ['id' => $this->getRequest()->query->get('order_id')]) . '?order_id=' . $this->getRequest()->query->get('order_id') . '&action=ship',
+                        $this->getUrl('crud.app.base.controllers.admin.json.ordershipment', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id')]) . '?order_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id') . '&action=ship',
                         'btn btn-sm btn-light inToolSidePanel'
                     );
                 }
@@ -142,7 +142,7 @@ class Orders extends AdminManageModelsPage
                             'payment-btn', 
                             $this->getHtmlRenderer()->getIcon('dollar-sign') . ' ' . $this->getUtils()->translate('Payment', locale: $this->getCurrentLocale()), 
                             //$this->getUrl('admin.commerce.orderpayments') . '?' . http_build_query(['action' => 'view', 'payment_id' => $orderPayment->getId()]) ,
-                            $this->getUrl('crud.app.base.controllers.admin.json.orderpayment', ['id' => $this->getRequest()->query->get('order_id')]) . '?order_id=' . $this->getRequest()->query->get('order_id') . '&action=payment',
+                            $this->getUrl('crud.app.base.controllers.admin.json.orderpayment', ['id' => $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id')]) . '?order_id=' . $this->getEnvironment()->getRequestInfo()->getRequest()->query->get('order_id') . '&action=payment',
                             'btn btn-sm btn-light inToolSidePanel'
                         );
                     }

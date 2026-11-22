@@ -53,7 +53,7 @@ abstract class BasePage extends ContainerAwareObject implements PageInterface
         $this->response = $this->containerMake(Response::class);
 
         // dispatch "response_created" event
-        $this->getApp()->event('response_created', ['response' => $this->response]);
+//        $this->getApp()->event('response_created', ['response' => $this->response]);
 
         // let App know this is the controller object
         $this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->setControllerObject($this);

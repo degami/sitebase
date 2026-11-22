@@ -66,7 +66,7 @@ class Minipaint extends AdminPage
     }
 
 
-    public function getRoutePath() : string 
+    public static function getRoutePath() : string 
     {
         return 'minipaint/{path:.*}';    
     }

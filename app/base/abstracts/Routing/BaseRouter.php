@@ -275,7 +275,7 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
     public function checkRoute(string $route): bool
     {
         try {
-            return !in_array($this->getRouteInfo('GET', $route)->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
+            return !in_array($this->getRouteInfo('GET', $route)?->getStatus(), [Dispatcher::NOT_FOUND, Dispatcher::METHOD_NOT_ALLOWED]);
         } catch (DependencyException | NotFoundException $e) {
         }
 
@@ -471,23 +471,31 @@ abstract class BaseRouter extends ContainerAwareObject implements RouterInterfac
      * @throws NotFoundException
      * @throws PhpfastcacheSimpleCacheException
      */
-    public function getRouteInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): RouteInfo
+    public function getRouteInfo(?string $http_method = null, ?string $request_uri = null, ?string $domain = null): ?RouteInfo
     {
         if (empty($http_method)) {
-            $http_method = $_SERVER['REQUEST_METHOD'];
+            $http_method = $_SERVER['REQUEST_METHOD'] ?? null;
         }
         if (empty($request_uri)) {
-            $request_uri = $_SERVER['REQUEST_URI'];
+            $request_uri = $_SERVER['REQUEST_URI'] ?? null;
         }
         if (empty($domain)) {
             $domain = $this->getSiteData()->currentServerName();
         }
 
+        if (!$domain) {
+            return null;
+        }
+
         // remove multiple "/" on request uri if present
-        $request_uri = preg_replace("/^\/+/", "/", $request_uri);
+        $request_uri = preg_replace("/^\/+/", "/", (string) $request_uri);
 
         // Fetch method and URI from somewhere
         $parsed = parse_url($request_uri);
+
+        if (!$parsed) {
+            return null;
+        }
 
         // Strip query string (?foo=bar) and decode URI
         $uri = rawurldecode($parsed['path']);

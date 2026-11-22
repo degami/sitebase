@@ -32,7 +32,7 @@ class MinipaintSave extends AdminJsonPage
         return 'administer_site';
     }
 
-    public function getRoutePath() : string 
+    public static function getRoutePath() : string 
     {
         return 'minipaint_save/{media_id:\d+}';    
     }

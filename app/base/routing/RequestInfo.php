@@ -43,19 +43,19 @@ class RequestInfo
         $app = App::getInstance();
 
         $routeInfo = null;
-        if ($request != null) {
+        if ($request != null && $app != null) {
             $website = null;
             if ($app->getEnvironment()->isCliServer()) {
                 $website = $app->containerCall([Website::class, 'load'], ['id' => getenv('website_id')]);
             }
 
-            foreach ($app->getRouters() as $router) {
-                if (!$app->containerCall([$app->getRouter($router), 'isEnabled'])) {
+            foreach ($app->getClassFinder()->findRouterClasses() as $routerClass) {
+                if (!call_user_func([$routerClass, 'isEnabled'])) {
                     continue;
                 }
 
                 $routeInfo = $app->containerCall(
-                    [$app->getRouter($router), 'getRouteInfo'],
+                    [$app->getRouter($routerClass), 'getRouteInfo'],
                     [
                         'http_method' => $request->getMethod() ?? $_SERVER['REQUEST_METHOD'],
                         'request_uri' => $request->getRequestUri() ?? $_SERVER['REQUEST_URI'],
@@ -63,7 +63,7 @@ class RequestInfo
                     ]
                 );
 
-                if ($routeInfo->getStatus() != Dispatcher::NOT_FOUND) {
+                if ($routeInfo?->getStatus() != Dispatcher::NOT_FOUND) {
                     break;
                 }
             }

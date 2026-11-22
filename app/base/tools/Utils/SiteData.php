@@ -28,6 +28,7 @@ use DI\NotFoundException;
 use Exception;
 use Phpfastcache\Exceptions\PhpfastcacheSimpleCacheException;
 use App\Base\Models\Website;
+use DebugBar\DebugBar;
 
 /**
  * Site Data Helper Class
@@ -53,7 +54,7 @@ class SiteData extends ContainerAwareObject
      */
     public function currentServerName(): ?string
     {
-        return $_SERVER['HTTP_HOST'] ?: $_SERVER['SERVER_NAME'];
+        return $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? null;
     }
 
     /**

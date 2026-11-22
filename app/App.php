@@ -112,6 +112,8 @@ class App
     public function init() : App
     {
         try { 
+            App::$instance = $this;
+
             if (is_file(static::getDir(self::CONFIG) . DS . 'blocked_ips.php')) {
                 $this->blocked_ips = include(static::getDir(self::CONFIG) . DS . 'blocked_ips.php');
                 if (!is_array($this->blocked_ips)) {
@@ -129,6 +131,12 @@ class App
                     }
                 }
             }
+
+            // preload requestInfo
+            $request_info = RequestInfo::createFromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals());
+
+            // store into environment
+            $this->getEnvironment()->setRequestInfo($request_info);
 
             // remove some sensible data from _SERVER
             if (!$this->getEnvironment()->canDebug()) {
@@ -171,8 +179,6 @@ class App
                 $debugbar = $this->getDebugbar();
                 $debugbar['time']->stopMeasure('app_construct');
             }
-
-            App::$instance = $this;
         } catch (Throwable $e) {
             if ($this->getEnvironment()->isCli()) {
                 echo $e->getMessage() . PHP_EOL;
@@ -247,7 +253,7 @@ class App
                     Rewrite::getCollection()->getItems();
                 }
 
-                switch ($this->getEnvironment()->getRequestInfo()->getRouteInfo()->getStatus()) {
+                switch ($this->getEnvironment()->getRequestInfo()->getRouteInfo()?->getStatus()) {
                     case Dispatcher::NOT_FOUND:
                         // ... 404 Not Found
                         throw new NotFoundException();

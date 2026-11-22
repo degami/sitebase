@@ -100,6 +100,19 @@ class Manager
         return $this->request_info = RequestInfo::createFromRequest(\Symfony\Component\HttpFoundation\Request::createFromGlobals());        
     }
 
+
+    /**
+     * Stores RequestInfo opbject
+     * 
+     * @param RequestInfo $request_info
+     * @return Manager
+     */
+    public function setRequestInfo(RequestInfo $request_info) : Manager
+    {
+        $this->request_info = $request_info;
+        return $this;
+    }
+    
     /**
      * gets env variable
      *

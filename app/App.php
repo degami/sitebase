@@ -134,7 +134,7 @@ class App
             }
 
 
-            if ($this->getEnvironment()->isCli()) {
+            if ($this->getEnvironment()->isCli() && !getenv('website_id')) {
                 // get first website and set as current website
                 $website = Website::getCollection()->getFirst();
                 putenv("website_id=".$website->id);

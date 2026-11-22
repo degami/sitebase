@@ -40,9 +40,7 @@ try {
 
     global $app;
     $app = new \App\App();
-    $app->init();
-    $container->set(\App\App::class, $app);
-    $container->set('app', $container->get(App::class));
+
     $website = null;
 
     // reading with like this as trying to bind applicationDefinition to a new ArgvInput
@@ -67,6 +65,10 @@ try {
             putenv('website_id=1');
         }
     }
+
+    $app->init();
+    $container->set(\App\App::class, $app);
+    $container->set('app', $container->get(App::class));
 
     // ... register commands
     $commandsClasses = App::getInstance()->getClassFinder()->findCommandClasses();

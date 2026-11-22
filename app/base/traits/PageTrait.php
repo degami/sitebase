@@ -162,7 +162,7 @@ trait PageTrait
             }
         }
 
-        if (is_array($this->route_info->getHandler()) && $this->route_info->getHandler()[1] == 'showFrontPage') {
+        if (is_array($this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->getHandler()) && $this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->getHandler()[1] == 'showFrontPage') {
             return true;
         }
 

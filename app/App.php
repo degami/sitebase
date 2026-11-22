@@ -253,7 +253,7 @@ class App
                     Rewrite::getCollection()->getItems();
                 }
 
-                switch ($this->getEnvironment()->getRequestInfo()->getRouteInfo()?->getStatus()) {
+                switch ($this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->getStatus()) {
                     case Dispatcher::NOT_FOUND:
                         // ... 404 Not Found
                         throw new NotFoundException();
@@ -261,8 +261,8 @@ class App
                         // ... 405 Method Not Allowed
                         throw new NotAllowedException();
                     case Dispatcher::FOUND:
-                        $handler = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getHandler();
-                        $vars = $this->getEnvironment()->getRequestInfo()->getRouteInfo()->getVars();
+                        $handler = $this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->getHandler();
+                        $vars = $this->getEnvironment()?->getRequestInfo()?->getRouteInfo()?->getVars();
 
                         // inject routeInfo
                         $vars['route_info'] = $this->getEnvironment()->getRequestInfo()->getRouteInfo();

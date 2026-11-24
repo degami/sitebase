@@ -41,7 +41,7 @@ try {
     ]);
 
     global $app;
-    $app = new \App\App();
+    $app = new \App\App($container);
 
     $website = null;
 

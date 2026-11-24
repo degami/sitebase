@@ -33,8 +33,6 @@ use App\Base\Tools\Utils\GZip;
 use App\Base\Tools\Utils\Geocoder;
 use App\Base\Models\Website;
 use App\Base\Routers\Admin;
-use App\Base\Routing\RouteInfo;
-use App\Base\Routing\RequestInfo;
 use App\Base\Routers\Web;
 use App\Base\Routers\Webhooks;
 use App\Base\Routers\Crud;
@@ -61,14 +59,10 @@ use DI\Container;
 /**
  * Container Aware Object Trait
  * @method string getClassBasename(string $className)
+ * @property ContainerInterface $container
  */
 trait ContainerAwareTrait
 {
-    /**
-     * @var ContainerInterface container
-     */
-    protected ContainerInterface $container;
-
     /**
      * gets container object
      *

@@ -360,9 +360,5 @@ class BaseCommand extends SymfonyCommand
 
         $question->setErrorMessage('Invalid choice %s.');
         return $helper->ask($this->input, $this->output, $question);
-
-//        $counter = 0;
-//        $this->renderTable([], array_map(function($el) use (&$counter) { return [++$counter, $el]; }, $list), true);
-//        return $list[$this->keepAsking('Select one of the above: ', range(1, $counter)) - 1] ?? null;
     }
 }

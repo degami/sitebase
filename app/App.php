@@ -92,17 +92,21 @@ class App
     /**
      * class constructor
      */
-    public function __construct() {
+    public function __construct(
+        protected ?ContainerInterface $container = null
+    ) {
         // do we need php sessions ?
         // session_start();
 
-        $builder = new ContainerBuilder();
-        $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
+        if ($container == null) {
+            $builder = new ContainerBuilder();
+            $builder->addDefinitions(static::getDir(self::CONFIG) . DS . 'di.php');
 
-        /**
-         * @var ContainerInterface $this->container
-         */
-        $this->container = $builder->build();
+            /**
+             * @var ContainerInterface $this->container
+             */
+            $this->container = $builder->build();
+        }
     }
 
     /**
